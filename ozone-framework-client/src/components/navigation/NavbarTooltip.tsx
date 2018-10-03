@@ -1,6 +1,10 @@
+import "./NavbarTooltip.css";
+
 import * as React from "react";
 
 import { Position, Tooltip } from "@blueprintjs/core";
+
+import { TOOLTIP_DELAY_MS } from "../../constants";
 
 
 export type NavbarTooltipProps = {
@@ -10,7 +14,6 @@ export type NavbarTooltipProps = {
 
     children?: any;
 }
-
 
 export class NavbarTooltip extends React.PureComponent<NavbarTooltipProps> {
 
@@ -29,6 +32,7 @@ export class NavbarTooltip extends React.PureComponent<NavbarTooltipProps> {
 
         return (
             <Tooltip position={Position.BOTTOM}
+                     hoverOpenDelay={TOOLTIP_DELAY_MS}
                      content={content}>
                 {children}
             </Tooltip>

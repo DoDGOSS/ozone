@@ -1,32 +1,42 @@
+import "./NavigationBar.css";
+
 import * as React from "react";
+import { observer } from "mobx-react";
 
 import { Alignment, Button, Classes, Navbar, NavbarGroup, NavbarHeading } from "@blueprintjs/core";
 
+import { MainStore } from "../MainStore";
 import { NavbarTooltip } from "./NavbarTooltip";
+import { actions } from "../../messages";
 
 
-export class NavigationBar extends React.PureComponent {
+export type NavigationBarProps = {
+    store: MainStore
+}
+
+@observer
+export class NavigationBar extends React.Component<NavigationBarProps> {
 
     public render() {
+        const store = this.props.store;
+
         return (
             <Navbar>
 
                 <NavbarGroup align={Alignment.LEFT}>
 
-                    <NavbarTooltip title="Dashboards"
-                                   shortcut="Alt+Shift+C"
-                                   description="My Dashboards...">
+                    <NavbarTooltip {...actions.dashboards.tooltip}>
                         <Button className={Classes.MINIMAL}
-                                icon="control"
-                                text="Dashboards"/>
+                                {...actions.dashboards.button}
+                                active={store.isDashboardDialogVisible}
+                                onClick={store.showDashboardDialog}/>
                     </NavbarTooltip>
 
-                    <NavbarTooltip title="Widgets"
-                                   shortcut="Alt+Shift+F"
-                                   description="My Widgets...">
+                    <NavbarTooltip {...actions.widgets.tooltip}>
                         <Button className={Classes.MINIMAL}
-                                icon="widget"
-                                text="Widgets"/>
+                                {...actions.widgets.button}
+                                active={store.isWidgetToolbarOpen}
+                                onClick={store.toggleWidgetToolbar}/>
                     </NavbarTooltip>
 
                 </NavbarGroup>
@@ -36,19 +46,16 @@ export class NavigationBar extends React.PureComponent {
                 </NavbarGroup>
 
                 <NavbarGroup align={Alignment.RIGHT}>
-
-                    <NavbarTooltip title="User Profile"
-                                   description="User profile options">
+                    <NavbarTooltip {...actions.userProfile.tooltip}>
                         <Button className={Classes.MINIMAL}
-                                icon="user"
-                                text="Test Administrator 1"/>
+                                {...actions.userProfile.button}/>
                     </NavbarTooltip>
 
-                    <NavbarTooltip title="Help"
-                                   shortcut="Alt+Shift+H"
-                                   description="Show help">
+                    <NavbarTooltip {...actions.help.tooltip}>
                         <Button className={Classes.MINIMAL}
-                                icon="help"/>
+                                {...actions.help.button}
+                                active={store.isHelpDialogVisible}
+                                onClick={store.showHelpDialog}/>
                     </NavbarTooltip>
 
                 </NavbarGroup>

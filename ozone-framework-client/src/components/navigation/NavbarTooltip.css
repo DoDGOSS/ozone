@@ -1,0 +1,18 @@
+.nav-tooltip {
+    font-size: .75rem;
+}
+
+.nav-tooltip-header {
+}
+
+.nav-tooltip-title {
+    font-weight: bold;
+}
+
+.nav-tooltip-shortcut {
+    font-style: italic;
+    margin-left: .5rem;
+}
+
+.nav-tooltip-description {
+}

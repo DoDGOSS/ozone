@@ -1,0 +1,20 @@
+.bp3-navbar {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    height: 32px;
+}
+
+.bp3-navbar-group {
+    justify-self: center;
+
+    height: 32px;
+}
+
+.bp3-navbar-group.bp3-align-left {
+    justify-self: left;
+}
+
+.bp3-navbar-group.bp3-align-right {
+    justify-self: right;
+}

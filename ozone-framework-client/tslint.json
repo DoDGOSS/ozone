@@ -5,10 +5,16 @@
     "tslint-config-prettier"
   ],
   "rules": {
+    "ordered-imports": [
+      true, {
+        "import-sources-order": "any"
+      }
+    ],
     "interface-name": [true, "never-prefix"],
     "interface-over-type-literal": false,
     "jsx-boolean-value": ["never"],
     "max-classes-per-file": [false, 1],
+    "no-console": [false],
     "object-literal-sort-keys": [false]
   },
   "linterOptions": {
