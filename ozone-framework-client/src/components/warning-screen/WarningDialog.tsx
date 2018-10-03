@@ -21,7 +21,7 @@ const DEFAULT_PROPS = {
 };
 
 @observer
-export class WarningDialog extends React.PureComponent<WarningDialogProps> {
+export class WarningDialog extends React.Component<WarningDialogProps> {
 
     public static defaultProps = DEFAULT_PROPS;
 
