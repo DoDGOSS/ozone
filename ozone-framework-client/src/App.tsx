@@ -1,7 +1,7 @@
 import * as React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import { HomeScreen } from "./components/HomeScreen";
+import { HomeScreen } from "./components/home-screen/HomeScreen";
 import { mainStore } from "./components/MainStore";
 
 

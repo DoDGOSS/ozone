@@ -39,6 +39,10 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
                                 onClick={store.toggleWidgetToolbar}/>
                     </NavbarTooltip>
 
+                    <Button className={Classes.MINIMAL}
+                            text="Warning"
+                            onClick={store.showWarningDialog}/>
+
                 </NavbarGroup>
 
                 <NavbarGroup align={Alignment.CENTER}>

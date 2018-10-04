@@ -1,0 +1,53 @@
+.widget-dashboard {
+    flex: 1 1 auto;
+
+    height: 100%;
+
+    background-color: #a7b6c2;
+}
+
+.widget-container {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+
+    border-radius: 3px;
+
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .15);
+}
+
+.widget-container--toolbar {
+    flex: 0 0 auto;
+    height: 30px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    z-index: 1;
+
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .15);
+
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+
+    background: #fff;
+}
+
+.widget-container--toolbar--title {
+    font-weight: bold;
+
+    padding-left: .5em;
+}
+
+.widget-container--content {
+    flex: 1 1 auto;
+    height: 100%;
+
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+
+    background: #eee;
+}

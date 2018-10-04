@@ -1,5 +1,6 @@
 .widget-toolbar {
     min-height: 150px;
+    flex: 0 0 150px;
 
     padding: 0.25rem;
 

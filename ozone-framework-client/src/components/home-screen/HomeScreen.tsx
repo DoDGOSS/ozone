@@ -1,14 +1,15 @@
+import "./HomeScreen.css"
+
 import * as React from "react";
 import { observer } from "mobx-react";
 
-import { Button } from "@blueprintjs/core";
-
-import { MainStore } from "./MainStore";
-import { DashboardDialog } from "./dashboard-screen/DashboardDialog";
-import { HelpDialog } from "./help-screen/HelpDialog";
-import { NavigationBar } from "./navigation/NavigationBar";
-import { WarningDialog } from "./warning-screen/WarningDialog";
-import { WidgetToolbar } from "./widget-toolbar/WidgetToolbar";
+import { MainStore } from "../MainStore";
+import { DashboardDialog } from "../dashboard-screen/DashboardDialog";
+import { HelpDialog } from "../help-screen/HelpDialog";
+import { NavigationBar } from "../navigation/NavigationBar";
+import { WarningDialog } from "../warning-screen/WarningDialog";
+import { WidgetToolbar } from "../widget-toolbar/WidgetToolbar";
+import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
 
 
 export type HomeScreenProps = {
@@ -22,20 +23,19 @@ export class HomeScreen extends React.Component<HomeScreenProps> {
         const store = this.props.store;
 
         return (
-            <div>
+            <div className="home-screen">
                 <NavigationBar store={store}/>
                 <WidgetToolbar store={store}/>
 
-                <Button onClick={store.showWarningDialog}>Show Warning</Button>
+                <WidgetDashboard/>
 
                 <WarningDialog store={store}/>
-
                 <HelpDialog store={store}/>
-
                 <DashboardDialog store={store}/>
             </div>
         )
     }
 
 }
+
 
