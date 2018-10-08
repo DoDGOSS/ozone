@@ -12,31 +12,39 @@
     "eject": "react-scripts-ts eject"
   },
   "dependencies": {
-    "@blueprintjs/core": "^3.6.1",
-    "@blueprintjs/datetime": "^3.2.0",
-    "@blueprintjs/icons": "^3.1.0",
-    "@blueprintjs/select": "^3.2.0",
-    "@blueprintjs/table": "^3.1.1",
-    "@blueprintjs/timezone": "^3.1.0",
-    "classnames": "^2.2.6",
-    "mobx": "^5.5.0",
-    "mobx-react": "^5.2.8",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "react-grid-layout": "^0.16.6",
-    "react-router": "^4.3.1",
-    "react-router-dom": "^4.3.1",
-    "react-scripts-ts": "3.1.0"
+    "@blueprintjs/core": "3.7.0",
+    "@blueprintjs/datetime": "3.3.0",
+    "@blueprintjs/icons": "3.2.0",
+    "@blueprintjs/select": "3.2.0",
+    "@blueprintjs/table": "3.2.0",
+    "@blueprintjs/timezone": "3.1.0",
+    "classnames": "2.2.6",
+    "mobx": "5.5.0",
+    "mobx-react": "5.2.8",
+    "react": "16.5.2",
+    "react-dom": "16.5.2",
+    "react-grid-layout": "0.16.6",
+    "react-router": "4.3.1",
+    "react-router-dom": "4.3.1",
+    "react-scripts-ts": "4.0.8"
   },
   "devDependencies": {
-    "@types/classnames": "^2.2.6",
-    "@types/jest": "^23.3.2",
-    "@types/node": "^10.11.3",
-    "@types/react": "^16.4.14",
-    "@types/react-dom": "^16.0.8",
-    "@types/react-grid-layout": "^0.16.5",
-    "@types/react-router": "^4.0.31",
-    "@types/react-router-dom": "^4.3.1",
-    "typescript": "^3.1.1"
-  }
+    "@types/classnames": "2.2.6",
+    "@types/jest": "23.3.4",
+    "@types/node": "10.11.4",
+    "@types/react": "16.4.16",
+    "@types/react-dom": "16.0.8",
+    "@types/react-grid-layout": "0.16.5",
+    "@types/react-router": "4.0.31",
+    "@types/react-router-dom": "4.3.1",
+    "jest": "23.6.0",
+    "ts-jest": "23.10.4",
+    "typescript": "3.1.1"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
