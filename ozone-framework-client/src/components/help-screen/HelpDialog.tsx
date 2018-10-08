@@ -1,12 +1,12 @@
-import "./HelpDialog.css";
+import * as styles from "./HelpDialog.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
-import * as classNames from "classnames";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
 import { MainStore } from "../MainStore";
+import { classNames } from "../util";
 
 
 export type HelpDialogProps = {
@@ -20,13 +20,13 @@ export class HelpDialog extends React.Component<HelpDialogProps> {
         const { store } = this.props;
 
         return (
-            <Dialog className="help-dialog"
+            <Dialog className={styles.helpDialog}
                     title="Help"
                     icon="help"
                     isOpen={store.isHelpDialogVisible}
                     onClose={store.hideHelpDialog}>
 
-                <div className={classNames(Classes.DIALOG_BODY, "help-content")}>
+                <div className={classNames(Classes.DIALOG_BODY, styles.helpContent)}>
                     <p>Lorem ipsum...</p>
                 </div>
 

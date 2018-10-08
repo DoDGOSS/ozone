@@ -1,12 +1,12 @@
-import "./WidgetToolbar.css";
+import * as styles from "./WidgetToolbar.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
 
-import { Button, Classes, Collapse, InputGroup } from "@blueprintjs/core";
+import { Button, Collapse, InputGroup } from "@blueprintjs/core";
 
 import { MainStore } from "../MainStore";
-import { handleStringChange } from "../util";
+import { classNames, handleStringChange } from "../util";
 
 
 export type WidgetToolbarProps = {
@@ -21,17 +21,15 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
 
         return (
             <Collapse isOpen={store.isWidgetToolbarOpen}>
-                <div className="widget-toolbar">
-                    <div className="widget-toolbar-menu">
+                <div className={classNames(styles.widgetToolbar, "dragHandle")}>
+                    <div className={styles.widgetToolbarMenu}>
                         <InputGroup
                             placeholder="Search..."
                             leftIcon="search"
                             round={true}
                             onChange={handleStringChange(store.setWidgetFilter)}/>
-                        <Button className={Classes.MINIMAL}
-                                icon="pin"/>
-                        <Button className={Classes.MINIMAL}
-                                icon="cross"
+                        <Button minimal icon="pin"/>
+                        <Button minimal icon="cross"
                                 onClick={store.closeWidgetToolbar}/>
                     </div>
                 </div>

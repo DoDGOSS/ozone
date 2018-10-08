@@ -1,12 +1,4 @@
-.widget-dashboard {
-    flex: 1 1 auto;
-
-    height: 100%;
-
-    background-color: #a7b6c2;
-}
-
-.widget-container {
+:local .widgetContainer {
     display: flex;
     flex-direction: column;
 
@@ -18,7 +10,7 @@
     box-shadow: 0 0 0 1px rgba(0, 0, 0, .15);
 }
 
-.widget-container--toolbar {
+:local .widgetContainerToolbar {
     flex: 0 0 auto;
     height: 30px;
 
@@ -36,13 +28,13 @@
     background: #fff;
 }
 
-.widget-container--toolbar--title {
+:local .widgetContainerToolbarTitle {
     font-weight: bold;
 
     padding-left: .5em;
 }
 
-.widget-container--content {
+:local .widgetContainerContent {
     flex: 1 1 auto;
     height: 100%;
 

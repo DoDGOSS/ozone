@@ -4,7 +4,7 @@ import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 
-import "./index.css";
+import "./index.scss";
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";

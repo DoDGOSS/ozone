@@ -1,4 +1,4 @@
-import "./HomeScreen.css"
+import * as styles from "./HomeScreen.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
@@ -23,7 +23,7 @@ export class HomeScreen extends React.Component<HomeScreenProps> {
         const store = this.props.store;
 
         return (
-            <div className="home-screen">
+            <div className={styles.homeScreen}>
                 <NavigationBar store={store}/>
                 <WidgetToolbar store={store}/>
 

@@ -1,4 +1,4 @@
-.widget-toolbar {
+:local .widgetToolbar {
     min-height: 150px;
     flex: 0 0 150px;
 
@@ -14,7 +14,7 @@
     box-shadow: 0 0 1px rgba(0,0,0,.2);
 }
 
-.widget-toolbar-menu {
+:local .widgetToolbarMenu {
     display: flex;
     justify-content: flex-end;
 }

@@ -1,4 +1,4 @@
-import "./WidgetDashboard.css";
+import * as styles from "./WidgetDashboard.scss";
 
 import * as React from "react";
 
@@ -15,14 +15,14 @@ export class WidgetDashboard extends React.Component {
 
     public render() {
         return (
-            <div className="widget-dashboard">
+            <div className={styles.widgetDashboard}>
                 <GridLayout className="layout"
                             layout={layout}
                             cols={8}
                             rowHeight={100}
                             width={1200}
                             autoSize={true}
-                            draggableHandle=".widget-container--toolbar"
+                            draggableHandle=".dragHandle"
                             compactType={null}>
                     <div key="a">
                         <WidgetContainer/>

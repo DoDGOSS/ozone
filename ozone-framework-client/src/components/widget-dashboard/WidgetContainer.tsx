@@ -1,5 +1,9 @@
+import * as styles from "./WidgetContainer.scss";
+
 import * as React from "react";
 import { Button, ButtonGroup, Classes } from "@blueprintjs/core";
+
+import { classNames } from "../util";
 
 
 export type WidgetContainerProps = {}
@@ -8,9 +12,9 @@ export class WidgetContainer extends React.Component<WidgetContainerProps> {
 
     public render() {
         return (
-            <div className="widget-container">
-                <div className="widget-container--toolbar">
-                    <div className="widget-container--toolbar--title">
+            <div className={styles.widgetContainer}>
+                <div className={classNames(styles.widgetContainerToolbar, "dragHandle")}>
+                    <div className={styles.widgetContainerToolbarTitle}>
                         My Widget
                     </div>
                     <ButtonGroup>
@@ -18,7 +22,7 @@ export class WidgetContainer extends React.Component<WidgetContainerProps> {
                                 icon="cross"/>
                     </ButtonGroup>
                 </div>
-                <div className="widget-container--content"/>
+                <div className={styles.widgetContainerContent}/>
             </div>
         )
     }
