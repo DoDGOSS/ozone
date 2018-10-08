@@ -1,17 +1,17 @@
+@import "../common";
+
 :local .widgetToolbar {
-    min-height: 150px;
-    flex: 0 0 150px;
+    min-height: $widget-toolbar-height;
 
     padding: 0.25rem;
 
-    background-color: rgba(115, 134, 148, 0.3);
-
-    border-bottom: 1px solid rgba(16, 22, 26, .2);
-    border-left: 1px solid rgba(16, 22, 26, .2);
-    border-right: 1px solid rgba(16, 22, 26, .2);
+    border-bottom: $widget-toolbar-border;
+    border-left: $widget-toolbar-border;
+    border-right: $widget-toolbar-border;
     border-radius: 0 0 4px 4px;
 
-    box-shadow: 0 0 1px rgba(0,0,0,.2);
+    background-color: $widget-toolbar-background-color;
+    box-shadow: $widget-toolbar-shadow;
 }
 
 :local .widgetToolbarMenu {

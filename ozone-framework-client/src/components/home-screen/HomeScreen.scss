@@ -1,3 +1,5 @@
+@import "../common";
+
 :local .homeScreen {
     position: absolute;
     width: 100%;
@@ -5,4 +7,18 @@
 
     display: flex;
     flex-direction: column;
+
+    background-color: $desktop-background-color;
+}
+
+:local .navigationBar {
+    flex: 0 0 auto;
+}
+
+:local .widgetToolbar {
+    flex: 0 0 auto;
+}
+
+:local .widgetDashboard {
+    flex: 1 1 auto;
 }

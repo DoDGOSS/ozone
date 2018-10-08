@@ -24,10 +24,10 @@ export class HomeScreen extends React.Component<HomeScreenProps> {
 
         return (
             <div className={styles.homeScreen}>
-                <NavigationBar store={store}/>
-                <WidgetToolbar store={store}/>
+                <NavigationBar className={styles.navigationBar} store={store}/>
+                <WidgetToolbar className={styles.widgetToolbar} store={store}/>
 
-                <WidgetDashboard/>
+                <WidgetDashboard className={styles.widgetDashboard}/>
 
                 <WarningDialog store={store}/>
                 <HelpDialog store={store}/>

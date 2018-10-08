@@ -11,17 +11,18 @@ import { actions } from "../../messages";
 
 
 export type NavigationBarProps = {
-    store: MainStore
+    store: MainStore,
+    className?: string
 }
 
 @observer
 export class NavigationBar extends React.Component<NavigationBarProps> {
 
     public render() {
-        const store = this.props.store;
+        const { className, store } = this.props;
 
         return (
-            <Navbar>
+            <Navbar className={className}>
 
                 <NavbarGroup align={Alignment.LEFT}>
 

@@ -5,17 +5,25 @@ import * as React from "react";
 import * as GridLayout from "react-grid-layout";
 import { WidgetContainer } from "./WidgetContainer";
 
+import { classNames } from "../util";
+
 
 const layout = [
     { i: 'a', x: 0, y: 0, w: 3, h: 2 },
     { i: 'b', x: 4, y: 0, w: 1, h: 2 }
 ];
 
-export class WidgetDashboard extends React.Component {
+export type WidgetDashboardProps = {
+    className?: string;
+}
+
+export class WidgetDashboard extends React.Component<WidgetDashboardProps> {
 
     public render() {
+        const { className } = this.props;
+
         return (
-            <div className={styles.widgetDashboard}>
+            <div className={classNames(styles.widgetDashboard, className)}>
                 <GridLayout className="layout"
                             layout={layout}
                             cols={8}

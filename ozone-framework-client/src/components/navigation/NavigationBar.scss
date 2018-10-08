@@ -1,14 +1,16 @@
+@import "../common";
+
 .bp3-navbar {
+    height: $navbar-height;
+
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-
-    flex: 0 0 32px;
 }
 
 .bp3-navbar-group {
     justify-self: center;
 
-    height: 32px;
+    height: $navbar-height;
 }
 
 .bp3-navbar-group.bp3-align-left {

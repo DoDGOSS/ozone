@@ -11,17 +11,18 @@ import { classNames, handleStringChange } from "../util";
 
 export type WidgetToolbarProps = {
     store: MainStore;
+    className?: string;
 }
 
 @observer
 export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
 
     public render() {
-        const { store } = this.props;
+        const { className, store } = this.props;
 
         return (
             <Collapse isOpen={store.isWidgetToolbarOpen}>
-                <div className={classNames(styles.widgetToolbar, "dragHandle")}>
+                <div className={classNames(styles.widgetToolbar, className)}>
                     <div className={styles.widgetToolbarMenu}>
                         <InputGroup
                             placeholder="Search..."
