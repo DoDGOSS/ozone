@@ -1,29 +1,32 @@
 import * as React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
+import { StoreProvider } from "./stores";
+
 import { HomeScreen } from "./components/home-screen/HomeScreen";
-import { mainStore } from "./components/MainStore";
 
 
 export const enum Paths {
     HOME = "/"
 }
 
+
 export default class App extends React.Component {
 
     public render() {
         return (
-            <Router>
-                <div>
-                    <Route exact path={Paths.HOME}
-                           component={HomeScreenRoute}/>
-                </div>
-            </Router>
+            <StoreProvider>
+                <Router>
+                    <div>
+                        <Route exact path={Paths.HOME}
+                               component={HomeScreen}/>
+                    </div>
+                </Router>
+            </StoreProvider>
         );
     }
 
 }
 
-const HomeScreenRoute = () => (<HomeScreen store={mainStore}/>);
 
 

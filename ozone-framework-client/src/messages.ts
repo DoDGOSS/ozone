@@ -1,6 +1,3 @@
-import { IconName } from "@blueprintjs/icons";
-
-
 export const WARNING_DIALOG = {
     title: "Usage Notice",
     content:
@@ -11,56 +8,5 @@ export const WARNING_DIALOG = {
         text: "I Agree",
         icon: "tick"
     }
-};
-
-
-export const actions = {
-
-    dashboards: {
-        button: {
-            text: "Dashboards",
-            icon: "control" as IconName
-        },
-        tooltip: {
-            title: "Dashboards",
-            shortcut: "alt+shift+c",
-            description: "Open the Dashboards window to start or manage your Dashboards."
-        }
-    },
-
-    widgets: {
-        button: {
-            text: "Widgets",
-            icon: "widget" as IconName
-        },
-        tooltip: {
-            title: "Widgets",
-            shortcut: "alt+shift+f",
-            description: "Open or close the Widgets toolbar to add Widgets to your Dashboard."
-        }
-    },
-
-    help: {
-        button: {
-            icon: "help" as IconName
-        },
-        tooltip: {
-            title: "Help",
-            shortcut: "alt+shift+h",
-            description: "Show the Help window."
-        }
-    },
-
-    userProfile: {
-        button: {
-            text: "Test Administrator 1",
-            icon: "user" as IconName
-        },
-        tooltip: {
-            title: "User Profile",
-            description: "Open the User Profile options window."
-        }
-    }
-
 };
 

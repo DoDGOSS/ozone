@@ -3,12 +3,13 @@ import { observer } from "mobx-react";
 
 import { Button, Classes, Dialog, IconName, Intent } from "@blueprintjs/core";
 
-import { MainStore } from "../MainStore";
+import { Inject, MainStore } from "../../stores";
+
 import { WARNING_DIALOG } from "../../messages";
 
 
 export type WarningDialogProps = {
-    store: MainStore;
+    store?: MainStore;
 } & WarningDialogDefaultProps;
 
 export type WarningDialogDefaultProps = Readonly<typeof DEFAULT_PROPS>
@@ -20,6 +21,7 @@ const DEFAULT_PROPS = {
     buttonText: WARNING_DIALOG.button.text
 };
 
+@Inject(({ mainStore }) => ({ store: mainStore }))
 @observer
 export class WarningDialog extends React.Component<WarningDialogProps> {
 
@@ -27,6 +29,8 @@ export class WarningDialog extends React.Component<WarningDialogProps> {
 
     public render() {
         const { store, title, content, buttonText, buttonIcon } = this.props;
+
+        if (!store) return null;
 
         return (
             <div>

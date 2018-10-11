@@ -3,18 +3,21 @@ import { observer } from "mobx-react";
 
 import { Button, Classes, Dialog } from "@blueprintjs/core";
 
-import { MainStore } from "../MainStore";
+import { Inject, MainStore } from "../../stores";
 
 
 export type DashboardDialogProps = {
-    store: MainStore
+    store?: MainStore
 }
 
+@Inject(({ mainStore }) => ({ store: mainStore }))
 @observer
 export class DashboardDialog extends React.Component<DashboardDialogProps> {
 
     public render() {
         const { store } = this.props;
+
+        if (!store) return null;
 
         return (
             <div>
@@ -22,7 +25,7 @@ export class DashboardDialog extends React.Component<DashboardDialogProps> {
                         onClose={store.hideDashboardDialog}
                         title="Dashboards">
 
-                    <div className={Classes.DIALOG_BODY} />
+                    <div className={Classes.DIALOG_BODY}/>
 
                     <div className={Classes.DIALOG_FOOTER}>
                         <div className={Classes.DIALOG_FOOTER_ACTIONS}>

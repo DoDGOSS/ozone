@@ -5,19 +5,22 @@ import { observer } from "mobx-react";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
-import { MainStore } from "../MainStore";
+import { Inject, MainStore } from "../../stores";
 import { classNames } from "../util";
 
 
 export type HelpDialogProps = {
-    store: MainStore
+    store?: MainStore
 }
 
+@Inject(({ mainStore }) => ({ store: mainStore }))
 @observer
 export class HelpDialog extends React.Component<HelpDialogProps> {
 
     public render() {
         const { store } = this.props;
+
+        if (!store) return null;
 
         return (
             <Dialog className={styles.helpDialog}

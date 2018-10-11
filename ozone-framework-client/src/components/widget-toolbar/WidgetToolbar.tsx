@@ -5,20 +5,24 @@ import { observer } from "mobx-react";
 
 import { Button, Collapse, InputGroup } from "@blueprintjs/core";
 
-import { MainStore } from "../MainStore";
+import { Inject, MainStore } from "../../stores";
+
 import { classNames, handleStringChange } from "../util";
 
 
 export type WidgetToolbarProps = {
-    store: MainStore;
+    store?: MainStore;
     className?: string;
 }
 
+@Inject(({ mainStore }) => ({ store: mainStore }))
 @observer
 export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
 
     public render() {
         const { className, store } = this.props;
+
+        if (!store) return null;
 
         return (
             <Collapse isOpen={store.isWidgetToolbarOpen}>
