@@ -5,37 +5,37 @@ import { observer } from "mobx-react";
 
 import { Button, Collapse, InputGroup } from "@blueprintjs/core";
 
-import { Inject, MainStore } from "../../stores";
+import { inject } from "../../inject";
+import { MainStore } from "../../stores";
 
 import { classNames, handleStringChange } from "../util";
 
 
 export type WidgetToolbarProps = {
-    store?: MainStore;
     className?: string;
 }
 
-@Inject(({ mainStore }) => ({ store: mainStore }))
 @observer
 export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
 
-    public render() {
-        const { className, store } = this.props;
+    @inject(MainStore)
+    private mainStore: MainStore;
 
-        if (!store) return null;
+    public render() {
+        const { className } = this.props;
 
         return (
-            <Collapse isOpen={store.isWidgetToolbarOpen}>
+            <Collapse isOpen={this.mainStore.isWidgetToolbarOpen}>
                 <div className={classNames(styles.widgetToolbar, className)}>
                     <div className={styles.widgetToolbarMenu}>
                         <InputGroup
                             placeholder="Search..."
                             leftIcon="search"
                             round={true}
-                            onChange={handleStringChange(store.setWidgetFilter)}/>
+                            onChange={handleStringChange(this.mainStore.setWidgetFilter)}/>
                         <Button minimal icon="pin"/>
                         <Button minimal icon="cross"
-                                onClick={store.closeWidgetToolbar}/>
+                                onClick={this.mainStore.closeWidgetToolbar}/>
                     </div>
                 </div>
             </Collapse>

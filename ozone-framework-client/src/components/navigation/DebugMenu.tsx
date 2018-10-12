@@ -2,26 +2,21 @@ import * as React from "react";
 
 import { Classes, Menu } from "@blueprintjs/core";
 
-import { Inject, MainStore } from "../../stores";
+import { inject } from "../../inject";
+import { MainStore } from "../../stores";
 
 
-export type DebugMenuProps = {
-    store?: MainStore
-}
+export class DebugMenu extends React.Component {
 
-@Inject(({ mainStore }) => ({ store: mainStore }))
-export class DebugMenu extends React.Component<DebugMenuProps> {
+    @inject(MainStore)
+    private mainStore: MainStore;
 
     public render() {
-        const { store } = this.props;
-
-        if (!store) return null;
-
         return (
             <Menu className={Classes.ELEVATION_1}>
                 <Menu.Item text="Show Warning"
                            icon="warning-sign"
-                           onClick={store.showWarningDialog}/>
+                           onClick={this.mainStore.showWarningDialog}/>
             </Menu>
         )
     }

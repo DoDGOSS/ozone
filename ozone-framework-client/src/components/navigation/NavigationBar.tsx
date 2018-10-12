@@ -5,7 +5,8 @@ import { observer } from "mobx-react";
 
 import { Alignment, Button, Navbar, NavbarGroup, NavbarHeading, Popover, Position } from "@blueprintjs/core";
 
-import { Inject, MainStore } from "../../stores";
+import { inject } from "../../inject";
+import { ConfigStore, MainStore } from "../../stores";
 
 import { NavbarTooltip } from "./NavbarTooltip";
 import { DebugMenu } from "./DebugMenu";
@@ -13,31 +14,33 @@ import { UserMenu } from "./UserMenu";
 
 
 export type NavigationBarProps = {
-    store?: MainStore;
     className?: string;
 }
 
-@Inject(({ mainStore }) => ({ store: mainStore }))
 @observer
 export class NavigationBar extends React.Component<NavigationBarProps> {
 
-    public render() {
-        const { className, store } = this.props;
+    @inject(MainStore)
+    private mainStore: MainStore;
 
-        if (!store) return null;
+    @inject(ConfigStore)
+    private configStore: ConfigStore;
+
+    public render() {
+        const { className } = this.props;
 
         return (
             <Navbar className={className}>
 
                 <NavbarGroup align={Alignment.LEFT}>
-                    <DashboardsButton active={store.isDashboardDialogVisible}
-                                      onClick={store.showDashboardDialog}/>
+                    <DashboardsButton active={this.mainStore.isDashboardDialogVisible}
+                                      onClick={this.mainStore.showDashboardDialog}/>
 
-                    <WidgetsButton active={store.isWidgetToolbarOpen}
-                                   onClick={store.toggleWidgetToolbar}/>
+                    <WidgetsButton active={this.mainStore.isWidgetToolbarOpen}
+                                   onClick={this.mainStore.toggleWidgetToolbar}/>
 
-                    <HelpButton active={store.isHelpDialogVisible}
-                                onClick={store.showHelpDialog}/>
+                    <HelpButton active={this.mainStore.isHelpDialogVisible}
+                                onClick={this.mainStore.showHelpDialog}/>
                 </NavbarGroup>
 
                 <NavbarGroup align={Alignment.CENTER}>
@@ -46,7 +49,7 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
 
                 <NavbarGroup align={Alignment.RIGHT}>
                     <DebugMenuButton/>
-                    <UserMenuButton userName="Test Administrator 1"/>
+                    <UserMenuButton userName={this.configStore.userDisplayName}/>
                 </NavbarGroup>
 
             </Navbar>

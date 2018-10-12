@@ -1,6 +1,8 @@
 import { observable } from "mobx";
+import { injectable } from "../inject";
 
 
+@injectable()
 export class MainStore {
 
     @observable
@@ -33,5 +35,3 @@ export class MainStore {
     public setWidgetFilter = (value: string) => this.widgetFilter = value;
 
 }
-
-export const mainStore = new MainStore();

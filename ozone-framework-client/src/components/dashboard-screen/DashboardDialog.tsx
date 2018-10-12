@@ -3,33 +3,28 @@ import { observer } from "mobx-react";
 
 import { Button, Classes, Dialog } from "@blueprintjs/core";
 
-import { Inject, MainStore } from "../../stores";
+import { inject } from "../../inject";
+import { MainStore } from "../../stores";
 
 
-export type DashboardDialogProps = {
-    store?: MainStore
-}
-
-@Inject(({ mainStore }) => ({ store: mainStore }))
 @observer
-export class DashboardDialog extends React.Component<DashboardDialogProps> {
+export class DashboardDialog extends React.Component {
+
+    @inject(MainStore)
+    private mainStore: MainStore;
 
     public render() {
-        const { store } = this.props;
-
-        if (!store) return null;
-
         return (
             <div>
-                <Dialog isOpen={store.isDashboardDialogVisible}
-                        onClose={store.hideDashboardDialog}
+                <Dialog isOpen={this.mainStore.isDashboardDialogVisible}
+                        onClose={this.mainStore.hideDashboardDialog}
                         title="Dashboards">
 
                     <div className={Classes.DIALOG_BODY}/>
 
                     <div className={Classes.DIALOG_FOOTER}>
                         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                            <Button onClick={store.hideDashboardDialog}
+                            <Button onClick={this.mainStore.hideDashboardDialog}
                                     icon="insert">
                                 Create New
                             </Button>
