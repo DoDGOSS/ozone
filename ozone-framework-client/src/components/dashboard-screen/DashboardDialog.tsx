@@ -13,7 +13,7 @@ export class DashboardDialog extends React.Component {
     @inject(MainStore)
     private mainStore: MainStore;
 
-    public render() {
+    render() {
         return (
             <div>
                 <Dialog isOpen={this.mainStore.isDashboardDialogVisible}

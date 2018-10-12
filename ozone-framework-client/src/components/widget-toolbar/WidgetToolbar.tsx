@@ -21,7 +21,7 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
     @inject(MainStore)
     private mainStore: MainStore;
 
-    public render() {
+    render() {
         const { className } = this.props;
 
         return (

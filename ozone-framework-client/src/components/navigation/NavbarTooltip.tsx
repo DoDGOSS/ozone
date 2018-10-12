@@ -17,7 +17,7 @@ export type NavbarTooltipProps = {
 
 export class NavbarTooltip extends React.PureComponent<NavbarTooltipProps> {
 
-    public render() {
+    render() {
         const { children, title, shortcut, description } = this.props;
 
         const content = (

@@ -1,4 +1,4 @@
-import { computed, observable } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 
 import { inject, injectable } from "../inject";
 
@@ -10,25 +10,29 @@ import { OzoneConfig, User } from "../api";
 export class ConfigStore {
 
     @observable
-    public config?: OzoneConfig;
+    config?: OzoneConfig;
 
     @observable
-    public user?: User;
+    user?: User;
 
     @inject(ConfigService)
     private configService: ConfigService;
 
-    @computed get userDisplayName() {
+    @computed
+    get userDisplayName() {
         return (this.user && this.user.userRealName)
             ? this.user.userRealName
             : "Unknown User";
     }
 
-    public fetch() {
-        this.configService.getConfig().then(config => {
+    @action.bound
+    async fetch() {
+        const config = await this.configService.getConfig();
+
+        runInAction("fetchSuccess", () => {
             this.config = config;
             this.user = config.user;
-        });
+        })
     }
 
 }

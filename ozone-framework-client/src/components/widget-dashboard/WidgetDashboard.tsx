@@ -19,7 +19,7 @@ export type WidgetDashboardProps = {
 
 export class WidgetDashboard extends React.Component<WidgetDashboardProps> {
 
-    public render() {
+    render() {
         const { className } = this.props;
 
         return (

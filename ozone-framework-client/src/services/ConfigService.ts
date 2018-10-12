@@ -15,7 +15,7 @@ export class ConfigService {
         this.rootUrl = baseUrl;
     }
 
-    public async getConfig(): Promise<OzoneConfig> {
+    async getConfig(): Promise<OzoneConfig> {
         const response = await axios.get(`${this.rootUrl}/api/v2/config`);
         return response.data;
     }

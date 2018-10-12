@@ -17,11 +17,11 @@ export default class App extends React.Component {
     @inject(ConfigStore)
     private configStore: ConfigStore;
 
-    public componentWillMount() {
+    componentWillMount() {
         this.configStore.fetch();
     }
 
-    public render() {
+    render() {
         return (
             <Router>
                 <div>

@@ -5,7 +5,7 @@ import { Classes, Menu } from "@blueprintjs/core";
 
 export class UserMenu extends React.Component {
 
-    public render() {
+    render() {
         return (
             <Menu className={Classes.ELEVATION_1}>
                 <Menu.Item text="Profile"/>

@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { action, observable, runInAction } from "mobx";
 import { injectable } from "../inject";
 
 
@@ -6,32 +6,72 @@ import { injectable } from "../inject";
 export class MainStore {
 
     @observable
-    public isWarningDialogVisible = false;
+    isWarningDialogVisible: boolean;
 
     @observable
-    public isHelpDialogVisible = false;
+    isHelpDialogVisible: boolean;
 
     @observable
-    public isDashboardDialogVisible = false;
+    isDashboardDialogVisible: boolean;
 
     @observable
-    public isWidgetToolbarOpen = false;
+    isWidgetToolbarOpen: boolean;
 
     @observable
-    public widgetFilter: string | undefined;
+    widgetFilter: string | undefined;
 
-    public showWarningDialog = () => this.isWarningDialogVisible = true;
-    public hideWarningDialog = () => this.isWarningDialogVisible = false;
+    constructor() {
+        runInAction("initialize", () => {
+            this.isWarningDialogVisible = false;
+            this.isHelpDialogVisible = false;
+            this.isDashboardDialogVisible = false;
+            this.isWidgetToolbarOpen = false;
+        })
+    }
 
-    public showHelpDialog = () => this.isHelpDialogVisible = true;
-    public hideHelpDialog = () => this.isHelpDialogVisible = false;
+    @action.bound
+    showWarningDialog() {
+        this.isWarningDialogVisible = true;
+    }
 
-    public showDashboardDialog = () => this.isDashboardDialogVisible = true;
-    public hideDashboardDialog = () => this.isDashboardDialogVisible = false;
+    @action.bound
+    hideWarningDialog() {
+        this.isWarningDialogVisible = false;
+    }
 
-    public closeWidgetToolbar = () => this.isWidgetToolbarOpen = false;
-    public toggleWidgetToolbar = () => this.isWidgetToolbarOpen = !this.isWidgetToolbarOpen;
+    @action.bound
+    showHelpDialog() {
+        this.isHelpDialogVisible = true;
+    }
 
-    public setWidgetFilter = (value: string) => this.widgetFilter = value;
+    @action.bound
+    hideHelpDialog() {
+        this.isHelpDialogVisible = false;
+    }
+
+    @action.bound
+    showDashboardDialog() {
+        this.isDashboardDialogVisible = true;
+    }
+
+    @action.bound
+    hideDashboardDialog() {
+        this.isDashboardDialogVisible = false;
+    }
+
+    @action.bound
+    closeWidgetToolbar() {
+        this.isWidgetToolbarOpen = false;
+    }
+
+    @action.bound
+    toggleWidgetToolbar() {
+        this.isWidgetToolbarOpen = !this.isWidgetToolbarOpen;
+    }
+
+    @action.bound
+    setWidgetFilter(value: string) {
+        this.widgetFilter = value;
+    }
 
 }

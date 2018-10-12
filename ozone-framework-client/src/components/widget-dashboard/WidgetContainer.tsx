@@ -10,7 +10,7 @@ export type WidgetContainerProps = {}
 
 export class WidgetContainer extends React.Component<WidgetContainerProps> {
 
-    public render() {
+    render() {
         return (
             <div className={styles.widgetContainer}>
                 <div className={classNames(styles.widgetContainerToolbar, "dragHandle")}>

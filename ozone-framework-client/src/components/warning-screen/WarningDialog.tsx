@@ -21,12 +21,12 @@ export type WarningDialogProps = Readonly<typeof DEFAULT_PROPS>
 @observer
 export class WarningDialog extends React.Component<WarningDialogProps> {
 
-    public static defaultProps = DEFAULT_PROPS;
+    static defaultProps = DEFAULT_PROPS;
 
     @inject(MainStore)
     private mainStore: MainStore;
 
-    public render() {
+    render() {
         const { title, content, buttonText, buttonIcon } = this.props;
 
         return (

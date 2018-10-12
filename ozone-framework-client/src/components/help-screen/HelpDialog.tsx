@@ -17,7 +17,7 @@ export class HelpDialog extends React.Component {
     @inject(MainStore)
     private mainStore: MainStore;
 
-    public render() {
+    render() {
         return (
             <Dialog className={styles.helpDialog}
                     title="Help"

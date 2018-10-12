@@ -12,7 +12,7 @@ import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
 
 export class HomeScreen extends React.Component {
 
-    public render() {
+    render() {
         return (
             <div className={styles.homeScreen}>
                 <NavigationBar className={styles.navigationBar}/>

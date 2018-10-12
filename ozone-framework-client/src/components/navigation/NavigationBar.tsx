@@ -26,7 +26,7 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
     @inject(ConfigStore)
     private configStore: ConfigStore;
 
-    public render() {
+    render() {
         const { className } = this.props;
 
         return (
