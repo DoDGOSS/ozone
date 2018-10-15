@@ -3,8 +3,8 @@ import { injectable } from "../inject";
 
 import { OzoneConfig } from "../api";
 
+import { DEFAULT_ROOT_URL } from "../constants";
 
-const DEFAULT_ROOT_URL = "http://localhost:8080";
 
 @injectable()
 export class ConfigService {

@@ -8,6 +8,7 @@ import { NavigationBar } from "../navigation/NavigationBar";
 import { WarningDialog } from "../warning-screen/WarningDialog";
 import { WidgetToolbar } from "../widget-toolbar/WidgetToolbar";
 import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
+import { AdminToolsDialog } from "../admin-tools-dialog/AdminToolsDialog";
 
 
 export class HomeScreen extends React.Component {
@@ -23,6 +24,7 @@ export class HomeScreen extends React.Component {
                 <WarningDialog/>
                 <HelpDialog/>
                 <DashboardDialog/>
+                <AdminToolsDialog/>
             </div>
         )
     }

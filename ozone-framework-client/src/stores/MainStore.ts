@@ -12,6 +12,9 @@ export class MainStore {
     isHelpDialogVisible: boolean;
 
     @observable
+    isAdminToolsDialogOpen: boolean;
+
+    @observable
     isDashboardDialogVisible: boolean;
 
     @observable
@@ -24,6 +27,7 @@ export class MainStore {
         runInAction("initialize", () => {
             this.isWarningDialogVisible = false;
             this.isHelpDialogVisible = false;
+            this.isAdminToolsDialogOpen = false;
             this.isDashboardDialogVisible = false;
             this.isWidgetToolbarOpen = false;
         })
@@ -47,6 +51,16 @@ export class MainStore {
     @action.bound
     hideHelpDialog() {
         this.isHelpDialogVisible = false;
+    }
+
+    @action.bound
+    showAdminToolsDialog() {
+        this.isAdminToolsDialogOpen = true;
+    }
+
+    @action.bound
+    hideAdminToolsDialog() {
+        this.isAdminToolsDialogOpen = false;
     }
 
     @action.bound
