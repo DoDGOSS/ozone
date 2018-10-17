@@ -1,0 +1,107 @@
+buildscript {
+    ext {
+        grailsVersion = '3.3.2'
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath group: 'io.spring.gradle', name: 'dependency-management-plugin', version: '1.0.4.RELEASE'
+    }
+}
+
+
+group 'org.ozoneplatform'
+version '4.0.4-0'
+
+
+apply plugin: 'io.spring.dependency-management'
+
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'java'
+
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'http://repository.springsource.com/maven/bundles/release' }
+    maven { url 'http://repository.springsource.com/maven/bundles/external' }
+    maven { url 'https://packages.atlassian.com/maven-3rdparty-legacy' }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.grails:grails-bom:' + grailsVersion
+        mavenBom 'org.ozoneplatform:ozone-classic-bom:7.17.2-0'
+    }
+
+    applyMavenExclusions false
+}
+
+dependencies {
+    compile group: 'log4j', name: 'log4j', version: '1.2.17'
+
+    compile group: 'javax.servlet', name: 'javax.servlet-api'
+
+    compile group: 'org.springframework.security', name: 'spring-security-core'
+    compile group: 'org.springframework.security', name: 'spring-security-cas'
+    compile group: 'org.springframework.security', name: 'spring-security-web'
+    compile group: 'org.springframework.security', name: 'spring-security-config'
+    compile group: 'org.springframework.security', name: 'spring-security-ldap'
+
+    compile group: 'org.springframework.ldap', name: 'spring-ldap-core'
+
+    compile group: 'org.slf4j', name: 'slf4j-api'
+
+    compile group: 'commons-lang', name: 'commons-lang'
+
+    compile group: 'org.ehcache', name: 'ehcache', version: '3.2.3'
+
+//    compile(group: 'opensymphony', name: 'oscache', version: '2.4') {
+//        exclude group: 'javax.jms', module: 'jms'
+//        exclude group: 'commons-logging', module: 'commons-logging'
+//        exclude group: 'javax.servlet', module: 'servlet-api'
+//    }
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.8.4'
+}
+
+jar {
+    exclude 'conf/**'
+}
+
+sourceSets {
+    test {
+        java {
+            exclude 'ozone/securitysample/authentication/ldap/**'
+        }
+    }
+}
+
+javadoc {
+    failOnError = false
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.2.1'
+}

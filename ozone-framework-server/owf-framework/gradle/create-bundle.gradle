@@ -1,0 +1,73 @@
+task extractCustomTomcat(type: Sync, group: 'bundle') {
+    dependsOn(configurations.customTomcat)
+
+    from { // use of closure defers evaluation until execution time
+        configurations.customTomcat.collect { zipTree(it) }
+    }
+    into "$tomcatBundleStaging"
+}
+
+task copyDatabaseDrivers(type: Copy, group: 'bundle') {
+    dependsOn(extractCustomTomcat)
+
+    from configurations.drivers
+    into file("$tomcatBundleStaging/drivers")
+}
+
+task copyFrameworkConfigurations(type: Copy, group: 'bundle') {
+    dependsOn(extractCustomTomcat)
+
+    from fileTree("config")
+    into file("$tomcatBundleStaging/tomcat/lib/config")
+}
+
+task copyFrameworkSpringConfigurations(type: Copy, group: 'bundle') {
+    dependsOn(extractCustomTomcat)
+
+    from fileTree("src/main/resources/ozone/framework")
+
+    into file("$tomcatBundleStaging/tomcat/lib/ozone/framework")
+}
+
+task copyFrameworkWar(type: Copy, group: 'bundle') {
+    dependsOn(extractCustomTomcat, ':war')
+
+    from tasks.getByPath(':war')
+    rename("owf-framework.*", 'owf.war')
+    into file("$tomcatBundleStaging/tomcat/webapps")
+}
+
+task copyDatabaseScripts(type: Copy, group: 'bundle') {
+    from fileTree("database")
+    include "**/*.sql"
+    into file("$tomcatBundleStaging/dbscripts")
+}
+
+task copyDocumentation(type: Copy, group: 'bundle') {
+    from fileTree("docs")
+    into file("$tomcatBundleStaging/docs")
+}
+
+task copyJbossModule(type: Zip, group: 'build') {
+    from file("jboss-modules")
+
+    archiveName "owf-jboss-modules.zip"
+
+    destinationDir file(tomcatBundleStaging)
+}
+
+task bundle(type: Zip, group: 'build') {
+    dependsOn(copyFrameworkConfigurations,
+              copyFrameworkSpringConfigurations,
+              copyDatabaseDrivers,
+              copyFrameworkWar,
+              copyDatabaseScripts,
+              copyJbossModule,
+              copyDocumentation)
+
+    from file(tomcatBundleStaging)
+
+    archiveName "ozone-framework-${releaseVersion}.zip"
+
+    destinationDir buildDir
+}

@@ -1,0 +1,96 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-1
+      author: owf
+      comment: reset Liquibase changelogs
+
+      preConditions:
+        - onFail: MARK_RAN
+        - changeSetExecuted:
+            id: 7.16.0-9
+            author: marketplace
+            changeLogFile: changelog_7.16.0.groovy
+
+      changes:
+          - dropTable:
+              tableName: databasechangelog
+              schemaName: ${schema.name}
+          - createSequence:
+              schemaName: ${schema.name}
+              startValue: 1
+              sequenceName: hibernate_sequence
+              incrementBy: 1
+  - include:
+      # requires: n/a
+      file: changelog-7.17.0-person.yaml
+  - include:
+      #requires: n/a
+      file: changelog-7.17.0-application_configuration.yaml
+  - include:
+      #requires: n/a
+      file: changelog-7.17.0-domain_mapping.yaml
+  - include:
+      #requires: n/a
+      file: changelog-7.17.0-application_configuration.yaml
+  - include:
+      #requires: n/a
+      file: changelog-7.17.0-role.yaml
+  - include:
+      #requires: person, role
+      file: changelog-7.17.0-person_role.yaml
+  - include:
+      #reqiores: person
+      file: changelog-7.17.0-preference.yaml
+  - include:
+      #requires: n/a
+      file: changelog-7.17.0-owf_group.yaml
+  - include:
+      #requires: owf_group, person
+      file: changelog-7.17.0-owf_group_people.yaml
+  - include:
+      #requires: n/a
+      file: changelog-7.17.0-intent.yaml
+  - include:
+      #requires: n/a
+      file: changelog-7.17.0-intent_data_type.yaml
+  - include:
+      #requires: intent, intent_data_type
+      file: changelog-7.17.0-intent_data_types.yaml
+  - include:
+      #requires: n/a
+      file: changelog-7.17.0-widget_definition.yaml
+  - include:
+      #requires: n/a
+      file: changelog-7.17.0-widget_type.yaml
+  - include:
+      #requires: widget_definition, widget_type
+      file: changelog-7.17.0-widget_definition_widget_types.yaml
+  - include:
+      #requires: widget_definition, person
+      file: changelog-7.17.0-person_widget_definition.yaml
+  - include:
+      #requires: widget_definition, intent
+      file: changelog-7.17.0-widget_def_intent.yaml
+  - include:
+      #requires: widget_def_intent, intent_data_type
+      file: changelog-7.17.0-widget_def_intent_data_types.yaml
+  - include:
+      #requires: n/a
+      file: changelog-7.17.0-requestmap.yaml
+  - include:
+      #requires: owf_group, person
+      file: changelog-7.17.0-stack.yaml
+  - include:
+      #requires: stack, owf_group
+      file: changelog-7.17.0-stack-groups.yaml
+  - include:
+      # requires: person, stack
+      file: changelog-7.17.0-dashboard.yaml
+
+  - include:
+      file: changelog-7.17.0-tags.yaml
+
+  - include:
+      #requires: tags
+      file: changelog-7.17.0-tag_links.yaml

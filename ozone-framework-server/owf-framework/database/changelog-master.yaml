@@ -1,0 +1,4 @@
+databaseChangeLog:
+
+  - include:
+      file: changelog-7.17.0.yaml

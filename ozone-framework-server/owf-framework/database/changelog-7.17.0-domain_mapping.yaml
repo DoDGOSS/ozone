@@ -1,0 +1,286 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-person
+      author: owf
+      comment: create domain_mapping table
+      dbms: postgresql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: domain_mapping
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: domain_mapping
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  defaultValueComputed: nextval('public.hibernate_sequence'::regclass)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: domain_mapping_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: src_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: src_type
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: relationship_type
+                  type: varchar(8)
+              - column:
+                  name: dest_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: dest_type
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+        - createIndex:
+            tableName: domain_mapping
+            schemaName: ${schema.name}
+            columns:
+              - column:
+                  name: src_id
+              - column:
+                  name: src_type
+              - column:
+                  name: relationship_type
+              - column:
+                  name: dest_id
+              - column:
+                  name: dest_type
+            indexName: domain_mapping_all
+
+  - changeSet:
+      id: 7.17.0-person
+      author: owf
+      comment: create domain_mapping table
+      dbms: mysql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: domain_mapping
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: domain_mapping
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: domain_mapping_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: src_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: src_type
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: relationship_type
+                  type: varchar(8)
+              - column:
+                  name: dest_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: dest_type
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+        - createIndex:
+            tableName: domain_mapping
+            schemaName: ${schema.name}
+            columns:
+              - column:
+                  name: src_id
+              - column:
+                  name: src_type
+              - column:
+                  name: relationship_type
+              - column:
+                  name: dest_id
+              - column:
+                  name: dest_type
+            indexName: domain_mapping_all
+
+  - changeSet:
+      id: 7.17.0-person
+      author: owf
+      comment: create domain_mapping table
+      dbms: oracle
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: domain_mapping
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: domain_mapping
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: SYS_C007337
+              - column:
+                  name: version
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: src_id
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: src_type
+                  type: varchar(255 char)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: relationship_type
+                  type: varchar(8 char)
+              - column:
+                  name: dest_id
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: dest_type
+                  type: varchar(255 char)
+                  constraints:
+                      nullable: false
+        - createIndex:
+            tableName: domain_mapping
+            schemaName: ${schema.name}
+            columns:
+              - column:
+                  name: src_id
+              - column:
+                  name: src_type
+              - column:
+                  name: relationship_type
+              - column:
+                  name: dest_id
+              - column:
+                  name: dest_type
+            indexName: DOMAIN_MAPPING_ALL
+
+  - changeSet:
+      id: 7.17.0-person
+      author: owf
+      comment: create domain_mapping table
+      dbms: mssql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: domain_mapping
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: domain_mapping
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+#                      primaryKey: true
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: src_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: src_type
+                  type: nvarchar(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: relationship_type
+                  type: nvarchar(8)
+              - column:
+                  name: dest_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: dest_type
+                  type: nvarchar(255)
+                  constraints:
+                      nullable: false
+        - createIndex:
+            tableName: domain_mapping
+            schemaName: ${schema.name}
+            columns:
+              - column:
+                  name: src_id
+              - column:
+                  name: src_type
+              - column:
+                  name: relationship_type
+              - column:
+                  name: dest_id
+              - column:
+                  name: dest_type
+            indexName: domain_mapping_all
+        - addPrimaryKey:
+            - columnNames: id
+            - tableName: domain_mapping

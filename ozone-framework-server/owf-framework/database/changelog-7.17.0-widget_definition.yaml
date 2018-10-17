@@ -1,0 +1,404 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-widget_definition
+      author: owf
+      comment: create widget_definition table
+      dbms: postgresql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: widget_definition
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: widget_definition
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  defaultValueComputed: nextval('public.hibernate_sequence'::regclass)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: widget_definition_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: visible
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: image_url_medium
+                  type: varchar(2083)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: image_url_small
+                  type: varchar(2083)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: singleton
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: width
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_version
+                  type: varchar(2083)
+              - column:
+                  name: height
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_url
+                  type: varchar(2083)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_guid
+                  type: varchar(255)
+                  constraints:
+                      unique: true
+                      uniqueConstraintName: widget_definition_widget_guid_key
+                      nullable: false
+              - column:
+                  name: display_name
+                  type: varchar(256)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: background
+                  type: boolean
+              - column:
+                  name: universal_name
+                  type: varchar(255)
+              - column:
+                  name: descriptor_url
+                  type: varchar(2083)
+              - column:
+                  name: description
+                  type: varchar(4000)
+                  defaultValue: ''
+              - column:
+                  name: mobile_ready
+                  type: boolean
+                  defaultValue: false
+                  constraints:
+                      nullable: false
+
+  - changeSet:
+      id: 7.17.0-widget_definition
+      author: owf
+      comment: create widget_definition table
+      dbms: mysql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: widget_definition
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: widget_definition
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: widget_definition_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: visible
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: image_url_medium
+                  type: varchar(2083)
+              - column:
+                  name: image_url_small
+                  type: varchar(2083)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: singleton
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: width
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_version
+                  type: varchar(2083)
+              - column:
+                  name: height
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_url
+                  type: varchar(2083)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_guid
+                  type: varchar(255)
+                  constraints:
+                      unique: true
+                      uniqueConstraintName: widget_guid
+                      nullable: false
+              - column:
+                  name: display_name
+                  type: varchar(256)
+              - column:
+                  name: background
+                  type: tinyint(1)
+              - column:
+                  name: universal_name
+                  type: varchar(255)
+              - column:
+                  name: descriptor_url
+                  type: varchar(2083)
+              - column:
+                  name: description
+                  type: varchar(4000)
+              - column:
+                  name: mobile_ready
+                  type: tinyint(1)
+                  defaultValue: '0'
+                  constraints:
+                      nullable: false
+
+  - changeSet:
+      id: 7.17.0-widget_definition
+      author: owf
+      comment: create widget_definition table
+      dbms: oracle
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: widget_definition
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: widget_definition
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: SYS_C007414
+              - column:
+                  name: version
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: visible
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: image_url_medium
+                  type: varchar(2083 char)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: image_url_small
+                  type: varchar(2083 char)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: singleton
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: width
+                  type: number(10, 0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_version
+                  type: varchar(2083 char)
+              - column:
+                  name: height
+                  type: number(10, 0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_url
+                  type: varchar(2083 char)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_guid
+                  type: varchar(255 char)
+                  constraints:
+                      unique: true
+                      uniqueConstraintName: SYS_C007415
+                      nullable: false
+              - column:
+                  name: display_name
+                  type: varchar(256)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: background
+                  type: boolean
+              - column:
+                  name: universal_name
+                  type: varchar(255)
+              - column:
+                  name: descriptor_url
+                  type: varchar(2083)
+              - column:
+                  name: description
+                  type: varchar(4000)
+                  defaultValue: ''
+              - column:
+                  name: mobile_ready
+                  type: boolean
+                  defaultValue: false
+                  constraints:
+                      nullable: false
+
+  - changeSet:
+      id: 7.17.0-widget_definition
+      author: owf
+      comment: create widget_definition table
+      dbms: mssql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: widget_definition
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: widget_definition
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+#                      primaryKey: true
+#                      primaryKeyName: widget_definition_pkey
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: visible
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: image_url_medium
+                  type: nvarchar(2083)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: image_url_small
+                  type: nvarchar(2083)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: singleton
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: width
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_version
+                  type: nvarchar(2083)
+              - column:
+                  name: height
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_url
+                  type: nvarchar(2083)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_guid
+                  type: nvarchar(255)
+                  constraints:
+                      unique: true
+#                      uniqueConstraintName: widget_definition_widget_guid_key
+                      nullable: false
+              - column:
+                  name: display_name
+                  type: varchar(256)
+              - column:
+                  name: background
+                  type: boolean
+              - column:
+                  name: universal_name
+                  type: varchar(255)
+              - column:
+                  name: descriptor_url
+                  type: varchar(2083)
+              - column:
+                  name: description
+                  type: varchar(4000)
+                  defaultValue: ''
+              - column:
+                  name: mobile_ready
+                  type: boolean
+                  defaultValue: false
+                  constraints:
+                      nullable: false
+        - addPrimaryKey:
+            columnNames: id
+            tableName: widget_definition

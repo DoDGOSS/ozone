@@ -1,0 +1,8 @@
+# Ensure shell scripts intended for UNIX systems always have appropriate
+# line endings. Must do this in case the contents of this repo are zipped on
+# Windows and then sent to run on a UNIX/Linux/Mac system.
+*.sh text eol=lf
+
+# Declare files that will always have CRLF line endings on checkout.
+*.bat text eol=crlf
+*.sln text eol=crlf
