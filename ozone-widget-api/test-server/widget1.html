@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>OWF Widget 1</title>
+
+    <script type="text/javascript" src="js/owf-widget-lite.js"></script>
+    <script type="text/javascript">
+        function main() {
+            Ozone.eventing.clientInitialize();
+        }
+
+        document.addEventListener("DOMContentLoaded", main);
+
+        function callWidget2Add() {
+            Ozone.eventing.getAllWidgets(function (widgetList) {
+                if (widgetList == null) return;
+
+                let widget2Id = findWidgetByName(widgetList, /^.*widget2.*$/);
+                if (widget2Id == null) return;
+
+                setMessage("Asking Widget2 to add 2+3<br>");
+
+                Ozone.eventing.importWidget(widget2Id, function (widget) {
+                    widget.add(2, 3, function (result) {
+                        appendMessage("Widget 2 responds:" + result);
+                    });
+                });
+            });
+        }
+
+        function findWidgetByName(widgetList, pattern) {
+            for (let i = 0; i < widgetList.length; i++) {
+                if (widgetList[i].id != null && widgetList[i].name.match(pattern) != null) {
+                    return widgetList[i].id;
+                }
+            }
+        }
+
+        function setMessage(message) {
+            document.getElementById("message").innerHTML = message;
+        }
+
+        function appendMessage(message) {
+            document.getElementById("message").innerHTML += message;
+        }
+    </script>
+</head>
+<body>
+<h1>Widget 1</h1>
+<button type="button" onclick="callWidget2Add()">Invoke Widget 2 'add'</button>
+<div id="message">No Message</div>
+</body>
+</html>
