@@ -1,7 +1,9 @@
 //kernel-rpc-base.js contains shared rpc logic that is used both in kernel-container.js and Container.js
 
 //Top level namespace defs
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 Ozone.eventing = Ozone.eventing || {};
 Ozone.eventing.rpc = Ozone.eventing.rpc || {};
 Ozone.eventing.rpc.priv = Ozone.eventing.rpc.priv || {};

@@ -1,7 +1,5 @@
-/**
- * @ignore
- */
-var Ozone = Ozone ? Ozone : {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @namespace

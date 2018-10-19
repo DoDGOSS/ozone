@@ -4,10 +4,8 @@
  *      needed handler).
  */
 
-/**
- * @namespace
- */
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @namespace

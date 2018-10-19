@@ -1,5 +1,7 @@
 //Top level namespace defs
-var Ozone           = Ozone               || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 Ozone.eventing      = Ozone.eventing      || {};
 Ozone.eventing.priv = Ozone.eventing.priv || {};
 

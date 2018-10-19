@@ -2,12 +2,8 @@
  * @fileoverview The preference server script controls all the preference server communication.
  */
 
-
-
-/**
- * @ignore
- */
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @ignore

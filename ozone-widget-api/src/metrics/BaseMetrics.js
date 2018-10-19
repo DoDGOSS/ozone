@@ -3,10 +3,8 @@
  *  likely be set up as separate files / separate sets.    
  */
 
-/**
- * @namespace
- */
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @namespace

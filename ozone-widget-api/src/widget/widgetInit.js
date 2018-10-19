@@ -1,3 +1,6 @@
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 if (!Ozone.disableWidgetInit) {
 
 

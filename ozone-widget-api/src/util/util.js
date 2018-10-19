@@ -1,7 +1,6 @@
-/**
- * @ignore
- */
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 Ozone.util = Ozone.util || {};
 Ozone.util.formField = Ozone.util.formField || {};
 Ozone.config = Ozone.config || {};

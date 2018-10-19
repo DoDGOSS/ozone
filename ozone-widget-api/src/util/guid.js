@@ -1,5 +1,9 @@
-var guid = guid || {};
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
+window.guid = window.guid || {};
+var guid = window.guid || {};
+
 Ozone.util = Ozone.util || {};
 
 guid.util = function() {

@@ -2,7 +2,9 @@
  * This file contains constant definitions that define global OWF hotkeys
  */
 
-Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 Ozone.components = Ozone.components || {};
 Ozone.components.keys = Ozone.components.keys || {};
 Ozone.components.keys.EVENT_NAME = 'keyup'; //keyup only fires once, which is what we want. keydown may fire repeatedly

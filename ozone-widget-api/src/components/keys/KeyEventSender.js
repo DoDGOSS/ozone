@@ -1,4 +1,6 @@
-Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 Ozone.components = Ozone.components || {};
 Ozone.components.keys = Ozone.components.keys || {};
 

@@ -1,4 +1,6 @@
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 /**
  * @namespace
  * @description Provides OWF utility methods for the widget developer

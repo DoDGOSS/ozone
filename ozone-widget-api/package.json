@@ -3,9 +3,10 @@
   "version": "7.17.2",
   "main": "index.js",
   "license": "Apache-2.0",
-  "scripts":  {
+  "scripts": {
     "build": "gulp build",
-    "test:serve":  "gulp build && node test-server/serve.js"
+    "test": "gulp build && jest",
+    "test:serve": "gulp build && node test-server/serve.js"
   },
   "dependencies": {},
   "devDependencies": {
@@ -15,6 +16,7 @@
     "gulp-gzip": "1.4.0",
     "gulp-rename": "1.2.2",
     "gulp-uglify": "3.0.0",
+    "jest": "23.6.0",
     "koa": "2.5.3",
     "koa-mount": "4.0.0",
     "koa-static": "5.0.0",

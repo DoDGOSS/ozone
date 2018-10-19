@@ -1,9 +1,5 @@
-/**
- * @ignore
- * @namespace
- * @since OWF 5.0
- */
-OWF = window.OWF ? window.OWF : {};
+window.OWF = window.OWF || {};
+var OWF = window.OWF;
 
 (function (window, document, undefined) {
 
