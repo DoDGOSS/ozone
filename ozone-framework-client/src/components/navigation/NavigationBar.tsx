@@ -41,6 +41,9 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
 
                     <HelpButton active={this.mainStore.isHelpDialogVisible}
                                 onClick={this.mainStore.showHelpDialog}/>
+
+                    <HelpButton active={this.mainStore.isLoginDialogOpen}
+                                onClick={this.mainStore.showLoginDialog}/>
                 </NavbarGroup>
 
                 <NavbarGroup align={Alignment.CENTER}>

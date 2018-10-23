@@ -6,6 +6,9 @@ import { injectable } from "../inject";
 export class MainStore {
 
     @observable
+    isLoginDialogOpen: boolean;
+
+    @observable
     isWarningDialogVisible: boolean;
 
     @observable
@@ -23,6 +26,7 @@ export class MainStore {
     @observable
     widgetFilter: string | undefined;
 
+
     constructor() {
         runInAction("initialize", () => {
             this.isWarningDialogVisible = false;
@@ -31,6 +35,16 @@ export class MainStore {
             this.isDashboardDialogVisible = false;
             this.isWidgetToolbarOpen = false;
         })
+    }
+
+    @action.bound
+    showLoginDialog() {
+        this.isLoginDialogOpen = true;
+    }
+
+    @action.bound
+    hideLoginDialog() {
+        this.isLoginDialogOpen = false;
     }
 
     @action.bound
