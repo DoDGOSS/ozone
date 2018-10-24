@@ -1,0 +1,55 @@
+{
+
+  "owf-widget": [
+    "vendor/dojo-1.5.0/owfdojo.js",
+    "src/audit/Audit.js",
+    "src/util/pageload.js",
+    "src/util/version.js",
+    "src/util/util.js",
+    "src/util/guid.js",
+    "src/components/keys/HotKeys.js",
+    "src/components/keys/KeyEventSender.js",
+    "src/lang/ozone-lang.js",
+    "src/lang/DateJs/globalization/en-US.js",
+    "src/util/transport.js",
+    "src/util/widget_utils.js",
+    "vendor/shindig-1.0/util.js",
+    "vendor/shindig-1.0/json.js",
+    "vendor/shindig-1.0/rpc.js",
+    "vendor/shindig-1.0/pubsub.js",
+    "vendor/log4javascript-1.4.13/log4javascript.min.js",
+    "src/util/log.js",
+    "src/pref/preference.js",
+    "src/eventing/Widget.js",
+    "src/intents/WidgetIntents.js",
+    "src/chrome/WidgetChrome.js",
+    "src/dd/WidgetDragAndDrop.js",
+    "src/launcher/WidgetLauncher.js",
+    "src/state/WidgetStateHandler.js",
+    "src/state/WidgetState.js",
+    "src/eventing/WidgetProxy.js",
+    "src/kernel/kernel-client.js",
+    "src/metrics/BaseMetrics.js",
+    "src/widget/Widget.js",
+    "src/widget/widgetInit.js"
+  ],
+
+  "owf-widget-lite": [
+    "vendor/shindig-1.0/util.js",
+    "vendor/shindig-1.0/json.js",
+    "vendor/shindig-1.0/rpc.js",
+    "vendor/shindig-1.0/pubsub.js",
+    "src/eventing/WidgetProxy.js",
+    "src/kernel/kernel-client.js"
+  ],
+
+  "owf-widget-container": [
+    "vendor/shindig-1.0/util.js",
+    "vendor/shindig-1.0/json.js",
+    "vendor/shindig-1.0/rpc.js",
+    "vendor/shindig-1.0/pubsub.js",
+    "src/kernel/kernel-rpc-base.js",
+    "src/kernel/kernel-container.js"
+  ]
+
+}

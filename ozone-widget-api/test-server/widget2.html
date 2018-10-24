@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>OWF Widget 2</title>
+
+    <script type="text/javascript" src="js/owf-widget-lite.js"></script>
+    <script type="text/javascript">
+        function main() {
+            Ozone.eventing.clientInitialize({
+                name: "add",
+                fn: add
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", main);
+
+        function add(a, b) {
+            const result = a + b;
+            setMessage(`Adding: ${a} + ${b} = ${result}<br>`);
+            return result;
+        }
+
+        function setMessage(message) {
+            document.getElementById("message").innerHTML = message;
+        }
+    </script>
+
+</head>
+<body>
+<h1>Widget 2</h1>
+<div id="message">No Message</div>
+</body>
+</html>
