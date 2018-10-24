@@ -1,0 +1,183 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-requestmap
+      author: owf
+      comment: create requestmap table
+      dbms: postgresql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: requestmap
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: requestmap
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  defaultValueComputed: nextval('public.hibernate_sequence'::regclass)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: requestmap_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: url
+                  type: varchar(255)
+                  constraints:
+                      unique: true
+                      uniqueConstraintName: requestmap_url_key
+                      nullable: false
+              - column:
+                  name: config_attribute
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+
+  - changeSet:
+      id: 7.17.0-requestmap
+      author: owf
+      comment: create requestmap table
+      dbms: mysql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: requestmap
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: requestmap
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: requestmap_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: url
+                  type: varchar(255)
+                  constraints:
+                      unique: true
+                      uniqueConstraintName: url
+                      nullable: false
+              - column:
+                  name: config_attribute
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+
+  - changeSet:
+      id: 7.17.0-requestmap
+      author: owf
+      comment: create requestmap table
+      dbms: oracle
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: requestmap
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: requestmap
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: SYS_C007380
+              - column:
+                  name: version
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: url
+                  type: varchar(255 char)
+                  constraints:
+                      unique: true
+                      uniqueConstraintName: SYS_C007381
+                      nullable: false
+              - column:
+                  name: config_attribute
+                  type: varchar(255 char)
+                  constraints:
+                      nullable: false
+
+  - changeSet:
+      id: 7.17.0-requestmap
+      author: owf
+      comment: create requestmap table
+      dbms: mssql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: requestmap
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: requestmap
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+#                      primaryKey: true
+#                      primaryKeyName: requestmap_pkey
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: url
+                  type: nvarchar(255)
+                  constraints:
+                      unique: true
+#                      uniqueConstraintName: requestmap_url_key
+                      nullable: false
+              - column:
+                  name: config_attribute
+                  type: nvarchar(255)
+                  constraints:
+                      nullable: false
+        - addPrimaryKey:
+            columnNames: id
+            tableName: requestmap

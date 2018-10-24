@@ -1,0 +1,455 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-dashboard
+      author: owf
+      comment: create dashboard table
+      dbms: postgresql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: dashboard
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: dashboard
+            schemaName: ${schema.name}
+
+            columns:
+            - column:
+                name: id
+                type: bigint
+                defaultValueComputed: nextval('public.hibernate_sequence'::regclass)
+                constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: dashboard_pkey
+            - column:
+                name: version
+                type: bigint
+                constraints:
+                    nullable: false
+            - column:
+                name: isdefault
+                type: boolean
+                constraints:
+                    nullable: false
+            - column:
+                name: dashboard_position
+                type: integer
+                constraints:
+                    nullable: false
+            - column:
+                name: altered_by_admin
+                type: boolean
+                constraints:
+                    nullable: false
+            - column:
+                name: guid
+                type: varchar(255)
+                constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintKey: dashboard_guid_key
+            - column:
+                name: name
+                type: varchar(200)
+                constraints:
+                    nullable: false
+            - column:
+                name: user_id
+                type: bigint
+                constraints:
+                    references: person (id)
+                    foreignKeyName: fkc18aea948656347d
+            - column:
+                name: description
+                type: varchar(4000)
+            - column:
+                name: created_by_id
+                type: bigint
+                constraints:
+                    references: person (id)
+                    foreignKeyName: fkc18aea94372cc5a
+            - column:
+                name: created_date
+                type: timestamp with time zone
+
+            - column:
+                name: edited_by_id
+                type: bigint
+                constraints:
+                    references: person (id)
+                    foreignKeyName: fkc18aea947028b8db
+            - column:
+                name: edited_date
+                type: timestamp with time zone
+            - column:
+                name: layout_config
+                type: clob
+            - column:
+                name: locked
+                type: boolean
+                defaultValue: false
+            - column:
+                name: stack_id
+                type: bigint
+                constraints:
+                    references: stack (id)
+                    foreignKeyName: fkc18aea946b3a1281
+            - column:
+                name: type
+                type: varchar(255)
+            - column:
+                name: icon_image_url
+                type: varchar(2083)
+            - column:
+                name: published_to_store
+                type: boolean
+            - column:
+                name: marked_for_deletion
+                type: boolean
+
+  - changeSet:
+      id: 7.17.0-dashboard
+      author: owf
+      comment: create dashboard table
+      dbms: mysql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: dashboard
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: dashboard
+            schemaName: ${schema.name}
+
+            columns:
+            - column:
+                name: id
+                type: bigint
+                autoIncrement: true
+                constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: dashboard_pkey
+            - column:
+                name: version
+                type: bigint
+                constraints:
+                    nullable: false
+            - column:
+                name: isdefault
+                type: boolean
+                constraints:
+                    nullable: false
+            - column:
+                name: dashboard_position
+                type: integer
+                constraints:
+                    nullable: false
+            - column:
+                name: altered_by_admin
+                type: boolean
+                constraints:
+                    nullable: false
+            - column:
+                name: guid
+                type: varchar(255)
+                constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintKey: dashboard_guid_key
+            - column:
+                name: name
+                type: varchar(200)
+                constraints:
+                    nullable: false
+            - column:
+                name: user_id
+                type: bigint
+                constraints:
+                    references: person (id)
+                    foreignKeyName: FKC18AEA948656347D
+            - column:
+                name: description
+                type: varchar(4000)
+            - column:
+                name: created_by_id
+                type: bigint
+                constraints:
+                    references: person (id)
+                    foreignKeyName: FKC18AEA94372CC5A
+            - column:
+                name: created_date
+                type: datetime
+
+            - column:
+                name: edited_by_id
+                type: bigint
+                constraints:
+                    references: person (id)
+                    foreignKeyName: FKC18AEA947028B8DB
+            - column:
+                name: edited_date
+                type: datetime
+            - column:
+                name: layout_config
+                type: clob
+            - column:
+                name: locked
+                type: tinyint(1)
+                defaultValue: '0'
+            - column:
+                name: stack_id
+                type: bigint
+                constraints:
+                    references: stack (id)
+                    foreignKeyName: FKC18AEA946B3A1281
+            - column:
+                name: type
+                type: varchar(255)
+            - column:
+                name: icon_image_url
+                type: varchar(2083)
+            - column:
+                name: published_to_store
+                type: tinyint(1)
+            - column:
+                name: marked_for_deletion
+                type: tinyint(1)
+
+  - changeSet:
+       id: 7.17.0-dashboard
+       author: owf
+       comment: create dashboard table
+       dbms: oracle
+
+       preConditions:
+         - onFail: MARK_RAN
+         - not:
+             - tableExists:
+                 tableName: dashboard
+                 schemaName: ${schema.name}
+
+       changes:
+         - createTable:
+             tableName: dashboard
+             schemaName: ${schema.name}
+
+             columns:
+             - column:
+                 name: id
+                 type: number(19, 0)
+                 constraints:
+                     nullable: false
+                     primaryKey: true
+                     primaryKeyName: SYS_C007308
+             - column:
+                 name: version
+                 type: number(19, 0)
+                 constraints:
+                     nullable: false
+             - column:
+                 name: isdefault
+                 type: boolean
+                 constraints:
+                     nullable: false
+             - column:
+                 name: dashboard_position
+                 type: number(10, 0)
+                 constraints:
+                     nullable: false
+             - column:
+                 name: altered_by_admin
+                 type: boolean
+                 constraints:
+                     nullable: false
+             - column:
+                 name: guid
+                 type: varchar(255 char)
+                 constraints:
+                     nullable: false
+                     unique: true
+                     uniqueConstraintName: SYS_C007309
+             - column:
+                 name: name
+                 type: varchar(200 char)
+                 constraints:
+                     nullable: false
+             - column:
+                 name: user_id
+                 type: number(19, 0)
+                 constraints:
+                     references: person (id)
+                     foreignKeyName: fkc18aea948656347d
+             - column:
+                 name: description
+                 type: varchar(4000)
+             - column:
+                 name: created_by_id
+                 type: bigint
+                 constraints:
+                     references: person (id)
+                     foreignKeyName: fkc18aea94372cc5a
+             - column:
+                 name: created_date
+                 type: timestamp
+
+             - column:
+                 name: edited_by_id
+                 type: bigint
+                 constraints:
+                     references: person (id)
+                     foreignKeyName: fkc18aea947028b8db
+             - column:
+                 name: edited_date
+                 type: timestamp
+             - column:
+                 name: layout_config
+                 type: clob
+             - column:
+                 name: locked
+                 type: boolean
+                 defaultValue: false
+             - column:
+                 name: stack_id
+                 type: bigint
+                 constraints:
+                     references: stack (id)
+                     foreignKeyName: fkc18aea946b3a1281
+             - column:
+                 name: type
+                 type: varchar(255)
+             - column:
+                 name: icon_image_url
+                 type: varchar(2083)
+             - column:
+                 name: published_to_store
+                 type: boolean
+             - column:
+                 name: marked_for_deletion
+                 type: boolean
+
+  - changeSet:
+      id: 7.17.0-dashboard
+      author: owf
+      comment: create dashboard table
+      dbms: mssql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: dashboard
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: dashboard
+            schemaName: ${schema.name}
+
+            columns:
+            - column:
+                name: id
+                type: number(19,0)
+                autoIncrement: true
+                constraints:
+                    nullable: false
+#                    primaryKey: true
+#                    primaryKeyName: dashboard_pkey
+            - column:
+                name: version
+                type: number(19,0)
+                constraints:
+                    nullable: false
+            - column:
+                name: isdefault
+                type: tinyint
+                constraints:
+                    nullable: false
+            - column:
+                name: dashboard_position
+                type: integer
+                constraints:
+                    nullable: false
+            - column:
+                name: altered_by_admin
+                type: tinyint
+                constraints:
+                    nullable: false
+            - column:
+                name: guid
+                type: nvarchar(255)
+                constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintKey: dashboard_guid_key
+            - column:
+                name: name
+                type: nvarchar(200)
+                constraints:
+                    nullable: false
+            - column:
+                name: user_id
+                type: number(19,0)
+                constraints:
+                    references: person (id)
+                    foreignKeyName: FKC18AEA948656347D
+            - column:
+                name: description
+                type: varchar(4000)
+            - column:
+                name: created_by_id
+                type: number(19,0)
+                constraints:
+                    references: person (id)
+                    foreignKeyName: FKC18AEA94372CC5A
+            - column:
+                name: created_date
+                type: timestamp with time zone
+
+            - column:
+                name: edited_by_id
+                type: number(19,0)
+                constraints:
+                    references: person (id)
+                    foreignKeyName: FKC18AEA947028B8DB
+            - column:
+                name: edited_date
+                type: timestamp with time zone
+            - column:
+                name: layout_config
+                type: nvarchar(max)
+            - column:
+                name: locked
+                type: boolean
+                defaultValue: false
+            - column:
+                name: stack_id
+                type: bigint
+                constraints:
+                    references: stack (id)
+                    foreignKeyName: FKC18AEA946B3A1281
+            - column:
+                name: type
+                type: varchar(255)
+            - column:
+                name: icon_image_url
+                type: varchar(2083)
+            - column:
+                name: published_to_store
+                type: boolean
+            - column:
+                name: marked_for_deletion
+                type: boolean
+        - addPrimaryKey:
+            columnNames: id
+            tableName: dashboard

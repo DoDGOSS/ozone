@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>OWF Widget Container</title>
+
+    <script type="text/javascript" src="js/owf-widget-container.js"></script>
+    <script type="text/javascript">
+        function main() {
+            Ozone.eventing.initializeContainer();
+            Ozone.eventing.createWidget(getWidgetUrl("widget1.html"), "widget1", "one", 300, 300);
+            Ozone.eventing.createWidget(getWidgetUrl("widget2.html"), "widget2", "two", 300, 300);
+        }
+
+        document.addEventListener("DOMContentLoaded", main);
+
+        function getWidgetUrl(widgetName) {
+            const location = window.location;
+
+            const hostname = location.hostname;
+            const port = location.port !== "" ? `:${location.port}` : "";
+            const protocol = location.protocol;
+
+            return `${protocol}//${hostname}${port}/${widgetName}`;
+        }
+    </script>
+</head>
+<body>
+<div style="border: 2px solid black;">
+    <h1>Container</h1>
+    <div id="message"></div>
+    <div id="one" style="border: 2px solid black;"></div>
+    <div id="two" style="border: 2px solid black;"></div>
+</div>
+</body>
+</html>

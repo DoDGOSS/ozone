@@ -1,0 +1,326 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-person_widget_definition
+      author: owf
+      comment: create person_widget_definition table
+      dbms: postgresql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: person_widget_definition
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: person_widget_definition
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  defaultValueComputed: nextval('public.hibernate_sequence'::regclass)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: person_widget_definition_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: person_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      references: person
+                      foreignKeyName: fk6f5c17c4c1f5e0b3
+              - column:
+                  name: visible
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: pwd_position
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_definition_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      references: widget_definition
+                      foreignKeyName: fk6f5c17c4293a835c
+              - column:
+                  name: group_widget
+                  type: boolean
+                  defaultValue: false
+              - column:
+                  name: favorite
+                  type: boolean
+                  defaultValue: false
+              - column:
+                  name: display_name
+                  type: varchar(256)
+              - column:
+                  name: disabled
+                  type: boolean
+                  defaultValue: false
+              - column:
+                  name: user_widget
+                  type: boolean
+                  defaultValue: false
+
+        - addUniqueConstraint:
+            columnNames: person_id, widget_definition_id
+            constraintName: person_widget_definition_person_id_widget_definition_id_key
+            tableName: person_widget_definition
+
+  - changeSet:
+      id: 7.17.0-person_widget_definition
+      author: owf
+      comment: create person_widget_definition table
+      dbms: mysql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: person_widget_definition
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: person_widget_definition
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: person_widget_definition_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: person_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      references: person (id)
+                      foreignKeyName: FK6F5C17C4C1F5E0B3
+              - column:
+                  name: visible
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: pwd_position
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_definition_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      references: widget_definition (id)
+                      foreignKeyName: FK6F5C17C4293A835C
+              - column:
+                  name: group_widget
+                  type: tinyint(1)
+                  defaultValue: '0'
+              - column:
+                  name: favorite
+                  type: tinyint(1)
+                  defaultValue: '0'
+              - column:
+                  name: display_name
+                  type: varchar(256)
+              - column:
+                  name: disabled
+                  type: tinyint(1)
+                  defaultValue: '0'
+              - column:
+                  name: user_widget
+                  type: tinyint(1)
+                  defaultValue: '0'
+        - addUniqueConstraint:
+            columnNames: person_id, widget_definition_id
+            constraintName: person_id
+            tableName: person_widget_definition
+
+  - changeSet:
+      id: 7.17.0-person_widget_definition
+      author: owf
+      comment: create person_widget_definition table
+      dbms: oracle
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: person_widget_definition
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: person_widget_definition
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: SYS_C007366
+              - column:
+                  name: version
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: person_id
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+                      references: person
+                      foreignKeyName: fk6f5c17c4c1f5e0b3
+              - column:
+                  name: visible
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: pwd_position
+                  type: number(10, 0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_definition_id
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+                      references: widget_definition
+                      foreignKeyName: fk6f5c17c4293a835c
+              - column:
+                  name: group_widget
+                  type: boolean
+                  defaultValue: false
+              - column:
+                  name: favorite
+                  type: boolean
+                  defaultValue: false
+              - column:
+                  name: display_name
+                  type: varchar(256)
+              - column:
+                  name: disabled
+                  type: boolean
+                  defaultValue: false
+              - column:
+                  name: user_widget
+                  type: boolean
+                  defaultValue: false
+
+        - addUniqueConstraint:
+            columnNames: person_id, widget_definition_id
+            constraintName: SYS_C007367
+            tableName: person_widget_definition
+
+  - changeSet:
+      id: 7.17.0-person_widget_definition
+      author: owf
+      comment: create person_widget_definition table
+      dbms: mssql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: person_widget_definition
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: person_widget_definition
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+#                      primaryKey: true
+#                      primaryKeyName: person_widget_definition_pkey
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: person_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+                      references: person
+                      foreignKeyName: FK6F5C17C4C1F5E0B3
+              - column:
+                  name: visible
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: pwd_position
+                  type: integer
+                  constraints:
+                      nullable: false
+              - column:
+                  name: widget_definition_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+                      references: widget_definition
+                      foreignKeyName: FK6F5C17C4293A835C
+              - column:
+                  name: group_widget
+                  type: boolean
+                  defaultValue: false
+              - column:
+                  name: favorite
+                  type: boolean
+                  defaultValue: false
+              - column:
+                  name: display_name
+                  type: varchar(256)
+              - column:
+                  name: disabled
+                  type: boolean
+                  defaultValue: false
+              - column:
+                  name: user_widget
+                  type: boolean
+                  defaultValue: false
+
+        - addUniqueConstraint:
+            columnNames: person_id, widget_definition_id
+#            constraintName: person_widget_definition_person_id_widget_definition_id_key
+            tableName: person_widget_definition
+        - addPrimaryKey:
+            columnNames: id
+            tableName: person_widget_definition

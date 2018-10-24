@@ -1,0 +1,293 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-person
+      author: owf
+      comment: create person table
+      dbms: postgresql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: person
+                schemaName: ${schema.name}
+      changes:
+        - createTable:
+            tableName: person
+            schemaName: ${schema.name}
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  defaultValueComputed: nextval('public.hibernate_sequence'::regclass)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: person_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: enabled
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: user_real_name
+                  type: varchar(200)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: username
+                  type: varchar(200)
+                  constraints:
+                      nullable: false
+                      unique: true
+                      uniqueConstraintName: person_username_key
+              - column:
+                  name: last_login
+                  type: datetime
+              - column:
+                  name: email_show
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: prev_login
+                  type: datetime
+              - column:
+                  name: description
+                  type: varchar(255)
+              - column:
+                  name: last_notification
+                  type: timestamp with time zone
+              - column:
+                  name: requires_sync
+                  type: boolean
+                  defaultValue: false
+
+  - changeSet:
+      id: 7.17.0-person
+      author: owf
+      comment: create person table
+      dbms: mysql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: person
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: person
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: person_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: enabled
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: user_real_name
+                  type: varchar(200)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: username
+                  type: varchar(200)
+                  constraints:
+                      nullable: false
+                      unique: true
+                      uniqueConstraintName: username
+              - column:
+                  name: last_login
+                  type: datetime
+              - column:
+                  name: email_show
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: prev_login
+                  type: datetime
+              - column:
+                  name: description
+                  type: varchar(255)
+              - column:
+                  name: last_notification
+                  type: datetime
+              - column:
+                  name: requires_sync
+                  type: tinyint(1)
+                  defaultValue: '0'
+
+  - changeSet:
+      id: 7.17.0-person
+      author: owf
+      comment: create person table
+      dbms: oracle
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: person
+                schemaName: ${schema.name}
+      changes:
+        - createTable:
+            tableName: person
+            schemaName: ${schema.name}
+            columns:
+              - column:
+                  name: id
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: SYS_C007358
+              - column:
+                  name: version
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: enabled
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: user_real_name
+                  type: varchar(200 char)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: username
+                  type: varchar(200 char)
+                  constraints:
+                      nullable: false
+                      unique: true
+                      uniqueConstraintName: SYS_C007359
+              - column:
+                  name: last_login
+                  type: datetime
+              - column:
+                  name: email_show
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: email
+                  type: varchar(255 char)
+              - column:
+                  name: prev_login
+                  type: datetime
+              - column:
+                  name: description
+                  type: varchar(255 char)
+              - column:
+                  name: last_notification
+                  type: timestamp
+              - column:
+                  name: requires_sync
+                  type: boolean
+                  defaultValue: false
+
+  - changeSet:
+      id: 7.17.0-person
+      author: owf
+      comment: create person table
+      dbms: mssql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: person
+                schemaName: ${schema.name}
+      changes:
+        - createTable:
+            tableName: person
+            schemaName: ${schema.name}
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+#                      primaryKey: true
+#                      primaryKeyName: person_pkey
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: enabled
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: user_real_name
+                  type: nvarchar(200)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: username
+                  type: nvarchar(200)
+                  constraints:
+                      nullable: false
+                      unique: true
+#                      uniqueConstraintName: person_username_key
+              - column:
+                  name: last_login
+                  type: datetime
+              - column:
+                  name: email_show
+                  type: tinyint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: email
+                  type: nvarchar(255)
+              - column:
+                  name: prev_login
+                  type: datetime
+              - column:
+                  name: description
+                  type: nvarchar(255)
+              - column:
+                  name: last_notification
+                  type: timestamp with time zone
+              - column:
+                  name: requires_sync
+                  type: boolean
+                  defaultValue: false
+        - addPrimaryKey:
+            columnNames: id
+            tableName: person
