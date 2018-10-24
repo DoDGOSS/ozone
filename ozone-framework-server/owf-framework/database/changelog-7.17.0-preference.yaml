@@ -1,0 +1,241 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-preference
+      author: owf
+      comment: create preference table
+      dbms: postgresql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: preference
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: preference
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  defaultValueComputed: nextval('public.hibernate_sequence'::regclass)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: preference_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: value
+                  type: text
+                  constraints:
+                      nullable: false
+              - column:
+                  name: path
+                  type: varchar(200)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      references: person
+                      foreignKeyName: fka8fcbcdb8656347d
+              - column:
+                  name: namespace
+                  type: varchar(200)
+                  constraints:
+                      nullable: false
+        - addUniqueConstraint:
+            tableName: preference
+            constraintName: preference_path_namespace_user_id_key
+            columnNames: path, namespace, user_id
+
+  - changeSet:
+      id: 7.17.0-preference
+      author: owf
+      comment: create preference table
+      dbms: mysql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: preference
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: preference
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: preference_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: value
+                  type: clob
+                  constraints:
+                      nullable: false
+              - column:
+                  name: path
+                  type: varchar(200)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      references: person (id)
+                      foreignKeyName: FKA8FCBCDB8656347D
+              - column:
+                  name: namespace
+                  type: varchar(200)
+                  constraints:
+                      nullable: false
+
+
+        - addUniqueConstraint:
+            tableName: preference
+            constraintName: path
+            columnNames: path, namespace, user_id
+
+  - changeSet:
+      id: 7.17.0-preference
+      author: owf
+      comment: create preference table
+      dbms: oracle
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: preference
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: preference
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: SYS_C007374
+              - column:
+                  name: version
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: value
+                  type: text
+                  constraints:
+                      nullable: false
+              - column:
+                  name: path
+                  type: varchar(200 char)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: user_id
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+                      references: person
+                      foreignKeyName: fka8fcbcdb8656347d
+              - column:
+                  name: namespace
+                  type: varchar(200 char)
+                  constraints:
+                      nullable: false
+        - addUniqueConstraint:
+            tableName: preference
+            constraintName: SYS_C007375
+            columnNames: path, namespace, user_id
+
+  - changeSet:
+      id: 7.17.0-preference
+      author: owf
+      comment: create preference table
+      dbms: mssql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: preference
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: preference
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+#                      primaryKey: true
+#                      primaryKeyName: preference_pkey
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: value
+                  type: [ntext]
+                  constraints:
+                      nullable: false
+              - column:
+                  name: path
+                  type: nvarchar(200)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: user_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+                      references: person
+                      foreignKeyName: FKA8FCBCDB8656347D
+              - column:
+                  name: namespace
+                  type: nvarchar(200)
+                  constraints:
+                      nullable: false
+        - addUniqueConstraint:
+            tableName: preference
+#            constraintName: preference_path_namespace_user_id_key
+            columnNames: path, namespace, user_id
+        - addPrimaryKey:
+            columnNames: id
+            tableName: preference

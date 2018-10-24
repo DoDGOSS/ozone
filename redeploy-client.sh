@@ -16,7 +16,7 @@ docker-compose rm -fs ozone_client
 
 if [ "$FLUSH_NODE_MODULES" = true ] ; then
     echo "Clearing node_modules volume..."
-    docker volume rm ozone_ozone_client_node_modules
+    docker volume rm ozone_client_node_modules
 fi
 
 echo "Starting container..."

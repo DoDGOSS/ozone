@@ -1,0 +1,127 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-intent
+      author: owf
+      comment: create intent table
+      dbms: postgresql, oracle
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: intent
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: intent
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: intentPK
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: action
+                  type: varchar(255)
+                  constraints:
+                      unique: true
+                      uniqueConstraintName: SYS_C007443
+                      nullable: false
+
+  - changeSet:
+      id: 7.17.0-intent
+      author: owf
+      comment: create intent table
+      dbms: mysql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: intent
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: intent
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: intent_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: action
+                  type: varchar(255)
+                  constraints:
+                      unique: true
+                      uniqueConstraintName: action
+                      nullable: false
+
+  - changeSet:
+      id: 7.17.0-intent
+      author: owf
+      comment: create intent table
+      dbms: postgresql, oracle, mssql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: intent
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: intent
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: intentPK
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: action
+                  type: varchar(255)
+                  constraints:
+                      unique: true
+#                      uniqueConstraintName: SYS_C007443
+                      nullable: false
+#        - addUniqueKey:
+#            tableName: intent
+#            columnNames: action
+#        - addPrimaryKey:
+#            columnNames: id
+#            tableName: intent

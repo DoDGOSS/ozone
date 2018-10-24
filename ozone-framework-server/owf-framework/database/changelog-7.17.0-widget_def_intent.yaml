@@ -1,0 +1,175 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-widget_def_intent
+      author: owf
+      comment: create widget_def_intent table
+      dbms: postgresql, oracle
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: widget_def_intent
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: widget_def_intent
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: widget_def_intentPK
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: receive
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: send
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: intent_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      references: intent
+                      foreignKeyName: fk8a59d92fd46c6fac
+              - column:
+                  name: widget_definition_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      references: widget_definition
+                      foreignKeyName: fk8a59d92fd46c6fab
+
+  - changeSet:
+      id: 7.17.0-widget_def_intent
+      author: owf
+      comment: create widget_def_intent table
+      dbms: mysql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: widget_def_intent
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: widget_def_intent
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: widget_def_intent_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: receive
+                  type: tinyint(1)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: send
+                  type: tinyint(1)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: intent_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      references: intent (id)
+                      foreignKeyName: FK8A59D92FD46C6FAC
+              - column:
+                  name: widget_definition_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      references: widget_definition (id)
+                      foreignKeyName: FK8A59D92FD46C6FAB
+
+  - changeSet:
+      id: 7.17.0-widget_def_intent
+      author: owf
+      comment: create widget_def_intent table
+      dbms: mssql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: widget_def_intent
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: widget_def_intent
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+#                      primaryKey: true
+#                      primaryKeyName: widget_def_intentPK
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: receive
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: send
+                  type: boolean
+                  constraints:
+                      nullable: false
+              - column:
+                  name: intent_id
+                  type: bigint
+                  constraints:
+                      nullable: false
+                      references: intent
+                      foreignKeyName: FK8A59D92FD46C6FAC
+              - column:
+                  name: widget_definition_id
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+                      references: widget_definition
+                      foreignKeyName: FK8A59D92FD46C6FAB
+        - addPrimaryKey:
+            columnNames: id
+            tableName: widget_def_intent

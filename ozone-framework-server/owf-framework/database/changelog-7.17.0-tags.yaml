@@ -1,0 +1,163 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-tags
+      author: owf
+      comment: create tags table
+      dbms: postgresql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: tags
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: tags
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  defaultValueComputed: nextval('public.hibernate_sequence'::regclass)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: tags_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+                      unique: true
+                      uniqueConstraintName: tags_name_key
+
+  - changeSet:
+      id: 7.17.0-tags
+      author: owf
+      comment: create tags table
+      dbms: mysql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: tags
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: tags
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: tags_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+                      unique: true
+                      uniqueConstraintName: name
+
+  - changeSet:
+      id: 7.17.0-tags
+      author: owf
+      comment: create tags table
+      dbms: oracle
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: tags
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: tags
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: SYS_C007400
+              - column:
+                  name: version
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: name
+                  type: varchar(255 char)
+                  constraints:
+                      nullable: false
+                      unique: true
+                      uniqueConstraintName: SYS_C007401
+
+  - changeSet:
+      id: 7.17.0-tags
+      author: owf
+      comment: create tags table
+      dbms: mssql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: tags
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: tags
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+#                      primaryKey: true
+#                      primaryKeyName: tags_pkey
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: name
+                  type: nvarchar(255)
+                  constraints:
+                      nullable: false
+                      unique: true
+#                      uniqueConstraintName: tags_name_key
+        - addPrimaryKey:
+            columnNames: id
+            tableName: tags

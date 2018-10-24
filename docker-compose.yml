@@ -9,9 +9,24 @@ services:
     container_name: ozone_client
     volumes:
       - ./ozone-framework-client:/app
-      - ozone_client_node_modules:/app/node_modules
+      - client_node_modules:/app/node_modules
     ports:
       - 3000:3000
 
+  ozone_server:
+    image: ozone/server
+    build:
+      context: ./ozone-framework-server
+    container_name: ozone_server
+    volumes:
+      - server_m2_cache:/root/.m2
+      - server_gradle_cache/root/.gradle
+    ports:
+      - 8080:8080
+
+
 volumes:
-  ozone_client_node_modules:
+  client_node_modules:
+
+  server_m2_cache:
+  server_gradle_cache:

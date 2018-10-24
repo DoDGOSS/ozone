@@ -1,0 +1,183 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 7.17.0-role
+      author: owf
+      comment: create role table
+      dbms: postgresql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: role
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: role
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  defaultValueComputed: nextval('public.hibernate_sequence'::regclass)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: role_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: authority
+                  type: varchar(255)
+                  constraints:
+                      unique: true
+                      uniqueConstraintName: role_authority_key
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+
+  - changeSet:
+      id: 7.17.0-role
+      author: owf
+      comment: create role table
+      dbms: mysql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: role
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: role
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: role_pkey
+              - column:
+                  name: version
+                  type: bigint
+                  constraints:
+                      nullable: false
+              - column:
+                  name: authority
+                  type: varchar(255)
+                  constraints:
+                      unique: true
+                      uniqueConstraintName: authority
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+                  constraints:
+                      nullable: false
+
+  - changeSet:
+      id: 7.17.0-role
+      author: owf
+      comment: create role table
+      dbms: oracle
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: role
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: role
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: SYS_C007386
+              - column:
+                  name: version
+                  type: number(19, 0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: authority
+                  type: varchar(255 char)
+                  constraints:
+                      unique: true
+                      uniqueConstraintName: SYS_C007387
+                      nullable: false
+              - column:
+                  name: description
+                  type: varchar(255 char)
+                  constraints:
+                      nullable: false
+
+  - changeSet:
+      id: 7.17.0-role
+      author: owf
+      comment: create role table
+      dbms: mssql
+
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: role
+                schemaName: ${schema.name}
+
+      changes:
+        - createTable:
+            tableName: role
+            schemaName: ${schema.name}
+
+            columns:
+              - column:
+                  name: id
+                  type: number(19,0)
+                  autoIncrement: true
+                  constraints:
+                      nullable: false
+#                      primaryKey: true
+#                      primaryKeyName: role_pkey
+              - column:
+                  name: version
+                  type: number(19,0)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: authority
+                  type: nvarchar(255)
+                  constraints:
+                      unique: true
+#                      uniqueConstraintName: role_authority_key
+                      nullable: false
+              - column:
+                  name: description
+                  type: nvarchar(255)
+                  constraints:
+                      nullable: false
+        - addPrimaryKey:
+            columnNames: id
+            tableName: role

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-web version="6.2"
+           xmlns="http://www.jboss.com/xml/ns/javaee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.jboss.com/xml/ns/javaee
+                               http://www.jboss.org/schema/jbossas/jboss-web_6_2.xsd">
+
+    <context-root>/owf</context-root>
+
+</jboss-web>
