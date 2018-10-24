@@ -13,6 +13,7 @@
     "member-access": [true, "no-public"],
     "no-console": [false],
     "object-literal-sort-keys": [false],
+    "jsx-no-lambda": false,
     "ordered-imports": [
       true, {
         "import-sources-order": "any"

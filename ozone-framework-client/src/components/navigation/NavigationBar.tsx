@@ -42,7 +42,7 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
                     <HelpButton active={this.mainStore.isHelpDialogVisible}
                                 onClick={this.mainStore.showHelpDialog}/>
 
-                    <HelpButton active={this.mainStore.isLoginDialogOpen}
+                    <LoginButton active={this.mainStore.isLoginDialogOpen}
                                 onClick={this.mainStore.showLoginDialog}/>
                 </NavbarGroup>
 
@@ -102,6 +102,20 @@ const HelpButton: React.SFC<MenuButtonProps> =
                        description="Show the Help window.">
             <Button minimal
                     icon="help"
+                    active={active}
+                    onClick={onClick}/>
+        </NavbarTooltip>
+    );
+
+
+const LoginButton: React.SFC<MenuButtonProps> =
+    ({ active, onClick }) => (
+        <NavbarTooltip title="Login"
+                       shortcut="alt+shift+l"
+                       description="Temporary placement - Show the Login window.">
+            <Button minimal
+                    text="Login"
+                    icon="log-in"
                     active={active}
                     onClick={onClick}/>
         </NavbarTooltip>

@@ -5,7 +5,7 @@ import { inject } from "./inject";
 import { ConfigStore } from "./stores";
 
 import { HomeScreen } from "./components/home-screen/HomeScreen";
-// import { LoginForm } from "./components/login/LoginForm";
+// import { LoginForm } from "./components/login-dialog/LoginForm";
 
 
 export const enum Paths {

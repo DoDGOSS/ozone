@@ -9,7 +9,7 @@ import { WarningDialog } from "../warning-screen/WarningDialog";
 import { WidgetToolbar } from "../widget-toolbar/WidgetToolbar";
 import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
 import { AdminToolsDialog } from "../admin-tools-dialog/AdminToolsDialog";
-import { LoginDialog } from "../login/LoginForm";
+import { LoginDialog } from "../login-dialog/LoginDialog";
 
 
 export class HomeScreen extends React.Component {
