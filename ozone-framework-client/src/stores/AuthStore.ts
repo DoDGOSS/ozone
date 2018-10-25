@@ -1,8 +1,8 @@
 import { action, observable, runInAction } from "mobx";
 
 import { inject, injectable } from "../inject";
-import { OzoneGateway } from "../api";
 import { User } from "../models";
+import { OzoneGateway } from "../services";
 
 
 @injectable()
