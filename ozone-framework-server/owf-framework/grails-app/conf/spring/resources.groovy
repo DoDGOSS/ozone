@@ -42,7 +42,7 @@ beans = {
     developmentDataLoader(DevelopmentDataLoader) { it.autowire = 'byType' }
 
     // wire up a different account service if -Duser=something and environment is development
-    if (isDevelopment() || isTest()) {
+    if (isTest()) {
         springSecurityFilterChain(FilterChainProxy, [])
 
         def userName = System.properties.getProperty('user', 'testUser1')
