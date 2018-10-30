@@ -4,7 +4,6 @@ import grails.converters.JSON
 import grails.converters.XML
 import grails.core.GrailsApplication
 import grails.util.Environment
-import grails.util.Holders
 
 import org.springframework.context.ApplicationContext
 

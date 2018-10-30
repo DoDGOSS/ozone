@@ -9,6 +9,7 @@
     "interface-name": [true, "never-prefix"],
     "interface-over-type-literal": false,
     "jsx-boolean-value": ["never"],
+    "jsx-no-lambda": false,
     "max-classes-per-file": [false, 1],
     "member-access": [true, "no-public"],
     "no-console": [false],
@@ -17,7 +18,8 @@
       true, {
         "import-sources-order": "any"
       }
-    ]
+    ],
+    "semicolon": [true, "always", "ignore-bound-class-methods"]
   },
   "linterOptions": {
     "exclude": [

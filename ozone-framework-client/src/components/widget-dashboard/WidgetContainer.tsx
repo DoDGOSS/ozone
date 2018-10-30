@@ -6,7 +6,7 @@ import { Button, ButtonGroup, Classes } from "@blueprintjs/core";
 import { classNames } from "../util";
 
 
-export type WidgetContainerProps = {}
+export type WidgetContainerProps = {};
 
 export class WidgetContainer extends React.Component<WidgetContainerProps> {
 
@@ -24,7 +24,7 @@ export class WidgetContainer extends React.Component<WidgetContainerProps> {
                 </div>
                 <div className={styles.widgetContainerContent}/>
             </div>
-        )
+        );
     }
 
 }

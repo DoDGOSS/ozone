@@ -32,7 +32,7 @@ export class ConfigStore {
         runInAction("fetchSuccess", () => {
             this.config = config;
             this.user = config.user;
-        })
+        });
     }
 
 }

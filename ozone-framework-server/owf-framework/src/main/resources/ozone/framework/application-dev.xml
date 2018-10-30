@@ -7,4 +7,6 @@
 
     <import resource="session-control.xml"/>
 
+    <import resource="security-dev.xml"/>
+
 </beans>

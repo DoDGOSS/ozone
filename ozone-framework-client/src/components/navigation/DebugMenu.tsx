@@ -18,7 +18,7 @@ export class DebugMenu extends React.Component {
                            icon="warning-sign"
                            onClick={this.mainStore.showWarningDialog}/>
             </Menu>
-        )
+        );
     }
 
 }

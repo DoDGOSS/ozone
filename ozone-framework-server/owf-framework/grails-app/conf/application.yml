@@ -88,6 +88,8 @@ grails:
     resources:
         # Enable browser caching for static assets (time in seconds) - sets 'Cache-Control' header 'max-age'
         cachePeriod: 600
+    cors:
+        enabled: true
 
 ---
 environments:

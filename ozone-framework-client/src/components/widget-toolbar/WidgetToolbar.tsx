@@ -13,7 +13,7 @@ import { classNames, handleStringChange } from "../util";
 
 export type WidgetToolbarProps = {
     className?: string;
-}
+};
 
 @observer
 export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
@@ -39,7 +39,7 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
                     </div>
                 </div>
             </Collapse>
-        )
+        );
     }
 
 }

@@ -33,7 +33,7 @@ export class DashboardDialog extends React.Component {
 
                 </Dialog>
             </div>
-        )
+        );
     }
 
 }

@@ -16,7 +16,7 @@ const DEFAULT_PROPS = {
     buttonText: WARNING_DIALOG.button.text
 };
 
-export type WarningDialogProps = Readonly<typeof DEFAULT_PROPS>
+export type WarningDialogProps = Readonly<typeof DEFAULT_PROPS>;
 
 @observer
 export class WarningDialog extends React.Component<WarningDialogProps> {
@@ -52,7 +52,7 @@ export class WarningDialog extends React.Component<WarningDialogProps> {
 
                 </Dialog>
             </div>
-        )
+        );
     }
 
 }

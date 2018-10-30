@@ -6,6 +6,7 @@ import org.grails.web.servlet.mvc.GrailsWebRequest
 
 
 class UrlMappings {
+
     static def getAction = {
         GrailsWebRequest webRequest = (GrailsWebRequest) RequestContextHolder.getRequestAttributes();
         String method = webRequest.getCurrentRequest().getMethod().toUpperCase()
@@ -97,6 +98,8 @@ class UrlMappings {
         '500' controller: 'error'
 
         '/js/config/config.js' controller: 'config', action: 'config'
+
+        "/login/status" controller: 'login', action: 'showStatus'
 
         "/help/$subPath**" controller: 'mergedDirectoryResource', action: 'findHelpResource'
 
