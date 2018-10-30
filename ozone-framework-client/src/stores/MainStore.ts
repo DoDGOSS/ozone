@@ -34,7 +34,7 @@ export class MainStore {
             this.isAdminToolsDialogOpen = false;
             this.isDashboardDialogVisible = false;
             this.isWidgetToolbarOpen = false;
-        })
+        });
     }
 
     @action.bound

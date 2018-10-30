@@ -13,7 +13,7 @@ export type NavbarTooltipProps = {
     description: string;
 
     children?: any;
-}
+};
 
 export class NavbarTooltip extends React.PureComponent<NavbarTooltipProps> {
 
@@ -36,7 +36,7 @@ export class NavbarTooltip extends React.PureComponent<NavbarTooltipProps> {
                      content={content}>
                 {children}
             </Tooltip>
-        )
+        );
     }
 
 }

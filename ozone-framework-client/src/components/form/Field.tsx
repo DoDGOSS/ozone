@@ -13,7 +13,7 @@ export interface Validation {
 
 // Available editors for the field
 // !TODO Expand this functionality as needed
-type Editor = "text" | "password" // "dropdown"
+type Editor = "text" | "password"; // "dropdown"
 
 export interface FieldProps {
     // Unique field name

@@ -34,7 +34,7 @@ export class HelpDialog extends React.Component {
                 </div>
 
             </Dialog>
-        )
+        );
     }
 
 }

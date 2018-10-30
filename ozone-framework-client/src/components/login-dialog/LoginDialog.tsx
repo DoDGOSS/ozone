@@ -11,17 +11,12 @@ import { MainStore } from "../../stores";
 import { LoginForm } from "./LoginForm";
 
 @observer
-export class LoginDialog extends React.Component<{}, {}> {
+export class LoginDialog extends React.Component {
 
     @inject(MainStore)
     private mainStore: MainStore;
 
-    constructor(props: {}) {
-        super(props);
-    }
-
     render() {
-        console.log(this.state)
         return (
             <div>
                 <Dialog className={styles.loginDialog}
@@ -37,9 +32,7 @@ export class LoginDialog extends React.Component<{}, {}> {
                     </div>
                 </Dialog>
             </div>
-        )
+        );
     }
 
 }
-
-export { LoginDialog as LoginForm };

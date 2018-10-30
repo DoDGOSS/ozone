@@ -6,7 +6,7 @@ import { observer } from "mobx-react";
 import { Alignment, Button, Navbar, NavbarGroup, NavbarHeading, Popover, Position } from "@blueprintjs/core";
 
 import { inject } from "../../inject";
-import { ConfigStore, MainStore } from "../../stores";
+import { AuthStore, MainStore } from "../../stores";
 
 import { NavbarTooltip } from "./NavbarTooltip";
 import { DebugMenu } from "./DebugMenu";
@@ -15,7 +15,7 @@ import { UserMenu } from "./UserMenu";
 
 export type NavigationBarProps = {
     className?: string;
-}
+};
 
 @observer
 export class NavigationBar extends React.Component<NavigationBarProps> {
@@ -23,11 +23,13 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
     @inject(MainStore)
     private mainStore: MainStore;
 
-    @inject(ConfigStore)
-    private configStore: ConfigStore;
+    @inject(AuthStore)
+    private authStore: AuthStore;
 
     render() {
         const { className } = this.props;
+
+        const user = this.authStore.user;
 
         return (
             <Navbar className={className}>
@@ -43,7 +45,7 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
                                 onClick={this.mainStore.showHelpDialog}/>
 
                     <LoginButton active={this.mainStore.isLoginDialogOpen}
-                                onClick={this.mainStore.showLoginDialog}/>
+                                 onClick={this.mainStore.showLoginDialog}/>
                 </NavbarGroup>
 
                 <NavbarGroup align={Alignment.CENTER}>
@@ -52,11 +54,11 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
 
                 <NavbarGroup align={Alignment.RIGHT}>
                     <DebugMenuButton/>
-                    <UserMenuButton userName={this.configStore.userDisplayName}/>
+                    <UserMenuButton userName={user ? user.displayName : "Unknown User"}/>
                 </NavbarGroup>
 
             </Navbar>
-        )
+        );
     }
 
 }
@@ -65,7 +67,7 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
 type MenuButtonProps = {
     active: boolean;
     onClick: () => void;
-}
+};
 
 const DashboardsButton: React.SFC<MenuButtonProps> =
     ({ active, onClick }) => (
@@ -124,7 +126,7 @@ const LoginButton: React.SFC<MenuButtonProps> =
 
 type UserMenuButtonProps = {
     userName: string;
-}
+};
 
 const UserMenuButton: React.SFC<UserMenuButtonProps> =
     ({ userName }) => (

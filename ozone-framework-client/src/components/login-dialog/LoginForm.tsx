@@ -1,11 +1,18 @@
 import * as React from "react";
+
+import { inject } from "../../inject";
+import { AuthStore } from "../../stores";
+
 import { Fields, Form, required } from "../form/Form";
 import { Field } from "../form/Field";
 
-export const LoginForm: React.SFC = () => {
 
-    const endPoint = "api/users/LOGIN_API_URL"
-    const fields: Fields = {
+export class LoginForm extends React.Component {
+
+    @inject(AuthStore)
+    private authStore: AuthStore;
+
+    private fields: Fields = {
         username: {
             id: "username",
             label: "Username",
@@ -17,19 +24,29 @@ export const LoginForm: React.SFC = () => {
             validation: { rule: required },
             editor: "password"
         }
+    };
+
+    render() {
+        const { username, password } = this.fields;
+
+        return (
+            <Form fields={this.fields}
+                  onSubmit={this.login}>
+                <Field {...username} />
+                <Field {...password} />
+            </Form>
+        );
     }
 
-    return (
-        <Form
-            action={endPoint}
-            fields={fields}
-            // TODO - Remove lambda if necessary
-            render={() => (
-                <React.Fragment>
-                    <Field {...fields.username} />
-                    <Field {...fields.password} />
-                </React.Fragment>
-            )}
-        />
-    )
+    private login = async (data: LoginRequest) => {
+        return this.authStore.login(data.username, data.password);
+    }
+
 }
+
+export interface LoginRequest {
+    username: string;
+    password: string;
+}
+
+

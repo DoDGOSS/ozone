@@ -4,7 +4,7 @@ import * as _classNames from "classnames";
 
 
 export function handleStringChange(handler: (value: string) => void) {
-    return (event: React.FormEvent<HTMLElement>) => handler((event.target as HTMLInputElement).value)
+    return (event: React.FormEvent<HTMLElement>) => handler((event.target as HTMLInputElement).value);
 }
 
 

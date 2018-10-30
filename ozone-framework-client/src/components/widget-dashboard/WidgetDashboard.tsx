@@ -15,7 +15,7 @@ const layout = [
 
 export type WidgetDashboardProps = {
     className?: string;
-}
+};
 
 export class WidgetDashboard extends React.Component<WidgetDashboardProps> {
 
@@ -40,7 +40,7 @@ export class WidgetDashboard extends React.Component<WidgetDashboardProps> {
                     </div>
                 </GridLayout>
             </div>
-        )
+        );
     }
 
 }

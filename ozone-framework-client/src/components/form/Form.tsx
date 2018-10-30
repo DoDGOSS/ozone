@@ -1,8 +1,9 @@
 import * as React from "react";
-import axios from 'axios';
-import { Button, FormGroup } from "@blueprintjs/core";
+
+import { Button, Callout, FormGroup } from "@blueprintjs/core";
 
 import { FieldProps } from "./Field";
+
 
 export interface IntFormContext extends FormState {
     // Allow values in values state to be set
@@ -14,7 +15,7 @@ export interface IntFormContext extends FormState {
 
 // Content which allows state and functions to be shared with Field
 // Pass a default value to createContent
-export const FormContext = React.createContext<IntFormContext | undefined> (
+export const FormContext = React.createContext<IntFormContext | undefined>(
     undefined
 );
 
@@ -31,17 +32,16 @@ export const required = (values: Values, fieldName: string): string =>
         : "";
 
 export interface Fields {
-    [key: string]: FieldProps
+    [key: string]: FieldProps;
 }
 
-interface FormProps {
-    action: string;
-
+interface FormProps<T> {
     // The props for all fields on the form
     fields: Fields;
 
-    // A prop which allows content to be injected
-    render: () => React.ReactNode
+    onSubmit: (data: T) => Promise<boolean>;
+
+    children?: any;
 }
 
 export interface Values {
@@ -51,7 +51,7 @@ export interface Values {
 
 export interface Errors {
     // Form validation errors (key is the field name)
-    [key: string]: string
+    [key: string]: string;
 }
 
 export interface FormState {
@@ -62,17 +62,12 @@ export interface FormState {
     submitSuccess?: boolean;
 }
 
-export class Form extends React.Component<FormProps, FormState> {
-    constructor(props: FormProps) {
-        super(props);
+export class Form<T> extends React.Component<FormProps<T>, FormState> {
 
-        const errors: Errors = {};
-        const values: Values = {};
-        this.state = {
-            errors,
-            values
-        };
-    }
+    state: FormState = {
+        errors: {},
+        values: {}
+    };
 
     // Stores new field values in state
     // @param {Values} values - The new field values
@@ -93,9 +88,7 @@ export class Form extends React.Component<FormProps, FormState> {
     }
 
     // Handles form submission
-    handleSubmit = async (
-        e: React.FormEvent<HTMLFormElement>
-    ): Promise<void> => {
+    handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
 
         console.log(this.state.values);
@@ -127,81 +120,72 @@ export class Form extends React.Component<FormProps, FormState> {
             errors: { ...this.state.errors, [fieldName]: newError }
         });
         return newError;
-    }
+    };
 
     // Executes the validation rules for all the fields on the form and sets the error state
     // @returns {boolean} - Form is valid or not
-     validateForm(): boolean {
+    validateForm(): boolean {
         const errors: Errors = {};
         Object.keys(this.props.fields).map((fieldName: string) => {
             errors[fieldName] = this.validate(fieldName);
-         });
-        this.setState({errors});
-        return !this.haveErrors(errors)
+        });
+        this.setState({ errors });
+        return !this.haveErrors(errors);
     }
 
     // Submits form to API
     // @returns {boolean} - Form submission successful or not
     async submitForm(): Promise<boolean> {
-
         // Base axios
         try {
-            // const response = await axios.post(this.props.action, this.state.values);
-            const response = await axios.get('http://google.com');
-            return response.data;
+            return await this.props.onSubmit(this.state.values as T);
         } catch (ex) {
             return false;
         }
-
     }
 
     render() {
         const { submitSuccess, errors } = this.state;
+
         const context: IntFormContext = {
             ...this.state,
             setValues: this.setValues,
             validate: this.validate
-        }
+        };
+
+        const { children } = this.props;
+
         return (
             <FormContext.Provider value={context}>
                 <form onSubmit={this.handleSubmit} noValidate={true}>
                     <div>
-
                         {submitSuccess && (
-                            <div className="bp3-callout bp3-intent-success">
-                                <h4 className="bp3-heading"> Success </h4>
+                            <Callout title="Success" intent="success">
                                 The form was successfully submitted!
-                            </div>
+                            </Callout>
                         )}
 
-                        {submitSuccess === false &&
-                        !this.haveErrors(errors) && (
-                            <div className="bp3-callout bp3-intent-danger">
-                                <h4 className="bp3-heading"> Error </h4>
-                                An unexpected error has occurred
-                            </div>
+                        {submitSuccess === false && !this.haveErrors(errors) && (
+                            <Callout title="Error" intent="danger">
+                                An unexpected error has occurred.
+                            </Callout>
                         )}
 
-                        {submitSuccess === false &&
-                        this.haveErrors(errors) && (
-                            <div className="bp3-callout bp3-intent-warning">
-                                <h4 className="bp3-heading"> Invalid Form </h4>
+                        {submitSuccess === false && this.haveErrors(errors) && (
+                            <Callout title="Invalid Form" intent="warning">
                                 Sorry, the form is invalid. Please review and try again.
-                            </div>
+                            </Callout>
                         )}
 
-                        {/* Render injected content */}
-                        {this.props.render()}
+                        {children}
 
                         <FormGroup>
-                            <Button
-                                type="submit"
-                                className="bp3-intent-primary bp3-fill"
-                                text="Submit"
-                                disabled={this.haveErrors(errors)}
-                            />
+                            <Button type="submit"
+                                    text="Submit"
+                                    intent="primary"
+                                    fill
+                                    disabled={this.haveErrors(errors)}/>
                         </FormGroup>
-
                     </div>
                 </form>
             </FormContext.Provider>

@@ -41,7 +41,7 @@ export class AdminToolsDialog extends React.Component {
 
                 </Dialog>
             </div>
-        )
+        );
     }
 
 }
@@ -50,7 +50,7 @@ export class AdminToolsDialog extends React.Component {
 export type WidgetTileProps = {
     title: string;
     iconUrl: string;
-}
+};
 
 export class WidgetTile extends React.PureComponent<WidgetTileProps> {
 
@@ -63,7 +63,7 @@ export class WidgetTile extends React.PureComponent<WidgetTileProps> {
                 <img className={styles.tileIcon} src={iconUrl}/>
                 <span className={styles.tileTitle}>{title}</span>
             </div>
-        )
+        );
     }
 
 }

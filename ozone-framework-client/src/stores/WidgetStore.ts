@@ -55,7 +55,7 @@ export class WidgetStore {
     constructor() {
         runInAction("initialize", () => {
             this.adminWidgets = ADMIN_WIDGETS;
-        })
+        });
     }
 
 }
