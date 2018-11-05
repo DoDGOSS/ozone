@@ -1,81 +1,94 @@
 import * as React from "react";
 
+
+// import { Column, Table } from "@blueprintjs/core";
 import { WidgetContainer } from "../../../widget-dashboard/WidgetContainer";
+
 import { User } from "../../../../models";
+import { UserHeader } from "./userHeader";
+import { UserRow } from "./userRow";
+
+
+import { inject } from "../../../../inject";
+import { AuthStore} from "../../../../stores";
+// import { UserAPI } from "../../../../api/src/user";
 import { userAPI } from "../../../../api/user";
 
 interface State {
-    users: User;
+    users: User[];
 }
 
-interface Props {
+export class UsersWidget extends React.Component<{}, State> {
 
-}
+    @inject(AuthStore)
+    private authStore: AuthStore;
 
-export class UsersWidget extends React.Component<Props, State> {
-
+    // @inject(UserAPI)
+    // private userAPI: UserAPI;
 
     constructor(props: any) {
         super(props);
         this.state = {
             users: []
-        }
+        };
     }
 
-    public componentDidMount() {
+    componentWillMount() {
+        this.authStore.check();
+    }
+
+
+
+    componentDidMount() {
+
+        // Mock users
         userAPI.fetchUsers()
             .then((users) => {
                 this.setState({ users });
+                console.log(users);
             });
+        // this.userAPI.getUserById(1)
+        //     .then((response) => {
+        //         console.log(response);
+        //     });
+        // this.userAPI.getUserById(1)
+        //     .then((res) => {
+        //         console.log(res);
+        //     });
+        // this.userAPI.getUserById(1)
+        //     .then((res) => {
+        //         console.log(res);
+        //     });
+
     }
 
     render() {
         const title = 'User Admin Widget';
 
         return (
-            <WidgetContainer title={title} body="test"/>
+            <WidgetContainer title={title} body={UserTable(this.state.users)}/>
         );
     }
 
-};
+}
 
-const UserHeader = () => {
-    return (
-        <tr>
-            <th>Full Name</th>
-            <th>Email</th>
-            <th>Groups</th>
-            <th>Widgets</th>
-            <th>Dashboards</th>
-            <th>Last Login</th>
-        </tr>
-    )
-};
 
-const UserRow = (user: User) => {
+const UserTable = (users: User[]) => {
     return (
-        <tr key={user.id}>
-            <td>{user.displayName}</td>
-            <td>{user.email}</td>
-            <td>{user.totalGroups}</td>
-            <td>{user.totalWidgets}</td>
-            <td>{user.totalDashboards}</td>
-            <td>{user.lastLogin}</td>
-        </tr>
-    )
-};
-
-const UserTable = () => {
-    return (
-        <div>
-            <table>
-                <thead>
-                    {UserHeader()}
-                </thead>
-                <tbody>
-                 {/*this.state.users.map(UserRow)*/}
-                </tbody>
-            </table>
-        </div>
-    )
+        <table>
+            <thead>
+            <UserHeader />
+            </thead>
+            <tbody>
+            {
+                users.map((user) =>
+                    <UserRow
+                        key={user.id}
+                        user={user}
+                    />
+                )
+            }
+            </tbody>
+        </table>
+    );
 };
