@@ -21,6 +21,9 @@ export class MainStore {
     isDashboardDialogVisible: boolean;
 
     @observable
+    isUserProfileDialogVisible: boolean;
+
+    @observable
     isWidgetToolbarOpen: boolean;
 
     @observable
@@ -31,6 +34,7 @@ export class MainStore {
         runInAction("initialize", () => {
             this.isWarningDialogVisible = false;
             this.isHelpDialogVisible = false;
+            this.isUserProfileDialogVisible = false;
             this.isAdminToolsDialogOpen = false;
             this.isDashboardDialogVisible = false;
             this.isWidgetToolbarOpen = false;
@@ -60,6 +64,16 @@ export class MainStore {
     @action.bound
     showHelpDialog() {
         this.isHelpDialogVisible = true;
+    }
+
+    @action.bound
+    showUserProfileDialog() {
+        this.isUserProfileDialogVisible = true;
+    }
+
+    @action.bound
+    hideUserProfileDialog() {
+        this.isUserProfileDialogVisible = false;
     }
 
     @action.bound

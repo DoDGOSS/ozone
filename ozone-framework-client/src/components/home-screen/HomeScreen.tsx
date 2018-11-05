@@ -12,6 +12,7 @@ import { WarningDialog } from "../warning-screen/WarningDialog";
 import { WidgetToolbar } from "../widget-toolbar/WidgetToolbar";
 import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
 import { AdminToolsDialog } from "../admin-tools-dialog/AdminToolsDialog";
+import { UserProfileDialog } from "../user-profile/UserProfileDialog";
 import { LoginDialog } from "../login-dialog/LoginDialog";
 
 
@@ -36,6 +37,7 @@ export class HomeScreen extends React.Component {
                 <HelpDialog/>
                 <DashboardDialog/>
                 <AdminToolsDialog/>
+                <UserProfileDialog/>
 
                 <LoginDialog/>
             </div>
@@ -43,5 +45,3 @@ export class HomeScreen extends React.Component {
     }
 
 }
-
-
