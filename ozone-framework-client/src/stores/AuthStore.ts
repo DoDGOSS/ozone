@@ -1,8 +1,8 @@
 import { action, observable, runInAction } from "mobx";
 
-import { inject, injectable } from "../inject";
+import { injectable, lazyInject, TYPES } from "../inject";
 import { User } from "../models";
-import { OzoneGateway } from "../services";
+import { Gateway, Response } from "../api";
 
 
 @injectable()
@@ -17,8 +17,8 @@ export class AuthStore {
     @observable
     error?: string;
 
-    @inject(OzoneGateway)
-    private gateway: OzoneGateway;
+    @lazyInject(TYPES.Gateway)
+    private gateway: Gateway;
 
     constructor() {
         runInAction("initialize", () => {
@@ -30,7 +30,7 @@ export class AuthStore {
     @action.bound
     async check() {
         try {
-            const user = (await this.gateway.fetchUserStatus()).data;
+            const user = (await this.fetchUserStatus()).data;
             runInAction("checkSuccess", () => {
                 this.user = user;
                 this.isAuthenticated = true;
@@ -59,6 +59,10 @@ export class AuthStore {
             });
             return false;
         }
+    }
+
+    private async fetchUserStatus(): Promise<Response<User>> {
+        return this.gateway.get<User>("login/status");
     }
 
 }

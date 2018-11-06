@@ -4,7 +4,7 @@
  * container in this file.
  */
 
-import { container } from "./inject";
+import { container, TYPES } from "./inject";
 
 import { OzoneGateway } from "./services";
 import { AuthStore, MainStore, WidgetStore } from "./stores";
@@ -17,7 +17,7 @@ export default function initializeIocContainerBindings() {
     container.bind(MainStore).toSelf().inSingletonScope();
     container.bind(WidgetStore).toSelf().inSingletonScope();
 
-    container.bind(OzoneGateway).toSelf().inSingletonScope();
+    container.bind(TYPES.Gateway).to(OzoneGateway).inSingletonScope();
 
     container.bind(UserAPI).toSelf().inSingletonScope();
 }

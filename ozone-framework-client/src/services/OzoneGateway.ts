@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as _ from "lodash";
 
-import { injectable } from "../../src/inject";
+import { injectable } from "../inject";
 import { AuthenticationError, Gateway, RequestOptions, Response } from "../api";
 
 
@@ -39,9 +39,7 @@ export class OzoneGateway implements Gateway {
         }
     }
 
-    async fetchUserStatus(): Promise<Response<User>> {
-        return this.get<User>("login/status");
-    }
+
 
     async get<T>(url: string, options: RequestOptions<T> = {}): Promise<Response<T>> {
         const { params, headers, validate } = options;

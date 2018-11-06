@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 
 import { Alignment, Button, Navbar, NavbarGroup, NavbarHeading, Popover, Position } from "@blueprintjs/core";
 
-import { inject } from "../../inject";
+import { lazyInject } from "../../inject";
 import { AuthStore, MainStore } from "../../stores";
 
 import { NavbarTooltip } from "./NavbarTooltip";
@@ -20,10 +20,10 @@ export type NavigationBarProps = {
 @observer
 export class NavigationBar extends React.Component<NavigationBarProps> {
 
-    @inject(MainStore)
+    @lazyInject(MainStore)
     private mainStore: MainStore;
 
-    @inject(AuthStore)
+    @lazyInject(AuthStore)
     private authStore: AuthStore;
 
     render() {

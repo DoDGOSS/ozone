@@ -2,6 +2,7 @@ import * as qs from "qs";
 import * as _ from "lodash";
 
 import { Gateway, Response } from "../interfaces";
+import { inject, injectable, TYPES } from "../../../inject";
 
 import { UserGetResponse, validateUserResponse } from "./get";
 import { UserCreateRequest, UserCreateResponse, validateCreateUserResponse } from "./create";
@@ -14,11 +15,13 @@ export interface UserQueryCriteria {
     offset?: number;
 }
 
+
+@injectable()
 export class UserAPI {
 
     private readonly gateway: Gateway;
 
-    constructor(gateway: Gateway) {
+    constructor(@inject(TYPES.Gateway) gateway: Gateway) {
         this.gateway = gateway;
     }
 

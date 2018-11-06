@@ -4,6 +4,10 @@ import getDecorators from "inversify-inject-decorators";
 
 export const container: Container = new Container();
 
-export const inject = getDecorators(container).lazyInject;
+export const lazyInject = getDecorators(container).lazyInject;
 
-export { injectable } from "inversify";
+export { inject, injectable } from "inversify";
+
+export const TYPES = {
+    Gateway: Symbol("Gateway")
+};
