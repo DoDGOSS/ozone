@@ -1,1 +1,1 @@
-export { ConfigService } from "./ConfigService";
+export * from "./OzoneGateway";

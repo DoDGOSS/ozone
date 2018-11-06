@@ -1,0 +1,88 @@
+openapi: "3.0.0"
+
+servers:
+  - url: http://localhost:8080
+    description: Development server (localhost)
+
+info:
+  title: "Ozone Widget Framework API"
+  version: "7.17.2.0"
+
+
+paths:
+
+  /user:
+    get:
+      tags:
+        - User
+      summary: "Get all Users"
+      operationId: getAllUsers
+      responses:
+        200:
+          $ref: "#/components/responses/UsersResponse"
+
+  /user/{id}:
+    get:
+      tags:
+        - User
+      summary: "Get User by ID"
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          $ref: "#/components/responses/UsersResponse"
+
+components:
+
+  responses:
+
+    UsersResponse:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              results:
+                type: number
+              data:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+
+  schemas:
+
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+        hasPWD:
+          type: string
+          nullable: true
+        id:
+          type: number
+        lastLogin:
+          type: string
+          nullable: true
+        totalDashboards:
+          type: number
+        totalGroups:
+          type: number
+        totalStacks:
+          type: number
+        totalWidgets:
+          type: number
+        username:
+          type: string
+        userRealName:
+          type: string

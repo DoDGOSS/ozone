@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
-import { inject } from "../../inject";
+import { lazyInject } from "../../inject";
 import { MainStore } from "../../stores";
 
 import { LoginForm } from "./LoginForm";
@@ -13,7 +13,7 @@ import { LoginForm } from "./LoginForm";
 @observer
 export class LoginDialog extends React.Component {
 
-    @inject(MainStore)
+    @lazyInject(MainStore)
     private mainStore: MainStore;
 
     render() {
