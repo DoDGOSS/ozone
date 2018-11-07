@@ -32,6 +32,7 @@
     "react-grid-layout": "0.16.6",
     "react-router": "4.3.1",
     "react-router-dom": "4.3.1",
+    "react-table": "*",
     "react-scripts-ts": "4.0.8",
     "reflect-metadata": "0.1.12"
   },
@@ -47,6 +48,7 @@
     "@types/react-grid-layout": "0.16.5",
     "@types/react-router": "4.0.32",
     "@types/react-router-dom": "4.3.1",
+    "@types/react-table": "*",
     "jest": "23.6.0",
     "node-sass": "4.9.4",
     "ts-jest": "23.10.4",

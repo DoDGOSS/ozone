@@ -8,7 +8,7 @@ import { classNames } from "../util";
 
 export type WidgetContainerProps = {
     title?: string;
-    body?: string;
+    body?: any;
 };
 
 

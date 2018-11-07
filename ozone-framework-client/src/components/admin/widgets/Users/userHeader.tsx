@@ -11,4 +11,4 @@ export const UserHeader: React.StatelessComponent<{}> = () => {
                 <th>Last Login</th>
             </tr>
         );
-}
+};
