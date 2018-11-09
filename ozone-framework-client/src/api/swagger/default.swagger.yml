@@ -1,0 +1,430 @@
+openapi: "3.0.0"
+
+servers:
+  - url: http://localhost:8080
+    description: Development server (localhost)
+
+info:
+  title: "Ozone Widget Framework API"
+  version: "7.17.2.0"
+
+
+paths:
+
+  /user:
+    get:
+      x-controller: PersonController
+      x-controller-action: list
+      tags:
+        - User
+      summary: "Get all Users"
+      operationId: getAllUsers
+      responses:
+        200:
+          $ref: "#/components/responses/UsersResponse"
+
+  /user/{id}:
+    get:
+      tags:
+        - User
+      summary: "Get User by ID"
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          $ref: "#/components/responses/UsersResponse"
+
+  /messages:
+    get:
+      x-controller: MessagesController
+      x-controller-action: list
+      tags:
+        - Messages
+      summary: "Get all Messages"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /applicationConfiguration/configs:
+    get:
+      x-controller: ApplicationConfigurationController
+      x-controller-action: list
+      tags:
+        - AppConfig
+      summary: "Get all AppConfig settings"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /dashboard:
+    get:
+      x-controller: DashboardController
+      x-controller-action: ?
+      tags:
+        - Dashboard
+      summary: "Get all Dashboards"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /person/me:
+    get:
+      x-controller: PersonController
+      x-controller-action: myData
+      tags:
+        - Widget
+        - Dashboard
+      summary: "Get own Widgets and Dashboard"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /person/me/widget:
+    get:
+      x-controller: PersonWidgetDefinitionController
+      x-controller-action: myWidgets
+      tags:
+        - Widget
+      summary: "Get own Widgets"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /person/me/dashboard:
+    get:
+      x-controller: DashboardController
+      x-controller-action: myDashboards
+      tags:
+        - Dashboard
+      summary: "Get own Widgets"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+
+
+  /access:
+    get:
+      x-controller: AccessController
+      x-controller-action: checkAccess
+      tags:
+        - Access Control
+      summary: "Get all Stacks"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /stack:
+    get:
+      x-controller: StackController
+      x-controller-action: list
+      tags:
+        - Stacks
+      summary: "Get all Stacks"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /stack/{id}:
+    get:
+      x-controller: StackController
+      x-controller-action: get
+      tags:
+        - Stacks
+      summary: "Get Stack by ID"
+      parameters:
+        - name: id
+          in: path
+          description: Stack ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+
+
+  /prefs/widget:
+    get:
+      x-controller: PersonWidgetDefinitionController
+      x-controller-action: list
+      tags:
+        - Preferences
+      summary: "Get Preferences for Widget"
+      operationId: getPreferenceByWidget
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /widget:
+    get:
+      tags:
+        - Widget
+      summary: "Get Preferences for Widget"
+      operationId: getPreferenceByWidget
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /widgettype/list:
+    get:
+      tags:
+        - Widget Type
+      summary: "Get all Widget Types"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /prefs/preference:
+    get:
+      tags:
+        - Preferences
+      summary: "Get all Preferences"
+      operationId: getAllPreferences
+      responses:
+        200:
+          $ref: "#/components/responses/PreferencesResponse"
+
+  /prefs/hasPreference:
+    get:
+      tags:
+        - Preferences
+      summary: "Does Preference Exist"
+      operationId: doesPreferenceExist
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  serverVersion:
+                    type: string
+
+  /prefs/person/whoami:
+    get:
+      x-controller: PersonController
+      x-controller-action: whoami
+      tags:
+        - Person
+      summary: "Does Preference Exist"
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+
+
+  /prefs/server/resources:
+    get:
+      tags:
+        - Preferences
+      summary: "Get Server Resources Preferences"
+      operationId: getServerResourcesPrefs
+      responses:
+        200:
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  serverVersion:
+                    type: string
+
+  /themes:
+    get:
+      tags:
+        - Themes
+      summary: "Get all Themes"
+      operationId: getAllThemes
+      responses:
+        200:
+          $ref: "#/components/responses/ThemesResponse"
+
+components:
+
+  responses:
+
+    UsersResponse:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              results:
+                type: number
+              data:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+
+    PreferencesResponse:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              results:
+                type: number
+              data:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Preference"
+
+    ThemesResponse:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Theme"
+
+  schemas:
+
+    Preference:
+      type: object
+      properties:
+        id:
+          type: number
+        namespace:
+          type: string
+        path:
+          type: string
+        value:
+          type: string
+        user:
+          type: object
+          properties:
+            userId:
+              type: string
+
+    Theme:
+      type: object
+      properties:
+        contact_email:
+          type: string
+        contrast:
+          type: string
+        name:
+          type: string
+        created_date:
+          type: string
+        css:
+          type: string
+        thumb:
+          type: string
+        author:
+          type: string
+        base_url:
+          type: string
+        description:
+          type: string
+        owf_font_size:
+          type: number
+        display_name:
+          type: string
+        type:
+          type: string
+        modified_date:
+          type: string
+        screenshots:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              url:
+                type: string
+
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+        hasPWD:
+          type: string
+          nullable: true
+        id:
+          type: number
+        lastLogin:
+          type: string
+          nullable: true
+        totalDashboards:
+          type: number
+        totalGroups:
+          type: number
+        totalStacks:
+          type: number
+        totalWidgets:
+          type: number
+        username:
+          type: string
+        userRealName:
+          type: string

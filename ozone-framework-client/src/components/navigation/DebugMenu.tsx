@@ -2,14 +2,18 @@ import * as React from "react";
 
 import { Classes, Menu } from "@blueprintjs/core";
 
-import { inject } from "../../inject";
+import { lazyInject } from "../../inject";
 import { MainStore } from "../../stores";
+import { UserAPI } from "../../api/src/user";
 
 
 export class DebugMenu extends React.Component {
 
-    @inject(MainStore)
+    @lazyInject(MainStore)
     private mainStore: MainStore;
+
+    @lazyInject(UserAPI)
+    private userApi: UserAPI;
 
     render() {
         return (
@@ -17,8 +21,14 @@ export class DebugMenu extends React.Component {
                 <Menu.Item text="Show Warning"
                            icon="warning-sign"
                            onClick={this.mainStore.showWarningDialog}/>
+                <Menu.Item text="Get Users"
+                           onClick={this.getUsers}/>
             </Menu>
         );
+    }
+
+    private getUsers = () => {
+        this.userApi.getUsers().then((response) => console.dir(response.data));
     }
 
 }

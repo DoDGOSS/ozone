@@ -2,7 +2,7 @@ import * as styles from "./HomeScreen.scss";
 
 import * as React from "react";
 
-import { inject } from "../../inject";
+import { lazyInject } from "../../inject";
 import { AuthStore } from "../../stores";
 
 import { DashboardDialog } from "../dashboard-screen/DashboardDialog";
@@ -17,7 +17,7 @@ import { LoginDialog } from "../login-dialog/LoginDialog";
 
 export class HomeScreen extends React.Component {
 
-    @inject(AuthStore)
+    @lazyInject(AuthStore)
     private authStore: AuthStore;
 
     componentWillMount() {

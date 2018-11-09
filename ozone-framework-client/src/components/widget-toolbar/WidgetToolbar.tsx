@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 
 import { Button, Collapse, InputGroup } from "@blueprintjs/core";
 
-import { inject } from "../../inject";
+import { lazyInject } from "../../inject";
 import { MainStore } from "../../stores";
 
 import { classNames, handleStringChange } from "../util";
@@ -18,7 +18,7 @@ export type WidgetToolbarProps = {
 @observer
 export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
 
-    @inject(MainStore)
+    @lazyInject(MainStore)
     private mainStore: MainStore;
 
     render() {

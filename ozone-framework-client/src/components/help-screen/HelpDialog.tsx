@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
-import { inject } from "../../inject";
+import { lazyInject } from "../../inject";
 import { MainStore } from "../../stores";
 
 import { classNames } from "../util";
@@ -14,7 +14,7 @@ import { classNames } from "../util";
 @observer
 export class HelpDialog extends React.Component {
 
-    @inject(MainStore)
+    @lazyInject(MainStore)
     private mainStore: MainStore;
 
     render() {

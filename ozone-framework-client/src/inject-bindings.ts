@@ -4,22 +4,20 @@
  * container in this file.
  */
 
-import { container } from "./inject";
+import { container, TYPES } from "./inject";
 
-import { ConfigService } from "./services";
-import { ConfigStore, MainStore, WidgetStore } from "./stores";
+import { OzoneGateway } from "./services";
+import { AuthStore, MainStore, WidgetStore } from "./stores";
 
-import { OzoneGateway } from "./api";
-import { AuthStore } from "./stores/AuthStore";
+import { UserAPI } from "./api";
 
 
 export default function initializeIocContainerBindings() {
-    container.bind(ConfigService).toSelf().inSingletonScope();
-
     container.bind(AuthStore).toSelf().inSingletonScope();
-    container.bind(ConfigStore).toSelf().inSingletonScope();
     container.bind(MainStore).toSelf().inSingletonScope();
     container.bind(WidgetStore).toSelf().inSingletonScope();
 
-    container.bind(OzoneGateway).toSelf().inSingletonScope();
+    container.bind(TYPES.Gateway).to(OzoneGateway).inSingletonScope();
+
+    container.bind(UserAPI).toSelf().inSingletonScope();
 }

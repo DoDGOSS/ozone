@@ -3,14 +3,14 @@ import { observer } from "mobx-react";
 
 import { Button, Classes, Dialog } from "@blueprintjs/core";
 
-import { inject } from "../../inject";
+import { lazyInject } from "../../inject";
 import { MainStore } from "../../stores";
 
 
 @observer
 export class DashboardDialog extends React.Component {
 
-    @inject(MainStore)
+    @lazyInject(MainStore)
     private mainStore: MainStore;
 
     render() {

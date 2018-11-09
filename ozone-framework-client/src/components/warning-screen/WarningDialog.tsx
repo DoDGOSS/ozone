@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 
 import { Button, Classes, Dialog, IconName, Intent } from "@blueprintjs/core";
 
-import { inject } from "../../inject";
+import { lazyInject } from "../../inject";
 import { MainStore } from "../../stores";
 
 import { WARNING_DIALOG } from "../../messages";
@@ -23,7 +23,7 @@ export class WarningDialog extends React.Component<WarningDialogProps> {
 
     static defaultProps = DEFAULT_PROPS;
 
-    @inject(MainStore)
+    @lazyInject(MainStore)
     private mainStore: MainStore;
 
     render() {

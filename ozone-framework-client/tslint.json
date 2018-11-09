@@ -19,10 +19,12 @@
         "import-sources-order": "any"
       }
     ],
-    "semicolon": [true, "always", "ignore-bound-class-methods"]
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "variable-name": [false]
   },
   "linterOptions": {
     "exclude": [
+      "**/jest.config.js",
       "config/**/*.js",
       "node_modules/**/*.ts",
       "coverage/lcov-report/*.js"

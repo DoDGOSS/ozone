@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { inject } from "../../inject";
+import { lazyInject } from "../../inject";
 import { AuthStore } from "../../stores";
 
 import { Fields, Form, required } from "../form/Form";
@@ -9,7 +9,7 @@ import { Field } from "../form/Field";
 
 export class LoginForm extends React.Component {
 
-    @inject(AuthStore)
+    @lazyInject(AuthStore)
     private authStore: AuthStore;
 
     private fields: Fields = {

@@ -5,17 +5,17 @@ import { observer } from "mobx-react";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
-import { inject } from "../../inject";
+import { lazyInject } from "../../inject";
 import { MainStore, WidgetStore } from "../../stores";
 
 
 @observer
 export class AdminToolsDialog extends React.Component {
 
-    @inject(MainStore)
+    @lazyInject(MainStore)
     private mainStore: MainStore;
 
-    @inject(WidgetStore)
+    @lazyInject(WidgetStore)
     private widgetStore: WidgetStore;
 
     render() {
