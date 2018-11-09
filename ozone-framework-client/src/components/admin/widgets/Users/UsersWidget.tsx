@@ -1,26 +1,31 @@
 import * as React from "react";
 
-import { Button, Intent } from "@blueprintjs/core";
+import { Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
 import { AdminTable } from "../../table/AdminTable";
-
 
 import { WidgetContainer } from "../../../widget-dashboard/WidgetContainer";
 import { User } from "../../../../models";
+import { UserCreateForm } from "./UserCreateForm";
 
 import { lazyInject } from "../../../../inject";
-import { UserAPI } from "../../../../api/src/user";
+import { UserAPI, UserCreateRequest } from "../../../../api/src/user";
+
 
 interface State {
     users: User[];
     loading: boolean;
     pageSize: number;
     columns: any;
+    showTable: boolean;
+    showCreate: boolean;
 }
 
-// Todo
-// Modify widget to take in widget values from administration menu and launch
+// TODO
+// Modify widget to take in widget values from administration menu and launch from menu
 // Pagination handling with client API
 // Style
+// Popup warning dialogue for deleting
+// Error handling for form (if username exists etc)
 
 export class UsersWidget extends React.Component<{}, State> {
 
@@ -33,13 +38,25 @@ export class UsersWidget extends React.Component<{}, State> {
             users: [],
             loading: true,
             pageSize: 5,
+            showTable: true,
+            showCreate: false,
             columns: [
                 {
                     Header: "Users",
                     columns: [
                         {
                             Header: "Name",
-                            accessor: "userRealName"
+                            accessor: "userRealName",
+                            Footer: (
+                                // TODO - Keep in footer or move to below table
+                                <Button
+                                    text="Create"
+                                    intent={Intent.SUCCESS}
+                                    icon="add"
+                                    small={true}
+                                    onClick={() => this.toggleCreate()}
+                                />
+                            )
                         },
                         {
                             Header: "Email",
@@ -61,35 +78,32 @@ export class UsersWidget extends React.Component<{}, State> {
                             Header: "Last Login",
                             accessor: "lastLogin"
                         }
-                    ]
+                    ],
+
                 },
                 // TODO - Abstract this to only have to provide onclick function name with styled buttons
                 {
                     Header: "Actions",
                     Cell: (row: any) => (
                         <div>
-                            <Button
-                                text="Create"
-                                intent={Intent.SUCCESS}
-                                icon="add"
-                                small={true}
-                                onClick={() => console.log(row.original.id)}
-                            />
-                            <Button
-                                text="Edit"
-                                intent={Intent.PRIMARY}
-                                icon="edit"
-                                small={true}
-                                onClick={() => this.getUserById(row.original.id)}
-                            />
-                            <Button
-                                text="Delete"
-                                intent={Intent.DANGER}
-                                icon="trash"
-                                disabled={true}
-                                small={true}
-                                // onClick={() => this.deleteUserById(row.original.id)}
-                            />
+                            <ButtonGroup>
+                                <Button
+                                    text="Edit"
+                                    intent={Intent.PRIMARY}
+                                    icon="edit"
+                                    small={true}
+                                    onClick={() => this.getUserById(row.original.id)}
+                                />
+                                <Divider/>
+                                <Button
+                                    text="Delete"
+                                    intent={Intent.DANGER}
+                                    icon="trash"
+                                    disabled={true}
+                                    small={true}
+                                    // onClick={() => this.deleteUserById(row.original.id)}
+                                />
+                            </ButtonGroup>
                         </div>
                     )
                 }
@@ -102,19 +116,45 @@ export class UsersWidget extends React.Component<{}, State> {
         this.getUserById(1);
     }
 
+    toggleCreate() {
+        this.setState({
+            showCreate: !this.state.showCreate,
+            showTable: !this.state.showTable
+        });
+    }
+
     render() {
         const title = 'User Admin Widget';
+        const showTable = this.state.showTable;
+        const showCreate = this.state.showCreate;
 
         return (
             <WidgetContainer
                 title={title}
                 body={
-                    <AdminTable
-                        data={this.state.users}
-                        columns={this.state.columns}
-                        loading={this.state.loading}
-                        pageSize={this.state.pageSize}
-                    />
+                    <div>
+                        {showTable &&
+                            <AdminTable
+                                data={this.state.users}
+                                columns={this.state.columns}
+                                loading={this.state.loading}
+                                pageSize={this.state.pageSize}
+                            />
+                        }
+                        {showCreate &&
+                            // TODO - Create class 
+                            <div style={{margin: 40}}>
+                                <UserCreateForm createUser={this.createUser.bind(this)}/>
+                                <Button
+                                    text="Back"
+                                    intent={Intent.SUCCESS}
+                                    icon="undo"
+                                    small={true}
+                                    onClick={() => this.toggleCreate()}
+                                />
+                            </div>
+                        }
+                    </div>
                 }
             />
         );
@@ -134,6 +174,12 @@ export class UsersWidget extends React.Component<{}, State> {
             .then ((res) => {
                 console.log(res.data.data);
             });
+    }
+
+    private createUser = async (data: UserCreateRequest) => {
+        const result = await this.userAPI.createUser(data);
+        console.log(result);
+        return result.status === 200;
     }
 
 }
