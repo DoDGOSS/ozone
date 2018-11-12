@@ -21,7 +21,7 @@ export const FormContext = React.createContext<IntFormContext | undefined>(
 
 // Basic validation
 // Validates whether a field has a value
-// @param {Values} vaules - All field values in form
+// @param {Values} values - All field values in form
 // @param {string} fieldName - Field to validate
 // @returns {string} - Error msg
 export const required = (values: Values, fieldName: string): string =>
@@ -29,6 +29,20 @@ export const required = (values: Values, fieldName: string): string =>
     values[fieldName] === null ||
     values[fieldName] === ""
         ? "This field is required"
+        : "";
+
+// Email Validation
+// Validates whether a field is a valid email
+// @param {Values} values - All the field values in the form
+// @param {string} fieldName - Field to validate
+// @returns {string} - Error msg
+
+export const isEmail = (values: Values, fieldName: string): string =>
+    values[fieldName] &&
+    values[fieldName].search(
+        /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    )
+        ? "Please enter a valid email"
         : "";
 
 export interface Fields {
@@ -133,6 +147,7 @@ export class Form<T> extends React.Component<FormProps<T>, FormState> {
         return !this.haveErrors(errors);
     }
 
+    // TODO - Add handling for error responses
     // Submits form to API
     // @returns {boolean} - Form submission successful or not
     async submitForm(): Promise<boolean> {
@@ -140,6 +155,7 @@ export class Form<T> extends React.Component<FormProps<T>, FormState> {
         try {
             return await this.props.onSubmit(this.state.values as T);
         } catch (ex) {
+            console.log(ex);
             return false;
         }
     }

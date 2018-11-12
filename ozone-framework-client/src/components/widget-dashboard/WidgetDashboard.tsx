@@ -7,10 +7,13 @@ import { WidgetContainer } from "./WidgetContainer";
 
 import { classNames } from "../util";
 
+import { UsersWidget } from "../admin/widgets/Users/UsersWidget";
+
 
 const layout = [
-    { i: 'a', x: 0, y: 0, w: 3, h: 2 },
-    { i: 'b', x: 4, y: 0, w: 1, h: 2 }
+    { i: 'a', x: 0, y: 0, w: 4, h: 4 },
+    { i: 'b', x: 2, y: 0, w: 6, h: 4 },
+    { i: 'c', x: 0, y: 0, w: 8, h: 4 }
 ];
 
 export type WidgetDashboardProps = {
@@ -32,11 +35,11 @@ export class WidgetDashboard extends React.Component<WidgetDashboardProps> {
                             autoSize={true}
                             draggableHandle=".dragHandle"
                             compactType={null}>
-                    <div key="a">
-                        <WidgetContainer/>
-                    </div>
                     <div key="b">
-                        <WidgetContainer/>
+                        <WidgetContainer title="My app 2"/>
+                    </div>
+                    <div key="c">
+                        <UsersWidget/>
                     </div>
                 </GridLayout>
             </div>

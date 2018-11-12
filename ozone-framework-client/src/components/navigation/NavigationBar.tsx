@@ -54,7 +54,7 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
 
                 <NavbarGroup align={Alignment.RIGHT}>
                     <DebugMenuButton/>
-                    <UserMenuButton userName={user ? user.displayName : "Unknown User"}/>
+                    <UserMenuButton userName={user ? user.userRealName : "Unknown User"}/>
                 </NavbarGroup>
 
             </Navbar>

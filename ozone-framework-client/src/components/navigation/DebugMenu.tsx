@@ -23,6 +23,8 @@ export class DebugMenu extends React.Component {
                            onClick={this.mainStore.showWarningDialog}/>
                 <Menu.Item text="Get Users"
                            onClick={this.getUsers}/>
+                <Menu.Item text="Login"
+                           onClick={this.mainStore.showLoginDialog}/>
             </Menu>
         );
     }
