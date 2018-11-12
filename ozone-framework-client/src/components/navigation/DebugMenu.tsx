@@ -4,7 +4,7 @@ import { Classes, Menu } from "@blueprintjs/core";
 
 import { lazyInject } from "../../inject";
 import { MainStore } from "../../stores";
-import { UserAPI } from "../../api/src/user";
+import { UserAPI } from "../../api/user";
 
 
 export class DebugMenu extends React.Component {

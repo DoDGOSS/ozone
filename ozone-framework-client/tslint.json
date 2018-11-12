@@ -25,6 +25,7 @@
   "linterOptions": {
     "exclude": [
       "**/jest.config.js",
+      "**/jest.config.e2e.js",
       "config/**/*.js",
       "node_modules/**/*.ts",
       "coverage/lcov-report/*.js"

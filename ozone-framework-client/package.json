@@ -9,7 +9,9 @@
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "api:test": "jest --config ./src/api/jest.config.js --runInBand",
+    "api:test-e2e": "jest --config ./src/api/jest.config.e2e.js --runInBand"
   },
   "dependencies": {
     "@blueprintjs/core": "3.7.0",

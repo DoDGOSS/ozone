@@ -8,7 +8,7 @@ import { User } from "../../../../models";
 import { UserCreateForm } from "./UserCreateForm";
 
 import { lazyInject } from "../../../../inject";
-import { UserAPI, UserCreateRequest } from "../../../../api/src/user";
+import { UserAPI, UserCreateRequest } from "../../../../api/user";
 
 
 interface State {
