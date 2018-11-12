@@ -113,14 +113,6 @@ export class UsersWidget extends React.Component<{}, State> {
 
     componentDidMount() {
         this.getUsers();
-        this.getUserById(1);
-    }
-
-    toggleCreate() {
-        this.setState({
-            showCreate: !this.state.showCreate,
-            showTable: !this.state.showTable
-        });
     }
 
     render() {
@@ -142,15 +134,15 @@ export class UsersWidget extends React.Component<{}, State> {
                             />
                         }
                         {showCreate &&
-                            // TODO - Create class 
+                            // TODO - Create class
                             <div style={{margin: 40}}>
-                                <UserCreateForm createUser={this.createUser.bind(this)}/>
+                                <UserCreateForm createUser={this.createUser}/>
                                 <Button
                                     text="Back"
                                     intent={Intent.SUCCESS}
                                     icon="undo"
                                     small={true}
-                                    onClick={() => this.toggleCreate()}
+                                    onClick={this.toggleCreate}
                                 />
                             </div>
                         }
@@ -160,26 +152,43 @@ export class UsersWidget extends React.Component<{}, State> {
         );
     }
 
-    private getUsers = () => {
-        this.userAPI.getUsers()
-            .then((res) => this.setState({
-                // TODO Modify to res.data
-                users: res.data.data,
-                loading: false
-            }));
+    private toggleCreate = () => {
+        this.setState({
+            showCreate: !this.state.showCreate,
+            showTable: !this.state.showTable
+        });
     }
 
-    private getUserById = (id: number) => {
-        this.userAPI.getUserById(id)
-            .then ((res) => {
-                console.log(res.data.data);
-            });
+    private getUsers = async () => {
+        const response = await this.userAPI.getUsers();
+
+        // TODO: Handle failed request
+        if (response.status !== 200) return;
+
+        this.setState({
+            users: response.data.data,
+            loading: false
+        });
+    }
+
+    private getUserById = async (id: number) => {
+        const response = await this.userAPI.getUserById(id);
+
+        // TODO: Handle failed request
+        if (response.status !== 200) return;
     }
 
     private createUser = async (data: UserCreateRequest) => {
-        const result = await this.userAPI.createUser(data);
-        console.log(result);
-        return result.status === 200;
+        const response = await this.userAPI.createUser(data);
+
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+
+        this.toggleCreate();
+        this.setState({loading: true});
+        this.getUsers();
+
+        return true;
     }
 
 }
