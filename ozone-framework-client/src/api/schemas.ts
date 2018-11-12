@@ -1,7 +1,10 @@
 import * as ajv from "ajv";
-import { Ajv, ValidateFunction } from "ajv";
+import { Ajv, ErrorObject, ValidateFunction } from "ajv";
 import { ValidationError } from "./errors";
 import { Validator } from "./interfaces";
+import { convertToJsonSchema } from "../lib/openapi/convert-json";
+import { isNil } from "../lib/openapi/util";
+import { Type } from "../interfaces";
 
 export function composeSchemas(baseSchema: any, componentSchemas: any): any {
     return {
@@ -19,6 +22,9 @@ export interface JsonSchema<T> {
     properties?: { [K in keyof T]: JsonSchema<any> };
     enum?: string[];
     items?: any;
+
+    // non-standard, for OAS3
+    components?: any;
 }
 
 let ajvInstance: Ajv;
@@ -41,8 +47,31 @@ export function createLazyValidator<T>(provideSchema: () => JsonSchema<T>): Vali
 
         const valid = validate(data);
         if (!valid) {
-            const message = validate.errors ? validate.errors.map(e => e.message).join("; ") : "Unknown validation error";
+            const message = formatValidationErrors(validate.errors);
             throw new ValidationError(message, validate.errors);
+        }
+        return data as T;
+    };
+}
+
+function formatValidationErrors(errors: ErrorObject[] | null | undefined): string {
+    if (isNil(errors)) return "Unknown validation error";
+
+    return errors.map(e => `${e.schemaPath} - ${e.message}`).join("; ");
+}
+
+export function createLazyComponentValidator<T>(component: Type<T>): Validator<T> {
+    let validate: ValidateFunction;
+
+    return (data: any) => {
+        if (!validate) {
+            validate = getAjv().compile(convertToJsonSchema(component));
+        }
+
+        const valid = validate(data);
+        if (!valid) {
+            const errors = formatValidationErrors(validate.errors);
+            throw new ValidationError(`${component.name} Validation Error: ${errors}`, validate.errors);
         }
         return data as T;
     };

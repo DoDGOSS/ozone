@@ -4,15 +4,14 @@ import { Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
 import { AdminTable } from "../../table/AdminTable";
 
 import { WidgetContainer } from "../../../widget-dashboard/WidgetContainer";
-import { User } from "../../../../models";
 import { UserCreateForm } from "./UserCreateForm";
 
 import { lazyInject } from "../../../../inject";
-import { UserAPI, UserCreateRequest } from "../../../../api/user";
+import { UserAPI, UserCreateRequest, UserDTO } from "../../../../api/user";
 
 
 interface State {
-    users: User[];
+    users: UserDTO[];
     loading: boolean;
     pageSize: number;
     columns: any;
@@ -126,25 +125,25 @@ export class UsersWidget extends React.Component<{}, State> {
                 body={
                     <div>
                         {showTable &&
-                            <AdminTable
-                                data={this.state.users}
-                                columns={this.state.columns}
-                                loading={this.state.loading}
-                                pageSize={this.state.pageSize}
-                            />
+                        <AdminTable
+                            data={this.state.users}
+                            columns={this.state.columns}
+                            loading={this.state.loading}
+                            pageSize={this.state.pageSize}
+                        />
                         }
                         {showCreate &&
-                            // TODO - Create class
-                            <div style={{margin: 40}}>
-                                <UserCreateForm createUser={this.createUser}/>
-                                <Button
-                                    text="Back"
-                                    intent={Intent.SUCCESS}
-                                    icon="undo"
-                                    small={true}
-                                    onClick={this.toggleCreate}
-                                />
-                            </div>
+                        // TODO - Create class
+                        <div style={{ margin: 40 }}>
+                            <UserCreateForm createUser={this.createUser}/>
+                            <Button
+                                text="Back"
+                                intent={Intent.SUCCESS}
+                                icon="undo"
+                                small={true}
+                                onClick={this.toggleCreate}
+                            />
+                        </div>
                         }
                     </div>
                 }
@@ -185,7 +184,7 @@ export class UsersWidget extends React.Component<{}, State> {
         if (response.status !== 200) return false;
 
         this.toggleCreate();
-        this.setState({loading: true});
+        this.setState({ loading: true });
         this.getUsers();
 
         return true;

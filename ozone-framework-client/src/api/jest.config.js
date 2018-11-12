@@ -19,5 +19,8 @@ module.exports = {
             tsConfig: "tsconfig.test.json"
         }
     },
-    collectCoverage: true
+    collectCoverage: true,
+    coveragePathIgnorePatterns: [
+        ".*/__test__/.*\.ts$",
+    ],
 };
