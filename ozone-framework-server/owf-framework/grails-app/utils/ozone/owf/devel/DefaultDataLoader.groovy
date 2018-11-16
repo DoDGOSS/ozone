@@ -98,8 +98,13 @@ class DefaultDataLoader {
     }
 
     private void initializeUsers() {
-        admin1 = create(Person, ADMIN1, [authorities: [userRole, adminRole], groups: [adminGroup]])
-        user1 = create(Person, USER1, [authorities: [userRole], groups: [userGroup]])
+        admin1 = create(Person, ADMIN1, [authorities: [userRole, adminRole]])
+        admin1.addToGroups(adminGroup)
+        admin1.save()
+
+        user1 = create(Person, USER1, [authorities: [userRole]])
+        user1.addToGroups(userGroup)
+        user1.save()
     }
 
     private void initializeAdminPreferences() {

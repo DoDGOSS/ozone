@@ -32,7 +32,9 @@
     <bean id="restAuthenticationEntryPoint" class="ozone.security.RestAuthenticationEntryPoint"/>
 
     <bean id="restAuthenticationSuccessHandler"
-          class="ozone.security.RestAuthenticationSuccessHandler"/>
+          class="ozone.security.OzoneAuthenticationSuccessHandler">
+        <property name="accountService" ref="accountService"/>
+    </bean>
 
     <bean id="restAuthenticationFailureHandler"
           class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"/>

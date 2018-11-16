@@ -1,10 +1,12 @@
 import * as ajv from "ajv";
 import { Ajv, ErrorObject, ValidateFunction } from "ajv";
+
+import { isNil } from "lodash";
+
 import { ValidationError } from "./errors";
 import { Validator } from "./interfaces";
-import { convertToJsonSchema } from "../lib/openapi/convert-json";
-import { isNil } from "../lib/openapi/util";
 import { Type } from "../interfaces";
+import { convertToJsonSchema } from "../lib/openapi/convert-json";
 
 export function composeSchemas(baseSchema: any, componentSchemas: any): any {
     return {
@@ -27,39 +29,6 @@ export interface JsonSchema<T> {
     components?: any;
 }
 
-let ajvInstance: Ajv;
-
-function getAjv(): Ajv {
-    if (!ajvInstance) {
-        ajvInstance = new ajv({ allErrors: true });
-    }
-    return ajvInstance;
-}
-
-
-export function createLazyValidator<T>(provideSchema: () => JsonSchema<T>): Validator<T> {
-    let validate: ValidateFunction;
-
-    return (data: any) => {
-        if (!validate) {
-            validate = getAjv().compile(provideSchema());
-        }
-
-        const valid = validate(data);
-        if (!valid) {
-            const message = formatValidationErrors(validate.errors);
-            throw new ValidationError(message, validate.errors);
-        }
-        return data as T;
-    };
-}
-
-function formatValidationErrors(errors: ErrorObject[] | null | undefined): string {
-    if (isNil(errors)) return "Unknown validation error";
-
-    return errors.map(e => `${e.schemaPath} - ${e.message}`).join("; ");
-}
-
 export function createLazyComponentValidator<T>(component: Type<T>): Validator<T> {
     let validate: ValidateFunction;
 
@@ -75,4 +44,19 @@ export function createLazyComponentValidator<T>(component: Type<T>): Validator<T
         }
         return data as T;
     };
+}
+
+let ajvInstance: Ajv;
+
+function getAjv(): Ajv {
+    if (!ajvInstance) {
+        ajvInstance = new ajv({ allErrors: true });
+    }
+    return ajvInstance;
+}
+
+function formatValidationErrors(errors: ErrorObject[] | null | undefined): string {
+    if (isNil(errors)) return "Unknown validation error";
+
+    return errors.map(e => `${e.schemaPath} - ${e.message}`).join("; ");
 }

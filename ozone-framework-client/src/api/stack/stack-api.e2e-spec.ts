@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { StackAPI } from "./stack-api";
 
 import { NodeGateway } from "../__test__/node-gateway";

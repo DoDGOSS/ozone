@@ -1,7 +1,7 @@
 import { PropertyOptions, ResponseOptions, SchemaOptions } from "./interfaces";
 import { ComponentType } from "./reflect";
 
-import { isNil, valuesOf } from "./util";
+import { isNil, values } from "lodash";
 
 
 export type PropertyMap = { [key: string]: PropertyMetadata };
@@ -36,7 +36,7 @@ export class SchemaMetadata implements ComponentMetadata, HasPropertyMetadata {
     }
 
     getProperties(): PropertyMetadata[] {
-        return valuesOf(this.properties);
+        return values(this.properties);
     }
 
     get name(): string {
@@ -45,14 +45,13 @@ export class SchemaMetadata implements ComponentMetadata, HasPropertyMetadata {
 
 }
 
-export function isSchemaMetadata(metadata: ComponentMetadata): metadata is SchemaMetadata {
+export function isSchemaMetadata(metadata: ComponentMetadata | null | undefined): metadata is SchemaMetadata {
     return !isNil(metadata) && metadata.type === ComponentType.SCHEMA;
 }
 
-export function isResponseMetadata(metadata: ComponentMetadata): metadata is ResponseMetadata {
+export function isResponseMetadata(metadata: ComponentMetadata | null | undefined): metadata is ResponseMetadata {
     return !isNil(metadata) && metadata.type === ComponentType.RESPONSE;
 }
-
 
 
 export class ResponseMetadata implements ComponentMetadata, HasPropertyMetadata {
@@ -71,7 +70,7 @@ export class ResponseMetadata implements ComponentMetadata, HasPropertyMetadata 
     }
 
     getProperties(): PropertyMetadata[] {
-        return valuesOf(this.properties);
+        return values(this.properties);
     }
 
     get name(): string {
@@ -92,5 +91,6 @@ export class PropertyMetadata {
         this.typeProvider = typeProvider;
         this.options = options;
     }
+
 }
 

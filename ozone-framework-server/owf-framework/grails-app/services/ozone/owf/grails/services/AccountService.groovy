@@ -1,6 +1,7 @@
 package ozone.owf.grails.services
 
 import grails.converters.JSON
+import org.grails.web.json.JSONObject
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -13,7 +14,13 @@ import org.hibernate.CacheMode
 import ozone.owf.grails.AuditOWFWebRequestsLogger
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
-import ozone.owf.grails.domain.*
+import ozone.owf.grails.domain.Dashboard
+import ozone.owf.grails.domain.ERoleAuthority
+import ozone.owf.grails.domain.Group
+import ozone.owf.grails.domain.Person
+import ozone.owf.grails.domain.PersonWidgetDefinition
+import ozone.owf.grails.domain.Stack
+import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.security.UserSessionProvider
 import ozone.security.authentication.OWFUserDetails
 import ozone.security.authentication.OWFUserDetailsImpl
@@ -559,6 +566,34 @@ class AccountService {
             log.error(e)
             throw new OwfException(message: 'A fatal error occurred while trying to delete a user. Params: ' + params.toString(), exceptionType: OwfExceptionTypes.Database)
         }
+    }
+
+    JSONObject getLoggedInUserDetails() {
+        def user = getLoggedInUser()
+        def isAdmin = getLoggedInUserIsAdmin()
+        def roleAuthorityNames = getLoggedInUserRoles().collect { it.authority }
+
+        def groups = user.groups
+                         .findAll { !it.stackDefault }
+                         .collect { serializeGroup(it) }
+
+        return new JSONObject([id          : user.id,
+                               username    : user.username,
+                               userRealName: user.userRealName,
+                               email       : user.email,
+                               groups      : groups,
+                               isAdmin     : isAdmin,
+                               roles       : roleAuthorityNames])
+    }
+
+    JSONObject serializeGroup(Group group) {
+        new JSONObject([id         : group.id,
+                        name       : group.name,
+                        displayName: group.displayName,
+                        description: group.description,
+                        email      : group.email,
+                        status     : group.status,
+                        automatic  : group.automatic])
     }
 
 }

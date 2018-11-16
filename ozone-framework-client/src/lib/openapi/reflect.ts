@@ -16,17 +16,22 @@ export function getDesignTypeName(target: object, key: string | symbol): string 
     const type = Reflect.getMetadata(DESIGN_TYPE, target, key);
 
     switch (type) {
-        case String:
-            return "string";
-        case Number:
-            return "number";
-        case Boolean:
-            return "boolean";
-        case Array:
-            return "array";
-        default:
-            return "object";
+        case String: return "string";
+        case Number: return "number";
+        case Boolean: return "boolean";
+        case Array: return "array";
+        default: return "object";
     }
+}
+
+export function getPrimitiveTypeName(type: Function): string | undefined {
+    switch (type) {
+        case String: return "string";
+        case Number: return "number";
+        case Boolean: return "boolean";
+        case Array: return "array";
+    }
+    return undefined;
 }
 
 export function getComponentType(target: Function): ComponentType | undefined {
@@ -46,7 +51,7 @@ export function setComponentMetadata(target: Function, metadata: ComponentMetada
 }
 
 export function hasComponentProperties(target: Function): boolean {
-    return Reflect.hasMetadata(COMPONENT_PROPERTIES, target)
+    return Reflect.hasMetadata(COMPONENT_PROPERTIES, target);
 }
 
 export function getComponentProperties(target: Function): PropertyMap {

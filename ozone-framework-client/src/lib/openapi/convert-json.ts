@@ -1,3 +1,5 @@
+import { JsonSchema } from "./json-schema";
+
 import {
     ComponentMetadata,
     HasPropertyMetadata,
@@ -5,10 +7,10 @@ import {
     isSchemaMetadata,
     PropertyMetadata
 } from "./metadata";
-import { ComponentType, getComponentMetadata } from "./reflect";
-import { JsonSchema } from "./json-schema";
 
-import { isNil } from "./util";
+import { ComponentType, getComponentMetadata, getPrimitiveTypeName } from "./reflect";
+
+import { isNil } from "lodash";
 
 
 const SCHEMA_CACHE: { [name: string]: any } = {};
@@ -54,18 +56,8 @@ export function convertToJsonSchema(component: Function) {
             propertySchema.enum = propertyOptions.enum;
         }
 
-        // TODO: Cleanup?
-        if (property.type === "array" && !isNil(property.typeProvider)) {
-            const itemComponent = getProvidedTypeMetadata(property);
-            if (!isNil(itemComponent)) {
-                const itemsSchema = getArrayItemsSchema(itemComponent);
-                if (!isNil(itemsSchema)) {
-                    propertySchema.items = itemsSchema;
-                    if (isSchemaMetadata(itemComponent)) {
-                        schema.addSchema(itemComponent.name, convertToJsonSchema(itemComponent.target));
-                    }
-                }
-            }
+        if (property.type === "array") {
+            addArrayItemsSchema(schema, propertySchema, property);
         }
 
         schema.addProperty(property.key, propertySchema);
@@ -82,6 +74,32 @@ export function convertToJsonSchema(component: Function) {
     return plainSchema;
 }
 
+function addArrayItemsSchema(schema: JsonSchema, propertySchema: any, property: PropertyMetadata): void {
+    if (isNil(property.typeProvider)) return;
+
+    const providedType = property.typeProvider();
+    if (isNil(providedType)) return;
+
+    const itemMetadata = getComponentMetadata(providedType);
+    if (!isNil(itemMetadata)) {
+        switch (itemMetadata.type) {
+            case ComponentType.SCHEMA:
+                propertySchema.items = { $ref: `#/components/schemas/${itemMetadata.name}` };
+                schema.addSchema(itemMetadata.name, convertToJsonSchema(itemMetadata.target));
+                break;
+            case ComponentType.RESPONSE:
+                propertySchema.items = { $ref: `#/components/responses/${itemMetadata.name}` };
+                break;
+        }
+        return;
+    }
+
+    const primitiveType = getPrimitiveTypeName(providedType);
+    if (isNil(primitiveType)) return;
+
+    propertySchema.items = {type: primitiveType};
+}
+
 function getSortedPropertyMetadata(componentMetadata: ComponentMetadata & HasPropertyMetadata): PropertyMetadata[] {
     const properties = componentMetadata.getProperties();
     properties.sort((a, b) => {
@@ -90,24 +108,4 @@ function getSortedPropertyMetadata(componentMetadata: ComponentMetadata & HasPro
         return 0;
     });
     return properties;
-}
-
-function getProvidedTypeMetadata(property: PropertyMetadata): ComponentMetadata | undefined {
-    if (isNil(property.typeProvider)) return undefined;
-
-    const component = property.typeProvider();
-    if (component === undefined) return undefined;
-
-    return getComponentMetadata(component);
-}
-
-function getArrayItemsSchema(componentMetadata: ComponentMetadata) {
-    switch (componentMetadata.type) {
-        case ComponentType.SCHEMA:
-            return {
-                $ref: `#/components/schemas/${componentMetadata.name}`
-            };
-    }
-
-    return undefined;
 }

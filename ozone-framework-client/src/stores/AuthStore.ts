@@ -1,8 +1,9 @@
 import { action, observable, runInAction } from "mobx";
 
 import { injectable, lazyInject, TYPES } from "../inject";
-import { User } from "../models";
-import { Gateway, Response } from "../api";
+
+import { Gateway } from "../api";
+import { AuthUserDTO } from "../api/auth";
 
 
 @injectable()
@@ -12,7 +13,7 @@ export class AuthStore {
     isAuthenticated: boolean | "pending";
 
     @observable
-    user?: User;
+    user?: AuthUserDTO;
 
     @observable
     error?: string;
@@ -28,41 +29,39 @@ export class AuthStore {
     }
 
     @action.bound
-    async check() {
-        try {
-            const user = (await this.fetchUserStatus()).data;
-            runInAction("checkSuccess", () => {
-                this.user = user;
-                this.isAuthenticated = true;
-                this.error = undefined;
-            });
-        } catch (ex) {
-            runInAction("checkFailure", () => {
-                this.user = undefined;
-                this.isAuthenticated = false;
-                this.error = ex.message;
-            });
-        }
-    }
-
-    @action.bound
     async login(username: string, password: string): Promise<boolean> {
         try {
-            await this.gateway.login(username, password);
-            await runInAction("loginSuccess", this.check);
+            const user = (await this.gateway.login(username, password)).data;
+            this.onAuthenticateSuccess(user);
             return true;
         } catch (ex) {
-            runInAction("loginFailure", () => {
-                console.log("AuthStore/loginFailure");
-                this.isAuthenticated = false;
-                this.error = ex.message;
-            });
+            this.onAuthenticationFailure(ex);
             return false;
         }
     }
 
-    private async fetchUserStatus(): Promise<Response<User>> {
-        return this.gateway.get<User>("login/status");
+    @action.bound
+    async check(): Promise<void> {
+        try {
+            const user = (await this.gateway.getLoginStatus()).data;
+            this.onAuthenticateSuccess(user);
+        } catch (ex) {
+            this.onAuthenticationFailure(ex);
+        }
+    }
+
+    @action.bound
+    onAuthenticateSuccess(user: AuthUserDTO) {
+        this.user = user;
+        this.isAuthenticated = true;
+        this.error = undefined;
+    }
+
+    @action.bound
+    onAuthenticationFailure(ex: Error) {
+        this.user = undefined;
+        this.isAuthenticated = false;
+        this.error = ex.message;
     }
 
 }

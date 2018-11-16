@@ -36,7 +36,7 @@ export function convertToOAS3Schema(componentMetadata: SchemaMetadata) {
         schema.properties[property.key] = propertySchema;
     }
 
-    if (schema.required.length == 0) {
+    if (schema.required.length === 0) {
         delete schema.required;
     }
 

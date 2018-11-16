@@ -36,7 +36,7 @@ export const USERS = [
     {
         "totalStacks": 0,
         "hasPWD": null,
-        "totalGroups": 0,
+        "totalGroups": 1,
         "id": 1,
         "userRealName": "Test Administrator 1",
         "totalWidgets": 0,
@@ -47,7 +47,7 @@ export const USERS = [
     }, {
         "totalStacks": 0,
         "hasPWD": null,
-        "totalGroups": 0,
+        "totalGroups": 1,
         "id": 2,
         "userRealName": "Test User 1",
         "totalWidgets": 0,
@@ -63,7 +63,7 @@ export const GROUPS = [
         "stackDefault": false,
         "totalStacks": 1,
         "status": "active",
-        "totalUsers": 0,
+        "totalUsers": 1,
         "id": 1,
         "description": "OWF Administrators",
         "totalWidgets": 10,
@@ -75,7 +75,7 @@ export const GROUPS = [
         "stackDefault": false,
         "totalStacks": 2,
         "status": "active",
-        "totalUsers": 0,
+        "totalUsers": 1,
         "id": 2,
         "description": "OWF Users",
         "totalWidgets": 0,
@@ -91,7 +91,7 @@ export const STACKS = [
         "approved": true,
         "imageUrl": "themes/common/images/admin/64x64_admin_app.png",
         "owner": null,
-        "totalUsers": 0,
+        "totalUsers": 1,
         "totalGroups": 1,
         "id": 1,
         "groups": [{
@@ -130,7 +130,7 @@ export const STACKS = [
         "approved": true,
         "imageUrl": null,
         "owner": null,
-        "totalUsers": 0,
+        "totalUsers": 1,
         "totalGroups": 1,
         "id": 2,
         "groups": [{
@@ -169,7 +169,7 @@ export const STACKS = [
         "approved": true,
         "imageUrl": null,
         "owner": null,
-        "totalUsers": 0,
+        "totalUsers": 1,
         "totalGroups": 1,
         "id": 3,
         "groups": [{
