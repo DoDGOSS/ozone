@@ -4,13 +4,31 @@
     height: 50%;
 }
 
-:local .title {
-    font-weight: bold;
-    margin-left: 1.0rem;
-    font-weight: 600;
-    background-color: #D3D3D3;
-    font-size: 16px;
+:local .dataSection {
+
+    > header {
+        font-weight: bold;
+        font-size: 1.2em;
+        border-bottom: 1px solid #000;
+    }
 }
 
-:local .userProfileDialogContent {
+:local .dataGrid {
+    padding: .25em 0 1em 1em;
+
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-auto-flow: row;
+
+    justify-items: start;
+    align-items: center;
+
+    > label {
+        margin: 0.25em 1em 0.25em 0;
+        font-weight: bold;
+    }
+
+    > span {
+        margin: 0.25em 1em 0.25em 1em;
+    }
 }
