@@ -1,22 +1,11 @@
-import { Validator } from "../interfaces";
+import { JsonSchema } from "../../schemas";
 
-import { composeSchemas, createLazyValidator, JsonSchema } from "../schemas";
-
-import { GroupDTO, GroupGetResponse } from "./group.dto";
-
-
-export const validateGroupDTO: Validator<GroupDTO> =
-    createLazyValidator(() => GROUP_SCHEMA);
-
-
-export const validateGroupGetResponse: Validator<GroupGetResponse> =
-    createLazyValidator(() => composeSchemas(GROUP_GET_RESPONSE_SCHEMA, { Group: GROUP_SCHEMA }));
+import { GroupDTO, GroupGetResponse } from "../group-dto";
 
 
 export const GROUP_SCHEMA_REF = "#/components/schemas/Group";
 
-
-export const GROUP_SCHEMA: JsonSchema<GroupDTO> = {
+export const GROUP_JSON_SCHEMA: JsonSchema<GroupDTO> = {
     type: "object",
     required: [
         "automatic",
@@ -71,22 +60,27 @@ export const GROUP_SCHEMA: JsonSchema<GroupDTO> = {
 };
 
 
-export const GROUP_GET_RESPONSE_SCHEMA: JsonSchema<GroupGetResponse> = {
+export const GROUP_GET_RESPONSE_JSON_SCHEMA: JsonSchema<GroupGetResponse> = {
     type: "object",
     required: [
-        "results",
-        "data"
+        "data",
+        "results"
     ],
     additionalProperties: false,
     properties: {
-        results: {
-            type: "number"
-        },
         data: {
             type: "array",
             items: {
                 $ref: GROUP_SCHEMA_REF
             }
+        },
+        results: {
+            type: "number"
+        }
+    },
+    components: {
+        schemas: {
+            Group: GROUP_JSON_SCHEMA
         }
     }
 };

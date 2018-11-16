@@ -1,8 +1,12 @@
+import { AuthUserDTO } from "./auth";
+
 export interface Gateway {
 
     readonly isAuthenticated: boolean;
 
-    login(username: string, password: string): Promise<Response<any>>;
+    login(username: string, password: string): Promise<Response<AuthUserDTO>>;
+
+    getLoginStatus(): Promise<Response<AuthUserDTO>>;
 
     get<T>(url: string, options?: RequestOptions<T>): Promise<Response<T>>;
 

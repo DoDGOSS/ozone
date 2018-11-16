@@ -1,15 +1,7 @@
 import * as qs from "qs";
-import * as _ from "lodash";
 
 import { inject, injectable, TYPES } from "../../inject";
 import { Gateway, Response } from "../interfaces";
-
-import {
-    validateUserCreateResponse,
-    validateUserDeleteResponse,
-    validateUserGetResponse,
-    validateUserUpdateResponse
-} from "./user.schema";
 
 import {
     UserCreateRequest,
@@ -18,7 +10,9 @@ import {
     UserGetResponse,
     UserUpdateRequest,
     UserUpdateResponse
-} from "./user.dto";
+} from "./user-dto";
+
+import { toIdArray } from "../common";
 
 
 export interface UserQueryCriteria {
@@ -39,13 +33,13 @@ export class UserAPI {
     getUsers(criteria?: UserQueryCriteria): Promise<Response<UserGetResponse>> {
         return this.gateway.get("user/", {
             params: getOptionParams(criteria),
-            validate: validateUserGetResponse
+            validate: UserGetResponse.validate
         });
     }
 
     getUserById(id: number): Promise<Response<UserGetResponse>> {
         return this.gateway.get(`user/${id}/`, {
-            validate: validateUserGetResponse
+            validate: UserGetResponse.validate
         });
     }
 
@@ -58,7 +52,7 @@ export class UserAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateUserCreateResponse
+            validate: UserCreateResponse.validate
         });
     }
 
@@ -71,7 +65,7 @@ export class UserAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateUserUpdateResponse
+            validate: UserUpdateResponse.validate
         });
     }
 
@@ -85,7 +79,7 @@ export class UserAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateUserDeleteResponse
+            validate: UserDeleteResponse.validate
         });
     }
 
@@ -100,13 +94,3 @@ function getOptionParams(options?: UserQueryCriteria): any | undefined {
     return params;
 }
 
-function toArray<T>(value: T | T[]): T[] {
-    if (_.isUndefined(value)) return [];
-    if (_.isArray(value)) return value;
-
-    return [value];
-}
-
-function toIdArray(id: number | number[]): Array<{ id: number }> {
-    return toArray(id).map((i) => ({ id: i }));
-}

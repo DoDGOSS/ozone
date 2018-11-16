@@ -1,9 +1,9 @@
 import axios from "axios";
-import * as _ from "lodash";
+import { trimEnd, trimStart } from "lodash";
 
 import { injectable } from "../inject";
-import { AuthenticationError, Gateway, RequestOptions, Response } from "../api";
-
+import { AuthenticationError, Gateway, RequestOptions, Response, ValidationError } from "../api";
+import { AuthUserDTO } from "../api/auth";
 
 
 @injectable()
@@ -14,24 +14,29 @@ export class OzoneGateway implements Gateway {
     private _isAuthenticated: boolean = false;
 
     constructor(baseUrl: string = "http://localhost:8080") {
-        this.rootUrl = _.trimEnd(baseUrl, "/");
+        this.rootUrl = trimEnd(baseUrl, "/");
     }
-
 
     get isAuthenticated(): boolean {
         return this._isAuthenticated;
     }
 
-    async login(username: string, password: string): Promise<Response<any>> {
+    async login(username: string, password: string): Promise<Response<AuthUserDTO>> {
         try {
-            return await axios.post(`${this.rootUrl}/perform_login`, null, {
-                withCredentials: true,
+            const response = await this.post(`perform_login`, null, {
                 params: {
                     username,
                     password
-                }
+                },
+                validate: AuthUserDTO.validate
             });
+            this._isAuthenticated = true;
+            return response;
         } catch (ex) {
+            this._isAuthenticated = false;
+
+            if (ex instanceof ValidationError) throw ex;
+
             if (ex.response.status === 401) {
                 throw new AuthenticationError("Invalid username or password", ex);
             }
@@ -39,11 +44,24 @@ export class OzoneGateway implements Gateway {
         }
     }
 
+    async getLoginStatus(): Promise<Response<AuthUserDTO>> {
+        try {
+            const response = await this.get(`login/status`, {
+                validate: AuthUserDTO.validate
+            });
+            this._isAuthenticated = true;
+            return response;
+        } catch (ex) {
+            this._isAuthenticated = false;
 
+            if (ex instanceof ValidationError) throw ex;
+            throw new AuthenticationError("Authentication Required", ex);
+        }
+    }
 
     async get<T>(url: string, options: RequestOptions<T> = {}): Promise<Response<T>> {
         const { params, headers, validate } = options;
-        const normalizedUrl = _.trimStart(url, "/");
+        const normalizedUrl = trimStart(url, "/");
 
         const response = await axios.get(`${this.rootUrl}/${normalizedUrl}`, {
             withCredentials: true,
@@ -58,7 +76,7 @@ export class OzoneGateway implements Gateway {
 
     async post<T>(url: string, data?: any, options: RequestOptions<T> = {}): Promise<Response<T>> {
         const { params, headers, validate } = options;
-        const normalizedUrl = _.trimStart(url, "/");
+        const normalizedUrl = trimStart(url, "/");
 
         const response = await axios.post(`${this.rootUrl}/${normalizedUrl}`, data, {
             withCredentials: true,
@@ -73,7 +91,7 @@ export class OzoneGateway implements Gateway {
 
     async delete<T>(url: string, data?: any, options: RequestOptions<T> = {}): Promise<Response<T>> {
         const { params, headers, validate } = options;
-        const normalizedUrl = _.trimStart(url, "/");
+        const normalizedUrl = trimStart(url, "/");
 
         const response = await axios.delete(`${this.rootUrl}/${normalizedUrl}`, {
             withCredentials: true,
@@ -87,10 +105,4 @@ export class OzoneGateway implements Gateway {
         return response;
     }
 
-}
-
-export interface User {
-    id: number;
-    username: string;
-    displayName: string;
 }

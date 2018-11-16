@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { DashboardAPI } from "./dashboard-api";
 
 import { NodeGateway } from "../__test__/node-gateway";

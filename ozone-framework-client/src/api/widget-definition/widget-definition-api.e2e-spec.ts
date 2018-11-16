@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { WIDGET_DEFINITION } from "../__test__/data";
 
 import { NodeGateway } from "../__test__/node-gateway";

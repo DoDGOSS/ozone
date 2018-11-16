@@ -1,8 +1,6 @@
 package ozone.owf.grails.controllers
 
 
-import org.grails.web.json.JSONObject
-
 import ozone.owf.grails.services.AccountService
 
 
@@ -13,13 +11,9 @@ class LoginController {
     AccountService accountService
 
     def showStatus() {
-        def user = accountService.getLoggedInUser()
+        def content = accountService.getLoggedInUserDetails()
 
-        def response = new JSONObject([id         : user.id,
-                                       username   : user.username,
-                                       displayName: user.userRealName])
-
-        render(response)
+        render(content)
     }
 
 }

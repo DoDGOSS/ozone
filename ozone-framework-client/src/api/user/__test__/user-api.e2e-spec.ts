@@ -1,10 +1,10 @@
 import "reflect-metadata";
 
-import { UserAPI } from "./user-api";
-import { UserDTO } from "./user.dto";
+import { UserAPI } from "../user-api";
+import { UserDTO } from "../user-dto";
 
-import { NodeGateway } from "../__test__/node-gateway";
-import { USERS } from "../__test__/data";
+import { NodeGateway } from "../../__test__/node-gateway";
+import { USERS } from "../../__test__/data";
 
 
 describe("User API", () => {

@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { PreferenceAPI } from "./preference-api";
 
 import { NodeGateway } from "../__test__/node-gateway";
