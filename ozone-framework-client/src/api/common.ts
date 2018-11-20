@@ -1,23 +1,51 @@
-import * as _ from "lodash";
+import { isArray, isNil, isUndefined } from "lodash";
 
-import { Property, Schema } from "../lib/openapi/decorators";
+import * as ajv from "ajv";
+import { Ajv, ErrorObject, ValidateFunction } from "ajv";
+import { Type } from "../interfaces";
+import { Validator } from "./interfaces";
+import { convertToJsonSchema } from "../lib/openapi/convert-json";
+import { ValidationError } from "./errors";
 
 
 export function toArray<T>(value: T | T[]): T[] {
-    if (_.isUndefined(value)) return [];
-    if (_.isArray(value)) return value;
+    if (isUndefined(value)) return [];
+    if (isArray(value)) return value;
 
     return [value];
 }
 
-export function toIdArray(id: number | number[]): Array<{ id: number }> {
-    return toArray(id).map((i) => ({ id: i }));
+
+export function createLazyComponentValidator<T>(component: Type<T>): Validator<T> {
+    let validate: ValidateFunction;
+
+    return (data: any) => {
+        if (!validate) {
+            validate = getAjv().compile(convertToJsonSchema(component));
+        }
+
+        const valid = validate(data);
+        if (!valid) {
+            const errors = formatValidationErrors(validate.errors);
+            throw new ValidationError(`${component.name} Validation Error: ${errors}`, validate.errors);
+        }
+        return data as T;
+    };
 }
 
-@Schema()
-export class Id {
 
-    @Property()
-    id: number;
+let ajvInstance: Ajv;
 
+function getAjv(): Ajv {
+    if (!ajvInstance) {
+        ajvInstance = new ajv({ allErrors: true });
+    }
+    return ajvInstance;
+}
+
+
+function formatValidationErrors(errors: ErrorObject[] | null | undefined): string {
+    if (isNil(errors)) return "Unknown validation error";
+
+    return errors.map(e => `${e.schemaPath} - ${e.message}`).join("; ");
 }

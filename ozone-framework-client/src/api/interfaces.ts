@@ -1,4 +1,5 @@
-import { AuthUserDTO } from "./auth";
+import { AuthUserDTO } from "./models/auth-dto";
+
 
 export interface Gateway {
 

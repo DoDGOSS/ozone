@@ -1,63 +1,74 @@
-import { ComponentMetadata, PropertyMap } from "./metadata";
+import { Option } from "space-lift";
+
+import { ModelMetadata, PropertyMap, PropertyMetadata } from "./metadata";
 
 const DESIGN_TYPE = "design:type";
 
-const COMPONENT_TYPE = Symbol("component:type");
-const COMPONENT_METADATA = "component:metadata";
-const COMPONENT_PROPERTIES = Symbol("component:properties");
+const MODEL_METADATA = Symbol("model:metadata");
+const MODEL_PROPERTIES = Symbol("model:properties");
 
 
-export const enum ComponentType {
-    SCHEMA = "Schema",
-    RESPONSE = "Response"
+export function getDesignType(target: object, key: string | symbol): any {
+    return Reflect.getMetadata(DESIGN_TYPE, target, key);
 }
 
-export function getDesignTypeName(target: object, key: string | symbol): string | undefined {
-    const type = Reflect.getMetadata(DESIGN_TYPE, target, key);
-
+export function getPrimitiveTypeName(type: Function): string {
     switch (type) {
-        case String: return "string";
-        case Number: return "number";
-        case Boolean: return "boolean";
-        case Array: return "array";
-        default: return "object";
+        case String:
+            return "string";
+        case Number:
+            return "number";
+        case Boolean:
+            return "boolean";
+        case Array:
+            return "array";
+        case undefined:
+            return "null";
+        default:
+            return "object";
     }
 }
 
-export function getPrimitiveTypeName(type: Function): string | undefined {
-    switch (type) {
-        case String: return "string";
-        case Number: return "number";
-        case Boolean: return "boolean";
-        case Array: return "array";
-    }
-    return undefined;
+export function getModelMetadata(target: Function): ModelMetadata | undefined {
+    return Reflect.getMetadata(MODEL_METADATA, target);
 }
 
-export function getComponentType(target: Function): ComponentType | undefined {
-    return Reflect.getMetadata(COMPONENT_TYPE, target);
+export function setModelMetadata(target: Function, metadata: ModelMetadata): void {
+    Reflect.defineMetadata(MODEL_METADATA, metadata, target);
 }
 
-export function setComponentType(target: Function, type: ComponentType): void {
-    Reflect.defineMetadata(COMPONENT_TYPE, type, target);
+export function hasModelProperties(target: Function): boolean {
+    return Reflect.hasMetadata(MODEL_PROPERTIES, target);
 }
 
-export function getComponentMetadata(target: Function): ComponentMetadata {
-    return Reflect.getMetadata(COMPONENT_METADATA, target);
+export function getModelProperties(target: Function): PropertyMap {
+    return Reflect.getMetadata(MODEL_PROPERTIES, target);
 }
 
-export function setComponentMetadata(target: Function, metadata: ComponentMetadata ): void {
-    Reflect.defineMetadata(COMPONENT_METADATA, metadata, target);
+export function getPropertyMetadata(target: Function, propertyName: string): PropertyMetadata {
+    const properties = getModelProperties(target);
+    return properties && properties[propertyName];
 }
 
-export function hasComponentProperties(target: Function): boolean {
-    return Reflect.hasMetadata(COMPONENT_PROPERTIES, target);
+
+export function setModelProperties(target: Function, properties: PropertyMap): void {
+    Reflect.defineMetadata(MODEL_PROPERTIES, properties, target);
 }
 
-export function getComponentProperties(target: Function): PropertyMap {
-    return Reflect.getMetadata(COMPONENT_PROPERTIES, target);
+export function deleteModelMetadata(target: Function): void {
+    Reflect.deleteMetadata(MODEL_METADATA, target);
 }
 
-export function setComponentProperties(target: Function, properties: PropertyMap): void {
-    Reflect.defineMetadata(COMPONENT_PROPERTIES, properties, target);
+export function deleteModelProperties(target: Function): void {
+    Reflect.deleteMetadata(MODEL_PROPERTIES, target);
+}
+
+export function getReferencedType(property: PropertyMetadata): Function | undefined {
+    return Option(property.typeProvider).map(typeProvider => typeProvider())
+                                        .orElse(() => Option(property.type))
+                                        .get();
+}
+
+export function getReferencedTypeMetadata(property: PropertyMetadata): ModelMetadata | undefined {
+    return Option(getReferencedType(property)).map(getModelMetadata).get();
 }

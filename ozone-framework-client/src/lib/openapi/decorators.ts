@@ -1,19 +1,12 @@
-import { PropertyOptions, ResponseOptions, SchemaOptions } from "./interfaces";
+import { ModelOptions, PropertyOptions } from "./interfaces";
 
 import { getDefaultComponentContainer } from "./container";
-import { isFunction } from "./util";
+import { isFunction } from "lodash";
 
 
-export function Schema(options?: SchemaOptions): ClassDecorator {
+export function Model(options?: ModelOptions): ClassDecorator {
     return (target: Function) => {
-        getDefaultComponentContainer().addSchemaMetadata(target, options);
-    };
-}
-
-
-export function Response(options: ResponseOptions): ClassDecorator {
-    return (target: Function) => {
-        getDefaultComponentContainer().addResponseMetadata(target, options);
+        getDefaultComponentContainer().addModelMetadata(target, options);
     };
 }
 

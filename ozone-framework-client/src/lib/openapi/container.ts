@@ -1,119 +1,94 @@
-import { PropertyOptions, ResponseOptions, SchemaOptions } from "./interfaces";
-
-import { PropertyMetadata, ResponseMetadata, SchemaMetadata } from "./metadata";
+import { ModelOptions, PropertyOptions } from "./interfaces";
+import { ModelMetadata, PropertyMetadata } from "./metadata";
 
 import {
-    ComponentType,
-    getComponentProperties,
-    getComponentType,
-    getDesignTypeName,
-    hasComponentProperties,
-    setComponentMetadata,
-    setComponentProperties,
-    setComponentType
+    deleteModelMetadata,
+    deleteModelProperties,
+    getDesignType, getModelMetadata,
+    getModelProperties,
+    hasModelProperties,
+    setModelMetadata,
+    setModelProperties
 } from "./reflect";
 
-import { isUndefined, valuesOf } from "./util";
+import { forIn, values } from "lodash";
 
 
 let componentContainer: ComponentContainer;
 
 export function getDefaultComponentContainer(): ComponentContainer {
-    if (!componentContainer) {
+    if (componentContainer === undefined) {
         componentContainer = new ComponentContainer();
     }
+
     return componentContainer;
 }
 
+export function resetDefaultComponentContainer() {
+    if (componentContainer !== undefined) {
+        componentContainer.clear();
+    }
+
+    componentContainer = new ComponentContainer();
+}
 
 export class ComponentContainer {
 
-    private schemas: { [id: string]: SchemaMetadata } = {};
-    private responses: { [id: string]: ResponseMetadata } = {};
+    private _metadata: { [id: string]: ModelMetadata } = {};
 
-    getSchema(schema: Function): SchemaMetadata {
-        const metadata = this.schemas[schema.name];
-
-        if (isUndefined(metadata)) {
-            throw new Error(`Schema component '${schema.name}' has not declared.`);
-        }
-
-        return metadata;
+    clear(): void {
+        forIn(this._metadata, (metadata: ModelMetadata) => {
+            const target = metadata.target;
+            deleteModelProperties(target);
+            deleteModelMetadata(target);
+        });
     }
 
-    getSchemas(): SchemaMetadata[] {
-        return valuesOf(this.schemas);
+    getAllModelMetadata(): ModelMetadata[] {
+        return values(this._metadata);
     }
 
-    getResponse(response: Function): ResponseMetadata {
-        const metadata = this.responses[response.name];
-
-        if (isUndefined(metadata)) {
-            throw new Error(`Response component '${response.name}' has not declared.`);
+    getModelMetadata(model: Function): ModelMetadata {
+        const metadata = getModelMetadata(model);
+        if (!metadata) {
+            throw new Error(`Model '${model.name}' not found`);
         }
 
-        return metadata;
+        const options = metadata.options;
+        const modelName = (options && options.name) ? options.name : model.name;
+
+        if (!(modelName in this._metadata)) {
+            throw new Error(`Model '${modelName}' not found`);
+        }
+
+        return this._metadata[modelName];
     }
 
-    getResponses(): ResponseMetadata[] {
-        return valuesOf(this.responses);
-    }
+    addModelMetadata(model: Function, options?: ModelOptions): void {
+        const modelName = (options && options.name) ? options.name : model.name;
 
-    addSchemaMetadata(schema: Function, options?: SchemaOptions): void {
-        const schemaName = schema.name;
-
-        const existingComponentType = getComponentType(schema);
-        if (existingComponentType) {
-            throw new Error(`Failed to declare Schema component '${schemaName}'; already has type '${existingComponentType}'`);
+        if (modelName in this._metadata) {
+            throw new Error(`Model already exists with name '${modelName}'`);
         }
 
-        if (schemaName in this.schemas) {
-            throw new Error(`Schema component already exists with name '${schemaName}'`);
-        }
-
-        setComponentType(schema, ComponentType.SCHEMA);
-
-        const properties = getComponentProperties(schema);
-        const schemaMetadata = new SchemaMetadata(schema, properties, options);
-        this.schemas[schemaName] = schemaMetadata;
-        setComponentMetadata(schema, schemaMetadata);
-    }
-
-    addResponseMetadata(response: Function, options: ResponseOptions) {
-        const responseName = response.name;
-
-        const existingComponentType = getComponentType(response);
-        if (existingComponentType) {
-            throw new Error(`Failed to declare Response component '${responseName}'; already has type '${existingComponentType}'`);
-        }
-
-        if (responseName in this.responses) {
-            throw new Error(`Response component already exists with name '${responseName}'`);
-        }
-
-        setComponentType(response, ComponentType.RESPONSE);
-
-        const properties = getComponentProperties(response);
-        const responseMetadata = new ResponseMetadata(response, properties, options);
-        this.responses[responseName] = responseMetadata;
-        setComponentMetadata(response, responseMetadata);
+        const properties = getModelProperties(model);
+        const modelMetadata = new ModelMetadata(model, properties, options);
+        setModelMetadata(model, modelMetadata);
+        this._metadata[modelName] = modelMetadata;
     }
 
     addPropertyMetadata(component: object, key: string | symbol, type?: () => Function, propertySchema?: PropertyOptions) {
         const propertyKey = String(key);
-        const primitiveType = getDesignTypeName(component, propertyKey);
-        if (isUndefined(primitiveType)) {
-            throw new Error("Failed to add Property metadata: unknown primitive type");
-        }
 
+        const primitiveType = getDesignType(component, propertyKey);
         const propertyMetadata = new PropertyMetadata(propertyKey, primitiveType, type, propertySchema);
 
-        if (hasComponentProperties(component.constructor)) {
-            const properties = getComponentProperties(component.constructor);
+        if (hasModelProperties(component.constructor)) {
+            const properties = getModelProperties(component.constructor);
             properties[propertyKey] = propertyMetadata;
         } else {
             const properties = { [propertyKey]: propertyMetadata };
-            setComponentProperties(component.constructor, properties);
+            setModelProperties(component.constructor, properties);
         }
     }
 

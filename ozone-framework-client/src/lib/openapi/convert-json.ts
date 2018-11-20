@@ -1,63 +1,76 @@
-import { JsonSchema } from "./json-schema";
+import { JsonSchemaBuilder } from "./json-schema-builder";
 
-import {
-    ComponentMetadata,
-    HasPropertyMetadata,
-    isResponseMetadata,
-    isSchemaMetadata,
-    PropertyMetadata
-} from "./metadata";
+import { ModelMetadata, PropertyMetadata } from "./metadata";
+import { getModelMetadata, getPrimitiveTypeName, getReferencedTypeMetadata } from "./reflect";
 
-import { ComponentType, getComponentMetadata, getPrimitiveTypeName } from "./reflect";
+import { isEqual, isNil, keys } from "lodash";
+import { invoke } from "./util";
 
-import { isNil } from "lodash";
+let SCHEMA_CACHE: { [name: string]: any } = {};
 
+export function resetSchemaCache(): void {
+    SCHEMA_CACHE = {};
+}
 
-const SCHEMA_CACHE: { [name: string]: any } = {};
-const RESPONSES_CACHE: { [name: string]: any } = {};
+function getCachedSchema(metadata: ModelMetadata) {
+    const modelName = metadata.name;
+    return (modelName in SCHEMA_CACHE) ? SCHEMA_CACHE[modelName] : undefined;
+}
 
+function addCachedSchema(metadata: ModelMetadata, schema: any): void {
+    const modelName = metadata.name;
+    SCHEMA_CACHE[modelName] = schema;
+}
 
-export function convertToJsonSchema(component: Function) {
-    const componentMetadata = getComponentMetadata(component);
+export function convertToJsonSchema(model: Function) {
+    const modelMetadata = getModelMetadata(model);
 
-    const targetName = componentMetadata.targetName;
-    if (isSchemaMetadata(componentMetadata)) {
-        if (targetName in SCHEMA_CACHE) {
-            return SCHEMA_CACHE[targetName];
-        }
-    } else if (isResponseMetadata(componentMetadata)) {
-        if (targetName in RESPONSES_CACHE) {
-            return RESPONSES_CACHE[targetName];
-        }
-    } else {
-        throw new Error(`Unable to convert to JSON schema; invalid component type '${componentMetadata.type}'`);
+    if (isNil(modelMetadata)) {
+        throw new Error(`Unable to convert to JSON schema; '${model.name}' is not defined as a Model`);
     }
 
-    const schema = new JsonSchema("object");
+    const cachedSchema = getCachedSchema(modelMetadata);
+    if (!isNil(cachedSchema)) return cachedSchema;
+
+    const schema = new JsonSchemaBuilder("object");
     schema.additionalProperties = false;
 
-    const properties = getSortedPropertyMetadata(componentMetadata);
+    const properties = getSortedPropertyMetadata(modelMetadata);
 
+    // TODO: Needs refactoring
     for (const property of properties) {
-        const propertySchema: any = {};
         const propertyOptions = property.options || {};
 
         if (propertyOptions.required !== false) {
             schema.addRequired(property.key);
         }
 
-        if (propertyOptions.nullable === true) {
-            propertySchema.type = [property.type, "null"];
+        const primitiveType = getPrimitiveTypeName(property.type);
+
+        let propertySchema: any;
+        let metadata: ModelMetadata | undefined;
+        if (primitiveType === "object") {
+            [propertySchema, metadata] = getObjectReferenceSchema(property);
+        } else if (primitiveType === "array") {
+            [propertySchema, metadata] = getArraySchema(property);
         } else {
-            propertySchema.type = property.type;
+            propertySchema = { type: primitiveType };
+        }
+
+        if (!isNil(metadata)) {
+            schema.addSchema(metadata.name, convertToJsonSchema(metadata.target));
         }
 
         if (!isNil(propertyOptions.enum)) {
             propertySchema.enum = propertyOptions.enum;
         }
 
-        if (property.type === "array") {
-            addArrayItemsSchema(schema, propertySchema, property);
+        if (propertyOptions.nullable) {
+            if (isEqual(keys(propertySchema), ["type"])) {
+                propertySchema.type = [primitiveType, "null"];
+            } else {
+                propertySchema = { oneOf: [propertySchema, { type: "null" }] };
+            }
         }
 
         schema.addProperty(property.key, propertySchema);
@@ -65,47 +78,67 @@ export function convertToJsonSchema(component: Function) {
 
     const plainSchema = schema.toJSON();
 
-    if (isSchemaMetadata(componentMetadata)) {
-        SCHEMA_CACHE[targetName] = plainSchema;
-    } else if (isResponseMetadata(componentMetadata)) {
-        RESPONSES_CACHE[targetName] = plainSchema;
-    }
+    addCachedSchema(modelMetadata, plainSchema);
 
     return plainSchema;
 }
 
-function addArrayItemsSchema(schema: JsonSchema, propertySchema: any, property: PropertyMetadata): void {
-    if (isNil(property.typeProvider)) return;
+function getObjectReferenceSchema(property: PropertyMetadata): [any, ModelMetadata?] {
+    const referenceMetadata = getReferencedTypeMetadata(property);
 
-    const providedType = property.typeProvider();
-    if (isNil(providedType)) return;
-
-    const itemMetadata = getComponentMetadata(providedType);
-    if (!isNil(itemMetadata)) {
-        switch (itemMetadata.type) {
-            case ComponentType.SCHEMA:
-                propertySchema.items = { $ref: `#/components/schemas/${itemMetadata.name}` };
-                schema.addSchema(itemMetadata.name, convertToJsonSchema(itemMetadata.target));
-                break;
-            case ComponentType.RESPONSE:
-                propertySchema.items = { $ref: `#/components/responses/${itemMetadata.name}` };
-                break;
-        }
-        return;
+    if (isNil(referenceMetadata)) {
+        return [{type: "object"}];
     }
 
-    const primitiveType = getPrimitiveTypeName(providedType);
-    if (isNil(primitiveType)) return;
-
-    propertySchema.items = {type: primitiveType};
+    return [{$ref: `#/definitions/${referenceMetadata.name}`}, referenceMetadata];
 }
 
-function getSortedPropertyMetadata(componentMetadata: ComponentMetadata & HasPropertyMetadata): PropertyMetadata[] {
-    const properties = componentMetadata.getProperties();
-    properties.sort((a, b) => {
-        if (a.key < b.key) return -1;
-        if (a.key > b.key) return 1;
+
+function getArraySchema(property: PropertyMetadata): [any, ModelMetadata?] {
+    const providedType = invoke(property.typeProvider);
+
+    if (!providedType.isDefined()) {
+        return [{ type: "array" }];
+    }
+
+    const itemMetadata = providedType.map(getModelMetadata);
+    if (itemMetadata.isDefined()) {
+        const metadata = itemMetadata.get();
+        return [{
+            type: "array",
+            items: {
+                $ref: `#/definitions/${metadata.name}`
+            }
+        }, metadata];
+    }
+
+    const primitiveType = providedType.map(getPrimitiveTypeName);
+
+    if (!primitiveType.isDefined()) {
+        return [{ type: "array"}];
+    }
+
+    return [{
+        type: "array",
+        items: {
+            type: primitiveType.get()
+        }
+    }];
+}
+
+function getSortedPropertyMetadata(modelMetadata: ModelMetadata): PropertyMetadata[] {
+    return modelMetadata.getProperties().sort(compareByProperty("key"));
+}
+
+type PropertyKeyOfType<T, U> = { [K in keyof T]: T[K] extends U ? K : never }[keyof T];
+
+function compareByProperty<T>(propertyKey: PropertyKeyOfType<T, string | number>): (a: T, b: T) => number {
+    return (a: T, b: T) => {
+        const av = a[propertyKey];
+        const bv = b[propertyKey];
+
+        if (av < bv) return -1;
+        if (av > bv) return 1;
         return 0;
-    });
-    return properties;
+    };
 }

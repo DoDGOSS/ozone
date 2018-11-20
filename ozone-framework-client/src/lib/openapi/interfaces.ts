@@ -1,4 +1,4 @@
-export interface SchemaOptions {
+export interface ModelOptions {
     name?: string;
 }
 
@@ -7,11 +7,4 @@ export interface PropertyOptions {
     nullable?: boolean;
     readOnly?: boolean;
     enum?: string[];
-}
-
-
-export interface ResponseOptions {
-    name?: string;
-    description: string;
-    mediaType?: string;
 }
