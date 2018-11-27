@@ -3,7 +3,7 @@ import { action, observable, runInAction } from "mobx";
 import { injectable, lazyInject, TYPES } from "../inject";
 
 import { Gateway } from "../api";
-import { AuthUserDTO } from "../api/auth";
+import { AuthUserDTO } from "../api";
 
 
 @injectable()

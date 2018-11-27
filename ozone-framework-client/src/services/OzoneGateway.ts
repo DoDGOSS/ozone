@@ -3,7 +3,7 @@ import { trimEnd, trimStart } from "lodash";
 
 import { injectable } from "../inject";
 import { AuthenticationError, Gateway, RequestOptions, Response, ValidationError } from "../api";
-import { AuthUserDTO } from "../api/auth";
+import { AuthUserDTO } from "../api";
 
 
 @injectable()

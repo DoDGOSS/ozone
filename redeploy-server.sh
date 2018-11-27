@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+of #!/usr/bin/env bash
 
 # Command line arguments
 REMOVE_VOLUMES=false
@@ -14,7 +14,7 @@ done
 
 
 echo "Stopping container..."
-// docker-compose rm -fs ozone_server
+# docker-compose rm -fs ozone_server
 
 if [ "$REMOVE_VOLUMES" = true ] ; then
     echo "Clearing volumes..."

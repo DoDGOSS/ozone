@@ -7,7 +7,7 @@ import { WidgetContainer } from "../../../widget-dashboard/WidgetContainer";
 import { UserCreateForm } from "./UserCreateForm";
 
 import { lazyInject } from "../../../../inject";
-import { UserAPI, UserCreateRequest, UserDTO } from "../../../../api/user";
+import { UserAPI, UserCreateRequest, UserDTO } from "../../../../api";
 
 
 interface State {
