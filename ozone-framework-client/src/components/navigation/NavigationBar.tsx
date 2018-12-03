@@ -119,7 +119,8 @@ const LoginButton: React.SFC<MenuButtonProps> =
                     text="Login"
                     icon="log-in"
                     active={active}
-                    onClick={onClick}/>
+                    onClick={onClick}
+                    data-element-id="login-button"/>
         </NavbarTooltip>
     );
 
@@ -139,7 +140,8 @@ const UserMenuButton: React.SFC<UserMenuButtonProps> =
                 <Button minimal
                         text={userName}
                         icon="user"
-                        rightIcon="caret-down"/>
+                        rightIcon="caret-down"
+                        data-element-id="user-menu-button"/>
             </Popover>
         </NavbarTooltip>
     );

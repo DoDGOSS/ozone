@@ -3,6 +3,9 @@
 /build/
 /coverage/
 
+/selenium-debug.log
+/reports/
+
 .DS_Store
 .env.local
 .env.development.local

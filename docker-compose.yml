@@ -20,7 +20,7 @@ services:
     container_name: ozone_server
     volumes:
       - server_m2_cache:/root/.m2
-      - server_gradle_cache/root/.gradle
+      - server_gradle_cache:/root/.gradle
     ports:
       - 8080:8080
 

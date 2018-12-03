@@ -75,6 +75,7 @@ export const Field: React.SFC<FieldProps> = ({
                                     context.setValues({ [id]: e.currentTarget.value })
                             }
                             onBlur={() => context.validate(id)}
+                            data-element-id={`form-field-${id}`}
                         />
                     )}
                     {editor!.toLowerCase() === "password" && (
@@ -88,6 +89,7 @@ export const Field: React.SFC<FieldProps> = ({
                                     context.setValues({ [id]: e.currentTarget.value })
                             }
                             onBlur={() => context.validate(id)}
+                            data-element-id={`form-field-${id}`}
                         />
                     )}
                     {/* TODO - Add more field types as needed */}

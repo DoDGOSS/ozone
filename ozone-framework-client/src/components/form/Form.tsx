@@ -176,19 +176,22 @@ export class Form<T> extends React.Component<FormProps<T>, FormState> {
                 <form onSubmit={this.handleSubmit} noValidate={true}>
                     <div>
                         {submitSuccess && (
-                            <Callout title="Success" intent="success">
+                            <Callout title="Success" intent="success"
+                                     data-element-id="form-success-callout">
                                 The form was successfully submitted!
                             </Callout>
                         )}
 
                         {submitSuccess === false && !this.haveErrors(errors) && (
-                            <Callout title="Error" intent="danger">
+                            <Callout title="Error" intent="danger"
+                                     data-element-id="form-error-callout">>
                                 An unexpected error has occurred.
                             </Callout>
                         )}
 
                         {submitSuccess === false && this.haveErrors(errors) && (
-                            <Callout title="Invalid Form" intent="warning">
+                            <Callout title="Invalid Form" intent="warning"
+                                     data-element-id="form-invalid-callout">>
                                 Sorry, the form is invalid. Please review and try again.
                             </Callout>
                         )}
@@ -199,6 +202,7 @@ export class Form<T> extends React.Component<FormProps<T>, FormState> {
                             <Button type="submit"
                                     text="Submit"
                                     intent="primary"
+                                    data-element-id="form-submit-button"
                                     fill
                                     disabled={this.haveErrors(errors)}/>
                         </FormGroup>

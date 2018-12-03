@@ -29,6 +29,7 @@
     "exclude": [
       "**/jest.config.js",
       "**/jest.config.e2e.js",
+      "**/nightwatch.conf.js",
       "config/**/*.js",
       "node_modules/**/*.ts",
       "coverage/lcov-report/*.js"
