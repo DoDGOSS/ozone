@@ -16,6 +16,7 @@
     "member-access": [true, "no-public"],
     "no-console": [false],
     "no-string-literal": [false],
+    "no-namespace": false,
     "object-literal-sort-keys": [false],
     "ordered-imports": [
       true, {
@@ -27,6 +28,7 @@
   },
   "linterOptions": {
     "exclude": [
+      "**/*.d.ts",
       "**/jest.config.js",
       "**/jest.config.e2e.js",
       "**/nightwatch.conf.js",

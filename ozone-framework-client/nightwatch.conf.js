@@ -26,9 +26,7 @@ module.exports = {
     },
 
     test_workers: {
-        // This allows more then one browser to be opened and tested in at once
-        enabled: true,
-        workers: "auto"
+        enabled: false
     },
 
     test_settings: {
@@ -47,7 +45,8 @@ module.exports = {
                 javascriptEnabled: true,
                 acceptSslCerts: true,
                 nativeEvents: true
-            }
+            },
+            filter: "*.spec.js"
         },
 
         // Here, we give each of the browsers we want to test in, and their driver configuration

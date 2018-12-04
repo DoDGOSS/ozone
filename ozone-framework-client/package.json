@@ -10,7 +10,7 @@
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "test:e2e": "jest --config ./jest.config.e2e.js --runInBand",
-    "test:functional": "nightwatch",
+    "test:functional": "tsc -p tests/functional && nightwatch",
     "eject": "react-scripts-ts eject"
   },
   "dependencies": {
@@ -43,7 +43,6 @@
     "@types/classnames": "2.2.6",
     "@types/jest": "23.3.5",
     "@types/lodash": "4.14.117",
-    "@types/nightwatch": "^0.9.11",
     "@types/node": "10.11.7",
     "@types/qs": "6.5.1",
     "@types/react": "16.7.7",
@@ -55,7 +54,7 @@
     "chromedriver": "^2.44.1",
     "geckodriver": "^1.14.1",
     "jest": "23.6.0",
-    "nightwatch": "^0.9.21",
+    "nightwatch": "0.9.21",
     "node-sass": "4.9.4",
     "selenium-server": "^3.141.59",
     "ts-jest": "22.4.6",
