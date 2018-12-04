@@ -24,11 +24,12 @@
   "exclude": [
     "node_modules",
     "build",
+    "coverage",
+    "reports",
     "scripts",
-    "acceptance-tests",
+    "swagger",
+    "tests",
     "webpack",
-    "jest",
-    "src/setupTests.ts",
-    "src/api/coverage"
+    "src/setupTests.ts"
   ]
 }
