@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { isNil, trimEnd, trimStart } from "lodash";
+import { get, isNil, trimEnd, trimStart } from "lodash";
 
 import { AuthenticationError, AuthUserDTO, Gateway, RequestOptions, Response, ValidationError } from "../..";
 
@@ -11,7 +11,9 @@ export class NodeGateway implements Gateway {
 
     private sessionCookie: string | null = null;
 
-    constructor(baseUrl: string = "http://localhost:8080") {
+    constructor(baseUrl?: string) {
+        if (!baseUrl) { baseUrl = getDefaultBaseUrl(); }
+
         this.rootUrl = trimEnd(baseUrl, "/");
     }
 
@@ -110,4 +112,9 @@ function getSessionCookie(headers: any) {
         if (cookie && cookie.startsWith("JSESSIONID=")) return cookie;
     }
     return null;
+}
+
+
+function getDefaultBaseUrl(): string {
+    return get(process.env, "OZONE_API_SERVER_URL", "http://localhost:8080") as string;
 }
