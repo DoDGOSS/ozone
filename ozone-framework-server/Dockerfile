@@ -51,6 +51,7 @@ RUN cd /opt/owf/owf-framework && \
 
 # Copy utility scripts (start, test, etc.)
 COPY ./scripts /opt/owf
+RUN chmod a+x /opt/owf/*.sh
 
 
 # Default start script
