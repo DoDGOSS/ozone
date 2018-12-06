@@ -54,6 +54,7 @@ export class UsersWidget extends React.Component<{}, State> {
                                     icon="add"
                                     small={true}
                                     onClick={() => this.toggleCreate()}
+                                    data-element-id='user-admin-widget-create-button'
                                 />
                             )
                         },
@@ -123,7 +124,8 @@ export class UsersWidget extends React.Component<{}, State> {
             <WidgetContainer
                 title={title}
                 body={
-                    <div>
+                    <div
+                        data-element-id="user-admin-widget-dialog">
                         {showTable &&
                         <AdminTable
                             data={this.state.users}

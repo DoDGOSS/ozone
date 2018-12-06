@@ -38,7 +38,7 @@ export class WidgetDashboard extends React.Component<WidgetDashboardProps> {
                     <div key="b">
                         <WidgetContainer title="My app 2"/>
                     </div>
-                    <div key="c">
+                    <div key="c" >
                         <UsersWidget/>
                     </div>
                 </GridLayout>

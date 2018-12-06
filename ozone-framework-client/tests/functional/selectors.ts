@@ -19,3 +19,21 @@ export namespace LoginForm {
     export const SUCCESS_CALLOUT = "div[data-element-id='form-success-callout']";
 
 }
+
+export namespace AdminWidgets {
+
+    // User Admin Widget
+
+    export const USER_ADMIN_WIDGET_DIALOG = "div[data-element-id='user-admin-widget-dialog']";
+
+    export const USER_ADMIN_CREATE_BUTTON = "button[data-element-id='user-admin-widget-create-button']";
+
+    export const USER_NAME_FIELD = "input[data-element-id='form-field-username']";
+
+    export const FULL_NAME_FIELD = "input[data-element-id='form-field-userRealName']";
+
+    export const EMAIL_FIELD = "input[data-element-id='form-field-email']";
+
+    export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
+
+}
