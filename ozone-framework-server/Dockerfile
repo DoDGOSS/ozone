@@ -1,13 +1,13 @@
 FROM openjdk:8u181-jdk-stretch
 
 
-# Gradle
+# Install Gradle
 COPY ./bin/gradle-4.2.1-all.zip /tmp
 RUN unzip -qq /tmp/gradle-4.2.1-all.zip -d /opt && \
     ln -s /opt/gradle-4.2.1/bin/gradle /bin/gradle
 
 
-# Node.js
+# Install Node.js
 COPY ./bin/node-v8.12.0-linux-x64.tar.xz /tmp
 RUN tar -xf /tmp/node-v8.12.0-linux-x64.tar.xz -C /opt && \
     ln -s /opt/node-v8.12.0-linux-x64/bin/node /bin/node && \
@@ -15,6 +15,7 @@ RUN tar -xf /tmp/node-v8.12.0-linux-x64.tar.xz -C /opt && \
     ln -s /opt/node-v8.12.0-linux-x64/bin/npx /bin/npx
 
 
+# Build application sub-modules
 COPY ./ozone-classic-bom /opt/owf/ozone-classic-bom
 COPY ./owf-appconfig /opt/owf/owf-appconfig
 COPY ./owf-auditing /opt/owf/owf-auditing
@@ -41,13 +42,17 @@ RUN cd /opt/owf/ozone-classic-bom && \
     gradle --no-daemon install
 
 
+# Build application module
 COPY ./owf-framework /opt/owf/owf-framework
 
 RUN cd /opt/owf/owf-framework && \
     gradle --no-daemon build testClasses integrationTestClasses -x test -x integrationTest
 
+
+# Copy utility scripts (start, test, etc.)
 COPY ./scripts /opt/owf
 
+
+# Default start script
 WORKDIR /opt/owf
 CMD ["sh", "./boot_run.sh"]
-

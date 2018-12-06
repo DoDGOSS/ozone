@@ -1,26 +1,23 @@
-version: '3'
+version: "3"
 
 services:
 
   ozone_client:
-    image: ozone/client
+    image: "ozone/client"
     build:
-      context: ./ozone-framework-client
-    container_name: ozone_client
-    volumes:
-      - ./ozone-framework-client:/app
-      - client_node_modules:/app/node_modules
+      context: "./ozone-framework-client"
+    container_name: "ozone_client"
+    links:
+      - "ozone_server:ozone_server"
     ports:
-      - 3000:3000
+      - "3000:3000"
+    environment:
+      OZONE_API_SERVER_URL: "http://ozone_server:8080"
 
   ozone_server:
-    image: ozone/server
+    image: "ozone/server"
     build:
-      context: ./ozone-framework-server
-    container_name: ozone_server
+      context: "./ozone-framework-server"
+    container_name: "ozone_server"
     ports:
-      - 8080:8080
-
-
-volumes:
-  client_node_modules:
+      - "8080:8080"

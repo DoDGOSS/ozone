@@ -1,4 +1,4 @@
-of #!/usr/bin/env bash
+#!/usr/bin/env bash
 
 # Command line arguments
 BUILD_OPTS=""
@@ -12,7 +12,7 @@ done
 
 
 echo "Stopping container..."
-# docker-compose rm -fs ozone_server
+docker-compose rm -fs ozone_server
 
 echo "Building container..."
 docker-compose build ${BUILD_OPTS} ozone_server
