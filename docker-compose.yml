@@ -18,15 +18,9 @@ services:
     build:
       context: ./ozone-framework-server
     container_name: ozone_server
-    volumes:
-      - server_m2_cache:/root/.m2
-      - server_gradle_cache:/root/.gradle
     ports:
       - 8080:8080
 
 
 volumes:
   client_node_modules:
-
-  server_m2_cache:
-  server_gradle_cache:

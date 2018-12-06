@@ -22,10 +22,32 @@ COPY ./owf-custom-tomcat /opt/owf/owf-custom-tomcat
 COPY ./owf-messaging /opt/owf/owf-messaging
 COPY ./owf-security /opt/owf/owf-security
 
+RUN cd /opt/owf/ozone-classic-bom && \
+    gradle --no-daemon install && \
+\
+    cd /opt/owf/owf-appconfig && \
+    gradle --no-daemon install  && \
+\
+    cd /opt/owf/owf-auditing && \
+    gradle --no-daemon install && \
+\
+    cd /opt/owf/owf-custom-tomcat && \
+    gradle --no-daemon install && \
+\
+    cd /opt/owf/owf-messaging && \
+    gradle --no-daemon install && \
+\
+    cd /opt/owf/owf-security && \
+    gradle --no-daemon install
+
+
 COPY ./owf-framework /opt/owf/owf-framework
+
+RUN cd /opt/owf/owf-framework && \
+    gradle --no-daemon build testClasses integrationTestClasses -x test -x integrationTest
 
 COPY ./scripts /opt/owf
 
 WORKDIR /opt/owf
-CMD ["sh", "./bootRun.sh"]
+CMD ["sh", "./boot_run.sh"]
 
