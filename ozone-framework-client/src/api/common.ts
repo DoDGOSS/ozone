@@ -4,7 +4,7 @@ import * as ajv from "ajv";
 import { Ajv, ErrorObject, ValidateFunction } from "ajv";
 import { Type } from "../interfaces";
 import { Validator } from "./interfaces";
-import { convertToJsonSchema } from "../lib/openapi/convert-json";
+import { convertToJsonSchema, convertToJsonSchemaArray } from "../lib/openapi/convert-json";
 import { ValidationError } from "./errors";
 
 
@@ -32,6 +32,24 @@ export function createLazyComponentValidator<T>(component: Type<T>): Validator<T
         return data as T;
     };
 }
+
+export function createLazyComponentArrayValidator<T>(component: Type<T>): Validator<T[]> {
+    let validate: ValidateFunction;
+
+    return (data: any) => {
+        if (!validate) {
+            validate = getAjv().compile(convertToJsonSchemaArray(component));
+        }
+
+        const valid = validate(data);
+        if (!valid) {
+            const errors = formatValidationErrors(validate.errors);
+            throw new ValidationError(`${component.name} Validation Error: ${errors}`, validate.errors);
+        }
+        return data as T[];
+    };
+}
+
 
 
 let ajvInstance: Ajv;

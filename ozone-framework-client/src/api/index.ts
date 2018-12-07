@@ -2,6 +2,7 @@ export * from "./errors";
 export * from "./interfaces";
 
 export * from "./models/auth-dto";
+export * from "./models/config-dto";
 export * from "./models/group-dto";
 export * from "./models/id-dto";
 export * from "./models/intent-dto";
@@ -10,6 +11,7 @@ export * from "./models/widget-dto";
 export * from "./models/widget-type-dto";
 
 export * from "./clients/administration-api";
+export * from "./clients/config-api";
 export * from "./clients/dashboard-api";
 export * from "./clients/group-api";
 export * from "./clients/preference-api";
