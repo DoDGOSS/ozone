@@ -103,6 +103,7 @@ export class UsersWidget extends React.Component<{}, State> {
                                     icon="trash"
                                     small={true}
                                     onClick={this.handleAlertOpen}
+                                    data-element-id={"user-admin-widget-delete-" + row.original.email}
                                 />
                                 <Alert
                                     cancelButtonText="Cancel"

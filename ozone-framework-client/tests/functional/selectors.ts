@@ -36,4 +36,7 @@ export namespace AdminWidgets {
 
     export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
 
+    export const DELETE_USER_ID = "button[data-element-id='user-admin-widget-delete-newUserEmail1@email.com']";
+
+
 }
