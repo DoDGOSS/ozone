@@ -18,6 +18,7 @@ export interface State {
     showTable: boolean;
     showCreate: boolean;
     alertIsOpen: boolean;
+    deleteUser?: any;
 }
 
 // TODO
@@ -102,22 +103,9 @@ export class UsersWidget extends React.Component<{}, State> {
                                     intent={Intent.DANGER}
                                     icon="trash"
                                     small={true}
-                                    onClick={this.handleAlertOpen}
+                                    onClick={() => this.handleAlertOpen(row.original)}
                                     data-element-id={"user-admin-widget-delete-" + row.original.email}
                                 />
-                                <Alert
-                                    cancelButtonText="Cancel"
-                                    confirmButtonText="Delete User"
-                                    icon="trash"
-                                    intent={Intent.DANGER}
-                                    isOpen={this.state.alertIsOpen}
-                                    onCancel={this.handleAlertCancel}
-                                    onConfirm={() => this.handleAlertConfirm(row.original.id)}
-                                >
-                                    <p>
-                                        Are you sure you want to delete <br /><b>User: {row.original.userRealName}</b>?
-                                    </p>
-                                </Alert>
                             </ButtonGroup>
                         </div>
                     )
@@ -162,19 +150,35 @@ export class UsersWidget extends React.Component<{}, State> {
                             />
                         </div>
                         }
+
+                        { this.state.alertIsOpen && (
+                            <Alert cancelButtonText="Cancel"
+                                   confirmButtonText="Delete User"
+                                   icon="trash"
+                                   intent={Intent.DANGER}
+                                   isOpen={this.state.alertIsOpen}
+                                   className="delete-user-alert"
+                                   onCancel={this.handleAlertCancel}
+                                   onConfirm={() => this.handleAlertConfirm(this.state.deleteUser.id)}>
+                                <p>Are you sure you want to delete <br/><b>User: {this.state.deleteUser.userRealName}</b>?</p>
+                            </Alert>
+                        )}
+
                     </div>
                 }
             />
         );
     }
 
-    private handleAlertOpen = () => this.setState({ alertIsOpen: true });
-    private handleAlertCancel = () => this.setState({ alertIsOpen: false });
+    private handleAlertOpen = (deleteUser: any) => this.setState({ alertIsOpen: true, deleteUser });
+
+    private handleAlertCancel = () => this.setState({ alertIsOpen: false, deleteUser: undefined });
+
     // pass in function to delete
     private handleAlertConfirm = (id: number) => {
         this.deleteUserById(id);
-        this.setState({alertIsOpen: false});
-    }
+        this.setState({ alertIsOpen: false, deleteUser: undefined });
+    };
 
     private toggleCreate = () => {
         this.setState({

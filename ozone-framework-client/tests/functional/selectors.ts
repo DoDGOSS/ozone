@@ -38,5 +38,8 @@ export namespace AdminWidgets {
 
     export const DELETE_USER_ID = "button[data-element-id='user-admin-widget-delete-newUserEmail1@email.com']";
 
+    export const CONFIRM_DELETE_ALERT = "div.delete-user-alert";
+
+    export const CONFIRM_DELETE_BUTTON = "div.delete-user-alert > div.bp3-alert-footer > button.bp3-intent-danger";
 
 }

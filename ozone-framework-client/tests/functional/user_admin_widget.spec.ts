@@ -127,8 +127,10 @@ export default {
 
         browser.click(AdminWidgets.DELETE_USER_ID);
 
-        browser.useXpath().click("//*[contains(text(),'Delete User')]")
-            .waitForElementVisible(AdminWidgets.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible")
+        browser.waitForElementVisible(AdminWidgets.CONFIRM_DELETE_ALERT)
+               .click(AdminWidgets.CONFIRM_DELETE_BUTTON);
+
+        browser.waitForElementVisible(AdminWidgets.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
 
         // TODO change to does not contain
         // browser.assert.containsText(AdminWidgets.USER_ADMIN_WIDGET_DIALOG,
