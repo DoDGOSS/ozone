@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
+import { Alert, Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
 import { AdminTable } from "../../table/AdminTable";
 
 import { WidgetContainer } from "../../../widget-dashboard/WidgetContainer";
@@ -10,13 +10,14 @@ import { lazyInject } from "../../../../inject";
 import { UserAPI, UserCreateRequest, UserDTO } from "../../../../api";
 
 
-interface State {
+export interface State {
     users: UserDTO[];
     loading: boolean;
     pageSize: number;
     columns: any;
     showTable: boolean;
     showCreate: boolean;
+    alertIsOpen: boolean;
 }
 
 // TODO
@@ -39,6 +40,7 @@ export class UsersWidget extends React.Component<{}, State> {
             pageSize: 5,
             showTable: true,
             showCreate: false,
+            alertIsOpen: false,
             columns: [
                 {
                     Header: "Users",
@@ -98,10 +100,22 @@ export class UsersWidget extends React.Component<{}, State> {
                                     text="Delete"
                                     intent={Intent.DANGER}
                                     icon="trash"
-                                    disabled={true}
                                     small={true}
-                                    // onClick={() => this.deleteUserById(row.original.id)}
+                                    onClick={this.handleAlertOpen}
                                 />
+                                <Alert
+                                    cancelButtonText="Cancel"
+                                    confirmButtonText="Delete User"
+                                    icon="trash"
+                                    intent={Intent.DANGER}
+                                    isOpen={this.state.alertIsOpen}
+                                    onCancel={this.handleAlertCancel}
+                                    onConfirm={() => this.handleAlertConfirm(row.original.id)}
+                                >
+                                    <p>
+                                        Are you sure you want to delete <br /><b>User: {row.original.userRealName}</b>?
+                                    </p>
+                                </Alert>
                             </ButtonGroup>
                         </div>
                     )
@@ -151,6 +165,14 @@ export class UsersWidget extends React.Component<{}, State> {
         );
     }
 
+    private handleAlertOpen = () => this.setState({ alertIsOpen: true });
+    private handleAlertCancel = () => this.setState({ alertIsOpen: false });
+    // pass in function to delete
+    private handleAlertConfirm = (id: number) => {
+        this.deleteUserById(id);
+        this.setState({alertIsOpen: false});
+    }
+
     private toggleCreate = () => {
         this.setState({
             showCreate: !this.state.showCreate,
@@ -172,6 +194,7 @@ export class UsersWidget extends React.Component<{}, State> {
 
     private getUserById = async (id: number) => {
         const response = await this.userAPI.getUserById(id);
+        console.log(response);
 
         // TODO: Handle failed request
         if (response.status !== 200) return;
@@ -185,6 +208,17 @@ export class UsersWidget extends React.Component<{}, State> {
 
         this.toggleCreate();
         this.setState({ loading: true });
+        this.getUsers();
+
+        return true;
+    }
+
+    private deleteUserById = async (id: number) => {
+        const response = await this.userAPI.deleteUser(id);
+
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+
         this.getUsers();
 
         return true;
