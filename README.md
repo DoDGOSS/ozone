@@ -12,12 +12,12 @@
 ### Required Software
 
 * Node.js (version >= 10.10.0+) -- https://nodejs.org/
-* Yarn (version >= 1.9.0) -- https://yarnpkg.com/
+* NPM (version >= 6.4.0) -- https://npmjs.com/
 
 
 #### Installation
 
-1. Run the `yarn install` script from the root project directory (`ozone/`)
+1. Run the `npm install` script from the client project directory (`ozone-framework-client/`)
 
 
 

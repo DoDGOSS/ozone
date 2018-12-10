@@ -25,7 +25,8 @@ export class LoginDialog extends React.Component {
                         title="Login"
                         icon="log-in">
 
-                    <div className={Classes.DIALOG_BODY}>
+                    <div className={Classes.DIALOG_BODY}
+                         data-element-id="login-dialog">
                         <div className={styles.tileContainer}>
                             <LoginForm/>
                         </div>

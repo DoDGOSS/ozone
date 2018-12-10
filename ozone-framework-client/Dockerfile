@@ -4,5 +4,5 @@ EXPOSE 3000
 
 WORKDIR /app
 
-CMD yarn install && \
-    yarn run start
+CMD npm install && \
+    npm run start

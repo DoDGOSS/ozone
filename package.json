@@ -1,7 +1,0 @@
-{
-  "private": true,
-  "workspaces": [
-    "ozone-framework-client",
-    "ozone-widget-api"
-  ]
-}

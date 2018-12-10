@@ -1,0 +1,39 @@
+export namespace MainPage {
+
+    export const LOGIN_BUTTON = "button[data-element-id='login-button']";
+
+    export const LOGIN_DIALOG = "div[data-element-id='login-dialog']";
+
+    export const USER_MENU_BUTTON = "button[data-element-id='user-menu-button']";
+
+}
+
+export namespace LoginForm {
+
+    export const USER_NAME_FIELD = "input[data-element-id='form-field-username']";
+
+    export const PASSWORD_FIELD = "input[data-element-id='form-field-password']";
+
+    export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
+
+    export const SUCCESS_CALLOUT = "div[data-element-id='form-success-callout']";
+
+}
+
+export namespace AdminWidgets {
+
+    // User Admin Widget
+
+    export const USER_ADMIN_WIDGET_DIALOG = "div[data-element-id='user-admin-widget-dialog']";
+
+    export const USER_ADMIN_CREATE_BUTTON = "button[data-element-id='user-admin-widget-create-button']";
+
+    export const USER_NAME_FIELD = "input[data-element-id='form-field-username']";
+
+    export const FULL_NAME_FIELD = "input[data-element-id='form-field-userRealName']";
+
+    export const EMAIL_FIELD = "input[data-element-id='form-field-email']";
+
+    export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
+
+}
