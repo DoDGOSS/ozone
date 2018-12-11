@@ -83,6 +83,7 @@ export class GroupCreateResponse {
 
 }
 
+
 export interface GroupUpdateRequest {
     id: number;
     name: string;

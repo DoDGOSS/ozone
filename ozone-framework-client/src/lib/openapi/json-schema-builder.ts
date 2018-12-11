@@ -10,6 +10,8 @@ export class JsonSchemaBuilder {
 
     definitions?: { [name: string]: any };
 
+    items?: any;
+
     constructor(type: string) {
         this.type = type;
     }
@@ -47,6 +49,7 @@ export class JsonSchemaBuilder {
             required: this.required,
             additionalProperties: this.additionalProperties,
             properties: this.properties,
+            items: this.items,
             definitions: this.definitions
         });
     }

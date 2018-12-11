@@ -13,6 +13,8 @@ export interface Gateway {
 
     post<T>(url: string, data?: any, options?: RequestOptions<T>): Promise<Response<T>>;
 
+    put<T>(url: string, data?: any, options?: RequestOptions<T>): Promise<Response<T>>;
+
     delete<T>(url: string, data?: any, options?: RequestOptions<T>): Promise<Response<T>>;
 
 }

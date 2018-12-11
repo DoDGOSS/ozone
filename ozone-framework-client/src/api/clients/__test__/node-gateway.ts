@@ -77,6 +77,22 @@ export class NodeGateway implements Gateway {
         return response;
     }
 
+    async put<T>(url: string, data?: any, options: RequestOptions<T> = {}): Promise<Response<T>> {
+        const { params, headers, validate } = options;
+        const normalizedUrl = trimStart(url, "/");
+
+        const requestOptions = {
+            headers: this.getHeaders(headers),
+            params
+        };
+
+        const response = await axios.put(`${this.rootUrl}/${normalizedUrl}`, data, requestOptions);
+
+        if (validate) validate(response.data);
+
+        return response;
+    }
+
     async delete<T>(url: string, data?: any, options: RequestOptions<T> = {}): Promise<Response<T>> {
         const { params, headers, validate } = options;
         const normalizedUrl = trimStart(url, "/");
