@@ -3,11 +3,11 @@ import * as styles from "./WidgetDashboard.scss";
 import * as React from "react";
 
 import * as GridLayout from "react-grid-layout";
-import { WidgetContainer } from "./WidgetContainer";
 
 import { classNames } from "../util";
 
 import { UsersWidget } from "../admin/widgets/Users/UsersWidget";
+import { GroupsWidget } from "../admin/widgets/Groups/GroupsWidget";
 
 
 const layout = [
@@ -36,7 +36,7 @@ export class WidgetDashboard extends React.Component<WidgetDashboardProps> {
                             draggableHandle=".dragHandle"
                             compactType={null}>
                     <div key="b">
-                        <WidgetContainer title="My app 2"/>
+                        <GroupsWidget/>
                     </div>
                     <div key="c">
                         <UsersWidget/>
@@ -47,5 +47,3 @@ export class WidgetDashboard extends React.Component<WidgetDashboardProps> {
     }
 
 }
-
-
