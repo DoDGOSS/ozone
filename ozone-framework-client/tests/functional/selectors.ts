@@ -18,6 +18,14 @@ export namespace LoginForm {
 
     export const SUCCESS_CALLOUT = "div[data-element-id='form-success-callout']";
 
+
+}
+
+export namespace AdminWidgets {
+
+  //Group Admin Widget
+  export const GROUP_ADMIN_WIDGET_DIALOG = "div[data-element-id='group-admin-widget-dialog']";
+
 }
 
 export namespace AdminWidget {
@@ -25,6 +33,8 @@ export namespace AdminWidget {
     export const ADMIN_WIDGET = "div[data-role='widget'][data-instance='user-admin']";
 
     export const USER_ADMIN_WIDGET_DIALOG = "div[data-element-id='user-admin-widget-dialog']";
+
+    export const GROUP_ADMIN_WIDGET_DIALOG = "div[data-element-id='group-admin-widget-dialog']";
 
     export const USER_ADMIN_CREATE_BUTTON = "button[data-element-id='user-admin-widget-create-button']";
 
