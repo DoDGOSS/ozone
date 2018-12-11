@@ -126,6 +126,7 @@ export class UsersWidget extends React.Component<{}, State> {
         return (
             <WidgetContainer
                 title={title}
+                data-instance="user-admin"
                 body={
                     <div
                         data-element-id="user-admin-widget-dialog">

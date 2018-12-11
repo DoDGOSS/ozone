@@ -20,9 +20,9 @@ export namespace LoginForm {
 
 }
 
-export namespace AdminWidgets {
+export namespace AdminWidget {
 
-    // User Admin Widget
+    export const ADMIN_WIDGET = "div[data-role='widget'][data-instance='user-admin']";
 
     export const USER_ADMIN_WIDGET_DIALOG = "div[data-element-id='user-admin-widget-dialog']";
 
