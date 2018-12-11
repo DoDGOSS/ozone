@@ -34,6 +34,8 @@ export namespace AdminWidget {
 
     export const USER_ADMIN_WIDGET_DIALOG = "div[data-element-id='user-admin-widget-dialog']";
 
+    export const GROUP_ADMIN_WIDGET_DIALOG = "div[data-element-id='group-admin-widget-dialog']";
+
     export const USER_ADMIN_CREATE_BUTTON = "button[data-element-id='user-admin-widget-create-button']";
 
     export const USER_NAME_FIELD = "input[data-element-id='form-field-username']";
