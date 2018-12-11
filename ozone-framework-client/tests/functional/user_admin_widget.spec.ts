@@ -85,6 +85,7 @@ export default {
                 .setValue(AdminWidgets.EMAIL_FIELD, newUserEmail)
 
         browser.click(AdminWidgets.SUBMIT_BUTTON)
+            browser.pause(1000)
             .waitForElementVisible(AdminWidgets.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible")
 
         browser.assert.containsText(AdminWidgets.USER_ADMIN_WIDGET_DIALOG,
@@ -132,12 +133,7 @@ export default {
 
         browser.waitForElementVisible(AdminWidgets.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
 
-        // TODO change to does not contain
-        // browser.assert.containsText(AdminWidgets.USER_ADMIN_WIDGET_DIALOG,
-        //     newUserEmail,
-        //     "[User Admin Widget] User is not displayed in table");
-
-        // browser.expect.element(AdminWidgets.USER_ADMIN_WIDGET_DIALOG).text.to.not.contain(newUserEmail);
+        browser.expect.element(AdminWidgets.USER_ADMIN_WIDGET_DIALOG).text.to.not.contain(newUserEmail);
 
         browser.closeWindow().end();
     }
