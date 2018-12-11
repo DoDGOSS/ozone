@@ -20,9 +20,9 @@ export namespace LoginForm {
 
 }
 
-export namespace AdminWidgets {
+export namespace AdminWidget {
 
-    // User Admin Widget
+    export const ADMIN_WIDGET = "div[data-role='widget'][data-instance='user-admin']";
 
     export const USER_ADMIN_WIDGET_DIALOG = "div[data-element-id='user-admin-widget-dialog']";
 
@@ -35,5 +35,11 @@ export namespace AdminWidgets {
     export const EMAIL_FIELD = "input[data-element-id='form-field-email']";
 
     export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
+
+    export const DELETE_USER_ID = "button[data-element-id='user-admin-widget-delete-newUserEmail1@email.com']";
+
+    export const CONFIRM_DELETE_ALERT = "div.delete-user-alert";
+
+    export const CONFIRM_DELETE_BUTTON = "div.delete-user-alert > div.bp3-alert-footer > button.bp3-intent-danger";
 
 }
