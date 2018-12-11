@@ -32,7 +32,7 @@ export default {
             'Groups', "[Group Admin Widget] is visible");
 
         browser.assert.containsText(AdminWidgets.GROUP_ADMIN_WIDGET_DIALOG,
-            'Test Administrator 1', "[Group Admin Widget] Displays group information");
+            'OWF Administrators', "[Group Admin Widget] Displays group information");
 
         browser.closeWindow().end();
     }

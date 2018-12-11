@@ -4,10 +4,11 @@ import { Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
 import { AdminTable } from "../../table/AdminTable";
 
 import { WidgetContainer } from "../../../widget-dashboard/WidgetContainer";
-import { GroupCreateForm } from "./GroupCreateForm";
+// import { GroupCreateForm } from "./GroupCreateForm";
 
 import { lazyInject } from "../../../../inject";
-import { GroupAPI, GroupCreateRequest, GroupDTO } from "../../../../api";
+// GroupCreateRequest,
+import { GroupAPI, GroupDTO } from "../../../../api";
 
 
 interface State {
@@ -45,7 +46,7 @@ export class GroupsWidget extends React.Component<{}, State> {
                     columns: [
                         {
                             Header: "Group Name",
-                            accessor: "groupName",
+                            accessor: "name",
                             Footer: (
                                 // TODO - Keep in footer or move to below table
                                 <Button
@@ -67,6 +68,7 @@ export class GroupsWidget extends React.Component<{}, State> {
                             accessor: "totalWidgets"
                         },
                         {
+                            // TODO - Access totalDashboards (Apps) in old OWF
                             Header: "Dashboards",
                             accessor: "totalDashboards"
                         }
@@ -129,7 +131,7 @@ export class GroupsWidget extends React.Component<{}, State> {
                         {showCreate &&
                         // TODO - Create class
                         <div style={{ margin: 40 }}>
-                            <GroupCreateForm createGroup={this.createGroup}/>
+                            {/*<GroupCreateForm createGroup={this.createGroup}/>*/}
                             <Button
                                 text="Back"
                                 intent={Intent.SUCCESS}
@@ -171,17 +173,17 @@ export class GroupsWidget extends React.Component<{}, State> {
         if (response.status !== 200) return;
     }
 
-    private createGroup = async (data: GroupCreateRequest) => {
-        const response = await this.groupAPI.createGroup(data);
-
-        // TODO: Handle failed request
-        if (response.status !== 200) return false;
-
-        this.toggleCreate();
-        this.setState({ loading: true });
-        this.getGroups();
-
-        return true;
-    }
+    // private createGroup = async (data: GroupCreateRequest) => {
+    //     const response = await this.groupAPI.createGroup(data);
+    //
+    //     // TODO: Handle failed request
+    //     if (response.status !== 200) return false;
+    //
+    //     this.toggleCreate();
+    //     this.setState({ loading: true });
+    //     this.getGroups();
+    //
+    //     return true;
+    // }
 
 }

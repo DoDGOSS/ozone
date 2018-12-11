@@ -15,6 +15,13 @@ import {
 } from "..";
 
 
+export interface GroupQueryCriteria {
+    limit?: number;
+    offset?: number;
+}
+
+
+
 @injectable()
 export class GroupAPI {
 
@@ -24,8 +31,9 @@ export class GroupAPI {
         this.gateway = gateway;
     }
 
-    getGroups(): Promise<Response<GroupGetResponse>> {
+    getGroups(criteria?: GroupQueryCriteria): Promise<Response<GroupGetResponse>> {
         return this.gateway.get("group/", {
+            params: getOptionParams(criteria),
             validate: GroupGetResponse.validate
         });
     }
@@ -77,3 +85,13 @@ export class GroupAPI {
     }
 
 }
+
+function getOptionParams(options?: GroupQueryCriteria): any | undefined {
+    if (!options) return undefined;
+
+    const params: any = {};
+    if (options.limit) params.max = options.limit;
+    if (options.offset) params.offset = options.offset;
+    return params;
+}
+
