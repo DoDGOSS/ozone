@@ -65,7 +65,13 @@ export function convertToJsonSchema(model: Function) {
             propertySchema.enum = propertyOptions.enum;
         }
 
+        // Optionally add maxLength to string type definitions
+        if (primitiveType === "string" && !isNil(propertyOptions.maxLength)) {
+            propertySchema.maxLength = propertyOptions.maxLength;
+        }
+
         if (propertyOptions.nullable) {
+            // Use type array shorthand for definitions which only include a type
             if (isEqual(keys(propertySchema), ["type"])) {
                 propertySchema.type = [primitiveType, "null"];
             } else {
@@ -81,6 +87,24 @@ export function convertToJsonSchema(model: Function) {
     addCachedSchema(modelMetadata, plainSchema);
 
     return plainSchema;
+}
+
+export function convertToJsonSchemaArray(model: Function) {
+    const metadata = getModelMetadata(model);
+
+    if (isNil(metadata)) {
+        throw new Error(`Unable to convert to JSON schema; '${model.name}' is not defined as a Model`);
+    }
+
+    const schema = new JsonSchemaBuilder("array");
+
+    schema.addSchema(metadata.name, convertToJsonSchema(metadata.target));
+
+    schema.items = {
+        $ref: `#/definitions/${metadata.name}`
+    };
+
+    return schema.toJSON();
 }
 
 function getObjectReferenceSchema(property: PropertyMetadata): [any, ModelMetadata?] {

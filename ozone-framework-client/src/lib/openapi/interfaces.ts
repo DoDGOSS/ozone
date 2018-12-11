@@ -7,4 +7,5 @@ export interface PropertyOptions {
     nullable?: boolean;
     readOnly?: boolean;
     enum?: string[];
+    maxLength?: number;
 }

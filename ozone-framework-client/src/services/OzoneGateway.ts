@@ -88,6 +88,21 @@ export class OzoneGateway implements Gateway {
         return response;
     }
 
+    async put<T>(url: string, data?: any, options: RequestOptions<T> = {}): Promise<Response<T>> {
+        const { params, headers, validate } = options;
+        const normalizedUrl = trimStart(url, "/");
+
+        const response = await axios.put(`${this.rootUrl}/${normalizedUrl}`, data, {
+            withCredentials: true,
+            headers,
+            params
+        });
+
+        if (validate) validate(response.data);
+
+        return response;
+    }
+
     async delete<T>(url: string, data?: any, options: RequestOptions<T> = {}): Promise<Response<T>> {
         const { params, headers, validate } = options;
         const normalizedUrl = trimStart(url, "/");

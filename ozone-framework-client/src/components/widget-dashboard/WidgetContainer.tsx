@@ -9,6 +9,7 @@ import { classNames } from "../util";
 export type WidgetContainerProps = {
     title?: string;
     body?: any;
+    "data-instance"?: string;
 };
 
 
@@ -16,9 +17,13 @@ export class WidgetContainer extends React.Component<WidgetContainerProps, {}> {
 
     render() {
         return (
-            <div className={styles.widgetContainer}>
-                <div className={classNames(styles.widgetContainerToolbar, "dragHandle")}>
-                    <div className={styles.widgetContainerToolbarTitle}>
+            <div className={styles.widgetContainer}
+                 data-role="widget"
+                 data-instance={this.props["data-instance"]}>
+                <div className={classNames(styles.widgetContainerToolbar, "dragHandle")}
+                     data-role="toolbar">
+                    <div className={styles.widgetContainerToolbarTitle}
+                         data-role="title">
                         {this.props.title}
                     </div>
                     <ButtonGroup>
