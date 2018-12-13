@@ -2,8 +2,6 @@ import * as React from "react";
 
 import { Alert, Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
 import { AdminTable } from "../../table/AdminTable";
-
-import { WidgetContainer } from "../../../widget-dashboard/WidgetContainer";
 import { UserCreateForm } from "./UserCreateForm";
 
 import { lazyInject } from "../../../../inject";
@@ -119,55 +117,46 @@ export class UsersWidget extends React.Component<{}, State> {
     }
 
     render() {
-        const title = 'User Admin Widget';
         const showTable = this.state.showTable;
         const showCreate = this.state.showCreate;
 
         return (
-            <WidgetContainer
-                title={title}
-                data-instance="user-admin"
-                body={
-                    <div
-                        data-element-id="user-admin-widget-dialog">
-                        {showTable &&
-                        <AdminTable
-                            data={this.state.users}
-                            columns={this.state.columns}
-                            loading={this.state.loading}
-                            pageSize={this.state.pageSize}
-                        />
-                        }
-                        {showCreate &&
-                        // TODO - Create class
-                        <div style={{ margin: 40 }}>
-                            <UserCreateForm createUser={this.createUser}/>
-                            <Button
-                                text="Back"
-                                intent={Intent.SUCCESS}
-                                icon="undo"
-                                small={true}
-                                onClick={this.toggleCreate}
-                            />
-                        </div>
-                        }
-
-                        { this.state.alertIsOpen && (
-                            <Alert cancelButtonText="Cancel"
-                                   confirmButtonText="Delete User"
-                                   icon="trash"
-                                   intent={Intent.DANGER}
-                                   isOpen={this.state.alertIsOpen}
-                                   className="delete-user-alert"
-                                   onCancel={this.handleAlertCancel}
-                                   onConfirm={() => this.handleAlertConfirm(this.state.deleteUser.id)}>
-                                <p>Are you sure you want to delete <br/><b>User: {this.state.deleteUser.userRealName}</b>?</p>
-                            </Alert>
-                        )}
-
-                    </div>
+            <div data-element-id="user-admin-widget-dialog">
+                {showTable &&
+                <AdminTable
+                    data={this.state.users}
+                    columns={this.state.columns}
+                    loading={this.state.loading}
+                    pageSize={this.state.pageSize}
+                />
                 }
-            />
+                {showCreate &&
+                // TODO - Create class
+                <div style={{ margin: 40 }}>
+                    <UserCreateForm createUser={this.createUser}/>
+                    <Button
+                        text="Back"
+                        intent={Intent.SUCCESS}
+                        icon="undo"
+                        small={true}
+                        onClick={this.toggleCreate}
+                    />
+                </div>
+                }
+
+                {this.state.alertIsOpen && (
+                    <Alert cancelButtonText="Cancel"
+                           confirmButtonText="Delete User"
+                           icon="trash"
+                           intent={Intent.DANGER}
+                           isOpen={this.state.alertIsOpen}
+                           className="delete-user-alert"
+                           onCancel={this.handleAlertCancel}
+                           onConfirm={() => this.handleAlertConfirm(this.state.deleteUser.id)}>
+                        <p>Are you sure you want to delete <br/><b>User: {this.state.deleteUser.userRealName}</b>?</p>
+                    </Alert>
+                )}
+            </div>
         );
     }
 
@@ -186,7 +175,7 @@ export class UsersWidget extends React.Component<{}, State> {
             showCreate: !this.state.showCreate,
             showTable: !this.state.showTable
         });
-    }
+    };
 
     private getUsers = async () => {
         const response = await this.userAPI.getUsers();
@@ -198,7 +187,7 @@ export class UsersWidget extends React.Component<{}, State> {
             users: response.data.data,
             loading: false
         });
-    }
+    };
 
     private getUserById = async (id: number) => {
         const response = await this.userAPI.getUserById(id);
@@ -206,7 +195,7 @@ export class UsersWidget extends React.Component<{}, State> {
 
         // TODO: Handle failed request
         if (response.status !== 200) return;
-    }
+    };
 
     private createUser = async (data: UserCreateRequest) => {
         const response = await this.userAPI.createUser(data);
@@ -219,7 +208,7 @@ export class UsersWidget extends React.Component<{}, State> {
         this.getUsers();
 
         return true;
-    }
+    };
 
     private deleteUserById = async (id: number) => {
         const response = await this.userAPI.deleteUser(id);
