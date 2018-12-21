@@ -30,8 +30,6 @@ export namespace AdminWidgets {
 
 export namespace AdminWidget {
 
-    export const ADMIN_WIDGET = "div[data-role='widget'][data-instance='user-admin']";
-
     export const USER_ADMIN_WIDGET_DIALOG = "div[data-element-id='user-admin-widget-dialog']";
 
     export const GROUP_ADMIN_WIDGET_DIALOG = "div[data-element-id='group-admin-widget-dialog']";

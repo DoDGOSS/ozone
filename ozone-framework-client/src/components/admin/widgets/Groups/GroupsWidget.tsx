@@ -3,7 +3,6 @@ import * as React from "react";
 import { Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
 import { AdminTable } from "../../table/AdminTable";
 
-import { WidgetContainer } from "../../../widget-dashboard/WidgetContainer";
 // import { GroupCreateForm } from "./GroupCreateForm";
 
 import { lazyInject } from "../../../../inject";
@@ -110,40 +109,33 @@ export class GroupsWidget extends React.Component<{}, State> {
     }
 
     render() {
-        const title = 'Group Admin Widget';
         const showTable = this.state.showTable;
         const showCreate = this.state.showCreate;
 
         return (
-            <WidgetContainer
-                title={title}
-                body={
-                    <div
-                       data-element-id="group-admin-widget-dialog">
-                        {showTable &&
-                        <AdminTable
-                            data={this.state.groups}
-                            columns={this.state.columns}
-                            loading={this.state.loading}
-                            pageSize={this.state.pageSize}
-                        />
-                        }
-                        {showCreate &&
-                        // TODO - Create class
-                        <div style={{ margin: 40 }}>
-                            {/*<GroupCreateForm createGroup={this.createGroup}/>*/}
-                            <Button
-                                text="Back"
-                                intent={Intent.SUCCESS}
-                                icon="undo"
-                                small={true}
-                                onClick={this.toggleCreate}
-                            />
-                        </div>
-                        }
-                    </div>
+            <div data-element-id="group-admin-widget-dialog">
+                {showTable &&
+                <AdminTable
+                    data={this.state.groups}
+                    columns={this.state.columns}
+                    loading={this.state.loading}
+                    pageSize={this.state.pageSize}
+                />
                 }
-            />
+                {showCreate &&
+                // TODO - Create class
+                <div style={{ margin: 40 }}>
+                    {/*<GroupCreateForm createGroup={this.createGroup}/>*/}
+                    <Button
+                        text="Back"
+                        intent={Intent.SUCCESS}
+                        icon="undo"
+                        small={true}
+                        onClick={this.toggleCreate}
+                    />
+                </div>
+                }
+            </div>
         );
     }
 

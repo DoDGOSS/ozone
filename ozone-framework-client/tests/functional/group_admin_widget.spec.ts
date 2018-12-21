@@ -11,12 +11,13 @@ export default {
     "As an Administrator, I can view all Groups in the Group Admin Widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
 
-        browser.waitForElementVisible(AdminWidget.ADMIN_WIDGET, 1000, "[Group Admin Widget] is visible");
+        browser.waitForElementVisible(AdminWidget.GROUP_ADMIN_WIDGET_DIALOG, 1000, "[Group Admin Widget] is visible");
 
         browser.assert.containsText(
             AdminWidget.GROUP_ADMIN_WIDGET_DIALOG, "OWF Administrators",
             "[User Group Widget] Displays group information");
 
         browser.closeWindow().end();
-    },
+    }
+
 };

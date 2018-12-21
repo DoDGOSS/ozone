@@ -1,6 +1,6 @@
 import { isArray, isNil, isUndefined } from "lodash";
 
-import * as ajv from "ajv";
+import ajv from "ajv";
 import { Ajv, ErrorObject, ValidateFunction } from "ajv";
 
 import { Type } from "../interfaces";

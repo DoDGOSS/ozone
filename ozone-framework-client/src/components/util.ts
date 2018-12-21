@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import * as _classNames from "classnames";
+import { default as _classNames } from "classnames";
 
 
 export function handleStringChange(handler: (value: string) => void) {

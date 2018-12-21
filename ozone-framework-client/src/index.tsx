@@ -9,22 +9,16 @@ import "reflect-metadata";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import { configure as configureMobX } from "mobx";
-
-import initializeIocContainerBindings from "./inject-bindings";
+import initializeApplication from "./init";
 import registerServiceWorker from "./registerServiceWorker";
 
 import App from "./App";
 
-configureMobX({
-    enforceActions: false
-});
-
-initializeIocContainerBindings();
+initializeApplication();
 
 ReactDOM.render(
-  <App />,
-  document.getElementById("root") as HTMLElement
+    <App/>,
+    document.getElementById("root") as HTMLElement
 );
 
 registerServiceWorker();
