@@ -2,10 +2,12 @@ import { isArray, isNil, isUndefined } from "lodash";
 
 import * as ajv from "ajv";
 import { Ajv, ErrorObject, ValidateFunction } from "ajv";
+
 import { Type } from "../interfaces";
 import { Validator } from "./interfaces";
-import { convertToJsonSchema, convertToJsonSchemaArray } from "../lib/openapi/convert-json";
 import { ValidationError } from "./errors";
+
+import { convertToJsonSchema, convertToJsonSchemaArray } from "../lib/openapi/convert-json";
 
 
 export function toArray<T>(value: T | T[]): T[] {

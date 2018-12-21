@@ -41,3 +41,12 @@ class OwfValidationException extends OwfException {
     }
 
 }
+
+@CompileStatic
+class OwfInvalidParameterException extends OwfException {
+
+    OwfInvalidParameterException(String message) {
+        super(message, OwfExceptionTypes.InvalidParameter)
+    }
+
+}

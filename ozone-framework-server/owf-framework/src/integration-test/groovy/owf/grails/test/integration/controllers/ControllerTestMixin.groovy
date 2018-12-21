@@ -10,6 +10,12 @@ import grails.util.GrailsWebMockUtil
 import grails.web.api.ServletAttributes
 import grails.web.mvc.FlashScope
 import grails.web.servlet.mvc.GrailsParameterMap
+import org.grails.core.artefact.ControllerArtefactHandler
+import org.grails.testing.runtime.support.ActionSettingMethodHandler
+import org.grails.web.json.JSONElement
+import org.grails.web.json.JSONObject
+import org.grails.web.servlet.mvc.GrailsWebRequest
+import org.grails.web.util.GrailsApplicationAttributes
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -17,10 +23,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.web.context.WebApplicationContext
 
-import org.grails.core.artefact.ControllerArtefactHandler
-import org.grails.web.json.JSONElement
-import org.grails.web.json.JSONObject
-import org.grails.web.util.GrailsApplicationAttributes
+import javassist.util.proxy.ProxyFactory
 
 
 trait ControllerTestMixin<T extends Controller & ServletAttributes> {
@@ -31,18 +34,19 @@ trait ControllerTestMixin<T extends Controller & ServletAttributes> {
     @Autowired
     WebApplicationContext ctx
 
-    private T _instance;
+    private T _instance
+    private T _proxyInstance
 
     ApplicationContext getApplicationContext() {
         grailsApplication.mainContext
     }
 
     T getController() {
-        if (_instance == null) {
+        if (_proxyInstance == null) {
             createController()
         }
 
-        _instance
+        _proxyInstance
     }
 
     MockHttpServletResponse getControllerResponse() {
@@ -127,17 +131,23 @@ trait ControllerTestMixin<T extends Controller & ServletAttributes> {
 
         def webRequest = GrailsWebMockUtil.bindMockWebRequest(ctx)
         webRequest.request.setAttribute(GrailsApplicationAttributes.CONTROLLER, _instance)
-        webRequest.controllerName = GrailsNameUtils.getLogicalPropertyName(_instance.class.name, ControllerArtefactHandler.TYPE)
+        webRequest.controllerName = GrailsNameUtils.
+                getLogicalPropertyName(_instance.class.name, ControllerArtefactHandler.TYPE)
+
+        ProxyFactory factory = new ProxyFactory()
+        factory.setSuperclass(type)
+        _proxyInstance = (T) factory.create(new Class<?>[0],
+                                            new Object[0],
+                                            new ActionSettingMethodHandler(_instance, webRequest))
     }
 
     private Class<T> getTypeUnderTest() {
         ParameterizedType parameterizedType = (ParameterizedType) getClass().genericInterfaces.find {
-            it instanceof ParameterizedType &&
-                    ControllerTestMixin.isAssignableFrom((Class) ((ParameterizedType) it).rawType)
+            it instanceof ParameterizedType && ControllerTestMixin.
+                    isAssignableFrom((Class) ((ParameterizedType) it).rawType)
         }
 
         parameterizedType?.actualTypeArguments[0] as Class<T>
     }
-
 
 }

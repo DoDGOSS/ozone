@@ -12,6 +12,8 @@ enum OwfExceptionTypes {
 
     NotFound(404, 'The requested entity was not found.'),
 
+    InvalidParameter(400, 'The request parameter was invalid'),
+
     Validation(400, 'The requested entity failed to pass validation.'),
 
     Validation_UniqueConstraint(400, 'The requested entity failed to pass unique constraint validation.'),

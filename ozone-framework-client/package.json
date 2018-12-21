@@ -37,7 +37,7 @@
     "react-scripts-ts": "4.0.8",
     "react-table": "6.8.6",
     "reflect-metadata": "0.1.12",
-    "space-lift": "0.8.6",
+    "space-lift": "0.8.6"
   },
   "devDependencies": {
     "@types/classnames": "2.2.6",
