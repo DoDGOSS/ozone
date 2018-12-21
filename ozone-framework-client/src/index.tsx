@@ -1,8 +1,6 @@
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
-
-import "react-grid-layout/css/styles.css";
-import "react-resizable/css/styles.css";
+import "react-mosaic-component/react-mosaic-component.css";
 
 import "./index.scss";
 
@@ -19,7 +17,7 @@ import registerServiceWorker from "./registerServiceWorker";
 import App from "./App";
 
 configureMobX({
-    enforceActions: "always"
+    enforceActions: false
 });
 
 initializeIocContainerBindings();

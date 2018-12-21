@@ -1,49 +1,64 @@
 import * as styles from "./WidgetDashboard.scss";
 
-import * as React from "react";
+import React from "react";
+import { observer } from 'mobx-react';
 
-import * as GridLayout from "react-grid-layout";
+import { Mosaic, MosaicBranch, MosaicWindow } from "react-mosaic-component";
 
 import { classNames } from "../util";
 
-import { UsersWidget } from "../admin/widgets/Users/UsersWidget";
-import { GroupsWidget } from "../admin/widgets/Groups/GroupsWidget";
+import { lazyInject } from "../../inject";
+import { DashboardNode, DashboardStore } from "../../stores";
 
 
-const layout = [
-    { i: 'a', x: 0, y: 0, w: 4, h: 4 },
-    { i: 'b', x: 2, y: 0, w: 6, h: 4 },
-    { i: 'c', x: 0, y: 0, w: 8, h: 4 }
-];
+const DashboardLayout = Mosaic.ofType<string>();
+const DashboardWindow = MosaicWindow.ofType<string>();
 
 export type WidgetDashboardProps = {
     className?: string;
 };
 
-export class WidgetDashboard extends React.Component<WidgetDashboardProps> {
+@observer
+export class WidgetDashboard extends React.Component<WidgetDashboardProps, {}> {
+
+    @lazyInject(DashboardStore)
+    private dashboardStore: DashboardStore;
 
     render() {
         const { className } = this.props;
+        const layout = this.dashboardStore.layout;
+        const widgets = this.dashboardStore.widgets;
 
         return (
             <div className={classNames(styles.widgetDashboard, className)}>
-                <GridLayout className="layout"
-                            layout={layout}
-                            cols={8}
-                            rowHeight={100}
-                            width={1200}
-                            autoSize={true}
-                            draggableHandle=".dragHandle"
-                            compactType={null}>
-                    <div key="b">
-                        <GroupsWidget/>
-                    </div>
-                    <div key="c" >
-                        <UsersWidget/>
-                    </div>
-                </GridLayout>
+                <DashboardLayout
+                    value={layout}
+                    onChange={this.onChange}
+                    renderTile={(id: string, path: MosaicBranch[]) => {
+                        const widget = widgets && widgets[id];
+                        if (!widget) {
+                            return (
+                                <DashboardWindow title="Error"
+                                                 path={path}>
+                                    <h1>Error: Widget not found</h1>
+                                </DashboardWindow>
+                            );
+                        }
+
+                        const widgetDef = widget.definition;
+                        return (
+                            <DashboardWindow title={widgetDef.title}
+                                             path={path}>
+                                {widgetDef.element}
+                            </DashboardWindow>);
+                    }}
+                />
             </div>
         );
+    }
+
+    private onChange = (currentNode: DashboardNode | null) => {
+        this.dashboardStore.setLayout(currentNode);
     }
 
 }
