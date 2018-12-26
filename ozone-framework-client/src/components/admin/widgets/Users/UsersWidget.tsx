@@ -1,11 +1,12 @@
 import * as React from "react";
-
 import { Alert, Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
-import { AdminTable } from "../../table/AdminTable";
-import { UserCreateForm } from "./UserCreateForm";
 
 import { lazyInject } from "../../../../inject";
 import { UserAPI, UserCreateRequest, UserDTO } from "../../../../api";
+
+import { AdminTable } from "../../table/AdminTable";
+
+import { UserCreateForm } from "./UserCreateForm";
 
 
 export interface State {
@@ -131,17 +132,8 @@ export class UsersWidget extends React.Component<{}, State> {
                 />
                 }
                 {showCreate &&
-                // TODO - Create class
-                <div style={{ margin: 40 }}>
-                    <UserCreateForm createUser={this.createUser}/>
-                    <Button
-                        text="Back"
-                        intent={Intent.SUCCESS}
-                        icon="undo"
-                        small={true}
-                        onClick={this.toggleCreate}
-                    />
-                </div>
+                    <UserCreateForm onSubmit={this.createUser}
+                                    onCancel={this.toggleCreate}/>
                 }
 
                 {this.state.alertIsOpen && (

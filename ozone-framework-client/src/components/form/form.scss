@@ -1,0 +1,27 @@
+:local .formError {
+  color: red;
+  font-size: 80%;
+}
+
+:local .formGroup {
+  margin-bottom: .5em;
+
+  label {
+    margin: 0;
+  }
+}
+
+:local .submitButton {
+}
+
+:local .cancelButton {
+}
+
+:local .validationError {
+  color: #f00;
+  font-size: 80%;
+}
+
+:local .errorCallout {
+  margin-bottom: 1em;
+}

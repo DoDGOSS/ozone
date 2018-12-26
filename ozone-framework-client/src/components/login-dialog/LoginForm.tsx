@@ -1,52 +1,69 @@
 import * as React from "react";
+import { Form, Formik, FormikActions, FormikProps } from "formik";
+import { object, string } from "yup";
 
 import { lazyInject } from "../../inject";
 import { AuthStore } from "../../stores";
 
-import { Fields, Form, required } from "../form/Form";
-import { Field } from "../form/Field";
+
+import { FormError, SubmitButton, TextField } from "../form";
 
 
-export class LoginForm extends React.Component {
+export interface LoginFormProps {
+    onSuccess: () => void;
+}
+
+export class LoginForm extends React.Component<LoginFormProps> {
 
     @lazyInject(AuthStore)
     private authStore: AuthStore;
 
-    private fields: Fields = {
-        username: {
-            id: "username",
-            label: "Username",
-            validation: { rule: required }
-        },
-        password: {
-            id: "password",
-            label: "Password",
-            validation: { rule: required },
-            editor: "password"
-        }
-    };
-
     render() {
-        const { username, password } = this.fields;
-
         return (
-            <Form fields={this.fields}
-                  onSubmit={this.login}>
-                <Field {...username} />
-                <Field {...password} />
-            </Form>
-        );
-    }
+            <Formik
+                initialValues={{
+                    username: "",
+                    password: ""
+                }}
+                validationSchema={LoginRequestSchema}
+                onSubmit={async (values: LoginRequest, actions: FormikActions<LoginRequest>) => {
+                    actions.setSubmitting(false);
 
-    private login = async (data: LoginRequest) => {
-        return this.authStore.login(data.username, data.password);
+                    const isSuccess = await this.authStore.login(values.username, values.password);
+
+                    if (isSuccess) {
+                        this.props.onSuccess();
+                        actions.setStatus(null);
+                    } else {
+                        actions.setStatus({ error: "An unexpected error has occurred" });
+                    }
+                }}
+            >
+                {(formik: FormikProps<LoginRequest>) => (
+                    <Form>
+                        {formik.status && formik.status.error && <FormError message={formik.status.error}/>}
+
+                        <TextField name="username" label="Username" labelInfo="(required)"/>
+                        <TextField name="password" label="Password" labelInfo="(required)"/>
+
+                        <SubmitButton/>
+                    </Form>
+                )}
+            </Formik>
+        );
     }
 
 }
 
-export interface LoginRequest {
+interface LoginRequest {
     username: string;
     password: string;
 }
 
 
+const LoginRequestSchema = object().shape({
+    username: string().matches(/^[a-zA-Z0-9_]+$/, { message: "Username must contain only alphanumeric or underscore characters." })
+                      .required("Required"),
+
+    password: string().required("Required")
+});

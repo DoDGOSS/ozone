@@ -28,7 +28,7 @@ export class LoginDialog extends React.Component {
                     <div className={Classes.DIALOG_BODY}
                          data-element-id="login-dialog">
                         <div className={styles.tileContainer}>
-                            <LoginForm/>
+                            <LoginForm onSuccess={this.mainStore.hideLoginDialog}/>
                         </div>
                     </div>
                 </Dialog>
