@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { WidgetAPI, WidgetCreateRequest } from "../..";
+import { WidgetAPI, WidgetCreateRequest, WidgetCreateResponse, WidgetUpdateRequest } from "../..";
 
 import { NodeGateway } from "./node-gateway";
 import { WIDGETS } from "../../models/__test__/data";
@@ -43,6 +43,7 @@ describe("Widget API", () => {
     });
 
     let createRequest: WidgetCreateRequest;
+    let createResponse: WidgetCreateResponse;
 
     test("createWidget - POST /widget/", async () => {
         createRequest = {
@@ -67,10 +68,10 @@ describe("Widget API", () => {
             title: "My Test Widget"
         };
 
-        const createResponse = await widgetApi.createWidget(createRequest);
+        const response = await widgetApi.createWidget(createRequest);
 
-        expect(createResponse.status).toEqual(200);
-        expect(createResponse.data).toEqual({
+        expect(response.status).toEqual(200);
+        expect(response.data).toEqual({
             success: true,
             data: [{
                 id: createRequest.widgetGuid,
@@ -88,32 +89,34 @@ describe("Widget API", () => {
                     width: createRequest.width,
                     height: createRequest.height,
                     x: 0,
-                    y:0,
+                    y: 0,
                     minimized: false,
-                    maximized:false,
+                    maximized: false,
                     widgetVersion: createRequest.version,
-                    totalUsers:0,
-                    totalGroups:0,
-                    singleton:createRequest.singleton,
+                    totalUsers: 0,
+                    totalGroups: 0,
+                    singleton: createRequest.singleton,
                     visible: createRequest.visible,
                     background: createRequest.background,
                     mobileReady: createRequest.mobileReady,
                     descriptorUrl: null,
                     definitionVisible: true,
-                    directRequired:[],
+                    directRequired: [],
                     allRequired: [],
-                    intents:{
-                        send:[],
-                        receive:[]
+                    intents: {
+                        send: [],
+                        receive: []
                     },
-                    widgetTypes:[{
-                        id:createRequest.widgetTypes[0].id,
-                        name:createRequest.widgetTypes[0].name,
-                        displayName:createRequest.widgetTypes[0].name
+                    widgetTypes: [{
+                        id: createRequest.widgetTypes[0].id,
+                        name: createRequest.widgetTypes[0].name,
+                        displayName: createRequest.widgetTypes[0].name
                     }]
                 }
             }]
         });
+
+        createResponse = response.data;
     });
 
     test("getWidgets - GET /widget/ - additional result after created", async () => {
@@ -125,6 +128,118 @@ describe("Widget API", () => {
             results: 22
         });
     });
+
+    test("updateWidget - PUT /widget/:guid/", async () => {
+        const updateRequest: WidgetUpdateRequest = {
+            ...createRequest,
+            id: createResponse.data[0].id,
+            intents: {
+                send: [{
+                    action: "action",
+                    dataTypes: ["application/json"]
+                }],
+                receive: []
+            }
+        };
+
+        const response = await widgetApi.updateWidget(updateRequest);
+
+        expect(response.status).toEqual(200);
+        expect(response.data).toEqual({
+            success: true,
+            data: [{
+                id: createRequest.widgetGuid,
+                namespace: "widget",
+                path: createRequest.widgetGuid,
+                value: {
+                    universalName: createRequest.universalName,
+                    namespace: createRequest.name,
+                    description: createRequest.description,
+                    url: createRequest.url,
+                    headerIcon: createRequest.headerIcon,
+                    image: createRequest.image,
+                    smallIconUrl: createRequest.headerIcon,
+                    mediumIconUrl: createRequest.image,
+                    width: createRequest.width,
+                    height: createRequest.height,
+                    x: 0,
+                    y: 0,
+                    minimized: false,
+                    maximized: false,
+                    widgetVersion: createRequest.version,
+                    totalUsers: 0,
+                    totalGroups: 0,
+                    singleton: createRequest.singleton,
+                    visible: createRequest.visible,
+                    background: createRequest.background,
+                    mobileReady: createRequest.mobileReady,
+                    descriptorUrl: null,
+                    definitionVisible: true,
+                    directRequired: [],
+                    allRequired: [],
+                    intents: updateRequest.intents,
+                    widgetTypes: [{
+                        id: createRequest.widgetTypes[0].id,
+                        name: createRequest.widgetTypes[0].name,
+                        displayName: createRequest.widgetTypes[0].name
+                    }]
+                }
+            }]
+        });
+    });
+
+    test("addWidgetUsers - PUT /widget/:guid/", async () => {
+        const widget = createResponse.data[0];
+        const response = await widgetApi.addWidgetUsers(widget.id, 1);
+
+        expect(response.status).toEqual(200);
+        expect(response.data).toMatchObject({
+            success: true,
+            data: [
+                { id: 1 }
+            ]
+        });
+    });
+
+    test("removeWidgetUsers - PUT /widget/:guid/", async () => {
+        const widget = createResponse.data[0];
+        const response = await widgetApi.removeWidgetUsers(widget.id, 1);
+
+        expect(response.status).toEqual(200);
+        expect(response.data).toMatchObject({
+            success: true,
+            data: [
+                { id: 1 }
+            ]
+        });
+    });
+
+    test("addWidgetGroups - PUT /widget/:guid/", async () => {
+        const widget = createResponse.data[0];
+        const response = await widgetApi.addWidgetGroups(widget.id, 1);
+
+        expect(response.status).toEqual(200);
+        expect(response.data).toMatchObject({
+            success: true,
+            data: [
+                { id: 1 }
+            ]
+        });
+    });
+
+    test("removeWidgetGroups - PUT /widget/:guid/", async () => {
+        const widget = createResponse.data[0];
+        const response = await widgetApi.removeWidgetGroups(widget.id, 1);
+
+        expect(response.status).toEqual(200);
+        expect(response.data).toMatchObject({
+            success: true,
+            data: [
+                { id: 1 }
+            ]
+        });
+    });
+
 
     test("deleteWidget - DELETE /widget/", async () => {
         const response = await widgetApi.deleteWidget(createRequest.widgetGuid);

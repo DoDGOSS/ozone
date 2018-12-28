@@ -4,6 +4,8 @@ import { IntentsDTO } from "./intent-dto";
 import { WidgetTypeDTO, WidgetTypeReference } from "./widget-type-dto";
 
 import { createLazyComponentValidator } from "../common";
+import { GroupDTO } from "./group-dto";
+import { UserDTO } from "./user-dto";
 
 
 @Model({ name: "WidgetProperties" })
@@ -130,6 +132,40 @@ export interface WidgetCreateRequest {
     widgetTypes: WidgetTypeReference[];
     descriptorUrl?: string;
     title: string;
+    intents?: IntentsDTO;
+}
+
+
+export interface WidgetUpdateRequest extends WidgetCreateRequest {
+    id: string;
+}
+
+
+@Model()
+export class WidgetUpdateUsersResponse {
+
+    static validate = createLazyComponentValidator(WidgetUpdateUsersResponse);
+
+    @Property()
+    success: boolean;
+
+    @Property(() => UserDTO)
+    data: UserDTO[];
+
+}
+
+
+@Model()
+export class WidgetUpdateGroupsResponse {
+
+    static validate = createLazyComponentValidator(WidgetUpdateGroupsResponse);
+
+    @Property()
+    success: boolean;
+
+    @Property(() => GroupDTO)
+    data: GroupDTO[];
+
 }
 
 
@@ -155,7 +191,7 @@ export class WidgetDeleteIdDTO {
 
     @Property()
     value: object;
-    
+
 }
 
 

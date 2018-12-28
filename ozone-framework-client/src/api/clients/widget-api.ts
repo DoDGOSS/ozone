@@ -4,12 +4,16 @@ import { inject, injectable, TYPES } from "../../inject";
 
 import {
     Gateway,
+    IdDto,
     Response,
     UuidDto,
     WidgetCreateRequest,
     WidgetCreateResponse,
     WidgetDeleteResponse,
-    WidgetGetResponse
+    WidgetGetResponse,
+    WidgetUpdateGroupsResponse,
+    WidgetUpdateRequest,
+    WidgetUpdateUsersResponse
 } from "..";
 
 
@@ -44,6 +48,83 @@ export class WidgetAPI {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             validate: WidgetCreateResponse.validate
+        });
+    }
+
+    async updateWidget(data: WidgetUpdateRequest): Promise<Response<WidgetCreateResponse>> {
+        const requestData = qs.stringify({
+            data: JSON.stringify([data])
+        });
+
+        return this.gateway.put(`widget/${data.id}`, requestData, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            validate: WidgetCreateResponse.validate
+        });
+    }
+
+    async addWidgetUsers(widgetId: string, userIds: number | number[]): Promise<Response<WidgetUpdateUsersResponse>> {
+        const requestData = qs.stringify({
+            widget_id: widgetId,
+            data: JSON.stringify(IdDto.fromValues(userIds)),
+            tab: "users",
+            update_action: "add"
+        });
+
+        return this.gateway.put(`widget/${widgetId}/`, requestData, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            validate: WidgetUpdateUsersResponse.validate
+        });
+    }
+
+    async removeWidgetUsers(widgetId: string, userIds: number | number[]): Promise<Response<WidgetUpdateUsersResponse>> {
+        const requestData = qs.stringify({
+            widget_id: widgetId,
+            data: JSON.stringify(IdDto.fromValues(userIds)),
+            tab: "users",
+            update_action: "remove"
+        });
+
+        return this.gateway.put(`widget/${widgetId}/`, requestData, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            validate: WidgetUpdateUsersResponse.validate
+        });
+    }
+
+    async addWidgetGroups(widgetId: string, groupIds: number | number[]): Promise<Response<WidgetUpdateGroupsResponse>> {
+        const requestData = qs.stringify({
+            widget_id: widgetId,
+            data: JSON.stringify(IdDto.fromValues(groupIds)),
+            tab: "groups",
+            update_action: "add"
+        });
+
+        return this.gateway.put(`widget/${widgetId}/`, requestData, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            validate: WidgetUpdateGroupsResponse.validate
+        });
+    }
+
+    async removeWidgetGroups(widgetId: string, groupIds: number | number[]): Promise<Response<WidgetUpdateGroupsResponse>> {
+        const requestData = qs.stringify({
+            widget_id: widgetId,
+            data: JSON.stringify(IdDto.fromValues(groupIds)),
+            tab: "groups",
+            update_action: "remove"
+        });
+
+        return this.gateway.put(`widget/${widgetId}/`, requestData, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            validate: WidgetUpdateGroupsResponse.validate
         });
     }
 
