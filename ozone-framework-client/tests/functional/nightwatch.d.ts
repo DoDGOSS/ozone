@@ -2187,6 +2187,7 @@ export interface SharedFunctions {
      * @param message: Optional message to be shown in the output; the message supports two placeholders: %s for current selector and %d for the time
      * (e.g. Element %s was not in the page for %d ms).
      */
+    waitForElementNotPresent(selector: string, time?: number, message?: string): this;
     waitForElementNotPresent(selector: string, time?: number, abortOnFailure?: boolean, callback?: () => void, message?: string): this;
 
     /**
@@ -2209,6 +2210,7 @@ export interface SharedFunctions {
      * @param message: Optional message to be shown in the output; the message supports two placeholders: %s for current selector and %d for the time
      * (e.g. Element %s was not in the page for %d ms).
      */
+    waitForElementNotVisible(selector: string, time?: number, message?: string): this;
     waitForElementNotVisible(selector: string, time?: number, abortOnFailure?: boolean, callback?: () => void, message?: string): this;
 
     /**

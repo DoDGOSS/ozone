@@ -10,9 +10,9 @@ export namespace MainPage {
 
 export namespace LoginForm {
 
-    export const USER_NAME_FIELD = "input[data-element-id='form-field-username']";
+    export const USER_NAME_FIELD = "input[data-role='field'][name='username']";
 
-    export const PASSWORD_FIELD = "input[data-element-id='form-field-password']";
+    export const PASSWORD_FIELD = "input[data-role='field'][name='password']";
 
     export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
 
@@ -36,11 +36,11 @@ export namespace AdminWidget {
 
     export const USER_ADMIN_CREATE_BUTTON = "button[data-element-id='user-admin-widget-create-button']";
 
-    export const USER_NAME_FIELD = "input[data-element-id='form-field-username']";
+    export const USER_NAME_FIELD = "input[data-role='field'][name='username']";
 
-    export const FULL_NAME_FIELD = "input[data-element-id='form-field-userRealName']";
+    export const FULL_NAME_FIELD = "input[data-role='field'][name='userRealName']";
 
-    export const EMAIL_FIELD = "input[data-element-id='form-field-email']";
+    export const EMAIL_FIELD = "input[data-role='field'][name='email']";
 
     export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
 

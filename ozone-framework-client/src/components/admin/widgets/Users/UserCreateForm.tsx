@@ -1,44 +1,58 @@
-import * as React from "react";
+import * as styles from "./UserCreateForm.scss";
 
-import { Fields, Form, isEmail, required } from "../../../form/Form";
-import { Field } from "../../../form/Field";
+import * as React from "react";
+import { Form, Formik, FormikActions, FormikProps } from "formik";
+import { object, string } from "yup";
+
+import { UserCreateRequest } from "../../../../api";
+import { CancelButton, FormError, SubmitButton, TextField } from "../../../form";
+
 
 interface UserCreateProps {
-    createUser: any;
+    onSubmit: (data: UserCreateRequest) => Promise<boolean>;
+    onCancel: () => void;
 }
 
-export class UserCreateForm extends React.Component<UserCreateProps> {
+export const UserCreateForm: React.FunctionComponent<UserCreateProps> =
+    ({ onSubmit, onCancel }) => (
+        <Formik
+            initialValues={{
+                username: "",
+                userRealName: "",
+                email: ""
+            }}
+            validationSchema={CreateUserSchema}
+            onSubmit={async (values: UserCreateRequest, actions: FormikActions<UserCreateRequest>) => {
+                const isSuccess = await onSubmit(values);
+                actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
+                actions.setSubmitting(false);
+            }}
+        >
+            {(formik: FormikProps<UserCreateRequest>) => (
+                <Form className={styles.form}>
+                    <TextField name="username" label="Username" labelInfo="(required)"/>
+                    <TextField name="userRealName" label="Full Name" labelInfo="(required)"/>
+                    <TextField name="email" label="E-mail" labelInfo="(required)"/>
 
-    private fields: Fields = {
-        username: {
-            id: "username",
-            label: "Username",
-            validation: { rule: required }
-        },
-        userRealName: {
-            id: "userRealName",
-            label: "Full Name",
-            validation: { rule: required }
-        },
-        email: {
-            id: "email",
-            label: "Email",
-            validation: { rule: isEmail }
-        }
-    };
+                    {formik.status && formik.status.error && <FormError message={formik.status.error}/>}
 
-    render() {
-        const { username, userRealName, email } = this.fields;
+                    <div className={styles.buttonBar}>
+                        <CancelButton className={styles.cancelButton} onClick={onCancel}/>
+                        <SubmitButton className={styles.submitButton}/>
+                    </div>
+                </Form>
+            )}
+        </Formik>
+    );
 
-        return (
-            <Form fields={this.fields}
-                  onSubmit={this.props.createUser}>
-                <Field {...username} />
-                <Field {...userRealName} />
-                <Field {...email} />
-            </Form>
-        );
-    }
 
-}
+const CreateUserSchema = object().shape({
+    username: string().matches(/^[a-zA-Z0-9_]+$/, { message: "Username must contain only alphanumeric or underscore characters." })
+                      .required("Required"),
+
+    userRealName: string().required("Required"),
+
+    email: string().required("Required")
+                   .email("Invalid e-mail address")
+});
 
