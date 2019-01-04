@@ -1,3 +1,17 @@
+export const CONFIRMATION_DIALOG = {
+    title: "Warning",
+    content:
+        `Are you sure?`,
+    confirm: {
+        text: "OK",
+        icon: "tick"
+    },
+    cancel: {
+        text: "Cancel",
+        icon: "cross"
+    }
+};
+
 export const WARNING_DIALOG = {
     title: "Usage Notice",
     content:

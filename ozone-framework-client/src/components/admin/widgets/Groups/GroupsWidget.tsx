@@ -8,7 +8,7 @@ import { AdminTable } from "../../table/AdminTable";
 import { lazyInject } from "../../../../inject";
 // GroupCreateRequest,
 import { GroupAPI, GroupDTO } from "../../../../api";
-
+import { ConfirmationDialog } from '../../../confirmation-dialog/ConfirmationDialog';
 
 interface State {
     groups: GroupDTO[];
@@ -17,6 +17,9 @@ interface State {
     columns: any;
     showTable: boolean;
     showCreate: boolean;
+    showDelete: boolean;
+    confirmationMessage: string;
+    manageGroup: GroupDTO | undefined;
 }
 
 // TODO
@@ -39,6 +42,9 @@ export class GroupsWidget extends React.Component<{}, State> {
             pageSize: 5,
             showTable: true,
             showCreate: false,
+            showDelete: false,
+            confirmationMessage: '',
+            manageGroup: undefined,
             columns: [
                 {
                     Header: "Groups",
@@ -92,9 +98,8 @@ export class GroupsWidget extends React.Component<{}, State> {
                                     text="Delete"
                                     intent={Intent.DANGER}
                                     icon="trash"
-                                    disabled={true}
                                     small={true}
-                                    // onClick={() => this.deleteUserById(row.original.id)}
+                                    onClick={() => this.deleteGroup(row.original)}
                                 />
                             </ButtonGroup>
                         </div>
@@ -122,6 +127,7 @@ export class GroupsWidget extends React.Component<{}, State> {
                     pageSize={this.state.pageSize}
                 />
                 }
+
                 {showCreate &&
                 // TODO - Create class
                 <div style={{ margin: 40 }}>
@@ -135,6 +141,13 @@ export class GroupsWidget extends React.Component<{}, State> {
                     />
                 </div>
                 }
+                <ConfirmationDialog
+                    show={this.state.showDelete}
+                    title='Warning'
+                    content={this.state.confirmationMessage}
+                    confirmHandler={this.handleConfirmationConfirmDelete}
+                    cancelHandler={this.handleConfirmationCancel}
+                    payload={this.state.manageGroup} />
             </div>
         );
     }
@@ -178,4 +191,37 @@ export class GroupsWidget extends React.Component<{}, State> {
     //     return true;
     // }
 
+    private deleteGroup = async (group: GroupDTO) => {
+        this.setState({
+            showDelete: true,
+            confirmationMessage: `This action will permenantly delete <strong>${group.name}</strong>`,
+            manageGroup: group
+        });
+    }
+
+    private handleConfirmationConfirmDelete = async (payload: any) => {
+        this.setState({
+            showDelete: false,
+            manageGroup: undefined,
+        });
+
+        const group: GroupDTO = payload;
+
+        const response = await this.groupAPI.deleteGroup(group.id);
+    
+        // // TODO: Handle failed request
+        if (response.status !== 200) return false;
+    
+        this.getGroups();
+    
+        return true;
+
+    }
+
+    private handleConfirmationCancel = (payload: any) => {
+        this.setState({
+            showDelete: false,
+            manageGroup: undefined,
+        });
+    }
 }
