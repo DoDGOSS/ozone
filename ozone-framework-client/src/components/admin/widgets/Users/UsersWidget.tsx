@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Alert, Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
+import {Alert, Button, ButtonGroup, Divider, InputGroup, Intent} from "@blueprintjs/core";
 
 import { lazyInject } from "../../../../inject";
 import { UserAPI, UserCreateRequest, UserDTO, UserUpdateRequest } from "../../../../api";
@@ -12,6 +12,8 @@ import { UserEditForm } from "./UserEditForm";
 
 export interface State {
     users: UserDTO[];
+    filtered: UserDTO[];
+    filter: string;
     loading: boolean;
     pageSize: number;
     columns: any;
@@ -38,6 +40,8 @@ export class UsersWidget extends React.Component<{}, State> {
         super(props);
         this.state = {
             users: [],
+            filtered: [],
+            filter: '',
             loading: true,
             pageSize: 5,
             showTable: true,
@@ -51,6 +55,7 @@ export class UsersWidget extends React.Component<{}, State> {
                         {
                             Header: "Name",
                             accessor: "userRealName",
+                            // filterable: true,
                             Footer: (
                                 // TODO - Keep in footer or move to below table
                                 <Button
@@ -128,12 +133,32 @@ export class UsersWidget extends React.Component<{}, State> {
         const showTable = this.state.showTable;
         const showCreate = this.state.showCreate;
         const showUpdate = this.state.showUpdate;
+        let data = this.state.users;
+
+
+        // TODO - Improve this - this will be slow if there are many users.
+        // Minimally could wait to hit enter before filtering. Pagination handling
+        if (this.state.filter) {
+            data = data.filter(row => {
+                return row.userRealName.includes(this.state.filter) || row.email.includes(this.state.filter);
+            });
+        }
 
         return (
+
             <div data-element-id="user-admin-widget-dialog">
+
+                <InputGroup
+                    placeholder="Search..."
+                    leftIcon="search"
+                    value={this.state.filter}
+                    onChange={(e: any) => this.setState({filter: e.target.value})}
+                    data-element-id="search-field"
+                />
+
                 {showTable &&
                 <AdminTable
-                    data={this.state.users}
+                    data={data}
                     columns={this.state.columns}
                     loading={this.state.loading}
                     pageSize={this.state.pageSize}
@@ -167,6 +192,8 @@ export class UsersWidget extends React.Component<{}, State> {
             </div>
         );
     }
+
+    // private handleFilter
 
     private handleAlertOpen = (deleteUser: any) => this.setState({ alertIsOpen: true, deleteUser });
 
