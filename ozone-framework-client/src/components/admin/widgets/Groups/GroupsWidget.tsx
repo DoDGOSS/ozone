@@ -3,11 +3,11 @@ import * as React from "react";
 import { Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
 import { AdminTable } from "../../table/AdminTable";
 
-// import { GroupCreateForm } from "./GroupCreateForm";
+import { GroupCreateForm } from "./GroupCreateForm";
 
 import { lazyInject } from "../../../../inject";
-// GroupCreateRequest,
-import { GroupAPI, GroupDTO } from "../../../../api";
+
+import { GroupAPI, GroupCreateRequest, GroupDTO } from "../../../../api";
 
 
 interface State {
@@ -123,17 +123,8 @@ export class GroupsWidget extends React.Component<{}, State> {
                 />
                 }
                 {showCreate &&
-                // TODO - Create class
-                <div style={{ margin: 40 }}>
-                    {/*<GroupCreateForm createGroup={this.createGroup}/>*/}
-                    <Button
-                        text="Back"
-                        intent={Intent.SUCCESS}
-                        icon="undo"
-                        small={true}
-                        onClick={this.toggleCreate}
-                    />
-                </div>
+                  <GroupCreateForm onSubmit={this.createGroup}
+                                  onCancel={this.toggleCreate}/>
                 }
             </div>
         );
@@ -165,17 +156,18 @@ export class GroupsWidget extends React.Component<{}, State> {
         if (response.status !== 200) return;
     }
 
-    // private createGroup = async (data: GroupCreateRequest) => {
-    //     const response = await this.groupAPI.createGroup(data);
-    //
-    //     // TODO: Handle failed request
-    //     if (response.status !== 200) return false;
-    //
-    //     this.toggleCreate();
-    //     this.setState({ loading: true });
-    //     this.getGroups();
-    //
-    //     return true;
-    // }
+    private createGroup = async (data: GroupCreateRequest) => {
+        console.log(data);
+        const response = await this.groupAPI.createGroup(data);
+
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+
+        this.toggleCreate();
+        this.setState({ loading: true });
+        this.getGroups();
+
+        return true;
+    }
 
 }
