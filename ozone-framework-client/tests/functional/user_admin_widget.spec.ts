@@ -55,6 +55,45 @@ export default {
         browser.closeWindow().end();
     },
 
+    "As an Administrator, I want to edit a User": (browser: NightwatchAPI) => {
+        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+
+        const newUserEmail = "newUserEmail1@email.com";
+        const newDisplayName = "Edited User";
+        const newUserName = "newUser1";
+
+        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 1000, "[User Admin Widget] is visible");
+
+        browser.assert.containsText(
+            AdminWidget.USER_ADMIN_WIDGET_DIALOG, newUserEmail,
+            "[User Admin Widget] Displays user information we wish to edit");
+
+        browser.click(AdminWidget.EDIT_USER_ID);
+
+        browser.pause(1000);
+
+        browser.assert.containsText(AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+            "Username", "[User Admin Create Form] is visible");
+
+        browser.clearValue(AdminWidget.USER_NAME_FIELD)
+            .clearValue(AdminWidget.FULL_NAME_FIELD)
+            .clearValue(AdminWidget.EMAIL_FIELD);
+
+        browser.setValue(AdminWidget.USER_NAME_FIELD, newUserName)
+            .setValue(AdminWidget.FULL_NAME_FIELD, newDisplayName)
+            .setValue(AdminWidget.EMAIL_FIELD, newUserEmail);
+
+        browser.click(AdminWidget.SUBMIT_BUTTON);
+
+        browser.pause(1000)
+            .waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
+
+        browser.assert.containsText(AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+            newDisplayName, "[User Admin Widget] User successfully edited");
+
+        browser.closeWindow().end();
+    },
+
     "As an Administrator, I want to delete a User": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
 
