@@ -8,6 +8,7 @@ import { GroupCreateForm } from "./GroupCreateForm";
 import { lazyInject } from "../../../../inject";
 
 import { GroupAPI, GroupCreateRequest, GroupDTO } from "../../../../api";
+import { ConfirmationDialog } from 'src/components/confirmation-dialog/ConfirmationDialog';
 
 
 interface State {
