@@ -2,11 +2,12 @@ import * as React from "react";
 import { Alert, Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
 
 import { lazyInject } from "../../../../inject";
-import { UserAPI, UserCreateRequest, UserDTO } from "../../../../api";
+import { UserAPI, UserCreateRequest, UserDTO, UserUpdateRequest } from "../../../../api";
 
 import { AdminTable } from "../../table/AdminTable";
 
 import { UserCreateForm } from "./UserCreateForm";
+import { UserEditForm } from "./UserEditForm";
 
 
 export interface State {
@@ -16,7 +17,9 @@ export interface State {
     columns: any;
     showTable: boolean;
     showCreate: boolean;
+    showUpdate: boolean;
     alertIsOpen: boolean;
+    updatingUser?: any;
     deleteUser?: any;
 }
 
@@ -24,7 +27,6 @@ export interface State {
 // Modify widget to take in widget values from administration menu and launch from menu
 // Pagination handling with client API
 // Style
-// Popup warning dialogue for deleting
 // Error handling for form (if username exists etc)
 
 export class UsersWidget extends React.Component<{}, State> {
@@ -40,6 +42,7 @@ export class UsersWidget extends React.Component<{}, State> {
             pageSize: 5,
             showTable: true,
             showCreate: false,
+            showUpdate: false,
             alertIsOpen: false,
             columns: [
                 {
@@ -94,7 +97,11 @@ export class UsersWidget extends React.Component<{}, State> {
                                     intent={Intent.PRIMARY}
                                     icon="edit"
                                     small={true}
-                                    onClick={() => this.getUserById(row.original.id)}
+                                    onClick={() => (
+                                        this.toggleUpdate(),
+                                            this.setState({updatingUser: row.original})
+                                    )}
+                                    data-element-id={"user-admin-widget-edit-" + row.original.email}
                                 />
                                 <Divider/>
                                 <Button
@@ -120,6 +127,7 @@ export class UsersWidget extends React.Component<{}, State> {
     render() {
         const showTable = this.state.showTable;
         const showCreate = this.state.showCreate;
+        const showUpdate = this.state.showUpdate;
 
         return (
             <div data-element-id="user-admin-widget-dialog">
@@ -134,6 +142,14 @@ export class UsersWidget extends React.Component<{}, State> {
                 {showCreate &&
                     <UserCreateForm onSubmit={this.createUser}
                                     onCancel={this.toggleCreate}/>
+                }
+                {showUpdate &&
+                // TODO - Create class
+                // TODO Consolidate into one form
+                    <UserEditForm onSubmit={this.updateUser}
+                                  onCancel={this.toggleUpdate}
+                                  user={this.state.updatingUser}/>
+
                 }
 
                 {this.state.alertIsOpen && (
@@ -169,6 +185,13 @@ export class UsersWidget extends React.Component<{}, State> {
         });
     };
 
+    private toggleUpdate = () => {
+        this.setState({
+            showUpdate: !this.state.showUpdate,
+            showTable: !this.state.showTable
+        });
+    };
+
     private getUsers = async () => {
         const response = await this.userAPI.getUsers();
 
@@ -179,14 +202,6 @@ export class UsersWidget extends React.Component<{}, State> {
             users: response.data.data,
             loading: false
         });
-    };
-
-    private getUserById = async (id: number) => {
-        const response = await this.userAPI.getUserById(id);
-        console.log(response);
-
-        // TODO: Handle failed request
-        if (response.status !== 200) return;
     };
 
     private createUser = async (data: UserCreateRequest) => {
@@ -201,6 +216,19 @@ export class UsersWidget extends React.Component<{}, State> {
 
         return true;
     };
+
+    private updateUser = async (data: UserUpdateRequest) => {
+        console.log('Submitting updated user');
+        const response = await this.userAPI.updateUser(data);
+
+        if (response.status !== 200) return false;
+
+        this.toggleUpdate();
+        this.setState({ loading: true });
+        this.getUsers();
+
+        return true;
+    }
 
     private deleteUserById = async (id: number) => {
         const response = await this.userAPI.deleteUser(id);
