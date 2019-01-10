@@ -44,7 +44,8 @@ module.exports = {
                 browserName: "chrome",
                 javascriptEnabled: true,
                 acceptSslCerts: true,
-                nativeEvents: true
+                nativeEvents: true,
+                elementScrollBehavior: 1
             },
             filter: "*.spec.js"
         },
@@ -55,7 +56,8 @@ module.exports = {
                 browserName: "chrome",
                 javascriptEnabled: true,
                 acceptSslCerts: true,
-                nativeEvents: true
+                nativeEvents: true,
+                elementScrollBehavior: 1
             }
         },
 
@@ -64,7 +66,8 @@ module.exports = {
                 browserName: "firefox",
                 javascriptEnabled: true,
                 acceptSslCerts: true,
-                nativeEvents: true
+                nativeEvents: true,
+                elementScrollBehavior: 1
             }
         }
 
