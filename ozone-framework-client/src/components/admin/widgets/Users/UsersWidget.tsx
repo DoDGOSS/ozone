@@ -133,16 +133,6 @@ export class UsersWidget extends React.Component<{}, State> {
         const showTable = this.state.showTable;
         const showCreate = this.state.showCreate;
         const showUpdate = this.state.showUpdate;
-        let data = this.state.users;
-
-
-        // TODO - Improve this - this will be slow if there are many users.
-        // Minimally could wait to hit enter before filtering. Pagination handling
-        if (this.state.filter) {
-            data = data.filter(row => {
-                return row.userRealName.includes(this.state.filter) || row.email.includes(this.state.filter);
-            });
-        }
 
         return (
 
@@ -193,8 +183,7 @@ export class UsersWidget extends React.Component<{}, State> {
         );
     }
 
-    // private handleFilter
-
+    
     private handleAlertOpen = (deleteUser: any) => this.setState({ alertIsOpen: true, deleteUser });
 
     private handleAlertCancel = () => this.setState({ alertIsOpen: false, deleteUser: undefined });
