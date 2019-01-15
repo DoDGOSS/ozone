@@ -12,3 +12,11 @@ test("login (POST /perform_login)", async () => {
     expect(gateway.isAuthenticated).toBeTruthy();
 });
 
+test("logout (GET /logout)", async () => {
+    const gateway = new NodeGateway();
+    const logoutResponse = await gateway.logout();
+
+    expect(logoutResponse.status).toEqual(200);
+
+    expect(gateway.isAuthenticated).toBeFalsy();
+});

@@ -40,6 +40,16 @@ export class AuthStore {
     }
 
     @action.bound
+    async logout():Promise<boolean> {
+      try{
+            await this.gateway.logout();
+            return true;
+          }catch(ex){
+            return false;
+          }
+    }
+
+    @action.bound
     async check(): Promise<void> {
         try {
             const user = (await this.gateway.getLoginStatus()).data;
