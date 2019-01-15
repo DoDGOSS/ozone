@@ -66,3 +66,10 @@ export namespace GroupAdminWidget {
     export const CREATE_GROUP_DIALOG_DESCRIPTION_INPUT = `${CREATE_GROUP_DIALOG_FORM} input[name='description']`;
 
 }
+
+export namespace GlobalElements {
+    export const CONFIRMATION_DIALOG = "div[data-element-id='confirmation-dialog']";
+
+    export const CONFIRMATION_DIALOG_CONFIRM_BUTTON = `button[data-element-id='confirmation-dialog-confirm'] `;
+
+}
