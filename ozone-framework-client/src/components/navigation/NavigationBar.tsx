@@ -83,7 +83,8 @@ const DashboardsButton: React.SFC<MenuButtonProps> =
                     text="Dashboards"
                     icon="control"
                     active={active}
-                    onClick={onClick}/>
+                    onClick={onClick}
+                    data-element-id="dashboards-button"/>
         </NavbarTooltip>
     );
 
@@ -97,7 +98,8 @@ const WidgetsButton: React.SFC<MenuButtonProps> =
                     text="Widgets"
                     icon="widget"
                     active={active}
-                    onClick={onClick}/>
+                    onClick={onClick}
+                    data-element-id="widgets-button"/>
         </NavbarTooltip>
     );
 
