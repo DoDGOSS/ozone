@@ -10,7 +10,6 @@ import { lazyInject } from "../../../../inject";
 import { GroupAPI, GroupCreateRequest, GroupDTO } from "../../../../api";
 import { ConfirmationDialog } from 'src/components/confirmation-dialog/ConfirmationDialog';
 
-
 interface State {
     groups: GroupDTO[];
     loading: boolean;
@@ -88,6 +87,7 @@ export class GroupsWidget extends React.Component<{}, State> {
                         <div>
                             <ButtonGroup>
                                 <Button
+                                    data-element-id='group-admin-widget-edit-button'
                                     text="Edit"
                                     intent={Intent.PRIMARY}
                                     icon="edit"
@@ -96,10 +96,12 @@ export class GroupsWidget extends React.Component<{}, State> {
                                 />
                                 <Divider/>
                                 <Button
+                                    data-element-id='group-admin-widget-delete-button'
                                     text="Delete"
                                     intent={Intent.DANGER}
                                     icon="trash"
                                     small={true}
+                                    disabled={row.original.totalStacks > 0}
                                     onClick={() => this.deleteGroup(row.original)}
                                 />
                             </ButtonGroup>
@@ -171,7 +173,6 @@ export class GroupsWidget extends React.Component<{}, State> {
     }
 
     private createGroup = async (data: GroupCreateRequest) => {
-        console.log(data);
         const response = await this.groupAPI.createGroup(data);
 
         // TODO: Handle failed request

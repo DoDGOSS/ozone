@@ -22,7 +22,8 @@ export class ConfirmationDialog extends React.Component<ConfirmationDialogProps>
             <div>
                 <Dialog isOpen={this.props.show}
                         isCloseButtonShown={false}
-                        title={this.props.title}>
+                        title={this.props.title}
+                        data-element-id='confirmation-dialog'>
 
                     <div className={Classes.DIALOG_BODY}
                          dangerouslySetInnerHTML={{ __html: this.props.content }}/>
@@ -32,12 +33,14 @@ export class ConfirmationDialog extends React.Component<ConfirmationDialogProps>
                         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
                             <Button onClick={this.handleConfirm}
                                     intent={Intent.SUCCESS}
-                                    rightIcon='tick'>
+                                    rightIcon='tick'
+                                    data-element-id='confirmation-dialog-confirm'>
                                 OK
                             </Button>
                             <Button onClick={this.handleCancel}
                                     intent={Intent.DANGER}
-                                    rightIcon='cross'>
+                                    rightIcon='cross'
+                                    data-element-id='confirmation-cancel'>
                                 Cancel
                             </Button>
                         </div>
