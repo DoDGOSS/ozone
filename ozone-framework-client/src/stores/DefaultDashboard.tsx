@@ -57,3 +57,8 @@ export const DEFAULT_DASHBOARD: Dashboard = {
         [sampleWidget1.id]: sampleWidget1,
     }
 };
+
+export const LOGIN_DASHBOARD: Dashboard = {
+    layout:null,
+    widgets: {}
+};

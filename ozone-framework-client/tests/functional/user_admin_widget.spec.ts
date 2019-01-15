@@ -94,6 +94,29 @@ export default {
         browser.closeWindow().end();
     },
 
+    "As an Administrator, I want to search for a User": (browser: NightwatchAPI) => {
+        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+
+        const adminEmail = "testAdmin1@ozone.test";
+        const newUserEmail = "newUserEmail1@email.com";
+        const newDisplayName = "Edited User";
+
+        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 1000, "[User Admin Widget] is visible");
+
+        browser.setValue(AdminWidget.SEARCH_FIELD, newUserEmail)
+
+        browser.assert.containsText(
+            AdminWidget.USER_ADMIN_WIDGET_DIALOG, newUserEmail,
+            "[User Admin Widget] Displays user information we searched for");
+
+        browser.expect.element(AdminWidget.USER_ADMIN_WIDGET_DIALOG).text.to.not.contain(adminEmail);
+
+        browser.assert.containsText(AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+            newDisplayName, "[User Admin Widget] User successfully edited");
+
+        browser.closeWindow().end();
+    },
+
     "As an Administrator, I want to delete a User": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
 

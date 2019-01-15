@@ -31,7 +31,10 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
 
         const user = this.authStore.user;
 
+        const isLoggedIn = this.authStore.isAuthenticated;
+
         return (
+
             <Navbar className={className}>
 
                 <NavbarGroup align={Alignment.LEFT}>
@@ -44,8 +47,10 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
                     <HelpButton active={this.mainStore.isHelpDialogVisible}
                                 onClick={this.mainStore.showHelpDialog}/>
 
+                    {isLoggedIn === false &&
                     <LoginButton active={this.mainStore.isLoginDialogOpen}
                                  onClick={this.mainStore.showLoginDialog}/>
+                               }
                 </NavbarGroup>
 
                 <NavbarGroup align={Alignment.CENTER}>
