@@ -138,15 +138,16 @@ export class UsersWidget extends React.Component<{}, State> {
         const showCreate = this.state.showCreate;
         const showUpdate = this.state.showUpdate;
         let data = this.state.users;
+        const filter = this.state.filter.toLowerCase();
 
 
         // TODO - Improve this - this will be slow if there are many users.
         // Minimally could wait to hit enter before filtering. Pagination handling
-        if (this.state.filter) {
+        if (filter) {
             data = data.filter(row => {
-                return row.userRealName.includes(this.state.filter) ||
-                    row.email.includes(this.state.filter) ||
-                    row.username.includes(this.state.filter);
+                return row.userRealName.toLowerCase().includes(filter) ||
+                    row.email.toLowerCase().includes(filter) ||
+                    row.username.toLowerCase().includes(filter);
             });
         }
 
