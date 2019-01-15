@@ -11,22 +11,12 @@
   background-color: $desktop-background-color;
 }
 
-:local .loginDialog {
-  width: auto;
-
-  padding: 0;
-}
-
-
-:local .Dialog {
-  width: auto;
-
-  padding: 0;
-}
-
 :local .tileContainer {
   display: flex;
-  flex-direction: row;
-
+  flex-direction: column;
   justify-content: center;
+}
+
+:local .bp3-dialog{
+  min-height: 600px;
 }
