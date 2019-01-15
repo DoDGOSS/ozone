@@ -69,6 +69,10 @@ export class UsersWidget extends React.Component<{}, State> {
                             )
                         },
                         {
+                            Header: "Username",
+                            accessor: "username"
+                        },
+                        {
                             Header: "Email",
                             accessor: "email"
                         },
@@ -140,7 +144,9 @@ export class UsersWidget extends React.Component<{}, State> {
         // Minimally could wait to hit enter before filtering. Pagination handling
         if (this.state.filter) {
             data = data.filter(row => {
-                return row.userRealName.includes(this.state.filter) || row.email.includes(this.state.filter);
+                return row.userRealName.includes(this.state.filter) ||
+                    row.email.includes(this.state.filter) ||
+                    row.username.includes(this.state.filter);
             });
         }
 
