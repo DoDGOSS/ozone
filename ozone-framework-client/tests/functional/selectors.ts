@@ -6,6 +6,10 @@ export namespace MainPage {
 
     export const USER_MENU_BUTTON = "button[data-element-id='user-menu-button']";
 
+    export const WIDGETS_BUTTON = "button[data-element-id='widgets-button']";
+
+    export const WIDGETS_DIALOG = "div[data-element-id='widgets-dialog']";
+
 }
 
 export namespace LoginForm {

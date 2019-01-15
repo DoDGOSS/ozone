@@ -2,9 +2,13 @@ $hover-background: rgba(167, 182, 194, 0.3);
 
 $navbar-height: 32px;
 
-$widget-toolbar-height: 150px;
+//$widget-toolbar-height: 150px;
+//$widget-toolbar-background-color: rgba(115, 134, 148, 0.3);
+// New sidebar
+$widget-toolbar-background-color: #ebf1f5;
+$widget-toolbar-height: 100%;
+// End sidebar
 $widget-toolbar-border: 1px solid rgba(16, 22, 26, .2);
-$widget-toolbar-background-color: rgba(115, 134, 148, 0.3);
 $widget-toolbar-shadow: 0 0 1px rgba(0, 0, 0, .2);
 
 $desktop-background-color: #a7b6c2;
