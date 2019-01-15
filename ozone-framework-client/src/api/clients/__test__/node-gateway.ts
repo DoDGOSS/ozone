@@ -32,6 +32,11 @@ export class NodeGateway implements Gateway {
         return response;
     }
 
+    async logout(): Promise<Response<AuthUserDTO>> {
+        const response = await axios.get(`/logout`);
+        return response;
+    }
+
     async getLoginStatus(): Promise<Response<AuthUserDTO>> {
         try {
             return await this.get(`login/status`, {
