@@ -6,6 +6,14 @@ export namespace MainPage {
 
     export const USER_MENU_BUTTON = "button[data-element-id='user-menu-button']";
 
+    export const USER_MENU = "div[data-element-id='user-menu']";
+
+    export const WARNING_DIALOG = "div[data-element-id='warning-dialog']";
+
+    export const ACCEPT_BUTTON = "button[data-element-id='form-accept-button']";
+
+    export const LOGOUT_BUTTON = "a[data-element-id='logout-button']";
+
 }
 
 export namespace LoginForm {
