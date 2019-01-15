@@ -31,17 +31,20 @@ export class WarningDialog extends React.Component<WarningDialogProps> {
 
         return (
             <div>
-                <Dialog isOpen={this.mainStore.isWarningDialogVisible}
+                <Dialog className="bp3-dark"
+                        isOpen={this.mainStore.isWarningDialogVisible}
                         isCloseButtonShown={false}
                         title={title}>
 
-                    <div className={Classes.DIALOG_BODY}
+                    <div data-element-id='warning-dialog'
+                         className={Classes.DIALOG_BODY}
                          dangerouslySetInnerHTML={{ __html: content }}/>
 
                     <div className={Classes.DIALOG_FOOTER}>
 
                         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                            <Button onClick={this.mainStore.hideWarningDialog}
+                            <Button data-element-id='form-accept-button'
+                                    onClick={this.mainStore.showLoginDialog}
                                     intent={Intent.SUCCESS}
                                     rightIcon={buttonIcon}>
                                 {buttonText}

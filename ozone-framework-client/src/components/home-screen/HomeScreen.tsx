@@ -17,6 +17,8 @@ import { LoginDialog } from "../login-dialog/LoginDialog";
 
 import { ClassificationBanner } from "./ClassificationBanner";
 
+import { DashboardStore } from "../../stores";
+import { DEFAULT_DASHBOARD } from "../../stores/DefaultDashboard";
 
 export class HomeScreen extends React.Component {
 
@@ -26,38 +28,35 @@ export class HomeScreen extends React.Component {
     @lazyInject(ConfigStore)
     private configStore: ConfigStore;
 
+    @lazyInject(DashboardStore)
+    private dashboardStore: DashboardStore;
+
     componentWillMount() {
         this.authStore.check();
     }
 
     render() {
         const classification = this.configStore.classification;
-
+        this.dashboardStore.setDashboard(DEFAULT_DASHBOARD);
         return (
             <div className={styles.homeScreen}>
                 {classification.disableTopBanner !== true &&
                 <ClassificationBanner className={styles.classificationBanner} {...classification}/>
                 }
-
-                <NavigationBar className={styles.navigationBar}/>
+                <NavigationBar className="bp3-dark"/>
                 <WidgetToolbar className={styles.widgetToolbar}/>
-
                 <WidgetDashboard className={styles.widgetDashboard}/>
-
                 {classification.disableBottomBanner !== true &&
                 <ClassificationBanner className={styles.classificationBanner} {...classification}/>
                 }
-
                 <WarningDialog/>
                 <HelpDialog/>
                 <DashboardDialog/>
                 <AdminToolsDialog/>
                 <UserProfileDialog/>
-
                 <LoginDialog/>
             </div>
         );
     }
 
 }
-

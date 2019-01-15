@@ -5,7 +5,6 @@ import { object, string } from "yup";
 import { lazyInject } from "../../inject";
 import { AuthStore } from "../../stores";
 
-
 import { FormError, SubmitButton, TextField } from "../form";
 
 
@@ -44,7 +43,11 @@ export class LoginForm extends React.Component<LoginFormProps> {
                         {formik.status && formik.status.error && <FormError message={formik.status.error}/>}
 
                         <TextField name="username" label="Username" labelInfo="(required)"/>
-                        <TextField name="password" label="Password" labelInfo="(required)"/>
+                        <TextField  type="password"
+                                    name="password"
+                                    label="Password"
+                                    labelInfo="(required)"
+                                    />
 
                         <SubmitButton/>
                     </Form>
