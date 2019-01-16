@@ -1,7 +1,6 @@
 import { action, observable, runInAction } from "mobx";
 import { injectable } from "../inject";
 
-
 @injectable()
 export class MainStore {
 
@@ -28,7 +27,6 @@ export class MainStore {
 
     @observable
     widgetFilter: string | undefined;
-
 
     constructor() {
         runInAction("initialize", () => {

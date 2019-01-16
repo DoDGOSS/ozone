@@ -1,4 +1,4 @@
-import * as styles from "./form.scss";
+import * as styles from "./Form.scss";
 
 import * as React from "react";
 import { Callout, Intent } from "@blueprintjs/core";
