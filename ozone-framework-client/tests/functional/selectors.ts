@@ -6,6 +6,14 @@ export namespace MainPage {
 
     export const USER_MENU_BUTTON = "button[data-element-id='user-menu-button']";
 
+    export const USER_MENU = "div[data-element-id='user-menu']";
+
+    export const WARNING_DIALOG = "div[data-element-id='warning-dialog']";
+
+    export const ACCEPT_BUTTON = "button[data-element-id='form-accept-button']";
+
+    export const LOGOUT_BUTTON = "a[data-element-id='logout-button']";
+
 }
 
 export namespace LoginForm {
@@ -21,18 +29,9 @@ export namespace LoginForm {
 
 }
 
-export namespace AdminWidgets {
-
-  //Group Admin Widget
-  export const GROUP_ADMIN_WIDGET_DIALOG = "div[data-element-id='group-admin-widget-dialog']";
-
-}
-
 export namespace AdminWidget {
 
     export const USER_ADMIN_WIDGET_DIALOG = "div[data-element-id='user-admin-widget-dialog']";
-
-    export const GROUP_ADMIN_WIDGET_DIALOG = "div[data-element-id='group-admin-widget-dialog']";
 
     export const USER_ADMIN_CREATE_BUTTON = "button[data-element-id='user-admin-widget-create-button']";
 
@@ -44,10 +43,37 @@ export namespace AdminWidget {
 
     export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
 
+    export const EDIT_USER_ID = "button[data-element-id='user-admin-widget-edit-newUserEmail1@email.com']";
+
     export const DELETE_USER_ID = "button[data-element-id='user-admin-widget-delete-newUserEmail1@email.com']";
 
     export const CONFIRM_DELETE_ALERT = "div.delete-user-alert";
 
     export const CONFIRM_DELETE_BUTTON = "div.delete-user-alert > div.bp3-alert-footer > button.bp3-intent-danger";
+
+}
+
+export namespace GroupAdminWidget {
+    export const GROUP_ADMIN_WIDGET_DIALOG = "div[data-element-id='group-admin-widget-dialog']";
+
+    export const GROUP_ADMIN_WIDGET_DIALOG_CREATE_BUTTON = "button[data-element-id='group-admin-widget-create-button']";
+
+    
+    export const CREATE_GROUP_DIALOG_FORM = "div[data-element-id='group-admin-widget-create-form']";
+
+    export const CREATE_GROUP_DIALOG_SUBMIT_BUTTON = "div[data-element-id='group-admin-widget-create-submit-button'] > button";
+
+    export const CREATE_GROUP_DIALOG_NAME_INPUT = `${CREATE_GROUP_DIALOG_FORM} input[name='name']`;
+
+    export const CREATE_GROUP_DIALOG_DISPLAY_NAME_INPUT = `${CREATE_GROUP_DIALOG_FORM} input[name='displayName']`;
+
+    export const CREATE_GROUP_DIALOG_DESCRIPTION_INPUT = `${CREATE_GROUP_DIALOG_FORM} input[name='description']`;
+
+}
+
+export namespace GlobalElements {
+    export const CONFIRMATION_DIALOG = "div[data-element-id='confirmation-dialog']";
+
+    export const CONFIRMATION_DIALOG_CONFIRM_BUTTON = `button[data-element-id='confirmation-dialog-confirm'] `;
 
 }

@@ -31,7 +31,10 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
 
         const user = this.authStore.user;
 
+        const isLoggedIn = this.authStore.isAuthenticated;
+
         return (
+
             <Navbar className={className}>
 
                 <NavbarGroup align={Alignment.LEFT}>
@@ -44,8 +47,10 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
                     <HelpButton active={this.mainStore.isHelpDialogVisible}
                                 onClick={this.mainStore.showHelpDialog}/>
 
+                    {isLoggedIn === false &&
                     <LoginButton active={this.mainStore.isLoginDialogOpen}
                                  onClick={this.mainStore.showLoginDialog}/>
+                               }
                 </NavbarGroup>
 
                 <NavbarGroup align={Alignment.CENTER}>
@@ -78,7 +83,8 @@ const DashboardsButton: React.SFC<MenuButtonProps> =
                     text="Dashboards"
                     icon="control"
                     active={active}
-                    onClick={onClick}/>
+                    onClick={onClick}
+                    data-element-id="dashboards-button"/>
         </NavbarTooltip>
     );
 
@@ -92,7 +98,8 @@ const WidgetsButton: React.SFC<MenuButtonProps> =
                     text="Widgets"
                     icon="widget"
                     active={active}
-                    onClick={onClick}/>
+                    onClick={onClick}
+                    data-element-id="widgets-button"/>
         </NavbarTooltip>
     );
 

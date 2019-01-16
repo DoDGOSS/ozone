@@ -43,6 +43,25 @@ export class OzoneGateway implements Gateway {
         }
     }
 
+    async logout(): Promise<Response<AuthUserDTO>> {
+        try {
+            window.location.reload();
+
+            const response = await this.get(`/logout`,{
+                params: {},
+                validate: AuthUserDTO.validate
+            });
+
+            return response;
+        } catch (ex) {
+            if (ex instanceof ValidationError) throw ex;
+            if (ex.response.status === 401) {
+                throw new AuthenticationError("No default username or password", ex);
+            }
+            throw new AuthenticationError("Unable to logout", ex);
+        }
+    }
+
     async getLoginStatus(): Promise<Response<AuthUserDTO>> {
         try {
             const response = await this.get(`login/status`, {

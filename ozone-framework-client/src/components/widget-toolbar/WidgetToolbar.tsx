@@ -3,7 +3,8 @@ import * as styles from "./WidgetToolbar.scss";
 import * as React from "react";
 import { observer } from "mobx-react";
 
-import { Button, Collapse, InputGroup } from "@blueprintjs/core";
+// Collapse
+import { Button, InputGroup, Overlay } from "@blueprintjs/core";
 
 import { lazyInject } from "../../inject";
 import { MainStore } from "../../stores";
@@ -25,8 +26,18 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
         const { className } = this.props;
 
         return (
-            <Collapse isOpen={this.mainStore.isWidgetToolbarOpen}>
-                <div className={classNames(styles.widgetToolbar, className)}>
+            <Overlay
+                isOpen={this.mainStore.isWidgetToolbarOpen}
+                hasBackdrop={false}
+                canOutsideClickClose={true}
+                canEscapeKeyClose={true}
+                onClose={this.mainStore.closeWidgetToolbar}
+            >
+                <div
+                    className={classNames(styles.widgetToolbar, className)}
+                    data-element-id='widgets-dialog'
+                >
+                    <h3 className={styles.widgetToolbarTitle}>Widgets</h3>
                     <div className={styles.widgetToolbarMenu}>
                         <InputGroup
                             placeholder="Search..."
@@ -37,8 +48,9 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
                         <Button minimal icon="cross"
                                 onClick={this.mainStore.closeWidgetToolbar}/>
                     </div>
+                    <hr/>
                 </div>
-            </Collapse>
+            </Overlay>
         );
     }
 

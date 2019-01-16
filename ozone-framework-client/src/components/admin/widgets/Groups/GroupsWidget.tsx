@@ -3,12 +3,12 @@ import * as React from "react";
 import { Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
 import { AdminTable } from "../../table/AdminTable";
 
-// import { GroupCreateForm } from "./GroupCreateForm";
+import { GroupCreateForm } from "./GroupCreateForm";
 
 import { lazyInject } from "../../../../inject";
-// GroupCreateRequest,
-import { GroupAPI, GroupDTO } from "../../../../api";
 
+import { GroupAPI, GroupCreateRequest, GroupDTO } from "../../../../api";
+import { ConfirmationDialog } from 'src/components/confirmation-dialog/ConfirmationDialog';
 
 interface State {
     groups: GroupDTO[];
@@ -17,6 +17,9 @@ interface State {
     columns: any;
     showTable: boolean;
     showCreate: boolean;
+    showDelete: boolean;
+    confirmationMessage: string;
+    manageGroup: GroupDTO | undefined;
 }
 
 // TODO
@@ -39,6 +42,9 @@ export class GroupsWidget extends React.Component<{}, State> {
             pageSize: 5,
             showTable: true,
             showCreate: false,
+            showDelete: false,
+            confirmationMessage: '',
+            manageGroup: undefined,
             columns: [
                 {
                     Header: "Groups",
@@ -81,6 +87,7 @@ export class GroupsWidget extends React.Component<{}, State> {
                         <div>
                             <ButtonGroup>
                                 <Button
+                                    data-element-id='group-admin-widget-edit-button'
                                     text="Edit"
                                     intent={Intent.PRIMARY}
                                     icon="edit"
@@ -89,12 +96,13 @@ export class GroupsWidget extends React.Component<{}, State> {
                                 />
                                 <Divider/>
                                 <Button
+                                    data-element-id='group-admin-widget-delete-button'
                                     text="Delete"
                                     intent={Intent.DANGER}
                                     icon="trash"
-                                    disabled={true}
                                     small={true}
-                                    // onClick={() => this.deleteUserById(row.original.id)}
+                                    disabled={row.original.totalStacks > 0}
+                                    onClick={() => this.deleteGroup(row.original)}
                                 />
                             </ButtonGroup>
                         </div>
@@ -122,19 +130,18 @@ export class GroupsWidget extends React.Component<{}, State> {
                     pageSize={this.state.pageSize}
                 />
                 }
+
                 {showCreate &&
-                // TODO - Create class
-                <div style={{ margin: 40 }}>
-                    {/*<GroupCreateForm createGroup={this.createGroup}/>*/}
-                    <Button
-                        text="Back"
-                        intent={Intent.SUCCESS}
-                        icon="undo"
-                        small={true}
-                        onClick={this.toggleCreate}
-                    />
-                </div>
+                  <GroupCreateForm onSubmit={this.createGroup}
+                                  onCancel={this.toggleCreate}/>
                 }
+                <ConfirmationDialog
+                    show={this.state.showDelete}
+                    title='Warning'
+                    content={this.state.confirmationMessage}
+                    confirmHandler={this.handleConfirmationConfirmDelete}
+                    cancelHandler={this.handleConfirmationCancel}
+                    payload={this.state.manageGroup} />
             </div>
         );
     }
@@ -165,17 +172,50 @@ export class GroupsWidget extends React.Component<{}, State> {
         if (response.status !== 200) return;
     }
 
-    // private createGroup = async (data: GroupCreateRequest) => {
-    //     const response = await this.groupAPI.createGroup(data);
-    //
-    //     // TODO: Handle failed request
-    //     if (response.status !== 200) return false;
-    //
-    //     this.toggleCreate();
-    //     this.setState({ loading: true });
-    //     this.getGroups();
-    //
-    //     return true;
-    // }
+    private createGroup = async (data: GroupCreateRequest) => {
+        const response = await this.groupAPI.createGroup(data);
 
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+
+        this.toggleCreate();
+        this.setState({ loading: true });
+        this.getGroups();
+
+        return true;
+    }
+
+    private deleteGroup = async (group: GroupDTO) => {
+        this.setState({
+            showDelete: true,
+            confirmationMessage: `This action will permenantly delete <strong>${group.name}</strong>`,
+            manageGroup: group
+        });
+    }
+
+    private handleConfirmationConfirmDelete = async (payload: any) => {
+        this.setState({
+            showDelete: false,
+            manageGroup: undefined,
+        });
+
+        const group: GroupDTO = payload;
+
+        const response = await this.groupAPI.deleteGroup(group.id);
+    
+        // // TODO: Handle failed request
+        if (response.status !== 200) return false;
+    
+        this.getGroups();
+    
+        return true;
+
+    }
+
+    private handleConfirmationCancel = (payload: any) => {
+        this.setState({
+            showDelete: false,
+            manageGroup: undefined,
+        });
+    }
 }
