@@ -11,7 +11,7 @@ export default {
     "As an Administrator, I can view all Users in the User Admin Widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
 
-        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 1000, "[User Admin Widget] is visible");
+        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG, "Test Administrator 1",
