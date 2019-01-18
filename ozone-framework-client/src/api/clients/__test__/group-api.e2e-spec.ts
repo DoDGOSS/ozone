@@ -81,7 +81,8 @@ describe("Group API", () => {
                 description: group.description,
                 email: group.email,
                 automatic: group.automatic,
-                status: group.status
+                status: group.status,
+                active: group.status === 'active'
             };
 
             const response = await groupApi.updateGroup(request);

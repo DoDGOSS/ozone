@@ -45,7 +45,14 @@ module.exports = {
                 javascriptEnabled: true,
                 acceptSslCerts: true,
                 nativeEvents: true,
-                elementScrollBehavior: 1
+                elementScrollBehavior: 1,
+                // "chromeOptions": {
+                //     "args": [
+                //         "headless",
+                //         "disable-web-security",
+                //         "ignore-certificate-errors"
+                //     ]
+                // }
             },
             filter: "*.spec.js"
         },
