@@ -46,7 +46,7 @@ export default {
 
         browser.click(AdminWidget.SUBMIT_BUTTON);
 
-        browser.pause(1000)
+        browser.pause(2000)
                .waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
 
         browser.assert.containsText(AdminWidget.USER_ADMIN_WIDGET_DIALOG,

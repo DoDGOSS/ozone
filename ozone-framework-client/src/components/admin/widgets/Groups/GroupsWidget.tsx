@@ -7,8 +7,9 @@ import { GroupCreateForm } from "./GroupCreateForm";
 
 import { lazyInject } from "../../../../inject";
 
-import { GroupAPI, GroupCreateRequest, GroupDTO } from "../../../../api";
+import { GroupAPI, GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../../../api";
 import { ConfirmationDialog } from 'src/components/confirmation-dialog/ConfirmationDialog';
+import { GroupEditForm } from './GroupEditForm';
 
 interface State {
     groups: GroupDTO[];
@@ -17,9 +18,11 @@ interface State {
     columns: any;
     showTable: boolean;
     showCreate: boolean;
+    showUpdate: boolean;    
     showDelete: boolean;
     confirmationMessage: string;
     manageGroup: GroupDTO | undefined;
+    updatingGroup?: any;
 }
 
 // TODO
@@ -42,6 +45,7 @@ export class GroupsWidget extends React.Component<{}, State> {
             pageSize: 5,
             showTable: true,
             showCreate: false,
+            showUpdate: false,
             showDelete: false,
             confirmationMessage: '',
             manageGroup: undefined,
@@ -92,7 +96,12 @@ export class GroupsWidget extends React.Component<{}, State> {
                                     intent={Intent.PRIMARY}
                                     icon="edit"
                                     small={true}
-                                    onClick={() => this.getGroupById(row.original.id)}
+                                    // onClick={() => this.getGroupById(row.original.id)}
+                                    // onSubmit={this.updateGroup}
+                                    onClick={() => (
+                                        this.toggleUpdate(),
+                                        this.setState({updatingGroup: row.original})
+                                    )}
                                 />
                                 <Divider/>
                                 <Button
@@ -119,6 +128,7 @@ export class GroupsWidget extends React.Component<{}, State> {
     render() {
         const showTable = this.state.showTable;
         const showCreate = this.state.showCreate;
+        const showUpdate = this.state.showUpdate;
 
         return (
             <div data-element-id="group-admin-widget-dialog">
@@ -135,6 +145,12 @@ export class GroupsWidget extends React.Component<{}, State> {
                   <GroupCreateForm onSubmit={this.createGroup}
                                   onCancel={this.toggleCreate}/>
                 }
+                {showUpdate &&
+                <GroupEditForm onSubmit={this.updateGroup}
+                              onCancel={this.toggleUpdate}
+                              group={this.state.updatingGroup}/>
+
+                }                
                 <ConfirmationDialog
                     show={this.state.showDelete}
                     title='Warning'
@@ -153,6 +169,13 @@ export class GroupsWidget extends React.Component<{}, State> {
         });
     }
 
+    private toggleUpdate = () => {
+        this.setState({
+            showUpdate: !this.state.showUpdate,
+            showTable: !this.state.showTable
+        });
+    };
+
     private getGroups = async () => {
         const response = await this.groupAPI.getGroups();
 
@@ -165,12 +188,12 @@ export class GroupsWidget extends React.Component<{}, State> {
         });
     }
 
-    private getGroupById = async (id: number) => {
-        const response = await this.groupAPI.getGroupById(id);
+    // private getGroupById = async (id: number) => {
+    //     const response = await this.groupAPI.getGroupById(id);
 
-        // TODO: Handle failed request
-        if (response.status !== 200) return;
-    }
+    //     // TODO: Handle failed request
+    //     if (response.status !== 200) return;
+    // }
 
     private createGroup = async (data: GroupCreateRequest) => {
         const response = await this.groupAPI.createGroup(data);
@@ -185,12 +208,31 @@ export class GroupsWidget extends React.Component<{}, State> {
         return true;
     }
 
+    private updateGroup = async (data: GroupUpdateRequest) => {
+        console.log('Submitting updated group');
+
+        data.status = data.active ? 'active' : 'inactive';
+        
+        const response = await this.groupAPI.updateGroup(data);
+
+        if (response.status !== 200) return false;
+
+        this.toggleUpdate();
+        this.setState({ loading: true });
+        this.getGroups();
+
+        return true;
+    }
+
     private deleteGroup = async (group: GroupDTO) => {
         this.setState({
             showDelete: true,
             confirmationMessage: `This action will permenantly delete <strong>${group.name}</strong>`,
             manageGroup: group
         });
+        this.getGroups();
+
+        return true;
     }
 
     private handleConfirmationConfirmDelete = async (payload: any) => {

@@ -9,6 +9,7 @@ const LOGIN_USERNAME: string = 'testAdmin1';
 const LOGIN_PASSWORD: string = 'password';
 
 const NEW_GROUP_NAME: string = 'NewGroup';
+const NEW_GROUP_MODIFIED_NAME: string = 'Modified New Group';
 const NEW_GROUP_DISPLAY_NAME: string = 'New Group Display Name';
 const NEW_GROUP_DESCRIPTION: string = 'New Group Description';
 
@@ -61,10 +62,10 @@ export default {
         browser.closeWindow().end();
     },
 
-    "As an Administrator, I can delete a group": (browser: NightwatchAPI) => {
+    "As an Administrator, I can edit a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
 
-        browser.waitForElementVisible(GroupAdminWidget.GROUP_ADMIN_WIDGET_DIALOG, 1000, "[Group Admin Widget] is visible");
+        browser.waitForElementVisible(GroupAdminWidget.GROUP_ADMIN_WIDGET_DIALOG, 2000, "[Group Admin Widget] is visible");
 
         browser.expect.element(GroupAdminWidget.GROUP_ADMIN_WIDGET_DIALOG).text.to.contain(NEW_GROUP_NAME);
 
@@ -74,6 +75,51 @@ export default {
             elements.value.forEach((element: any, i: number) => {
                 browser.elementIdText(element.ELEMENT, (result) => {
                     if(result.value === NEW_GROUP_NAME) {
+                        relevant_row = i;
+                        browser.getAttribute(`${GroupAdminWidget.GROUP_ADMIN_WIDGET_DIALOG} div[role='rowgroup']:nth-child(${i+1}) div[role='row'] > div:last-child button[data-element-id='group-admin-widget-edit-button']`, 'disabled', function(isDisabled) {
+                            this.assert.equal(isDisabled.value, null, "[Group Admin Widget] created group can be edited");
+                        });                        
+                    }
+                });
+            });
+
+            browser
+                .click(`${GroupAdminWidget.GROUP_ADMIN_WIDGET_DIALOG} div[role='rowgroup']:nth-child(${relevant_row + 1}) div[role='row'] > div:last-child button[data-element-id='group-admin-widget-edit-button']`)
+                .waitForElementPresent(GroupAdminWidget.EDIT_GROUP_DIALOG_FORM, 1000, undefined, undefined, "[Edit Group Form] is present");
+            });
+        
+        browser
+            .clearValue(GroupAdminWidget.EDIT_GROUP_DIALOG_NAME_INPUT)
+            .setValue(GroupAdminWidget.EDIT_GROUP_DIALOG_NAME_INPUT, NEW_GROUP_MODIFIED_NAME)
+            .pause(1000);
+
+        browser.getAttribute(GroupAdminWidget.EDIT_GROUP_DIALOG_SUBMIT_BUTTON, 'disabled', function(result) {
+            this.assert.equal(result.value, null, "[Create Group Submit Button] is enabled");
+        });
+
+        browser
+            .click(GroupAdminWidget.EDIT_GROUP_DIALOG_SUBMIT_BUTTON)
+            .waitForElementNotPresent(GroupAdminWidget.EDIT_GROUP_DIALOG_FORM, 1000, "[Edit Group Form] is closed");
+
+        browser.expect.element(GroupAdminWidget.GROUP_ADMIN_WIDGET_DIALOG).text.to.contain(NEW_GROUP_MODIFIED_NAME);
+        browser.expect.element(GroupAdminWidget.GROUP_ADMIN_WIDGET_DIALOG).text.to.not.contain(NEW_GROUP_NAME);
+
+        browser.closeWindow().end();
+    },
+
+    "As an Administrator, I can delete a group": (browser: NightwatchAPI) => {
+        loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+
+        browser.waitForElementVisible(GroupAdminWidget.GROUP_ADMIN_WIDGET_DIALOG, 1000, "[Group Admin Widget] is visible");
+
+        browser.expect.element(GroupAdminWidget.GROUP_ADMIN_WIDGET_DIALOG).text.to.contain(NEW_GROUP_MODIFIED_NAME);
+
+        browser.elements("css selector", `${GroupAdminWidget.GROUP_ADMIN_WIDGET_DIALOG} div[role='rowgroup'] div[role='row'] > div:first-child`, (elements: NightwatchCallbackResult) => {
+            let relevant_row: number = 0;
+
+            elements.value.forEach((element: any, i: number) => {
+                browser.elementIdText(element.ELEMENT, (result) => {
+                    if(result.value === NEW_GROUP_MODIFIED_NAME) {
                         relevant_row = i;
                         browser.getAttribute(`${GroupAdminWidget.GROUP_ADMIN_WIDGET_DIALOG} div[role='rowgroup']:nth-child(${i+1}) div[role='row'] > div:last-child button[data-element-id='group-admin-widget-delete-button']`, 'disabled', function(result) {
                             this.assert.equal(result.value, null, "[Group Admin Widget] created group can be deleted");
@@ -94,8 +140,8 @@ export default {
 
         });
 
-        browser.expect.element(GroupAdminWidget.GROUP_ADMIN_WIDGET_DIALOG).text.to.not.contain(NEW_GROUP_NAME);
+        browser.expect.element(GroupAdminWidget.GROUP_ADMIN_WIDGET_DIALOG).text.to.not.contain(NEW_GROUP_MODIFIED_NAME);
 
         browser.closeWindow().end();
-    }
+    },
 };
