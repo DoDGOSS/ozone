@@ -9,10 +9,11 @@ export interface CheckBoxProps {
     label?: string;
     labelInfo?: string;
     text?: string;
+    defaultChecked?: boolean;
 }
 
 const _CheckBox: React.FunctionComponent<CheckBoxProps & FieldProps<any>> =
-    ({ name, label, labelInfo, field, form, text}) => {
+    ({ defaultChecked, name, label, labelInfo, field, form, text}) => {
 
         return (
             <FormGroup
@@ -24,6 +25,7 @@ const _CheckBox: React.FunctionComponent<CheckBoxProps & FieldProps<any>> =
                             data-role="field"
                             type="checkbox"
                             label={text}
+                            defaultChecked={defaultChecked}
                             {...field}
                 />
 

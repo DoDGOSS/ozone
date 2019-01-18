@@ -92,6 +92,7 @@ export interface GroupUpdateRequest {
     email?: string;
     automatic: boolean;
     status: "active" | "inactive";
+    active: boolean;
 }
 
 
