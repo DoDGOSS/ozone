@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
+import { Button, ButtonGroup, Divider, InputGroup, Intent  } from "@blueprintjs/core";
 import { AdminTable } from "../../table/AdminTable";
 
 import { GroupCreateForm } from "./GroupCreateForm";
@@ -13,6 +13,8 @@ import { GroupEditForm } from './GroupEditForm';
 
 interface State {
     groups: GroupDTO[];
+    filtered: GroupDTO[];
+    filter: string;
     loading: boolean;
     pageSize: number;
     columns: any;
@@ -41,6 +43,8 @@ export class GroupsWidget extends React.Component<{}, State> {
         super(props);
         this.state = {
             groups: [],
+            filtered: [],
+            filter: '',
             loading: true,
             pageSize: 5,
             showTable: true,
@@ -130,11 +134,31 @@ export class GroupsWidget extends React.Component<{}, State> {
         const showCreate = this.state.showCreate;
         const showUpdate = this.state.showUpdate;
 
+        let data = this.state.groups;
+        const filter = this.state.filter.toLowerCase();
+
+
+        // TODO - Improve this - this will be slow if there are many users.
+        // Minimally could wait to hit enter before filtering. Pagination handling
+        if (filter) {
+            data = data.filter(row => {
+                return row.name.toLowerCase().includes(filter);
+            });
+        }
+
         return (
             <div data-element-id="group-admin-widget-dialog">
+                <InputGroup
+                    placeholder="Search..."
+                    leftIcon="search"
+                    value={this.state.filter}
+                    onChange={(e: any) => this.setState({filter: e.target.value})}
+                    data-element-id="search-field"
+                />
+                            
                 {showTable &&
                 <AdminTable
-                    data={this.state.groups}
+                    data={data}
                     columns={this.state.columns}
                     loading={this.state.loading}
                     pageSize={this.state.pageSize}
