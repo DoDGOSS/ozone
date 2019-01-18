@@ -38,14 +38,13 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
             <Navbar className={className}>
 
                 <NavbarGroup align={Alignment.LEFT}>
+                    <CenterButton onClick={this.authStore.check}/>
+                    <OWFButton onClick={this.authStore.check}/>
                     <DashboardsButton active={this.mainStore.isDashboardDialogVisible}
                                       onClick={this.mainStore.showDashboardDialog}/>
 
                     <WidgetsButton active={this.mainStore.isWidgetToolbarOpen}
                                    onClick={this.mainStore.toggleWidgetToolbar}/>
-
-                    <HelpButton active={this.mainStore.isHelpDialogVisible}
-                                onClick={this.mainStore.showHelpDialog}/>
 
                     {isLoggedIn === false &&
                     <LoginButton active={this.mainStore.isLoginDialogOpen}
@@ -59,6 +58,8 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
 
                 <NavbarGroup align={Alignment.RIGHT}>
                     <DebugMenuButton/>
+                    <HelpButton active={this.mainStore.isHelpDialogVisible}
+                                onClick={this.mainStore.showHelpDialog}/>
                     <UserMenuButton userName={user ? user.userRealName : "Unknown User"}/>
                 </NavbarGroup>
 
@@ -71,6 +72,10 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
 
 type MenuButtonProps = {
     active: boolean;
+    onClick: () => void;
+};
+
+type NavProps = {
     onClick: () => void;
 };
 
@@ -87,6 +92,31 @@ const DashboardsButton: React.SFC<MenuButtonProps> =
                     data-element-id="dashboards-button"/>
         </NavbarTooltip>
     );
+
+  const CenterButton: React.SFC<NavProps> =
+      ({onClick}) => (
+          <NavbarTooltip title="AppsMall Center"
+                         shortcut="alt+shift+a"
+                         description="Open AppsMall">
+              <Button minimal
+                      icon="shopping-cart"
+                      onClick={onClick}
+                      data-element-id="center-button"/>
+          </NavbarTooltip>
+      );
+
+      const OWFButton: React.SFC<NavProps> =
+          ({onClick}) => (
+              <NavbarTooltip title="OWF"
+                             shortcut="alt+shift+c"
+                             description="Refresh Ozone Widget Framework">
+                  <Button minimal
+                          icon="page-layout"
+                          intent="primary"
+                          onClick={onClick}
+                          data-element-id="owf-button"/>
+              </NavbarTooltip>
+          );
 
 
 const WidgetsButton: React.SFC<MenuButtonProps> =
@@ -146,7 +176,7 @@ const UserMenuButton: React.SFC<UserMenuButtonProps> =
                      modifiers={{ arrow: { enabled: false } }}>
                 <Button minimal
                         text={userName}
-                        icon="user"
+                        icon="menu"
                         rightIcon="caret-down"
                         data-element-id="user-menu-button"/>
             </Popover>
