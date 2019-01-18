@@ -5,7 +5,7 @@ import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { object, string } from "yup";
 
 import { GroupCreateRequest } from "../../../../api";
-import { CheckBox, FormError, SubmitButton, TextField } from "../../../form";
+import { CancelButton, CheckBox, FormError, SubmitButton, TextField } from "../../../form";
 
 interface GroupCreateProps {
   onSubmit: (data: GroupCreateRequest) => Promise<boolean>;
@@ -41,6 +41,7 @@ export const GroupCreateForm: React.FunctionComponent<GroupCreateProps> =
                         {formik.status && formik.status.error && <FormError message={formik.status.error}/>}
 
                         <div className={styles.buttonBar} data-element-id='group-admin-widget-create-submit-button'>
+                            <CancelButton className={styles.cancelButton} onClick={onCancel}/>
                             <SubmitButton className={styles.submitButton}/>
                         </div>
                     </Form>
@@ -50,8 +51,7 @@ export const GroupCreateForm: React.FunctionComponent<GroupCreateProps> =
    );
 
    const CreateGroupSchema = object().shape({
-     name: string().matches(/^[a-zA-Z0-9_]+$/, { message: "Name must contain only alphanumeric or underscore characters." })
-                     .required("Required"),
+     name: string().required("Required"),
 
      displayName: string().required("Required"),
 
