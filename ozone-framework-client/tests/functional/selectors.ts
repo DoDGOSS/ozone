@@ -14,6 +14,9 @@ export namespace MainPage {
 
     export const LOGOUT_BUTTON = "a[data-element-id='logout-button']";
 
+    export const WIDGETS_BUTTON = "button[data-element-id='widgets-button']";
+
+    export const WIDGETS_DIALOG = "div[data-element-id='widgets-dialog']";
 }
 
 export namespace LoginForm {
@@ -51,23 +54,30 @@ export namespace AdminWidget {
 
     export const CONFIRM_DELETE_BUTTON = "div.delete-user-alert > div.bp3-alert-footer > button.bp3-intent-danger";
 
+    export const SEARCH_FIELD = "input[data-element-id='search-field']";
 }
 
 export namespace GroupAdminWidget {
+
     export const GROUP_ADMIN_WIDGET_DIALOG = "div[data-element-id='group-admin-widget-dialog']";
 
     export const GROUP_ADMIN_WIDGET_DIALOG_CREATE_BUTTON = "button[data-element-id='group-admin-widget-create-button']";
 
-    
     export const CREATE_GROUP_DIALOG_FORM = "div[data-element-id='group-admin-widget-create-form']";
 
-    export const CREATE_GROUP_DIALOG_SUBMIT_BUTTON = "div[data-element-id='group-admin-widget-create-submit-button'] > button";
+    export const CREATE_GROUP_DIALOG_SUBMIT_BUTTON = "div[data-element-id='group-admin-widget-create-submit-button'] > button[data-element-id='form-submit-button']";
 
     export const CREATE_GROUP_DIALOG_NAME_INPUT = `${CREATE_GROUP_DIALOG_FORM} input[name='name']`;
 
     export const CREATE_GROUP_DIALOG_DISPLAY_NAME_INPUT = `${CREATE_GROUP_DIALOG_FORM} input[name='displayName']`;
 
     export const CREATE_GROUP_DIALOG_DESCRIPTION_INPUT = `${CREATE_GROUP_DIALOG_FORM} input[name='description']`;
+
+    export const EDIT_GROUP_DIALOG_FORM = "div[data-element-id='group-admin-widget-edit-form']";
+
+    export const EDIT_GROUP_DIALOG_SUBMIT_BUTTON = "div[data-element-id='group-admin-widget-edit-submit-button'] > button[data-element-id='form-submit-button']";
+
+    export const EDIT_GROUP_DIALOG_NAME_INPUT = `${EDIT_GROUP_DIALOG_FORM} input[name='name']`;
 
 }
 
