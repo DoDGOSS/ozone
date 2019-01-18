@@ -103,7 +103,7 @@ export default {
 
         browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 1000, "[User Admin Widget] is visible");
 
-        browser.setValue(AdminWidget.SEARCH_FIELD, newUserEmail)
+        browser.setValue(AdminWidget.SEARCH_FIELD, newUserEmail);
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG, newUserEmail,
