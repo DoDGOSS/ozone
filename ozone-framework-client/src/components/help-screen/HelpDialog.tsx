@@ -19,8 +19,7 @@ export class HelpDialog extends React.Component {
 
     render() {
         return (
-            <Dialog className={styles.helpDialog}
-                    title="Help"
+            <Dialog className={classNames(this.mainStore.darkClass, styles.helpDialog)}
                     icon="help"
                     isOpen={this.mainStore.isHelpDialogVisible}
                     onClose={this.mainStore.hideHelpDialog}>

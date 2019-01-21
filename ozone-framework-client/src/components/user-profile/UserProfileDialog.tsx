@@ -8,6 +8,8 @@ import { Classes, Dialog } from "@blueprintjs/core";
 import { lazyInject } from "../../inject";
 import { AuthStore, MainStore } from "../../stores";
 
+import { classNames } from "../util";
+
 
 @observer
 export class UserProfileDialog extends React.Component {
@@ -22,7 +24,7 @@ export class UserProfileDialog extends React.Component {
         const user = this.authStore.user;
 
         return (
-            <Dialog className={styles.userProfileDialog}
+            <Dialog className={classNames(styles.userProfileDialog, this.mainStore.darkClass)}
                     title="Profile"
                     icon="wrench"
                     isOpen={this.mainStore.isUserProfileDialogVisible}
