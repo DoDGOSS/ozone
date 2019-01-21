@@ -16,7 +16,8 @@ export class DashboardDialog extends React.Component {
     render() {
         return (
             <div>
-                <Dialog isOpen={this.mainStore.isDashboardDialogVisible}
+                <Dialog className={this.mainStore.darkClass}
+                        isOpen={this.mainStore.isDashboardDialogVisible}
                         onClose={this.mainStore.hideDashboardDialog}
                         title="Dashboards">
 
