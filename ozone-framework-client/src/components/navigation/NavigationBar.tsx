@@ -57,6 +57,9 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
                 </NavbarGroup>
 
                 <NavbarGroup align={Alignment.RIGHT}>
+
+                    <ThemeButton active={this.mainStore.darkTheme}
+                                  onClick={this.mainStore.toggleTheme}/>
                     <DebugMenuButton/>
                     <HelpButton active={this.mainStore.isHelpDialogVisible}
                                 onClick={this.mainStore.showHelpDialog}/>
@@ -105,10 +108,23 @@ const DashboardsButton: React.SFC<MenuButtonProps> =
           </NavbarTooltip>
       );
 
+      const ThemeButton: React.SFC<MenuButtonProps> =
+          ({active, onClick}) => (
+              <NavbarTooltip title="theme switch"
+                             shortcut="alt+shift+t"
+                             description="toggle theme">
+                  <Button minimal
+                          icon="moon"
+                          active={active}
+                          onClick={onClick}
+                          data-element-id="theme-button"/>
+              </NavbarTooltip>
+          );
+
       const OWFButton: React.SFC<NavProps> =
           ({onClick}) => (
               <NavbarTooltip title="OWF"
-                             shortcut="alt+shift+c"
+                             shortcut="alt+shift+o"
                              description="Refresh Ozone Widget Framework">
                   <Button minimal
                           icon="page-layout"
