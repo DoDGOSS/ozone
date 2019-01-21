@@ -34,7 +34,7 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
                 onClose={this.mainStore.closeWidgetToolbar}
             >
                 <div
-                    className={classNames(styles.widgetToolbar, className)}
+                    className={classNames(styles.widgetToolbar, className, this.mainStore.darkClass)}
                     data-element-id='widgets-dialog'
                 >
                     <h3 className={styles.widgetToolbarTitle}>Widgets</h3>

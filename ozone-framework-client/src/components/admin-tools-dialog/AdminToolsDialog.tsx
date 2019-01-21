@@ -23,7 +23,7 @@ export class AdminToolsDialog extends React.Component {
 
         return (
             <div>
-                <Dialog className={styles.adminToolsDialog}
+                <Dialog className={[this.mainStore.darkClass, styles.adminToolsDialog].join(' ')}
                         isOpen={this.mainStore.isAdminToolsDialogOpen}
                         onClose={this.mainStore.hideAdminToolsDialog}
                         title="Administration"

@@ -26,6 +26,12 @@ export class MainStore {
     isWidgetToolbarOpen: boolean;
 
     @observable
+    darkTheme: boolean;
+
+    @observable
+    darkClass:string;
+
+    @observable
     widgetFilter: string | undefined;
 
     constructor() {
@@ -36,6 +42,7 @@ export class MainStore {
             this.isAdminToolsDialogOpen = false;
             this.isDashboardDialogVisible = false;
             this.isWidgetToolbarOpen = false;
+            this.darkTheme = false;
         });
     }
 
@@ -112,6 +119,16 @@ export class MainStore {
     @action.bound
     setWidgetFilter(value: string) {
         this.widgetFilter = value;
+    }
+
+    @action.bound
+    toggleTheme(){
+      this.darkTheme = !this.darkTheme;
+      if (this.darkTheme ===true){
+         this.darkClass='bp3-dark';
+       }else{
+         this.darkClass="";
+       }
     }
 
 }
