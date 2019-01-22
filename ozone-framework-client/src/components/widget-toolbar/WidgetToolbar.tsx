@@ -4,12 +4,14 @@ import * as React from "react";
 import { observer } from "mobx-react";
 
 // Collapse
-import { Button, InputGroup, Overlay } from "@blueprintjs/core";
+import { Button, Classes, InputGroup, Overlay } from "@blueprintjs/core";
 
 import { lazyInject } from "../../inject";
-import { MainStore } from "../../stores";
+import { MainStore, WidgetStore } from "../../stores";
 
 import { classNames, handleStringChange } from "../util";
+
+// TODO - Filter on search (mainstore Widget filter)
 
 
 export type WidgetToolbarProps = {
@@ -22,8 +24,13 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
     @lazyInject(MainStore)
     private mainStore: MainStore;
 
+    @lazyInject(WidgetStore)
+    private widgetStore: WidgetStore;
+
     render() {
         const { className } = this.props;
+
+        const userWidgets = this.widgetStore.userWidgets;
 
         return (
             <Overlay
@@ -32,6 +39,7 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
                 canOutsideClickClose={true}
                 canEscapeKeyClose={true}
                 onClose={this.mainStore.closeWidgetToolbar}
+                className={Classes.OVERLAY_SCROLL_CONTAINER}
             >
                 <div
                     className={classNames(styles.widgetToolbar, className, this.mainStore.darkClass)}
@@ -49,8 +57,61 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
                                 onClick={this.mainStore.closeWidgetToolbar}/>
                     </div>
                     <hr/>
+
+                    <div className={Classes.DIALOG_BODY}>
+                        <ul className={styles.widgetList}>
+                            {userWidgets.map(widget =>
+                                <Widget key={widget.id}
+                                        title={widget.title}
+                                        iconUrl={widget.iconUrl}
+                                />
+
+                            )}
+                        </ul>
+                    </div>
+
+                </div>
+                <div className={styles.widgetToolbarFooter}>
+                    <div className={styles.buttonBar}>
+                        <Button
+                            text="Prev"
+                            icon="undo"
+                            small={true}
+                        />
+                        <p>
+                            <b>Page 1</b>
+                        </p>
+                        <Button
+                            text="Next"
+                            icon="fast-forward"
+                            small={true}
+                        />
+                    </div>
                 </div>
             </Overlay>
+        );
+    }
+
+}
+
+export type WidgetProps = {
+    title: string;
+    iconUrl: string;
+    url?: string;
+};
+
+export class Widget extends React.PureComponent<WidgetProps> {
+
+    render() {
+        const { title, iconUrl, url } = this.props;
+
+        return (
+            <li>
+                <a href={url}>
+                    <img className={styles.tileIcon} src={iconUrl}/>
+                    <span className={styles.tileTitle}>{title}</span>
+                </a>
+            </li>
         );
     }
 
