@@ -7,6 +7,7 @@ interface Widget {
     universalName: string;
     title: string;
     iconUrl: string;
+    url?: string;
 }
 
 export const IMAGE_ROOT_URL = "http://localhost:3000/images";
@@ -45,6 +46,37 @@ const ADMIN_WIDGETS: Widget[] = [
     }
 ];
 
+const USER_WIDGETS: Widget[] = [
+    {
+        id: "18070c45-5f6a-4460-810c-6e3496495ec4",
+        universalName: "org.ozoneplatform.owf.XXXX.XXXX",
+        title: "Sample Widget 1",
+        url: "#",
+        iconUrl: `${IMAGE_ROOT_URL}/widgets/widgets-manager.png`
+    },
+    {
+        id: "48edfe94-4291-4991-a648-c19a903a663b",
+        universalName: "org.ozoneplatform.owf.XXXX.XXXX",
+        title: "Sample Widget 2",
+        url: "#",
+        iconUrl: `${IMAGE_ROOT_URL}/widgets/users-manager.png`
+    },
+    {
+        id: "48edfe94-4291-4991-a648-c19a903a663b",
+        universalName: "org.ozoneplatform.owf.XXXX.XXXX",
+        title: "Sample Widget 3",
+        url: "#",
+        iconUrl: `${IMAGE_ROOT_URL}/widgets/widgets-manager.png`
+    },
+    {
+        id: "48edfe94-4291-4991-a648-c19a903a663b",
+        universalName: "org.ozoneplatform.owf.XXXX.XXXX",
+        title: "Sample Widget 4",
+        url: "#",
+        iconUrl: `${IMAGE_ROOT_URL}/widgets/users-manager.png`
+    },
+];
+
 
 @injectable()
 export class WidgetStore {
@@ -52,10 +84,14 @@ export class WidgetStore {
     @observable
     adminWidgets: Widget[];
 
+    @observable
+    userWidgets: Widget[];
+
 
     constructor() {
         runInAction("initialize", () => {
             this.adminWidgets = ADMIN_WIDGETS;
+            this.userWidgets = USER_WIDGETS;
         });
     }
 

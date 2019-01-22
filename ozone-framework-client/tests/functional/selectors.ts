@@ -73,12 +73,12 @@ export namespace GroupAdminWidget {
         export const FORM = "div[data-element-id='group-admin-widget-create-form']";
 
         export const NAME_INPUT = `${CreateGroup.FORM} input[name='name']`;
-    
+
         export const DISPLAY_NAME_INPUT = `${CreateGroup.FORM} input[name='displayName']`;
-    
+
         export const DESCRIPTION_INPUT = `${CreateGroup.FORM} input[name='description']`;
 
-        export const SUBMIT_BUTTON = "div[data-element-id='group-admin-widget-create-submit-button'] > button[data-element-id='form-submit-button']";    
+        export const SUBMIT_BUTTON = "div[data-element-id='group-admin-widget-create-submit-button'] > button[data-element-id='form-submit-button']";
     }
 
     export namespace EditGroup
