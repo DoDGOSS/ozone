@@ -59,26 +59,36 @@ export namespace AdminWidget {
 
 export namespace GroupAdminWidget {
 
-    export const GROUP_ADMIN_WIDGET_DIALOG = "div[data-element-id='group-admin-widget-dialog']";
+    export namespace Main
+    {
+        export const DIALOG = "div[data-element-id='group-admin-widget-dialog']";
 
-    export const GROUP_ADMIN_WIDGET_DIALOG_CREATE_BUTTON = "button[data-element-id='group-admin-widget-create-button']";
+        export const SEARCH_FIELD = `${Main.DIALOG} input[data-element-id='search-field']`;
 
-    export const CREATE_GROUP_DIALOG_FORM = "div[data-element-id='group-admin-widget-create-form']";
+        export const CREATE_BUTTON = `${Main.DIALOG} button[data-element-id='group-admin-widget-create-button']`;
+    }
 
-    export const CREATE_GROUP_DIALOG_SUBMIT_BUTTON = "div[data-element-id='group-admin-widget-create-submit-button'] > button[data-element-id='form-submit-button']";
+    export namespace CreateGroup
+    {
+        export const FORM = "div[data-element-id='group-admin-widget-create-form']";
 
-    export const CREATE_GROUP_DIALOG_NAME_INPUT = `${CREATE_GROUP_DIALOG_FORM} input[name='name']`;
+        export const NAME_INPUT = `${CreateGroup.FORM} input[name='name']`;
 
-    export const CREATE_GROUP_DIALOG_DISPLAY_NAME_INPUT = `${CREATE_GROUP_DIALOG_FORM} input[name='displayName']`;
+        export const DISPLAY_NAME_INPUT = `${CreateGroup.FORM} input[name='displayName']`;
 
-    export const CREATE_GROUP_DIALOG_DESCRIPTION_INPUT = `${CREATE_GROUP_DIALOG_FORM} input[name='description']`;
+        export const DESCRIPTION_INPUT = `${CreateGroup.FORM} input[name='description']`;
 
-    export const EDIT_GROUP_DIALOG_FORM = "div[data-element-id='group-admin-widget-edit-form']";
+        export const SUBMIT_BUTTON = "div[data-element-id='group-admin-widget-create-submit-button'] > button[data-element-id='form-submit-button']";
+    }
 
-    export const EDIT_GROUP_DIALOG_SUBMIT_BUTTON = "div[data-element-id='group-admin-widget-edit-submit-button'] > button[data-element-id='form-submit-button']";
+    export namespace EditGroup
+    {
+        export const FORM = "div[data-element-id='group-admin-widget-edit-form']";
 
-    export const EDIT_GROUP_DIALOG_NAME_INPUT = `${EDIT_GROUP_DIALOG_FORM} input[name='name']`;
+        export const NAME_INPUT = `${EditGroup.FORM} input[name='name']`;
 
+        export const SUBMIT_BUTTON = "div[data-element-id='group-admin-widget-edit-submit-button'] > button[data-element-id='form-submit-button']";
+    }
 }
 
 export namespace GlobalElements {

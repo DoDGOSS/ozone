@@ -8,7 +8,7 @@ import { Mosaic, MosaicBranch, MosaicWindow } from "react-mosaic-component";
 import { classNames } from "../util";
 
 import { lazyInject } from "../../inject";
-import { DashboardNode, DashboardStore } from "../../stores";
+import { DashboardNode, DashboardStore, MainStore } from "../../stores";
 
 
 const DashboardLayout = Mosaic.ofType<string>();
@@ -24,6 +24,9 @@ export class WidgetDashboard extends React.Component<WidgetDashboardProps, {}> {
     @lazyInject(DashboardStore)
     private dashboardStore: DashboardStore;
 
+    @lazyInject(MainStore)
+    private mainStore: MainStore;
+
     render() {
         const { className } = this.props;
         const layout = this.dashboardStore.layout;
@@ -32,6 +35,7 @@ export class WidgetDashboard extends React.Component<WidgetDashboardProps, {}> {
         return (
             <div className={classNames(styles.widgetDashboard, className)}>
                 <DashboardLayout
+                    className={classNames("mosaic-blueprint-theme","mosaic","mosaic-drop-target",this.mainStore.darkClass)}
                     value={layout}
                     onChange={this.onChange}
                     renderTile={(id: string, path: MosaicBranch[]) => {
