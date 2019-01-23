@@ -14,11 +14,82 @@
     box-shadow: $widget-toolbar-shadow;
 }
 
+.bp3-dark{
+  background-color: $dark-theme-background;
+}
+
 :local .widgetToolbarMenu {
+    width: 250px;
     display: flex;
     justify-content: flex-end;
 }
 
 :local .widgetToolbarTitle {
+    text-align: center;
+}
+
+:local .widgetToolbarFooter {
+    position: fixed;
+    text-align: center;
+    bottom: 0;
+}
+
+:local .widgetList {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0;
+    color: inherit;
+}
+
+:local .buttonBar {
+    display: flex;
+    justify-content: space-between;
+    width: 260px;
+    margin-top: 1em;
+}
+
+//
+
+:local .adminToolsDialog {
+    width: auto;
+
+    padding: 0;
+}
+
+:local .tileContainer {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+}
+
+:local .widgetTile {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    margin: 0 0.25rem 0 0.25rem;
+    padding: 0.5rem;
+
+    border-radius: 8px;
+
+    width: 120px;
+
+    &:hover {
+        background: $hover-background;
+    }
+}
+
+:local .tileIcon {
+    width: 15px;
+    margin-right: 8px;
+    margin-top: 2px;
+}
+
+:local .tileTitle {
+    margin-top: 0.25rem;
+    font-weight: 600;
+
     text-align: center;
 }

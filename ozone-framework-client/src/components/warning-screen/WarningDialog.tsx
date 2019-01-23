@@ -44,7 +44,7 @@ export class WarningDialog extends React.Component<WarningDialogProps> {
 
                         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
                             <Button data-element-id='form-accept-button'
-                                    onClick={this.mainStore.showLoginDialog}
+                                    onClick={()=>{this.mainStore.hideWarningDialog();this.mainStore.showLoginDialog();}}
                                     intent={Intent.SUCCESS}
                                     rightIcon={buttonIcon}>
                                 {buttonText}
