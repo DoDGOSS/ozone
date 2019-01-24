@@ -55,7 +55,7 @@ Ozone.chrome.WidgetChrome = function(config) {
 
             var id = data.itemId != null ? data.itemId : data.id;
             var handler = scope.items[id].handler;
-            if (handler != null && owfdojo.isFunction(handler)) {
+            if (handler != null && Ozone.util.internal.isFunction(handler)) {
               returnValue = handler.apply(data.scope != null ? data.scope : window, data.args != null ? data.args : []);
             }
 
@@ -163,14 +163,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       addHeaderButtons : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'addHeaderButtons';
         data.type = 'button';
@@ -247,14 +240,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       updateHeaderButtons : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'updateHeaderButtons';
         data.type = 'button';
@@ -263,7 +249,7 @@ Ozone.chrome.WidgetChrome = function(config) {
           //save data
           var id = items[i].itemId != null ? items[i].itemId : items[i].id;
           if (scope.items[id] != null) {
-            owfdojo.mixin(scope.items[id], items[i]);
+            Ozone.util.internal.mixin(scope.items[id], items[i]);
           }
           else {
             scope.items[id] = items[i];
@@ -340,14 +326,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       insertHeaderButtons : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'insertHeaderButtons';
         data.type = 'button';
@@ -388,14 +367,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       removeHeaderButtons : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'removeHeaderButtons';
         data.type = 'button';
@@ -544,14 +516,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       addHeaderMenus : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'addHeaderMenus';
         data.type = 'menu';
@@ -668,14 +633,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       updateHeaderMenus : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'updateHeaderMenus';
         data.type = 'menu';
@@ -688,7 +646,7 @@ Ozone.chrome.WidgetChrome = function(config) {
                         merge(source[key], value);
                     }
                     else {
-                        source[key] = Ext.clone(value);
+                        source[key] = _.clone(value);
                     }
                 }
                 else {
@@ -820,14 +778,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       insertHeaderMenus : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'insertHeaderMenus';
         data.type = 'menu';
@@ -876,14 +827,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       removeHeaderMenus : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'removeHeaderMenus';
         data.type = 'menu';

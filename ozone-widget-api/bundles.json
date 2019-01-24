@@ -2,6 +2,7 @@
 
   "owf-widget": [
     "vendor/dojo-1.5.0/owfdojo.js",
+    "src/util/internal.js",
     "src/audit/Audit.js",
     "src/util/pageload.js",
     "src/util/version.js",
