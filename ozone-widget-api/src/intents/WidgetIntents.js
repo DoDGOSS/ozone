@@ -116,14 +116,14 @@ var OWF = window.OWF;
              * );
              */
             receive:function (intent, handler) {
-                var intentKey = owfdojo.toJson(intent);
+                var intentKey = JSON.stringify(intent);
 
                 //save a list of handlers per intent
                 intentReceiverMap[intentKey] = handler;
 
                 //register with shindig for when the intent message is sent
                 gadgets.rpc.register(INTENTS_SERVICE_NAME, function(sender, intent, data) {
-                     var intentKey = owfdojo.toJson(intent);
+                     var intentKey = JSON.stringify(intent);
 
                     //execute the handler that matches the intent
                     var receiverHandler = intentReceiverMap[intentKey];
