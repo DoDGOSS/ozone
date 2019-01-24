@@ -4,9 +4,9 @@
   "main": "index.js",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "gulp build",
-    "test": "gulp build && jest",
-    "test:serve": "gulp build && node test-server/serve.js"
+    "build": "tsc && gulp build",
+    "test": "tsc && gulp build && jest",
+    "test:serve": "tsc && gulp build && node test-server/serve.js"
   },
   "dependencies": {},
   "devDependencies": {
@@ -15,11 +15,12 @@
     "gulp-concat": "2.6.1",
     "gulp-gzip": "1.4.0",
     "gulp-rename": "1.2.2",
-    "gulp-uglify": "3.0.0",
+    "gulp-terser": "1.1.7",
     "jest": "23.6.0",
     "koa": "2.5.3",
     "koa-mount": "4.0.0",
     "koa-static": "5.0.0",
-    "merge2": "1.2.0"
+    "merge2": "1.2.0",
+    "typescript": "3.2.4"
   }
 }

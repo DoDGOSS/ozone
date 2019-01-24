@@ -28,40 +28,34 @@ Ozone.eventing = Ozone.eventing ? Ozone.eventing : {};
  * });
  * @throws {Error} throws an error with a message if widget initialization fails
  */
-Ozone.eventing.Widget = function(widgetRelay, afterInit) {
-  if (Ozone.eventing.Widget.instance == null) {
-    Ozone.eventing.Widget.instance = this;
-    this.isAfterInit = false;
-    //connect passed in function to the internal callback function
-    if (afterInit != null) {
-      owfdojo.connect(
-              this,'afterInitCallBack',
-              this,afterInit);
-    }
-    this.setWidgetRelay(widgetRelay);
-    try {
-        this.widgetInit();
-    } catch (error) {
-        throw 'Widget relay init failed. Relaying will not work. Inner Exception: ' + error.name + ": " + error.message;
-    }
-  }
-  else {
-    if (afterInit != null) {
-      if (this.isAfterInit === false) {
+Ozone.eventing.Widget = function (widgetRelay, afterInit) {
+    if (Ozone.eventing.Widget.instance == null) {
+        Ozone.eventing.Widget.instance = this;
+        this.isAfterInit = false;
         //connect passed in function to the internal callback function
-        owfdojo.connect(
-                this,'afterInitCallBack',
-                this,afterInit);
+        if (afterInit != null) {
+            this.afterInitCallBack = afterInit.bind(this);
+        }
+        this.setWidgetRelay(widgetRelay);
+        try {
+            this.widgetInit();
+        } catch (error) {
+            throw 'Widget relay init failed. Relaying will not work. Inner Exception: ' + error.name + ": " + error.message;
+        }
+    } else {
+        if (afterInit != null) {
+            if (this.isAfterInit === false) {
+                //connect passed in function to the internal callback function
+                this.afterInitCallBack = afterInit.bind(this);
+            } else {
+                //already initialized just execute the supplied callback
+                setTimeout(() => {
+                    afterInit.call(Ozone.eventing.Widget.instance, Ozone.eventing.Widget.instance);
+                }, 50);
+            }
+        }
     }
-      else {
-        //already initialized just execute the supplied callback
-        setTimeout(function() { 
-            afterInit.call(Ozone.eventing.Widget.instance, Ozone.eventing.Widget.instance);
-        },50);
-  }
-    }
-  }
-  return Ozone.eventing.Widget.instance;
+    return Ozone.eventing.Widget.instance;
 };
 
 /**
@@ -212,49 +206,47 @@ Ozone.eventing.Widget.prototype = {
         }
 
         //register for after_container_init
-        gadgets.rpc.register("after_container_init", owfdojo.hitch(this,function() {
-
+        gadgets.rpc.register("after_container_init", () => {
             gadgets.rpc.unregister("after_container_init");
-            
+
             //attach mouse click and keydown listener to send activate calls for the widget
-            if(!onClickHandler) {
-                onClickHandler = owfdojo.connect(document, 'click', owfdojo.hitch(this, activateWidget));
+            if (!onClickHandler) {
+                onClickHandler = activateWidget.bind(this);
+                document.addEventListener("click", onClickHandler);
             }
-            
-            if(!onKeyDownHandler) {
-                onKeyDownHandler = owfdojo.connect(document, 'onkeyup', owfdojo.hitch(this, activateWidget));
+
+            if (!onKeyDownHandler) {
+                onKeyDownHandler = activateWidget.bind(this);
+                document.addEventListener("keyup", onKeyDownHandler);
             }
 
             //execute callback
             this.afterContainerInit();
+        });
 
-        }));
-
-        gadgets.rpc.register("_widget_activated", owfdojo.hitch(this,function() {
-            //console.log("_widget_activated => " + configParams.id);
-            
-            if(onClickHandler) {
-                owfdojo.disconnect(onClickHandler);
+        gadgets.rpc.register("_widget_activated", () => {
+            if (onClickHandler) {
+                document.removeEventListener("click", onClickHandler);
+                onClickHandler = null;
             }
-            if(onClickHandler) {
-                owfdojo.disconnect(onKeyDownHandler);
-            }
-                        
-            onClickHandler = null;
-            onKeyDownHandler = null;
 
-        }));
-
-        gadgets.rpc.register("_widget_deactivated", owfdojo.hitch(this,function() {
-            //console.log("_widget_deactivated => " + configParams.id);
-
-            if(!onClickHandler) {
-                onClickHandler = owfdojo.connect(document, 'click', owfdojo.hitch(this, activateWidget));
+            if (onClickHandler) {
+                document.removeEventListener("keyup", onKeyDownHandler);
+                onKeyDownHandler = null;
             }
-            if(!onKeyDownHandler) {
-                onKeyDownHandler = owfdojo.connect(document, 'onkeyup', owfdojo.hitch(this, activateWidget));
+        });
+
+        gadgets.rpc.register("_widget_deactivated", () => {
+            if (!onClickHandler) {
+                onClickHandler = activateWidget.bind(this);
+                document.addEventListener("click", onClickHandler);
             }
-        }));
+
+            if (!onKeyDownHandler) {
+                onKeyDownHandler = activateWidget.bind(this);
+                document.addEventListener("keyup", onKeyDownHandler);
+            }
+        });
 
         //register with container
         try {
@@ -399,25 +391,21 @@ Ozone.eventing.Widget.prototype = {
  *       });
  * &lt;/script&gt;
  */
-Ozone.eventing.Widget.getInstance = function(afterInit, widgetRelay) {
-  if (Ozone.eventing.Widget.instance == null) {
-    Ozone.eventing.Widget.instance = new Ozone.eventing.Widget(widgetRelay, afterInit);
-  }
-  else {
-    if (afterInit != null) {
-      if (!Ozone.eventing.Widget.instance.isAfterInit) {
-        //connect passed in function to the internal callback function
-        owfdojo.connect(
-                Ozone.eventing.Widget.instance,'afterInitCallBack',
-                Ozone.eventing.Widget.instance,afterInit);
-      }
-      else {
-        //already initialized just execute the supplied callback
-      setTimeout(function() {
-        afterInit.call(Ozone.eventing.Widget.instance, Ozone.eventing.Widget.instance);
-      },50);
+Ozone.eventing.Widget.getInstance = function (afterInit, widgetRelay) {
+    if (Ozone.eventing.Widget.instance == null) {
+        Ozone.eventing.Widget.instance = new Ozone.eventing.Widget(widgetRelay, afterInit);
+    } else {
+        let instance = Ozone.eventing.Widget.instance;
+        if (afterInit != null) {
+            if (!instance.isAfterInit) {
+                instance.afterInitCallBack = afterInit.bind(instance);
+            } else {
+                // already initialized, execute the supplied callback
+                setTimeout(() => {
+                    afterInit.call(instance, instance);
+                }, 50);
+            }
+        }
     }
-  }
-  }
-  return Ozone.eventing.Widget.instance;
+    return Ozone.eventing.Widget.instance;
 };
