@@ -120,7 +120,7 @@ Ozone.util.Transport.send = function(cfg) {
 
     // Use AJAX if we can
     if (Ozone.util.isUrlLocal(cfg.url) && !cfg.forceXdomain) {
-        return owfdojo.xhr(methodToUse.toUpperCase(), {
+        return Ozone.util.internal.xhr(methodToUse.toUpperCase(), {
             url: cfg.url,
             content: cfg.content,
             preventCache: true,
@@ -147,8 +147,8 @@ Ozone.util.Transport.send = function(cfg) {
             },
             error: function(response, ioArgs) {
                 if (response.dojoType=='cancel') { return; }
-                if (cfg.ignoredErrorCodes != null && cfg.ignoredErrorCodes.length > 0 && 
-                        owfdojo.indexOf(cfg.ignoredErrorCodes,response.status) > -1){
+                if (cfg.ignoredErrorCodes != null && cfg.ignoredErrorCodes.length > 0 &&
+                        cfg.ignoredErrorCodes.indexOf(response.status) > -1){
                     cfg.onSuccess({});
                 }
                 else {
@@ -205,7 +205,7 @@ Ozone.util.Transport.send = function(cfg) {
             if (methodToUse == "PUT" || methodToUse == "DELETE") {
                 methodToUse = "POST";
             }
-            var deferred = owfdojox.io.windowName.send(methodToUse.toUpperCase(), {
+            var deferred = Ozone.util.internal.sendByWindowName(methodToUse.toUpperCase(), {
                 url: cfg.url,
                 content: content,
                 preventCache: true,
@@ -240,7 +240,7 @@ Ozone.util.Transport.send = function(cfg) {
                             cfg.onFailure(json.data);
                         }
                         //if it is an error code we ignore than call onSuccess with empty data
-                        else if (cfg.ignoredErrorCodes != null && cfg.ignoredErrorCodes.length > 0 && owfdojo.indexOf(cfg.ignoredErrorCodes,json.status) > -1){
+                        else if (cfg.ignoredErrorCodes != null && cfg.ignoredErrorCodes.length > 0 && cfg.ignoredErrorCodes.indexOf(json.status) > -1){
                             cfg.onSuccess({});
                         }
                         else {
@@ -323,7 +323,7 @@ Ozone.util.Transport.sendAndForget = function(cfg) {
 
     var content = null;
     if (methodToUse == "GET") {
-        content = owfdojo.objectToQuery(cfg.content);
+        content = Ozone.util.internal.encodeQueryObject(cfg.content);
     }
     else {
         content = cfg.content;
@@ -335,7 +335,7 @@ Ozone.util.Transport.sendAndForget = function(cfg) {
 
     // Use AJAX if we can
     if (Ozone.util.isUrlLocal(cfg.url)) {
-        owfdojo.xhr(methodToUse.toUpperCase(), {
+        Ozone.util.internal.xhr(methodToUse.toUpperCase(), {
             url: cfg.url,
             content: cfg.content,
             preventCache: true,
@@ -366,7 +366,7 @@ Ozone.util.Transport.sendAndForget = function(cfg) {
             {
                 methodToUse = "POST";
             }
-            var deferred = owfdojox.io.windowName.send(methodToUse.toUpperCase(), {
+            var deferred = Ozone.util.internal.sendByWindowName(methodToUse.toUpperCase(), {
                 url: cfg.url,
                 content: content,
                 preventCache: true
@@ -444,7 +444,7 @@ Ozone.util.Transport.sendWithCors = function(cfg) {
     }
 
     var xhr = new XMLHttpRequest();
-    var deferred = new owfdojo.Deferred(function() { /* canceler */ xhr.abort();} );
+    var deferred = Ozone.util.internal.createDeferred(function() { /* canceler */ xhr.abort();} );
 
     var onFailure = function(e) {
         if (cfg.onFailure) {
@@ -682,5 +682,5 @@ Ozone.util.Transport.isWindowNameBroken = (function() {
         trident = Number(trident[1]);
     }
 
-    return (owfdojo.isIE && owfdojo.isIE >= 10) || trident >= 7;
+    return (Ozone.util.internal.isIE && Ozone.util.internal.isIE >= 10) || trident >= 7;
 })();

@@ -20,7 +20,7 @@ OWF = window.OWF ? window.OWF : {};
 		launchingController,
 		chromeController;
 
-	owfdojo.mixin(OWF, /** @lends OWF */ {
+	Ozone.util.internal.mixin(OWF, /** @lends OWF */ {
 
 		/**
 		 * The OWF.Eventing object manages the eventing for an individual widget
@@ -381,17 +381,17 @@ OWF = window.OWF ? window.OWF : {};
 		function initDragAndDrop() {
 			OWF.DragAndDrop = {
 				onDragStart: function(callback, scope) {
-					dragAndDropController.addCallback('dragStart', owfdojo.hitch(scope, callback));
+					dragAndDropController.addCallback('dragStart', callback.bind(scope));
 					return this;
 				},
 
 				onDragStop: function(callback, scope) {
-					dragAndDropController.addCallback('dragStop', owfdojo.hitch(scope, callback));
+					dragAndDropController.addCallback('dragStop', callback.bind(scope));
 					return this;
 				},
 
 				onDrop: function(callback, scope) {
-					dragAndDropController.addCallback('dropReceive', owfdojo.hitch(scope, callback));
+					dragAndDropController.addCallback('dropReceive', callback.bind(scope));
 					return this;
 				},
 
