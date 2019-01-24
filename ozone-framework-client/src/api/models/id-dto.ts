@@ -22,3 +22,24 @@ export class IdDto {
     }
 
 }
+
+
+@Model({name: "Uuid"})
+export class UuidDto {
+
+    static fromValues(id: string | string[]): UuidDto[] {
+        return toArray(id).map((i) => new UuidDto(i));
+    }
+
+    @Property()
+    id: string;
+
+    constructor(id: string) {
+        this.id = id;
+    }
+
+    toJSON(): any {
+        return {id: this.id};
+    }
+
+}

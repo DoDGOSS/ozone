@@ -9,7 +9,7 @@ import { container, TYPES } from "./inject";
 import { OzoneGateway } from "./services";
 import { AuthStore, ConfigStore, DashboardStore, MainStore, WidgetStore } from "./stores";
 
-import { DashboardAPI, GroupAPI, UserAPI } from "./api";
+import { DashboardAPI, GroupAPI, UserAPI, WidgetAPI } from "./api";
 
 
 export default function initializeIocContainerBindings() {
@@ -24,4 +24,5 @@ export default function initializeIocContainerBindings() {
     container.bind(DashboardAPI).toSelf().inSingletonScope();
     container.bind(GroupAPI).toSelf().inSingletonScope();
     container.bind(UserAPI).toSelf().inSingletonScope();
+    container.bind(WidgetAPI).toSelf().inSingletonScope();
 }
