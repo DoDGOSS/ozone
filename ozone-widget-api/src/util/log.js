@@ -87,11 +87,9 @@ Ozone.log.widgetLog = function() {
 };
 
 
-if (typeof(Ext) != "undefined") {
-	Ext.onReady(function(){
-		gadgets.rpc.register('Ozone.log', function(args){
-			var logger = Ozone.log.getDefaultLogger(); 
-			logger.debug.apply(logger, args);
-		});
+Ozone.util.internal.onDocumentReady(function(){
+	gadgets.rpc.register('Ozone.log', function(args){
+		var logger = Ozone.log.getDefaultLogger();
+		logger.debug.apply(logger, args);
 	});
-}
+});

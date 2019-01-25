@@ -3,3 +3,7 @@
 /dist/
 
 /*.iml
+
+
+# Temporary ignore for generated JS
+/src/util/internal.js
