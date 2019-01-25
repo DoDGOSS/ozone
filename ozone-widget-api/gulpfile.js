@@ -2,7 +2,7 @@ const gulp = require("gulp");
 const merge2 = require("merge2");
 const concat = require("gulp-concat");
 const rename = require("gulp-rename");
-const uglify = require("gulp-uglify");
+const terser = require("gulp-terser");
 const gzip = require("gulp-gzip");
 
 
@@ -21,7 +21,10 @@ gulp.task("build", () => {
                 .pipe(concat(`${bundleName}.js`))
                 .pipe(gulp.dest(BUNDLE_OUTPUT_PATH))
                 .pipe(rename(`${bundleName}.min.js`))
-                .pipe(uglify())
+                .pipe(terser({
+                    keep_classnames: true,
+                    keep_fnames: true
+                }))
                 .pipe(gulp.dest(BUNDLE_OUTPUT_PATH));
 
         if (!GZIP_ENABLED) return stream;

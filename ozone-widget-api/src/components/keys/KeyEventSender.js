@@ -4,100 +4,76 @@ var Ozone = window.Ozone;
 Ozone.components = Ozone.components || {};
 Ozone.components.keys = Ozone.components.keys || {};
 
-Ozone.components.keys.createKeyEventSender = function(widgetEventingController) {
-    var keyChannelName = '_keyEvent',
-        rpc = gadgets.rpc,
-        callrpc = rpc.call;
+Ozone.components.keys.createKeyEventSender = function (widgetEventingController) {
 
-    
-    rpc.register('_focus_widget_window', function() {
+    gadgets.rpc.register('_focus_widget_window', function () {
         try {
             window.focus();
+        } catch (e) {
         }
-        catch(e) {}
     });
 
-    callrpc('..', '_widget_iframe_ready', null, widgetEventingController.getWidgetId());
+    gadgets.rpc.call('..', '_widget_iframe_ready', null, widgetEventingController.getWidgetId());
 
-    owfdojo.connect(document, 'on' + Ozone.components.keys.EVENT_NAME, this, function(keyevent) {
-        var keys = Ozone.components.keys.HotKeys,
-            key, found = false;
+    document.addEventListener("keyup", (context, event) => {
+        for (let key of Ozone.components.keys.HotKeys) {
+            if (key.key === event.keyCode
+                && key.alt === event.altKey
+                && key.shift === event.shiftKey) {
 
-        for (var key_i in keys) {
-            key = keys[key_i];
-
-            if (key.key === keyevent.keyCode 
-                && key.alt === keyevent.altKey
-                && key.shift === keyevent.shiftKey) {
-
-                if(key.focusParent === true) {
+                if (key.focusParent === true) {
                     parent.focus();
-                    //window.blur();
                 }
 
-                callrpc('..', '_key_eventing', null, widgetEventingController.getWidgetId(), {
-                    keyCode: keyevent.keyCode,
-                    altKey: keyevent.altKey,
-                    shiftKey: keyevent.shiftKey,
+                gadgets.rpc.call('..', '_key_eventing', null, widgetEventingController.getWidgetId(), {
+                    keyCode: event.keyCode,
+                    altKey: event.altKey,
+                    shiftKey: event.shiftKey,
                     focusParent: key.focusParent
                 });
 
-                found = true;
-                break;  //in case the same key is in keys twice, we still only want
-                        //to send one event
+                return;
             }
         }
 
-        if(found === true) {
-            return;
-        }
+        for (let key of Ozone.components.keys.MoveHotKeys) {
+            if (key.key === event.keyCode
+                && key.ctrl === event.ctrlKey
+                && key.alt === event.altKey
+                && key.shift === event.shiftKey) {
 
-        keys = Ozone.components.keys.MoveHotKeys;
-
-        for (var key_i in keys) {
-            key = keys[key_i];
-
-            if (key.key === keyevent.keyCode 
-                && key.ctrl === keyevent.ctrlKey
-                && key.alt === keyevent.altKey
-                && key.shift === keyevent.shiftKey) {
-                
-                callrpc('..', '_key_eventing', null, widgetEventingController.getWidgetId(), {
-                    keyCode: keyevent.keyCode,
-                    ctrlKey: keyevent.ctrlKey,
-                    altKey: keyevent.altKey,
-                    shiftKey: keyevent.shiftKey,
+                gadgets.rpc.call('..', '_key_eventing', null, widgetEventingController.getWidgetId(), {
+                    keyCode: event.keyCode,
+                    ctrlKey: event.ctrlKey,
+                    altKey: event.altKey,
+                    shiftKey: event.shiftKey,
                     focusParent: key.focusParent
                 });
 
-                break;
+                return;
             }
         }
     });
 
-    owfdojo.connect(document, 'onkeydown', this, function(keyevent) {
-        var keys = Ozone.components.keys.MoveHotKeys,
-            key;
+    document.addEventListener("keydown", (context, event) => {
+        for (let key of Ozone.components.keys.MoveHotKeys) {
+            if (key.key === event.keyCode
+                && key.ctrl === event.ctrlKey
+                && key.alt === event.altKey
+                && key.shift === event.shiftKey) {
 
-        for (var key_i in keys) {
-            key = keys[key_i];
-
-            if (key.key === keyevent.keyCode 
-                && key.ctrl === keyevent.ctrlKey
-                && key.alt === keyevent.altKey
-                && key.shift === keyevent.shiftKey) {
-
-                callrpc('..', '_key_eventing', null, widgetEventingController.getWidgetId(), {
-                    keyCode: keyevent.keyCode,
-                    ctrlKey: keyevent.ctrlKey,
-                    altKey: keyevent.altKey,
-                    shiftKey: keyevent.shiftKey,
+                gadgets.rpc.call('..', '_key_eventing', null, widgetEventingController.getWidgetId(), {
+                    keyCode: event.keyCode,
+                    ctrlKey: event.ctrlKey,
+                    altKey: event.altKey,
+                    shiftKey: event.shiftKey,
                     keydown: true,
                     focusParent: key.focusParent
                 });
 
-                break;
+                return;
             }
         }
     });
+
 };

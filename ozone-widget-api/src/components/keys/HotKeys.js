@@ -53,9 +53,9 @@ Ozone.components.keys.MoveHotKeys = Ozone.components.keys.MoveHotKeys || {};
 
     k.LOGOUT = { key: 'O'.charCodeAt(0) }; //O for 'out'
 
-    k.PREVIOUS_DASHBOARD = { key: owfdojo.keys.PAGE_UP }; 
+    k.PREVIOUS_DASHBOARD = { key: Ozone.util.internal.keys.PAGE_UP };
     
-    k.NEXT_DASHBOARD = { key: owfdojo.keys.PAGE_DOWN };
+    k.NEXT_DASHBOARD = { key: Ozone.util.internal.keys.PAGE_DOWN };
 
     k.DASHBOARD_SWITCHER = {
         key: 'C'.charCodeAt(0),
@@ -67,22 +67,22 @@ Ozone.components.keys.MoveHotKeys = Ozone.components.keys.MoveHotKeys || {};
         exclusive: true
     }; 
     
-    k.DEFAULT_DASHBOARD = { key: owfdojo.keys.HOME };
+    k.DEFAULT_DASHBOARD = { key: Ozone.util.internal.keys.HOME };
     
     k.CLOSE_WIDGET = { key: 'W'.charCodeAt(0) }; 
     
     k.MAXIMIZE_COLLAPSE_WIDGET = { 
-        key: owfdojo.keys.UP_ARROW,
+        key: Ozone.util.internal.keys.UP_ARROW,
         focusParent: false
     };
     
     k.MINIMIZE_EXPAND_WIDGET = { 
-        key: owfdojo.keys.DOWN_ARROW,
+        key: Ozone.util.internal.keys.DOWN_ARROW,
         focusParent: false
     };
     
     k.ESCAPE_FOCUS = { 
-        key: owfdojo.keys.ESCAPE,
+        key: Ozone.util.internal.keys.ESCAPE,
         //the escape key should not use alt+shift
         alt: false,
         shift: false
@@ -134,16 +134,16 @@ Ozone.components.keys.MoveHotKeys = Ozone.components.keys.MoveHotKeys || {};
 
     var moveKeys = Ozone.components.keys.MoveHotKeys;
     moveKeys.MOVE_UP = {
-        key: owfdojo.keys.UP_ARROW
+        key: Ozone.util.internal.keys.UP_ARROW
     };
     moveKeys.MOVE_RIGHT = {
-        key: owfdojo.keys.RIGHT_ARROW
+        key: Ozone.util.internal.keys.RIGHT_ARROW
     };
     moveKeys.MOVE_DOWN = {
-        key: owfdojo.keys.DOWN_ARROW
+        key: Ozone.util.internal.keys.DOWN_ARROW
     };
     moveKeys.MOVE_LEFT = {
-        key: owfdojo.keys.LEFT_ARROW
+        key: Ozone.util.internal.keys.LEFT_ARROW
     };
 
     for (key_i in moveKeys) {

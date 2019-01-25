@@ -55,25 +55,18 @@ Ozone.util.isUrlLocal = function(url) {
 /**
  * @private
  *
- * @description This method will convert a string into a json object.  There is a check
- * done to ensure no unsafe json is included.
+ * @description This method will convert a string into a json object.
  *
  * @param {String} str String that represents a json object
  *
  * @returns {Object} json object
  *
  * @throws Error if parameter is not a string
- * @throws Error if secure check finds unsafe JSON
  * @throws Error if there is an issue converting to JSON
- *
- * @requires dojox.secure.capability
- * @requires dojo base
  */
 Ozone.util.parseJson = function(str) {
-    if (typeof(str) === 'string') {
-        owfdojox.secure.capability.validate(str,[],{}); // will error if there is unsafe JSON
-        var x = owfdojo.fromJson(str);
-        return x;
+    if (Ozone.util.internal.isString(str)) {
+        return JSON.parse(str);
     } else {
         throw "Ozone.util.parseJson expected a string, but didn't get one";
     }
@@ -128,12 +121,8 @@ Ozone.util.parseWindowNameData = function() {
  * calling a controller at the server (will not
  * make the call if it has already been done).
  *
- * @param {Object} o unused
- *
  * @returns context path with leading slash
  *          (ex. "/owf")
- *
- * @requires Ext base, dojo
  */
 Ozone.util.contextPath = (function() {
     var configParams = Ozone.util.parseWindowNameData(),
@@ -201,12 +190,10 @@ Ozone.util.getContainerRelay = function() {
  * @param {Object} obj object to convert
  *
  * @returns string
- *
- * @requires dojo base
  */
 Ozone.util.toString = function(obj) {
-    if (typeof(obj) === 'object') {
-        return owfdojo.toJson(obj);
+    if (Ozone.util.internal.isObject(obj)) {
+        return JSON.stringify(obj);
     } else {
         return obj+'';
     }
@@ -216,8 +203,6 @@ Ozone.util.toString = function(obj) {
  * @private
  */
 Ozone.util.formatWindowNameData = function(data) {
-    // this value needs to be not uri encoded
-    // return decodeURIComponent(owfdojo.objectToQuery(data));
     return Ozone.util.toString(data);
 };
 
@@ -766,29 +751,33 @@ Ozone.util._findByReceiveIntent = function (array, intent) {
  * @param url The URL to match on
  */
 Ozone.util.findWidgetDefinitionByLongestUrlMatch = function(url) {
-    var store = Ext.StoreManager.lookup('widgetStore'),
-        match = null;
+    throw new Error("Deprecated");
 
-    if (!url) return null;
-
-    store.each(function(widget) {
-        var widgetUrl = widget.get('url');
-
-        //if this url is the beginning of the url in question
-        if (url.indexOf(widgetUrl) === 0) {
-            //if this is a better match than the previous best
-            if (!match || match.get('url').length < widgetUrl.length) {
-                match = widget;
-            }
-        }
-    });
-
-    return match;
+    // var store = Ext.StoreManager.lookup('widgetStore'),
+    //     match = null;
+    //
+    // if (!url) return null;
+    //
+    // store.each(function(widget) {
+    //     var widgetUrl = widget.get('url');
+    //
+    //     //if this url is the beginning of the url in question
+    //     if (url.indexOf(widgetUrl) === 0) {
+    //         //if this is a better match than the previous best
+    //         if (!match || match.get('url').length < widgetUrl.length) {
+    //             match = widget;
+    //         }
+    //     }
+    // });
+    //
+    // return match;
 };
 
 /**
  * Given and Ext model, creates a Backbone model holding the same data.
  */
 Ozone.util.convertExtModelToBackboneModel = function(extModel) {
-    return new Backbone.Model(extModel.data);
+    throw new Error("Deprecated");
+
+    // return new Backbone.Model(extModel.data);
 };
