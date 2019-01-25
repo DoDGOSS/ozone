@@ -6,7 +6,15 @@ export namespace MainPage {
 
     export const USER_MENU_BUTTON = "button[data-element-id='user-menu-button']";
 
-    export const USER_MENU = "div[data-element-id='user-menu']";
+    export const USER_MENU = "ul[data-element-id='user-menu']";
+
+    export const ADMINISTRATION_BUTTON = "a[data-element-id='administration']";
+
+    export const ADMINISTRATION_MENU = "div[data-element-id='administration']";
+
+    export const USER_MENU_ADMIN_BUTTON = "div[data-element-id='Users']";
+
+    export const USER_ADMINISTRATION_WIDGET = "div[data-element-id='user-admin-widget-dialog']";
 
     export const WARNING_DIALOG = "div[data-element-id='warning-dialog']";
 
