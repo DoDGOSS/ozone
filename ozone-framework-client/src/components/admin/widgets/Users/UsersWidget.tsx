@@ -36,6 +36,7 @@ export class UsersWidget extends React.Component<{}, State> {
     @lazyInject(UserAPI)
     private userAPI: UserAPI;
 
+
     constructor(props: any) {
         super(props);
         this.state = {
@@ -273,5 +274,7 @@ export class UsersWidget extends React.Component<{}, State> {
 
         return true;
     }
+
+    
 
 }
