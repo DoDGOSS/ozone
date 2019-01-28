@@ -14,6 +14,12 @@ export default {
                .waitForElementVisible("body", 1000, "[Home Page] is visible")
                .waitForElementVisible(MainPage.WARNING_DIALOG, 1000, "[Warning Dialog] is visible");
 
+        browser.click(MainPage.USER_AGREEMENT_LINK)
+              .waitForElementVisible(MainPage.USER_AGREEMENT, 1000, "[User Agreement] is visible");
+
+        browser.click(MainPage.USER_AGREEMENT_BACK)
+              .waitForElementVisible(MainPage.WARNING_DIALOG, 1000, "[Warning Dialog] is visible");
+
         browser.click(MainPage.ACCEPT_BUTTON)
                .waitForElementVisible(MainPage.LOGIN_DIALOG, 1000, "[Login Dialog] is visible");
 
