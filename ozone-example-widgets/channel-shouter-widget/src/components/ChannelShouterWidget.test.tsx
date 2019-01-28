@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import PreferencesWidget from "./PreferencesWidget";
+import ChannelShouterWidget from "./ChannelShouterWidget";
 
 it("renders without crashing", () => {
     const div = document.createElement("div");
-    ReactDOM.render(<PreferencesWidget/>, div);
+    ReactDOM.render(<ChannelShouterWidget/>, div);
     ReactDOM.unmountComponentAtNode(div);
 });

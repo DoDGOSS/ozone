@@ -1,0 +1,34 @@
+.app {
+  padding: .5em;
+
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  > div:not(:first-child) {
+    margin-top: .5em;
+  }
+}
+
+.section-header {
+  height: 2em;
+  margin-bottom: .5em;
+
+  > .bp3-navbar-group {
+    height: 2em;
+  }
+}
+
+.subscription-cell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-channel-input {
+  justify-content: flex-end;
+  margin-bottom: .25em;
+}

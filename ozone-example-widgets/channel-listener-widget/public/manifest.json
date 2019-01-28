@@ -1,6 +1,6 @@
 {
-  "short_name": "Preferences",
-  "name": "Preferences Widget",
+  "short_name": "Channel Listener",
+  "name": "Channel Listener Widget",
   "icons": [
     {
       "src": "favicon.ico",
