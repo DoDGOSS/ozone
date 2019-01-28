@@ -1,9 +1,20 @@
-import React, { Component } from "react";
-
 import "./PreferencesWidget.scss";
 
-import { Button, ButtonGroup, FormGroup, InputGroup, Intent, Position, TextArea, Toaster } from "@blueprintjs/core";
+import React, { Component } from "react";
+
 import { Field, FieldProps, Form, Formik, FormikActions, FormikProps } from "formik";
+
+import {
+    Button,
+    ButtonGroup,
+    FormGroup,
+    InputGroup,
+    Intent,
+    Navbar,
+    Position,
+    TextArea,
+    Toaster
+} from "@blueprintjs/core";
 
 import { deleteUserPreference, getUserPreference, setUserPreference } from "../api/preferences";
 
@@ -18,11 +29,9 @@ interface PreferenceWidgetState {
     preference: Preference;
 }
 
-
 const AppToaster = Toaster.create({
     position: Position.BOTTOM,
 });
-
 
 class PreferencesWidget extends Component<{}, PreferenceWidgetState> {
 
@@ -50,65 +59,67 @@ class PreferencesWidget extends Component<{}, PreferenceWidgetState> {
         const { preference } = this.state;
 
         return (
-            <div className="app">
-                <header>
-                    Preferences API
-                </header>
-                <main className="content">
-                    <Formik
-                        initialValues={preference}
-                        enableReinitialize={true}
-                        onSubmit={this.savePreference}
-                        render={(formik: FormikProps<Preference>) => (
-                            <Form>
-                                <Field name="namespace"
-                                       render={({ field, form }: FieldProps<Preference>) => (
-                                           <FormGroup label="Value">
-                                               <InputGroup {...field}
-                                                           spellCheck={false}/>
-                                           </FormGroup>
-                                       )}
-                                />
-                                <Field name="path"
-                                       render={({ field, form }: FieldProps<Preference>) => (
-                                           <FormGroup label="Preference">
-                                               <InputGroup {...field}
-                                                           spellCheck={false}/>
-                                           </FormGroup>
-                                       )}
-                                />
-                                <Field name="value"
-                                       render={({ field, form }: FieldProps<Preference>) => (
-                                           <FormGroup label="Value">
-                                               <TextArea className="fill-width"
-                                                         {...field}
-                                                         spellCheck={false}/>
-                                           </FormGroup>
-                                       )}
-                                />
+            <div className="app flex-column">
+                <Navbar className="section-header bp3-dark">
+                    <Navbar.Group>
+                        <Navbar.Heading>Preferences</Navbar.Heading>
+                    </Navbar.Group>
+                </Navbar>
+                <Formik
+                    initialValues={preference}
+                    enableReinitialize={true}
+                    onSubmit={this.savePreference}
+                    render={(formik: FormikProps<Preference>) => (
+                        <Form className="flex-column flex-grow">
+                            <Field name="namespace"
+                                   render={({ field }: FieldProps<Preference>) => (
+                                       <FormGroup label="Value">
+                                           <InputGroup {...field}
+                                                       spellCheck={false}/>
+                                       </FormGroup>
+                                   )}
+                            />
+                            <Field name="path"
+                                   render={({ field }: FieldProps<Preference>) => (
+                                       <FormGroup label="Preference">
+                                           <InputGroup {...field}
+                                                       spellCheck={false}/>
+                                       </FormGroup>
+                                   )}
+                            />
+                            <Field name="value"
+                                   render={({ field }: FieldProps<Preference>) => (
+                                       <FormGroup label="Value"
+                                                  className="flex-grow"
+                                                  contentClassName="flex-column flex-grow">
+                                           <TextArea className="flex-grow"
+                                                     {...field}
+                                                     spellCheck={false}/>
+                                       </FormGroup>
+                                   )}
+                            />
 
-                                <ButtonGroup>
-                                    <Button text="Delete"
-                                            icon="trash"
-                                            onClick={async () => {
-                                                await this.deletePreference(formik.values);
-                                            }}/>
+                            <ButtonGroup fill={true}>
+                                <Button text="Delete"
+                                        icon="trash"
+                                        onClick={async () => {
+                                            await this.deletePreference(formik.values);
+                                        }}/>
 
-                                    <Button text="Refresh"
-                                            icon="refresh"
-                                            onClick={async () => {
-                                                await this.fetchPreference(formik.values);
-                                                formik.handleReset();
-                                            }}/>
+                                <Button text="Refresh"
+                                        icon="refresh"
+                                        onClick={async () => {
+                                            await this.fetchPreference(formik.values);
+                                            formik.handleReset();
+                                        }}/>
 
-                                    <Button text="Save"
-                                            icon="floppy-disk"
-                                            onClick={formik.submitForm}
-                                            disabled={formik.isSubmitting}/>
-                                </ButtonGroup>
-                            </Form>
-                        )}/>
-                </main>
+                                <Button text="Save"
+                                        icon="floppy-disk"
+                                        onClick={formik.submitForm}
+                                        disabled={formik.isSubmitting}/>
+                            </ButtonGroup>
+                        </Form>
+                    )}/>
             </div>
         );
     }
@@ -133,7 +144,7 @@ class PreferencesWidget extends Component<{}, PreferenceWidgetState> {
         try {
             const result = await setUserPreference(preference.namespace, preference.path, preference.value);
             this.setPreference(result);
-            AppToaster.show({ intent: Intent.SUCCESS, message: `Saved: ${preference.namespace}/${preference.path}`})
+            AppToaster.show({ intent: Intent.SUCCESS, message: `Saved: ${preference.namespace}/${preference.path}` });
         } catch (error) {
             AppToaster.show({ intent: Intent.WARNING, message: error });
         }
@@ -146,7 +157,7 @@ class PreferencesWidget extends Component<{}, PreferenceWidgetState> {
         try {
             await deleteUserPreference(preference.namespace, preference.value);
             this.setPreference({ ...preference, value: "" });
-            AppToaster.show({ intent: Intent.SUCCESS, message: `Deleted: ${preference.namespace}/${preference.path}`})
+            AppToaster.show({ intent: Intent.SUCCESS, message: `Deleted: ${preference.namespace}/${preference.path}` });
         } catch (error) {
             AppToaster.show({ intent: Intent.WARNING, message: error });
         }

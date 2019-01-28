@@ -1,6 +1,6 @@
 {
-  "short_name": "Preferences",
-  "name": "Preferences Widget",
+  "short_name": "Channel Shouter",
+  "name": "Channel Shouter Widget",
   "icons": [
     {
       "src": "favicon.ico",

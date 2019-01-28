@@ -11,12 +11,12 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 
 import "./index.scss";
 
-import PreferencesWidget from "./components/PreferencesWidget";
+import ChannelShouterWidget from "./components/ChannelShouterWidget";
 
 
 OWF.ready(() => {
     ReactDOM.render(
-        <PreferencesWidget/>,
+        <ChannelShouterWidget/>,
         document.getElementById("root"));
 });
 
