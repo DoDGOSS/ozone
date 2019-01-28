@@ -14,6 +14,7 @@ import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
 import { AdminToolsDialog } from "../admin-tools-dialog/AdminToolsDialog";
 import { UserProfileDialog } from "../user-profile/UserProfileDialog";
 import { LoginDialog } from "../login-dialog/LoginDialog";
+import { AboutDialog } from "../about/About";
 
 import { ClassificationBanner } from "./ClassificationBanner";
 
@@ -49,6 +50,7 @@ export class HomeScreen extends React.Component {
                 {classification.disableBottomBanner !== true &&
                 <ClassificationBanner className={styles.classificationBanner} {...classification}/>
                 }
+                <AboutDialog/>
                 <WarningDialog/>
                 <HelpDialog/>
                 <DashboardDialog/>
