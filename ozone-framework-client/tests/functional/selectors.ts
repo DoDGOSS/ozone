@@ -29,6 +29,12 @@ export namespace MainPage {
     export const WIDGETS_BUTTON = "button[data-element-id='widgets-button']";
 
     export const WIDGETS_DIALOG = "div[data-element-id='widgets-dialog']";
+
+    export const USER_AGREEMENT_LINK = "a[data-element-id='user-agreement-link']";
+
+    export const USER_AGREEMENT = "div[data-element-id='user-agreement-dialog']"
+
+    export const USER_AGREEMENT_BACK = "button[data-element-id='back-button']";
 }
 
 export namespace LoginForm {
