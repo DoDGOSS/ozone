@@ -24,7 +24,9 @@ export class UserMenu extends React.Component {
                 <Menu.Item text="Themes"/>
                 <Menu.Item data-element-id="administration" text="Administration"
                            onClick={this.mainStore.showAdminToolsDialog}/>
-                <Menu.Item text="About"/>
+                <Menu.Item text="About"
+                            data-element-id="about-button"
+                            onClick={this.mainStore.showAboutDialog}/>
                 <Menu.Divider/>
                 <Menu.Item data-element-id="logout-button"
                            icon="log-out"
