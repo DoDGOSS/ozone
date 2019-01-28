@@ -6,7 +6,7 @@ import { lazyInject } from "../../inject";
 import { AuthStore, ConfigStore, MainStore } from "../../stores";
 
 import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
-import { WarningDialog } from "../warning-screen/WarningDialog";
+import { UserAgreement, WarningDialog } from "../warning-screen/WarningDialog";
 import { LoginDialog } from "../login-dialog/LoginDialog";
 import { AboutDialog } from "../about/About";
 
@@ -48,6 +48,7 @@ export class LoginScreen extends React.Component {
                 }
                 <LoginDialog/>
                 <WarningDialog/>
+                <UserAgreement/>
                 <AboutDialog/>
                 <WidgetDashboard className={styles.widgetDashboard}/>
                 {classification.disableBottomBanner !== true &&
