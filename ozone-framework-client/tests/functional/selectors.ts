@@ -8,6 +8,10 @@ export namespace MainPage {
 
     export const USER_MENU = "ul[data-element-id='user-menu']";
 
+    export const ABOUT_BUTTON="a[data-element-id='about-button']";
+
+    export const ABOUT_DIALOG="div[data-element-id='about-dialog']";
+
     export const ADMINISTRATION_BUTTON = "a[data-element-id='administration']";
 
     export const ADMINISTRATION_MENU = "div[data-element-id='administration']";
