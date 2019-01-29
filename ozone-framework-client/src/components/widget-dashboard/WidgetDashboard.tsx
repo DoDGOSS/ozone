@@ -10,7 +10,6 @@ import { classNames } from "../util";
 import { lazyInject } from "../../inject";
 import { DashboardNode, DashboardStore, MainStore } from "../../stores";
 
-
 const DashboardLayout = Mosaic.ofType<string>();
 const DashboardWindow = MosaicWindow.ofType<string>();
 
@@ -30,7 +29,7 @@ export class WidgetDashboard extends React.Component<WidgetDashboardProps, {}> {
     render() {
         const { className } = this.props;
         const layout = this.dashboardStore.layout;
-        const widgets = this.dashboardStore.widgets;
+        const widgets = this.dashboardStore.getDashboard().widgets;
 
         return (
             <div className={classNames(styles.widgetDashboard, className)}>
@@ -44,7 +43,7 @@ export class WidgetDashboard extends React.Component<WidgetDashboardProps, {}> {
                             return (
                                 <DashboardWindow title="Error"
                                                  path={path}>
-                                    <h1>Error: Widget not found</h1>
+                                    <h1>Error: Widget not found </h1>
                                 </DashboardWindow>
                             );
                         }
@@ -61,7 +60,8 @@ export class WidgetDashboard extends React.Component<WidgetDashboardProps, {}> {
         );
     }
 
-    private onChange = (currentNode: DashboardNode | null) => {
+    private onChange =
+        (currentNode: DashboardNode | null) => {
         this.dashboardStore.setLayout(currentNode);
     }
 

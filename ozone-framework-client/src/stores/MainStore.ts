@@ -11,6 +11,12 @@ export class MainStore {
     isWarningDialogVisible: boolean;
 
     @observable
+    isUserAgreementVisible: boolean;
+
+    @observable
+    isAboutVisible: boolean;
+
+    @observable
     isHelpDialogVisible: boolean;
 
     @observable
@@ -36,7 +42,9 @@ export class MainStore {
 
     constructor() {
         runInAction("initialize", () => {
+            this.isAboutVisible=false;
             this.isWarningDialogVisible = false;
+            this.isUserAgreementVisible = false;
             this.isHelpDialogVisible = false;
             this.isUserProfileDialogVisible = false;
             this.isAdminToolsDialogOpen = false;
@@ -64,6 +72,25 @@ export class MainStore {
     @action.bound
     hideWarningDialog() {
         this.isWarningDialogVisible = false;
+    }
+    @action.bound
+    showAboutDialog() {
+        this.isAboutVisible=true;
+    }
+
+    @action.bound
+    hideAboutDialog() {
+        this.isAboutVisible=false;
+    }
+
+    @action.bound
+    showUserAgreement() {
+        this.isUserAgreementVisible = true;
+    }
+
+    @action.bound
+    hideUserAgreement() {
+        this.isUserAgreementVisible = false;
     }
 
     @action.bound

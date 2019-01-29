@@ -8,12 +8,13 @@ import { AuthStore, ConfigStore } from "../../stores";
 import { DashboardDialog } from "../dashboard-screen/DashboardDialog";
 import { HelpDialog } from "../help-screen/HelpDialog";
 import { NavigationBar } from "../navigation/NavigationBar";
-import { WarningDialog } from "../warning-screen/WarningDialog";
+import { UserAgreement, WarningDialog } from "../warning-screen/WarningDialog";
 import { WidgetToolbar } from "../widget-toolbar/WidgetToolbar";
 import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
 import { AdminToolsDialog } from "../admin-tools-dialog/AdminToolsDialog";
 import { UserProfileDialog } from "../user-profile/UserProfileDialog";
 import { LoginDialog } from "../login-dialog/LoginDialog";
+import { AboutDialog } from "../about/About";
 
 import { ClassificationBanner } from "./ClassificationBanner";
 
@@ -45,10 +46,14 @@ export class HomeScreen extends React.Component {
                 }
                 <NavigationBar className="bp3-dark"/>
                 <WidgetToolbar className={styles.widgetToolbar}/>
+
                 <WidgetDashboard className={styles.widgetDashboard}/>
+
                 {classification.disableBottomBanner !== true &&
                 <ClassificationBanner className={styles.classificationBanner} {...classification}/>
                 }
+                <UserAgreement />
+                <AboutDialog/>
                 <WarningDialog/>
                 <HelpDialog/>
                 <DashboardDialog/>

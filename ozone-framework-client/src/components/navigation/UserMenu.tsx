@@ -22,9 +22,11 @@ export class UserMenu extends React.Component {
             <Menu data-element-id="user-menu" className={Classes.ELEVATION_1}>
                 <Menu.Item text="Profile" onClick={this.mainStore.showUserProfileDialog}/>
                 <Menu.Item text="Themes"/>
-                <Menu.Item text="Administration"
+                <Menu.Item data-element-id="administration" text="Administration"
                            onClick={this.mainStore.showAdminToolsDialog}/>
-                <Menu.Item text="About"/>
+                <Menu.Item text="About"
+                            data-element-id="about-button"
+                            onClick={this.mainStore.showAboutDialog}/>
                 <Menu.Divider/>
                 <Menu.Item data-element-id="logout-button"
                            icon="log-out"
