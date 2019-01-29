@@ -9,17 +9,23 @@ import { Button, Classes, InputGroup, Overlay } from "@blueprintjs/core";
 import { lazyInject } from "../../inject";
 import { MainStore, WidgetStore } from "../../stores";
 
-import { classNames, handleStringChange } from "../util";
+// handleStringChange
+import { classNames,  } from "../util";
 
 // TODO - Filter on search (mainstore Widget filter)
+// Convert to mainstore Widget filter
 
 
 export type WidgetToolbarProps = {
     className?: string;
 };
 
+interface State {
+    filter: string;
+}
+
 @observer
-export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
+export class WidgetToolbar extends React.Component<WidgetToolbarProps, State> {
 
     @lazyInject(MainStore)
     private mainStore: MainStore;
@@ -27,10 +33,25 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
     @lazyInject(WidgetStore)
     private widgetStore: WidgetStore;
 
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            filter: ''
+        };
+    }
+
     render() {
         const { className } = this.props;
 
-        const userWidgets = this.widgetStore.userWidgets;
+        let data = this.widgetStore.userWidgets;
+        const filter = this.state.filter.toLowerCase();
+        // const filter = this.mainStore.setWidgetFilter;
+
+        if (filter) {
+            data = data.filter(row => {
+                return row.title.toLowerCase().includes(filter);
+            });
+        }
 
         return (
             <Overlay
@@ -51,7 +72,11 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
                             placeholder="Search..."
                             leftIcon="search"
                             round={true}
-                            onChange={handleStringChange(this.mainStore.setWidgetFilter)}/>
+                            // onChange={handleStringChange(this.mainStore.setWidgetFilter)}
+                            value={this.state.filter}
+                            onChange={(e: any) => this.setState({filter: e.target.value})}
+                            data-element-id="widget-search-field"
+                        />
                         <Button minimal icon="pin"/>
                         <Button minimal icon="cross"
                                 onClick={this.mainStore.closeWidgetToolbar}/>
@@ -60,7 +85,7 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps> {
 
                     <div className={Classes.DIALOG_BODY}>
                         <ul className={styles.widgetList}>
-                            {userWidgets.map(widget =>
+                            {data.map(widget =>
                                 <Widget key={widget.id}
                                         title={widget.title}
                                         iconUrl={widget.iconUrl}

@@ -227,6 +227,30 @@ describe("convertToJson", () => {
 
     });
 
+    it("primitive object property", () => {
+        @Model()
+        class Class1 {
+            @Property()
+            value: object;
+        }
+
+        const schema = convertToJsonSchema(Class1);
+
+        expect(schema).toEqual({
+            type: "object",
+            required: [
+                "value"
+            ],
+            additionalProperties: false,
+            properties: {
+                value: {
+                    type: "object"
+                }
+            }
+        });
+
+    });
+
 });
 
 

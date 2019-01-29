@@ -21,7 +21,6 @@ export interface GroupQueryCriteria {
 }
 
 
-
 @injectable()
 export class GroupAPI {
 
