@@ -15,12 +15,15 @@ export default {
                .waitForElementVisible(MainPage.WARNING_DIALOG, 1000, "[Warning Dialog] is visible");
 
         browser.click(MainPage.USER_AGREEMENT_LINK)
+              .waitForElementNotPresent(MainPage.WARNING_DIALOG, 1000, "[Warning Dialog] is closed")
               .waitForElementVisible(MainPage.USER_AGREEMENT, 1000, "[User Agreement] is visible");
 
         browser.click(MainPage.USER_AGREEMENT_BACK)
-              .waitForElementVisible(MainPage.WARNING_DIALOG, 1000, "[Warning Dialog] is visible");
+               .waitForElementNotPresent(MainPage.USER_AGREEMENT, 1000, "[User Agreement] is closed")
+               .waitForElementVisible(MainPage.WARNING_DIALOG, 1000, "[Warning Dialog] is visible");
 
         browser.click(MainPage.ACCEPT_BUTTON)
+               .waitForElementNotPresent(MainPage.WARNING_DIALOG, 1000, "[Warning Dialog] is closed")
                .waitForElementVisible(MainPage.LOGIN_DIALOG, 1000, "[Login Dialog] is visible");
 
         browser.setValue(LoginForm.USER_NAME_FIELD, username)
