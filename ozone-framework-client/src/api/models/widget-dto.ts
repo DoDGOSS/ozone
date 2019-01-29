@@ -1,9 +1,11 @@
 import { Model, Property } from "../../lib/openapi/decorators";
 
 import { IntentsDTO } from "./intent-dto";
-import { WidgetTypeDTO } from "./widget-type-dto";
+import { WidgetTypeDTO, WidgetTypeReference } from "./widget-type-dto";
 
 import { createLazyComponentValidator } from "../common";
+import { GroupDTO } from "./group-dto";
+import { UserDTO } from "./user-dto";
 
 
 @Model({ name: "WidgetProperties" })
@@ -110,6 +112,102 @@ export class WidgetDTO {
     value: WidgetPropertiesDTO;
 
 }
+
+
+export interface WidgetCreateRequest {
+    name: string;
+    version: string;
+    description: string;
+    url: string;
+    headerIcon: string;  // Small Icon
+    image: string;  // Large Icon
+    width: number;
+    height: number;
+    widgetGuid: string;
+    universalName: string;
+    visible: boolean;
+    background: boolean;
+    singleton: boolean;
+    mobileReady: boolean;
+    widgetTypes: WidgetTypeReference[];
+    descriptorUrl?: string;
+    title: string;
+    intents?: IntentsDTO;
+}
+
+
+export interface WidgetUpdateRequest extends WidgetCreateRequest {
+    id: string;
+}
+
+
+@Model()
+export class WidgetUpdateUsersResponse {
+
+    static validate = createLazyComponentValidator(WidgetUpdateUsersResponse);
+
+    @Property()
+    success: boolean;
+
+    @Property(() => UserDTO)
+    data: UserDTO[];
+
+}
+
+
+@Model()
+export class WidgetUpdateGroupsResponse {
+
+    static validate = createLazyComponentValidator(WidgetUpdateGroupsResponse);
+
+    @Property()
+    success: boolean;
+
+    @Property(() => GroupDTO)
+    data: GroupDTO[];
+
+}
+
+
+@Model()
+export class WidgetCreateResponse {
+
+    static validate = createLazyComponentValidator(WidgetCreateResponse);
+
+    @Property()
+    success: boolean;
+
+    @Property(() => WidgetDTO)
+    data: WidgetDTO[];
+
+}
+
+
+@Model()
+export class WidgetDeleteIdDTO {
+
+    @Property()
+    id: string;
+
+    @Property()
+    value: object;
+
+}
+
+
+@Model()
+export class WidgetDeleteResponse {
+
+    static validate = createLazyComponentValidator(WidgetDeleteResponse);
+
+    @Property()
+    success: boolean;
+
+    @Property(() => WidgetDeleteIdDTO)
+    data: WidgetDeleteIdDTO[];
+
+}
+
 
 @Model()
 export class WidgetGetResponse {
