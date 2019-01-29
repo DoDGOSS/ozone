@@ -14,3 +14,15 @@ export class WidgetTypeDTO {
     displayName: string;
 
 }
+
+
+@Model()
+export class WidgetTypeReference {
+
+    @Property()
+    id: number;
+
+    @Property()
+    name: string;
+
+}
