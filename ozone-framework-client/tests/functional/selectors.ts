@@ -6,7 +6,19 @@ export namespace MainPage {
 
     export const USER_MENU_BUTTON = "button[data-element-id='user-menu-button']";
 
-    export const USER_MENU = "div[data-element-id='user-menu']";
+    export const USER_MENU = "ul[data-element-id='user-menu']";
+
+    export const ABOUT_BUTTON="a[data-element-id='about-button']";
+
+    export const ABOUT_DIALOG="div[data-element-id='about-dialog']";
+
+    export const ADMINISTRATION_BUTTON = "a[data-element-id='administration']";
+
+    export const ADMINISTRATION_MENU = "div[data-element-id='administration']";
+
+    export const USER_MENU_ADMIN_BUTTON = "div[data-element-id='Users']";
+
+    export const USER_ADMINISTRATION_WIDGET = "div[data-element-id='user-admin-widget-dialog']";
 
     export const WARNING_DIALOG = "div[data-element-id='warning-dialog']";
 
@@ -17,6 +29,12 @@ export namespace MainPage {
     export const WIDGETS_BUTTON = "button[data-element-id='widgets-button']";
 
     export const WIDGETS_DIALOG = "div[data-element-id='widgets-dialog']";
+
+    export const USER_AGREEMENT_LINK = "a[data-element-id='user-agreement-link']";
+
+    export const USER_AGREEMENT = "div[data-element-id='user-agreement-dialog']"
+
+    export const USER_AGREEMENT_BACK = "button[data-element-id='back-button']";
 }
 
 export namespace LoginForm {
