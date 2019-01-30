@@ -1,5 +1,3 @@
-/// <reference path="./typings/owf-widget.d.ts" />
-
 import React from "react";
 import ReactDOM from "react-dom";
 import * as serviceWorker from "./serviceWorker";

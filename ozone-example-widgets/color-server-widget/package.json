@@ -1,9 +1,9 @@
 {
-  "name": "channel-listener-widget",
+  "name": "color-server-widget",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "cross-env PORT=4002 react-scripts start",
+    "start": "cross-env PORT=4003 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -11,9 +11,7 @@
   "dependencies": {
     "@blueprintjs/core": "3.12.0",
     "@blueprintjs/icons": "3.5.1",
-    "formik": "1.4.2",
     "react": "16.7.0",
-    "react-data-grid": "5.0.5",
     "react-dom": "16.7.0"
   },
   "devDependencies": {
@@ -21,7 +19,6 @@
     "@types/node": "10.12.18",
     "@types/ozone-widget-api": "file:../ozone-widget-api",
     "@types/react": "16.7.20",
-    "@types/react-data-grid": "4.0.1",
     "@types/react-dom": "16.0.11",
     "cross-env": "5.2.0",
     "node-sass": "4.11.0",

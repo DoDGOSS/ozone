@@ -1,6 +1,3 @@
-/// <reference path="../typings/owf-widget.d.ts" />
-
-
 export function getUserPreference(namespace: string, path: string): Promise<OWF.Preferences.UserPreference> {
     return new Promise<OWF.Preferences.UserPreference>((resolve, reject) => {
         OWF.Preferences.getUserPreference({
