@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import ColorServerWidget from "./ColorServerWidget";
+
+import { ColorServerWidget } from "./ColorServerWidget";
+
 
 it("renders without crashing", () => {
     const div = document.createElement("div");

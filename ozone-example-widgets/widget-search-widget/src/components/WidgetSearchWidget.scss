@@ -1,0 +1,22 @@
+.app {
+  padding: .5em;
+
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  > div:not(:first-child) {
+    margin-top: .5em;
+  }
+}
+
+.react-grid-HeaderCell {
+  font-size: 12px;
+}
+
+.react-grid-Cell__value {
+  font-size: 12px;
+}

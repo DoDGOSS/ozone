@@ -87,3 +87,32 @@ declare namespace OWF {
     }
 
 }
+
+
+declare namespace Ozone {
+
+    export interface WidgetDTO {
+        id: string;
+        value: {
+            id: string;
+            namespace: string;
+        };
+    }
+
+    export namespace pref {
+
+        export interface FindWidgetOptions {
+            searchParams: any;
+            onSuccess: (results: WidgetDTO[]) => void;
+            onFailure: (error: any) => void;
+        }
+
+        export interface PrefServer {
+            findWidgets(options: FindWidgetOptions): void;
+        }
+
+        export const PrefServer: PrefServer;
+
+    }
+
+}

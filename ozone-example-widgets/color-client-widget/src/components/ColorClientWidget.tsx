@@ -8,12 +8,12 @@ import { getColorServerProxy } from "../api/color-server";
 import { isNil } from "../util";
 
 
-interface AppState {
+interface WidgetState {
     colors?: string[];
     selected?: string;
 }
 
-export class ColorClientWidget extends Component<{}, AppState> {
+export class ColorClientWidget extends Component<{}, WidgetState> {
 
     constructor(props: any) {
         super(props);

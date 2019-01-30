@@ -3,18 +3,18 @@ import ReactDOM from "react-dom";
 import * as serviceWorker from "./serviceWorker";
 
 
-import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
+import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 
 
 import "./index.scss";
 
-import { PreferencesWidget } from "./components/PreferencesWidget";
+import { WidgetSearchWidget } from "./components/WidgetSearchWidget";
 
 
 OWF.ready(() => {
     ReactDOM.render(
-        <PreferencesWidget/>,
+        <WidgetSearchWidget/>,
         document.getElementById("root"));
 });
 

@@ -5,16 +5,17 @@ import React, { Component } from "react";
 import { Navbar } from "@blueprintjs/core";
 
 
-interface AppState {
-    color: string;
-}
-
 interface ColorResult {
     colors: string[];
     selected: string;
 }
 
-class ColorServerWidget extends Component<{}, AppState> {
+
+interface WidgetState {
+    color: string;
+}
+
+export class ColorServerWidget extends Component<{}, WidgetState> {
 
     constructor(props: any) {
         super(props);
@@ -63,5 +64,3 @@ class ColorServerWidget extends Component<{}, AppState> {
     }
 
 }
-
-export default ColorServerWidget;

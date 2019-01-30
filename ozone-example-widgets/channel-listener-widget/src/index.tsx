@@ -9,7 +9,7 @@ import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 
 import "./index.scss";
 
-import ChannelListenerWidget from "./components/ChannelListenerWidget";
+import { ChannelListenerWidget } from "./components/ChannelListenerWidget";
 
 
 OWF.ready(() => {

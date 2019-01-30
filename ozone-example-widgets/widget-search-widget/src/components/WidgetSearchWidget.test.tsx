@@ -1,11 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
-import { ColorClientWidget } from "./ColorClientWidget";
-
+import { WidgetSearchWidget } from "./WidgetSearchWidget";
 
 it("renders without crashing", () => {
     const div = document.createElement("div");
-    ReactDOM.render(<ColorClientWidget/>, div);
+    ReactDOM.render(<WidgetSearchWidget/>, div);
     ReactDOM.unmountComponentAtNode(div);
 });

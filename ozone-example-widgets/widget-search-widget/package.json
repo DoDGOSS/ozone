@@ -1,0 +1,39 @@
+{
+  "name": "widget-search-widget",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "cross-env PORT=4006 react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "@blueprintjs/core": "3.12.0",
+    "@blueprintjs/icons": "3.5.1",
+    "react": "16.7.0",
+    "react-data-grid": "5.0.5",
+    "react-dom": "16.7.0"
+  },
+  "devDependencies": {
+    "@types/jest": "23.3.13",
+    "@types/node": "10.12.18",
+    "@types/ozone-widget-api": "file:../ozone-widget-api",
+    "@types/react": "16.7.20",
+    "@types/react-data-grid": "4.0.1",
+    "@types/react-dom": "16.0.11",
+    "cross-env": "5.2.0",
+    "node-sass": "4.11.0",
+    "react-scripts": "2.1.3",
+    "typescript": "3.2.4"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

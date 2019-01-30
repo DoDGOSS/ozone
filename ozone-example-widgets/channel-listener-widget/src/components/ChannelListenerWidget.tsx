@@ -4,9 +4,11 @@ import React, { Component } from "react";
 
 import { Field, FieldProps, Form, Formik, FormikActions, FormikProps } from "formik";
 
-import { Alignment, Button, FormGroup, Icon, InputGroup, Navbar } from "@blueprintjs/core";
+import { Button, FormGroup, InputGroup} from "@blueprintjs/core";
 
 import ReactDataGrid from "react-data-grid";
+
+import { SectionHeader } from "./SectionHeader";
 
 
 interface Subscription {
@@ -20,14 +22,15 @@ interface Activity {
     timestamp: number;
 }
 
-interface ChannelListenerWidgetState {
+
+interface WidgetState {
     subscriptions: Subscription[];
     activities: Activity[];
 }
 
-class ChannelListenerWidget extends Component<{}, ChannelListenerWidgetState> {
+export class ChannelListenerWidget extends Component<{}, WidgetState> {
 
-    private activityLogColumns: Column<Activity>[] = [
+    private activityLogColumns = [
         {
             key: "timestamp",
             name: "Timestamp",
@@ -48,7 +51,7 @@ class ChannelListenerWidget extends Component<{}, ChannelListenerWidgetState> {
         }
     ];
 
-    private subscriptionColumns: Column<Subscription>[] = [
+    private subscriptionColumns = [
         {
             key: "channel",
             name: "Channel",
@@ -116,11 +119,8 @@ class ChannelListenerWidget extends Component<{}, ChannelListenerWidgetState> {
         return (
             <div className="app flex-column">
                 <div>
-                    <Navbar className="section-header bp3-dark">
-                        <Navbar.Group>
-                            <Navbar.Heading>Channel Subscriptions</Navbar.Heading>
-                        </Navbar.Group>
-                    </Navbar>
+                    <SectionHeader text="Channel Subscriptions"/>
+
                     <Formik
                         initialValues={{
                             channel: ""
@@ -150,6 +150,7 @@ class ChannelListenerWidget extends Component<{}, ChannelListenerWidgetState> {
                             </Form>
                         )}
                     />
+
                     <ReactDataGrid
                         columns={this.subscriptionColumns}
                         rowGetter={i => this.state.subscriptions[i]}
@@ -159,16 +160,12 @@ class ChannelListenerWidget extends Component<{}, ChannelListenerWidgetState> {
                 </div>
 
                 <div>
-                    <Navbar className="section-header bp3-dark">
-                        <Navbar.Group>
-                            <Navbar.Heading>Activity Log</Navbar.Heading>
-                        </Navbar.Group>
-                        <Navbar.Group align={Alignment.RIGHT}>
-                            <Button text="Clear"
-                                    minimal={true}
-                                    onClick={this.clearActivities}/>
-                        </Navbar.Group>
-                    </Navbar>
+                    <SectionHeader text="Activity Log">
+                        <Button text="Clear"
+                                minimal={true}
+                                onClick={this.clearActivities}/>
+                    </SectionHeader>
+
                     <ReactDataGrid
                         columns={this.activityLogColumns}
                         rowGetter={i => this.state.activities[i]}
@@ -193,15 +190,5 @@ class ChannelListenerWidget extends Component<{}, ChannelListenerWidgetState> {
 
 }
 
-export default ChannelListenerWidget;
-
 
 const TimestampFormatter = (row: any) => <span>{(new Date(row.value)).toISOString()}</span>;
-
-interface Column<T> {
-    key: keyof T;
-    name: string;
-    resizable?: boolean;
-    formatter?: React.ReactElement<any> | React.ComponentClass<any> | React.StatelessComponent<any>;
-    width?: number;
-}
