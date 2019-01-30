@@ -1,4 +1,4 @@
-import "./SectionHeader.scss";
+import styles from "./SectionHeader.module.scss";
 
 import React from "react";
 
@@ -12,14 +12,15 @@ export interface SectionHeaderProps {
 
 export const SectionHeader: React.FunctionComponent<SectionHeaderProps> = (props) => (
 
-    <Navbar className="section-header bp3-dark">
+    <Navbar className={`${styles.header} bp3-dark`}>
 
-        <Navbar.Group>
+        <Navbar.Group className={styles.group}>
             <Navbar.Heading>{props.text}</Navbar.Heading>
         </Navbar.Group>
 
         {props.children && (
-            <Navbar.Group align={Alignment.RIGHT}>
+            <Navbar.Group className={styles.group}
+                          align={Alignment.RIGHT}>
                 {props.children}
             </Navbar.Group>
         )}
