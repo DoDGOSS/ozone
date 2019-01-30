@@ -1,4 +1,4 @@
-import "./ChannelListenerWidget.scss";
+import styles from "./ChannelListenerWidget.module.scss";
 
 import React, { Component } from "react";
 
@@ -117,7 +117,7 @@ export class ChannelListenerWidget extends Component<{}, WidgetState> {
 
     render() {
         return (
-            <div className="app flex-column">
+            <div className={styles.app}>
                 <div>
                     <SectionHeader text="Channel Subscriptions"/>
 
@@ -134,7 +134,7 @@ export class ChannelListenerWidget extends Component<{}, WidgetState> {
                                 <Field name="channel"
                                        render={({ field, form }: FieldProps<Subscription>) => (
                                            <FormGroup inline={true}
-                                                      className="add-channel-input">
+                                                      className={styles.addChannelInput}>
                                                <InputGroup {...field}
                                                            placeholder="Add channel name..."
                                                            spellCheck={false}
@@ -179,7 +179,7 @@ export class ChannelListenerWidget extends Component<{}, WidgetState> {
 
     private getSubscriptionCellFormatter() {
         return (row: any) => (
-            <div className="subscription-cell">
+            <div className={styles.subscriptionCell}>
                 <span>{row.value}</span>
                 <Button icon="cross"
                         minimal={true}

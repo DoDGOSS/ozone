@@ -13,22 +13,13 @@
   }
 }
 
-.section-header {
-  height: 2em;
-  margin-bottom: .5em;
-
-  > .bp3-navbar-group {
-    height: 2em;
-  }
-}
-
-.subscription-cell {
+.subscriptionCell {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.add-channel-input {
+.addChannelInput {
   justify-content: flex-end;
   margin-bottom: .25em;
 }
