@@ -9,7 +9,7 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 
 import "./index.scss";
 
-import ChannelShouterWidget from "./components/ChannelShouterWidget";
+import { ChannelShouterWidget } from "./components/ChannelShouterWidget";
 
 
 OWF.ready(() => {

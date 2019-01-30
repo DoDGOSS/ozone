@@ -9,7 +9,7 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 
 import "./index.scss";
 
-import ColorServerWidget from "./components/ColorServerWidget";
+import { ColorServerWidget } from "./components/ColorServerWidget";
 
 
 OWF.ready(() => {

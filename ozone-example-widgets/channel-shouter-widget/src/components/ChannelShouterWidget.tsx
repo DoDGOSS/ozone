@@ -15,7 +15,8 @@ interface Message {
     value: string;
 }
 
-class ChannelShouterWidget extends Component {
+
+export class ChannelShouterWidget extends Component {
 
     render() {
         return (
@@ -60,5 +61,3 @@ class ChannelShouterWidget extends Component {
     }
 
 }
-
-export default ChannelShouterWidget;

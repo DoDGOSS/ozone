@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import ChannelListenerWidget from "./ChannelListenerWidget";
+
+import { ChannelListenerWidget } from "./ChannelListenerWidget";
+
 
 it("renders without crashing", () => {
     const div = document.createElement("div");

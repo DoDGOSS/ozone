@@ -25,15 +25,12 @@ interface Preference {
     value: string;
 }
 
-interface PreferenceWidgetState {
+
+interface WidgetState {
     preference: Preference;
 }
 
-const AppToaster = Toaster.create({
-    position: Position.BOTTOM,
-});
-
-class PreferencesWidget extends Component<{}, PreferenceWidgetState> {
+export class PreferencesWidget extends Component<{}, WidgetState> {
 
     constructor(props: any) {
         super(props);
@@ -131,10 +128,10 @@ class PreferencesWidget extends Component<{}, PreferenceWidgetState> {
             const result = await getUserPreference(preference.namespace, preference.path);
             this.setPreference(result);
         } catch (error) {
+            reportError(error);
             this.setState({
                 preference: { ...preference, value: "" }
             });
-            AppToaster.show({ intent: Intent.WARNING, message: error });
         }
     }
 
@@ -146,7 +143,7 @@ class PreferencesWidget extends Component<{}, PreferenceWidgetState> {
             this.setPreference(result);
             AppToaster.show({ intent: Intent.SUCCESS, message: `Saved: ${preference.namespace}/${preference.path}` });
         } catch (error) {
-            AppToaster.show({ intent: Intent.WARNING, message: error });
+            reportError(error);
         }
         actions.setSubmitting(false);
     }
@@ -159,7 +156,7 @@ class PreferencesWidget extends Component<{}, PreferenceWidgetState> {
             this.setPreference({ ...preference, value: "" });
             AppToaster.show({ intent: Intent.SUCCESS, message: `Deleted: ${preference.namespace}/${preference.path}` });
         } catch (error) {
-            AppToaster.show({ intent: Intent.WARNING, message: error });
+            reportError(error);
         }
     }
 
@@ -186,6 +183,15 @@ class PreferencesWidget extends Component<{}, PreferenceWidgetState> {
             }
         });
     }
+
 }
 
-export default PreferencesWidget;
+
+const AppToaster = Toaster.create({
+    position: Position.BOTTOM,
+});
+
+function reportError(error: Error) {
+    AppToaster.show({ intent: Intent.WARNING, message: error.message });
+    console.error(error);
+}
