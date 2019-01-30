@@ -37,6 +37,8 @@ export namespace MainPage {
     export const USER_AGREEMENT = "div[data-element-id='user-agreement-dialog']"
 
     export const USER_AGREEMENT_BACK = "button[data-element-id='back-button']";
+
+    export const CLASSIFICATION_BANNER = "div[data-element-id='classification-banner'";
 }
 
 export namespace LoginForm {

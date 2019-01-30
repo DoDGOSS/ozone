@@ -3,7 +3,7 @@ import { action, observable, runInAction } from "mobx";
 import { injectable } from "../inject";
 
 import { ClassificationConfig } from "../interfaces";
-import { DYNAMIC } from "../classifications";
+import { UNCLASSIFIED_FOUO } from "../classifications";
 
 
 @injectable()
@@ -14,7 +14,7 @@ export class ConfigStore {
 
     constructor() {
         runInAction("initialize", () => {
-            this.classification = DYNAMIC;
+            this.classification = UNCLASSIFIED_FOUO;
         });
     }
 
