@@ -2,6 +2,18 @@ declare namespace OWF {
 
     export function ready(callback: () => void): void;
 
+    export function getOpenedWidgets(callback: (widgets: Widget[]) => void): void;
+
+    export interface Widget {
+        frameId: string;
+        id: string;
+        name: string;
+        universalName: string;
+        url: string;
+        widgetGuid: string;
+        widgetName: string;
+    }
+
     namespace Eventing {
 
         type MessageCallback = (sender: any, message: string, channel: string) => void;
@@ -58,6 +70,19 @@ declare namespace OWF {
         };
 
         export function deleteUserPreference(options: DeleteUserPreferenceOptions): void;
+
+    }
+
+    namespace RPC {
+
+        type RegisterFunction = {
+            name: string;
+            fn: Function;
+        };
+
+        export function registerFunctions(functions: RegisterFunction[]): void;
+
+        export function getWidgetProxy(widgetId: string, callback: (proxy: any) => void): void;
 
     }
 

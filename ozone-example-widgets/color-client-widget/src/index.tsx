@@ -9,12 +9,12 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 
 import "./index.scss";
 
-import PreferencesWidget from "./components/PreferencesWidget";
+import { ColorClientWidget } from "./components/ColorClientWidget";
 
 
 OWF.ready(() => {
     ReactDOM.render(
-        <PreferencesWidget/>,
+        <ColorClientWidget/>,
         document.getElementById("root"));
 });
 

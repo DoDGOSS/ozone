@@ -1,0 +1,7 @@
+{
+  "name": "@types/ozone-widget-api",
+  "version": "1.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "types": "./index.d.ts"
+}
