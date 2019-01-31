@@ -8,12 +8,10 @@ import { Button, Classes, InputGroup, Overlay } from "@blueprintjs/core";
 
 import { lazyInject } from "../../inject";
 import { MainStore, WidgetStore } from "../../stores";
+import { IMAGE_ROOT_URL } from "../../stores/WidgetStore";
 
 // handleStringChange
 import { classNames,  } from "../util";
-
-// TODO - Filter on search (mainstore Widget filter)
-// Convert to mainstore Widget filter
 
 
 export type WidgetToolbarProps = {
@@ -22,6 +20,8 @@ export type WidgetToolbarProps = {
 
 interface State {
     filter: string;
+    toggleAlphabeticalAsc: boolean;
+    toggleAlphabeticalDsc: boolean;
 }
 
 @observer
@@ -33,25 +33,41 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps, State> {
     @lazyInject(WidgetStore)
     private widgetStore: WidgetStore;
 
+
     constructor(props: any) {
         super(props);
         this.state = {
-            filter: ''
+            filter: '',
+            toggleAlphabeticalAsc: true,
+            toggleAlphabeticalDsc: false
         };
+    }
+
+    componentDidMount() {
+        this.widgetStore.getWidgets();
     }
 
     render() {
         const { className } = this.props;
 
-        let data = this.widgetStore.userWidgets;
+        if (this.widgetStore.loadingWidgets) {
+            return <span>Loading...</span>;
+        }
+
+        let widgets = this.widgetStore.standardWidgets;
+
+        if (this.state.toggleAlphabeticalDsc) {
+            widgets = widgets.sort((a, b) => b.value.namespace.localeCompare(a.value.namespace));
+        }
+
         const filter = this.state.filter.toLowerCase();
-        // const filter = this.mainStore.setWidgetFilter;
 
         if (filter) {
-            data = data.filter(row => {
-                return row.title.toLowerCase().includes(filter);
+            widgets = widgets.filter(row => {
+                return row.value.namespace.toLowerCase().includes(filter);
             });
         }
+
 
         return (
             <Overlay
@@ -72,11 +88,20 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps, State> {
                             placeholder="Search..."
                             leftIcon="search"
                             round={true}
+                            // TODO - Implement mainstore widget filter
                             // onChange={handleStringChange(this.mainStore.setWidgetFilter)}
                             value={this.state.filter}
                             onChange={(e: any) => this.setState({filter: e.target.value})}
                             data-element-id="widget-search-field"
                         />
+                        <Button minimal icon="sort-alphabetical"
+                                onClick={this.toggleAlphabeticalAsc}
+                                active={this.state.toggleAlphabeticalAsc}
+                                data-element-id="widget-sort-ascending" />
+                        <Button minimal icon="sort-alphabetical-desc"
+                                onClick={this.toggleAlphabeticalDsc}
+                                active={this.state.toggleAlphabeticalDsc}
+                                data-element-id="widget-sort-descending" />
                         <Button minimal icon="pin"/>
                         <Button minimal icon="cross"
                                 onClick={this.mainStore.closeWidgetToolbar}/>
@@ -85,10 +110,12 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps, State> {
 
                     <div className={Classes.DIALOG_BODY}>
                         <ul className={styles.widgetList}>
-                            {data.map(widget =>
+                            {widgets.map(widget =>
                                 <Widget key={widget.id}
-                                        title={widget.title}
-                                        iconUrl={widget.iconUrl}
+                                        name={widget.value.namespace}
+                                        // TODO - Replace this temp fix to display images
+                                        // smallIconUrl={widget.value.smallIconUrl}
+                                        smallIconUrl={IMAGE_ROOT_URL + widget.value.smallIconUrl.replace("static/themes/common/images", "")}
                                 />
 
                             )}
@@ -117,24 +144,39 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps, State> {
         );
     }
 
+    private toggleAlphabeticalDsc = () => {
+        this.setState({
+            toggleAlphabeticalAsc: false,
+            toggleAlphabeticalDsc: true
+        });
+    };
+
+    private toggleAlphabeticalAsc = () => {
+        this.setState({
+            toggleAlphabeticalAsc: true,
+            toggleAlphabeticalDsc: false
+        });
+    };
+
 }
 
 export type WidgetProps = {
-    title: string;
-    iconUrl: string;
+    name: string;
+    smallIconUrl: string;
+    description?: string;
     url?: string;
 };
 
 export class Widget extends React.PureComponent<WidgetProps> {
 
     render() {
-        const { title, iconUrl, url } = this.props;
+        const { name, smallIconUrl, url } = this.props;
 
         return (
             <li>
                 <a href={url}>
-                    <img className={styles.tileIcon} src={iconUrl}/>
-                    <span className={styles.tileTitle}>{title}</span>
+                    <img className={styles.tileIcon} src={smallIconUrl}/>
+                    <span className={styles.tileTitle}>{name}</span>
                 </a>
             </li>
         );
