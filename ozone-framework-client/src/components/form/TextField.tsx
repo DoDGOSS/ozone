@@ -10,11 +10,12 @@ export interface TextFieldProps {
     label?: string;
     labelInfo?: string;
     type?: string;
+    disabled?: boolean;
 }
 
 
 const _TextField: React.FunctionComponent<TextFieldProps & FieldProps<any>> =
-    ({ name, label, labelInfo, field, form, type }) => {
+    ({ name, label, labelInfo, field, form, type, disabled }) => {
         const errors = form.errors[field.name];
         const showError = errors && form.touched[field.name];
 
@@ -29,6 +30,7 @@ const _TextField: React.FunctionComponent<TextFieldProps & FieldProps<any>> =
                             type={type}
                             intent={showError ? Intent.DANGER : Intent.NONE}
                             {...field}
+                            disabled={disabled}
                 />
                 {showError && (<div className={styles.validationError}>{errors}</div>)}
             </FormGroup>
