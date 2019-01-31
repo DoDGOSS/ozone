@@ -65,7 +65,7 @@ export default {
         browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 1000, "[User Admin Widget] is visible");
 
         browser.assert.containsText(
-            AdminWidget.USER_ADMIN_WIDGET_DIALOG, newUserEmail,
+            AdminWidget.USER_ADMIN_WIDGET_DIALOG, newUserName,
             "[User Admin Widget] Displays user information we wish to edit");
 
         browser.click(AdminWidget.EDIT_USER_ID);
@@ -75,12 +75,10 @@ export default {
         browser.assert.containsText(AdminWidget.USER_ADMIN_WIDGET_DIALOG,
             "Username", "[User Admin Create Form] is visible");
 
-        browser.clearValue(AdminWidget.USER_NAME_FIELD)
-            .clearValue(AdminWidget.FULL_NAME_FIELD)
+        browser.clearValue(AdminWidget.FULL_NAME_FIELD)
             .clearValue(AdminWidget.EMAIL_FIELD);
 
-        browser.setValue(AdminWidget.USER_NAME_FIELD, newUserName)
-            .setValue(AdminWidget.FULL_NAME_FIELD, newDisplayName)
+        browser.setValue(AdminWidget.FULL_NAME_FIELD, newDisplayName)
             .setValue(AdminWidget.EMAIL_FIELD, newUserEmail);
 
         browser.click(AdminWidget.SUBMIT_BUTTON);
