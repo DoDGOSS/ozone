@@ -61,6 +61,8 @@ export class UserAPI {
             data: JSON.stringify([data])
         });
 
+        console.log(data);
+
         return this.gateway.post(`user/${data.id}/`, requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"

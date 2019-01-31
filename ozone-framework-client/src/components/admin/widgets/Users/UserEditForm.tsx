@@ -18,7 +18,7 @@ export const UserEditForm: React.FunctionComponent<UserEditProps> =
     ({ onSubmit, onCancel, user }) => (
         <Formik
             initialValues={ user }
-            validationSchema={CreateUserSchema}
+            validationSchema={EditUserSchema}
             onSubmit={async (values: UserUpdateRequest, actions: FormikActions<UserUpdateRequest>) => {
                 const isSuccess = await onSubmit(values);
                 actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
@@ -27,7 +27,7 @@ export const UserEditForm: React.FunctionComponent<UserEditProps> =
         >
             {(formik: FormikProps<UserUpdateRequest>) => (
                 <Form className={styles.form}>
-                    <TextField name="username" label="Username" labelInfo="(required)"/>
+                    <TextField name="username" label="Username" disabled={true}/>
                     <TextField name="userRealName" label="Full Name" labelInfo="(required)"/>
                     <TextField name="email" label="E-mail" labelInfo="(required)"/>
 
@@ -43,13 +43,13 @@ export const UserEditForm: React.FunctionComponent<UserEditProps> =
     );
 
 
-const CreateUserSchema = object().shape({
-    username: string().matches(/^[a-zA-Z0-9_]+$/, { message: "Username must contain only alphanumeric or underscore characters." })
-                      .required("Required"),
+const EditUserSchema = object().shape({
 
     userRealName: string().required("Required"),
 
     email: string().required("Required")
-                   .email("Invalid e-mail address")
+                   .email("Invalid e-mail address"),
+
+
 });
 
