@@ -60,7 +60,6 @@ export class DashboardStore {
     @action.bound
     async addDashboard(title: string, icon: string, description:string, layout:string): Promise<boolean> {
         try {
-            // const dashboard = (await this.gateway.addDashboard(title, icon, description, layout)).data;
             return true;
         } catch (ex) {
             return false;
