@@ -18,6 +18,7 @@ import {
 export interface UserQueryCriteria {
     limit?: number;
     offset?: number;
+    group_id?: number;
 }
 
 
@@ -61,8 +62,6 @@ export class UserAPI {
             data: JSON.stringify([data])
         });
 
-        console.log(data);
-
         return this.gateway.post(`user/${data.id}/`, requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -93,6 +92,7 @@ function getOptionParams(options?: UserQueryCriteria): any | undefined {
     const params: any = {};
     if (options.limit) params.max = options.limit;
     if (options.offset) params.offset = options.offset;
+    if (options.group_id) params.group_id = options.group_id;
     return params;
 }
 
