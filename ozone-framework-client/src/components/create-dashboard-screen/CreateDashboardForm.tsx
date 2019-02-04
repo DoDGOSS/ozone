@@ -33,7 +33,6 @@ export interface CreateDashboardFormProps {
 }
 
 export interface State {
-    iconImageUrl:string;
     showPremades: boolean;
     showCopy: boolean;
     createNew: boolean;
@@ -51,7 +50,6 @@ export class CreateDashboardForm extends React.Component<CreateDashboardFormProp
     constructor(props: any) {
         super(props);
         this.state = {
-          iconImageUrl:"https://cdn.onlinewebfonts.com/svg/img_301147.png",
           showPremades:false,
           showCopy:false,
           createNew:false,
@@ -67,6 +65,8 @@ export class CreateDashboardForm extends React.Component<CreateDashboardFormProp
                 initialValues={{
                   name: "",
                   guid: myUuid,
+                  iconImageUrl:"https://cdn.onlinewebfonts.com/svg/img_301147.png",
+                  description:"",
                 }}
                 // validationSchema={NewDashboardRequestSchema}
                 onSubmit={async (values: DashboardUpdateRequest, actions: FormikActions<DashboardUpdateRequest>) => {
@@ -89,11 +89,11 @@ export class CreateDashboardForm extends React.Component<CreateDashboardFormProp
                         </div>
                         <div style={FieldStyles}>
                         <TextField name="name" label="Title" labelInfo="(required)"/>
-
+                        {this.state.hidden &&
                         <TextField name="guid" label="guid" />
-
+                        }
                         <TextField name="iconImageUrl" label="Icon Url" />
-                        <TextField name="description" label="Description" labelInfo="(required)"/>
+                        <TextField name="description" label="Description"/>
                         </div>
                         </div>
                         <RadioGroup
