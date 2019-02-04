@@ -39,7 +39,6 @@ export interface State {
     createNew: boolean;
     hidden:boolean;
     value: string;
-    // onSubmit: () => void;
 }
 
 export class CreateDashboardForm extends React.Component<CreateDashboardFormProps, State> {
@@ -68,9 +67,6 @@ export class CreateDashboardForm extends React.Component<CreateDashboardFormProp
                 initialValues={{
                   name: "",
                   guid: myUuid,
-                  iconImageUrl:"https://cdn.onlinewebfonts.com/svg/img_301147.png",
-                  description: "",
-                  layoutConfig: "",
                 }}
                 // validationSchema={NewDashboardRequestSchema}
                 onSubmit={async (values: DashboardUpdateRequest, actions: FormikActions<DashboardUpdateRequest>) => {
@@ -113,6 +109,7 @@ export class CreateDashboardForm extends React.Component<CreateDashboardFormProp
                                     }
                                     <Radio label='Create a new layout' value='new'/>
                         </RadioGroup>
+
 
                         <SubmitButton/>
                     </Form>
