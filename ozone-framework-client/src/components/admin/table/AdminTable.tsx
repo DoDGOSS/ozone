@@ -1,14 +1,15 @@
 import * as React from "react";
 
-import ReactTable from 'react-table';
+import ReactTable, { Column } from 'react-table';
 import 'react-table/react-table.css';
 
 
 export type AdminTableProps = {
     data: any[],
-    columns: [],
+    columns?: Column<any>[],
     loading: boolean,
     pageSize?: number,
+    getTrProps?: (state: any, rowInfo: any) => ({});
 };
 
 // Todo
@@ -46,8 +47,8 @@ export class AdminTable extends React.Component<AdminTableProps, {}> {
                     className="-striped -highlight"
                     loading={this.props.loading}
                     pageSize={this.props.pageSize}
+                    getTrProps={this.props.getTrProps}
                 />
-                <br/>
             </React.Fragment>
             </div>
         );

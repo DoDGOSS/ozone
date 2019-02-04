@@ -1,6 +1,6 @@
 import { NightwatchAPI } from "nightwatch";
 
-import { AdminWidget } from "./selectors";
+import { AdminWidget, GlobalElements } from "./selectors";
 
 import { loggedInAs } from "./helpers";
 
@@ -83,6 +83,14 @@ export default {
 
         browser.click(AdminWidget.SUBMIT_BUTTON);
 
+        browser.getAttribute(AdminWidget.SUBMIT_BUTTON, 'disabled', function(result) {
+            this.assert.equal(result.value, 'true', "[Edit User Submit Button] is disabled");
+        });
+
+        browser
+            .click(AdminWidget.USER_ADMIN_BACK_BUTTON)
+            .waitForElementNotPresent(AdminWidget.SUBMIT_BUTTON, 1000, "[Edit User Form] is closed");
+
         browser.pause(1000)
             .waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
 
@@ -126,10 +134,10 @@ export default {
             AdminWidget.USER_ADMIN_WIDGET_DIALOG, newUserEmail,
             "[User Admin Widget] Displays user information we wish to delete");
 
-        browser.click(AdminWidget.DELETE_USER_ID);
-
-        browser.waitForElementVisible(AdminWidget.CONFIRM_DELETE_ALERT)
-               .click(AdminWidget.CONFIRM_DELETE_BUTTON);
+        browser.click(AdminWidget.DELETE_USER_ID)
+            .waitForElementPresent(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON, 1000, undefined, undefined, "[Confirmation Dialog] is present")
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .waitForElementNotPresent(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON, 1000, "[Confirmation Dialog] is not present");
 
         browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
 

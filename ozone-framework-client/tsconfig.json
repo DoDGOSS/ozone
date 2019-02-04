@@ -31,6 +31,8 @@
     "swagger",
     "tests",
     "webpack",
-    "src/setupTests.ts"
+    "src/setupTests.ts",
+    "jest.config.e2e.js",
+    "nightwatch.conf.js",
   ]
 }

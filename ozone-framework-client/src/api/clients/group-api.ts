@@ -18,6 +18,7 @@ import {
 export interface GroupQueryCriteria {
     limit?: number;
     offset?: number;
+    user_id?: number;
 }
 
 
@@ -61,7 +62,7 @@ export class GroupAPI {
             data: JSON.stringify([data])
         });
 
-        return this.gateway.post(`group/${data.id}/`, requestData, {
+        return this.gateway.put(`group/${data.id}/`, requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
@@ -91,6 +92,7 @@ function getOptionParams(options?: GroupQueryCriteria): any | undefined {
     const params: any = {};
     if (options.limit) params.max = options.limit;
     if (options.offset) params.offset = options.offset;
+    if (options.user_id) params.user_id = options.user_id;
     return params;
 }
 

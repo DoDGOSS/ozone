@@ -1,4 +1,4 @@
-import * as styles from "./GroupCreateForm.scss";
+import * as styles from "../Widgets.scss";
 
 import * as React from "react";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
@@ -6,6 +6,7 @@ import { object, string } from "yup";
 
 import { GroupCreateRequest } from "../../../../api";
 import { CancelButton, CheckBox, FormError, SubmitButton, TextField } from "../../../form";
+import { boolean } from 'space-lift/commonjs/object/is';
 
 interface GroupCreateProps {
   onSubmit: (data: GroupCreateRequest) => Promise<boolean>;
@@ -32,14 +33,15 @@ export const GroupCreateForm: React.FunctionComponent<GroupCreateProps> =
            {(formik: FormikProps<GroupCreateRequest>) => (
                 <div data-element-id='group-admin-widget-create-form'>
                     <Form className={styles.form}>
-                        <TextField name="name" label="Name" labelInfo="(required)"/>
-                        <TextField name="displayName" label="Display Name" labelInfo="(required)"/>
-                        <TextField name="description" label="Description" labelInfo="(required)"/>
-                        <CheckBox name="active" label="Active" text="True"/>
-                        <CheckBox name="userManagement" label="User Management" text="Automatic"/>
+                        <div className={styles.formBody}>
+                            <TextField name="name" label="Name" labelInfo="(required)"/>
+                            <TextField name="displayName" label="Display Name" labelInfo="(required)"/>
+                            <TextField name="description" label="Description" labelInfo="(required)"/>
+                            <CheckBox name="active" label="Active" text="True"/>
+                            <CheckBox name="userManagement" label="User Management" text="Automatic"/>
 
-                        {formik.status && formik.status.error && <FormError message={formik.status.error}/>}
-
+                            {formik.status && formik.status.error && <FormError message={formik.status.error}/>}
+                        </div>
                         <div className={styles.buttonBar} data-element-id='group-admin-widget-create-submit-button'>
                             <CancelButton className={styles.cancelButton} onClick={onCancel}/>
                             <SubmitButton className={styles.submitButton}/>
@@ -57,7 +59,7 @@ export const GroupCreateForm: React.FunctionComponent<GroupCreateProps> =
 
      description: string().required("Required"),
 
-     active: string(),
+     active: boolean,
 
-     userManagement: string()
+     userManagement: boolean,
 });
