@@ -33,7 +33,7 @@ export class CreateDashboardDialog extends React.Component {
                         title="Create New Dashboard"
                         style={CreateDashboardStyles}>
 
-                    <div className={Classes.DIALOG_BODY}>
+                    <div data-element-id='CreateDashboardDialog' className={Classes.DIALOG_BODY}>
                     <CreateDashboardForm onSubmit={this.submitDashboard} />
                     </div>
 

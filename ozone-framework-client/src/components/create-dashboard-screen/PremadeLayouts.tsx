@@ -17,7 +17,7 @@ import { DEFAULT_LAYOUTS, IMAGE_ROOT_URL } from "../../stores/LayoutStore";
         ({ onChange }) => {
 
           return (
-                  <div style={PremadeStyles}>
+                  <div style={PremadeStyles} data-element-id='PremadeLayoutsList'>
                   <RadioGroup onChange={onChange}>
                     {DEFAULT_LAYOUTS.map(Layout =>
                         <button className='layout' key={Layout.name} value={Layout.name} >

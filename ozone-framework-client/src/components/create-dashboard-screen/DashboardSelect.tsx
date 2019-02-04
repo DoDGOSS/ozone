@@ -33,7 +33,7 @@ export class DashboardSelect extends React.Component<{}, State> {
       const Data = this.state.dashboards;
 
         return (
-            <div style={CopyStyles}>
+            <div style={CopyStyles} data-element-id='DashboardSelect'>
                 <select>
                     {Data.map(Dash =>
                         <option key={Dash.guid} value={Dash.name}>

@@ -38,7 +38,7 @@ export class DashboardDialog extends React.Component<{}, State> {
                 <Dialog className={this.mainStore.darkClass}
                         isOpen={this.mainStore.isDashboardDialogVisible}
                         onClose={this.mainStore.hideDashboardDialog}
-                        title="Dashboards">
+                        title="Dashboards" >
 
                     <div className={Classes.DIALOG_BODY} >
 
@@ -54,7 +54,8 @@ export class DashboardDialog extends React.Component<{}, State> {
                     <div className={Classes.DIALOG_FOOTER}>
                         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
                             <Button onClick={()=>{this.mainStore.hideDashboardDialog();this.mainStore.showCreateDashboardDialog();}}
-                                    icon="insert">
+                                    icon="insert"
+                                    data-element-id='CreateDashboardButton'>
                                 Create New
                             </Button>
                         </div>

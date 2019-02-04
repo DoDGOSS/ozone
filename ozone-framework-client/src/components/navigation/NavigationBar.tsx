@@ -40,7 +40,8 @@ export class NavigationBar extends React.Component<NavigationBarProps> {
                 <NavbarGroup align={Alignment.LEFT}>
                     <CenterButton onClick={this.authStore.check}/>
                     <OWFButton onClick={this.authStore.check}/>
-                    <DashboardsButton active={this.mainStore.isDashboardDialogVisible}
+                    <DashboardsButton data-element-id="dashboards-button"
+                                      active={this.mainStore.isDashboardDialogVisible}
                                       onClick={this.mainStore.showDashboardDialog}/>
 
                     <WidgetsButton active={this.mainStore.isWidgetToolbarOpen}
