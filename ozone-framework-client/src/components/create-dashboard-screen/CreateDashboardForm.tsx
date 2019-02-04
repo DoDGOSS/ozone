@@ -68,7 +68,7 @@ export class CreateDashboardForm extends React.Component<CreateDashboardFormProp
                 initialValues={{
                   name: "",
                   guid: myUuid,
-                  iconImageUrl:"",
+                  iconImageUrl:"https://cdn.onlinewebfonts.com/svg/img_301147.png",
                   description: "",
                   layoutConfig: "",
                 }}
@@ -83,13 +83,13 @@ export class CreateDashboardForm extends React.Component<CreateDashboardFormProp
                     }
                 }}>
 
-                {(formik: FormikProps<DashboardUpdateRequest> ) => (
+                {(formik: FormikProps<DashboardUpdateRequest>) => (
                     <Form>
                         {formik.status && formik.status.error && <FormError message={formik.status.error}/>}
 
                         <div style={ParentStyles}>
                         <div style = {IconStyles}>
-                        <img width='60px' src={this.state.iconImageUrl}/>
+                        <img width='60px' src={formik.values.iconImageUrl}/>
                         </div>
                         <div style={FieldStyles}>
                         <TextField name="name" label="Title" labelInfo="(required)"/>
