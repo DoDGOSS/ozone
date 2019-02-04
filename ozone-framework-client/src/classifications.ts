@@ -1,6 +1,14 @@
 import { ClassificationConfig } from "./interfaces";
 
 
+export const DISABLED: ClassificationConfig = {
+    text: "Disabled",
+    backgroundColor: "#000",
+    foregroundColor: "#fff",
+    disableTopBanner: true,
+    disableBottomBanner: true
+};
+
 export const DYNAMIC: ClassificationConfig = {
     text: "DYNAMIC PAGE - HIGHEST POSSIBLE CLASSIFICATION IS ...",
     backgroundColor: "#000",
@@ -14,7 +22,7 @@ export const UNCLASSIFIED: ClassificationConfig = {
 };
 
 export const UNCLASSIFIED_FOUO: ClassificationConfig = {
-    text: "UNCLASSIFIED//FOR OFFICIAL USE ONLY",
+    text: "UNCLASSIFIED // FOR OFFICIAL USE ONLY",
     backgroundColor: "#090",
     foregroundColor: "#fff"
 };
@@ -38,7 +46,7 @@ export const TOP_SECRET: ClassificationConfig = {
 };
 
 export const TOP_SECRET_SCI: ClassificationConfig = {
-    text: "TOP SECRET//SCI",
+    text: "TOP SECRET // SCI",
     backgroundColor: "#fe2",
     foregroundColor: "#000"
 };

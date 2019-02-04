@@ -21,7 +21,8 @@ export const ClassificationBanner: React.FunctionComponent<ClassificationBannerP
              style={{
                  color: foregroundColor,
                  backgroundColor
-             }}>
+             }}
+             data-element-id="classification-banner">
             {text}
         </div>
     );

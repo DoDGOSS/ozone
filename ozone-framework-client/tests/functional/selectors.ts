@@ -30,6 +30,8 @@ export namespace MainPage {
 
     export const WIDGETS_DIALOG = "div[data-element-id='widgets-dialog']";
 
+    export const WIDGETS_SEARCH = "input[data-element-id='widget-search-field']";
+
     export const USER_AGREEMENT_LINK = "a[data-element-id='user-agreement-link']";
 
     export const USER_AGREEMENT = "div[data-element-id='user-agreement-dialog']";
@@ -41,6 +43,8 @@ export namespace MainPage {
     export const CREATE_DASHBOARD_BUTTON ="button[data-element-id='CreateDashboardButton']";
 
     export const CREATE_DASHBOARD_DIALOG ="a[data-element-id='CreateDashboardDialog']";
+
+    export const CLASSIFICATION_BANNER = "div[data-element-id='classification-banner'";
 }
 
 export namespace CreateDashboardDialog {
