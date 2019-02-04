@@ -72,7 +72,7 @@ const USER_WIDGETS: Widget[] = [
         iconUrl: `${IMAGE_ROOT_URL}/widgets/widgets-manager.png`
     },
     {
-        id: "48edfe94-4291-4991-a648-c19a903a663b",
+        id: "48edfe94-4291-4991-a648-c19a9023132",
         universalName: "org.ozoneplatform.owf.XXXX.XXXX",
         title: "Sample Widget 2",
         url: "#",
@@ -80,7 +80,7 @@ const USER_WIDGETS: Widget[] = [
         iconUrl: `${IMAGE_ROOT_URL}/widgets/users-manager.png`
     },
     {
-        id: "48edfe94-4291-4991-a648-c19a903a663b",
+        id: "48edfe94-4291-4991-a648-c19a9123123b",
         universalName: "org.ozoneplatform.owf.XXXX.XXXX",
         title: "Sample Widget 3",
         url: "#",
@@ -88,7 +88,7 @@ const USER_WIDGETS: Widget[] = [
         iconUrl: `${IMAGE_ROOT_URL}/widgets/widgets-manager.png`
     },
     {
-        id: "48edfe94-4291-4991-a648-c19a903a663b",
+        id: "48edfe94-4291-4991-a648-c19a912312313b",
         universalName: "org.ozoneplatform.owf.XXXX.XXXX",
         title: "Sample Widget 4",
         url: "#",
