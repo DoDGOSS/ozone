@@ -58,15 +58,6 @@ export class DashboardStore {
     }
 
     @action.bound
-    async addDashboard(title: string, icon: string, description:string, layout:string): Promise<boolean> {
-        try {
-            return true;
-        } catch (ex) {
-            return false;
-        }
-    }
-
-    @action.bound
     setDashboard(dashboard: Dashboard | undefined) {
         this.dashboard = dashboard;
     }
