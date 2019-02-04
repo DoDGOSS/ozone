@@ -6,9 +6,7 @@ import { DashboardAPI} from "../../api";
 
 import { DashboardDTO } from "../../api/models/dashboard-dto";
 
-const CopyStyles={
-   paddingBottom:"15px",
- };
+import * as styles from "./CreateDashboardStyles.scss";
 
 export interface State {
   dashboards: DashboardDTO[];
@@ -33,7 +31,7 @@ export class DashboardSelect extends React.Component<{}, State> {
       const Data = this.state.dashboards;
 
         return (
-            <div style={CopyStyles} data-element-id='DashboardSelect'>
+            <div className={styles.CopyStyles} data-element-id='DashboardSelect'>
                 <select>
                     {Data.map(Dash =>
                         <option key={Dash.guid} value={Dash.name}>

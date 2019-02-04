@@ -10,23 +10,12 @@ import { DashboardUpdateRequest } from "../../api/models/dashboard-dto";
 import { DashboardAPI} from "../../api";
 import { Radio, RadioGroup } from "@blueprintjs/core";
 
+import * as styles from "./CreateDashboardStyles.scss";
+
 import * as Util from "../util";
 
 import * as uuid from "uuid/v4";
 const myUuid = uuid();
-
-const ParentStyles={
-   display:"flex",
- };
-
- const IconStyles={
-   padding:"10px",
-   width:"20%"
- };
-
- const FieldStyles={
-   width:"80%"
- };
 
 export interface CreateDashboardFormProps {
     onSubmit: () => void;
@@ -83,11 +72,11 @@ export class CreateDashboardForm extends React.Component<CreateDashboardFormProp
                     <Form>
                         {formik.status && formik.status.error && <FormError message={formik.status.error}/>}
 
-                        <div style={ParentStyles}>
-                        <div style = {IconStyles}>
+                        <div className={styles.ParentStyles}>
+                        <div className={styles.IconStyles}>
                         <img width='60px' src={formik.values.iconImageUrl}/>
                         </div>
-                        <div style={FieldStyles}>
+                        <div className={styles.FieldStyles}>
                         <TextField name="name" label="Title" labelInfo="(required)"/>
                         {this.state.hidden &&
                         <TextField name="guid" label="guid" />

@@ -7,10 +7,8 @@ import { Classes, Dialog } from "@blueprintjs/core";
 import { lazyInject } from "../../inject";
 import { MainStore } from "../../stores";
 import { CreateDashboardForm } from "./CreateDashboardForm";
-
-const CreateDashboardStyles={
-    minWidth:"600px",
-  };
+import * as styles from "./CreateDashboardStyles.scss";
+import { classNames } from "../util";
 
 @observer
 export class CreateDashboardDialog extends React.Component {
@@ -27,11 +25,11 @@ export class CreateDashboardDialog extends React.Component {
     render() {
         return (
             <div>
-                <Dialog className={this.mainStore.darkClass}
+                <Dialog className={classNames(this.mainStore.darkClass,styles.CreateDashboardStyles)}
                         isOpen={this.mainStore.isCreateDashboardDialogVisible}
                         onClose={this.mainStore.hideCreateDashboardDialog}
                         title="Create New Dashboard"
-                        style={CreateDashboardStyles}>
+                        >
 
                     <div data-element-id='CreateDashboardDialog' className={Classes.DIALOG_BODY}>
                     <CreateDashboardForm onSubmit={this.submitDashboard} />

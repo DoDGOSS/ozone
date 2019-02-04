@@ -2,10 +2,7 @@ import * as React from "react";
 import { Field, FieldProps } from "formik";
 import { RadioGroup } from "@blueprintjs/core";
 import { DEFAULT_LAYOUTS, IMAGE_ROOT_URL } from "../../stores/LayoutStore";
-
-   const PremadeStyles={
-      paddingBottom:"15px",
-    };
+import * as styles from "./CreateDashboardStyles.scss";
 
     export interface PremadeLayoutsProps {
           onChange:(event: React.FormEvent<HTMLElement>) => void;
@@ -17,7 +14,7 @@ import { DEFAULT_LAYOUTS, IMAGE_ROOT_URL } from "../../stores/LayoutStore";
         ({ onChange }) => {
 
           return (
-                  <div style={PremadeStyles} data-element-id='PremadeLayoutsList'>
+                  <div className={styles.PremadeStyles} data-element-id='PremadeLayoutsList'>
                   <RadioGroup onChange={onChange}>
                     {DEFAULT_LAYOUTS.map(Layout =>
                         <button className='layout' key={Layout.name} value={Layout.name} >
