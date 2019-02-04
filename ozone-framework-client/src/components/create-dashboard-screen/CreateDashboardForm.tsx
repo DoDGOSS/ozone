@@ -103,7 +103,7 @@ export class CreateDashboardForm extends React.Component<CreateDashboardFormProp
                                     {this.state.value==='premade' &&
                                     <PremadeLayouts onChange={this.handleRadioChange}/>
                                     }
-                                    <Radio label='Copy the layout of an existing dashboard' value='copy' />
+                                    <Radio label='Copy the layout of an existing page' value='copy' />
                                     {this.state.value==='copy' &&
                                     <DashboardSelect />
                                     }
