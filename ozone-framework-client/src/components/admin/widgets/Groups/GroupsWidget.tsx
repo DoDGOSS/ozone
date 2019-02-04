@@ -1,3 +1,5 @@
+import * as styles from "../Widgets.scss";
+
 import * as React from "react";
 
 import { Button, ButtonGroup, Divider, InputGroup, Intent  } from "@blueprintjs/core";
@@ -7,9 +9,10 @@ import { GroupCreateForm } from "./GroupCreateForm";
 
 import { lazyInject } from "../../../../inject";
 
-import { GroupAPI, GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../../../api";
-import { ConfirmationDialog } from '../../../confirmation-dialog/ConfirmationDialog';
-import { GroupEditForm } from './GroupEditForm';
+import { GroupAPI, GroupCreateRequest, GroupDTO } from "../../../../api";
+import { ConfirmationDialog } from 'src/components/confirmation-dialog/ConfirmationDialog';
+
+import { GroupEditTabGroup } from './GroupEditTabGroup';
 
 interface State {
     groups: GroupDTO[];
@@ -20,7 +23,7 @@ interface State {
     columns: any;
     showTable: boolean;
     showCreate: boolean;
-    showUpdate: boolean;    
+    showEditGroup: boolean;    
     showDelete: boolean;
     confirmationMessage: string;
     manageGroup: GroupDTO | undefined;
@@ -33,6 +36,12 @@ interface State {
 // Style
 // Popup warning dialogue for deleting
 // Error handling for form
+
+enum GroupWidgetSubSection {
+    TABLE,
+    CREATE,
+    EDIT,
+}
 
 export class GroupsWidget extends React.Component<{}, State> {
 
@@ -49,7 +58,7 @@ export class GroupsWidget extends React.Component<{}, State> {
             pageSize: 5,
             showTable: true,
             showCreate: false,
-            showUpdate: false,
+            showEditGroup: false,
             showDelete: false,
             confirmationMessage: '',
             manageGroup: undefined,
@@ -57,36 +66,11 @@ export class GroupsWidget extends React.Component<{}, State> {
                 {
                     Header: "Groups",
                     columns: [
-                        {
-                            Header: "Group Name",
-                            accessor: "name",
-                            Footer: (
-                                // TODO - Keep in footer or move to below table
-                                <Button
-                                    text="Create"
-                                    intent={Intent.SUCCESS}
-                                    icon="add"
-                                    small={true}
-                                    onClick={() => this.toggleCreate()}
-                                    data-element-id='group-admin-widget-create-button'
-                                />
-                            )
-                        },
-                        {
-                            Header: "Users",
-                            accessor: "totalUsers"
-                        },
-                        {
-                            Header: "Widgets",
-                            accessor: "totalWidgets"
-                        },
-                        {
-                            // TODO - Access totalDashboards (Apps) in old OWF
-                            Header: "Dashboards",
-                            accessor: "totalDashboards"
-                        }
+                        { Header: "Group Name", accessor: "name" },
+                        { Header: "Users",      accessor: "totalUsers" },
+                        { Header: "Widgets",    accessor: "totalWidgets" },
+                        { Header: "Dashboards", accessor: "totalDashboards"  }
                     ],
-
                 },
                 // TODO - Abstract this to only have to provide onclick function name with styled buttons
                 {
@@ -100,10 +84,8 @@ export class GroupsWidget extends React.Component<{}, State> {
                                     intent={Intent.PRIMARY}
                                     icon="edit"
                                     small={true}
-                                    // onClick={() => this.getGroupById(row.original.id)}
-                                    // onSubmit={this.updateGroup}
                                     onClick={() => (
-                                        this.toggleUpdate(),
+                                        this.showSubSection(GroupWidgetSubSection.EDIT),
                                         this.setState({updatingGroup: row.original})
                                     )}
                                 />
@@ -123,6 +105,8 @@ export class GroupsWidget extends React.Component<{}, State> {
                 }
             ]
         };
+
+        this.handleUpdate = this.handleUpdate.bind(this);
     }
 
     componentDidMount() {
@@ -132,7 +116,7 @@ export class GroupsWidget extends React.Component<{}, State> {
     render() {
         const showTable = this.state.showTable;
         const showCreate = this.state.showCreate;
-        const showUpdate = this.state.showUpdate;
+        const showEditGroup = this.state.showEditGroup;
 
         let data = this.state.groups;
         const filter = this.state.filter.toLowerCase();
@@ -148,33 +132,54 @@ export class GroupsWidget extends React.Component<{}, State> {
 
         return (
             <div data-element-id="group-admin-widget-dialog">
-                <InputGroup
-                    placeholder="Search..."
-                    leftIcon="search"
-                    value={this.state.filter}
-                    onChange={(e: any) => this.setState({filter: e.target.value})}
-                    data-element-id="search-field"
-                />
-                            
                 {showTable &&
-                <AdminTable
-                    data={data}
-                    columns={this.state.columns}
-                    loading={this.state.loading}
-                    pageSize={this.state.pageSize}
-                />
+                <div className={styles.actionBar}>
+                    <InputGroup
+                        placeholder="Search..."
+                        leftIcon="search"
+                        value={this.state.filter}
+                        onChange={(e: any) => this.setState({filter: e.target.value})}
+                        data-element-id="search-field"
+                    />
+                </div>
+                }
+
+                {showTable &&
+                <div className={styles.table}>
+                    <AdminTable
+                        data={data}
+                        columns={this.state.columns}
+                        loading={this.state.loading}
+                        pageSize={this.state.pageSize}
+                    />
+                </div>
+                }
+
+                {showTable &&
+                <div className={styles.buttonBar}>
+                    <Button
+                        text="Create"
+                        onClick={() => this.showSubSection(GroupWidgetSubSection.CREATE)}
+                        data-element-id='group-admin-widget-create-button'
+                    />
+                </div>
                 }
 
                 {showCreate &&
-                  <GroupCreateForm onSubmit={this.createGroup}
-                                  onCancel={this.toggleCreate}/>
+                <GroupCreateForm
+                onSubmit={this.createGroup}
+                onCancel={() => {this.showSubSection(GroupWidgetSubSection.TABLE);}}
+                />
                 }
-                {showUpdate &&
-                <GroupEditForm onSubmit={this.updateGroup}
-                              onCancel={this.toggleUpdate}
-                              group={this.state.updatingGroup}/>
 
+                {showEditGroup &&
+                <GroupEditTabGroup
+                    group={this.state.updatingGroup}
+                    onUpdate={this.handleUpdate}
+                    onBack={() => {this.showSubSection(GroupWidgetSubSection.TABLE);}}
+                />
                 }                
+
                 <ConfirmationDialog
                     show={this.state.showDelete}
                     title='Warning'
@@ -186,19 +191,13 @@ export class GroupsWidget extends React.Component<{}, State> {
         );
     }
 
-    private toggleCreate = () => {
+    private showSubSection(subSection: GroupWidgetSubSection) {
         this.setState({
-            showCreate: !this.state.showCreate,
-            showTable: !this.state.showTable
+            showTable: subSection === GroupWidgetSubSection.TABLE,
+            showCreate: subSection === GroupWidgetSubSection.CREATE,
+            showEditGroup: subSection === GroupWidgetSubSection.EDIT,
         });
     }
-
-    private toggleUpdate = () => {
-        this.setState({
-            showUpdate: !this.state.showUpdate,
-            showTable: !this.state.showTable
-        });
-    };
 
     private getGroups = async () => {
         const response = await this.groupAPI.getGroups();
@@ -212,36 +211,19 @@ export class GroupsWidget extends React.Component<{}, State> {
         });
     }
 
-    // private getGroupById = async (id: number) => {
-    //     const response = await this.groupAPI.getGroupById(id);
-
-    //     // TODO: Handle failed request
-    //     if (response.status !== 200) return;
-    // }
+    private handleUpdate(update?: any) {
+        this.getGroups();
+    }
 
     private createGroup = async (data: GroupCreateRequest) => {
+        data.status = data.active ? 'active' : 'inactive';
+
         const response = await this.groupAPI.createGroup(data);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;
 
-        this.toggleCreate();
-        this.setState({ loading: true });
-        this.getGroups();
-
-        return true;
-    }
-
-    private updateGroup = async (data: GroupUpdateRequest) => {
-        console.log('Submitting updated group');
-
-        data.status = data.active ? 'active' : 'inactive';
-        
-        const response = await this.groupAPI.updateGroup(data);
-
-        if (response.status !== 200) return false;
-
-        this.toggleUpdate();
+        this.showSubSection(GroupWidgetSubSection.TABLE);
         this.setState({ loading: true });
         this.getGroups();
 
@@ -254,6 +236,7 @@ export class GroupsWidget extends React.Component<{}, State> {
             confirmationMessage: `This action will permenantly delete <strong>${group.name}</strong>`,
             manageGroup: group
         });
+
         this.getGroups();
 
         return true;
@@ -269,7 +252,7 @@ export class GroupsWidget extends React.Component<{}, State> {
 
         const response = await this.groupAPI.deleteGroup(group.id);
     
-        // // TODO: Handle failed request
+        // TODO: Handle failed request
         if (response.status !== 200) return false;
     
         this.getGroups();

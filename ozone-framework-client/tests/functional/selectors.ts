@@ -34,7 +34,7 @@ export namespace MainPage {
 
     export const USER_AGREEMENT_LINK = "a[data-element-id='user-agreement-link']";
 
-    export const USER_AGREEMENT = "div[data-element-id='user-agreement-dialog']"
+    export const USER_AGREEMENT = "div[data-element-id='user-agreement-dialog']";
 
     export const USER_AGREEMENT_BACK = "button[data-element-id='back-button']";
 
@@ -59,6 +59,8 @@ export namespace AdminWidget {
     export const USER_ADMIN_WIDGET_DIALOG = "div[data-element-id='user-admin-widget-dialog']";
 
     export const USER_ADMIN_CREATE_BUTTON = "button[data-element-id='user-admin-widget-create-button']";
+
+    export const USER_ADMIN_BACK_BUTTON = `${USER_ADMIN_WIDGET_DIALOG} span[data-element-id='user-admin-widget-edit-back-button'] button`;
 
     export const USER_NAME_FIELD = "input[data-role='field'][name='username']";
 
@@ -88,6 +90,8 @@ export namespace GroupAdminWidget {
         export const SEARCH_FIELD = `${Main.DIALOG} input[data-element-id='search-field']`;
 
         export const CREATE_BUTTON = `${Main.DIALOG} button[data-element-id='group-admin-widget-create-button']`;
+
+        export const BACK_BUTTON = `${Main.DIALOG} span[data-element-id='group-admin-widget-edit-back-button'] button`;
     }
 
     export namespace CreateGroup
@@ -105,11 +109,25 @@ export namespace GroupAdminWidget {
 
     export namespace EditGroup
     {
+        export const TAB_PROPERTIES = `div[data-tab-id='group_properties']`;
+
+        export const TAB_USERS = `div[data-tab-id='group_users']`;
+    }
+
+    export namespace PropertiesGroup
+    {
         export const FORM = "div[data-element-id='group-admin-widget-edit-form']";
 
-        export const NAME_INPUT = `${EditGroup.FORM} input[name='name']`;
+        export const NAME_INPUT = `${PropertiesGroup.FORM} input[name='name']`;
 
         export const SUBMIT_BUTTON = "div[data-element-id='group-admin-widget-edit-submit-button'] > button[data-element-id='form-submit-button']";
+    }
+
+    export namespace UsersGroup
+    {
+        export const TAB = "div[data-element-id='group-admin-add-user']";
+
+        export const ADD_BUTTON = "button[data-element-id='group-edit-add-user-dialog-add-button']";
     }
 }
 
@@ -118,4 +136,7 @@ export namespace GlobalElements {
 
     export const CONFIRMATION_DIALOG_CONFIRM_BUTTON = `button[data-element-id='confirmation-dialog-confirm'] `;
 
+    export const GENERIC_TABLE_SELECTOR_DIALOG = "div[data-element-id='table-selector-dialog']";
+
+    export const GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON = "button[data-element-id='table-selector-confirm']";
 }
