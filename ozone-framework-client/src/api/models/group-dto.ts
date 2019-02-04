@@ -67,6 +67,7 @@ export interface GroupCreateRequest {
     email?: string;
     automatic?: boolean;
     status?: "active" | "inactive";
+    active?: boolean;
 }
 
 
@@ -84,15 +85,10 @@ export class GroupCreateResponse {
 }
 
 
-export interface GroupUpdateRequest {
+export interface GroupUpdateRequest extends GroupCreateRequest {
     id: number;
-    name: string;
-    displayName?: string;
-    description?: string;
-    email?: string;
-    automatic: boolean;
-    status: "active" | "inactive";
-    active: boolean;
+    update_action?: "add" | "remove";
+    user_ids?: Array<number>;
 }
 
 
