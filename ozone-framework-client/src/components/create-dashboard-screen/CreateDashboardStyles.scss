@@ -1,0 +1,23 @@
+//CreateDashboardForm
+:local .ParentStyles{
+   display:flex !important;
+ }
+:local .IconStyles{
+   padding:10px !important;
+   width:20% !important;
+ }
+:local .FieldStyles{
+   width:80% !important;
+ }
+ //CreateDashboardDialog
+:local .CreateDashboardStyles{
+     min-width:600px !important;
+   }
+//DashboardSelect
+:local .CopyStyles{
+  padding-bottom: 15px !important;
+}
+//PremadeLayouts
+:local .PremadeStyles{
+  padding-bottom: 15px !important;
+}

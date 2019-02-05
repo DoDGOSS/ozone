@@ -117,6 +117,7 @@ export class DashboardGetResponse {
 export interface DashboardUpdateRequest {
     name: string;
     guid: string;
+    iconImageUrl?:string;
     isdefault?: boolean;
     locked?: boolean;
     description?: string;

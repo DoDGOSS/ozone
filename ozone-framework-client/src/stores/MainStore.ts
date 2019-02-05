@@ -5,6 +5,9 @@ import { injectable } from "../inject";
 export class MainStore {
 
     @observable
+    isCreateDashboardDialogVisible: boolean;
+
+    @observable
     isLoginDialogOpen: boolean;
 
     @observable
@@ -42,6 +45,7 @@ export class MainStore {
 
     constructor() {
         runInAction("initialize", () => {
+            this.isCreateDashboardDialogVisible = false;
             this.isAboutVisible=false;
             this.isWarningDialogVisible = false;
             this.isUserAgreementVisible = false;
@@ -52,6 +56,16 @@ export class MainStore {
             this.isWidgetToolbarOpen = false;
             this.darkTheme = false;
         });
+    }
+
+    @action.bound
+    showCreateDashboardDialog() {
+        this.isCreateDashboardDialogVisible = true;
+    }
+
+    @action.bound
+    hideCreateDashboardDialog() {
+        this.isCreateDashboardDialogVisible = false;
     }
 
     @action.bound
