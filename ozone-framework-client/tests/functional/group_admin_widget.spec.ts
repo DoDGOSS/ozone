@@ -183,6 +183,47 @@ export default {
         browser.closeWindow().end();
     },
 
+    "As an Administrator, I can add remove a user from a group": (browser: NightwatchAPI) => {
+        loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+
+        browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
+
+        browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_MODIFIED_NAME);
+
+        openEditSectionForGroup(browser, NEW_GROUP_MODIFIED_NAME, `${GroupAdminWidget.EditGroup.TAB_USERS}`)
+            .waitForElementVisible(GroupAdminWidget.UsersGroup.ADD_BUTTON, 2000, "[Group Users Interface] is visible");
+
+        DEFAULT_USER_EMAILS.forEach((email: string) => {
+            browser.expect.element(GroupAdminWidget.UsersGroup.TAB).text.to.contain(email);
+        });
+
+        browser
+            .click(`${GroupAdminWidget.UsersGroup.TAB} div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child button[data-element-id='group-admin-widget-delete-user-button']`)
+            .waitForElementPresent(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON, 1000, undefined, undefined, "[Confirmation Dialog] is present")
+            .pause(250)
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .pause(500)
+            .waitForElementNotPresent(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON, 1000, "[Confirmation Dialog] is not present");
+
+        browser
+            .click(`${GroupAdminWidget.UsersGroup.TAB} div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='group-admin-widget-delete-user-button']`)
+            .pause(250)
+            .waitForElementPresent(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON, 1000, undefined, undefined, "[Confirmation Dialog] is present")
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .pause(500)
+            .waitForElementNotPresent(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON, 1000, "[Confirmation Dialog] is not present");
+
+        DEFAULT_USER_EMAILS.forEach((email: string) => {
+            browser.expect.element(GroupAdminWidget.UsersGroup.TAB).text.to.not.contain(email);
+        });    
+
+        browser
+            .click(GroupAdminWidget.Main.BACK_BUTTON)
+            .waitForElementNotPresent(GroupAdminWidget.UsersGroup.ADD_BUTTON, 1000, "[Edit Group Form] is closed");
+
+        browser.closeWindow().end();
+    },
+
     "As an Administrator, I can delete a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
 
@@ -210,8 +251,10 @@ export default {
 
             browser
                 .click(`${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row + 1}) div[role='row'] > div:last-child button[data-element-id='group-admin-widget-delete-button']`)
+                .pause(250)
                 .waitForElementPresent(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON, 1000, undefined, undefined, "[Confirmation Dialog] is present")
                 .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+                .pause(500)
                 .waitForElementNotPresent(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON, 1000, "[Confirmation Dialog] is not present");
 
         });
