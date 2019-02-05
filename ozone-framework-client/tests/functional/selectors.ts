@@ -42,7 +42,34 @@ export namespace MainPage {
 
     export const USER_AGREEMENT_BACK = "button[data-element-id='back-button']";
 
+    export const DASHBOARD_BUTTON = "button[data-element-id='dashboards-button']";
+
+    export const CREATE_DASHBOARD_BUTTON ="button[data-element-id='CreateDashboardButton']";
+
+    export const CREATE_DASHBOARD_DIALOG ="a[data-element-id='CreateDashboardDialog']";
+
     export const CLASSIFICATION_BANNER = "div[data-element-id='classification-banner'";
+}
+
+export namespace CreateDashboardDialog {
+
+    export const NAME_FIELD="input[data-role='field'][name='name']";
+
+    export const ICON_FIELD="input[data-role='field'][name='iconImageUrl']";
+
+    export const DESCRIPTION_FIELD="input[data-role='field'][name='description']";
+
+    export const PREMADE="input[type='radio'][value='premade']";
+
+    export const SELECT_PREMADE_LAYOUT="div[data-element-id='PremadeLayoutsList']";
+
+    export const COPY="input[type='radio'][value='copy']";
+
+    export const COPY_DROPDOWN ="div[data-element-id='DashboardSelect']";
+
+    export const NEW="input[type='radio'][value='new']";
+
+    export const SUBMIT="button[data-element-id='form-submit-button']";
 }
 
 export namespace LoginForm {
