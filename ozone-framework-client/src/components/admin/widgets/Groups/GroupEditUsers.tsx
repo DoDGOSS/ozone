@@ -1,13 +1,14 @@
 import * as styles from "../Widgets.scss";
 
 import * as React from "react";
-import { Button, InputGroup } from "@blueprintjs/core";
+import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
 
 import { lazyInject } from "../../../../inject";
 import { GroupAPI, GroupDTO, GroupUpdateRequest, UserAPI, UserDTO, UserQueryCriteria} from "../../../../api";
 
 import { AdminTable } from "../../table/AdminTable";
 import { GroupEditUsersDialog } from './GroupEditUsersDialog';
+import { ConfirmationDialog } from 'src/components/confirmation-dialog/ConfirmationDialog';
 
 interface GroupEditUsersProps {
     onUpdate: (update?: any) => void;
@@ -22,10 +23,30 @@ export interface GroupEditUsersState {
     pageSize: number;
     group: any;
     showAdd: boolean;
+    showDelete: boolean;
+    confirmationMessage: string;
+    manageUser: UserDTO | undefined;
+
 }
 
 export class GroupEditUsers extends React.Component<GroupEditUsersProps, GroupEditUsersState> {
-    private static readonly USERS_COLUMN_DEFINITION = [
+
+    private static readonly SELECT_USERS_COLUMN_DEFINITION = [
+        {
+            Header: "Users",
+            columns: [
+                { Header: "Name",       accessor: "userRealName" },
+                { Header: "Username",   accessor: "username" },
+                { Header: "Email",      accessor: "email" },
+                { Header: "Groups",     accessor: "totalGroups" },
+                { Header: "Widgets",    accessor: "totalWidgets" },
+                { Header: "Dashboards", accessor: "totalDashboards" },
+                { Header: "Last Login", accessor: "lastLogin" },
+            ]
+        }
+    ];
+
+    private readonly USERS_COLUMN_DEFINITION = [
         {
             Header: "Users",
             columns: [
@@ -38,21 +59,23 @@ export class GroupEditUsers extends React.Component<GroupEditUsersProps, GroupEd
                 { Header: "Last Login", accessor: "lastLogin"  }
             ],
         },
-    ];
-
-    private static readonly SELECT_USERS_COLUMN_DEFINITION = [
         {
-            Header: "Users",
-            columns: [
-                { Header: "Name",       accessor: "userRealName" },
-                { Header: "Username",   accessor: "username" },
-                { Header: "Email",      accessor: "email" },
-                { Header: "Groups",     accessor: "totalGroups" },
-                { Header: "Widgets",    accessor: "totalWidgets" },
-                { Header: "Dashboards", accessor: "totalDashboards" },
-                { Header: "Last Login", accessor: "lastLogin" }
-            ],
-        },
+            Header: "Actions",
+            Cell: (row: any) => (
+                <div>
+                    <ButtonGroup>
+                        <Button
+                            data-element-id='group-admin-widget-delete-user-button'
+                            text="Delete"
+                            intent={Intent.DANGER}
+                            icon="trash"
+                            small={true}
+                            onClick={() => this.deleteUser(row.original)}
+                        />
+                    </ButtonGroup>
+                </div>
+            )
+        }
     ];
 
     @lazyInject(UserAPI)
@@ -71,6 +94,9 @@ export class GroupEditUsers extends React.Component<GroupEditUsersProps, GroupEd
             pageSize: 5,
             group: this.props.group,
             showAdd: false,
+            showDelete: false,
+            confirmationMessage: '',
+            manageUser: undefined,
         };
     }
 
@@ -110,7 +136,7 @@ export class GroupEditUsers extends React.Component<GroupEditUsersProps, GroupEd
                 <div className={styles.table}>
                     <AdminTable
                         data={data}
-                        columns={GroupEditUsers.USERS_COLUMN_DEFINITION}
+                        columns={this.USERS_COLUMN_DEFINITION}
                         loading={this.state.loading}
                         pageSize={this.state.pageSize}
                     />
@@ -131,6 +157,14 @@ export class GroupEditUsers extends React.Component<GroupEditUsersProps, GroupEd
                     cancelHandler={this.handleAddUserCancel}
                     columns={GroupEditUsers.SELECT_USERS_COLUMN_DEFINITION}
                     />
+
+                <ConfirmationDialog
+                    show={this.state.showDelete}
+                    title='Warning'
+                    content={this.state.confirmationMessage}
+                    confirmHandler={this.handleConfirmationConfirmDelete}
+                    cancelHandler={this.handleConfirmationCancel}
+                    payload={this.state.manageUser} />
             </div>
         );
     }
@@ -183,6 +217,54 @@ export class GroupEditUsers extends React.Component<GroupEditUsersProps, GroupEd
     private handleAddUserCancel = () => {
         this.setState({
             showAdd: false,
+        });
+    }
+    
+    private deleteUser = async (user: UserDTO) => {
+        const currentGroup: GroupDTO = this.state.group;
+
+        this.setState({
+            showDelete: true,
+            confirmationMessage: `This action will permenantly delete <strong>${user.userRealName}</strong> from the group <strong>${currentGroup.name}</strong>`,
+            manageUser: user
+        });
+
+        this.getUsers();
+
+        return true;
+    }
+
+    private handleConfirmationConfirmDelete = async (payload: any) => {
+
+        this.setState({
+            showDelete: false,
+            manageUser: undefined,
+        });
+
+        const user: UserDTO = payload;
+
+        const request: GroupUpdateRequest = {
+            id: this.state.group.id,
+            name: this.state.group.name,
+            update_action: 'remove',
+            user_ids: [user.id]
+        };
+
+        const response = await this.groupAPI.updateGroup(request);        
+
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+    
+        this.getUsers();
+        this.props.onUpdate();
+    
+        return true;
+    }
+
+    private handleConfirmationCancel = (payload: any) => {
+        this.setState({
+            showDelete: false,
+            manageUser: undefined,
         });
     }    
 }
