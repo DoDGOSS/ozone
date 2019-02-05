@@ -1,11 +1,9 @@
-import { observable, runInAction } from "mobx";
+import {action, observable, runInAction} from "mobx";
 import { injectable } from "../inject";
 import { WidgetDefinition } from "./DashboardStore";
 import { groupAdminWidgetDef, sampleWidgetDef, userAdminWidgetDef } from "./DefaultDashboard";
-// import React from 'react';
-// import { UsersWidget } from "../components/admin/widgets/Users/UsersWidget";
-// import { GroupsWidget } from "../components/admin/widgets/Groups/GroupsWidget";
-// import { MosaicNode } from 'react-mosaic-component';
+import { WidgetAPI, WidgetDTO } from "../api";
+import { lazyInject } from "../inject";
 
 
 interface Widget {
@@ -62,41 +60,6 @@ const ADMIN_WIDGETS: Widget[] = [
     }
 ];
 
-const USER_WIDGETS: Widget[] = [
-    {
-        id: "18070c45-5f6a-4460-810c-6e3496495ec4",
-        universalName: "org.ozoneplatform.owf.XXXX.XXXX",
-        title: "Sample Widget 1",
-        url: "#",
-        definition: sampleWidgetDef,
-        iconUrl: `${IMAGE_ROOT_URL}/widgets/widgets-manager.png`
-    },
-    {
-        id: "48edfe94-4291-4991-a648-c19a9023132",
-        universalName: "org.ozoneplatform.owf.XXXX.XXXX",
-        title: "Sample Widget 2",
-        url: "#",
-        definition: sampleWidgetDef,
-        iconUrl: `${IMAGE_ROOT_URL}/widgets/users-manager.png`
-    },
-    {
-        id: "48edfe94-4291-4991-a648-c19a9123123b",
-        universalName: "org.ozoneplatform.owf.XXXX.XXXX",
-        title: "Sample Widget 3",
-        url: "#",
-        definition: sampleWidgetDef,
-        iconUrl: `${IMAGE_ROOT_URL}/widgets/widgets-manager.png`
-    },
-    {
-        id: "48edfe94-4291-4991-a648-c19a912312313b",
-        universalName: "org.ozoneplatform.owf.XXXX.XXXX",
-        title: "Sample Widget 4",
-        url: "#",
-        definition: sampleWidgetDef,
-        iconUrl: `${IMAGE_ROOT_URL}/widgets/users-manager.png`
-    },
-];
-
 
 @injectable()
 export class WidgetStore {
@@ -105,16 +68,55 @@ export class WidgetStore {
     adminWidgets: Widget[];
 
     @observable
-    userWidgets: Widget[];
+    error?: string;
+
+    @observable
+    loadingWidgets: boolean;
+
+    @observable
+    standardWidgets: WidgetDTO[];
+
+    @lazyInject(WidgetAPI)
+    private widgetAPI: WidgetAPI;
 
 
     constructor() {
         runInAction("initialize", () => {
             this.adminWidgets = ADMIN_WIDGETS;
-            this.userWidgets = USER_WIDGETS;
+            this.loadingWidgets = true;
+            this.standardWidgets = [];
         });
     }
 
+    @action.bound
+    async getWidgets() {
+        try {
+            const standardWidgets = (await this.widgetAPI.getWidgets()).data.data;
+            this.onWidgetSuccess(standardWidgets);
+            return true;
+        } catch (ex) {
+            this.onWidgetFailure(ex);
+            return false;
+        }
+    }
+
+    @action.bound
+    onWidgetSuccess(widgets: WidgetDTO[]) {
+        const result =
+            widgets.filter(widget => !widget.value.universalName.includes("admin"))
+                .sort((a, b) => a.value.namespace.localeCompare(b.value.namespace));
+
+        this.standardWidgets = result;
+        this.loadingWidgets = false;
+        this.error = undefined;
+    }
+
+    @action.bound
+    onWidgetFailure(ex: Error) {
+        this.adminWidgets = [];
+        this.adminWidgets = [];
+        this.error = ex.message;
+    }
 
 
 }

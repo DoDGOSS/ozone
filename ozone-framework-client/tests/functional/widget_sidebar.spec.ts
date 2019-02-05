@@ -11,7 +11,7 @@ export default {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
 
         browser.click(MainPage.WIDGETS_BUTTON)
-            .waitForElementVisible(MainPage.WIDGETS_DIALOG, 1000, "[Widget Sidebar] is visible");
+            .waitForElementVisible(MainPage.WIDGETS_DIALOG, 1500, "[Widget Sidebar] is visible");
 
         browser.closeWindow().end();
     },
@@ -20,17 +20,32 @@ export default {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
 
         browser.click(MainPage.WIDGETS_BUTTON)
-            .waitForElementVisible(MainPage.WIDGETS_DIALOG, 1000, "[Widget Sidebar] is visible");
+            .waitForElementVisible(MainPage.WIDGETS_DIALOG, 1500, "[Widget Sidebar] is visible");
 
         browser
             .clearValue(MainPage.WIDGETS_SEARCH)
-            .setValue(MainPage.WIDGETS_SEARCH, "2");
+            .setValue(MainPage.WIDGETS_SEARCH, "Channel Listener");
 
         browser.assert.containsText(
-            MainPage.WIDGETS_DIALOG, "Sample Widget 2",
+            MainPage.WIDGETS_DIALOG, "Channel Listener",
             "[Widget Sidebar] Displays information we searched for");
 
-        browser.expect.element(MainPage.WIDGETS_DIALOG).text.to.not.contain("Sample Widget 1");
+        browser.expect.element(MainPage.WIDGETS_DIALOG).text.to.not.contain("Channel Shouter");
+
+
+        browser.closeWindow().end();
+    },
+
+    "As an Administrator, I can toggle ascending and descending": (browser: NightwatchAPI) => {
+        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+
+        browser.click(MainPage.WIDGETS_BUTTON)
+            .waitForElementVisible(MainPage.WIDGETS_DIALOG, 1500, "[Widget Sidebar] is visible");
+
+        browser.click(MainPage.WIDGETS_SORT_DSC)
+            .pause(1500)
+            .click(MainPage.WIDGETS_SORT_ASC)
+            .click(MainPage.WIDGETS_SORT_DSC)
 
 
         browser.closeWindow().end();
