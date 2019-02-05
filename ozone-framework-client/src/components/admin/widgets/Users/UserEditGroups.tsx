@@ -1,13 +1,14 @@
 import * as styles from "../Widgets.scss";
 
 import * as React from "react";
-import { Button, InputGroup } from "@blueprintjs/core";
+import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
 
 import { lazyInject } from "../../../../inject";
 import { GroupAPI, GroupDTO, GroupQueryCriteria, GroupUpdateRequest, UserDTO } from "../../../../api";
 
 import { AdminTable } from "../../table/AdminTable";
 import { UserEditGroupsDialog } from './UserEditGroupsDialog';
+import { ConfirmationDialog } from 'src/components/confirmation-dialog/ConfirmationDialog';
 
 interface UserEditGroupsProps {
     onUpdate: (update?: any) => void;
@@ -22,21 +23,12 @@ export interface UserEditGroupsState {
     pageSize: number;
     user: any;
     showAdd: boolean;
+    showDelete: boolean;
+    confirmationMessage: string;
+    manageGroup: GroupDTO | undefined;
 }
 
 export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEditGroupsState> {
-    private static readonly GROUPS_COLUMN_DEFINITION = [
-        {
-            Header: "Groups",
-            columns: [
-                { Header: "Group Name", accessor: "name" },
-                { Header: "Users",      accessor: "totalUsers" },
-                { Header: "Widgets",    accessor: "totalWidgets" },
-                { Header: "Dashboards", accessor: "totalDashboards"  }
-            ],
-},
-    ];
-
     private static readonly SELECT_GROUPS_COLUMN_DEFINITION = [
         {
             Header: "Groups",
@@ -47,6 +39,34 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
                 { Header: "Dashboards", accessor: "totalDashboards"  }
             ],
         },
+    ];
+    private readonly GROUPS_COLUMN_DEFINITION = [
+        {
+            Header: "Groups",
+            columns: [
+                { Header: "Group Name", accessor: "name" },
+                { Header: "Users",      accessor: "totalUsers" },
+                { Header: "Widgets",    accessor: "totalWidgets" },
+                { Header: "Dashboards", accessor: "totalDashboards"  }
+            ],
+        },
+        {
+            Header: "Actions",
+            Cell: (row: any) => (
+                <div>
+                    <ButtonGroup>
+                        <Button
+                            data-element-id='user-admin-widget-delete-group-button'
+                            text="Delete"
+                            intent={Intent.DANGER}
+                            icon="trash"
+                            small={true}
+                            onClick={() => this.deleteGroup(row.original)}
+                        />
+                    </ButtonGroup>
+                </div>
+            )
+        }
     ];
 
     @lazyInject(GroupAPI)
@@ -62,6 +82,9 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
             pageSize: 5,
             user: this.props.user,
             showAdd: false,
+            showDelete: false,
+            confirmationMessage: '',
+            manageGroup: undefined,
         };
     }
 
@@ -99,7 +122,7 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
                 <div className={styles.table}>
                     <AdminTable
                         data={data}
-                        columns={UserEditGroups.GROUPS_COLUMN_DEFINITION}
+                        columns={this.GROUPS_COLUMN_DEFINITION}
                         loading={this.state.loading}
                         pageSize={this.state.pageSize}
                     />
@@ -120,6 +143,14 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
                     cancelHandler={this.handleAddGroupCancel}
                     columns={UserEditGroups.SELECT_GROUPS_COLUMN_DEFINITION}
                     />
+
+                <ConfirmationDialog
+                    show={this.state.showDelete}
+                    title='Warning'
+                    content={this.state.confirmationMessage}
+                    confirmHandler={this.handleConfirmationConfirmDelete}
+                    cancelHandler={this.handleConfirmationCancel}
+                    payload={this.state.manageGroup} />
             </div>
         );
     }
@@ -181,5 +212,53 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
         this.setState({
             showAdd: false,
         });
-    }    
+    }
+
+    private deleteGroup = async (group: GroupDTO) => {
+        const currentUser: UserDTO = this.state.user;
+
+        this.setState({
+            showDelete: true,
+            confirmationMessage: `This action will permenantly delete <strong>${group.displayName}</strong> from the user <strong>${currentUser.userRealName}</strong>`,
+            manageGroup: group
+        });
+
+        this.getGroups();
+
+        return true;
+    }
+
+    private handleConfirmationConfirmDelete = async (payload: any) => {
+
+        this.setState({
+            showDelete: false,
+            manageGroup: undefined,
+        });
+
+        const group: GroupDTO = payload;
+
+        const request: GroupUpdateRequest = {
+            id: group.id,
+            name: group.name,
+            update_action: 'remove',
+            user_ids: [this.state.user.id]
+        };
+
+        const response = await this.groupAPI.updateGroup(request);        
+
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+    
+        this.getGroups();
+        this.props.onUpdate();
+    
+        return true;
+    }
+
+    private handleConfirmationCancel = (payload: any) => {
+        this.setState({
+            showDelete: false,
+            manageGroup: undefined,
+        });
+    }        
 }
