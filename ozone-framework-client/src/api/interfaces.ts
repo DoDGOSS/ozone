@@ -7,7 +7,7 @@ export interface Gateway {
 
     login(username: string, password: string): Promise<Response<AuthUserDTO>>;
 
-    logout():Promise<Response<AuthUserDTO>>;
+    logout():Promise<Response<{}>>;
 
     getLoginStatus(): Promise<Response<AuthUserDTO>>;
 

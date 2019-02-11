@@ -148,6 +148,7 @@ describe("Dashboard API", () => {
                 }
             }]
         });
+
     });
 
     test("deleteDashboard - DELETE /dashboard/:guid/", async () => {
@@ -155,6 +156,7 @@ describe("Dashboard API", () => {
 
         expect(response.status).toEqual(200);
         expect(response.data).toMatchObject({ guid: createRequest.guid });
+
     });
 
     test("getDashboards - GET /dashboard/ - no results after deleted", async () => {
