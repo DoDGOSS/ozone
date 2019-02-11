@@ -243,9 +243,7 @@ describe("Widget API", () => {
 
     test("deleteWidget - DELETE /widget/", async () => {
         const response = await widgetApi.deleteWidget(createRequest.widgetGuid);
-
-        console.dir(response.data);
-
+        // console.dir(response.data);
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
             success: true,
@@ -254,16 +252,15 @@ describe("Widget API", () => {
                 value: {}
             }]
         });
-    });
 
-    test("getWidgets - GET /widget/ - removed after deleted", async () => {
-        const response = await widgetApi.getWidgets();
+        const response2 = await widgetApi.getWidgets();
 
-        expect(response.status).toEqual(200);
-        expect(response.data).toMatchObject({
+        expect(response2.status).toEqual(200);
+        expect(response2.data).toMatchObject({
             success: true,
             results: 21
         });
+
     });
 
 });
