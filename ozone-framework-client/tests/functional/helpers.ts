@@ -19,6 +19,22 @@ export function loggedInAs(browser: NightwatchAPI, username: string, password: s
 
     browser.assert.containsText(MainPage.USER_MENU_BUTTON, displayName, `[User Menu] Button text is equal to "${displayName}"`);
 
-    // Refresh browser temporarily to view the users in the user admin widget
-    browser.refresh();
+    browser.click(MainPage.USER_MENU_BUTTON)
+      .waitForElementVisible(MainPage.ADMINISTRATION_BUTTON, 2000, "[Administration Button] is visible");
+
+    browser.click(MainPage.ADMINISTRATION_BUTTON)
+      .waitForElementVisible(MainPage.ADMINISTRATION_MENU, 2000, "[Administration Menu] is visible");
+
+    browser.click(MainPage.USER_MENU_ADMIN_BUTTON)
+      .waitForElementVisible(MainPage.USER_ADMINISTRATION_WIDGET, 2000, "[User Administration Widget] is visible");
+
+      browser.click(MainPage.USER_MENU_BUTTON)
+        .waitForElementVisible(MainPage.ADMINISTRATION_BUTTON, 2000, "[Administration Button] is visible");
+
+      browser.click(MainPage.ADMINISTRATION_BUTTON)
+        .waitForElementVisible(MainPage.ADMINISTRATION_MENU, 2000, "[Administration Menu] is visible");
+
+    browser.click(MainPage.GROUPS_ADMIN_BUTTON)
+      .waitForElementVisible(MainPage.GROUPS_ADMIN_WIDGET, 2000, "[Groups Administration Widget] is visible");
+
 }
