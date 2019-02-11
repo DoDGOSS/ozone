@@ -20,6 +20,10 @@ export namespace MainPage {
 
     export const USER_ADMINISTRATION_WIDGET = "div[data-element-id='user-admin-widget-dialog']";
 
+    export const GROUPS_ADMIN_BUTTON ="div[data-element-id='Groups']";
+
+    export const GROUPS_ADMIN_WIDGET = "div[data-element-id='group-admin-widget-dialog']";
+
     export const WARNING_DIALOG = "div[data-element-id='warning-dialog']";
 
     export const ACCEPT_BUTTON = "button[data-element-id='form-accept-button']";

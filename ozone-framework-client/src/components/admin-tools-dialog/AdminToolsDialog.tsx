@@ -66,7 +66,7 @@ export class AdminToolsDialog extends React.Component {
                                 <WidgetTile key={widget.id}
                                             title={widget.title}
                                             iconUrl={widget.iconUrl}
-                                            onClick={() => this.addWidget(widget)}
+                                            onClick={() => {this.addWidget(widget);this.mainStore.hideAdminToolsDialog();}}
                                             />
                             )}
                         </div>
