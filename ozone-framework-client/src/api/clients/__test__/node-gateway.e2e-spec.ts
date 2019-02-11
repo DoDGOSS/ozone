@@ -14,9 +14,13 @@ test("login (POST /perform_login)", async () => {
 
 test("logout (GET /logout)", async () => {
     const gateway = new NodeGateway();
-    const logoutResponse = await gateway.logout();
+    try {
+    await gateway.logout();
+  }catch(ex){
+    expect(ex.response.status).toEqual(401);
+  }
+     expect(gateway.isAuthenticated).toBeFalsy();
+     await gateway.login("testAdmin1", "password");
+     expect(gateway.isAuthenticated).toBeTruthy();
 
-    expect(logoutResponse.status).toEqual(200);
-
-    expect(gateway.isAuthenticated).toBeFalsy();
 });
