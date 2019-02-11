@@ -20,7 +20,7 @@ import { CreateDashboardDialog } from "../create-dashboard-screen/CreateDashboar
 import { ClassificationBanner } from "./ClassificationBanner";
 
 import { DashboardStore } from "../../stores";
-import { DEFAULT_DASHBOARD } from "../../stores/DefaultDashboard";
+import { LOGIN_DASHBOARD } from "../../stores/DefaultDashboard";
 
 export class HomeScreen extends React.Component {
 
@@ -39,7 +39,7 @@ export class HomeScreen extends React.Component {
 
     render() {
         const classification = this.configStore.classification;
-        this.dashboardStore.setDashboard(DEFAULT_DASHBOARD);
+        this.dashboardStore.setDashboard(LOGIN_DASHBOARD);
         return (
             <div className={styles.homeScreen}>
                 {classification.disableTopBanner !== true &&
