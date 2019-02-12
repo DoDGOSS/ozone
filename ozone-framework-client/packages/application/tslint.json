@@ -1,0 +1,45 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-react"
+  ],
+  "rules": {
+    "array-type": [false],
+    "ban-types": [false],
+    "curly": [true, "ignore-same-line"],
+    "interface-name": [true, "never-prefix"],
+    "interface-over-type-literal": false,
+    "jsx-boolean-value": ["never"],
+    "jsx-no-lambda": false,
+    "jsx-no-multiline-js": false,
+    "jsx-alignment": false,
+    "max-classes-per-file": [false, 1],
+    "max-line-length": false,
+    "member-access": [true, "no-public"],
+    "no-console": [false],
+    "no-string-literal": [false],
+    "no-namespace": false,
+    "no-consecutive-blank-lines": false,
+    "object-literal-sort-keys": [false],
+    "ordered-imports": [
+      true, {
+        "import-sources-order": "any"
+      }
+    ],
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "trailing-comma": false,
+    "variable-name": [false]
+  },
+  "linterOptions": {
+    "exclude": [
+      "**/*.d.ts",
+      "node_modules/**/*.ts",
+      "*.conf.js",
+      "*.config.js",
+      "**/jest.config.js",
+      "**/jest.config.e2e.js",
+      "**/nightwatch.conf.js",
+      "coverage/lcov-report/*.js"
+    ]
+  }
+}

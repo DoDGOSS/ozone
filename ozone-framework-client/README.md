@@ -1,29 +1,10 @@
-# Ozone Framework
+# Ozone Platform
 
-##### Start the development server
+### Getting Started
 
-`npm run start`
+#### Installation and Build
 
-
-##### Run unit tests
-
-`npm run test`
-
-
-##### Run end-to-end tests
-
-_Requires a running instance of the Ozone Framework Server_
-
-`npm run test:e2e`
-
-
-##### Run functional tests
-
-_Requires running instances of the Ozone Framework Server and the Ozone Framework Client_
-
-`npm run test:functional`
-
-
-##### Build the production assets
-
-`npm run build`
+1. `npm install` - install the root dependencies
+2. `npm run bootstrap` - bootstrap (install and link) the packages 
+3. `npm run compile` - run the _compile_ script for all packages
+4. `npm run start` - start the application development server (runs the _start_ script)
