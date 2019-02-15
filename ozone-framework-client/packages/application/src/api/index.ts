@@ -11,7 +11,7 @@ export * from "./models/widget-dto";
 export * from "./models/widget-type-dto";
 
 export * from "./clients/administration-api";
-export * from "./clients/config-api";
+export * from "./clients/SystemConfigAPI";
 export * from "./clients/dashboard-api";
 export * from "./clients/group-api";
 export * from "./clients/preference-api";
