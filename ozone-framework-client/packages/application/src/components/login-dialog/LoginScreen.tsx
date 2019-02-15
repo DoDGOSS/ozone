@@ -38,8 +38,11 @@ export class LoginScreen extends React.Component {
     }
 
     render() {
-        this.mainStore.showWarningDialog();
-        // this.mainStore.showLoginDialog();
+        if(this.configStore.consentForm===true){
+          this.mainStore.showWarningDialog();
+        }else{
+          this.mainStore.showLoginDialog();
+        }
         const classification = this.configStore.classification;
 
         return (
