@@ -12,9 +12,13 @@ export class ConfigStore {
     @observable
     classification: ClassificationConfig;
 
+    @observable
+    consentForm: boolean;
+
     constructor() {
         runInAction("initialize", () => {
             this.classification = UNCLASSIFIED_FOUO;
+            this.consentForm = true;
         });
     }
 
