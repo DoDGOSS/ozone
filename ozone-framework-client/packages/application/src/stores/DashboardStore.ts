@@ -2,9 +2,14 @@ import { action, computed, observable, runInAction } from "mobx";
 import { injectable } from "../inject";
 
 import { MosaicNode } from 'react-mosaic-component';
-import { DEFAULT_DASHBOARD } from "./DefaultDashboard";
 
-// for adding widgets
+//swithch to FIT_DEFAULT for testing
+import { LOGIN_DASHBOARD } from "./DefaultDashboard";
+
+// confirmation Diaolog for next sprint
+// import { MainStore } from "./MainStore";
+// import { lazyInject } from "../inject"
+
 import { Corner,
         getNodeAtPath,
         getOtherDirection,
@@ -41,6 +46,10 @@ export class DashboardStore {
     @observable
     dashboard: Dashboard | undefined;
 
+    // confirmation Diaolog for next sprint
+    // @lazyInject(MainStore)
+    // private mainStore: MainStoreg;
+
     @computed
     get layout(): DashboardNode | null {
         return this.dashboard ? this.dashboard.layout : null;
@@ -53,7 +62,10 @@ export class DashboardStore {
 
     constructor() {
         runInAction("initialize", () => {
-            this.dashboard = DEFAULT_DASHBOARD;
+          if (!this.dashboard){
+            //swithch to FIT_DEFAULT for testing
+            this.dashboard = LOGIN_DASHBOARD;
+          }
         });
     }
 
@@ -65,7 +77,8 @@ export class DashboardStore {
     @action.bound
     getDashboard() {
         if (!this.dashboard){
-          return DEFAULT_DASHBOARD;
+          //swithch to FIT_DEFAULT for testing
+          return LOGIN_DASHBOARD;
         }
         else{
           return this.dashboard;
@@ -80,39 +93,53 @@ export class DashboardStore {
 
     @action.bound
     addToTopRight(dashboard:Dashboard, widget:string, windowCount:number) {
-    let { layout } = dashboard;
-    this.setDashboard(dashboard);
-    if (layout) {
-      const path = getPathToCorner(layout, Corner.TOP_RIGHT);
-      const parent = getNodeAtPath(layout, dropRight(path)) as MosaicParent<string>;
-      const destination = getNodeAtPath(layout, path) as MosaicNode<string>;
-      const direction: MosaicDirection = parent ? getOtherDirection(parent.direction) : 'row';
-      let first: MosaicNode<string>;
-      let second: MosaicNode<string>;
-      if (direction === 'row') {
-        first = destination;
-        second = String(windowCount);
-      } else {
-        first = String(windowCount);
-        second = destination;
+    if(this.getDashboard().widgets.hasOwnProperty('fit-flag')) {
+      if(this.getDashboard().layout!==null){
+        // the confirmation dialog will be wodking in the next sprint:
+        // this.mainStore.showConfirmationDialog();
+      }else{
+        let { layout } = dashboard;
+        this.setDashboard(dashboard);
+        layout = widget;
+        dashboard.layout = layout;
+        this.setLayout(dashboard.layout);
       }
-      layout = updateTree(layout, [
-        {
-          path,
-          spec: {
-            $set: {
-              direction,
-              first,
-              second,
+    }
+    else{
+      let { layout } = dashboard;
+      this.setDashboard(dashboard);
+      if (layout) {
+        const path = getPathToCorner(layout, Corner.TOP_RIGHT);
+        const parent = getNodeAtPath(layout, dropRight(path)) as MosaicParent<string>;
+        const destination = getNodeAtPath(layout, path) as MosaicNode<string>;
+        const direction: MosaicDirection = parent ? getOtherDirection(parent.direction) : 'row';
+        let first: MosaicNode<string>;
+        let second: MosaicNode<string>;
+        if (direction === 'row') {
+          first = destination;
+          second = String(windowCount);
+        } else {
+          first = String(windowCount);
+          second = destination;
+        }
+        layout = updateTree(layout, [
+          {
+            path,
+            spec: {
+              $set: {
+                direction,
+                first,
+                second,
+              },
             },
           },
-        },
-      ]);
-    } else {
-      layout = widget;
-    }
-    dashboard.layout = layout;
-    this.setLayout(dashboard.layout);
+        ]);
+      } else {
+        layout = widget;
+      }
+      dashboard.layout = layout;
+      this.setLayout(dashboard.layout);
+      }
     }
 
 }

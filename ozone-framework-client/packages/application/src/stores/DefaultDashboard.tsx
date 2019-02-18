@@ -24,6 +24,12 @@ export const sampleWidgetDef: WidgetDefinition = {
     element: <h1>Sample</h1>
 };
 
+export const flagWidgetDef: WidgetDefinition = {
+  id: "fit-flag",
+  title:"Fit Layout Flag",
+  element:<h1></h1>
+}
+
 const userAdminWidget: Widget = {
     id: "cad8dc1b-1f33-487c-8d85-21c8aeac5f49",
     definition: userAdminWidgetDef
@@ -38,6 +44,12 @@ const sampleWidget1: Widget = {
     id: "bb08050a-d3f0-4293-8f94-083d6823f297",
     definition: sampleWidgetDef
 };
+
+ //flag widget for fit layout
+const flagWidget: Widget = {
+  id: "fit-flag",
+  definition: flagWidgetDef
+}
 
 export const DEFAULT_DASHBOARD: Dashboard = {
     layout: {
@@ -61,8 +73,18 @@ export const DEFAULT_DASHBOARD: Dashboard = {
 export const LOGIN_DASHBOARD: Dashboard = {
     layout:null,
     widgets: {
+        [sampleWidget1.id]:sampleWidget1,
         [userAdminWidget.id]: userAdminWidget,
         [groupAdminWidget.id]: groupAdminWidget,
-        [sampleWidget1.id]:sampleWidget1
+    }
+};
+
+export const FIT_DEFAULT: Dashboard = {
+    layout:null,
+    widgets: {
+      [flagWidget.id]:flagWidget,
+      [sampleWidget1.id]:sampleWidget1,
+      [userAdminWidget.id]: userAdminWidget,
+      [groupAdminWidget.id]: groupAdminWidget,
     }
 };
