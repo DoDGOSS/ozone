@@ -1,9 +1,9 @@
 import "reflect-metadata";
 
-import { DashboardAPI } from "../../src/api";
+import { DashboardAPI } from "../../src/api/clients/DashboardAPI";
 
 import { NodeGateway } from "./node-gateway";
-import { DashboardUpdateRequest } from "../../src/api/models/dashboard-dto";
+import { DashboardUpdateRequest } from "../../src/api/models/DashboardDTO";
 
 describe("Dashboard API", () => {
     let gateway: NodeGateway;

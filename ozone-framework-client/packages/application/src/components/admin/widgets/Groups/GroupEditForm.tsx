@@ -4,7 +4,7 @@ import * as React from "react";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { object, string } from "yup";
 
-import { GroupUpdateRequest } from "../../../../api";
+import { GroupUpdateRequest } from "../../../../api/models/GroupDTO";
 import { CheckBox, FormError, TextField } from "../../../form";
 import { Button } from "@blueprintjs/core";
 

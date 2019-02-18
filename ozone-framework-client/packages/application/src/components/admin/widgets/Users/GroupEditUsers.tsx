@@ -3,12 +3,16 @@ import * as styles from "../Widgets.scss";
 import * as React from "react";
 import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
 
-import { lazyInject } from "../../../../inject";
-import { GroupAPI, GroupDTO, GroupUpdateRequest, UserAPI, UserDTO, UserQueryCriteria } from "../../../../api";
-
 import { AdminTable } from "../../table/AdminTable";
 import { GroupEditUsersDialog } from "./GroupEditUsersDialog";
+
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
+
+import { groupApi } from "../../../../api/clients/GroupAPI";
+import { GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
+
+import { userApi, UserQueryCriteria } from "../../../../api/clients/UserAPI";
+import { UserDTO } from "../../../../api/models/UserDTO";
 
 interface GroupEditUsersProps {
     onUpdate: (update?: any) => void;
@@ -75,12 +79,6 @@ export class GroupEditUsers extends React.Component<GroupEditUsersProps, GroupEd
             )
         }
     ];
-
-    @lazyInject(UserAPI)
-    private userAPI: UserAPI;
-
-    @lazyInject(GroupAPI)
-    private groupAPI: GroupAPI;
 
     constructor(props: GroupEditUsersProps) {
         super(props);
@@ -180,7 +178,7 @@ export class GroupEditUsers extends React.Component<GroupEditUsersProps, GroupEd
             group_id: currentGroup.id
         };
 
-        const response = await this.userAPI.getUsers(criteria);
+        const response = await userApi.getUsers(criteria);
 
         // TODO: Handle failed request
         if (response.status !== 200) return;
@@ -199,7 +197,7 @@ export class GroupEditUsers extends React.Component<GroupEditUsersProps, GroupEd
             user_ids: users.map((user: UserDTO) => user.id)
         };
 
-        const response = await this.groupAPI.updateGroup(request);
+        const response = await groupApi.updateGroup(request);
 
         if (response.status !== 200) return;
 
@@ -248,7 +246,7 @@ export class GroupEditUsers extends React.Component<GroupEditUsersProps, GroupEd
             user_ids: [user.id]
         };
 
-        const response = await this.groupAPI.updateGroup(request);
+        const response = await groupApi.updateGroup(request);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;

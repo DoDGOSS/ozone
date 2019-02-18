@@ -1,8 +1,10 @@
-import * as styles from "./Form.scss";
-
 import * as React from "react";
+
 import { Field, FieldProps } from "formik";
+
 import { FormGroup, InputGroup, Intent } from "@blueprintjs/core";
+
+import * as styles from "./index.scss";
 
 export interface TextFieldProps {
     name: string;
@@ -12,27 +14,19 @@ export interface TextFieldProps {
     disabled?: boolean;
 }
 
-const _TextField: React.FunctionComponent<TextFieldProps & FieldProps<any>> = ({
-    name,
-    label,
-    labelInfo,
-    field,
-    form,
-    type,
-    disabled
-}) => {
-    const errors = form.errors[field.name];
-    const showError = errors && form.touched[field.name];
+const _TextField: React.FunctionComponent<TextFieldProps & FieldProps<any>> = (props) => {
+    const errors = props.form.errors[props.field.name];
+    const showError = errors && props.form.touched[props.field.name];
 
     return (
-        <FormGroup label={label} labelFor={name} labelInfo={labelInfo}>
+        <FormGroup label={props.label} labelFor={props.name} labelInfo={props.labelInfo}>
             <InputGroup
-                name={name}
+                name={props.name}
                 data-role="field"
-                type={type}
+                type={props.type}
                 intent={showError ? Intent.DANGER : Intent.NONE}
-                {...field}
-                disabled={disabled}
+                {...props.field}
+                disabled={props.disabled}
             />
             {showError && <div className={styles.validationError}>{errors}</div>}
         </FormGroup>

@@ -1,4 +1,4 @@
-@import "../common";
+@import "../../common";
 
 :local .LoginPage {
   position: absolute;
@@ -17,6 +17,11 @@
   justify-content: center;
 }
 
-:local .bp3-dialog{
-  min-height: 600px;
+:local .dialog {
+  min-height: 400px;
+}
+
+:local .dialogBody {
+  display: flex;
+  justify-content: center;
 }

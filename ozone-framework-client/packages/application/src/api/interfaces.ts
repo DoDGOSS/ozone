@@ -1,6 +1,7 @@
-import { AuthUserDTO } from "./models/auth-dto";
+import { AuthUserDTO } from "./models/AuthUserDTO";
 
 import { Validator } from "@ozone/openapi-decorators";
+import { OzoneGateway } from "../services/OzoneGateway";
 
 export interface Gateway {
     readonly isAuthenticated: boolean;
@@ -18,6 +19,10 @@ export interface Gateway {
     put<T>(url: string, data?: any, options?: RequestOptions<T>): Promise<Response<T>>;
 
     delete<T>(url: string, data?: any, options?: RequestOptions<T>): Promise<Response<T>>;
+}
+
+export function getGateway(): Gateway {
+    return OzoneGateway.instance();
 }
 
 export interface RequestOptions<T> {

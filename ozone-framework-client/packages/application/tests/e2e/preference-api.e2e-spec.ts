@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { PreferenceAPI } from "../../src/api";
+import { PreferenceAPI } from "../../src/api/clients/PreferenceAPI";
 
 import { NodeGateway } from "./node-gateway";
 import { PREFERENCES } from "../unit/data";

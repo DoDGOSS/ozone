@@ -1,6 +1,7 @@
 import "reflect-metadata";
 
-import { WidgetAPI, WidgetCreateRequest, WidgetCreateResponse, WidgetUpdateRequest } from "../../src/api";
+import { WidgetAPI } from "../../src/api/clients/WidgetAPI";
+import { WidgetCreateRequest, WidgetCreateResponse, WidgetUpdateRequest } from "../../src/api/models/WidgetDTO";
 
 import { NodeGateway } from "./node-gateway";
 import { WIDGETS } from "../unit/data";

@@ -1,4 +1,11 @@
-import { ClassificationConfig } from "./interfaces";
+export interface ClassificationConfig {
+    text: string;
+    backgroundColor: string;
+    foregroundColor: string;
+
+    disableTopBanner?: boolean;
+    disableBottomBanner?: boolean;
+}
 
 export const DISABLED: ClassificationConfig = {
     text: "Disabled",

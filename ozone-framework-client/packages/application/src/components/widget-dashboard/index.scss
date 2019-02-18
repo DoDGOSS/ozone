@@ -1,0 +1,55 @@
+@import "../../common";
+
+:local .dashboard {
+  height: 100%;
+  display: flex;
+}
+
+.mosaic {
+  height: 100%
+}
+
+:local .container {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .15);
+}
+
+:local .containerToolbar {
+  flex: 0 0 auto;
+  height: 30px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  z-index: 1;
+
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .15);
+
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+
+  background: #fff;
+}
+
+:local .containerToolbarTitle {
+  font-weight: bold;
+
+  padding-left: .5em;
+}
+
+:local .containerContent {
+  flex: 1 1 auto;
+  height: 100%;
+
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+
+  background: #eee;
+}

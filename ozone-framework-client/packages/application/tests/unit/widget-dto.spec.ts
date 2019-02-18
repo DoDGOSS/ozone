@@ -5,7 +5,7 @@ import * as path from "path";
 
 import { convertToJsonSchema } from "@ozone/openapi-decorators";
 
-import { WidgetDTO } from "../../src/api";
+import { WidgetDTO } from "../../src/api/models/WidgetDTO";
 
 import { expectSuccessfulValidation } from "./assertions";
 import { WIDGETS } from "./data";

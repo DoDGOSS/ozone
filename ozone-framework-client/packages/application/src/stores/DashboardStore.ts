@@ -1,13 +1,4 @@
-import { action, computed, observable, runInAction, when } from "mobx";
-import { injectable } from "../inject";
-
-import { MosaicNode } from "react-mosaic-component";
-
-// switch to FIT_DEFAULT for testing
-import { LOGIN_DASHBOARD } from "./DefaultDashboard";
-
-import { MainStore } from "./MainStore";
-import { lazyInject } from "../inject";
+import { BehaviorSubject } from "rxjs";
 
 import {
     Corner,
@@ -15,138 +6,142 @@ import {
     getOtherDirection,
     getPathToCorner,
     MosaicDirection,
+    MosaicNode,
     MosaicParent,
     updateTree
 } from "react-mosaic-component";
-import dropRight from "lodash/dropRight";
 
-export interface WidgetDefinition {
-    id: string;
-    title: string;
-    element: JSX.Element;
+import { Dashboard, DashboardNode, Widget } from "./interfaces";
+
+import { DEFAULT_DASHBOARD } from "./default-dashboard";
+// import { TILING_DASHBOARD } from "./default-dashboard";
+// import { FIT_DASHBOARD } from "./default-dashboard";
+
+import { dropRight, isString, pick } from "lodash";
+import { asBehavior } from "../observables";
+
+function findWidgetIds(node: DashboardNode | null): string[] {
+    if (node === null) return [];
+    if (isString(node)) return [node];
+    return [...findWidgetIds(node.first), ...findWidgetIds(node.second)];
 }
 
-export interface Widget {
-    id: string;
-    definition: WidgetDefinition;
-}
-
-export type DashboardNode = MosaicNode<string>;
-
-export type WidgetMap = { [id: string]: Widget };
-
-export interface Dashboard {
-    layout: DashboardNode | null;
-    widgets: WidgetMap;
-}
-
-@injectable()
 export class DashboardStore {
-    @observable
-    dashboard: Dashboard | undefined;
+    // "TILING_DASHBOARD" for tiling layout, "FIT_DASHBOARD" for fit layout
+    private readonly dashboard$ = new BehaviorSubject<Dashboard | null>(DEFAULT_DASHBOARD);
+    private readonly isConfirmationDialogVisible$ = new BehaviorSubject(false);
 
-    @lazyInject(MainStore)
-    private mainStore: MainStore;
+    private replaceWidgetCallback?: () => void;
 
-    @computed
-    get layout(): DashboardNode | null {
-        return this.dashboard ? this.dashboard.layout : null;
-    }
+    isConfirmationDialogVisible = () => asBehavior(this.isConfirmationDialogVisible$);
 
-    @computed
-    get widgets(): WidgetMap | null {
-        return this.dashboard ? this.dashboard.widgets : null;
-    }
+    showConfirmationDialog = (callback: () => void) => {
+        this.isConfirmationDialogVisible$.next(true);
+        this.replaceWidgetCallback = callback;
+    };
 
-    constructor() {
-        runInAction("initialize", () => {
-            if (!this.dashboard) {
-                // switch to FIT_DEFAULT for testing
-                this.dashboard = LOGIN_DASHBOARD;
-            }
+    cancelReplaceWidget = () => {
+        this.isConfirmationDialogVisible$.next(false);
+
+        this.replaceWidgetCallback = undefined;
+    };
+
+    confirmReplaceWidget = () => {
+        this.isConfirmationDialogVisible$.next(false);
+
+        if (this.replaceWidgetCallback) this.replaceWidgetCallback();
+        this.replaceWidgetCallback = undefined;
+    };
+
+    dashboard = () => asBehavior(this.dashboard$);
+
+    setDashboard = (dashboard: Dashboard | null) => this.dashboard$.next(dashboard);
+
+    setLayout = (dashboardNode: DashboardNode | null) => {
+        const dashboard = this.dashboard$.value;
+        if (!dashboard) {
+            console.warn("Failed to set Dashboard layout: no Dashboard is available");
+            return;
+        }
+
+        this.setDashboard({
+            ...dashboard,
+            widgets: pick(dashboard.widgets, findWidgetIds(dashboardNode)),
+            layout: dashboardNode
         });
-    }
+    };
 
-    @action.bound
-    setDashboard(dashboard: Dashboard | undefined) {
-        this.dashboard = dashboard;
-    }
-
-    @action.bound
-    getDashboard() {
-        if (!this.dashboard) {
-            // switch to FIT_DEFAULT for testing
-            return LOGIN_DASHBOARD;
-        } else {
-            return this.dashboard;
+    addWidget = (widget: Widget) => {
+        const dashboard = this.dashboard$.value;
+        if (!dashboard) {
+            console.warn("Failed to add Widget to Dashboard: no Dashboard is available");
+            return;
         }
-    }
 
-    @action.bound
-    setLayout(dashboardNode: DashboardNode | null) {
-        if (!this.dashboard) return;
-        this.dashboard.layout = dashboardNode;
-    }
+        switch (dashboard.type) {
+            case "fit":
+                this.addFitWidget(dashboard, widget);
+                return;
+            case "tile":
+                this.addTileWidget(dashboard, widget);
+                return;
+        }
+    };
 
-    @action.bound
-    addToTopRight(dashboard: Dashboard, widget: string, windowCount: number) {
-        if (this.getDashboard().widgets.hasOwnProperty("fit-flag")) {
-            // if widget already exists
-            if (this.getDashboard().layout !== null) {
-                this.mainStore.showConfirmationDialog();
-                when(
-                    () => !this.mainStore.isConfirmationDialogVisible,
-                    () => {
-                        if (this.mainStore.isConfirmationTrue) {
-                            let { layout } = dashboard;
-                            this.setDashboard(dashboard);
-                            layout = widget;
-                            dashboard.layout = layout;
-                            this.setLayout(dashboard.layout);
-                        }
-                    }
-                );
-            } else {
-                let { layout } = dashboard;
-                this.setDashboard(dashboard);
-                layout = widget;
-                dashboard.layout = layout;
-                this.setLayout(dashboard.layout);
-            }
+    addFitWidget = (dashboard: Dashboard, widget: Widget) => {
+        if (dashboard.layout == null) {
+            dashboard.widgets[widget.id] = widget;
+            this.setLayout(widget.id);
+            return;
+        }
+
+        this.showConfirmationDialog(() => {
+            dashboard.widgets[widget.id] = widget;
+            this.setLayout(widget.id);
+        });
+    };
+
+    addTileWidget = (dashboard: Dashboard, widget: Widget) => {
+        dashboard.widgets[widget.id] = widget;
+
+        const { layout } = dashboard;
+        if (!layout) {
+            this.setLayout(widget.id);
         } else {
-            let { layout } = dashboard;
-            this.setDashboard(dashboard);
-            if (layout) {
-                const path = getPathToCorner(layout, Corner.TOP_RIGHT);
-                const parent = getNodeAtPath(layout, dropRight(path)) as MosaicParent<string>;
-                const destination = getNodeAtPath(layout, path) as MosaicNode<string>;
-                const direction: MosaicDirection = parent ? getOtherDirection(parent.direction) : "row";
-                let first: MosaicNode<string>;
-                let second: MosaicNode<string>;
-                if (direction === "row") {
-                    first = destination;
-                    second = String(windowCount);
-                } else {
-                    first = String(windowCount);
-                    second = destination;
+            this.addToTopRight(layout, widget);
+        }
+    };
+
+    private addToTopRight = (layout: DashboardNode, widget: Widget) => {
+        const path = getPathToCorner(layout, Corner.TOP_RIGHT);
+        const parent = getNodeAtPath(layout, dropRight(path)) as MosaicParent<string>;
+        const destination = getNodeAtPath(layout, path) as MosaicNode<string>;
+        const direction: MosaicDirection = parent ? getOtherDirection(parent.direction) : "row";
+        let first: MosaicNode<string>;
+        let second: MosaicNode<string>;
+        if (direction === "row") {
+            first = destination;
+            second = widget.id;
+        } else {
+            first = widget.id;
+            second = destination;
+        }
+
+        const update = {
+            path,
+            spec: {
+                $set: {
+                    direction,
+                    first,
+                    second
                 }
-                layout = updateTree(layout, [
-                    {
-                        path,
-                        spec: {
-                            $set: {
-                                direction,
-                                first,
-                                second
-                            }
-                        }
-                    }
-                ]);
-            } else {
-                layout = widget;
             }
-            dashboard.layout = layout;
-            this.setLayout(dashboard.layout);
-        }
-    }
+        };
+
+        const updatedLayout = updateTree(layout, [update]);
+
+        this.setLayout(updatedLayout);
+    };
 }
+
+export const dashboardStore = new DashboardStore();

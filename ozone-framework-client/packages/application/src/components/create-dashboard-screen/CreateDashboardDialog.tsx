@@ -1,44 +1,39 @@
 import * as React from "react";
-import { observer } from "mobx-react";
-import { action } from "mobx";
+import { useBehavior } from "../../hooks";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
-import { lazyInject } from "../../inject";
-import { MainStore } from "../../stores";
+import { mainStore } from "../../stores/MainStore";
 import { CreateDashboardForm } from "./CreateDashboardForm";
-import * as styles from "./CreateDashboardStyles.scss";
-import { classNames } from "../util";
 
-@observer
-export class CreateDashboardDialog extends React.Component {
-    @lazyInject(MainStore)
-    private mainStore: MainStore;
+import { classNames } from "../../utility";
 
-    @action.bound
-    submitDashboard() {
-        this.mainStore.hideCreateDashboardDialog();
-        window.location.reload();
-    }
+import * as styles from "./index.scss";
 
-    render() {
-        return (
-            <div>
-                <Dialog
-                    className={classNames(this.mainStore.darkClass, styles.CreateDashboardStyles)}
-                    isOpen={this.mainStore.isCreateDashboardDialogVisible}
-                    onClose={this.mainStore.hideCreateDashboardDialog}
-                    title="Create New Dashboard"
-                >
-                    <div data-element-id="CreateDashboardDialog" className={Classes.DIALOG_BODY}>
-                        <CreateDashboardForm onSubmit={this.submitDashboard} />
-                    </div>
+export const CreateDashboardDialog: React.FunctionComponent<{}> = () => {
+    const themeClass = useBehavior(mainStore.themeClass);
+    const isVisible = useBehavior(mainStore.isCreateDashboardDialogVisible);
 
-                    <div className={Classes.DIALOG_FOOTER}>
-                        <div className={Classes.DIALOG_FOOTER_ACTIONS} />
-                    </div>
-                </Dialog>
-            </div>
-        );
-    }
-}
+    const submitDashboard = () => {
+        mainStore.hideCreateDashboardDialog();
+    };
+
+    return (
+        <div>
+            <Dialog
+                className={classNames(themeClass, styles.dialog)}
+                isOpen={isVisible}
+                onClose={mainStore.hideCreateDashboardDialog}
+                title="Create New Dashboard"
+            >
+                <div data-element-id="CreateDashboardDialog" className={Classes.DIALOG_BODY}>
+                    <CreateDashboardForm onSubmit={submitDashboard} />
+                </div>
+
+                <div className={Classes.DIALOG_FOOTER}>
+                    <div className={Classes.DIALOG_FOOTER_ACTIONS} />
+                </div>
+            </Dialog>
+        </div>
+    );
+};

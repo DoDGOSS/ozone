@@ -1,32 +1,37 @@
 import * as React from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import { observer } from "mobx-react";
+import { useEffect } from "react";
+import { useBehavior } from "./hooks";
 
+import { BrowserRouter as Router, Route } from "react-router-dom";
+
+import { Spinner } from "@blueprintjs/core";
+
+import { AuthStatus, authStore } from "./stores/AuthStore";
 import { HomeScreen } from "./components/home-screen/HomeScreen";
 import { LoginScreen } from "./components/login-dialog/LoginScreen";
+import { ClassificationWrapper } from "./components/classification/ClassificationWrapper";
 
-import { AuthStore } from "./stores";
-import { lazyInject } from "./inject";
+import * as styles from "./App.scss";
 
 export const Paths = {
     HOME: "/",
     LOGIN: "/"
 };
 
-@observer
-export default class App extends React.Component {
-    @lazyInject(AuthStore)
-    private authStore: AuthStore;
+export const App: React.FunctionComponent<{}> = () => {
+    const authStatus = useBehavior(authStore.status);
 
-    render() {
-        const isLoggedIn = this.authStore.isAuthenticated;
-        return (
-            <Router>
-                <div>
-                    {isLoggedIn === false && <Route exact path={Paths.LOGIN} component={LoginScreen} />}
-                    {!isLoggedIn === false && <Route exact path={Paths.HOME} component={HomeScreen} />}
-                </div>
-            </Router>
-        );
-    }
-}
+    useEffect(() => {
+        authStore.check();
+    }, []);
+
+    return (
+        <Router>
+            <ClassificationWrapper>
+                {authStatus === AuthStatus.PENDING && <Spinner className={styles.loadingSpinner} />}
+                {authStatus === AuthStatus.LOGGED_OUT && <Route exact path={Paths.LOGIN} component={LoginScreen} />}
+                {authStatus === AuthStatus.LOGGED_IN && <Route exact path={Paths.HOME} component={HomeScreen} />}
+            </ClassificationWrapper>
+        </Router>
+    );
+};

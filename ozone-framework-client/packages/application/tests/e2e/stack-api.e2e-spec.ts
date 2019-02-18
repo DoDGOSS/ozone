@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { StackAPI } from "../../src/api";
+import { StackAPI } from "../../src/api/clients/StackAPI";
 
 import { NodeGateway } from "./node-gateway";
 import { STACKS } from "../unit/data";

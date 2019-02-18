@@ -1,74 +1,54 @@
-import "./NavigationBar.scss";
-
 import * as React from "react";
-import { observer } from "mobx-react";
+import { useBehavior } from "../../hooks";
 
 import { Alignment, Button, Navbar, NavbarGroup, NavbarHeading, Popover, Position } from "@blueprintjs/core";
 
-import { lazyInject } from "../../inject";
-import { AuthStore, MainStore } from "../../stores";
+import { authStore } from "../../stores/AuthStore";
+import { mainStore } from "../../stores/MainStore";
 
 import { NavbarTooltip } from "./NavbarTooltip";
-import { DebugMenu } from "./DebugMenu";
 import { UserMenu } from "./UserMenu";
+
+import "./NavigationBar.scss";
 
 export type NavigationBarProps = {
     className?: string;
 };
 
-@observer
-export class NavigationBar extends React.Component<NavigationBarProps> {
-    @lazyInject(MainStore)
-    private mainStore: MainStore;
+export const NavigationBar: React.FunctionComponent<NavigationBarProps> = ({ className }) => {
+    const user = useBehavior(authStore.user);
 
-    @lazyInject(AuthStore)
-    private authStore: AuthStore;
+    const isDashboardDialogVisible = useBehavior(mainStore.isDashboardDialogVisible);
+    const isHelpDialogVisible = useBehavior(mainStore.isHelpDialogVisible);
+    const isWidgetToolbarOpen = useBehavior(mainStore.isWidgetToolbarOpen);
 
-    render() {
-        const { className } = this.props;
+    return (
+        <Navbar className={className}>
+            <NavbarGroup align={Alignment.LEFT}>
+                <CenterButton onClick={() => null} />
+                <OWFButton onClick={() => null} />
 
-        const user = this.authStore.user;
+                <DashboardsButton
+                    data-element-id="dashboards-button"
+                    active={isDashboardDialogVisible}
+                    onClick={mainStore.showDashboardDialog}
+                />
 
-        const isLoggedIn = this.authStore.isAuthenticated;
+                <WidgetsButton active={isWidgetToolbarOpen} onClick={mainStore.toggleWidgetToolbar} />
+            </NavbarGroup>
 
-        return (
-            <Navbar className={className}>
-                <NavbarGroup align={Alignment.LEFT}>
-                    <CenterButton onClick={this.authStore.check} />
-                    <OWFButton onClick={this.authStore.check} />
-                    <DashboardsButton
-                        data-element-id="dashboards-button"
-                        active={this.mainStore.isDashboardDialogVisible}
-                        onClick={this.mainStore.showDashboardDialog}
-                    />
+            <NavbarGroup align={Alignment.CENTER}>
+                <NavbarHeading>OZONE Widget Framework</NavbarHeading>
+            </NavbarGroup>
 
-                    <WidgetsButton
-                        active={this.mainStore.isWidgetToolbarOpen}
-                        onClick={this.mainStore.toggleWidgetToolbar}
-                    />
-
-                    {isLoggedIn === false && (
-                        <LoginButton
-                            active={this.mainStore.isLoginDialogOpen}
-                            onClick={this.mainStore.showLoginDialog}
-                        />
-                    )}
-                </NavbarGroup>
-
-                <NavbarGroup align={Alignment.CENTER}>
-                    <NavbarHeading>OZONE Widget Framework</NavbarHeading>
-                </NavbarGroup>
-
-                <NavbarGroup align={Alignment.RIGHT}>
-                    <ThemeButton active={this.mainStore.darkTheme} onClick={this.mainStore.toggleTheme} />
-                    <DebugMenuButton />
-                    <HelpButton active={this.mainStore.isHelpDialogVisible} onClick={this.mainStore.showHelpDialog} />
-                    <UserMenuButton userName={user ? user.userRealName : "Unknown User"} />
-                </NavbarGroup>
-            </Navbar>
-        );
-    }
-}
+            <NavbarGroup align={Alignment.RIGHT}>
+                <ThemeButton onClick={mainStore.toggleTheme} />
+                <HelpButton active={isHelpDialogVisible} onClick={mainStore.showHelpDialog} />
+                <UserMenuButton userName={user ? user.userRealName : "Unknown User"} />
+            </NavbarGroup>
+        </Navbar>
+    );
+};
 
 type MenuButtonProps = {
     active: boolean;
@@ -79,7 +59,7 @@ type NavProps = {
     onClick: () => void;
 };
 
-const DashboardsButton: React.SFC<MenuButtonProps> = ({ active, onClick }) => (
+const DashboardsButton: React.FunctionComponent<MenuButtonProps> = ({ active, onClick }) => (
     <NavbarTooltip
         title="Dashboards"
         shortcut="alt+shift+c"
@@ -96,25 +76,25 @@ const DashboardsButton: React.SFC<MenuButtonProps> = ({ active, onClick }) => (
     </NavbarTooltip>
 );
 
-const CenterButton: React.SFC<NavProps> = ({ onClick }) => (
+const CenterButton: React.FunctionComponent<NavProps> = ({ onClick }) => (
     <NavbarTooltip title="AppsMall Center" shortcut="alt+shift+a" description="Open AppsMall">
         <Button minimal icon="shopping-cart" onClick={onClick} data-element-id="center-button" />
     </NavbarTooltip>
 );
 
-const ThemeButton: React.SFC<MenuButtonProps> = ({ active, onClick }) => (
+const ThemeButton: React.FunctionComponent<{ onClick: () => void }> = ({ onClick }) => (
     <NavbarTooltip title="theme switch" shortcut="alt+shift+t" description="toggle theme">
-        <Button minimal icon="moon" active={active} onClick={onClick} data-element-id="theme-button" />
+        <Button minimal icon="moon" onClick={onClick} data-element-id="theme-button" />
     </NavbarTooltip>
 );
 
-const OWFButton: React.SFC<NavProps> = ({ onClick }) => (
+const OWFButton: React.FunctionComponent<NavProps> = ({ onClick }) => (
     <NavbarTooltip title="OWF" shortcut="alt+shift+o" description="Refresh Ozone Widget Framework">
         <Button minimal icon="page-layout" intent="primary" onClick={onClick} data-element-id="owf-button" />
     </NavbarTooltip>
 );
 
-const WidgetsButton: React.SFC<MenuButtonProps> = ({ active, onClick }) => (
+const WidgetsButton: React.FunctionComponent<MenuButtonProps> = ({ active, onClick }) => (
     <NavbarTooltip
         title="Widgets"
         shortcut="alt+shift+f"
@@ -131,13 +111,13 @@ const WidgetsButton: React.SFC<MenuButtonProps> = ({ active, onClick }) => (
     </NavbarTooltip>
 );
 
-const HelpButton: React.SFC<MenuButtonProps> = ({ active, onClick }) => (
+const HelpButton: React.FunctionComponent<MenuButtonProps> = ({ active, onClick }) => (
     <NavbarTooltip title="Help" shortcut="alt+shift+h" description="Show the Help window.">
         <Button minimal icon="help" active={active} onClick={onClick} />
     </NavbarTooltip>
 );
 
-const LoginButton: React.SFC<MenuButtonProps> = ({ active, onClick }) => (
+const LoginButton: React.FunctionComponent<MenuButtonProps> = ({ active, onClick }) => (
     <NavbarTooltip title="Login" shortcut="alt+shift+l" description="Temporary placement - Show the Login window.">
         <Button minimal text="Login" icon="log-in" active={active} onClick={onClick} data-element-id="login-button" />
     </NavbarTooltip>
@@ -147,7 +127,7 @@ type UserMenuButtonProps = {
     userName: string;
 };
 
-const UserMenuButton: React.SFC<UserMenuButtonProps> = ({ userName }) => (
+const UserMenuButton: React.FunctionComponent<UserMenuButtonProps> = ({ userName }) => (
     <NavbarTooltip title="User Profile" description="Open the User Profile options window.">
         <Popover
             content={<UserMenu />}
@@ -156,19 +136,6 @@ const UserMenuButton: React.SFC<UserMenuButtonProps> = ({ userName }) => (
             modifiers={{ arrow: { enabled: false } }}
         >
             <Button minimal text={userName} icon="menu" rightIcon="caret-down" data-element-id="user-menu-button" />
-        </Popover>
-    </NavbarTooltip>
-);
-
-const DebugMenuButton: React.SFC = () => (
-    <NavbarTooltip title="User Profile" description="Open the User Profile options window.">
-        <Popover
-            content={<DebugMenu />}
-            minimal
-            position={Position.BOTTOM_RIGHT}
-            modifiers={{ arrow: { enabled: false } }}
-        >
-            <Button minimal text="Debug" icon="cog" rightIcon="caret-down" />
         </Popover>
     </NavbarTooltip>
 );

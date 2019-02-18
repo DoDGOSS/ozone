@@ -1,10 +1,10 @@
-import * as styles from "./TableSelectionDialog.scss";
-
 import * as React from "react";
 
 import { Button, Classes, Dialog, InputGroup } from "@blueprintjs/core";
 import { AdminTable } from "../admin/table/AdminTable";
 import { Column } from "react-table";
+
+import * as styles from "./index.scss";
 
 /**
  * properties for TableSelectionDialog extended classes
