@@ -16,11 +16,11 @@ import { UserProfileDialog } from "../user-profile/UserProfileDialog";
 import { LoginDialog } from "../login-dialog/LoginDialog";
 import { AboutDialog } from "../about/About";
 import { CreateDashboardDialog } from "../create-dashboard-screen/CreateDashboardDialog";
+import { ConfirmationDialog } from "../replaceConfirmationDialog/ConfirmationDialog";
 
 import { ClassificationBanner } from "./ClassificationBanner";
 
 import { DashboardStore } from "../../stores";
-import { LOGIN_DASHBOARD } from "../../stores/DefaultDashboard";
 
 export class HomeScreen extends React.Component {
 
@@ -35,8 +35,6 @@ export class HomeScreen extends React.Component {
 
     componentWillMount() {
         this.authStore.check();
-
-        this.dashboardStore.setDashboard(LOGIN_DASHBOARD);
     }
 
     render() {
@@ -55,6 +53,7 @@ export class HomeScreen extends React.Component {
                 <ClassificationBanner className={styles.classificationBanner} {...classification}/>
                 }
                 <CreateDashboardDialog />
+                <ConfirmationDialog />
                 <UserAgreement />
                 <AboutDialog/>
                 <WarningDialog/>

@@ -1,14 +1,13 @@
-import { action, computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction, when } from "mobx";
 import { injectable } from "../inject";
 
 import { MosaicNode } from 'react-mosaic-component';
 
-//swithch to FIT_DEFAULT for testing
+// switch to FIT_DEFAULT for testing
 import { LOGIN_DASHBOARD } from "./DefaultDashboard";
 
-// confirmation Diaolog for next sprint
-// import { MainStore } from "./MainStore";
-// import { lazyInject } from "../inject"
+import { MainStore } from "./MainStore";
+import { lazyInject } from "../inject";
 
 import { Corner,
         getNodeAtPath,
@@ -46,9 +45,8 @@ export class DashboardStore {
     @observable
     dashboard: Dashboard | undefined;
 
-    // confirmation Diaolog for next sprint
-    // @lazyInject(MainStore)
-    // private mainStore: MainStoreg;
+    @lazyInject(MainStore)
+    private mainStore: MainStore;
 
     @computed
     get layout(): DashboardNode | null {
@@ -94,9 +92,20 @@ export class DashboardStore {
     @action.bound
     addToTopRight(dashboard:Dashboard, widget:string, windowCount:number) {
     if(this.getDashboard().widgets.hasOwnProperty('fit-flag')) {
+      // if widget already exists
       if(this.getDashboard().layout!==null){
-        // the confirmation dialog will be wodking in the next sprint:
-        // this.mainStore.showConfirmationDialog();
+        this.mainStore.showConfirmationDialog();
+        when(
+          () => !this.mainStore.isConfirmationDialogVisible,
+            ()=>{
+              if (this.mainStore.isConfrimationTrue === true){
+                let { layout } = dashboard;
+                this.setDashboard(dashboard);
+                layout = widget;
+                dashboard.layout = layout;
+                this.setLayout(dashboard.layout);
+              }
+        )
       }else{
         let { layout } = dashboard;
         this.setDashboard(dashboard);
