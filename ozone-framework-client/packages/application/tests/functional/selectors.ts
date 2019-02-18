@@ -16,11 +16,13 @@ export namespace MainPage {
 
     export const ADMINISTRATION_MENU = "div[data-element-id='administration']";
 
+    export const WIDGETS_MENU_ADMIN_BUTTON = "div[data-element-id='Widgets']";
+
     export const USER_MENU_ADMIN_BUTTON = "div[data-element-id='Users']";
 
     export const USER_ADMINISTRATION_WIDGET = "div[data-element-id='user-admin-widget-dialog']";
 
-    export const GROUPS_ADMIN_BUTTON ="div[data-element-id='Groups']";
+    export const GROUPS_ADMIN_BUTTON = "div[data-element-id='Groups']";
 
     export const GROUPS_ADMIN_WIDGET = "div[data-element-id='group-admin-widget-dialog']";
 
@@ -46,37 +48,34 @@ export namespace MainPage {
 
     export const USER_AGREEMENT_BACK = "button[data-element-id='back-button']";
 
-<<<<<<< HEAD:ozone-framework-client/packages/application/tests/functional/selectors.ts
-=======
     export const DASHBOARD_BUTTON = "button[data-element-id='dashboards-button']";
 
-    export const CREATE_DASHBOARD_BUTTON ="button[data-element-id='CreateDashboardButton']";
+    export const CREATE_DASHBOARD_BUTTON = "button[data-element-id='CreateDashboardButton']";
 
-    export const CREATE_DASHBOARD_DIALOG ="a[data-element-id='CreateDashboardDialog']";
+    export const CREATE_DASHBOARD_DIALOG = "a[data-element-id='CreateDashboardDialog']";
 
     export const CLASSIFICATION_BANNER = "div[data-element-id='classification-banner'";
 }
 
 export namespace CreateDashboardDialog {
 
-    export const NAME_FIELD="input[data-role='field'][name='name']";
+    export const NAME_FIELD = "input[data-role='field'][name='name']";
 
-    export const ICON_FIELD="input[data-role='field'][name='iconImageUrl']";
+    export const ICON_FIELD = "input[data-role='field'][name='iconImageUrl']";
 
-    export const DESCRIPTION_FIELD="input[data-role='field'][name='description']";
+    export const DESCRIPTION_FIELD = "input[data-role='field'][name='description']";
 
-    export const PREMADE="input[type='radio'][value='premade']";
+    export const PREMADE = "input[type='radio'][value='premade']";
 
-    export const SELECT_PREMADE_LAYOUT="div[data-element-id='PremadeLayoutsList']";
+    export const SELECT_PREMADE_LAYOUT = "div[data-element-id='PremadeLayoutsList']";
 
-    export const COPY="input[type='radio'][value='copy']";
+    export const COPY = "input[type='radio'][value='copy']";
 
-    export const COPY_DROPDOWN ="div[data-element-id='DashboardSelect']";
+    export const COPY_DROPDOWN = "div[data-element-id='DashboardSelect']";
 
-    export const NEW="input[type='radio'][value='new']";
+    export const NEW = "input[type='radio'][value='new']";
 
-    export const SUBMIT="button[data-element-id='form-submit-button']";
->>>>>>> develop:ozone-framework-client/tests/functional/selectors.ts
+    export const SUBMIT = "button[data-element-id='form-submit-button']";
 }
 
 
@@ -133,10 +132,7 @@ export namespace GroupAdminWidget {
 
         export const CREATE_BUTTON = `${Main.DIALOG} button[data-element-id='group-admin-widget-create-button']`;
 
-<<<<<<< HEAD:ozone-framework-client/packages/application/tests/functional/selectors.ts
-=======
         export const BACK_BUTTON = `${Main.DIALOG} span[data-element-id='group-admin-widget-edit-back-button'] button`;
->>>>>>> develop:ozone-framework-client/tests/functional/selectors.ts
     }
 
     export namespace CreateGroup {
@@ -153,20 +149,13 @@ export namespace GroupAdminWidget {
 
     }
 
-<<<<<<< HEAD:ozone-framework-client/packages/application/tests/functional/selectors.ts
     export namespace EditGroup {
-
-=======
-    export namespace EditGroup
-    {
         export const TAB_PROPERTIES = `div[data-tab-id='group_properties']`;
 
         export const TAB_USERS = `div[data-tab-id='group_users']`;
     }
 
-    export namespace PropertiesGroup
-    {
->>>>>>> develop:ozone-framework-client/tests/functional/selectors.ts
+    export namespace PropertiesGroup {
         export const FORM = "div[data-element-id='group-admin-widget-edit-form']";
 
         export const NAME_INPUT = `${PropertiesGroup.FORM} input[name='name']`;
@@ -175,17 +164,26 @@ export namespace GroupAdminWidget {
 
     }
 
-<<<<<<< HEAD:ozone-framework-client/packages/application/tests/functional/selectors.ts
-=======
-    export namespace UsersGroup
-    {
+    export namespace UsersGroup {
         export const TAB = "div[data-element-id='group-admin-add-user']";
 
         export const ADD_BUTTON = "button[data-element-id='group-edit-add-user-dialog-add-button']";
     }
->>>>>>> develop:ozone-framework-client/tests/functional/selectors.ts
 }
 
+export namespace WidgetAdminWidget {
+
+    export namespace Main {
+
+        export const DIALOG = "div[data-element-id='widget-admin-widget-dialog']";
+
+        export const SEARCH_FIELD = `${Main.DIALOG} input[data-element-id='search-field']`;
+
+        export const CREATE_BUTTON = `${Main.DIALOG} button[data-element-id='widget-admin-widget-create-button']`;
+
+        export const BACK_BUTTON = `${Main.DIALOG} span[data-element-id='group-admin-widget-edit-back-button'] button`;
+    }
+}
 
 export namespace GlobalElements {
 
