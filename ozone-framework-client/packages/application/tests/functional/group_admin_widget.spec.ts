@@ -2,7 +2,7 @@ import { NightwatchAPI, NightwatchCallbackResult } from "nightwatch";
 
 import { GlobalElements, GroupAdminWidget } from "./selectors";
 
-import { loggedInAs } from "./helpers";
+import { AdminWidgetType, loggedInAs, openAdminWidget } from "./helpers";
 
 const LOGIN_USERNAME: string = 'testAdmin1';
 const LOGIN_PASSWORD: string = 'password';
@@ -45,10 +45,11 @@ function openEditSectionForGroup(browser: NightwatchAPI, userDisplayName: string
     }
 }
 
-export default {
+module.exports = {
 
     "As an Administrator, I can view all Groups in the Group Admin Widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
         browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 1000, "[Group Admin Widget] is visible");
 
@@ -61,6 +62,7 @@ export default {
 
     "As an Administrator, I want to search for a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
         browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 1000, "[Group Admin Widget] is visible");
 
@@ -80,6 +82,7 @@ export default {
 
     "As an Administrator, I can create a new group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
         browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 1000, "[Group Admin Widget] is visible");
 
@@ -114,6 +117,7 @@ export default {
 
     "As an Administrator, I can edit a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
         browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
 
@@ -150,6 +154,7 @@ export default {
 
     "As an Administrator, I can add a user to a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
         browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
 
@@ -174,7 +179,7 @@ export default {
 
         DEFAULT_USER_EMAILS.forEach((email: string) => {
             browser.expect.element(GroupAdminWidget.UsersGroup.TAB).text.to.contain(email);
-        });    
+        });
 
         browser
             .click(GroupAdminWidget.Main.BACK_BUTTON)
@@ -185,6 +190,7 @@ export default {
 
     "As an Administrator, I can add remove a user from a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
         browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
 
@@ -215,7 +221,7 @@ export default {
 
         DEFAULT_USER_EMAILS.forEach((email: string) => {
             browser.expect.element(GroupAdminWidget.UsersGroup.TAB).text.to.not.contain(email);
-        });    
+        });
 
         browser
             .click(GroupAdminWidget.Main.BACK_BUTTON)
@@ -226,6 +232,7 @@ export default {
 
     "As an Administrator, I can delete a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
         browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 1000, "[Group Admin Widget] is visible");
 
@@ -240,11 +247,11 @@ export default {
                         relevant_row = i;
                         browser.getAttribute(`${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i+1}) div[role='row'] > div:last-child button[data-element-id='group-admin-widget-delete-button']`, 'disabled', function(modifiedResult) {
                             this.assert.equal(modifiedResult.value, null, "[Group Admin Widget] created group can be deleted");
-                        });                        
+                        });
                     } else if ((result.value as string).trim().length > 0) {
                         browser.getAttribute(`${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i+1}) div[role='row'] > div:last-child button[data-element-id='group-admin-widget-delete-button']`, 'disabled', function(modifiedResult) {
                             this.assert.equal(modifiedResult.value, 'true', "[Group Admin Widget] irrelevant group can not be deleted");
-                        }); 
+                        });
                     }
                 });
             });

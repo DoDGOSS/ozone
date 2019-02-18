@@ -14,21 +14,28 @@ module.exports = {
                .waitForElementVisible("body", 1000, "[Home Page] is visible")
                .waitForElementVisible(MainPage.WARNING_DIALOG, 1000, "[Warning Dialog] is visible");
 
-        browser.click(MainPage.USER_AGREEMENT_LINK)
+        (browser as any)
+              .waitAndClick(MainPage.USER_AGREEMENT_LINK, 250)
+              .waitForElementNotPresent(MainPage.USER_AGREEMENT_LINK)
               .waitForElementNotPresent(MainPage.WARNING_DIALOG, 1000, "[Warning Dialog] is closed")
               .waitForElementVisible(MainPage.USER_AGREEMENT, 1000, "[User Agreement] is visible");
 
-        browser.click(MainPage.USER_AGREEMENT_BACK)
+        (browser as any)
+               .waitAndClick(MainPage.USER_AGREEMENT_BACK, 250)
+               .waitForElementNotPresent(MainPage.USER_AGREEMENT_BACK)
                .waitForElementNotPresent(MainPage.USER_AGREEMENT, 1000, "[User Agreement] is closed")
                .waitForElementVisible(MainPage.WARNING_DIALOG, 1000, "[Warning Dialog] is visible");
 
-        browser.click(MainPage.ACCEPT_BUTTON)
+        (browser as any)
+               .waitAndClick(MainPage.ACCEPT_BUTTON, 250)
+               .waitForElementNotPresent(MainPage.ACCEPT_BUTTON)
                .waitForElementNotPresent(MainPage.WARNING_DIALOG, 1000, "[Warning Dialog] is closed")
                .waitForElementVisible(MainPage.LOGIN_DIALOG, 1000, "[Login Dialog] is visible");
 
         browser.setValue(LoginForm.USER_NAME_FIELD, username)
                .setValue(LoginForm.PASSWORD_FIELD, password)
                .click(LoginForm.SUBMIT_BUTTON)
+               .pause(250)
                .waitForElementNotPresent(MainPage.WARNING_DIALOG, 1000, "[Warning Dialog] is closed")
                .waitForElementNotPresent(MainPage.LOGIN_DIALOG, 1000, "[Login Dialog] is closed");
 
