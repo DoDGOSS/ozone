@@ -5,7 +5,7 @@ import { MainPage } from "./selectors";
 import { loggedInAs } from "./helpers";
 
 
-export default {
+module.exports = {
 
     "As a user, I can see the classification banner": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");

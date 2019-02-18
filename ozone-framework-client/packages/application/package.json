@@ -10,7 +10,8 @@
     "build": "cross-env NODE_ENV=production webpack-cli -p",
     "test": "jest --config ./jest-unit.config.js",
     "test:e2e": "jest --config ./jest-e2e.config.js --runInBand",
-    "test:functional": "tsc -p tests/functional && nightwatch"
+    "pretest:functional": "tsc -p tests/functional",
+    "test:functional": "nightwatch"
   },
   "dependencies": {
     "@blueprintjs/core": "3.12.0",
