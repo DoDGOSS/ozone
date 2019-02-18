@@ -1,7 +1,7 @@
 import {action, observable, runInAction} from "mobx";
 import { injectable } from "../inject";
 import { WidgetDefinition } from "./DashboardStore";
-import { groupAdminWidgetDef, sampleWidgetDef, userAdminWidgetDef } from "./DefaultDashboard";
+import { groupAdminWidgetDef, sampleWidgetDef, userAdminWidgetDef, widgetAdminWidgetDef } from "./DefaultDashboard";
 import { WidgetAPI, WidgetDTO } from "../api";
 import { lazyInject } from "../inject";
 
