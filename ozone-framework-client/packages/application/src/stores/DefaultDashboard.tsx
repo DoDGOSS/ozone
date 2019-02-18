@@ -4,12 +4,28 @@ import { Dashboard, Widget, WidgetDefinition } from "./DashboardStore";
 
 import { UsersWidget } from "../components/admin/widgets/Users/UsersWidget";
 import { GroupsWidget } from "../components/admin/widgets/Groups/GroupsWidget";
+import { WidgetsWidget } from "../components/admin/widgets/Widgets/WidgetsWidget";
 
+export const widgetAdminWidgetDef: WidgetDefinition = {
+    id: "0b7a39e0-87a2-4077-801b-2e5160fb2287",
+    title: "Widget Administration",
+    element: <WidgetsWidget/>
+};
+
+const widgetAdminWidget: Widget = {
+    id: "48edfe94-4291-4991-a648-c19a903a663b",
+    definition: widgetAdminWidgetDef
+};
 
 export const userAdminWidgetDef: WidgetDefinition = {
     id: "105a20c8-f81b-47fb-b683-af3a1cc4ec50",
     title: "User Administration",
     element: <UsersWidget/>
+};
+
+const userAdminWidget: Widget = {
+    id: "cad8dc1b-1f33-487c-8d85-21c8aeac5f49",
+    definition: userAdminWidgetDef
 };
 
 export const groupAdminWidgetDef: WidgetDefinition = {
@@ -18,20 +34,15 @@ export const groupAdminWidgetDef: WidgetDefinition = {
     element: <GroupsWidget/>
 };
 
+const groupAdminWidget: Widget = {
+    id: "53a2a879-442c-4012-9215-a17604dedff7",
+    definition: groupAdminWidgetDef
+};
+
 export const sampleWidgetDef: WidgetDefinition = {
     id: "483d0022-58c4-4e43-ba48-f7a8f9af0e82",
     title: "Sample Widget",
     element: <h1>Sample</h1>
-};
-
-const userAdminWidget: Widget = {
-    id: "cad8dc1b-1f33-487c-8d85-21c8aeac5f49",
-    definition: userAdminWidgetDef
-};
-
-const groupAdminWidget: Widget = {
-    id: "53a2a879-442c-4012-9215-a17604dedff7",
-    definition: groupAdminWidgetDef
 };
 
 const sampleWidget1: Widget = {
@@ -54,7 +65,8 @@ export const DEFAULT_DASHBOARD: Dashboard = {
     widgets: {
         ['1']: userAdminWidget,
         ['2']: groupAdminWidget,
-        ['3']: sampleWidget1
+        ['3']: sampleWidget1,
+        ['4']: widgetAdminWidget,
     }
 };
 
@@ -63,6 +75,7 @@ export const LOGIN_DASHBOARD: Dashboard = {
     widgets: {
         [userAdminWidget.id]: userAdminWidget,
         [groupAdminWidget.id]: groupAdminWidget,
-        [sampleWidget1.id]:sampleWidget1
+        [sampleWidget1.id]: sampleWidget1,
+        [widgetAdminWidget.id]: widgetAdminWidget,
     }
 };

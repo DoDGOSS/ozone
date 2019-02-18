@@ -4,6 +4,8 @@ var geckodriver = require("geckodriver");
 
 module.exports = {
 
+    custom_commands_path: "tests/functional/custom_commands",
+
     src_folders: [
         // Folders with tests
         "tests/functional"
