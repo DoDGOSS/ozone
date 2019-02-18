@@ -2,7 +2,7 @@ import { NightwatchAPI } from "nightwatch";
 
 import { AdminWidget, GlobalElements } from "./selectors";
 
-import { loggedInAs } from "./helpers";
+import { AdminWidgetType, loggedInAs, openAdminWidget } from "./helpers";
 
 
 module.exports = {
@@ -10,6 +10,7 @@ module.exports = {
     // TODO - Change test to launch the widget when functionality is implemented
     "As an Administrator, I can view all Users in the User Admin Widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.USERS);
 
         browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
 
@@ -22,6 +23,7 @@ module.exports = {
 
     "As an Administrator, I want to create a new User": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.USERS);
 
         const newDisplayName = "New User Test";
         const newUserName = "newUser1";
@@ -57,6 +59,7 @@ module.exports = {
 
     "As an Administrator, I want to edit a User": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.USERS);
 
         const newUserEmail = "newUserEmail1@email.com";
         const newDisplayName = "Edited User";
@@ -102,6 +105,7 @@ module.exports = {
 
     "As an Administrator, I want to search for a User": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.USERS);
 
         const adminEmail = "testAdmin1@ozone.test";
         const newUserEmail = "newUserEmail1@email.com";
@@ -125,6 +129,7 @@ module.exports = {
 
     "As an Administrator, I want to delete a User": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.USERS);
 
         const newUserEmail = "newUserEmail1@email.com";
 
