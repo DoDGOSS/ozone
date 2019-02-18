@@ -1,0 +1,90 @@
+@import "../../common";
+
+:local .toolbar {
+    min-height: $widget-toolbar-height;
+
+    padding: 0.25rem;
+
+    border-bottom: $widget-toolbar-border;
+    border-left: $widget-toolbar-border;
+    border-right: $widget-toolbar-border;
+    border-radius: 0 0 4px 4px;
+
+    background-color: $widget-toolbar-background-color;
+    box-shadow: $widget-toolbar-shadow;
+}
+
+
+:local .toolbarMenu {
+    width: 250px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+:local .toolbarTitle {
+    text-align: center;
+}
+
+:local .toolbarFooter {
+    position: fixed;
+    text-align: center;
+    bottom: 0;
+}
+
+:local .widgetList {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    color: inherit;
+}
+
+:local .buttonBar {
+    display: flex;
+    justify-content: space-between;
+    width: 260px;
+    margin-top: 1em;
+}
+
+:local .dialog {
+    width: auto;
+
+    padding: 0;
+}
+
+:local .tileContainer {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+}
+
+:local .tile {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    margin: 0 0.25rem 0 0.25rem;
+    padding: 0.5rem;
+
+    border-radius: 8px;
+
+    width: 120px;
+
+    &:hover {
+        background: $hover-background;
+    }
+}
+
+:local .tileIcon {
+    width: 15px;
+    margin-right: 8px;
+    margin-top: 2px;
+}
+
+:local .tileTitle {
+    margin-top: 0.25rem;
+    font-weight: 600;
+
+    text-align: center;
+}

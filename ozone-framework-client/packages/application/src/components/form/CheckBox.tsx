@@ -1,7 +1,7 @@
-// import * as styles from "./form.scss";
-
 import * as React from "react";
+
 import { Field, FieldProps } from "formik";
+
 import { Checkbox, FormGroup } from "@blueprintjs/core";
 
 export interface CheckBoxProps {
@@ -12,28 +12,18 @@ export interface CheckBoxProps {
     defaultChecked?: boolean;
 }
 
-const _CheckBox: React.FunctionComponent<CheckBoxProps & FieldProps<any>> = ({
-    defaultChecked,
-    name,
-    label,
-    labelInfo,
-    field,
-    form,
-    text
-}) => {
-    return (
-        <FormGroup label={label} labelFor={name} labelInfo={labelInfo}>
-            <Checkbox
-                name={name}
-                data-role="field"
-                type="checkbox"
-                label={text}
-                defaultChecked={defaultChecked}
-                {...field}
-            />
-        </FormGroup>
-    );
-};
+const _CheckBox: React.FunctionComponent<CheckBoxProps & FieldProps<any>> = (props) => (
+    <FormGroup label={props.label} labelFor={props.name} labelInfo={props.labelInfo}>
+        <Checkbox
+            name={props.name}
+            data-role="field"
+            type="checkbox"
+            label={props.text}
+            defaultChecked={props.defaultChecked}
+            {...props.field}
+        />
+    </FormGroup>
+);
 
 _CheckBox.displayName = "CheckBox";
 

@@ -4,7 +4,13 @@ import { omit } from "lodash";
 
 import { convertToJsonSchema } from "@ozone/openapi-decorators";
 
-import { UserCreateResponse, UserDeleteResponse, UserDTO, UserGetResponse, UserUpdateResponse } from "../../src/api";
+import {
+    UserCreateResponse,
+    UserDeleteResponse,
+    UserDTO,
+    UserGetResponse,
+    UserUpdateResponse
+} from "../../src/api/models/UserDTO";
 
 import { expectSuccessfulValidation, expectToThrow } from "./assertions";
 import { USERS } from "./data";

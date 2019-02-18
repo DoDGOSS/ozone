@@ -2,7 +2,7 @@ import "reflect-metadata";
 
 import { convertToJsonSchema } from "@ozone/openapi-decorators";
 
-import { AuthUserDTO } from "../../src/api";
+import { AuthUserDTO } from "../../src/api/models/AuthUserDTO";
 
 describe("AuthUserDTO", () => {
     describe("schema generation", () => {

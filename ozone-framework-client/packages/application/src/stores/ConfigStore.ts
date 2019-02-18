@@ -1,27 +1,12 @@
-import { action, observable, runInAction } from "mobx";
+import { BehaviorSubject } from "rxjs";
+import { asBehavior } from "../observables";
 
-import { injectable } from "../inject";
-
-import { ClassificationConfig } from "../interfaces";
 import { UNCLASSIFIED_FOUO } from "../classifications";
 
-@injectable()
 export class ConfigStore {
-    @observable
-    classification: ClassificationConfig;
+    private readonly classification$ = new BehaviorSubject(UNCLASSIFIED_FOUO);
 
-    @observable
-    consentForm: boolean;
-
-    constructor() {
-        runInAction("initialize", () => {
-            this.classification = UNCLASSIFIED_FOUO;
-            this.consentForm = true;
-        });
-    }
-
-    @action.bound
-    setClassification(classification: ClassificationConfig) {
-        this.classification = classification;
-    }
+    classification = () => asBehavior(this.classification$);
 }
+
+export const configStore = new ConfigStore();

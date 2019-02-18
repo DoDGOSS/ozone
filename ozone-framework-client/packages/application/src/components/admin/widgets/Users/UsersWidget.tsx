@@ -1,16 +1,16 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
 import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
-
-import { lazyInject } from "../../../../inject";
-import { UserAPI, UserCreateRequest, UserDTO } from "../../../../api";
 
 import { AdminTable } from "../../table/AdminTable";
 
 import { UserCreateForm } from "./UserCreateForm";
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
 import { UserEditTabGroup } from "../Groups/UserEditTabGroup";
+
+import { UserCreateRequest, UserDTO } from "../../../../api/models/UserDTO";
+import { userApi } from "../../../../api/clients/UserAPI";
+
+import * as styles from "../Widgets.scss";
 
 export interface State {
     users: UserDTO[];
@@ -41,9 +41,6 @@ enum UserWidgetSubSection {
 }
 
 export class UsersWidget extends React.Component<{}, State> {
-    @lazyInject(UserAPI)
-    private userAPI: UserAPI;
-
     constructor(props: any) {
         super(props);
         this.state = {
@@ -220,7 +217,7 @@ export class UsersWidget extends React.Component<{}, State> {
     }
 
     private getUsers = async () => {
-        const response = await this.userAPI.getUsers();
+        const response = await userApi.getUsers();
 
         // TODO: Handle failed request
         if (response.status !== 200) return;
@@ -236,7 +233,7 @@ export class UsersWidget extends React.Component<{}, State> {
     }
 
     private createUser = async (data: UserCreateRequest) => {
-        const response = await this.userAPI.createUser(data);
+        const response = await userApi.createUser(data);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;
@@ -281,7 +278,7 @@ export class UsersWidget extends React.Component<{}, State> {
 
         const user: UserDTO = payload;
 
-        const response = await this.userAPI.deleteUser(user.id);
+        const response = await userApi.deleteUser(user.id);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;

@@ -1,32 +1,30 @@
-import { action, observable, runInAction } from "mobx";
+import { BehaviorSubject } from "rxjs";
+import { asBehavior } from "../observables";
 
-import { injectable, lazyInject, TYPES } from "../inject";
+import { Gateway, getGateway } from "../api/interfaces";
 
-import { AuthUserDTO, Gateway } from "../api";
+import { AuthUserDTO } from "../api/models/AuthUserDTO";
 
-@injectable()
+export enum AuthStatus {
+    PENDING,
+    LOGGED_IN,
+    LOGGED_OUT
+}
+
 export class AuthStore {
-    @observable
-    isAuthenticated: boolean | "pending";
+    private readonly gateway: Gateway;
 
-    @observable
-    user?: AuthUserDTO;
+    private readonly status$ = new BehaviorSubject(AuthStatus.PENDING);
+    private readonly user$ = new BehaviorSubject<AuthUserDTO | null>(null);
 
-    @observable
-    error?: string;
-
-    @lazyInject(TYPES.Gateway)
-    private gateway: Gateway;
-
-    constructor() {
-        runInAction("initialize", () => {
-            this.isAuthenticated = "pending";
-            this.error = undefined;
-        });
+    constructor(gateway?: Gateway) {
+        this.gateway = gateway || getGateway();
     }
 
-    @action.bound
-    async login(username: string, password: string): Promise<boolean> {
+    user = () => asBehavior(this.user$);
+    status = () => asBehavior(this.status$);
+
+    login = async (username: string, password: string) => {
         try {
             const user = (await this.gateway.login(username, password)).data;
             this.onAuthenticateSuccess(user);
@@ -35,39 +33,41 @@ export class AuthStore {
             this.onAuthenticationFailure(ex);
             return false;
         }
-    }
+    };
 
-    @action.bound
-    async logout(): Promise<boolean> {
-        try {
-            await this.gateway.logout();
-            return true;
-        } catch (ex) {
-            return false;
-        }
-    }
+    logout = () => {
+        this.gateway
+            .logout()
+            .then(() => {
+                location.reload();
+            })
+            .catch(() => {
+                // TODO: Error handling
+            });
+    };
 
-    @action.bound
-    async check(): Promise<void> {
-        try {
-            const user = (await this.gateway.getLoginStatus()).data;
-            this.onAuthenticateSuccess(user);
-        } catch (ex) {
-            this.onAuthenticationFailure(ex);
-        }
-    }
+    check = () => {
+        this.gateway
+            .getLoginStatus()
+            .then((result) => {
+                this.onAuthenticateSuccess(result.data);
+            })
+            .catch((error) => {
+                this.onAuthenticationFailure(error);
+            });
+    };
 
-    @action.bound
-    onAuthenticateSuccess(user: AuthUserDTO) {
-        this.user = user;
-        this.isAuthenticated = true;
-        this.error = undefined;
-    }
+    private onAuthenticateSuccess = (user: AuthUserDTO) => {
+        this.user$.next(user);
+        this.status$.next(AuthStatus.LOGGED_IN);
+    };
 
-    @action.bound
-    onAuthenticationFailure(ex: Error) {
-        this.user = undefined;
-        this.isAuthenticated = false;
-        this.error = ex.message;
-    }
+    private onAuthenticationFailure = (ex: Error) => {
+        this.user$.next(null);
+        this.status$.next(AuthStatus.LOGGED_OUT);
+        console.log("Authentication failure");
+        console.dir(ex);
+    };
 }
+
+export const authStore = new AuthStore();

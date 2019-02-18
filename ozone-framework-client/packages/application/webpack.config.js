@@ -3,6 +3,10 @@ const path = require("path");
 const webpack = require("webpack");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 const { CheckerPlugin } = require("awesome-typescript-loader");
+const CircularDependencyPlugin = require("circular-dependency-plugin");
+
+const { getLocalIdent } = require("./scripts/getCSSModuleLocalIdent");
+
 
 const IS_DEVELOPMENT = process.env.NODE_ENV !== "production";
 
@@ -80,13 +84,14 @@ module.exports = {
                     {
                         loader: require.resolve("css-loader"),
                         options: {
-                            modules: "global"
+                            modules: "global",
+                            getLocalIdent: getLocalIdent
                         }
                     },
                     require.resolve("sass-loader")
                 ]
             },
-            
+
             {
                 test: /\.(eot|ttf|woff|woff2|svg|png|gif|jpe?g)$/,
                 loader: require.resolve("file-loader"),
@@ -106,6 +111,11 @@ module.exports = {
 
     plugins: IS_DEVELOPMENT ? [
         new CheckerPlugin(),
+        new CircularDependencyPlugin({
+            exclude: /node_modules/,
+            failOnError: true,
+            cwd: process.cwd(),
+        }),
         new webpack.HotModuleReplacementPlugin(),
         HTMLTemplateConfig
     ] : [

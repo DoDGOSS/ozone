@@ -1,10 +1,12 @@
 import axios from "axios";
 
-import { get, isNil, trimEnd, trimStart } from "lodash";
-
 import { ValidationError } from "@ozone/openapi-decorators";
 
-import { AuthenticationError, AuthUserDTO, Gateway, RequestOptions, Response } from "../../src/api";
+import { Gateway, RequestOptions, Response } from "../../src/api/interfaces";
+import { AuthenticationError } from "../../src/api/errors";
+import { AuthUserDTO } from "../../src/api/models/AuthUserDTO";
+
+import { get, isNil, trimEnd, trimStart } from "lodash";
 
 export class NodeGateway implements Gateway {
     private readonly rootUrl: string;

@@ -1,6 +1,7 @@
 import "reflect-metadata";
 
-import { GroupAPI, GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../src/api";
+import { GroupAPI } from "../../src/api/clients/GroupAPI";
+import { GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../src/api/models/GroupDTO";
 
 import { NodeGateway } from "./node-gateway";
 import { GROUPS } from "../unit/data";

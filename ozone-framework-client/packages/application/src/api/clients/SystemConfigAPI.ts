@@ -1,16 +1,12 @@
-import { ConfigDTO, ConfigUpdateRequest, Gateway, Response } from "..";
+import { Gateway, getGateway, Response } from "../interfaces";
 
-import { OzoneGateway } from "../../services";
-
-import { lazy } from "../../utility";
+import { ConfigDTO, ConfigUpdateRequest } from "../models/ConfigDTO";
 
 export class SystemConfigAPI {
-    static readonly instance = lazy(() => new SystemConfigAPI());
-
     private readonly gateway: Gateway;
 
     constructor(gateway?: Gateway) {
-        this.gateway = gateway || OzoneGateway.instance();
+        this.gateway = gateway || getGateway();
     }
 
     async getConfigs(): Promise<Response<ConfigDTO[]>> {
@@ -25,3 +21,5 @@ export class SystemConfigAPI {
         });
     }
 }
+
+export const systemConfigApi = new SystemConfigAPI();

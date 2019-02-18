@@ -1,17 +1,13 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
 
 import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
 import { AdminTable } from "../../table/AdminTable";
 
-// import { GroupCreateForm } from "./GroupCreateForm";
-
-import { lazyInject } from "../../../../inject";
-
-import { WidgetAPI, WidgetCreateRequest, WidgetDTO } from "../../../../api";
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
-// import { GroupEditTabGroup } from "../Users/GroupEditTabGroup";
+import { WidgetCreateRequest, WidgetDTO } from "../../../../api/models/WidgetDTO";
+import { widgetApi } from "../../../../api/clients/WidgetAPI";
+
+import * as styles from "../Widgets.scss";
 
 interface State {
     widgets: WidgetDTO[];
@@ -43,9 +39,6 @@ enum WidgetWidgetSubSection {
 }
 
 export class WidgetsWidget extends React.Component<{}, State> {
-    @lazyInject(WidgetAPI)
-    private widgetAPI: WidgetAPI;
-
     constructor(props: any) {
         super(props);
         this.state = {
@@ -198,7 +191,7 @@ export class WidgetsWidget extends React.Component<{}, State> {
     }
 
     private getWidgets = async () => {
-        const response = await this.widgetAPI.getWidgets();
+        const response = await widgetApi.getWidgets();
 
         // TODO: Handle failed request
         if (response.status !== 200) return;
@@ -214,7 +207,7 @@ export class WidgetsWidget extends React.Component<{}, State> {
     }
 
     private createWidget = async (data: WidgetCreateRequest) => {
-        const response = await this.widgetAPI.createWidget(data);
+        const response = await widgetApi.createWidget(data);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;
@@ -246,7 +239,7 @@ export class WidgetsWidget extends React.Component<{}, State> {
 
         const widget: WidgetDTO = payload;
 
-        const response = await this.widgetAPI.deleteWidget(widget.id);
+        const response = await widgetApi.deleteWidget(widget.id);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;

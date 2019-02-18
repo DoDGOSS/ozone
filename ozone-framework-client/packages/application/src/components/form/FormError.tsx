@@ -1,7 +1,8 @@
-import * as styles from "./Form.scss";
-
 import * as React from "react";
+
 import { Callout, Intent } from "@blueprintjs/core";
+
+import * as styles from "./index.scss";
 
 export interface FormErrorProps {
     message: string;

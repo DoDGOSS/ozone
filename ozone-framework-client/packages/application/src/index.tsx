@@ -9,12 +9,9 @@ import "reflect-metadata";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import initializeApplication from "./init";
 import registerServiceWorker from "./registerServiceWorker";
 
-import App from "./App";
-
-initializeApplication();
+import { App } from "./App";
 
 ReactDOM.render(<App />, document.getElementById("root") as HTMLElement);
 

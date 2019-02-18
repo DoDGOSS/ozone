@@ -1,117 +1,59 @@
-import { action, observable, runInAction } from "mobx";
-import { injectable } from "../inject";
-import { WidgetDefinition } from "./DashboardStore";
-import {
-    groupAdminWidgetDef,
-    sampleWidgetDef,
-    systemConfigWidgetDef,
-    userAdminWidgetDef,
-    widgetAdminWidgetDef
-} from "./DefaultDashboard";
-import { WidgetAPI, WidgetDTO } from "../api";
-import { lazyInject } from "../inject";
+import { BehaviorSubject } from "rxjs";
+import { asBehavior } from "../observables";
 
-interface Widget {
-    id: string;
-    universalName: string;
-    title: string;
-    iconUrl: string;
-    url?: string;
-    definition: WidgetDefinition;
-}
+import { WidgetDTO } from "../api/models/WidgetDTO";
+import { WidgetAPI } from "../api/clients/WidgetAPI";
 
-export const IMAGE_ROOT_URL = "http://localhost:3000/images";
+import { ADMIN_WIDGETS } from "./admin-widgets";
 
-const ADMIN_WIDGETS: Widget[] = [
-    {
-        id: "48edfe94-4291-4991-a648-c19a903a663b",
-        universalName: "org.ozoneplatform.owf.admin.appcomponentmanagement",
-        title: "Widgets",
-        iconUrl: `${IMAGE_ROOT_URL}/widgets/widgets-manager.png`,
-        definition: sampleWidgetDef
-    },
-    {
-        id: "391dd2af-a207-41a3-8e51-2b20ec3e7241",
-        universalName: "org.ozoneplatform.owf.admin.appmanagement",
-        title: "Dashboards",
-        iconUrl: `${IMAGE_ROOT_URL}/widgets/stacks-manager.png`,
-        definition: sampleWidgetDef
-    },
-    {
-        id: "af180bfc-3924-4111-93de-ad6e9bfc060e",
-        universalName: "org.ozoneplatform.owf.admin.configuration",
-        title: "System Configuration",
-        iconUrl: `${IMAGE_ROOT_URL}/widgets/configuration-manager.png`,
-        definition: systemConfigWidgetDef
-    },
-    {
-        id: "53a2a879-442c-4012-9215-a17604dedff7",
-        universalName: "org.ozoneplatform.owf.admin.groupmanagement",
-        title: "Groups",
-        iconUrl: `${IMAGE_ROOT_URL}/widgets/groups-manager.png`,
-        definition: groupAdminWidgetDef
-    },
-    {
-        id: "cad8dc1b-1f33-487c-8d85-21c8aeac5f49",
-        universalName: "org.ozoneplatform.owf.admin.usermanagement",
-        title: "Users",
-        iconUrl: `${IMAGE_ROOT_URL}/widgets/users-manager.png`,
-        definition: userAdminWidgetDef
-    }
-];
+import { widgetApi as widgetApiDefault } from "../api/clients/WidgetAPI";
 
-@injectable()
 export class WidgetStore {
-    @observable
-    adminWidgets: Widget[];
 
-    @observable
-    error?: string;
+    private readonly adminWidgets$ = new BehaviorSubject(ADMIN_WIDGETS);
 
-    @observable
-    loadingWidgets: boolean;
+    private readonly error$ = new BehaviorSubject<string | null>(null);
 
-    @observable
-    standardWidgets: WidgetDTO[];
+    private readonly loadingWidgets$ = new BehaviorSubject(true);
 
-    @lazyInject(WidgetAPI)
-    private widgetAPI: WidgetAPI;
+    private readonly standardWidgets$ = new BehaviorSubject<WidgetDTO[]>([]);
 
-    constructor() {
-        runInAction("initialize", () => {
-            this.adminWidgets = ADMIN_WIDGETS;
-            this.loadingWidgets = true;
-            this.standardWidgets = [];
-        });
+    private readonly widgetApi: WidgetAPI;
+
+    constructor(widgetApi?: WidgetAPI) {
+        this.widgetApi = widgetApi || widgetApiDefault;
     }
 
-    @action.bound
-    async getWidgets() {
-        try {
-            const standardWidgets = (await this.widgetAPI.getWidgets()).data.data;
-            this.onWidgetSuccess(standardWidgets);
-            return true;
-        } catch (ex) {
-            this.onWidgetFailure(ex);
-            return false;
-        }
-    }
+    adminWidgets = () => asBehavior(this.adminWidgets$);
+    isLoading = () => asBehavior(this.loadingWidgets$);
+    standardWidgets = () => asBehavior(this.standardWidgets$);
 
-    @action.bound
-    onWidgetSuccess(widgets: WidgetDTO[]) {
+    fetchWidgets = () => {
+        this.widgetApi
+            .getWidgets()
+            .then((results) => {
+                this.onWidgetSuccess(results.data.data);
+            })
+            .catch((error) => {
+                this.onWidgetFailure(error);
+            });
+    };
+
+    private onWidgetSuccess = (widgets: WidgetDTO[]) => {
         const result = widgets
             .filter((widget) => !widget.value.universalName.includes("admin"))
             .sort((a, b) => a.value.namespace.localeCompare(b.value.namespace));
 
-        this.standardWidgets = result;
-        this.loadingWidgets = false;
-        this.error = undefined;
-    }
+        this.standardWidgets$.next(result);
+        this.loadingWidgets$.next(false);
+        this.error$.next(null);
+    };
 
-    @action.bound
-    onWidgetFailure(ex: Error) {
-        this.adminWidgets = [];
-        this.adminWidgets = [];
-        this.error = ex.message;
-    }
+    private onWidgetFailure = (ex: Error) => {
+        this.adminWidgets$.next([]);
+        this.standardWidgets$.next([]);
+        this.error$.next(ex.message);
+    };
 }
+
+export const widgetStore = new WidgetStore();

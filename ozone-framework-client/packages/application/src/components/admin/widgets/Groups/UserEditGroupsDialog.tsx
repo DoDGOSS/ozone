@@ -1,20 +1,14 @@
-import { observer } from "mobx-react";
-
-import { GroupAPI, GroupDTO } from "../../../../api";
-import { lazyInject } from "../../../../inject";
-
 import { TableSelectionDialog, TableSelectionDialogProps } from "../../../table-selection-dialog/TableSelectionDialog";
+import { GroupDTO } from "../../../../api/models/GroupDTO";
+import { groupApi } from "../../../../api/clients/GroupAPI";
 
-@observer
 export class UserEditGroupsDialog extends TableSelectionDialog<GroupDTO> {
-    @lazyInject(GroupAPI)
-    private groupAPI: GroupAPI;
-
     constructor(props: TableSelectionDialogProps<GroupDTO>) {
         super(props);
     }
+
     protected async dataLoader(): Promise<Array<GroupDTO>> {
-        const response = await this.groupAPI.getGroups();
+        const response = await groupApi.getGroups();
 
         if (response.status !== 200) return [];
 

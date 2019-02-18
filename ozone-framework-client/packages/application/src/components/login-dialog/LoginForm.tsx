@@ -2,54 +2,47 @@ import * as React from "react";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { object, string } from "yup";
 
-import { lazyInject } from "../../inject";
-import { AuthStore } from "../../stores";
-
 import { FormError, SubmitButton, TextField } from "../form";
+import { authStore } from "../../stores/AuthStore";
 
 export interface LoginFormProps {
     onSuccess: () => void;
 }
 
-export class LoginForm extends React.Component<LoginFormProps> {
-    @lazyInject(AuthStore)
-    private authStore: AuthStore;
+export const LoginForm: React.FunctionComponent<LoginFormProps> = (props) => {
+    return (
+        <Formik
+            initialValues={{
+                username: "",
+                password: ""
+            }}
+            validationSchema={LoginRequestSchema}
+            onSubmit={async (values: LoginRequest, actions: FormikActions<LoginRequest>) => {
+                actions.setSubmitting(false);
 
-    render() {
-        return (
-            <Formik
-                initialValues={{
-                    username: "",
-                    password: ""
-                }}
-                validationSchema={LoginRequestSchema}
-                onSubmit={async (values: LoginRequest, actions: FormikActions<LoginRequest>) => {
-                    actions.setSubmitting(false);
+                const isSuccess = await authStore.login(values.username, values.password);
 
-                    const isSuccess = await this.authStore.login(values.username, values.password);
+                if (isSuccess) {
+                    props.onSuccess();
+                    actions.setStatus(null);
+                } else {
+                    actions.setStatus({ error: "An unexpected error has occurred" });
+                }
+            }}
+        >
+            {(formik: FormikProps<LoginRequest>) => (
+                <Form>
+                    {formik.status && formik.status.error && <FormError message={formik.status.error} />}
 
-                    if (isSuccess) {
-                        this.props.onSuccess();
-                        actions.setStatus(null);
-                    } else {
-                        actions.setStatus({ error: "An unexpected error has occurred" });
-                    }
-                }}
-            >
-                {(formik: FormikProps<LoginRequest>) => (
-                    <Form>
-                        {formik.status && formik.status.error && <FormError message={formik.status.error} />}
+                    <TextField name="username" label="Username" labelInfo="(required)" />
+                    <TextField type="password" name="password" label="Password" labelInfo="(required)" />
 
-                        <TextField name="username" label="Username" labelInfo="(required)" />
-                        <TextField type="password" name="password" label="Password" labelInfo="(required)" />
-
-                        <SubmitButton />
-                    </Form>
-                )}
-            </Formik>
-        );
-    }
-}
+                    <SubmitButton />
+                </Form>
+            )}
+        </Formik>
+    );
+};
 
 interface LoginRequest {
     username: string;

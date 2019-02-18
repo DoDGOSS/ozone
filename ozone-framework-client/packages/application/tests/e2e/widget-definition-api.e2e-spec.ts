@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { WidgetDefinitionAPI } from "../../src/api";
+import { WidgetDefinitionAPI } from "../../src/api/clients/WidgetDefinitionAPI";
 
 import { NodeGateway } from "./node-gateway";
 import { WIDGET_DEFINITION } from "../unit/data";

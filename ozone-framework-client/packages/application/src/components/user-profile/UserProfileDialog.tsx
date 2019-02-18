@@ -1,57 +1,52 @@
-import * as styles from "./UserProfileDialog.scss";
-
 import * as React from "react";
-import { observer } from "mobx-react";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
-import { lazyInject } from "../../inject";
-import { AuthStore, MainStore } from "../../stores";
+import { classNames } from "../../utility";
 
-import { classNames } from "../util";
+import * as styles from "./index.scss";
+import { useBehavior } from "../../hooks";
+import { authStore } from "../../stores/AuthStore";
+import { mainStore } from "../../stores/MainStore";
 
-@observer
-export class UserProfileDialog extends React.Component {
-    @lazyInject(MainStore)
-    private mainStore: MainStore;
+export const UserProfileDialog: React.FunctionComponent = () => {
+    const themeClass = useBehavior(mainStore.themeClass);
 
-    @lazyInject(AuthStore)
-    private authStore: AuthStore;
+    const user = useBehavior(authStore.user);
 
-    render() {
-        const user = this.authStore.user;
+    const isOpen = useBehavior(mainStore.isUserProfileDialogVisible);
+    const onClose = mainStore.hideUserProfileDialog;
 
-        return (
-            <Dialog
-                className={classNames(styles.userProfileDialog, this.mainStore.darkClass)}
-                title="Profile"
-                icon="wrench"
-                isOpen={this.mainStore.isUserProfileDialogVisible}
-                onClose={this.mainStore.hideUserProfileDialog}
-            >
-                <div className={Classes.DIALOG_BODY}>
-                    <DataSection title="User Information">
-                        <DataItem label="Username:">{user ? user.username : ""}</DataItem>
-                        <DataItem label="Full Name:">{user ? user.userRealName : ""}</DataItem>
-                        <DataItem label="E-mail:">{user ? user.email : ""}</DataItem>
-                        <DataItem label="Groups:">
-                            {user ? user.groups.map((group) => group.displayName).join(", ") : ""}
-                        </DataItem>
-                    </DataSection>
+    return (
+        <Dialog
+            className={classNames(themeClass, styles.userProfileDialog)}
+            title="Profile"
+            icon="wrench"
+            isOpen={isOpen}
+            onClose={onClose}
+        >
+            <div className={Classes.DIALOG_BODY}>
+                <DataSection title="User Information">
+                    <DataItem label="Username:">{user ? user.username : ""}</DataItem>
+                    <DataItem label="Full Name:">{user ? user.userRealName : ""}</DataItem>
+                    <DataItem label="E-mail:">{user ? user.email : ""}</DataItem>
+                    <DataItem label="Groups:">
+                        {user ? user.groups.map((group) => group.displayName).join(", ") : ""}
+                    </DataItem>
+                </DataSection>
 
-                    <DataSection title="User Preferences">
-                        <DataItem label="Enable Animations:">
-                            <input id="animations" type="checkbox" />
-                        </DataItem>
-                        <DataItem label="Enable Hints:">
-                            <input id="hints" type="checkbox" />
-                        </DataItem>
-                    </DataSection>
-                </div>
-            </Dialog>
-        );
-    }
-}
+                <DataSection title="User Preferences">
+                    <DataItem label="Enable Animations:">
+                        <input id="animations" type="checkbox" />
+                    </DataItem>
+                    <DataItem label="Enable Hints:">
+                        <input id="hints" type="checkbox" />
+                    </DataItem>
+                </DataSection>
+            </div>
+        </Dialog>
+    );
+};
 
 interface DataSectionProps {
     title: string;
