@@ -5,6 +5,12 @@ import { injectable } from "../inject";
 export class MainStore {
 
     @observable
+    isConfrimationTrue:boolean;
+
+    @observable
+    isConfirmationDialogVisible:boolean;
+
+    @observable
     isCreateDashboardDialogVisible: boolean;
 
     @observable
@@ -45,6 +51,8 @@ export class MainStore {
 
     constructor() {
         runInAction("initialize", () => {
+            this.isConfrimationTrue = false;
+            this.isConfirmationDialogVisible = false;
             this.isCreateDashboardDialogVisible = false;
             this.isAboutVisible=false;
             this.isWarningDialogVisible = false;
@@ -57,6 +65,25 @@ export class MainStore {
             this.darkTheme = false;
         });
     }
+
+    @action.bound
+    showConfirmationDialog() {
+        this.isConfirmationDialogVisible = true;
+        this.isConfrimationTrue=false;
+    }
+
+    @action.bound
+    hideConfirmationDialogCancel() {
+        this.isConfirmationDialogVisible = false;
+    }
+
+    @action.bound
+    hideConfirmationDialogConfirm() {
+        this.isConfirmationDialogVisible = false;
+        this.isConfrimationTrue=true;
+    }
+
+
 
     @action.bound
     showCreateDashboardDialog() {
