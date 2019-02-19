@@ -9,11 +9,8 @@ import { UserCreateResponse, UserDeleteResponse, UserDTO, UserGetResponse, UserU
 import { expectSuccessfulValidation, expectToThrow } from "./assertions";
 import { USERS } from "./data";
 
-
 describe("UserDTO", () => {
-
     describe("validate", () => {
-
         test("is valid", () => {
             const user = USERS[0];
 
@@ -25,28 +22,23 @@ describe("UserDTO", () => {
 
             const ex = expectToThrow(() => UserDTO.validate(user));
 
-            expect(ex.errors).toMatchObject([{
-                params: { missingProperty: "id" }
-            }]);
+            expect(ex.errors).toMatchObject([
+                {
+                    params: { missingProperty: "id" }
+                }
+            ]);
         });
-
     });
 
     describe("schema generation", () => {
-
         it("convert to JSON schema", () => {
             expect(convertToJsonSchema(UserDTO)).toEqual(USER_JSON_SCHEMA);
         });
-
     });
-
 });
 
-
 describe("UserGetResponse", () => {
-
     describe("validate", () => {
-
         test("is valid", () => {
             const response = {
                 success: true,
@@ -56,51 +48,36 @@ describe("UserGetResponse", () => {
 
             expectSuccessfulValidation(() => UserGetResponse.validate(response));
         });
-
     });
 
     describe("schema generation", () => {
-
         it("convert to JSON schema", () => {
             expect(convertToJsonSchema(UserGetResponse)).toEqual(USER_GET_RESPONSE_JSON_SCHEMA);
         });
-
     });
-
 });
 
-
 describe("UserCreateResponse", () => {
-
     describe("validate", () => {
-
         test("is valid", () => {
             const response = {
                 success: true,
                 data: [USERS[0]]
             };
 
-            expectSuccessfulValidation(() =>
-                UserCreateResponse.validate(response));
+            expectSuccessfulValidation(() => UserCreateResponse.validate(response));
         });
-
     });
 
     describe("schema generation", () => {
-
         it("convert to JSON schema", () => {
             expect(convertToJsonSchema(UserCreateResponse)).toEqual(USER_CREATE_RESPONSE_JSON_SCHEMA);
         });
-
     });
-
 });
 
-
 describe("UserUpdateResponse", () => {
-
     describe("validate", () => {
-
         test("is valid", () => {
             const response = {
                 success: true,
@@ -109,24 +86,17 @@ describe("UserUpdateResponse", () => {
 
             expectSuccessfulValidation(() => UserUpdateResponse.validate(response));
         });
-
     });
 
     describe("schema generation", () => {
-
         it("convert to JSON schema", () => {
             expect(convertToJsonSchema(UserUpdateResponse)).toEqual(USER_UPDATE_RESPONSE_JSON_SCHEMA);
         });
-
     });
-
 });
 
-
 describe("UserDeleteResponse", () => {
-
     describe("validate", () => {
-
         test("is valid", () => {
             const response = {
                 success: true,
@@ -135,26 +105,18 @@ describe("UserDeleteResponse", () => {
 
             expectSuccessfulValidation(() => UserDeleteResponse.validate(response));
         });
-
     });
 
     describe("schema generation", () => {
-
         it("convert to JSON schema", () => {
             expect(convertToJsonSchema(UserDeleteResponse)).toEqual(USER_DELETE_RESPONSE_JSON_SCHEMA);
         });
-
     });
-
-
 });
-
 
 export const ID_JSON_SCHEMA = {
     type: "object",
-    required: [
-        "id"
-    ],
+    required: ["id"],
     additionalProperties: false,
     properties: {
         id: {
@@ -162,7 +124,6 @@ export const ID_JSON_SCHEMA = {
         }
     }
 };
-
 
 const USER_JSON_SCHEMA = {
     type: "object",
@@ -213,14 +174,9 @@ const USER_JSON_SCHEMA = {
     }
 };
 
-
 const USER_GET_RESPONSE_JSON_SCHEMA = {
     type: "object",
-    required: [
-        "data",
-        "results",
-        "success"
-    ],
+    required: ["data", "results", "success"],
     additionalProperties: false,
     properties: {
         data: {
@@ -241,13 +197,9 @@ const USER_GET_RESPONSE_JSON_SCHEMA = {
     }
 };
 
-
 const USER_CREATE_RESPONSE_JSON_SCHEMA = {
     type: "object",
-    required: [
-        "data",
-        "success"
-    ],
+    required: ["data", "success"],
     additionalProperties: false,
     properties: {
         data: {
@@ -264,14 +216,10 @@ const USER_CREATE_RESPONSE_JSON_SCHEMA = {
         User: USER_JSON_SCHEMA
     }
 };
-
 
 const USER_UPDATE_RESPONSE_JSON_SCHEMA = {
     type: "object",
-    required: [
-        "data",
-        "success"
-    ],
+    required: ["data", "success"],
     additionalProperties: false,
     properties: {
         data: {
@@ -289,13 +237,9 @@ const USER_UPDATE_RESPONSE_JSON_SCHEMA = {
     }
 };
 
-
 const USER_DELETE_RESPONSE_JSON_SCHEMA = {
     type: "object",
-    required: [
-        "data",
-        "success"
-    ],
+    required: ["data", "success"],
     additionalProperties: false,
     properties: {
         data: {

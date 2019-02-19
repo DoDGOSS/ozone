@@ -4,10 +4,8 @@ import { injectable, lazyInject, TYPES } from "../inject";
 
 import { AuthUserDTO, Gateway } from "../api";
 
-
 @injectable()
 export class AuthStore {
-
     @observable
     isAuthenticated: boolean | "pending";
 
@@ -40,13 +38,13 @@ export class AuthStore {
     }
 
     @action.bound
-    async logout():Promise<boolean> {
-      try{
+    async logout(): Promise<boolean> {
+        try {
             await this.gateway.logout();
             return true;
-          }catch(ex){
+        } catch (ex) {
             return false;
-          }
+        }
     }
 
     @action.bound
@@ -72,5 +70,4 @@ export class AuthStore {
         this.isAuthenticated = false;
         this.error = ex.message;
     }
-
 }

@@ -5,9 +5,7 @@ import { UserAPI, UserDTO } from "../../src/api";
 import { NodeGateway } from "./node-gateway";
 import { USERS } from "../unit/data";
 
-
 describe("User API", () => {
-
     let gateway: NodeGateway;
     let userApi: UserAPI;
 
@@ -24,9 +22,9 @@ describe("User API", () => {
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
-            "success": true,
-            "results": 2,
-            "data": USERS
+            success: true,
+            results: 2,
+            data: USERS
         });
     });
 
@@ -35,9 +33,9 @@ describe("User API", () => {
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
-            "success": true,
-            "results": 2,
-            "data": [USERS[0]]
+            success: true,
+            results: 2,
+            data: [USERS[0]]
         });
     });
 
@@ -46,9 +44,9 @@ describe("User API", () => {
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
-            "success": true,
-            "results": 1,
-            "data": [USERS[0]]
+            success: true,
+            results: 1,
+            data: [USERS[0]]
         });
     });
 
@@ -57,14 +55,13 @@ describe("User API", () => {
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
-            "success": true,
-            "results": 0,
-            "data": []
+            success: true,
+            results: 0,
+            data: []
         });
     });
 
     describe("create, update, and delete", () => {
-
         let user: UserDTO;
 
         test("createUser - POST /user/", async () => {
@@ -78,19 +75,21 @@ describe("User API", () => {
 
             expect(response.status).toEqual(200);
             expect(response.data).toMatchObject({
-                "success": true,
-                "data": [{
-                    "id": expect.any(Number),
-                    "username": request.username,
-                    "userRealName": request.userRealName,
-                    "email": request.email,
-                    "hasPWD": null,
-                    "lastLogin": null,
-                    "totalDashboards": 0,
-                    "totalGroups": 0,
-                    "totalStacks": 0,
-                    "totalWidgets": 0,
-                }]
+                success: true,
+                data: [
+                    {
+                        id: expect.any(Number),
+                        username: request.username,
+                        userRealName: request.userRealName,
+                        email: request.email,
+                        hasPWD: null,
+                        lastLogin: null,
+                        totalDashboards: 0,
+                        totalGroups: 0,
+                        totalStacks: 0,
+                        totalWidgets: 0
+                    }
+                ]
             });
 
             user = response.data.data[0];
@@ -108,19 +107,21 @@ describe("User API", () => {
 
             expect(response.status).toEqual(200);
             expect(response.data).toEqual({
-                "success": true,
-                "data": [{
-                    "id": request.id,
-                    "username": request.username,
-                    "userRealName": request.userRealName,
-                    "email": request.email,
-                    "hasPWD": null,
-                    "lastLogin": null,
-                    "totalDashboards": 0,
-                    "totalGroups": 0,
-                    "totalStacks": 0,
-                    "totalWidgets": 0,
-                }]
+                success: true,
+                data: [
+                    {
+                        id: request.id,
+                        username: request.username,
+                        userRealName: request.userRealName,
+                        email: request.email,
+                        hasPWD: null,
+                        lastLogin: null,
+                        totalDashboards: 0,
+                        totalGroups: 0,
+                        totalStacks: 0,
+                        totalWidgets: 0
+                    }
+                ]
             });
         });
 
@@ -129,12 +130,13 @@ describe("User API", () => {
 
             expect(response.status).toEqual(200);
             expect(response.data).toEqual({
-                "success": true,
-                "data": [{
-                    "id": user.id
-                }]
+                success: true,
+                data: [
+                    {
+                        id: user.id
+                    }
+                ]
             });
         });
     });
-
 });

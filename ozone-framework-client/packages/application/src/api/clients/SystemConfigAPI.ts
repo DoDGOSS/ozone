@@ -4,9 +4,7 @@ import { OzoneGateway } from "../../services";
 
 import { lazy } from "../../utility";
 
-
 export class SystemConfigAPI {
-
     static readonly instance = lazy(() => new SystemConfigAPI());
 
     private readonly gateway: Gateway;
@@ -26,6 +24,4 @@ export class SystemConfigAPI {
             validate: ConfigDTO.validate
         });
     }
-
 }
-

@@ -11,18 +11,54 @@ import { AuthStore, ConfigStore, DashboardStore, MainStore, WidgetStore } from "
 
 import { DashboardAPI, GroupAPI, UserAPI, WidgetAPI } from "./api";
 
-
 export default function initializeIocContainerBindings() {
-    container.bind(AuthStore).toSelf().inSingletonScope();
-    container.bind(ConfigStore).toSelf().inSingletonScope();
-    container.bind(DashboardStore).toSelf().inSingletonScope();
-    container.bind(MainStore).toSelf().inSingletonScope();
-    container.bind(WidgetStore).toSelf().inSingletonScope();
+    container
+        .bind(AuthStore)
+        .toSelf()
+        .inSingletonScope();
 
-    container.bind(TYPES.Gateway).to(OzoneGateway).inSingletonScope();
+    container
+        .bind(ConfigStore)
+        .toSelf()
+        .inSingletonScope();
 
-    container.bind(DashboardAPI).toSelf().inSingletonScope();
-    container.bind(GroupAPI).toSelf().inSingletonScope();
-    container.bind(UserAPI).toSelf().inSingletonScope();
-    container.bind(WidgetAPI).toSelf().inSingletonScope();
+    container
+        .bind(DashboardStore)
+        .toSelf()
+        .inSingletonScope();
+
+    container
+        .bind(MainStore)
+        .toSelf()
+        .inSingletonScope();
+
+    container
+        .bind(WidgetStore)
+        .toSelf()
+        .inSingletonScope();
+
+    container
+        .bind(TYPES.Gateway)
+        .to(OzoneGateway)
+        .inSingletonScope();
+
+    container
+        .bind(DashboardAPI)
+        .toSelf()
+        .inSingletonScope();
+
+    container
+        .bind(GroupAPI)
+        .toSelf()
+        .inSingletonScope();
+
+    container
+        .bind(UserAPI)
+        .toSelf()
+        .inSingletonScope();
+
+    container
+        .bind(WidgetAPI)
+        .toSelf()
+        .inSingletonScope();
 }

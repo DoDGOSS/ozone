@@ -5,9 +5,7 @@ import { PreferenceAPI } from "../../src/api";
 import { NodeGateway } from "./node-gateway";
 import { PREFERENCES } from "../unit/data";
 
-
 describe("Preference API", () => {
-
     let gateway: NodeGateway;
     let preferenceApi: PreferenceAPI;
 
@@ -56,5 +54,4 @@ describe("Preference API", () => {
             serverVersion: "7.17.2-0"
         });
     });
-
 });

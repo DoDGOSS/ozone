@@ -1,6 +1,5 @@
 import { ClassificationConfig } from "./interfaces";
 
-
 export const DISABLED: ClassificationConfig = {
     text: "Disabled",
     backgroundColor: "#000",

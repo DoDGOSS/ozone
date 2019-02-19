@@ -4,31 +4,17 @@ import { convertToJsonSchema } from "@ozone/openapi-decorators";
 
 import { AuthUserDTO } from "../../src/api";
 
-
 describe("AuthUserDTO", () => {
-
     describe("schema generation", () => {
-
         it("convert to JSON schema", () => {
             expect(convertToJsonSchema(AuthUserDTO)).toEqual(AUTH_USER_JSON_SCHEMA);
         });
-
     });
-
 });
-
 
 const AUTH_GROUP_JSON_SCHEMA = {
     type: "object",
-    required: [
-        "automatic",
-        "description",
-        "displayName",
-        "email",
-        "id",
-        "name",
-        "status"
-    ],
+    required: ["automatic", "description", "displayName", "email", "id", "name", "status"],
     additionalProperties: false,
     properties: {
         automatic: {
@@ -53,20 +39,12 @@ const AUTH_GROUP_JSON_SCHEMA = {
             type: "string",
             enum: ["active", "inactive"]
         }
-    },
+    }
 };
 
 const AUTH_USER_JSON_SCHEMA = {
     type: "object",
-    required: [
-        "email",
-        "groups",
-        "id",
-        "isAdmin",
-        "roles",
-        "userRealName",
-        "username"
-    ],
+    required: ["email", "groups", "id", "isAdmin", "roles", "userRealName", "username"],
     additionalProperties: false,
     properties: {
         email: {

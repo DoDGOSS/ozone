@@ -5,9 +5,7 @@ import { WidgetTypeAPI } from "../../src/api";
 import { NodeGateway } from "./node-gateway";
 import { WIDGET_TYPES } from "../unit/data";
 
-
 describe("Widget Type API", () => {
-
     let gateway: NodeGateway;
     let widgetTypeApi: WidgetTypeAPI;
 
@@ -24,10 +22,9 @@ describe("Widget Type API", () => {
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
-            "success": true,
-            "results": 5,
-            "data": WIDGET_TYPES
+            success: true,
+            results: 5,
+            data: WIDGET_TYPES
         });
     });
-
 });

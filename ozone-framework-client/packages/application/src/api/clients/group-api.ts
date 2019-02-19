@@ -14,17 +14,14 @@ import {
     Response
 } from "..";
 
-
 export interface GroupQueryCriteria {
     limit?: number;
     offset?: number;
     user_id?: number;
 }
 
-
 @injectable()
 export class GroupAPI {
-
     private readonly gateway: Gateway;
 
     constructor(@inject(TYPES.Gateway) gateway: Gateway) {
@@ -83,7 +80,6 @@ export class GroupAPI {
             validate: GroupDeleteResponse.validate
         });
     }
-
 }
 
 function getOptionParams(options?: GroupQueryCriteria): any | undefined {
@@ -95,4 +91,3 @@ function getOptionParams(options?: GroupQueryCriteria): any | undefined {
     if (options.user_id) params.user_id = options.user_id;
     return params;
 }
-
