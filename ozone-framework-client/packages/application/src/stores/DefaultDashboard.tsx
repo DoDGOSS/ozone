@@ -92,6 +92,7 @@ export const LOGIN_DASHBOARD: Dashboard = {
         [sampleWidget1.id]:sampleWidget1,
         [userAdminWidget.id]: userAdminWidget,
         [groupAdminWidget.id]: groupAdminWidget,
+        [widgetAdminWidget.id]: widgetAdminWidget,
     }
 };
 
@@ -102,5 +103,6 @@ export const FIT_DEFAULT: Dashboard = {
       [sampleWidget1.id]:sampleWidget1,
       [userAdminWidget.id]: userAdminWidget,
       [groupAdminWidget.id]: groupAdminWidget,
+      [widgetAdminWidget.id]: widgetAdminWidget,
     }
 };
