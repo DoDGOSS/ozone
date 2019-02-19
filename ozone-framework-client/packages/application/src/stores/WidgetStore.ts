@@ -1,7 +1,7 @@
 import {action, observable, runInAction} from "mobx";
 import { injectable } from "../inject";
 import { WidgetDefinition } from "./DashboardStore";
-import { groupAdminWidgetDef, sampleWidgetDef, userAdminWidgetDef, widgetAdminWidgetDef } from "./DefaultDashboard";
+import { groupAdminWidgetDef, sampleWidgetDef, systemConfigWidgetDef, userAdminWidgetDef, widgetAdminWidgetDef } from "./DefaultDashboard";
 import { WidgetAPI, WidgetDTO } from "../api";
 import { lazyInject } from "../inject";
 
@@ -40,8 +40,7 @@ const ADMIN_WIDGETS: Widget[] = [
         universalName: "org.ozoneplatform.owf.admin.configuration",
         title: "System Configuration",
         iconUrl: `${IMAGE_ROOT_URL}/widgets/configuration-manager.png`,
-        definition: sampleWidgetDef
-
+        definition: systemConfigWidgetDef
     },
     {
         id: "53a2a879-442c-4012-9215-a17604dedff7",
