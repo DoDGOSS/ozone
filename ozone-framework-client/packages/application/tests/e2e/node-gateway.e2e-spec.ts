@@ -2,7 +2,6 @@ import "reflect-metadata";
 
 import { NodeGateway } from "./node-gateway";
 
-
 test("login (POST /perform_login)", async () => {
     const gateway = new NodeGateway();
     const loginResponse = await gateway.login("testAdmin1", "password");
@@ -15,12 +14,11 @@ test("login (POST /perform_login)", async () => {
 test.skip("logout (GET /logout)", async () => {
     const gateway = new NodeGateway();
     try {
-    await gateway.logout();
-  }catch(ex){
-    expect(ex.response.status).toEqual(401);
-  }
-     expect(gateway.isAuthenticated).toBeFalsy();
-     await gateway.login("testAdmin1", "password");
-     expect(gateway.isAuthenticated).toBeTruthy();
-
+        await gateway.logout();
+    } catch (ex) {
+        expect(ex.response.status).toEqual(401);
+    }
+    expect(gateway.isAuthenticated).toBeFalsy();
+    await gateway.login("testAdmin1", "password");
+    expect(gateway.isAuthenticated).toBeTruthy();
 });

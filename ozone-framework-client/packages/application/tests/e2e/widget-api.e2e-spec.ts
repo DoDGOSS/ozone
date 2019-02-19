@@ -5,9 +5,7 @@ import { WidgetAPI, WidgetCreateRequest, WidgetCreateResponse, WidgetUpdateReque
 import { NodeGateway } from "./node-gateway";
 import { WIDGETS } from "../unit/data";
 
-
 describe("Widget API", () => {
-
     let gateway: NodeGateway;
     let widgetApi: WidgetAPI;
 
@@ -24,8 +22,8 @@ describe("Widget API", () => {
 
         expect(response.status).toEqual(200);
         expect(response.data).toMatchObject({
-            "success": true,
-            "results": 21
+            success: true,
+            results: 21
         });
     });
 
@@ -36,9 +34,9 @@ describe("Widget API", () => {
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
-            "success": true,
-            "results": 1,
-            "data": [widget]
+            success: true,
+            results: 1,
+            data: [widget]
         });
     });
 
@@ -61,10 +59,12 @@ describe("Widget API", () => {
             background: false,
             singleton: false,
             mobileReady: false,
-            widgetTypes: [{
-                id: 1,
-                name: "standard"
-            }],
+            widgetTypes: [
+                {
+                    id: 1,
+                    name: "standard"
+                }
+            ],
             title: "My Test Widget"
         };
 
@@ -73,47 +73,51 @@ describe("Widget API", () => {
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
             success: true,
-            data: [{
-                id: createRequest.widgetGuid,
-                namespace: "widget",
-                path: createRequest.widgetGuid,
-                value: {
-                    universalName: createRequest.universalName,
-                    namespace: createRequest.name,
-                    description: createRequest.description,
-                    url: createRequest.url,
-                    headerIcon: createRequest.headerIcon,
-                    image: createRequest.image,
-                    smallIconUrl: createRequest.headerIcon,
-                    mediumIconUrl: createRequest.image,
-                    width: createRequest.width,
-                    height: createRequest.height,
-                    x: 0,
-                    y: 0,
-                    minimized: false,
-                    maximized: false,
-                    widgetVersion: createRequest.version,
-                    totalUsers: 0,
-                    totalGroups: 0,
-                    singleton: createRequest.singleton,
-                    visible: createRequest.visible,
-                    background: createRequest.background,
-                    mobileReady: createRequest.mobileReady,
-                    descriptorUrl: null,
-                    definitionVisible: true,
-                    directRequired: [],
-                    allRequired: [],
-                    intents: {
-                        send: [],
-                        receive: []
-                    },
-                    widgetTypes: [{
-                        id: createRequest.widgetTypes[0].id,
-                        name: createRequest.widgetTypes[0].name,
-                        displayName: createRequest.widgetTypes[0].name
-                    }]
+            data: [
+                {
+                    id: createRequest.widgetGuid,
+                    namespace: "widget",
+                    path: createRequest.widgetGuid,
+                    value: {
+                        universalName: createRequest.universalName,
+                        namespace: createRequest.name,
+                        description: createRequest.description,
+                        url: createRequest.url,
+                        headerIcon: createRequest.headerIcon,
+                        image: createRequest.image,
+                        smallIconUrl: createRequest.headerIcon,
+                        mediumIconUrl: createRequest.image,
+                        width: createRequest.width,
+                        height: createRequest.height,
+                        x: 0,
+                        y: 0,
+                        minimized: false,
+                        maximized: false,
+                        widgetVersion: createRequest.version,
+                        totalUsers: 0,
+                        totalGroups: 0,
+                        singleton: createRequest.singleton,
+                        visible: createRequest.visible,
+                        background: createRequest.background,
+                        mobileReady: createRequest.mobileReady,
+                        descriptorUrl: null,
+                        definitionVisible: true,
+                        directRequired: [],
+                        allRequired: [],
+                        intents: {
+                            send: [],
+                            receive: []
+                        },
+                        widgetTypes: [
+                            {
+                                id: createRequest.widgetTypes[0].id,
+                                name: createRequest.widgetTypes[0].name,
+                                displayName: createRequest.widgetTypes[0].name
+                            }
+                        ]
+                    }
                 }
-            }]
+            ]
         });
 
         createResponse = response.data;
@@ -134,10 +138,12 @@ describe("Widget API", () => {
             ...createRequest,
             id: createResponse.data[0].id,
             intents: {
-                send: [{
-                    action: "action",
-                    dataTypes: ["application/json"]
-                }],
+                send: [
+                    {
+                        action: "action",
+                        dataTypes: ["application/json"]
+                    }
+                ],
                 receive: []
             }
         };
@@ -147,44 +153,48 @@ describe("Widget API", () => {
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
             success: true,
-            data: [{
-                id: createRequest.widgetGuid,
-                namespace: "widget",
-                path: createRequest.widgetGuid,
-                value: {
-                    universalName: createRequest.universalName,
-                    namespace: createRequest.name,
-                    description: createRequest.description,
-                    url: createRequest.url,
-                    headerIcon: createRequest.headerIcon,
-                    image: createRequest.image,
-                    smallIconUrl: createRequest.headerIcon,
-                    mediumIconUrl: createRequest.image,
-                    width: createRequest.width,
-                    height: createRequest.height,
-                    x: 0,
-                    y: 0,
-                    minimized: false,
-                    maximized: false,
-                    widgetVersion: createRequest.version,
-                    totalUsers: 0,
-                    totalGroups: 0,
-                    singleton: createRequest.singleton,
-                    visible: createRequest.visible,
-                    background: createRequest.background,
-                    mobileReady: createRequest.mobileReady,
-                    descriptorUrl: null,
-                    definitionVisible: true,
-                    directRequired: [],
-                    allRequired: [],
-                    intents: updateRequest.intents,
-                    widgetTypes: [{
-                        id: createRequest.widgetTypes[0].id,
-                        name: createRequest.widgetTypes[0].name,
-                        displayName: createRequest.widgetTypes[0].name
-                    }]
+            data: [
+                {
+                    id: createRequest.widgetGuid,
+                    namespace: "widget",
+                    path: createRequest.widgetGuid,
+                    value: {
+                        universalName: createRequest.universalName,
+                        namespace: createRequest.name,
+                        description: createRequest.description,
+                        url: createRequest.url,
+                        headerIcon: createRequest.headerIcon,
+                        image: createRequest.image,
+                        smallIconUrl: createRequest.headerIcon,
+                        mediumIconUrl: createRequest.image,
+                        width: createRequest.width,
+                        height: createRequest.height,
+                        x: 0,
+                        y: 0,
+                        minimized: false,
+                        maximized: false,
+                        widgetVersion: createRequest.version,
+                        totalUsers: 0,
+                        totalGroups: 0,
+                        singleton: createRequest.singleton,
+                        visible: createRequest.visible,
+                        background: createRequest.background,
+                        mobileReady: createRequest.mobileReady,
+                        descriptorUrl: null,
+                        definitionVisible: true,
+                        directRequired: [],
+                        allRequired: [],
+                        intents: updateRequest.intents,
+                        widgetTypes: [
+                            {
+                                id: createRequest.widgetTypes[0].id,
+                                name: createRequest.widgetTypes[0].name,
+                                displayName: createRequest.widgetTypes[0].name
+                            }
+                        ]
+                    }
                 }
-            }]
+            ]
         });
     });
 
@@ -195,9 +205,7 @@ describe("Widget API", () => {
         expect(response.status).toEqual(200);
         expect(response.data).toMatchObject({
             success: true,
-            data: [
-                { id: 1 }
-            ]
+            data: [{ id: 1 }]
         });
     });
 
@@ -208,9 +216,7 @@ describe("Widget API", () => {
         expect(response.status).toEqual(200);
         expect(response.data).toMatchObject({
             success: true,
-            data: [
-                { id: 1 }
-            ]
+            data: [{ id: 1 }]
         });
     });
 
@@ -221,9 +227,7 @@ describe("Widget API", () => {
         expect(response.status).toEqual(200);
         expect(response.data).toMatchObject({
             success: true,
-            data: [
-                { id: 1 }
-            ]
+            data: [{ id: 1 }]
         });
     });
 
@@ -234,12 +238,9 @@ describe("Widget API", () => {
         expect(response.status).toEqual(200);
         expect(response.data).toMatchObject({
             success: true,
-            data: [
-                { id: 1 }
-            ]
+            data: [{ id: 1 }]
         });
     });
-
 
     test("deleteWidget - DELETE /widget/", async () => {
         const response = await widgetApi.deleteWidget(createRequest.widgetGuid);
@@ -247,10 +248,12 @@ describe("Widget API", () => {
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
             success: true,
-            data: [{
-                id: createRequest.widgetGuid,
-                value: {}
-            }]
+            data: [
+                {
+                    id: createRequest.widgetGuid,
+                    value: {}
+                }
+            ]
         });
 
         const response2 = await widgetApi.getWidgets();
@@ -260,7 +263,5 @@ describe("Widget API", () => {
             success: true,
             results: 21
         });
-
     });
-
 });

@@ -1,9 +1,7 @@
 import { createValidator, Model, Property } from "@ozone/openapi-decorators";
 
-
 @Model({ name: "AuthUser" })
 export class AuthUserDTO {
-
     static validate = createValidator(AuthUserDTO);
 
     @Property()
@@ -26,13 +24,10 @@ export class AuthUserDTO {
 
     @Property(() => AuthGroupDTO)
     groups: AuthGroupDTO[];
-
 }
-
 
 @Model({ name: "AuthGroup" })
 export class AuthGroupDTO {
-
     static validate = createValidator(AuthGroupDTO);
 
     @Property()
@@ -55,5 +50,4 @@ export class AuthGroupDTO {
 
     @Property()
     automatic: boolean;
-
 }

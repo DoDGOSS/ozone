@@ -1,8 +1,6 @@
 import { Gateway, Response } from "..";
 
-
 export class AdministrationAPI {
-
     private readonly gateway: Gateway;
 
     constructor(gateway: Gateway) {
@@ -24,5 +22,4 @@ export class AdministrationAPI {
     async getRoles(): Promise<Response<any>> {
         return this.gateway.get("administration/listPersonRoles/");
     }
-
 }

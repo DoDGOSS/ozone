@@ -5,10 +5,8 @@ import { WidgetDefinitionAPI } from "../../src/api";
 import { NodeGateway } from "./node-gateway";
 import { WIDGET_DEFINITION } from "../unit/data";
 
-
 // TODO: 404?
 describe.skip("Widget Definition API", () => {
-
     let gateway: NodeGateway;
     let widgetDefApi: WidgetDefinitionAPI;
 
@@ -26,5 +24,4 @@ describe.skip("Widget Definition API", () => {
         expect(response.status).toEqual(200);
         expect(response.data).toEqual(WIDGET_DEFINITION);
     });
-
 });

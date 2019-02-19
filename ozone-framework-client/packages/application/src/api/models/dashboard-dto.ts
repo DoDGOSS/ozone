@@ -1,30 +1,22 @@
 import { createValidator, Model, Property } from "@ozone/openapi-decorators";
 
-
 @Model()
 export class ProfileReference {
-
     @Property({ nullable: true })
     userId?: string;
 
     @Property({ nullable: true })
     userRealName?: string;
-
 }
-
 
 @Model()
 export class UserReference {
-
     @Property()
     userId: string;
-
 }
-
 
 @Model({ name: "Dashboard" })
 export class DashboardDTO {
-
     static validate = createValidator(DashboardDTO);
 
     @Property()
@@ -92,13 +84,10 @@ export class DashboardDTO {
 
     @Property()
     user: UserReference;
-
 }
-
 
 @Model()
 export class DashboardGetResponse {
-
     static validate = createValidator(DashboardGetResponse);
 
     @Property()
@@ -109,14 +98,12 @@ export class DashboardGetResponse {
 
     @Property(() => DashboardDTO)
     data: DashboardDTO[];
-
 }
-
 
 export interface DashboardUpdateRequest {
     name: string;
     guid: string;
-    iconImageUrl?:string;
+    iconImageUrl?: string;
     isdefault?: boolean;
     locked?: boolean;
     description?: string;
@@ -130,10 +117,8 @@ export interface DashboardUpdateParams {
     adminEnabled?: boolean;
 }
 
-
 @Model()
 export class DashboardUpdateResponse {
-
     static validate = createValidator(DashboardUpdateResponse);
 
     @Property()
@@ -141,5 +126,4 @@ export class DashboardUpdateResponse {
 
     @Property(() => DashboardDTO)
     data: DashboardDTO[];
-
 }

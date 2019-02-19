@@ -4,9 +4,7 @@ import { MainPage } from "./selectors";
 
 import { loggedInAs } from "./helpers";
 
-
 module.exports = {
-
     "As a user, I can see the classification banner": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
 
@@ -14,5 +12,4 @@ module.exports = {
 
         browser.closeWindow().end();
     }
-
 };

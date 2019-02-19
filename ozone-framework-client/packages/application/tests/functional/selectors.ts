@@ -1,5 +1,4 @@
 export namespace MainPage {
-
     export const LOGIN_BUTTON = "button[data-element-id='login-button']";
 
     export const LOGIN_DIALOG = "div[data-element-id='login-dialog']";
@@ -58,7 +57,6 @@ export namespace MainPage {
 }
 
 export namespace CreateDashboardDialog {
-
     export const NAME_FIELD = "input[data-role='field'][name='name']";
 
     export const ICON_FIELD = "input[data-role='field'][name='iconImageUrl']";
@@ -78,9 +76,7 @@ export namespace CreateDashboardDialog {
     export const SUBMIT = "button[data-element-id='form-submit-button']";
 }
 
-
 export namespace LoginForm {
-
     export const USER_NAME_FIELD = "input[data-role='field'][name='username']";
 
     export const PASSWORD_FIELD = "input[data-role='field'][name='password']";
@@ -88,13 +84,9 @@ export namespace LoginForm {
     export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
 
     export const SUCCESS_CALLOUT = "div[data-element-id='form-success-callout']";
-
-
 }
 
-
 export namespace AdminWidget {
-
     export const USER_ADMIN_WIDGET_DIALOG = "div[data-element-id='user-admin-widget-dialog']";
 
     export const USER_ADMIN_CREATE_BUTTON = "button[data-element-id='user-admin-widget-create-button']";
@@ -118,14 +110,10 @@ export namespace AdminWidget {
     export const CONFIRM_DELETE_BUTTON = "div.delete-user-alert > div.bp3-alert-footer > button.bp3-intent-danger";
 
     export const SEARCH_FIELD = "input[data-element-id='search-field']";
-
 }
 
-
 export namespace GroupAdminWidget {
-
     export namespace Main {
-
         export const DIALOG = "div[data-element-id='group-admin-widget-dialog']";
 
         export const SEARCH_FIELD = `${Main.DIALOG} input[data-element-id='search-field']`;
@@ -136,7 +124,6 @@ export namespace GroupAdminWidget {
     }
 
     export namespace CreateGroup {
-
         export const FORM = "div[data-element-id='group-admin-widget-create-form']";
 
         export const NAME_INPUT = `${CreateGroup.FORM} input[name='name']`;
@@ -145,8 +132,8 @@ export namespace GroupAdminWidget {
 
         export const DESCRIPTION_INPUT = `${CreateGroup.FORM} input[name='description']`;
 
-        export const SUBMIT_BUTTON = "div[data-element-id='group-admin-widget-create-submit-button'] > button[data-element-id='form-submit-button']";
-
+        export const SUBMIT_BUTTON =
+            "div[data-element-id='group-admin-widget-create-submit-button'] > button[data-element-id='form-submit-button']";
     }
 
     export namespace EditGroup {
@@ -160,8 +147,8 @@ export namespace GroupAdminWidget {
 
         export const NAME_INPUT = `${PropertiesGroup.FORM} input[name='name']`;
 
-        export const SUBMIT_BUTTON = "div[data-element-id='group-admin-widget-edit-submit-button'] > button[data-element-id='form-submit-button']";
-
+        export const SUBMIT_BUTTON =
+            "div[data-element-id='group-admin-widget-edit-submit-button'] > button[data-element-id='form-submit-button']";
     }
 
     export namespace UsersGroup {
@@ -172,9 +159,7 @@ export namespace GroupAdminWidget {
 }
 
 export namespace WidgetAdminWidget {
-
     export namespace Main {
-
         export const DIALOG = "div[data-element-id='widget-admin-widget-dialog']";
 
         export const SEARCH_FIELD = `${Main.DIALOG} input[data-element-id='search-field']`;
@@ -186,7 +171,6 @@ export namespace WidgetAdminWidget {
 }
 
 export namespace GlobalElements {
-
     export const CONFIRMATION_DIALOG = "div[data-element-id='confirmation-dialog']";
 
     export const CONFIRMATION_DIALOG_CONFIRM_BUTTON = `button[data-element-id='confirmation-dialog-confirm'] `;

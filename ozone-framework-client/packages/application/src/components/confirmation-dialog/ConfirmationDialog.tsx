@@ -16,36 +16,37 @@ interface ConfirmationDialogProps {
 
 @observer
 export class ConfirmationDialog extends React.Component<ConfirmationDialogProps> {
-
     render() {
         return (
             <div>
-                <Dialog isOpen={this.props.show}
-                        isCloseButtonShown={false}
-                        title={this.props.title}
-                        data-element-id='confirmation-dialog'>
-
-                    <div className={Classes.DIALOG_BODY}
-                         dangerouslySetInnerHTML={{ __html: this.props.content }}/>
+                <Dialog
+                    isOpen={this.props.show}
+                    isCloseButtonShown={false}
+                    title={this.props.title}
+                    data-element-id="confirmation-dialog"
+                >
+                    <div className={Classes.DIALOG_BODY} dangerouslySetInnerHTML={{ __html: this.props.content }} />
 
                     <div className={Classes.DIALOG_FOOTER}>
-
                         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                            <Button onClick={this.handleConfirm}
-                                    intent={Intent.SUCCESS}
-                                    rightIcon='tick'
-                                    data-element-id='confirmation-dialog-confirm'>
+                            <Button
+                                onClick={this.handleConfirm}
+                                intent={Intent.SUCCESS}
+                                rightIcon="tick"
+                                data-element-id="confirmation-dialog-confirm"
+                            >
                                 OK
                             </Button>
-                            <Button onClick={this.handleCancel}
-                                    intent={Intent.DANGER}
-                                    rightIcon='cross'
-                                    data-element-id='confirmation-cancel'>
+                            <Button
+                                onClick={this.handleCancel}
+                                intent={Intent.DANGER}
+                                rightIcon="cross"
+                                data-element-id="confirmation-cancel"
+                            >
                                 Cancel
                             </Button>
                         </div>
                     </div>
-
                 </Dialog>
             </div>
         );
@@ -53,9 +54,9 @@ export class ConfirmationDialog extends React.Component<ConfirmationDialogProps>
 
     handleConfirm = (event: React.MouseEvent<HTMLElement>) => {
         this.props.confirmHandler(this.props.payload);
-    }
+    };
 
     handleCancel = (event: React.MouseEvent<HTMLElement>) => {
         this.props.cancelHandler(this.props.payload);
-    }
+    };
 }

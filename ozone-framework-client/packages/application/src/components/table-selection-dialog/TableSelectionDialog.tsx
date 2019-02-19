@@ -3,17 +3,19 @@ import * as styles from "./TableSelectionDialog.scss";
 import * as React from "react";
 
 import { Button, Classes, Dialog, InputGroup } from "@blueprintjs/core";
-import { AdminTable } from '../admin/table/AdminTable';
-import { Column } from 'react-table';
+import { AdminTable } from "../admin/table/AdminTable";
+import { Column } from "react-table";
 
 /**
  * properties for TableSelectionDialog extended classes
  */
 export class TableSelectionDialogProps<T> {
-    show: boolean;  /** show or hide the dialog */
+    show: boolean; /** show or hide the dialog */
     title?: string; /** title for the dialog */
     columns: Column<any>[]; /** react-table Column definition for the displayed table */
-    confirmHandler: (selected: Array<T>) => void; /** handler for the Submit button - returns the array of selected elements */
+    confirmHandler: (
+        selected: Array<T>
+    ) => void; /** handler for the Submit button - returns the array of selected elements */
     cancelHandler: () => void; /** handler for the cancel button */
 }
 
@@ -21,16 +23,18 @@ export class TableSelectionDialogProps<T> {
  * state holder for TableSelectionDialog instances
  */
 export interface TableSelectionDialogState<T> {
-    selections: Array<T>; /** available selections for the displayed table */
-    selected: Array<T>; /** selected values from the displayed table */
-    filtered: Array<T>; /** filtered / searched values for the displayed table */
-    filter: string; /** currently entered filter / search string */
-    loading: boolean; /** loading flag for fetching new data */
-    pageSize: number; /** paging size for the table of data */
+    selections: Array<T> /** available selections for the displayed table */;
+    selected: Array<T> /** selected values from the displayed table */;
+    filtered: Array<T> /** filtered / searched values for the displayed table */;
+    filter: string /** currently entered filter / search string */;
+    loading: boolean /** loading flag for fetching new data */;
+    pageSize: number /** paging size for the table of data */;
 }
 
-export abstract class TableSelectionDialog<T> extends React.Component<TableSelectionDialogProps<T>, TableSelectionDialogState<T>> {
-
+export abstract class TableSelectionDialog<T> extends React.Component<
+    TableSelectionDialogProps<T>,
+    TableSelectionDialogState<T>
+> {
     constructor(props: TableSelectionDialogProps<T>) {
         super(props);
 
@@ -38,9 +42,9 @@ export abstract class TableSelectionDialog<T> extends React.Component<TableSelec
             selections: [],
             selected: [],
             filtered: [],
-            filter: '',
+            filter: "",
             loading: true,
-            pageSize: 5,
+            pageSize: 5
         };
     }
 
@@ -53,16 +57,17 @@ export abstract class TableSelectionDialog<T> extends React.Component<TableSelec
         const filter = this.state.filter.toLowerCase();
 
         if (filter) {
-            data = data.filter(row => this.filterMatch(filter, row));
+            data = data.filter((row) => this.filterMatch(filter, row));
         }
 
         return (
             <div>
-                <Dialog isOpen={this.props.show}
-                        isCloseButtonShown={false}
-                        title={this.props.title}
-                        data-element-id='table-selector'>
-
+                <Dialog
+                    isOpen={this.props.show}
+                    isCloseButtonShown={false}
+                    title={this.props.title}
+                    data-element-id="table-selector"
+                >
                     <div className={Classes.DIALOG_BODY}>
                         <div data-element-id="table-selector-dialog">
                             <div className={styles.searchBar}>
@@ -70,7 +75,7 @@ export abstract class TableSelectionDialog<T> extends React.Component<TableSelec
                                     placeholder="Search..."
                                     leftIcon="search"
                                     value={this.state.filter}
-                                    onChange={(e: any) => this.setState({filter: e.target.value})}
+                                    onChange={(e: any) => this.setState({ filter: e.target.value })}
                                     data-element-id="table-selector-search-field"
                                 />
                             </div>
@@ -80,24 +85,21 @@ export abstract class TableSelectionDialog<T> extends React.Component<TableSelec
                                 columns={this.props.columns}
                                 loading={this.state.loading}
                                 pageSize={this.state.pageSize}
-                                getTrProps = {this.injectRowHooks}
+                                getTrProps={this.injectRowHooks}
                             />
                         </div>
                     </div>
- 
+
                     <div className={Classes.DIALOG_FOOTER}>
                         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                            <Button onClick={this.handleConfirm}
-                                    data-element-id='table-selector-confirm'>
+                            <Button onClick={this.handleConfirm} data-element-id="table-selector-confirm">
                                 OK
                             </Button>
-                            <Button onClick={this.handleCancel}
-                                    data-element-id='table-selector-cancel'>
+                            <Button onClick={this.handleCancel} data-element-id="table-selector-cancel">
                                 Cancel
                             </Button>
                         </div>
                     </div>
-
                 </Dialog>
             </div>
         );
@@ -110,7 +112,7 @@ export abstract class TableSelectionDialog<T> extends React.Component<TableSelec
 
     /**
      * function to determine if the provided element matches the filter / search string
-     * 
+     *
      * @param filter filter string
      * @param value object to test for matching state to the provided filter
      */
@@ -125,27 +127,31 @@ export abstract class TableSelectionDialog<T> extends React.Component<TableSelec
 
     private handleConfirm = (event: React.MouseEvent<HTMLElement>) => {
         this.props.confirmHandler(this.state.selected);
-    }
+    };
 
     private handleCancel = (event: React.MouseEvent<HTMLElement>) => {
         this.props.cancelHandler();
-    }
-    
+    };
+
     private isRowSelected(rowInfo: any): boolean {
-        if(rowInfo === undefined) {
+        if (rowInfo === undefined) {
             return false;
         }
 
-        return rowInfo ? this.state.selected.find((value: T) => this.selectionMatch(rowInfo.original, value)) !== undefined : false;
+        return rowInfo
+            ? this.state.selected.find((value: T) => this.selectionMatch(rowInfo.original, value)) !== undefined
+            : false;
     }
 
     private injectRowHooks = (state: any, rowInfo: any) => {
         return {
-            className: this.isRowSelected(rowInfo) ? styles.highlightRow : '',
+            className: this.isRowSelected(rowInfo) ? styles.highlightRow : "",
             onClick: (e: MouseEvent, handleOriginal: Function) => {
                 if (this.isRowSelected(rowInfo)) {
                     this.setState({
-                        selected: this.state.selected.filter((value: T) => !this.selectionMatch(rowInfo.original, value) ),
+                        selected: this.state.selected.filter(
+                            (value: T) => !this.selectionMatch(rowInfo.original, value)
+                        )
                     });
                 } else {
                     const selected: Array<T> = this.state.selected;
@@ -160,8 +166,8 @@ export abstract class TableSelectionDialog<T> extends React.Component<TableSelec
                 }
             }
         };
-    }
-    
+    };
+
     private getSelections = async () => {
         const selections = await this.dataLoader();
 
@@ -169,5 +175,5 @@ export abstract class TableSelectionDialog<T> extends React.Component<TableSelec
             selections,
             loading: false
         });
-    }; 
+    };
 }

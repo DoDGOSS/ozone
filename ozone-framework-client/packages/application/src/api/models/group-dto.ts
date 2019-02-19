@@ -2,10 +2,8 @@ import { createValidator, Model, Property } from "@ozone/openapi-decorators";
 
 import { IdDto } from "./id-dto";
 
-
 @Model({ name: "Group" })
 export class GroupDTO {
-
     static validate = createValidator(GroupDTO);
 
     @Property()
@@ -40,13 +38,10 @@ export class GroupDTO {
 
     @Property({ readOnly: true })
     totalWidgets: number;
-
 }
-
 
 @Model()
 export class GroupGetResponse {
-
     static validate = createValidator(GroupGetResponse);
 
     @Property()
@@ -54,9 +49,7 @@ export class GroupGetResponse {
 
     @Property(() => GroupDTO)
     data: GroupDTO[];
-
 }
-
 
 export interface GroupCreateRequest {
     name: string;
@@ -68,10 +61,8 @@ export interface GroupCreateRequest {
     active?: boolean;
 }
 
-
 @Model()
 export class GroupCreateResponse {
-
     static validate = createValidator(GroupCreateResponse);
 
     @Property()
@@ -79,9 +70,7 @@ export class GroupCreateResponse {
 
     @Property(() => GroupDTO)
     data: GroupDTO[];
-
 }
-
 
 export interface GroupUpdateRequest extends GroupCreateRequest {
     id: number;
@@ -89,10 +78,8 @@ export interface GroupUpdateRequest extends GroupCreateRequest {
     user_ids?: Array<number>;
 }
 
-
 @Model()
 export class GroupUpdateResponse {
-
     static validate = createValidator(GroupUpdateResponse);
 
     @Property()
@@ -100,13 +87,10 @@ export class GroupUpdateResponse {
 
     @Property(() => GroupDTO)
     data: GroupDTO[];
-
 }
-
 
 @Model()
 export class GroupDeleteResponse {
-
     static validate = createValidator(GroupDeleteResponse);
 
     @Property()
@@ -114,5 +98,4 @@ export class GroupDeleteResponse {
 
     @Property(() => IdDto)
     data: IdDto[];
-
 }

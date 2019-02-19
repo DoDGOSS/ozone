@@ -8,10 +8,8 @@ import { ValidationError } from "@ozone/openapi-decorators";
 
 import { lazy } from "../utility";
 
-
 @injectable()
 export class OzoneGateway implements Gateway {
-
     static readonly instance = lazy(() => new OzoneGateway());
 
     private readonly rootUrl: string;
@@ -60,7 +58,6 @@ export class OzoneGateway implements Gateway {
                 return ex.response;
             }
             throw new AuthenticationError("Unable to logout", ex);
-
         }
     }
 
@@ -139,5 +136,4 @@ export class OzoneGateway implements Gateway {
 
         return response;
     }
-
 }

@@ -1,8 +1,6 @@
 import { Gateway, Response } from "..";
 
-
 export class PreferenceAPI {
-
     private readonly gateway: Gateway;
 
     constructor(gateway: Gateway) {
@@ -24,5 +22,4 @@ export class PreferenceAPI {
     async getServerResources(): Promise<Response<any>> {
         return this.gateway.get(`prefs/server/resources/`);
     }
-
 }
