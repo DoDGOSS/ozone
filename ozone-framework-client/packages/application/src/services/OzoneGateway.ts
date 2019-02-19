@@ -6,9 +6,13 @@ import { injectable } from "../inject";
 import { AuthenticationError, AuthUserDTO, Gateway, RequestOptions, Response } from "../api";
 import { ValidationError } from "@ozone/openapi-decorators";
 
+import { lazy } from "../utility";
+
 
 @injectable()
 export class OzoneGateway implements Gateway {
+
+    static readonly instance = lazy(() => new OzoneGateway());
 
     private readonly rootUrl: string;
 

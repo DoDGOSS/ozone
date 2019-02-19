@@ -4,6 +4,7 @@ import { Dashboard, Widget, WidgetDefinition } from "./DashboardStore";
 
 import { UsersWidget } from "../components/admin/widgets/Users/UsersWidget";
 import { GroupsWidget } from "../components/admin/widgets/Groups/GroupsWidget";
+import { SystemConfigWidget } from "../components/admin/widgets/SystemConfig/SystemConfigWidget";
 import { WidgetsWidget } from "../components/admin/widgets/Widgets/WidgetsWidget";
 
 export const widgetAdminWidgetDef: WidgetDefinition = {
@@ -43,6 +44,12 @@ export const sampleWidgetDef: WidgetDefinition = {
     id: "483d0022-58c4-4e43-ba48-f7a8f9af0e82",
     title: "Sample Widget",
     element: <h1>Sample</h1>
+};
+
+export const systemConfigWidgetDef: WidgetDefinition = {
+    id: "a224eb26-31bc-466a-bce2-dccb09e5e2e9",
+    title: "System Configuration",
+    element: <SystemConfigWidget/>
 };
 
 const sampleWidget1: Widget = {
