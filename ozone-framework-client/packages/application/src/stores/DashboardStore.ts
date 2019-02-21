@@ -97,14 +97,15 @@ export class DashboardStore {
         this.mainStore.showConfirmationDialog();
         when(
           () => !this.mainStore.isConfirmationDialogVisible,
-            ()=>{
-              if (this.mainStore.isConfrimationTrue === true){
-                let { layout } = dashboard;
-                this.setDashboard(dashboard);
-                layout = widget;
-                dashboard.layout = layout;
-                this.setLayout(dashboard.layout);
-              }
+            ()=> {
+                if (this.mainStore.isConfirmationTrue) {
+                    let { layout } = dashboard;
+                    this.setDashboard(dashboard);
+                    layout = widget;
+                    dashboard.layout = layout;
+                    this.setLayout(dashboard.layout);
+                }
+            }
         )
       }else{
         let { layout } = dashboard;
