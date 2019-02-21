@@ -6,7 +6,7 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 export interface NightwatchCustomPageObjects {
-    page: {[name: string]: () => EnhancedPageObject};
+    page: { [name: string]: () => EnhancedPageObject };
 }
 
 export interface NightwatchDesiredCapabilities {
@@ -118,7 +118,7 @@ export interface NightwatchScreenshotOptions {
 }
 
 export interface NightwatchTestRunner {
-    "type"?: string;
+    type?: string;
     options?: {
         ui?: string;
     };
@@ -373,7 +373,7 @@ export interface NightwatchTestOptions extends NightwatchTestSettingGeneric {
 
 export interface NightwatchTestSuite {
     name: string;
-    "module": string;
+    module: string;
     group: string;
     results: any;
 }
@@ -633,8 +633,7 @@ export interface NightwatchTypedCallbackResult<T> {
 }
 
 // tslint:disable-next-line:no-empty-interface
-export interface NightwatchCallbackResult extends NightwatchTypedCallbackResult<any> {
-}
+export interface NightwatchCallbackResult extends NightwatchTypedCallbackResult<any> {}
 
 export interface NightwatchLogEntry {
     /**
@@ -655,125 +654,125 @@ export interface NightwatchLogEntry {
 
 export interface NightwatchKeys {
     /** Releases all held modifier keys. */
-    "NULL": string;
+    NULL: string;
     /** OS-specific keystroke sequence that performs a cancel action. */
-    "CANCEL": string;
+    CANCEL: string;
     /** The help key. This key only appears on older Apple keyboards in place of the Insert key. */
-    "HELP": string;
+    HELP: string;
     /** The backspace key. */
-    "BACK_SPACE": string;
+    BACK_SPACE: string;
     /** The tab key. */
-    "TAB": string;
+    TAB: string;
     /** The clear key. This key only appears on full-size Apple keyboards in place of Num Lock key. */
-    "CLEAR": string;
+    CLEAR: string;
     /** The return key. */
-    "RETURN": string;
+    RETURN: string;
     /** The enter (numpad) key. */
-    "ENTER": string;
+    ENTER: string;
     /** The shift key. */
-    "SHIFT": string;
+    SHIFT: string;
     /** The control key. */
-    "CONTROL": string;
+    CONTROL: string;
     /** The alt key. */
-    "ALT": string;
+    ALT: string;
     /** The pause key. */
-    "PAUSE": string;
+    PAUSE: string;
     /** The escape key. */
-    "ESCAPE": string;
+    ESCAPE: string;
 
     /** The space bar. */
-    "SPACE": string;
+    SPACE: string;
     /** The page up key. */
-    "PAGEUP": string;
+    PAGEUP: string;
     /** The page down key. */
-    "PAGEDOWN": string;
+    PAGEDOWN: string;
     /** The end key. */
-    "END": string;
+    END: string;
     /** The home key. */
-    "HOME": string;
+    HOME: string;
     /** The left arrow. */
-    "ARROW_LEFT": string;
-    "LEFT_ARROW": string;
+    ARROW_LEFT: string;
+    LEFT_ARROW: string;
     /** The up arrow. */
-    "ARROW_UP": string;
-    "UP_ARROW": string;
+    ARROW_UP: string;
+    UP_ARROW: string;
     /** The right arrow. */
-    "ARROW_RIGHT": string;
-    "RIGHT_ARROW": string;
+    ARROW_RIGHT: string;
+    RIGHT_ARROW: string;
     /** The down arrow. */
-    "ARROW_DOWN": string;
-    "DOWN_ARROW": string;
+    ARROW_DOWN: string;
+    DOWN_ARROW: string;
     /** The insert key. */
-    "INSERT": string;
+    INSERT: string;
     /** The delete key. */
-    "DELETE": string;
+    DELETE: string;
     /** The semicolon key. */
-    "SEMICOLON": string;
+    SEMICOLON: string;
     /** The equals key. */
-    "EQUALS": string;
+    EQUALS: string;
 
     /** The numpad zero key. */
-    "NUMPAD0": string;
+    NUMPAD0: string;
     /** The numpad one key. */
-    "NUMPAD1": string;
+    NUMPAD1: string;
     /** The numpad two key. */
-    "NUMPAD2": string;
+    NUMPAD2: string;
     /** The numpad three key. */
-    "NUMPAD3": string;
+    NUMPAD3: string;
     /** The numpad four key. */
-    "NUMPAD4": string;
+    NUMPAD4: string;
     /** The numpad five key. */
-    "NUMPAD5": string;
+    NUMPAD5: string;
     /** The numpad six key. */
-    "NUMPAD6": string;
+    NUMPAD6: string;
     /** The numpad seven key. */
-    "NUMPAD7": string;
+    NUMPAD7: string;
     /** The numpad eight key. */
-    "NUMPAD8": string;
+    NUMPAD8: string;
     /** The numpad nine key. */
-    "NUMPAD9": string;
+    NUMPAD9: string;
 
     /** The numpad multiply (*) key. */
-    "MULTIPLY": string;
+    MULTIPLY: string;
     /** The numpad add (+) key. */
-    "ADD": string;
+    ADD: string;
     /** The numpad separator (=) key. */
-    "SEPARATOR": string;
+    SEPARATOR: string;
     /** The numpad subtract (-) key. */
-    "SUBTRACT": string;
+    SUBTRACT: string;
     /** The numpad decimal (.) key. */
-    "DECIMAL": string;
+    DECIMAL: string;
     /** The numpad divide (/) key. */
-    "DIVIDE": string;
+    DIVIDE: string;
 
     /** The F1 key. */
-    "F1": string;
+    F1: string;
     /** The F2 key. */
-    "F2": string;
+    F2: string;
     /** The F3 key. */
-    "F3": string;
+    F3: string;
     /** The F4 key. */
-    "F4": string;
+    F4: string;
     /** The F5 key. */
-    "F5": string;
+    F5: string;
     /** The F6 key. */
-    "F6": string;
+    F6: string;
     /** The F7 key. */
-    "F7": string;
+    F7: string;
     /** The F8 key. */
-    "F8": string;
+    F8: string;
     /** The F9 key. */
-    "F9": string;
+    F9: string;
     /** The F10 key. */
-    "F10": string;
+    F10: string;
     /** The F11 key. */
-    "F11": string;
+    F11: string;
     /** The F12 key. */
-    "F12": string;
+    F12: string;
     /** The meta (Windows) key. */
-    "META": string;
+    META: string;
     /** The command (⌘) key. */
-    "COMMAND": string;
+    COMMAND: string;
 }
 
 export interface NightwatchAPI extends SharedFunctions {
@@ -1294,7 +1293,11 @@ export interface NightwatchAPI extends SharedFunctions {
      * Query the value of an element's computed CSS property.
      * The CSS property to query should be specified using the CSS property name, not the JavaScript property name (e.g. background-color instead of backgroundColor).
      */
-    elementIdCssProperty(id: string, cssPropertyName: string, callback?: (result: NightwatchCallbackResult) => void): this;
+    elementIdCssProperty(
+        id: string,
+        cssPropertyName: string,
+        callback?: (result: NightwatchCallbackResult) => void
+    ): this;
 
     /**
      * Determine if an element is currently displayed.
@@ -1310,7 +1313,12 @@ export interface NightwatchAPI extends SharedFunctions {
      * @param value: The search target.
      * @param callback: Optional callback function to be called when the command finishes.
      */
-    elementIdElement(id: string, using: string, value: string, callback?: (result: NightwatchCallbackResult) => void): this;
+    elementIdElement(
+        id: string,
+        using: string,
+        value: string,
+        callback?: (result: NightwatchCallbackResult) => void
+    ): this;
 
     /**
      * Search for multiple elements on the page, starting from the identified element. The located element will be returned as a WebElement JSON objects.
@@ -1319,7 +1327,12 @@ export interface NightwatchAPI extends SharedFunctions {
      * @param value: The search target.
      * @param callback: Optional callback function to be called when the command finishes.
      */
-    elementIdElements(id: string, using: string, value: string, callback?: (result: NightwatchCallbackResult) => void): this;
+    elementIdElements(
+        id: string,
+        using: string,
+        value: string,
+        callback?: (result: NightwatchCallbackResult) => void
+    ): this;
 
     /**
      * Determine if an element is currently enabled.
@@ -1418,7 +1431,11 @@ export interface NightwatchAPI extends SharedFunctions {
      * @param callback: Optional callback function to be called when the command finishes.
      * @returns The script result.
      */
-    execute(body: ((...data: any[]) => void) | string, args?: any[], callback?: (result: NightwatchCallbackResult) => void): this;
+    execute(
+        body: ((...data: any[]) => void) | string,
+        args?: any[],
+        callback?: (result: NightwatchCallbackResult) => void
+    ): this;
 
     /**
      * Inject a snippet of JavaScript into the page for execution in the context of the currently selected frame. The executed script is assumed to be asynchronous
@@ -1442,7 +1459,11 @@ export interface NightwatchAPI extends SharedFunctions {
      * @param callback: Optional callback function to be called when the command finishes.
      * @returns The script result.
      */
-    executeAsync(script: ((...data: any[]) => void) | string, args?: any[], callback?: (result: NightwatchCallbackResult) => void): this;
+    executeAsync(
+        script: ((...data: any[]) => void) | string,
+        args?: any[],
+        callback?: (result: NightwatchCallbackResult) => void
+    ): this;
 
     /**
      * Navigate forwards in the browser history, if possible.
@@ -1691,7 +1712,10 @@ export interface NightwatchAPI extends SharedFunctions {
      * @param url: If missing, it will return the URL of the current page as an argument to the supplied callback
      * @param callback Optional callback function to be called when the command finishes.
      */
-    url(url?: string | ((result: NightwatchCallbackResult) => void), callback?: (result: NightwatchCallbackResult) => void): this;
+    url(
+        url?: string | ((result: NightwatchCallbackResult) => void),
+        callback?: (result: NightwatchCallbackResult) => void
+    ): this;
 
     /**
      * Change focus to another window or close the current window.
@@ -1734,7 +1758,12 @@ export interface NightwatchAPI extends SharedFunctions {
      * @param: offsetY:
      * @param: callback:
      */
-    windowPosition(windowHandle: string, offsetX: number, offsetY: number, callback: (result: NightwatchCallbackResult) => void): this;
+    windowPosition(
+        windowHandle: string,
+        offsetX: number,
+        offsetY: number,
+        callback: (result: NightwatchCallbackResult) => void
+    ): this;
 
     /**
      * Change or get the size of the specified window. If the second argument is a function it will be used as a callback and the call will perform a get request to retrieve the existing window size.
@@ -1791,7 +1820,11 @@ export interface NightwatchCustomCommands {}
 /* tslint:disable-next-line:no-empty-interface */
 export interface NightwatchCustomAssertions {}
 
-export interface NightwatchBrowser extends NightwatchAPI, NightwatchCustomCommands, NightwatchCustomAssertions, NightwatchCustomPageObjects { }
+export interface NightwatchBrowser
+    extends NightwatchAPI,
+        NightwatchCustomCommands,
+        NightwatchCustomAssertions,
+        NightwatchCustomPageObjects {}
 
 export type NightwatchTest = (browser: NightwatchBrowser) => void;
 
@@ -1806,7 +1839,7 @@ export interface NightwatchTestHooks {
     after?: NightwatchTestHook;
     beforeEach?: NightwatchTestHook;
     afterEach?: NightwatchTestHook;
-    '@disabled'?: boolean;
+    "@disabled"?: boolean;
 }
 
 export type NightwatchTests = NightwatchTestFunctions | NightwatchTestHooks;
@@ -1815,7 +1848,14 @@ export type NightwatchTests = NightwatchTestFunctions | NightwatchTestHooks;
  * Performs an assertion
  *
  */
-export type NightwatchAssert = (passed: boolean, receivedValue?: any, expectedValue?: any, message?: string, abortOnFailure?: boolean, originalStackTrace?: string) => void;
+export type NightwatchAssert = (
+    passed: boolean,
+    receivedValue?: any,
+    expectedValue?: any,
+    message?: string,
+    abortOnFailure?: boolean,
+    originalStackTrace?: string
+) => void;
 
 /**
  * Abstract assertion class that will subclass all defined assertions
@@ -1899,7 +1939,7 @@ export interface EnhancedPageObject extends SharedFunctions {
     /**
      * A map of Element objects (see [Enhanced Element Instances](https://github.com/nightwatchjs/nightwatch/wiki/Page-Object-API#enhanced-element-instances)) used by element selectors.
      */
-    elements: {[name: string]: EnhancedElementInstance};
+    elements: { [name: string]: EnhancedElementInstance };
 
     /**
      * The name of the page object as defined by its module name (not including the extension).
@@ -1955,7 +1995,11 @@ export interface SharedFunctions {
      * @param callback: Optional callback function to be called when the command finishes.
      * @returns The value of the attribute
      */
-    getAttribute(selector: string, attribute: string, callback?: (this: NightwatchAPI, result: NightwatchCallbackResult) => void): this;
+    getAttribute(
+        selector: string,
+        attribute: string,
+        callback?: (this: NightwatchAPI, result: NightwatchCallbackResult) => void
+    ): this;
 
     /**
      * Retrieve the value of a css property for a given DOM element. Uses elementIdCssProperty protocol command.
@@ -1975,7 +2019,11 @@ export interface SharedFunctions {
      * @param callback: Optional callback function to be called when the command finishes.
      * @returns The value of the css property
      */
-    getCssProperty(selector: string, cssProperty: string, callback?: (this: NightwatchAPI, result: NightwatchCallbackResult) => void): this;
+    getCssProperty(
+        selector: string,
+        cssProperty: string,
+        callback?: (this: NightwatchAPI, result: NightwatchCallbackResult) => void
+    ): this;
 
     /**
      * Determine an element's size in pixels. Uses elementIdSize protocol command.
@@ -2036,7 +2084,10 @@ export interface SharedFunctions {
      * @param callback: Optional callback function to be called when the command finishes.
      * @returns The X and Y coordinates for the element on the page.
      */
-    getLocationInView(selector: string, callback?: (this: NightwatchAPI, result: NightwatchCallbackResult) => void): this;
+    getLocationInView(
+        selector: string,
+        callback?: (this: NightwatchAPI, result: NightwatchCallbackResult) => void
+    ): this;
 
     /**
      * Query for an element's tag name. Uses elementIdName protocol command.
@@ -2127,7 +2178,12 @@ export interface SharedFunctions {
      * @param yoffset: Y offset to move to, relative to the top-left corner of the element.
      * @param callback: Optional callback function to be called when the command finishes.
      */
-    moveToElement(selector: string, xoffset: number, yoffset: number, callback?: (result: NightwatchCallbackResult) => void): this;
+    moveToElement(
+        selector: string,
+        xoffset: number,
+        yoffset: number,
+        callback?: (result: NightwatchCallbackResult) => void
+    ): this;
 
     /**
      * Sends some text to an element. Can be used to set the value of a form element or to send a sequence of key strokes to an element. Any UTF-8 character may be specified.
@@ -2188,7 +2244,13 @@ export interface SharedFunctions {
      * (e.g. Element %s was not in the page for %d ms).
      */
     waitForElementNotPresent(selector: string, time?: number, message?: string): this;
-    waitForElementNotPresent(selector: string, time?: number, abortOnFailure?: boolean, callback?: () => void, message?: string): this;
+    waitForElementNotPresent(
+        selector: string,
+        time?: number,
+        abortOnFailure?: boolean,
+        callback?: () => void,
+        message?: string
+    ): this;
 
     /**
      * Opposite of waitForElementVisible. Waits a given time in milliseconds for an element to be not visible (i.e. hidden but existing) in the page before performing
@@ -2211,7 +2273,13 @@ export interface SharedFunctions {
      * (e.g. Element %s was not in the page for %d ms).
      */
     waitForElementNotVisible(selector: string, time?: number, message?: string): this;
-    waitForElementNotVisible(selector: string, time?: number, abortOnFailure?: boolean, callback?: () => void, message?: string): this;
+    waitForElementNotVisible(
+        selector: string,
+        time?: number,
+        abortOnFailure?: boolean,
+        callback?: () => void,
+        message?: string
+    ): this;
 
     /**
      * Waits a given time in milliseconds for an element to be present in the page before performing any other commands or assertions.
@@ -2244,7 +2312,13 @@ export interface SharedFunctions {
      * @param message: Optional message to be shown in the output; the message supports two placeholders: %s for current selector and %d for the time
      * (e.g. Element %s was not in the page for %d ms).
      */
-    waitForElementPresent(selector: string, time?: number, abortOnFailure?: boolean, callback?: () => void, message?: string): this;
+    waitForElementPresent(
+        selector: string,
+        time?: number,
+        abortOnFailure?: boolean,
+        callback?: () => void,
+        message?: string
+    ): this;
 
     /**
      * Waits a given time in milliseconds for an element to be visible in the page before performing any other commands or assertions.
@@ -2278,5 +2352,11 @@ export interface SharedFunctions {
      * @param message: Optional message to be shown in the output; the message supports two placeholders: %s for current selector and %d for the time (e.g. Element %s was not in the page for %d ms).
      */
     waitForElementVisible(selector: string, time?: number, message?: string): this;
-    waitForElementVisible(selector: string, time?: number, abortOnFailure?: boolean, callback?: () => void, message?: string): this;
+    waitForElementVisible(
+        selector: string,
+        time?: number,
+        abortOnFailure?: boolean,
+        callback?: () => void,
+        message?: string
+    ): this;
 }

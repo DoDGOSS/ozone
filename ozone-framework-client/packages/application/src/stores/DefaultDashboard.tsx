@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 import { Dashboard, Widget, WidgetDefinition } from "./DashboardStore";
 
@@ -10,7 +10,7 @@ import { WidgetsWidget } from "../components/admin/widgets/Widgets/WidgetsWidget
 export const widgetAdminWidgetDef: WidgetDefinition = {
     id: "0b7a39e0-87a2-4077-801b-2e5160fb2287",
     title: "Widget Administration",
-    element: <WidgetsWidget/>
+    element: <WidgetsWidget />
 };
 
 const widgetAdminWidget: Widget = {
@@ -21,7 +21,7 @@ const widgetAdminWidget: Widget = {
 export const userAdminWidgetDef: WidgetDefinition = {
     id: "105a20c8-f81b-47fb-b683-af3a1cc4ec50",
     title: "User Administration",
-    element: <UsersWidget/>
+    element: <UsersWidget />
 };
 
 const userAdminWidget: Widget = {
@@ -32,7 +32,7 @@ const userAdminWidget: Widget = {
 export const groupAdminWidgetDef: WidgetDefinition = {
     id: "17a6e77b-304f-47e6-a6be-16143ee3b2fb",
     title: "Group Administration",
-    element: <GroupsWidget/>
+    element: <GroupsWidget />
 };
 
 const groupAdminWidget: Widget = {
@@ -49,7 +49,7 @@ export const sampleWidgetDef: WidgetDefinition = {
 export const systemConfigWidgetDef: WidgetDefinition = {
     id: "a224eb26-31bc-466a-bce2-dccb09e5e2e9",
     title: "System Configuration",
-    element: <SystemConfigWidget/>
+    element: <SystemConfigWidget />
 };
 
 const sampleWidget1: Widget = {
@@ -61,28 +61,28 @@ export const DEFAULT_DASHBOARD: Dashboard = {
     layout: {
         direction: "row",
         splitPercentage: 50,
-        first:'1',
+        first: "1",
         second: {
             direction: "column",
             splitPercentage: 50,
-            first: '2',
-            second: '3'
+            first: "2",
+            second: "3"
         }
     },
     widgets: {
-        ['1']: userAdminWidget,
-        ['2']: groupAdminWidget,
-        ['3']: sampleWidget1,
-        ['4']: widgetAdminWidget,
+        ["1"]: userAdminWidget,
+        ["2"]: groupAdminWidget,
+        ["3"]: sampleWidget1,
+        ["4"]: widgetAdminWidget
     }
 };
 
 export const LOGIN_DASHBOARD: Dashboard = {
-    layout:null,
+    layout: null,
     widgets: {
         [userAdminWidget.id]: userAdminWidget,
         [groupAdminWidget.id]: groupAdminWidget,
         [sampleWidget1.id]: sampleWidget1,
-        [widgetAdminWidget.id]: widgetAdminWidget,
+        [widgetAdminWidget.id]: widgetAdminWidget
     }
 };

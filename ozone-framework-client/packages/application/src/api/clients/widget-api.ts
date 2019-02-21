@@ -1,4 +1,4 @@
-import * as qs from 'qs';
+import * as qs from "qs";
 
 import { inject, injectable, TYPES } from "../../inject";
 
@@ -16,10 +16,8 @@ import {
     WidgetUpdateUsersResponse
 } from "..";
 
-
 @injectable()
 export class WidgetAPI {
-
     private readonly gateway: Gateway;
 
     constructor(@inject(TYPES.Gateway) gateway: Gateway) {
@@ -80,7 +78,10 @@ export class WidgetAPI {
         });
     }
 
-    async removeWidgetUsers(widgetId: string, userIds: number | number[]): Promise<Response<WidgetUpdateUsersResponse>> {
+    async removeWidgetUsers(
+        widgetId: string,
+        userIds: number | number[]
+    ): Promise<Response<WidgetUpdateUsersResponse>> {
         const requestData = qs.stringify({
             widget_id: widgetId,
             data: JSON.stringify(IdDto.fromValues(userIds)),
@@ -96,7 +97,10 @@ export class WidgetAPI {
         });
     }
 
-    async addWidgetGroups(widgetId: string, groupIds: number | number[]): Promise<Response<WidgetUpdateGroupsResponse>> {
+    async addWidgetGroups(
+        widgetId: string,
+        groupIds: number | number[]
+    ): Promise<Response<WidgetUpdateGroupsResponse>> {
         const requestData = qs.stringify({
             widget_id: widgetId,
             data: JSON.stringify(IdDto.fromValues(groupIds)),
@@ -112,7 +116,10 @@ export class WidgetAPI {
         });
     }
 
-    async removeWidgetGroups(widgetId: string, groupIds: number | number[]): Promise<Response<WidgetUpdateGroupsResponse>> {
+    async removeWidgetGroups(
+        widgetId: string,
+        groupIds: number | number[]
+    ): Promise<Response<WidgetUpdateGroupsResponse>> {
         const requestData = qs.stringify({
             widget_id: widgetId,
             data: JSON.stringify(IdDto.fromValues(groupIds)),
@@ -141,5 +148,4 @@ export class WidgetAPI {
             validate: WidgetDeleteResponse.validate
         });
     }
-
 }

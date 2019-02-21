@@ -8,7 +8,6 @@ import { LoginScreen } from "./components/login-dialog/LoginScreen";
 import { AuthStore } from "./stores";
 import { lazyInject } from "./inject";
 
-
 export const Paths = {
     HOME: "/",
     LOGIN: "/"
@@ -16,7 +15,6 @@ export const Paths = {
 
 @observer
 export default class App extends React.Component {
-
     @lazyInject(AuthStore)
     private authStore: AuthStore;
 
@@ -25,16 +23,10 @@ export default class App extends React.Component {
         return (
             <Router>
                 <div>
-                {isLoggedIn===false &&
-                  <Route exact path={Paths.LOGIN}
-                       component={LoginScreen}/>}
-                {!isLoggedIn===false &&
-                    <Route exact path={Paths.HOME}
-                           component={HomeScreen}/>
-                }
+                    {isLoggedIn === false && <Route exact path={Paths.LOGIN} component={LoginScreen} />}
+                    {!isLoggedIn === false && <Route exact path={Paths.HOME} component={HomeScreen} />}
                 </div>
             </Router>
         );
     }
-
 }

@@ -12,10 +12,8 @@ import {
     DashboardUpdateResponse
 } from "../models/dashboard-dto";
 
-
 @injectable()
 export class DashboardAPI {
-
     private readonly gateway: Gateway;
 
     constructor(@inject(TYPES.Gateway) gateway: Gateway) {
@@ -28,7 +26,10 @@ export class DashboardAPI {
         });
     }
 
-    async createDashboard(data: DashboardUpdateRequest, options?: DashboardUpdateParams): Promise<Response<DashboardUpdateResponse>> {
+    async createDashboard(
+        data: DashboardUpdateRequest,
+        options?: DashboardUpdateParams
+    ): Promise<Response<DashboardUpdateResponse>> {
         const requestData = buildDashboardUpdateRequest(data, options);
 
         return this.gateway.post(`dashboard/`, requestData, {
@@ -39,7 +40,10 @@ export class DashboardAPI {
         });
     }
 
-    async updateDashboard(data: DashboardUpdateRequest, options?: DashboardUpdateParams): Promise<Response<DashboardUpdateResponse>> {
+    async updateDashboard(
+        data: DashboardUpdateRequest,
+        options?: DashboardUpdateParams
+    ): Promise<Response<DashboardUpdateResponse>> {
         const requestData = buildDashboardUpdateRequest(data, options);
 
         return this.gateway.put(`dashboard/${data.guid}/`, requestData, {
@@ -62,9 +66,7 @@ export class DashboardAPI {
             validate: DashboardDTO.validate
         });
     }
-
 }
-
 
 function buildDashboardUpdateRequest(data: DashboardUpdateRequest, options?: DashboardUpdateParams): string {
     const request: any = {

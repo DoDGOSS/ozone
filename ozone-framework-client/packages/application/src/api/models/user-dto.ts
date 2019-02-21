@@ -2,10 +2,8 @@ import { createValidator, Model, Property } from "@ozone/openapi-decorators";
 
 import { IdDto } from "./id-dto";
 
-
 @Model({ name: "User" })
 export class UserDTO {
-
     static validate = createValidator(UserDTO);
 
     @Property()
@@ -37,13 +35,10 @@ export class UserDTO {
 
     @Property({ readOnly: true })
     totalWidgets: number;
-
 }
-
 
 @Model()
 export class UserGetResponse {
-
     static validate = createValidator(UserGetResponse);
 
     @Property()
@@ -54,9 +49,7 @@ export class UserGetResponse {
 
     @Property(() => UserDTO)
     data: UserDTO[];
-
 }
-
 
 export interface UserCreateRequest {
     username: string;
@@ -64,10 +57,8 @@ export interface UserCreateRequest {
     email: string;
 }
 
-
 @Model()
 export class UserCreateResponse {
-
     static validate = createValidator(UserCreateResponse);
 
     @Property()
@@ -77,7 +68,6 @@ export class UserCreateResponse {
     data: UserDTO[];
 }
 
-
 export interface UserUpdateRequest {
     id: number;
     username: string;
@@ -85,10 +75,8 @@ export interface UserUpdateRequest {
     email: string;
 }
 
-
 @Model()
 export class UserUpdateResponse {
-
     static validate = createValidator(UserUpdateResponse);
 
     @Property()
@@ -96,13 +84,10 @@ export class UserUpdateResponse {
 
     @Property(() => UserDTO)
     data: UserDTO[];
-
 }
-
 
 @Model()
 export class UserDeleteResponse {
-
     static validate = createValidator(UserDeleteResponse);
 
     @Property()
@@ -110,7 +95,4 @@ export class UserDeleteResponse {
 
     @Property(() => IdDto)
     data: IdDto[];
-
 }
-
-

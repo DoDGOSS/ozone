@@ -7,7 +7,7 @@ import { lazyInject } from "../../../../inject";
 import { GroupAPI, GroupDTO, GroupQueryCriteria, GroupUpdateRequest, UserDTO } from "../../../../api";
 
 import { AdminTable } from "../../table/AdminTable";
-import { UserEditGroupsDialog } from './UserEditGroupsDialog';
+import { UserEditGroupsDialog } from "./UserEditGroupsDialog";
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
 
 interface UserEditGroupsProps {
@@ -34,21 +34,21 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
             Header: "Groups",
             columns: [
                 { Header: "Group Name", accessor: "name" },
-                { Header: "Users",      accessor: "totalUsers" },
-                { Header: "Widgets",    accessor: "totalWidgets" },
-                { Header: "Dashboards", accessor: "totalDashboards"  }
-            ],
-        },
+                { Header: "Users", accessor: "totalUsers" },
+                { Header: "Widgets", accessor: "totalWidgets" },
+                { Header: "Dashboards", accessor: "totalDashboards" }
+            ]
+        }
     ];
     private readonly GROUPS_COLUMN_DEFINITION = [
         {
             Header: "Groups",
             columns: [
                 { Header: "Group Name", accessor: "name" },
-                { Header: "Users",      accessor: "totalUsers" },
-                { Header: "Widgets",    accessor: "totalWidgets" },
-                { Header: "Dashboards", accessor: "totalDashboards"  }
-            ],
+                { Header: "Users", accessor: "totalUsers" },
+                { Header: "Widgets", accessor: "totalWidgets" },
+                { Header: "Dashboards", accessor: "totalDashboards" }
+            ]
         },
         {
             Header: "Actions",
@@ -56,7 +56,7 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
                 <div>
                     <ButtonGroup>
                         <Button
-                            data-element-id='user-admin-widget-delete-group-button'
+                            data-element-id="user-admin-widget-delete-group-button"
                             text="Delete"
                             intent={Intent.DANGER}
                             icon="trash"
@@ -71,20 +71,20 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
 
     @lazyInject(GroupAPI)
     private groupAPI: GroupAPI;
-    
+
     constructor(props: UserEditGroupsProps) {
         super(props);
         this.state = {
             groups: [],
             filtered: [],
-            filter: '',
+            filter: "",
             loading: true,
             pageSize: 5,
             user: this.props.user,
             showAdd: false,
             showDelete: false,
-            confirmationMessage: '',
-            manageGroup: undefined,
+            confirmationMessage: "",
+            manageGroup: undefined
         };
     }
 
@@ -96,25 +96,22 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
         let data = this.state.groups;
         const filter = this.state.filter.toLowerCase();
 
-
         // TODO - Improve this - this will be slow if there are many users.
         // Minimally could wait to hit enter before filtering. Pagination handling
         if (filter) {
-            data = data.filter(row => {
+            data = data.filter((row) => {
                 return row.name.toLowerCase().includes(filter);
             });
         }
 
         return (
-
             <div data-element-id="group-admin-widget-dialog">
-
                 <div className={styles.actionBar}>
                     <InputGroup
                         placeholder="Search..."
                         leftIcon="search"
                         value={this.state.filter}
-                        onChange={(e: any) => this.setState({filter: e.target.value})}
+                        onChange={(e: any) => this.setState({ filter: e.target.value })}
                         data-element-id="search-field"
                     />
                 </div>
@@ -132,7 +129,7 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
                     <Button
                         text="Add"
                         onClick={() => this.toggleShowAdd()}
-                        data-element-id='group-edit-add-group-dialog-add-button'
+                        data-element-id="group-edit-add-group-dialog-add-button"
                     />
                 </div>
 
@@ -142,15 +139,16 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
                     confirmHandler={this.handleAddGroupResponse}
                     cancelHandler={this.handleAddGroupCancel}
                     columns={UserEditGroups.SELECT_GROUPS_COLUMN_DEFINITION}
-                    />
+                />
 
                 <ConfirmationDialog
                     show={this.state.showDelete}
-                    title='Warning'
+                    title="Warning"
                     content={this.state.confirmationMessage}
                     confirmHandler={this.handleConfirmationConfirmDelete}
                     cancelHandler={this.handleConfirmationCancel}
-                    payload={this.state.manageGroup} />
+                    payload={this.state.manageGroup}
+                />
             </div>
         );
     }
@@ -178,61 +176,61 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
             loading: false
         });
     };
-    
-    private handleAddGroupResponse = async (groups: Array<GroupDTO>) => {
 
+    private handleAddGroupResponse = async (groups: Array<GroupDTO>) => {
         // const responses = await Promise.all(groups.map( async (group: GroupDTO) => {
         const responses = [];
         for (const group of groups) {
             const request: GroupUpdateRequest = {
                 id: group.id,
                 name: group.name,
-                update_action: 'add',
+                update_action: "add",
                 user_ids: [this.state.user.id]
             };
-    
+
             const response = await this.groupAPI.updateGroup(request);
-    
+
             if (response.status !== 200) return;
 
             responses.push(response.data.data);
         }
 
         this.setState({
-            showAdd: false,
+            showAdd: false
         });
 
         this.getGroups();
         this.props.onUpdate(responses);
 
         return responses;
-    }
+    };
 
     private handleAddGroupCancel = () => {
         this.setState({
-            showAdd: false,
+            showAdd: false
         });
-    }
+    };
 
     private deleteGroup = async (group: GroupDTO) => {
         const currentUser: UserDTO = this.state.user;
 
         this.setState({
             showDelete: true,
-            confirmationMessage: `This action will permenantly delete <strong>${group.displayName}</strong> from the user <strong>${currentUser.userRealName}</strong>`,
+            confirmationMessage: `This action will permenantly delete <strong>${
+                group.displayName
+            }</strong> from the user <strong>${currentUser.userRealName}</strong>`,
             manageGroup: group
         });
 
         this.getGroups();
 
         return true;
-    }
+    };
 
     private handleConfirmationConfirmDelete = async (payload: any) => {
-
         this.setState({
             showDelete: false,
-            manageGroup: undefined,
+            manageGroup: undefined
         });
 
         const group: GroupDTO = payload;
@@ -240,25 +238,25 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
         const request: GroupUpdateRequest = {
             id: group.id,
             name: group.name,
-            update_action: 'remove',
+            update_action: "remove",
             user_ids: [this.state.user.id]
         };
 
-        const response = await this.groupAPI.updateGroup(request);        
+        const response = await this.groupAPI.updateGroup(request);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;
-    
+
         this.getGroups();
         this.props.onUpdate();
-    
+
         return true;
-    }
+    };
 
     private handleConfirmationCancel = (payload: any) => {
         this.setState({
             showDelete: false,
-            manageGroup: undefined,
+            manageGroup: undefined
         });
-    }        
+    };
 }

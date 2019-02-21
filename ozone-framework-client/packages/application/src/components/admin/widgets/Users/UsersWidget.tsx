@@ -1,7 +1,7 @@
-import * as styles from '../Widgets.scss';
+import * as styles from "../Widgets.scss";
 
 import * as React from "react";
-import {Button, ButtonGroup, Divider, InputGroup, Intent} from "@blueprintjs/core";
+import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
 
 import { lazyInject } from "../../../../inject";
 import { UserAPI, UserCreateRequest, UserDTO } from "../../../../api";
@@ -9,9 +9,8 @@ import { UserAPI, UserCreateRequest, UserDTO } from "../../../../api";
 import { AdminTable } from "../../table/AdminTable";
 
 import { UserCreateForm } from "./UserCreateForm";
-import { ConfirmationDialog } from '../../../confirmation-dialog/ConfirmationDialog';
+import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
 import { UserEditTabGroup } from "../Groups/UserEditTabGroup";
-
 
 export interface State {
     users: UserDTO[];
@@ -22,12 +21,11 @@ export interface State {
     columns: any;
     showTable: boolean;
     showCreate: boolean;
-    showEditUser: boolean;    
+    showEditUser: boolean;
     showDelete: boolean;
     confirmationMessage: string;
     manageUser: UserDTO | undefined;
     updatingUser?: any;
-
 }
 
 // TODO
@@ -39,43 +37,40 @@ export interface State {
 enum UserWidgetSubSection {
     TABLE,
     CREATE,
-    EDIT,
+    EDIT
 }
 
 export class UsersWidget extends React.Component<{}, State> {
-
     @lazyInject(UserAPI)
     private userAPI: UserAPI;
-
 
     constructor(props: any) {
         super(props);
         this.state = {
             users: [],
             filtered: [],
-            filter: '',
+            filter: "",
             loading: true,
             pageSize: 5,
             showTable: true,
             showCreate: false,
             showEditUser: false,
             showDelete: false,
-            confirmationMessage: '',
+            confirmationMessage: "",
             manageUser: undefined,
 
             columns: [
                 {
                     Header: "Users",
                     columns: [
-                        { Header: "Name",       accessor: "userRealName" },
-                        { Header: "Username",   accessor: "username" },
-                        { Header: "Email",      accessor: "email" },
-                        { Header: "Groups",     accessor: "totalGroups" },
-                        { Header: "Widgets",    accessor: "totalWidgets" },
+                        { Header: "Name", accessor: "userRealName" },
+                        { Header: "Username", accessor: "username" },
+                        { Header: "Email", accessor: "email" },
+                        { Header: "Groups", accessor: "totalGroups" },
+                        { Header: "Widgets", accessor: "totalWidgets" },
                         { Header: "Dashboards", accessor: "totalDashboards" },
                         { Header: "Last Login", accessor: "lastLogin" }
-                    ],
-
+                    ]
                 },
                 // TODO - Abstract this to only have to provide onclick function name with styled buttons
                 {
@@ -90,11 +85,11 @@ export class UsersWidget extends React.Component<{}, State> {
                                     small={true}
                                     onClick={() => (
                                         this.showSubSection(UserWidgetSubSection.EDIT),
-                                        this.setState({updatingUser: row.original})
+                                        this.setState({ updatingUser: row.original })
                                     )}
                                     data-element-id={"user-admin-widget-edit-" + row.original.email}
                                 />
-                                <Divider/>
+                                <Divider />
                                 <Button
                                     data-element-id={"user-admin-widget-delete-" + row.original.email}
                                     text="Delete"
@@ -125,77 +120,80 @@ export class UsersWidget extends React.Component<{}, State> {
         let data = this.state.users;
         const filter = this.state.filter.toLowerCase();
 
-
         // TODO - Improve this - this will be slow if there are many users.
         // Minimally could wait to hit enter before filtering. Pagination handling
         if (filter) {
-            data = data.filter(row => {
-                return row.userRealName.toLowerCase().includes(filter) ||
+            data = data.filter((row) => {
+                return (
+                    row.userRealName.toLowerCase().includes(filter) ||
                     row.email.toLowerCase().includes(filter) ||
-                    row.username.toLowerCase().includes(filter);
+                    row.username.toLowerCase().includes(filter)
+                );
             });
         }
 
         return (
-
             <div data-element-id="user-admin-widget-dialog">
+                {showTable && (
+                    <div className={styles.actionBar}>
+                        <InputGroup
+                            placeholder="Search..."
+                            leftIcon="search"
+                            value={this.state.filter}
+                            onChange={(e: any) => this.setState({ filter: e.target.value })}
+                            data-element-id="search-field"
+                        />
+                    </div>
+                )}
 
-                {showTable &&
-                <div className={styles.actionBar}>
-                    <InputGroup
-                        placeholder="Search..."
-                        leftIcon="search"
-                        value={this.state.filter}
-                        onChange={(e: any) => this.setState({filter: e.target.value})}
-                        data-element-id="search-field"
+                {showTable && (
+                    <div className={styles.table}>
+                        <AdminTable
+                            data={data}
+                            columns={this.state.columns}
+                            loading={this.state.loading}
+                            pageSize={this.state.pageSize}
+                        />
+                    </div>
+                )}
+
+                {showTable && (
+                    <div className={styles.buttonBar}>
+                        <Button
+                            text="Create"
+                            onClick={() => this.showSubSection(UserWidgetSubSection.CREATE)}
+                            data-element-id="user-admin-widget-create-button"
+                        />
+                    </div>
+                )}
+
+                {showCreate && (
+                    <UserCreateForm
+                        onSubmit={this.createUser}
+                        onCancel={() => {
+                            this.showSubSection(UserWidgetSubSection.TABLE);
+                        }}
                     />
-                </div>
-                }
+                )}
 
-                {showTable &&
-                <div className={styles.table}>
-                    <AdminTable
-                        data={data}
-                        columns={this.state.columns}
-                        loading={this.state.loading}
-                        pageSize={this.state.pageSize}
+                {showEditUser && (
+                    <UserEditTabGroup
+                        user={this.state.updatingUser}
+                        onUpdate={this.handleUpdate}
+                        onBack={() => {
+                            this.showSubSection(UserWidgetSubSection.TABLE);
+                        }}
                     />
-                </div>                
-                }
-                
-                {showTable &&
-                <div className={styles.buttonBar}>
-                    <Button
-                        text="Create"
-                        onClick={() => this.showSubSection(UserWidgetSubSection.CREATE)}
-                        data-element-id='user-admin-widget-create-button'
-                    />
-                </div>
-                }
+                )}
 
-                {showCreate &&
-                <UserCreateForm
-                    onSubmit={this.createUser}
-                    onCancel={() => {this.showSubSection(UserWidgetSubSection.TABLE);}}
-                    />
-                }
-
-
-                {showEditUser &&
-                <UserEditTabGroup
-                    user={this.state.updatingUser}
-                    onUpdate={this.handleUpdate}
-                    onBack={() => {this.showSubSection(UserWidgetSubSection.TABLE);}}
-                />
-                }
-
-<               ConfirmationDialog
+                <ConfirmationDialog
                     show={this.state.showDelete}
-                    title='Warning'
+                    title="Warning"
                     content={this.state.confirmationMessage}
                     confirmHandler={this.handleConfirmationConfirmDelete}
                     cancelHandler={this.handleConfirmationCancel}
-                    payload={this.state.manageUser} />
+                    payload={this.state.manageUser}
+                />
 
                 {/* {this.state.alertIsOpen && (
                     <Alert cancelButtonText="Cancel"
@@ -217,7 +215,7 @@ export class UsersWidget extends React.Component<{}, State> {
         this.setState({
             showTable: subSection === UserWidgetSubSection.TABLE,
             showCreate: subSection === UserWidgetSubSection.CREATE,
-            showEditUser: subSection === UserWidgetSubSection.EDIT,
+            showEditUser: subSection === UserWidgetSubSection.EDIT
         });
     }
 
@@ -273,30 +271,30 @@ export class UsersWidget extends React.Component<{}, State> {
         this.getUsers();
 
         return true;
-    }
+    };
 
     private handleConfirmationConfirmDelete = async (payload: any) => {
         this.setState({
             showDelete: false,
-            manageUser: undefined,
+            manageUser: undefined
         });
 
         const user: UserDTO = payload;
 
         const response = await this.userAPI.deleteUser(user.id);
-    
+
         // TODO: Handle failed request
         if (response.status !== 200) return false;
-    
-        this.getUsers();
-    
-        return true;
 
-    }
+        this.getUsers();
+
+        return true;
+    };
 
     private handleConfirmationCancel = (payload: any) => {
         this.setState({
             showDelete: false,
-            manageUser: undefined,
+            manageUser: undefined
         });
-    }}
+    };
+}

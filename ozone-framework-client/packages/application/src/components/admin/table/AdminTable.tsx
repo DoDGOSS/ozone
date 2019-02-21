@@ -1,15 +1,14 @@
 import * as React from "react";
 
-import ReactTable, { Column } from 'react-table';
-import 'react-table/react-table.css';
-
+import ReactTable, { Column } from "react-table";
+import "react-table/react-table.css";
 
 export type AdminTableProps = {
-    data: any[],
-    columns?: Column<any>[],
-    loading: boolean,
-    pageSize?: number,
-    getTrProps?: (state: any, rowInfo: any) => ({});
+    data: any[];
+    columns?: Column<any>[];
+    loading: boolean;
+    pageSize?: number;
+    getTrProps?: (state: any, rowInfo: any) => {};
 };
 
 // Todo
@@ -20,9 +19,7 @@ export type AdminTableProps = {
 // Make responsive - may not be easily done with this release
 // try new wrapped tabulator if necessary https://github.com/ngduc/react-tabulator#readme
 
-
 export class AdminTable extends React.Component<AdminTableProps, {}> {
-
     //
     // componentWillReceiveProps(newProps) {
     //     if (this.props.y != newProps.y) {
@@ -40,16 +37,16 @@ export class AdminTable extends React.Component<AdminTableProps, {}> {
     render() {
         return (
             <div>
-            <React.Fragment>
-                <ReactTable
-                    data={this.props.data}
-                    columns={this.props.columns}
-                    className="-striped -highlight"
-                    loading={this.props.loading}
-                    pageSize={this.props.pageSize}
-                    getTrProps={this.props.getTrProps}
-                />
-            </React.Fragment>
+                <React.Fragment>
+                    <ReactTable
+                        data={this.props.data}
+                        columns={this.props.columns}
+                        className="-striped -highlight"
+                        loading={this.props.loading}
+                        pageSize={this.props.pageSize}
+                        getTrProps={this.props.getTrProps}
+                    />
+                </React.Fragment>
             </div>
         );
     }

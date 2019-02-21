@@ -7,13 +7,11 @@ import { AuthStore } from "../../stores";
 
 import { FormError, SubmitButton, TextField } from "../form";
 
-
 export interface LoginFormProps {
     onSuccess: () => void;
 }
 
 export class LoginForm extends React.Component<LoginFormProps> {
-
     @lazyInject(AuthStore)
     private authStore: AuthStore;
 
@@ -40,22 +38,17 @@ export class LoginForm extends React.Component<LoginFormProps> {
             >
                 {(formik: FormikProps<LoginRequest>) => (
                     <Form>
-                        {formik.status && formik.status.error && <FormError message={formik.status.error}/>}
+                        {formik.status && formik.status.error && <FormError message={formik.status.error} />}
 
-                        <TextField name="username" label="Username" labelInfo="(required)"/>
-                        <TextField  type="password"
-                                    name="password"
-                                    label="Password"
-                                    labelInfo="(required)"
-                                    />
+                        <TextField name="username" label="Username" labelInfo="(required)" />
+                        <TextField type="password" name="password" label="Password" labelInfo="(required)" />
 
-                        <SubmitButton/>
+                        <SubmitButton />
                     </Form>
                 )}
             </Formik>
         );
     }
-
 }
 
 interface LoginRequest {
@@ -63,10 +56,10 @@ interface LoginRequest {
     password: string;
 }
 
-
 const LoginRequestSchema = object().shape({
-    username: string().matches(/^[a-zA-Z0-9_]+$/, { message: "Username must contain only alphanumeric or underscore characters." })
-                      .required("Required"),
+    username: string()
+        .matches(/^[a-zA-Z0-9_]+$/, { message: "Username must contain only alphanumeric or underscore characters." })
+        .required("Required"),
 
     password: string().required("Required")
 });

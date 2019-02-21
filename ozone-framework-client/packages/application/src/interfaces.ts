@@ -1,5 +1,3 @@
-
-
 export interface ClassificationConfig {
     text: string;
     backgroundColor: string;

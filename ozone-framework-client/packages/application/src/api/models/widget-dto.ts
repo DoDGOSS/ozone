@@ -5,10 +5,8 @@ import { IntentsDTO } from "./intent-dto";
 import { UserDTO } from "./user-dto";
 import { WidgetTypeDTO, WidgetTypeReference } from "./widget-type-dto";
 
-
 @Model({ name: "WidgetProperties" })
 export class WidgetPropertiesDTO {
-
     @Property()
     universalName: string;
 
@@ -91,10 +89,8 @@ export class WidgetPropertiesDTO {
     widgetTypes: WidgetTypeDTO[];
 }
 
-
 @Model({ name: "Widget" })
 export class WidgetDTO {
-
     static validate = createValidator(WidgetDTO);
 
     @Property()
@@ -108,17 +104,15 @@ export class WidgetDTO {
 
     @Property(() => WidgetPropertiesDTO)
     value: WidgetPropertiesDTO;
-
 }
-
 
 export interface WidgetCreateRequest {
     name: string;
     version: string;
     description: string;
     url: string;
-    headerIcon: string;  // Small Icon
-    image: string;  // Large Icon
+    headerIcon: string; // Small Icon
+    image: string; // Large Icon
     width: number;
     height: number;
     widgetGuid: string;
@@ -133,15 +127,12 @@ export interface WidgetCreateRequest {
     intents?: IntentsDTO;
 }
 
-
 export interface WidgetUpdateRequest extends WidgetCreateRequest {
     id: string;
 }
 
-
 @Model()
 export class WidgetUpdateUsersResponse {
-
     static validate = createValidator(WidgetUpdateUsersResponse);
 
     @Property()
@@ -149,13 +140,10 @@ export class WidgetUpdateUsersResponse {
 
     @Property(() => UserDTO)
     data: UserDTO[];
-
 }
-
 
 @Model()
 export class WidgetUpdateGroupsResponse {
-
     static validate = createValidator(WidgetUpdateGroupsResponse);
 
     @Property()
@@ -163,13 +151,10 @@ export class WidgetUpdateGroupsResponse {
 
     @Property(() => GroupDTO)
     data: GroupDTO[];
-
 }
-
 
 @Model()
 export class WidgetCreateResponse {
-
     static validate = createValidator(WidgetCreateResponse);
 
     @Property()
@@ -177,25 +162,19 @@ export class WidgetCreateResponse {
 
     @Property(() => WidgetDTO)
     data: WidgetDTO[];
-
 }
-
 
 @Model()
 export class WidgetDeleteIdDTO {
-
     @Property()
     id: string;
 
     @Property()
     value: object;
-
 }
-
 
 @Model()
 export class WidgetDeleteResponse {
-
     static validate = createValidator(WidgetDeleteResponse);
 
     @Property()
@@ -203,13 +182,10 @@ export class WidgetDeleteResponse {
 
     @Property(() => WidgetDeleteIdDTO)
     data: WidgetDeleteIdDTO[];
-
 }
-
 
 @Model()
 export class WidgetGetResponse {
-
     static validate = createValidator(WidgetGetResponse);
 
     @Property()
@@ -220,8 +196,4 @@ export class WidgetGetResponse {
 
     @Property(() => WidgetDTO)
     data: WidgetDTO[];
-
 }
-
-
-

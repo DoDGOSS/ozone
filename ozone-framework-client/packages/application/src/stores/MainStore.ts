@@ -3,7 +3,6 @@ import { injectable } from "../inject";
 
 @injectable()
 export class MainStore {
-
     @observable
     isCreateDashboardDialogVisible: boolean;
 
@@ -38,7 +37,7 @@ export class MainStore {
     darkTheme: boolean;
 
     @observable
-    darkClass:string;
+    darkClass: string;
 
     @observable
     widgetFilter: string | undefined;
@@ -46,7 +45,7 @@ export class MainStore {
     constructor() {
         runInAction("initialize", () => {
             this.isCreateDashboardDialogVisible = false;
-            this.isAboutVisible=false;
+            this.isAboutVisible = false;
             this.isWarningDialogVisible = false;
             this.isUserAgreementVisible = false;
             this.isHelpDialogVisible = false;
@@ -89,12 +88,12 @@ export class MainStore {
     }
     @action.bound
     showAboutDialog() {
-        this.isAboutVisible=true;
+        this.isAboutVisible = true;
     }
 
     @action.bound
     hideAboutDialog() {
-        this.isAboutVisible=false;
+        this.isAboutVisible = false;
     }
 
     @action.bound
@@ -163,13 +162,12 @@ export class MainStore {
     }
 
     @action.bound
-    toggleTheme(){
-      this.darkTheme = !this.darkTheme;
-      if (this.darkTheme ===true){
-         this.darkClass='bp3-dark';
-       }else{
-         this.darkClass="";
-       }
+    toggleTheme() {
+        this.darkTheme = !this.darkTheme;
+        if (this.darkTheme === true) {
+            this.darkClass = "bp3-dark";
+        } else {
+            this.darkClass = "";
+        }
     }
-
 }

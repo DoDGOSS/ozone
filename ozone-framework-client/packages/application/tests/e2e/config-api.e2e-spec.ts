@@ -4,9 +4,7 @@ import { SystemConfigAPI } from "../../src/api";
 
 import { NodeGateway } from "./node-gateway";
 
-
 describe("AppConfig API", () => {
-
     let gateway: NodeGateway;
     let configApi: SystemConfigAPI;
 
@@ -60,5 +58,4 @@ describe("AppConfig API", () => {
         // Cleanup
         await configApi.updateConfig({ id: 1, value: "false" });
     });
-
 });
