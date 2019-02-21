@@ -7,6 +7,7 @@ import { GroupsWidget } from "../components/admin/widgets/Groups/GroupsWidget";
 import { SystemConfigWidget } from "../components/admin/widgets/SystemConfig/SystemConfigWidget";
 import { WidgetsWidget } from "../components/admin/widgets/Widgets/WidgetsWidget";
 
+// widgetAdmin
 export const widgetAdminWidgetDef: WidgetDefinition = {
     id: "0b7a39e0-87a2-4077-801b-2e5160fb2287",
     title: "Widget Administration",
@@ -18,6 +19,7 @@ const widgetAdminWidget: Widget = {
     definition: widgetAdminWidgetDef
 };
 
+// UserAdmin
 export const userAdminWidgetDef: WidgetDefinition = {
     id: "105a20c8-f81b-47fb-b683-af3a1cc4ec50",
     title: "User Administration",
@@ -29,6 +31,7 @@ const userAdminWidget: Widget = {
     definition: userAdminWidgetDef
 };
 
+// groupAdmin
 export const groupAdminWidgetDef: WidgetDefinition = {
     id: "17a6e77b-304f-47e6-a6be-16143ee3b2fb",
     title: "Group Administration",
@@ -40,6 +43,7 @@ const groupAdminWidget: Widget = {
     definition: groupAdminWidgetDef
 };
 
+// sample Widget
 export const sampleWidgetDef: WidgetDefinition = {
     id: "483d0022-58c4-4e43-ba48-f7a8f9af0e82",
     title: "Sample Widget",
@@ -55,6 +59,18 @@ export const systemConfigWidgetDef: WidgetDefinition = {
 const sampleWidget1: Widget = {
     id: "bb08050a-d3f0-4293-8f94-083d6823f297",
     definition: sampleWidgetDef
+};
+
+// flag Widget
+export const flagWidgetDef: WidgetDefinition = {
+    id: "fit-flag",
+    title: "Fit Layout Flag",
+    element: <h1 />
+};
+
+const flagWidget: Widget = {
+    id: "fit-flag",
+    definition: flagWidgetDef
 };
 
 export const DEFAULT_DASHBOARD: Dashboard = {
@@ -80,9 +96,20 @@ export const DEFAULT_DASHBOARD: Dashboard = {
 export const LOGIN_DASHBOARD: Dashboard = {
     layout: null,
     widgets: {
+        [sampleWidget1.id]: sampleWidget1,
         [userAdminWidget.id]: userAdminWidget,
         [groupAdminWidget.id]: groupAdminWidget,
+        [widgetAdminWidget.id]: widgetAdminWidget
+    }
+};
+
+export const FIT_DEFAULT: Dashboard = {
+    layout: null,
+    widgets: {
+        [flagWidget.id]: flagWidget,
         [sampleWidget1.id]: sampleWidget1,
+        [userAdminWidget.id]: userAdminWidget,
+        [groupAdminWidget.id]: groupAdminWidget,
         [widgetAdminWidget.id]: widgetAdminWidget
     }
 };

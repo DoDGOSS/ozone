@@ -4,6 +4,12 @@ import { injectable } from "../inject";
 @injectable()
 export class MainStore {
     @observable
+    isConfirmationTrue: boolean;
+
+    @observable
+    isConfirmationDialogVisible: boolean;
+
+    @observable
     isCreateDashboardDialogVisible: boolean;
 
     @observable
@@ -44,6 +50,8 @@ export class MainStore {
 
     constructor() {
         runInAction("initialize", () => {
+            this.isConfirmationTrue = false;
+            this.isConfirmationDialogVisible = false;
             this.isCreateDashboardDialogVisible = false;
             this.isAboutVisible = false;
             this.isWarningDialogVisible = false;
@@ -55,6 +63,23 @@ export class MainStore {
             this.isWidgetToolbarOpen = false;
             this.darkTheme = false;
         });
+    }
+
+    @action.bound
+    showConfirmationDialog() {
+        this.isConfirmationDialogVisible = true;
+        this.isConfirmationTrue = false;
+    }
+
+    @action.bound
+    hideConfirmationDialogCancel() {
+        this.isConfirmationDialogVisible = false;
+    }
+
+    @action.bound
+    hideConfirmationDialogConfirm() {
+        this.isConfirmationDialogVisible = false;
+        this.isConfirmationTrue = true;
     }
 
     @action.bound
