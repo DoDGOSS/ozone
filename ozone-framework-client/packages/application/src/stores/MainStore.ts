@@ -4,10 +4,10 @@ import { injectable } from "../inject";
 @injectable()
 export class MainStore {
     @observable
-    isConfirmationTrue:boolean;
+    isConfirmationTrue: boolean;
 
     @observable
-    isConfirmationDialogVisible:boolean;
+    isConfirmationDialogVisible: boolean;
 
     @observable
     isCreateDashboardDialogVisible: boolean;
@@ -68,7 +68,7 @@ export class MainStore {
     @action.bound
     showConfirmationDialog() {
         this.isConfirmationDialogVisible = true;
-        this.isConfirmationTrue=false;
+        this.isConfirmationTrue = false;
     }
 
     @action.bound
@@ -79,10 +79,8 @@ export class MainStore {
     @action.bound
     hideConfirmationDialogConfirm() {
         this.isConfirmationDialogVisible = false;
-        this.isConfirmationTrue=true;
+        this.isConfirmationTrue = true;
     }
-
-
 
     @action.bound
     showCreateDashboardDialog() {
