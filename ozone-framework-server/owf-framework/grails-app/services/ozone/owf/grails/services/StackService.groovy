@@ -2,6 +2,7 @@ package ozone.owf.grails.services
 
 import grails.converters.JSON
 import grails.core.GrailsApplication
+import grails.gorm.transactions.Transactional
 
 import org.hibernate.CacheMode
 
@@ -511,8 +512,9 @@ class StackService {
         } as boolean
     }
 
-    def isStackOwner(Stack stack) {
-        stack?.owner?.id == accountService.getLoggedInUser()?.id
+    boolean isStackOwner(Stack stack) {
+        if (!stack || !stack.owner) return false
+        stack.owner.id == accountService.getLoggedInUser().id
     }
 
     /**
@@ -555,6 +557,7 @@ class StackService {
      * Deletes the given stack
      * @param stack
      */
+    @Transactional
     protected void deleteStack(Stack stack) {
         def dashboards = Dashboard.findAllByStack(stack)
         def defaultDashboards = []
@@ -576,7 +579,7 @@ class StackService {
         if (defaultStackGroup) {
             stack.defaultGroup = null
             stack.save()
-            groupService.delete(["data": "{id: ${defaultStackGroup.id}}"])
+            groupService.deleteGroupById(defaultStackGroup.id)
         }
 
         // Delete the stacks's master dashboards.
@@ -938,7 +941,9 @@ class StackService {
     }
 
     private def ensureAdminOrOwner(stackId) {
-        if (!stackId && !accountService.getLoggedInUserIsAdmin()) {
+        boolean isAdmin = accountService.getLoggedInUserIsAdmin()
+
+        if (!stackId && !isAdmin) {
             throw new OwfException(
                     message: "Cannot verify ownership of a stack without the stack ID",
                     exceptionType: OwfExceptionTypes.NotFound)
@@ -946,7 +951,9 @@ class StackService {
 
         def stack = findById(stackId)
 
-        if (!stack.owner || accountService.getLoggedInUser().id != stack.owner.id) {
+        if (isAdmin) return
+
+        if (!isStackOwner(stack)) {
             throw new OwfException(
                     message: "You must be an administrator or owner of a stack to edit it.",
                     exceptionType: OwfExceptionTypes.Authorization)
