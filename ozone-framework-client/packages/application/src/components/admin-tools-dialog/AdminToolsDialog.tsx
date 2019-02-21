@@ -22,7 +22,6 @@ export interface WidgetDefinition {
 
 @observer
 export class AdminToolsDialog extends React.Component {
-
     @lazyInject(DashboardStore)
     private dashboardStore: DashboardStore;
 
@@ -38,14 +37,13 @@ export class AdminToolsDialog extends React.Component {
     @observable
     private windowCount: number = Object.keys(this.dashboard.widgets).length;
 
-
     @action.bound
     addWidget(widget: Widget) {
         const addWidget: Widget = {
-             id: widget.id,
-             definition: widget.definition
-         };
-        this.dashboard.widgets[String(++this.windowCount)]=addWidget;
+            id: widget.id,
+            definition: widget.definition
+        };
+        this.dashboard.widgets[String(++this.windowCount)] = addWidget;
         this.dashboardStore.addToTopRight(this.dashboard, widget.id, this.windowCount);
     }
 
@@ -54,34 +52,33 @@ export class AdminToolsDialog extends React.Component {
 
         return (
             <div>
-                <Dialog className={[this.mainStore.darkClass, styles.adminToolsDialog].join(' ')}
-                        isOpen={this.mainStore.isAdminToolsDialogOpen}
-                        onClose={this.mainStore.hideAdminToolsDialog}
-                        title="Administration"
-                        icon="wrench">
-
-                    <div data-element-id='administration' className={Classes.DIALOG_BODY}>
+                <Dialog
+                    className={[this.mainStore.darkClass, styles.adminToolsDialog].join(" ")}
+                    isOpen={this.mainStore.isAdminToolsDialogOpen}
+                    onClose={this.mainStore.hideAdminToolsDialog}
+                    title="Administration"
+                    icon="wrench"
+                >
+                    <div data-element-id="administration" className={Classes.DIALOG_BODY}>
                         <div className={styles.tileContainer}>
-                            {adminWidgets.map(widget =>
-                                <WidgetTile key={widget.id}
-                                            title={widget.title}
-                                            iconUrl={widget.iconUrl}
-                                            onClick={() => {
-                                                this.addWidget(widget);
-                                                this.mainStore.hideAdminToolsDialog();
-                                            }}
-                                            />
-                            )}
+                            {adminWidgets.map((widget) => (
+                                <WidgetTile
+                                    key={widget.id}
+                                    title={widget.title}
+                                    iconUrl={widget.iconUrl}
+                                    onClick={() => {
+                                        this.addWidget(widget);
+                                        this.mainStore.hideAdminToolsDialog();
+                                    }}
+                                />
+                            ))}
                         </div>
                     </div>
-
                 </Dialog>
             </div>
         );
     }
-
 }
-
 
 export type WidgetTileProps = {
     title: string;
@@ -90,20 +87,16 @@ export type WidgetTileProps = {
 };
 
 export class WidgetTile extends React.PureComponent<WidgetTileProps> {
-
-
     render() {
         const { title, iconUrl, onClick } = this.props;
 
         return (
             <div className={styles.widgetTile} data-element-id={title}>
                 <button onClick={onClick}>
-                <img className={styles.tileIcon} src={iconUrl}/>
-                <span className={styles.tileTitle}>{title}</span>
+                    <img className={styles.tileIcon} src={iconUrl} />
+                    <span className={styles.tileTitle}>{title}</span>
                 </button>
             </div>
         );
     }
-
-
 }

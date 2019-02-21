@@ -5,10 +5,8 @@ import { injectable } from "../inject";
 import { ClassificationConfig } from "../interfaces";
 import { UNCLASSIFIED_FOUO } from "../classifications";
 
-
 @injectable()
 export class ConfigStore {
-
     @observable
     classification: ClassificationConfig;
 
@@ -26,5 +24,4 @@ export class ConfigStore {
     setClassification(classification: ClassificationConfig) {
         this.classification = classification;
     }
-
 }

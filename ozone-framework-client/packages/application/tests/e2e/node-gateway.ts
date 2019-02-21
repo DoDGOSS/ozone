@@ -6,15 +6,15 @@ import { ValidationError } from "@ozone/openapi-decorators";
 
 import { AuthenticationError, AuthUserDTO, Gateway, RequestOptions, Response } from "../../src/api";
 
-
 export class NodeGateway implements Gateway {
-
     private readonly rootUrl: string;
 
     private sessionCookie: string | null = null;
 
     constructor(baseUrl?: string) {
-        if (!baseUrl) { baseUrl = getDefaultBaseUrl(); }
+        if (!baseUrl) {
+            baseUrl = getDefaultBaseUrl();
+        }
 
         this.rootUrl = trimEnd(baseUrl, "/");
     }
@@ -126,7 +126,6 @@ export class NodeGateway implements Gateway {
 
         return { ...defaultHeaders, ...additionalHeaders };
     }
-
 }
 
 function getSessionCookie(headers: any) {
@@ -136,7 +135,6 @@ function getSessionCookie(headers: any) {
     }
     return null;
 }
-
 
 function getDefaultBaseUrl(): string {
     return get(process.env, "OZONE_API_SERVER_URL", "http://localhost:8080") as string;

@@ -2,14 +2,12 @@ import { AuthUserDTO } from "./models/auth-dto";
 
 import { Validator } from "@ozone/openapi-decorators";
 
-
 export interface Gateway {
-
     readonly isAuthenticated: boolean;
 
     login(username: string, password: string): Promise<Response<AuthUserDTO>>;
 
-    logout():Promise<Response<{}>>;
+    logout(): Promise<Response<{}>>;
 
     getLoginStatus(): Promise<Response<AuthUserDTO>>;
 

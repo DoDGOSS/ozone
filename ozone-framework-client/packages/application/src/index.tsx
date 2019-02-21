@@ -16,9 +16,6 @@ import App from "./App";
 
 initializeApplication();
 
-ReactDOM.render(
-    <App/>,
-    document.getElementById("root") as HTMLElement
-);
+ReactDOM.render(<App />, document.getElementById("root") as HTMLElement);
 
 registerServiceWorker();

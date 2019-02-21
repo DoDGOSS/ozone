@@ -1,9 +1,7 @@
 import { createArrayValidator, createValidator, Model, Property } from "@ozone/openapi-decorators";
 
-
 @Model({ name: "Config" })
 export class ConfigDTO {
-
     static validate = createValidator(ConfigDTO);
 
     static validateList = createArrayValidator(ConfigDTO);
@@ -40,14 +38,10 @@ export class ConfigDTO {
 
     @Property({ nullable: true })
     subGroupOrder?: number;
-
 }
 
-
 export interface ConfigUpdateRequest {
-
     id: number;
 
     value?: string;
-
 }

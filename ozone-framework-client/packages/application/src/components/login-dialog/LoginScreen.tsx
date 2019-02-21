@@ -16,7 +16,6 @@ import { DashboardStore } from "../../stores";
 import { LOGIN_DASHBOARD } from "../../stores/DefaultDashboard";
 
 export class LoginScreen extends React.Component {
-
     @lazyInject(ConfigStore)
     private configStore: ConfigStore;
 
@@ -30,37 +29,35 @@ export class LoginScreen extends React.Component {
     private authStore: AuthStore;
 
     componentDidMount() {
-        if(this.authStore.isAuthenticated===false){
-          this.authStore.check();
+        if (this.authStore.isAuthenticated === false) {
+            this.authStore.check();
         }
 
         this.dashboardStore.setDashboard(LOGIN_DASHBOARD);
     }
 
     render() {
-        if(this.configStore.consentForm===true){
-          this.mainStore.showWarningDialog();
-        }else{
-          this.mainStore.showLoginDialog();
+        if (this.configStore.consentForm === true) {
+            this.mainStore.showWarningDialog();
+        } else {
+            this.mainStore.showLoginDialog();
         }
         const classification = this.configStore.classification;
 
         return (
             <div className={styles.homeScreen}>
-                {classification.disableTopBanner !== true &&
-                <ClassificationBanner className={styles.classificationBanner} {...classification}/>
-                }
-                <LoginDialog/>
-                <WarningDialog/>
-                <UserAgreement/>
-                <AboutDialog/>
-                <WidgetDashboard className={styles.widgetDashboard}/>
-                {classification.disableBottomBanner !== true &&
-                <ClassificationBanner className={styles.classificationBanner} {...classification}/>
-                }
-
+                {classification.disableTopBanner !== true && (
+                    <ClassificationBanner className={styles.classificationBanner} {...classification} />
+                )}
+                <LoginDialog />
+                <WarningDialog />
+                <UserAgreement />
+                <AboutDialog />
+                <WidgetDashboard className={styles.widgetDashboard} />
+                {classification.disableBottomBanner !== true && (
+                    <ClassificationBanner className={styles.classificationBanner} {...classification} />
+                )}
             </div>
         );
     }
-
 }

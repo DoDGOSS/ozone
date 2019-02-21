@@ -1,18 +1,16 @@
 import "reflect-metadata";
 
-import { ConfigAPI } from "../../src/api";
+import { SystemConfigAPI } from "../../src/api";
 
 import { NodeGateway } from "./node-gateway";
 
-
 describe("AppConfig API", () => {
-
     let gateway: NodeGateway;
-    let configApi: ConfigAPI;
+    let configApi: SystemConfigAPI;
 
     beforeAll(async () => {
         gateway = new NodeGateway();
-        configApi = new ConfigAPI(gateway);
+        configApi = new SystemConfigAPI(gateway);
 
         await gateway.login("testAdmin1", "password");
         expect(gateway.isAuthenticated).toEqual(true);
@@ -60,5 +58,4 @@ describe("AppConfig API", () => {
         // Cleanup
         await configApi.updateConfig({ id: 1, value: "false" });
     });
-
 });

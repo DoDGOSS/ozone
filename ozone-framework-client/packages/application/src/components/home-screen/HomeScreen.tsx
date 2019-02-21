@@ -23,7 +23,6 @@ import { ClassificationBanner } from "./ClassificationBanner";
 import { DashboardStore } from "../../stores";
 
 export class HomeScreen extends React.Component {
-
     @lazyInject(AuthStore)
     private authStore: AuthStore;
 
@@ -41,29 +40,28 @@ export class HomeScreen extends React.Component {
         const classification = this.configStore.classification;
         return (
             <div className={styles.homeScreen}>
-                {classification.disableTopBanner !== true &&
-                <ClassificationBanner className={styles.classificationBanner} {...classification}/>
-                }
-                <NavigationBar className="bp3-dark"/>
-                <WidgetToolbar className={styles.widgetToolbar}/>
+                {classification.disableTopBanner !== true && (
+                    <ClassificationBanner className={styles.classificationBanner} {...classification} />
+                )}
+                <NavigationBar className="bp3-dark" />
+                <WidgetToolbar className={styles.widgetToolbar} />
 
-                <WidgetDashboard className={styles.widgetDashboard}/>
+                <WidgetDashboard className={styles.widgetDashboard} />
 
-                {classification.disableBottomBanner !== true &&
-                <ClassificationBanner className={styles.classificationBanner} {...classification}/>
-                }
+                {classification.disableBottomBanner !== true && (
+                    <ClassificationBanner className={styles.classificationBanner} {...classification} />
+                )}
                 <CreateDashboardDialog />
                 <ConfirmationDialog />
                 <UserAgreement />
-                <AboutDialog/>
-                <WarningDialog/>
-                <HelpDialog/>
-                <DashboardDialog/>
-                <AdminToolsDialog/>
-                <UserProfileDialog/>
-                <LoginDialog/>
+                <AboutDialog />
+                <WarningDialog />
+                <HelpDialog />
+                <DashboardDialog />
+                <AdminToolsDialog />
+                <UserProfileDialog />
+                <LoginDialog />
             </div>
         );
     }
-
 }
