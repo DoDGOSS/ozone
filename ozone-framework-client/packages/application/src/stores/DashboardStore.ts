@@ -1,7 +1,7 @@
 import { action, computed, observable, runInAction, when } from "mobx";
 import { injectable } from "../inject";
 
-import { MosaicNode } from 'react-mosaic-component';
+import { MosaicNode } from "react-mosaic-component";
 
 // switch to FIT_DEFAULT for testing
 import { LOGIN_DASHBOARD } from "./DefaultDashboard";
@@ -9,14 +9,16 @@ import { LOGIN_DASHBOARD } from "./DefaultDashboard";
 import { MainStore } from "./MainStore";
 import { lazyInject } from "../inject";
 
-import { Corner,
-        getNodeAtPath,
-        getOtherDirection,
-        getPathToCorner,
-        MosaicDirection,
-        MosaicParent,
-        updateTree } from 'react-mosaic-component';
-import dropRight from 'lodash/dropRight';
+import {
+    Corner,
+    getNodeAtPath,
+    getOtherDirection,
+    getPathToCorner,
+    MosaicDirection,
+    MosaicParent,
+    updateTree
+} from "react-mosaic-component";
+import dropRight from "lodash/dropRight";
 
 export interface WidgetDefinition {
     id: string;
@@ -58,10 +60,10 @@ export class DashboardStore {
 
     constructor() {
         runInAction("initialize", () => {
-          if (!this.dashboard){
-            //swithch to FIT_DEFAULT for testing
-            this.dashboard = LOGIN_DASHBOARD;
-          }
+            if (!this.dashboard) {
+                // switch to FIT_DEFAULT for testing
+                this.dashboard = LOGIN_DASHBOARD;
+            }
         });
     }
 
@@ -72,12 +74,11 @@ export class DashboardStore {
 
     @action.bound
     getDashboard() {
-        if (!this.dashboard){
-          //swithch to FIT_DEFAULT for testing
-          return LOGIN_DASHBOARD;
-        }
-        else{
-          return this.dashboard;
+        if (!this.dashboard) {
+            // switch to FIT_DEFAULT for testing
+            return LOGIN_DASHBOARD;
+        } else {
+            return this.dashboard;
         }
     }
 
@@ -88,66 +89,64 @@ export class DashboardStore {
     }
 
     @action.bound
-    addToTopRight(dashboard:Dashboard, widget:string, windowCount:number) {
-    if(this.getDashboard().widgets.hasOwnProperty('fit-flag')) {
-      // if widget already exists
-      if(this.getDashboard().layout!==null){
-        this.mainStore.showConfirmationDialog();
-        when(
-          () => !this.mainStore.isConfirmationDialogVisible,
-            ()=> {
-                if (this.mainStore.isConfirmationTrue) {
-                    let { layout } = dashboard;
-                    this.setDashboard(dashboard);
-                    layout = widget;
-                    dashboard.layout = layout;
-                    this.setLayout(dashboard.layout);
-                }
+    addToTopRight(dashboard: Dashboard, widget: string, windowCount: number) {
+        if (this.getDashboard().widgets.hasOwnProperty("fit-flag")) {
+            // if widget already exists
+            if (this.getDashboard().layout !== null) {
+                this.mainStore.showConfirmationDialog();
+                when(
+                    () => !this.mainStore.isConfirmationDialogVisible,
+                    () => {
+                        if (this.mainStore.isConfirmationTrue) {
+                            let { layout } = dashboard;
+                            this.setDashboard(dashboard);
+                            layout = widget;
+                            dashboard.layout = layout;
+                            this.setLayout(dashboard.layout);
+                        }
+                    }
+                );
+            } else {
+                let { layout } = dashboard;
+                this.setDashboard(dashboard);
+                layout = widget;
+                dashboard.layout = layout;
+                this.setLayout(dashboard.layout);
             }
-        )
-      }else{
-        let { layout } = dashboard;
-        this.setDashboard(dashboard);
-        layout = widget;
-        dashboard.layout = layout;
-        this.setLayout(dashboard.layout);
-      }
-    }
-    else{
-      let { layout } = dashboard;
-      this.setDashboard(dashboard);
-      if (layout) {
-        const path = getPathToCorner(layout, Corner.TOP_RIGHT);
-        const parent = getNodeAtPath(layout, dropRight(path)) as MosaicParent<string>;
-        const destination = getNodeAtPath(layout, path) as MosaicNode<string>;
-        const direction: MosaicDirection = parent ? getOtherDirection(parent.direction) : 'row';
-        let first: MosaicNode<string>;
-        let second: MosaicNode<string>;
-        if (direction === 'row') {
-          first = destination;
-          second = String(windowCount);
         } else {
-          first = String(windowCount);
-          second = destination;
+            let { layout } = dashboard;
+            this.setDashboard(dashboard);
+            if (layout) {
+                const path = getPathToCorner(layout, Corner.TOP_RIGHT);
+                const parent = getNodeAtPath(layout, dropRight(path)) as MosaicParent<string>;
+                const destination = getNodeAtPath(layout, path) as MosaicNode<string>;
+                const direction: MosaicDirection = parent ? getOtherDirection(parent.direction) : "row";
+                let first: MosaicNode<string>;
+                let second: MosaicNode<string>;
+                if (direction === "row") {
+                    first = destination;
+                    second = String(windowCount);
+                } else {
+                    first = String(windowCount);
+                    second = destination;
+                }
+                layout = updateTree(layout, [
+                    {
+                        path,
+                        spec: {
+                            $set: {
+                                direction,
+                                first,
+                                second
+                            }
+                        }
+                    }
+                ]);
+            } else {
+                layout = widget;
+            }
+            dashboard.layout = layout;
+            this.setLayout(dashboard.layout);
         }
-        layout = updateTree(layout, [
-          {
-            path,
-            spec: {
-              $set: {
-                direction,
-                first,
-                second,
-              },
-            },
-          },
-        ]);
-      } else {
-        layout = widget;
-      }
-      dashboard.layout = layout;
-      this.setLayout(dashboard.layout);
-      }
     }
-
 }
