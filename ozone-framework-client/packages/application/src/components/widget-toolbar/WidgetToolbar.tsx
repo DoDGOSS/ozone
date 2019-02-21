@@ -11,8 +11,7 @@ import { MainStore, WidgetStore } from "../../stores";
 import { IMAGE_ROOT_URL } from "../../stores/WidgetStore";
 
 // handleStringChange
-import { classNames,  } from "../util";
-
+import { classNames } from "../util";
 
 export type WidgetToolbarProps = {
     className?: string;
@@ -26,18 +25,16 @@ interface State {
 
 @observer
 export class WidgetToolbar extends React.Component<WidgetToolbarProps, State> {
-
     @lazyInject(MainStore)
     private mainStore: MainStore;
 
     @lazyInject(WidgetStore)
     private widgetStore: WidgetStore;
 
-
     constructor(props: any) {
         super(props);
         this.state = {
-            filter: '',
+            filter: "",
             toggleAlphabeticalAsc: true,
             toggleAlphabeticalDsc: false
         };
@@ -63,11 +60,10 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps, State> {
         const filter = this.state.filter.toLowerCase();
 
         if (filter) {
-            widgets = widgets.filter(row => {
+            widgets = widgets.filter((row) => {
                 return row.value.namespace.toLowerCase().includes(filter);
             });
         }
-
 
         return (
             <Overlay
@@ -80,7 +76,7 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps, State> {
             >
                 <div
                     className={classNames(styles.widgetToolbar, className, this.mainStore.darkClass)}
-                    data-element-id='widgets-dialog'
+                    data-element-id="widgets-dialog"
                 >
                     <h3 className={styles.widgetToolbarTitle}>Widgets</h3>
                     <div className={styles.widgetToolbarMenu}>
@@ -91,53 +87,52 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps, State> {
                             // TODO - Implement mainstore widget filter
                             // onChange={handleStringChange(this.mainStore.setWidgetFilter)}
                             value={this.state.filter}
-                            onChange={(e: any) => this.setState({filter: e.target.value})}
+                            onChange={(e: any) => this.setState({ filter: e.target.value })}
                             data-element-id="widget-search-field"
                         />
-                        <Button minimal icon="sort-alphabetical"
-                                onClick={this.toggleAlphabeticalAsc}
-                                active={this.state.toggleAlphabeticalAsc}
-                                data-element-id="widget-sort-ascending" />
-                        <Button minimal icon="sort-alphabetical-desc"
-                                onClick={this.toggleAlphabeticalDsc}
-                                active={this.state.toggleAlphabeticalDsc}
-                                data-element-id="widget-sort-descending" />
-                        <Button minimal icon="pin"/>
-                        <Button minimal icon="cross"
-                                onClick={this.mainStore.closeWidgetToolbar}/>
+                        <Button
+                            minimal
+                            icon="sort-alphabetical"
+                            onClick={this.toggleAlphabeticalAsc}
+                            active={this.state.toggleAlphabeticalAsc}
+                            data-element-id="widget-sort-ascending"
+                        />
+                        <Button
+                            minimal
+                            icon="sort-alphabetical-desc"
+                            onClick={this.toggleAlphabeticalDsc}
+                            active={this.state.toggleAlphabeticalDsc}
+                            data-element-id="widget-sort-descending"
+                        />
+                        <Button minimal icon="pin" />
+                        <Button minimal icon="cross" onClick={this.mainStore.closeWidgetToolbar} />
                     </div>
-                    <hr/>
+                    <hr />
 
                     <div className={Classes.DIALOG_BODY}>
                         <ul className={styles.widgetList}>
-                            {widgets.map(widget =>
-                                <Widget key={widget.id}
-                                        name={widget.value.namespace}
-                                        // TODO - Replace this temp fix to display images
-                                        // smallIconUrl={widget.value.smallIconUrl}
-                                        smallIconUrl={IMAGE_ROOT_URL + widget.value.smallIconUrl.replace("static/themes/common/images", "")}
+                            {widgets.map((widget) => (
+                                <Widget
+                                    key={widget.id}
+                                    name={widget.value.namespace}
+                                    // TODO - Replace this temp fix to display images
+                                    // smallIconUrl={widget.value.smallIconUrl}
+                                    smallIconUrl={
+                                        IMAGE_ROOT_URL +
+                                        widget.value.smallIconUrl.replace("static/themes/common/images", "")
+                                    }
                                 />
-
-                            )}
+                            ))}
                         </ul>
                     </div>
-
                 </div>
                 <div className={styles.widgetToolbarFooter}>
                     <div className={styles.buttonBar}>
-                        <Button
-                            text="Prev"
-                            icon="undo"
-                            small={true}
-                        />
+                        <Button text="Prev" icon="undo" small={true} />
                         <p>
                             <b>Page 1</b>
                         </p>
-                        <Button
-                            text="Next"
-                            icon="fast-forward"
-                            small={true}
-                        />
+                        <Button text="Next" icon="fast-forward" small={true} />
                     </div>
                 </div>
             </Overlay>
@@ -157,7 +152,6 @@ export class WidgetToolbar extends React.Component<WidgetToolbarProps, State> {
             toggleAlphabeticalDsc: false
         });
     };
-
 }
 
 export type WidgetProps = {
@@ -168,18 +162,16 @@ export type WidgetProps = {
 };
 
 export class Widget extends React.PureComponent<WidgetProps> {
-
     render() {
         const { name, smallIconUrl, url } = this.props;
 
         return (
             <li>
                 <a href={url}>
-                    <img className={styles.tileIcon} src={smallIconUrl}/>
+                    <img className={styles.tileIcon} src={smallIconUrl} />
                     <span className={styles.tileTitle}>{name}</span>
                 </a>
             </li>
         );
     }
-
 }

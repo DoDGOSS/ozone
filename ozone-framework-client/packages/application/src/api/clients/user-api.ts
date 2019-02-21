@@ -14,17 +14,14 @@ import {
     UserUpdateResponse
 } from "..";
 
-
 export interface UserQueryCriteria {
     limit?: number;
     offset?: number;
     group_id?: number;
 }
 
-
 @injectable()
 export class UserAPI {
-
     private readonly gateway: Gateway;
 
     constructor(@inject(TYPES.Gateway) gateway: Gateway) {
@@ -83,7 +80,6 @@ export class UserAPI {
             validate: UserDeleteResponse.validate
         });
     }
-
 }
 
 function getOptionParams(options?: UserQueryCriteria): any | undefined {
@@ -95,4 +91,3 @@ function getOptionParams(options?: UserQueryCriteria): any | undefined {
     if (options.group_id) params.group_id = options.group_id;
     return params;
 }
-

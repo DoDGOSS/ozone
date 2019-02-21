@@ -1,22 +1,26 @@
-import {action, observable, runInAction} from "mobx";
+import { action, observable, runInAction } from "mobx";
 import { injectable } from "../inject";
 import { WidgetDefinition } from "./DashboardStore";
-import { groupAdminWidgetDef, sampleWidgetDef, userAdminWidgetDef, widgetAdminWidgetDef } from "./DefaultDashboard";
+import {
+    groupAdminWidgetDef,
+    sampleWidgetDef,
+    systemConfigWidgetDef,
+    userAdminWidgetDef,
+    widgetAdminWidgetDef
+} from "./DefaultDashboard";
 import { WidgetAPI, WidgetDTO } from "../api";
 import { lazyInject } from "../inject";
-
 
 interface Widget {
     id: string;
     universalName: string;
     title: string;
     iconUrl: string;
-    url?:string;
+    url?: string;
     definition: WidgetDefinition;
 }
 
 export const IMAGE_ROOT_URL = "http://localhost:3000/images";
-
 
 const ADMIN_WIDGETS: Widget[] = [
     {
@@ -25,7 +29,6 @@ const ADMIN_WIDGETS: Widget[] = [
         title: "Widgets",
         iconUrl: `${IMAGE_ROOT_URL}/widgets/widgets-manager.png`,
         definition: sampleWidgetDef
-
     },
     {
         id: "391dd2af-a207-41a3-8e51-2b20ec3e7241",
@@ -33,15 +36,13 @@ const ADMIN_WIDGETS: Widget[] = [
         title: "Dashboards",
         iconUrl: `${IMAGE_ROOT_URL}/widgets/stacks-manager.png`,
         definition: sampleWidgetDef
-
     },
     {
         id: "af180bfc-3924-4111-93de-ad6e9bfc060e",
         universalName: "org.ozoneplatform.owf.admin.configuration",
         title: "System Configuration",
         iconUrl: `${IMAGE_ROOT_URL}/widgets/configuration-manager.png`,
-        definition: sampleWidgetDef
-
+        definition: systemConfigWidgetDef
     },
     {
         id: "53a2a879-442c-4012-9215-a17604dedff7",
@@ -56,14 +57,11 @@ const ADMIN_WIDGETS: Widget[] = [
         title: "Users",
         iconUrl: `${IMAGE_ROOT_URL}/widgets/users-manager.png`,
         definition: userAdminWidgetDef
-
     }
 ];
 
-
 @injectable()
 export class WidgetStore {
-
     @observable
     adminWidgets: Widget[];
 
@@ -78,7 +76,6 @@ export class WidgetStore {
 
     @lazyInject(WidgetAPI)
     private widgetAPI: WidgetAPI;
-
 
     constructor() {
         runInAction("initialize", () => {
@@ -102,9 +99,9 @@ export class WidgetStore {
 
     @action.bound
     onWidgetSuccess(widgets: WidgetDTO[]) {
-        const result =
-            widgets.filter(widget => !widget.value.universalName.includes("admin"))
-                .sort((a, b) => a.value.namespace.localeCompare(b.value.namespace));
+        const result = widgets
+            .filter((widget) => !widget.value.universalName.includes("admin"))
+            .sort((a, b) => a.value.namespace.localeCompare(b.value.namespace));
 
         this.standardWidgets = result;
         this.loadingWidgets = false;
@@ -117,6 +114,4 @@ export class WidgetStore {
         this.adminWidgets = [];
         this.error = ex.message;
     }
-
-
 }

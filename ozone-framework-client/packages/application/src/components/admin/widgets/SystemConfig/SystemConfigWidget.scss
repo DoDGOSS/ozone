@@ -1,0 +1,27 @@
+:local .configPanel {
+  display: table;
+}
+
+:local .formRow {
+  display: table-row;
+}
+
+:local .formCell {
+  display: table-cell;
+  border-top: 0.5em solid transparent;
+  border-bottom: 0.5em solid transparent;
+  border-right: 0.5em solid transparent;
+}
+
+:local .fieldTitle {
+  font-variant: small-caps;
+}
+
+:local .fieldDescription {
+  margin: .1em;
+}
+
+:local .sectionTitle {
+  font-weight: bold;
+}
+

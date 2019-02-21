@@ -38,10 +38,8 @@ export interface Dashboard {
     widgets: WidgetMap;
 }
 
-
 @injectable()
 export class DashboardStore {
-
     @observable
     dashboard: Dashboard | undefined;
 

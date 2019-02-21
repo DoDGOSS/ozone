@@ -1,7 +1,7 @@
 import * as styles from "./WidgetDashboard.scss";
 
 import React from "react";
-import { observer } from 'mobx-react';
+import { observer } from "mobx-react";
 
 import { Mosaic, MosaicBranch, MosaicWindow } from "react-mosaic-component";
 
@@ -19,7 +19,6 @@ export type WidgetDashboardProps = {
 
 @observer
 export class WidgetDashboard extends React.Component<WidgetDashboardProps, {}> {
-
     @lazyInject(DashboardStore)
     private dashboardStore: DashboardStore;
 
@@ -34,15 +33,19 @@ export class WidgetDashboard extends React.Component<WidgetDashboardProps, {}> {
         return (
             <div className={classNames(styles.widgetDashboard, className)}>
                 <DashboardLayout
-                    className={classNames("mosaic-blueprint-theme","mosaic","mosaic-drop-target",this.mainStore.darkClass)}
+                    className={classNames(
+                        "mosaic-blueprint-theme",
+                        "mosaic",
+                        "mosaic-drop-target",
+                        this.mainStore.darkClass
+                    )}
                     value={layout}
                     onChange={this.onChange}
                     renderTile={(id: string, path: MosaicBranch[]) => {
                         const widget = widgets && widgets[id];
                         if (!widget) {
                             return (
-                                <DashboardWindow title="Error"
-                                                 path={path}>
+                                <DashboardWindow title="Error" path={path}>
                                     <h1>Error: Widget not found </h1>
                                 </DashboardWindow>
                             );
@@ -50,19 +53,17 @@ export class WidgetDashboard extends React.Component<WidgetDashboardProps, {}> {
 
                         const widgetDef = widget.definition;
                         return (
-                            <DashboardWindow title={widgetDef.title}
-                                             path={path}>
+                            <DashboardWindow title={widgetDef.title} path={path}>
                                 {widgetDef.element}
-                            </DashboardWindow>);
+                            </DashboardWindow>
+                        );
                     }}
                 />
             </div>
         );
     }
 
-    private onChange =
-        (currentNode: DashboardNode | null) => {
+    private onChange = (currentNode: DashboardNode | null) => {
         this.dashboardStore.setLayout(currentNode);
-    }
-
+    };
 }
