@@ -1,11 +1,11 @@
 import * as styles from "../Widgets.scss";
 
-import { Tab, Tabs } from '@blueprintjs/core';
+import { Tab, Tabs } from "@blueprintjs/core";
 
-import * as React from 'react';
+import * as React from "react";
 
-import { GroupEditForm } from '../Groups/GroupEditForm';
-import { GroupEditUsers } from './GroupEditUsers';
+import { GroupEditForm } from "../Groups/GroupEditForm";
+import { GroupEditUsers } from "./GroupEditUsers";
 
 import { lazyInject } from "../../../../inject";
 import { GroupAPI, GroupUpdateRequest } from "../../../../api";
@@ -23,16 +23,15 @@ export interface GroupEditTabGroupState {
 }
 
 export class GroupEditTabGroup extends React.Component<GroupEditTabGroupProps, GroupEditTabGroupState> {
-
     @lazyInject(GroupAPI)
     private groupAPI: GroupAPI;
-    
+
     constructor(props: GroupEditTabGroupProps) {
         super(props);
 
         this.state = {
             group: props.group,
-            updated: false,
+            updated: false
         };
     }
 
@@ -40,21 +39,19 @@ export class GroupEditTabGroup extends React.Component<GroupEditTabGroupProps, G
         return (
             <div className={styles.actionBar}>
                 <Tabs id="GroupTabs">
-                    <Tab id="group_properties" title="Properties" panel={
-                        <GroupEditForm
-                            onUpdate={this.updateGroup}
-                            group={this.state.group}
-                        />
-                    }/>
-                    <Tab id="group_users" title="Users" panel={
-                        <GroupEditUsers
-                            onUpdate={this.props.onUpdate}
-                            group={this.state.group}
-                        />
-                    }/>
+                    <Tab
+                        id="group_properties"
+                        title="Properties"
+                        panel={<GroupEditForm onUpdate={this.updateGroup} group={this.state.group} />}
+                    />
+                    <Tab
+                        id="group_users"
+                        title="Users"
+                        panel={<GroupEditUsers onUpdate={this.props.onUpdate} group={this.state.group} />}
+                    />
                     <Tabs.Expander />
-                    <span data-element-id='group-admin-widget-edit-back-button'>
-                        <CancelButton onClick={this.props.onBack}/>
+                    <span data-element-id="group-admin-widget-edit-back-button">
+                        <CancelButton onClick={this.props.onBack} />
                     </span>
                 </Tabs>
             </div>
@@ -62,20 +59,19 @@ export class GroupEditTabGroup extends React.Component<GroupEditTabGroupProps, G
     }
 
     private updateGroup = async (data: GroupUpdateRequest) => {
-        console.log('Submitting updated group');
+        console.log("Submitting updated group");
 
         if (data.active === undefined) {
-            data.status = data.status || 'inactive';
+            data.status = data.status || "inactive";
+        } else {
+            data.status = data.active ? "active" : "inactive";
         }
-        else {
-            data.status = data.active ? 'active' : 'inactive';
-        }
-        
+
         const response = await this.groupAPI.updateGroup(data);
         const result = response.status === 200;
 
         this.props.onUpdate(response.data.data);
 
         return result;
-    }
+    };
 }

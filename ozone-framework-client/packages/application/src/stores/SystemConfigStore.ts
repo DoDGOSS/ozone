@@ -1,12 +1,10 @@
 import { BehaviorSubject } from "rxjs";
 
-import { SystemConfigAPI, ConfigDTO } from "../api";
+import { ConfigDTO, SystemConfigAPI } from "../api";
 
 import { lazy } from "../utility";
 
-
 export class SystemConfigStore {
-
     static readonly instance = lazy(() => new SystemConfigStore());
 
     readonly configs$ = new BehaviorSubject<ConfigDTO[]>([]);
@@ -26,5 +24,4 @@ export class SystemConfigStore {
             this.configs$.next(results.data);
         }
     }
-
 }

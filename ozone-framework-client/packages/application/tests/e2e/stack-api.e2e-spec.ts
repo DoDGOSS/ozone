@@ -5,9 +5,7 @@ import { StackAPI } from "../../src/api";
 import { NodeGateway } from "./node-gateway";
 import { STACKS } from "../unit/data";
 
-
 describe("Stack API", () => {
-
     let gateway: NodeGateway;
     let stackApi: StackAPI;
 
@@ -24,8 +22,8 @@ describe("Stack API", () => {
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
-            "results": 3,
-            "data": STACKS
+            results: 3,
+            data: STACKS
         });
     });
 
@@ -34,11 +32,8 @@ describe("Stack API", () => {
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
-            "results": 1,
-            "data": [STACKS[0]]
+            results: 1,
+            data: [STACKS[0]]
         });
     });
-
 });
-
-

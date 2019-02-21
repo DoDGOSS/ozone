@@ -1,8 +1,6 @@
 import { Gateway, Response } from "..";
 
-
 export class StackAPI {
-
     private readonly gateway: Gateway;
 
     constructor(gateway: Gateway) {
@@ -16,5 +14,4 @@ export class StackAPI {
     async getStackById(id: number): Promise<Response<any>> {
         return this.gateway.get(`stack/${id}/`);
     }
-
 }

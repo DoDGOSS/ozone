@@ -4,16 +4,19 @@ import { omit } from "lodash";
 
 import { convertToJsonSchema } from "@ozone/openapi-decorators";
 
-import { GroupCreateResponse, GroupDeleteResponse, GroupDTO, GroupGetResponse, GroupUpdateResponse } from "../../src/api";
+import {
+    GroupCreateResponse,
+    GroupDeleteResponse,
+    GroupDTO,
+    GroupGetResponse,
+    GroupUpdateResponse
+} from "../../src/api";
 
 import { expectSuccessfulValidation, expectToThrow } from "./assertions";
 import { GROUPS } from "./data";
 
-
 describe("GroupDTO", () => {
-
     describe("validate", () => {
-
         test("is valid", () => {
             const group = GROUPS[0];
 
@@ -25,28 +28,23 @@ describe("GroupDTO", () => {
 
             const ex = expectToThrow(() => GroupDTO.validate(group));
 
-            expect(ex.errors).toMatchObject([{
-                params: { missingProperty: "id" }
-            }]);
+            expect(ex.errors).toMatchObject([
+                {
+                    params: { missingProperty: "id" }
+                }
+            ]);
         });
-
     });
 
     describe("schema generation", () => {
-
         it("convert to JSON schema", () => {
             expect(convertToJsonSchema(GroupDTO)).toEqual(GROUP_JSON_SCHEMA);
         });
-
     });
-
 });
 
-
 describe("GroupGetResponse", () => {
-
     describe("validate", () => {
-
         test("is valid", () => {
             const response = {
                 results: GROUPS.length,
@@ -55,24 +53,17 @@ describe("GroupGetResponse", () => {
 
             expectSuccessfulValidation(() => GroupGetResponse.validate(response));
         });
-
     });
 
     describe("schema generation", () => {
-
         it("convert to JSON schema", () => {
             expect(convertToJsonSchema(GroupGetResponse)).toEqual(GROUP_GET_RESPONSE_JSON_SCHEMA);
         });
-
     });
-
 });
 
-
 describe("GroupCreateResponse", () => {
-
     describe("validate", () => {
-
         test("is valid", () => {
             const response = {
                 success: true,
@@ -81,16 +72,11 @@ describe("GroupCreateResponse", () => {
 
             expectSuccessfulValidation(() => GroupCreateResponse.validate(response));
         });
-
     });
-
 });
 
-
 describe("GroupUpdateResponse", () => {
-
     describe("validate", () => {
-
         test("is valid", () => {
             const response = {
                 success: true,
@@ -99,30 +85,21 @@ describe("GroupUpdateResponse", () => {
 
             expectSuccessfulValidation(() => GroupUpdateResponse.validate(response));
         });
-
     });
-
 });
 
-
 describe("GroupDeleteResponse", () => {
-
     describe("validate", () => {
-
         test("is valid", () => {
             const response = {
                 success: true,
                 data: [{ id: 1 }]
             };
 
-            expectSuccessfulValidation(() =>
-                GroupDeleteResponse.validate(response));
+            expectSuccessfulValidation(() => GroupDeleteResponse.validate(response));
         });
-
     });
-
 });
-
 
 const GROUP_JSON_SCHEMA = {
     type: "object",
@@ -178,13 +155,9 @@ const GROUP_JSON_SCHEMA = {
     }
 };
 
-
 const GROUP_GET_RESPONSE_JSON_SCHEMA = {
     type: "object",
-    required: [
-        "data",
-        "results"
-    ],
+    required: ["data", "results"],
     additionalProperties: false,
     properties: {
         data: {

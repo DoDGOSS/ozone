@@ -1,7 +1,8 @@
 {
   "extends": [
     "tslint:recommended",
-    "tslint-react"
+    "tslint-react",
+    "tslint-config-prettier"
   ],
   "rules": {
     "array-type": [false],
@@ -14,7 +15,6 @@
     "jsx-no-multiline-js": false,
     "jsx-alignment": false,
     "max-classes-per-file": [false, 1],
-    "max-line-length": false,
     "member-access": [true, "no-public"],
     "no-console": [false],
     "no-string-literal": [false],
@@ -26,12 +26,12 @@
         "import-sources-order": "any"
       }
     ],
-    "semicolon": [true, "always", "ignore-bound-class-methods"],
     "trailing-comma": false,
     "variable-name": [false]
   },
   "linterOptions": {
     "exclude": [
+      "src/registerServiceWorker.ts",
       "**/*.d.ts",
       "node_modules/**/*.ts",
       "*.conf.js",

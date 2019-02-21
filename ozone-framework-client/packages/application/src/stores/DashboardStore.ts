@@ -1,18 +1,20 @@
 import { action, computed, observable, runInAction } from "mobx";
 import { injectable } from "../inject";
 
-import { MosaicNode } from 'react-mosaic-component';
+import { MosaicNode } from "react-mosaic-component";
 import { DEFAULT_DASHBOARD } from "./DefaultDashboard";
 
 // for adding widgets
-import { Corner,
-        getNodeAtPath,
-        getOtherDirection,
-        getPathToCorner,
-        MosaicDirection,
-        MosaicParent,
-        updateTree } from 'react-mosaic-component';
-import dropRight from 'lodash/dropRight';
+import {
+    Corner,
+    getNodeAtPath,
+    getOtherDirection,
+    getPathToCorner,
+    MosaicDirection,
+    MosaicParent,
+    updateTree
+} from "react-mosaic-component";
+import dropRight from "lodash/dropRight";
 
 export interface WidgetDefinition {
     id: string;
@@ -34,10 +36,8 @@ export interface Dashboard {
     widgets: WidgetMap;
 }
 
-
 @injectable()
 export class DashboardStore {
-
     @observable
     dashboard: Dashboard | undefined;
 
@@ -64,11 +64,10 @@ export class DashboardStore {
 
     @action.bound
     getDashboard() {
-        if (!this.dashboard){
-          return DEFAULT_DASHBOARD;
-        }
-        else{
-          return this.dashboard;
+        if (!this.dashboard) {
+            return DEFAULT_DASHBOARD;
+        } else {
+            return this.dashboard;
         }
     }
 
@@ -79,40 +78,39 @@ export class DashboardStore {
     }
 
     @action.bound
-    addToTopRight(dashboard:Dashboard, widget:string, windowCount:number) {
-    let { layout } = dashboard;
-    this.setDashboard(dashboard);
-    if (layout) {
-      const path = getPathToCorner(layout, Corner.TOP_RIGHT);
-      const parent = getNodeAtPath(layout, dropRight(path)) as MosaicParent<string>;
-      const destination = getNodeAtPath(layout, path) as MosaicNode<string>;
-      const direction: MosaicDirection = parent ? getOtherDirection(parent.direction) : 'row';
-      let first: MosaicNode<string>;
-      let second: MosaicNode<string>;
-      if (direction === 'row') {
-        first = destination;
-        second = String(windowCount);
-      } else {
-        first = String(windowCount);
-        second = destination;
-      }
-      layout = updateTree(layout, [
-        {
-          path,
-          spec: {
-            $set: {
-              direction,
-              first,
-              second,
-            },
-          },
-        },
-      ]);
-    } else {
-      layout = widget;
+    addToTopRight(dashboard: Dashboard, widget: string, windowCount: number) {
+        let { layout } = dashboard;
+        this.setDashboard(dashboard);
+        if (layout) {
+            const path = getPathToCorner(layout, Corner.TOP_RIGHT);
+            const parent = getNodeAtPath(layout, dropRight(path)) as MosaicParent<string>;
+            const destination = getNodeAtPath(layout, path) as MosaicNode<string>;
+            const direction: MosaicDirection = parent ? getOtherDirection(parent.direction) : "row";
+            let first: MosaicNode<string>;
+            let second: MosaicNode<string>;
+            if (direction === "row") {
+                first = destination;
+                second = String(windowCount);
+            } else {
+                first = String(windowCount);
+                second = destination;
+            }
+            layout = updateTree(layout, [
+                {
+                    path,
+                    spec: {
+                        $set: {
+                            direction,
+                            first,
+                            second
+                        }
+                    }
+                }
+            ]);
+        } else {
+            layout = widget;
+        }
+        dashboard.layout = layout;
+        this.setLayout(dashboard.layout);
     }
-    dashboard.layout = layout;
-    this.setLayout(dashboard.layout);
-    }
-
 }

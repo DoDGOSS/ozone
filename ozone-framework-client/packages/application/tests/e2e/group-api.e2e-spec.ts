@@ -5,9 +5,7 @@ import { GroupAPI, GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../.
 import { NodeGateway } from "./node-gateway";
 import { GROUPS } from "../unit/data";
 
-
 describe("Group API", () => {
-
     let gateway: NodeGateway;
     let groupApi: GroupAPI;
 
@@ -40,7 +38,6 @@ describe("Group API", () => {
     });
 
     describe("create, update, and delete", () => {
-
         let group: GroupDTO;
 
         test("createGroup - POST /group/", async () => {
@@ -82,7 +79,7 @@ describe("Group API", () => {
                 email: group.email,
                 automatic: group.automatic,
                 status: group.status,
-                active: group.status === 'active'
+                active: group.status === "active"
             };
 
             const response = await groupApi.updateGroup(request);
@@ -114,13 +111,12 @@ describe("Group API", () => {
             expect(response.status).toEqual(200);
             expect(response.data).toEqual({
                 success: true,
-                data: [{
-                    id: group.id
-                }]
+                data: [
+                    {
+                        id: group.id
+                    }
+                ]
             });
         });
-
     });
-
 });
-

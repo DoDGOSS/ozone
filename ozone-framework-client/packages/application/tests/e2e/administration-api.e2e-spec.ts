@@ -5,9 +5,7 @@ import { AdministrationAPI } from "../../src/api";
 import { NodeGateway } from "./node-gateway";
 import { PREFERENCES } from "../unit/data";
 
-
 describe("Administration API", () => {
-
     let gateway: NodeGateway;
     let adminApi: AdministrationAPI;
 
@@ -31,9 +29,9 @@ describe("Administration API", () => {
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
-            "success": true,
-            "results": 5,
-            "rows": PREFERENCES
+            success: true,
+            results: 5,
+            rows: PREFERENCES
         });
     });
 
@@ -42,9 +40,9 @@ describe("Administration API", () => {
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
-            "success": true,
-            "results": 0,
-            "rows": []
+            success: true,
+            results: 0,
+            rows: []
         });
     });
 
@@ -53,13 +51,9 @@ describe("Administration API", () => {
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
-            "success": true,
-            "results": 2,
-            "rows": [
-                "ROLE_ADMIN",
-                "ROLE_USER"
-            ]
+            success: true,
+            results: 2,
+            rows: ["ROLE_ADMIN", "ROLE_USER"]
         });
     });
-
 });

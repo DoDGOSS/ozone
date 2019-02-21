@@ -2,10 +2,8 @@ import { Model, Property } from "@ozone/openapi-decorators";
 
 import { toArray } from "../util";
 
-
-@Model({name: "Id"})
+@Model({ name: "Id" })
 export class IdDto {
-
     static fromValues(id: number | number[]): IdDto[] {
         return toArray(id).map((i) => new IdDto(i));
     }
@@ -18,15 +16,12 @@ export class IdDto {
     }
 
     toJSON(): any {
-        return {id: this.id};
+        return { id: this.id };
     }
-
 }
 
-
-@Model({name: "Uuid"})
+@Model({ name: "Uuid" })
 export class UuidDto {
-
     static fromValues(id: string | string[]): UuidDto[] {
         return toArray(id).map((i) => new UuidDto(i));
     }
@@ -39,7 +34,6 @@ export class UuidDto {
     }
 
     toJSON(): any {
-        return {id: this.id};
+        return { id: this.id };
     }
-
 }
