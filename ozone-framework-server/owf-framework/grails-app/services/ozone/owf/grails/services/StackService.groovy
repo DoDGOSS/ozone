@@ -559,6 +559,8 @@ class StackService {
      */
     @Transactional
     protected void deleteStack(Stack stack) {
+        if (!stack) return
+
         def dashboards = Dashboard.findAllByStack(stack)
         def defaultDashboards = []
         // Delete the association with any existing dashboard instances.
@@ -574,21 +576,30 @@ class StackService {
                 defaultDashboards << dashboard
             }
         }
+
         // Remove the default stack group
-        Group defaultStackGroup = stack?.defaultGroup
-        if (defaultStackGroup) {
+        Group defaultGroup = stack.defaultGroup
+        if (defaultGroup) {
             stack.defaultGroup = null
-            stack.save()
-            groupService.deleteGroupById(defaultStackGroup.id)
+
+            // Delete the group if it is the stack default
+            if (defaultGroup.stackDefault) {
+                groupService.deleteGroupById(defaultGroup.id)
+            }
+
+            // Or just remove the association to the regular group
+            else {
+                stack.removeFromGroups(defaultGroup)
+            }
         }
 
         // Delete the stacks's master dashboards.
-        defaultDashboards?.each { dashboard ->
+        defaultDashboards.each { dashboard ->
             dashboard.delete()
         }
 
         // Delete the stack.
-        stack?.delete(flush: true, failOnError: true)
+        stack.delete(failOnError: true)
     }
 
     def importStack(params) {
