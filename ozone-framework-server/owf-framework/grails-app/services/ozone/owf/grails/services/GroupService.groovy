@@ -1,6 +1,7 @@
 package ozone.owf.grails.services
 
 import grails.converters.JSON
+import grails.gorm.transactions.Transactional
 
 import org.hibernate.CacheMode
 
@@ -501,28 +502,32 @@ class GroupService {
             groups = params.list('id').collect { [id:it] }
         }
 
-        groups.each {
-            def group = Group.findById(it.id,[cache:true])
-            if (group == null) {
-                log.info('Group ' + params.guid + ' not found. for delete')
-            }
-            else {
-                //delete all widget mappings
-                domainMappingService.deleteAllMappings(group)
-
-                //delete all user mappings
-                def people = []
-                if (group.people != null) {
-                    people += group.people
-                }
-                people.each { group?.removeFromPeople(it) }
-
-                //delete group
-                group.delete(flush: true)
-            }
-        }
+        groups.each { deleteGroupById(it.id) }
 
         return [success: true, data: groups]
+    }
+
+    @Transactional
+    void deleteGroupById(Long id) {
+        ensureAdmin()
+
+        Group group = Group.findById(id, [cache: true])
+        if (!group) {
+            log.info("Group $id not found")
+            return
+        }
+
+        domainMappingService.deleteAllMappings(group)
+        removeAllMembersFromGroup(group)
+
+        group.delete()
+    }
+
+    @Transactional
+    void removeAllMembersFromGroup(Group group) {
+        List<Person> people = []
+        if (group.people != null) people += group.people
+        people.each { group.removeFromPeople(it) }
     }
 
     Group getAllUsersGroup() {

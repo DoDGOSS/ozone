@@ -2,6 +2,7 @@ package ozone.owf.grails.services
 
 import grails.converters.JSON
 import grails.core.GrailsApplication
+import grails.gorm.transactions.Transactional
 
 import org.hibernate.CacheMode
 
@@ -511,8 +512,9 @@ class StackService {
         } as boolean
     }
 
-    def isStackOwner(Stack stack) {
-        stack?.owner?.id == accountService.getLoggedInUser()?.id
+    boolean isStackOwner(Stack stack) {
+        if (!stack || !stack.owner) return false
+        stack.owner.id == accountService.getLoggedInUser().id
     }
 
     /**
@@ -555,7 +557,10 @@ class StackService {
      * Deletes the given stack
      * @param stack
      */
+    @Transactional
     protected void deleteStack(Stack stack) {
+        if (!stack) return
+
         def dashboards = Dashboard.findAllByStack(stack)
         def defaultDashboards = []
         // Delete the association with any existing dashboard instances.
@@ -571,21 +576,30 @@ class StackService {
                 defaultDashboards << dashboard
             }
         }
+
         // Remove the default stack group
-        Group defaultStackGroup = stack?.defaultGroup
-        if (defaultStackGroup) {
+        Group defaultGroup = stack.defaultGroup
+        if (defaultGroup) {
             stack.defaultGroup = null
-            stack.save()
-            groupService.delete(["data": "{id: ${defaultStackGroup.id}}"])
+
+            // Delete the group if it is the stack default
+            if (defaultGroup.stackDefault) {
+                groupService.deleteGroupById(defaultGroup.id)
+            }
+
+            // Or just remove the association to the regular group
+            else {
+                stack.removeFromGroups(defaultGroup)
+            }
         }
 
         // Delete the stacks's master dashboards.
-        defaultDashboards?.each { dashboard ->
+        defaultDashboards.each { dashboard ->
             dashboard.delete()
         }
 
         // Delete the stack.
-        stack?.delete(flush: true, failOnError: true)
+        stack.delete(failOnError: true)
     }
 
     def importStack(params) {
@@ -938,7 +952,9 @@ class StackService {
     }
 
     private def ensureAdminOrOwner(stackId) {
-        if (!stackId && !accountService.getLoggedInUserIsAdmin()) {
+        boolean isAdmin = accountService.getLoggedInUserIsAdmin()
+
+        if (!stackId && !isAdmin) {
             throw new OwfException(
                     message: "Cannot verify ownership of a stack without the stack ID",
                     exceptionType: OwfExceptionTypes.NotFound)
@@ -946,7 +962,9 @@ class StackService {
 
         def stack = findById(stackId)
 
-        if (!stack.owner || accountService.getLoggedInUser().id != stack.owner.id) {
+        if (isAdmin) return
+
+        if (!isStackOwner(stack)) {
             throw new OwfException(
                     message: "You must be an administrator or owner of a stack to edit it.",
                     exceptionType: OwfExceptionTypes.Authorization)
