@@ -1,3 +1,4 @@
+import { isNil } from "lodash";
 import {
     Gateway,
     IdDto,
@@ -8,10 +9,16 @@ import {
     StackUpdateRequest,
     StackUpdateParams,
     StackUpdateResponse,
-    StackDeleteResponse
+    StackDeleteResponse, StackDeleteRequest, StackCreateRequest
 } from "..";
 import * as qs from "qs";
-import { Gateway, getGateway, Response } from "../interfaces";
+
+
+export interface StackQueryCriteria {
+    limit?: number;
+    offset?: number;
+    user_id?: number;
+}
 
 export class StackAPI {
 
@@ -21,8 +28,9 @@ export class StackAPI {
         this.gateway = gateway || getGateway();
     }
 
-    async getStacks(): Promise<Response<StackGetResponse>> {
+    async getStacks(criteria?: StackQueryCriteria): Promise<Response<StackGetResponse>> {
         return this.gateway.get("stack/", {
+            params: getOptionParams(criteria),
             validate: StackGetResponse.validate
         });
     }
@@ -33,8 +41,7 @@ export class StackAPI {
         });
     }
 
-    async createStack(data: StackUpdateRequest, options?: StackUpdateParams): Promise<Response<StackUpdateResponse>> {
-        // const requestData = buildStackUpdateRequest(data, options);
+    async createStack(data: StackCreateRequest): Promise<Response<StackUpdateResponse>> {
         const requestData = qs.stringify({
             data: JSON.stringify([data])
         });
@@ -47,13 +54,12 @@ export class StackAPI {
         });
     }
 
-    async updateStack(data: StackUpdateRequest, options?: StackUpdateParams): Promise<Response<StackUpdateResponse>> {
-        // const requestData = buildStackdUpdateRequest(data, options);
+    async updateStack(data: StackUpdateRequest): Promise<Response<StackUpdateResponse>> {
         const requestData = qs.stringify({
             data: JSON.stringify([data])
         });
 
-        return this.gateway.put(`stack/${data.guid}/`, requestData, {
+        return this.gateway.put(`stack/${data.id}/`, requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
@@ -61,11 +67,8 @@ export class StackAPI {
         });
     }
 
-    deleteStack(id: number | number[]): Promise<Response<StackDeleteResponse>> {
-        const requestData = qs.stringify({
-            _method: "DELETE",
-            data: JSON.stringify(IdDto.fromValues(id))
-        });
+    deleteStack(id: number, options?: StackUpdateParams): Promise<Response<StackDeleteResponse>> {
+        const requestData = buildStackDeleteRequest(id, options);
 
         return this.gateway.post("stack/", requestData, {
             headers: {
@@ -75,5 +78,28 @@ export class StackAPI {
         });
     }
 
-
 }
+
+function buildStackDeleteRequest(id: number, options?: StackUpdateParams): string {
+    const request: any = {
+        data: JSON.stringify(IdDto.fromValues(id)),
+        _method: "DELETE"
+    };
+
+    if (options && !isNil(options.adminEnabled)) {
+        request.adminEnabled = options.adminEnabled;
+    }
+
+    return qs.stringify(request);
+}
+
+function getOptionParams(options?: StackQueryCriteria): any | undefined {
+    if (!options) return undefined;
+
+    const params: any = {};
+    if (options.limit) params.max = options.limit;
+    if (options.offset) params.offset = options.offset;
+    if (options.user_id) params.user_id = options.user_id;
+    return params;
+}
+

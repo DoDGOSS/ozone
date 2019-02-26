@@ -1,6 +1,8 @@
 import { createValidator, Model, Property } from "@ozone/openapi-decorators";
-import { GroupDTO } from "./group-dto";
-import { IdDto } from "./id-dto";
+import { DefaultGroupDTO } from "./default-group-dto";
+import {UserDTO} from "./user-dto";
+import {GroupDTO} from "./group-dto";
+
 
 @Model({ name: "Stack" })
 export class StackDTO {
@@ -18,7 +20,7 @@ export class StackDTO {
 
     // Testing
     @Property({ nullable: true })
-    owner: any;
+    owner: OwnerUsernameDTO;
 
     @Property()
     groups: any[];
@@ -27,7 +29,7 @@ export class StackDTO {
     stackContext: string;
 
     @Property()
-    defaultGroup: GroupDTO;
+    defaultGroup: DefaultGroupDTO;
 
     @Property({ nullable: true })
     descriptorUrl: string;
@@ -49,10 +51,7 @@ export class StackDTO {
 
     @Property({ readOnly: true })
     totalDashboards: number;
-
-
 }
-
 
 @Model()
 export class StackGetResponse {
@@ -67,20 +66,25 @@ export class StackGetResponse {
 
 }
 
-
 export interface StackUpdateParams {
     adminEnabled?: boolean;
 }
 
-
-export interface StackUpdateRequest {
+export interface StackCreateRequest {
     name: string;
-    stackContext?: string;
-    update_action?: "add" | "remove";
-    user_ids?: Array<number>;
-    // Owner
+    approved?: boolean;
+    imageUrl?: string;
+    stackContext: string;
+    descriptorUrl?: string;
+    description?: string;
 }
 
+export interface StackUpdateRequest extends StackCreateRequest {
+    id: number;
+    update_action?: "add" | "remove";
+    tab?: "users" | "groups";
+    data?: UserDTO[] | GroupDTO[];
+}
 
 @Model()
 export class StackUpdateResponse {
@@ -95,6 +99,17 @@ export class StackUpdateResponse {
 
 }
 
+@Model()
+export class OwnerUsernameDTO {
+    @Property()
+    username: string;
+}
+
+@Model()
+export class StackDeleteIdDTO {
+    @Property()
+    id: number;
+}
 
 @Model()
 export class StackDeleteResponse {
@@ -104,18 +119,10 @@ export class StackDeleteResponse {
     @Property()
     success: boolean;
 
-    @Property(() => IdDto)
-    data: IdDto[];
+    @Property(() => StackDeleteIdDTO)
+    data: StackDeleteIdDTO[];
 
 }
-
-// StackGetResponse
-// StackCreateRequest
-// StackCreateResponse
-// StackUpdateRequest
-// StackUpdateResponse
-// StackDeleteResponse
-
 
 
 
