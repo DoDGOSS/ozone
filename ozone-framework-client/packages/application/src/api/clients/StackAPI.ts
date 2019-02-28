@@ -1,27 +1,26 @@
-import { isNil } from "lodash";
-import {
-    Gateway,
-    IdDto,
-    Response,
-    UuidDto,
-    StackDTO,
-    StackGetResponse,
-    StackUpdateRequest,
-    StackUpdateParams,
-    StackUpdateResponse,
-    StackDeleteResponse, StackDeleteRequest, StackCreateRequest
-} from "..";
 import * as qs from "qs";
 
+import { Gateway, getGateway, Response } from "../interfaces";
+
+import { IdDTO } from "../models/IdDTO";
+import {
+    StackCreateRequest,
+    StackDeleteResponse,
+    StackGetResponse,
+    StackUpdateParams,
+    StackUpdateRequest,
+    StackUpdateResponse
+} from "../models/StackDTO";
+
+import { isNil } from "lodash";
 
 export interface StackQueryCriteria {
     limit?: number;
     offset?: number;
-    user_id?: number;
+    userId?: number;
 }
 
 export class StackAPI {
-
     private readonly gateway: Gateway;
 
     constructor(gateway?: Gateway) {
@@ -77,12 +76,11 @@ export class StackAPI {
             validate: StackDeleteResponse.validate
         });
     }
-
 }
 
 function buildStackDeleteRequest(id: number, options?: StackUpdateParams): string {
     const request: any = {
-        data: JSON.stringify(IdDto.fromValues(id)),
+        data: JSON.stringify(IdDTO.fromValues(id)),
         _method: "DELETE"
     };
 
@@ -99,7 +97,6 @@ function getOptionParams(options?: StackQueryCriteria): any | undefined {
     const params: any = {};
     if (options.limit) params.max = options.limit;
     if (options.offset) params.offset = options.offset;
-    if (options.user_id) params.user_id = options.user_id;
+    if (options.userId) params.user_id = options.userId;
     return params;
 }
-
