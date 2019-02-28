@@ -39,6 +39,8 @@ export class ColorServerWidget extends Component<{}, WidgetState> {
             { name: "getColors", fn: this.getColors.bind(this) },
             { name: "setColor", fn: this.setColor.bind(this) }
         ]);
+
+        OWF.notifyWidgetReady();
     }
 
     render() {

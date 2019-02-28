@@ -23,6 +23,10 @@ export class ColorClientWidget extends Component<{}, WidgetState> {
         this.fetchColors = this.fetchColors.bind(this);
     }
 
+    componentDidMount(): void {
+        OWF.notifyWidgetReady();
+    }
+
     render() {
         const { colors, selected } = this.state;
 

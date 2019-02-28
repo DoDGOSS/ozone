@@ -16,6 +16,10 @@ interface Message {
 }
 
 export class ChannelShouterWidget extends Component {
+    componentDidMount() {
+        OWF.notifyWidgetReady();
+    }
+
     render() {
         return (
             <div className="app flex-column">

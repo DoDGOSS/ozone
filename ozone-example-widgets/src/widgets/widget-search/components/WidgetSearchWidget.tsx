@@ -46,6 +46,8 @@ export class WidgetSearchWidget extends Component<{}, WidgetState> {
     }
 
     componentDidMount() {
+        OWF.notifyWidgetReady();
+
         this.search();
     }
 

@@ -2,7 +2,7 @@ import * as React from "react";
 import { useBehavior } from "../../hooks";
 
 import { Classes, Dialog } from "@blueprintjs/core";
-import { dashboardStore } from "../../stores/DashboardStore";
+import { dashboardService } from "../../stores/DashboardService";
 import { mainStore } from "../../stores/MainStore";
 import { widgetStore } from "../../stores/WidgetStore";
 
@@ -35,7 +35,7 @@ export const AdminToolsDialog: React.FunctionComponent<{}> = () => {
                                 title={widget.title}
                                 iconUrl={widget.iconUrl}
                                 onClick={() => {
-                                    dashboardStore.addWidget({
+                                    dashboardService.addWidget({
                                         id: widget.id,
                                         definition: widget.definition
                                     });
