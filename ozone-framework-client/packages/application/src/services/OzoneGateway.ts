@@ -1,14 +1,14 @@
 import axios from "axios";
-import { trimEnd, trimStart } from "lodash";
 
-import { injectable } from "../inject";
-
-import { AuthenticationError, AuthUserDTO, Gateway, RequestOptions, Response } from "../api";
 import { ValidationError } from "@ozone/openapi-decorators";
 
-import { lazy } from "../utility";
+import { Gateway, RequestOptions, Response } from "../api/interfaces";
+import { AuthUserDTO } from "../api/models/AuthUserDTO";
 
-@injectable()
+import { trimEnd, trimStart } from "lodash";
+import { lazy } from "../utility";
+import { AuthenticationError } from "../api/errors";
+
 export class OzoneGateway implements Gateway {
     static readonly instance = lazy(() => new OzoneGateway());
 
@@ -26,7 +26,7 @@ export class OzoneGateway implements Gateway {
 
     async login(username: string, password: string): Promise<Response<AuthUserDTO>> {
         try {
-            const response = await this.post(`perform_login`, null, {
+            const response = await this.post("perform_login", null, {
                 params: {
                     username,
                     password
@@ -49,9 +49,7 @@ export class OzoneGateway implements Gateway {
 
     async logout(): Promise<Response<{}>> {
         try {
-            window.location.reload();
-            const response = await this.get(`/logout`);
-            return response;
+            return await this.get("/logout");
         } catch (ex) {
             if (ex instanceof ValidationError) throw ex;
             if (ex.response.status === 401) {

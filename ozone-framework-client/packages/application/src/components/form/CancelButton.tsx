@@ -1,9 +1,9 @@
-import * as styles from "./Form.scss";
+import * as styles from "./index.scss";
 
 import * as React from "react";
 import { Button } from "@blueprintjs/core";
 
-import { classNames } from "../util";
+import { classNames } from "../../utility";
 
 export interface CancelButtonProps {
     onClick: () => void;

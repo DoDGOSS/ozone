@@ -1,36 +1,33 @@
-import * as styles from "./HelpDialog.scss";
-
 import * as React from "react";
-import { observer } from "mobx-react";
+import { useBehavior } from "../../hooks";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
-import { lazyInject } from "../../inject";
-import { MainStore } from "../../stores";
+import { mainStore } from "../../stores/MainStore";
 
-import { classNames } from "../util";
+import { classNames } from "../../utility";
 
-@observer
-export class HelpDialog extends React.Component {
-    @lazyInject(MainStore)
-    private mainStore: MainStore;
+import * as styles from "./index.scss";
 
-    render() {
-        return (
-            <Dialog
-                className={classNames(this.mainStore.darkClass, styles.helpDialog)}
-                icon="help"
-                isOpen={this.mainStore.isHelpDialogVisible}
-                onClose={this.mainStore.hideHelpDialog}
-            >
-                <div className={classNames(Classes.DIALOG_BODY, styles.helpContent)}>
-                    <p>Lorem ipsum...</p>
-                </div>
+export const HelpDialog: React.FunctionComponent = () => {
+    const themeClass = useBehavior(mainStore.themeClass);
+    const isOpen = useBehavior(mainStore.isHelpDialogVisible);
 
-                <div className={Classes.DIALOG_FOOTER}>
-                    <div className={Classes.DIALOG_FOOTER_ACTIONS} />
-                </div>
-            </Dialog>
-        );
-    }
-}
+    return (
+        <Dialog
+            className={classNames(themeClass, styles.helpDialog)}
+            title="Help"
+            icon="help"
+            isOpen={isOpen}
+            onClose={mainStore.hideHelpDialog}
+        >
+            <div className={classNames(Classes.DIALOG_BODY, styles.helpContent)}>
+                <p>Lorem ipsum...</p>
+            </div>
+
+            <div className={Classes.DIALOG_FOOTER}>
+                <div className={Classes.DIALOG_FOOTER_ACTIONS} />
+            </div>
+        </Dialog>
+    );
+};

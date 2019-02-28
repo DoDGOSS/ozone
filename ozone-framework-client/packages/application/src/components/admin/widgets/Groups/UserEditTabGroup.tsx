@@ -1,15 +1,14 @@
-import * as styles from "../Widgets.scss";
+import * as React from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
 
-import * as React from "react";
-
 import { UserEditForm } from "../Users/UserEditForm";
-
-import { lazyInject } from "../../../../inject";
-import { UserAPI, UserUpdateRequest } from "../../../../api";
 import { CancelButton } from "../../../form";
 import { UserEditGroups } from "./UserEditGroups";
+import { userApi } from "../../../../api/clients/UserAPI";
+import { UserUpdateRequest } from "../../../../api/models/UserDTO";
+
+import * as styles from "../Widgets.scss";
 
 export interface UserEditTabGroupProps {
     onUpdate: (update?: any) => void;
@@ -22,9 +21,6 @@ export interface UserEditTabGroupState {
 }
 
 export class UserEditTabGroup extends React.Component<UserEditTabGroupProps, UserEditTabGroupState> {
-    @lazyInject(UserAPI)
-    private userAPI: UserAPI;
-
     constructor(props: UserEditTabGroupProps) {
         super(props);
 
@@ -59,7 +55,7 @@ export class UserEditTabGroup extends React.Component<UserEditTabGroupProps, Use
     private updateGroup = async (data: UserUpdateRequest) => {
         console.log("Submitting updated user");
 
-        const response = await this.userAPI.updateUser(data);
+        const response = await userApi.updateUser(data);
         const result = response.status === 200;
 
         this.props.onUpdate(response.data.data);

@@ -10,7 +10,7 @@ import {
     GroupDTO,
     GroupGetResponse,
     GroupUpdateResponse
-} from "../../src/api";
+} from "../../src/api/models/GroupDTO";
 
 import { expectSuccessfulValidation, expectToThrow } from "./assertions";
 import { GROUPS } from "./data";

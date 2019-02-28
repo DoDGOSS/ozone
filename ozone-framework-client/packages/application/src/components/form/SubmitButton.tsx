@@ -1,24 +1,23 @@
-import * as styles from "./Form.scss";
-
 import * as React from "react";
+
 import { connect, FormikContext } from "formik";
+
 import { Button } from "@blueprintjs/core";
 
-import { classNames } from "../util";
+import { classNames } from "../../utility";
+
+import * as styles from "./index.scss";
 
 interface SubmitButtonProps {
     className?: string;
 }
 
-const _SubmitButton: React.FunctionComponent<SubmitButtonProps & { formik: FormikContext<any> }> = ({
-    className,
-    formik
-}) => {
-    const { dirty, isValid, isSubmitting } = formik;
+const _SubmitButton: React.FunctionComponent<SubmitButtonProps & { formik: FormikContext<any> }> = (props) => {
+    const { dirty, isValid, isSubmitting } = props.formik;
 
     return (
         <Button
-            className={classNames(styles.submitButton, className)}
+            className={classNames(styles.submitButton, props.className)}
             type="submit"
             text="Submit"
             intent="primary"

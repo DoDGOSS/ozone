@@ -1,0 +1,42 @@
+@import "../../common";
+
+:local .dialog {
+  width: auto;
+
+  padding: 0;
+}
+
+:local .tileContainer {
+  display: flex;
+  flex-direction: row;
+
+  justify-content: center;
+}
+
+:local .tile {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+
+  margin: 0 0.25rem 0 0.25rem;
+  padding: 0.5rem;
+
+  border-radius: 8px;
+
+  width: 120px;
+
+  &:hover {
+    background: $hover-background;
+  }
+}
+
+:local .tileIcon {
+}
+
+:local .tileTitle {
+  margin-top: 0.25rem;
+  font-weight: 600;
+
+  text-align: center;
+}

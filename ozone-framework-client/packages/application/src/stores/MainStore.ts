@@ -1,198 +1,71 @@
-import { action, observable, runInAction } from "mobx";
-import { injectable } from "../inject";
+import { BehaviorSubject } from "rxjs";
 
-@injectable()
+import { asBehavior } from "../observables";
+import { isBlank } from "../utility";
+
 export class MainStore {
-    @observable
-    isConfirmationTrue: boolean;
+    private readonly themeClass$ = new BehaviorSubject("bp3-dark");
 
-    @observable
-    isConfirmationDialogVisible: boolean;
+    private readonly isAboutVisible$ = new BehaviorSubject(false);
+    private readonly isAdminToolsDialogOpen$ = new BehaviorSubject(false);
+    private readonly isCreateDashboardDialogVisible$ = new BehaviorSubject(false);
+    private readonly isDashboardDialogVisible$ = new BehaviorSubject(false);
+    private readonly isHelpDialogVisible$ = new BehaviorSubject(false);
+    private readonly isLoginDialogOpen$ = new BehaviorSubject(false);
+    private readonly isUserAgreementVisible$ = new BehaviorSubject(false);
+    private readonly isUserProfileDialogVisible$ = new BehaviorSubject(false);
+    private readonly isWarningDialogVisible$ = new BehaviorSubject(false);
+    private readonly isWidgetToolbarOpen$ = new BehaviorSubject(false);
+    private readonly widgetFilter$ = new BehaviorSubject<string | null>(null);
 
-    @observable
-    isCreateDashboardDialogVisible: boolean;
+    themeClass = () => asBehavior(this.themeClass$);
+    toggleTheme = () => {
+        this.themeClass$.next(isBlank(this.themeClass$.value) ? "bp3-dark" : "");
+    };
 
-    @observable
-    isLoginDialogOpen: boolean;
+    isDashboardDialogVisible = () => asBehavior(this.isDashboardDialogVisible$);
+    showDashboardDialog = () => this.isDashboardDialogVisible$.next(true);
+    hideDashboardDialog = () => this.isDashboardDialogVisible$.next(false);
 
-    @observable
-    isWarningDialogVisible: boolean;
+    isWidgetToolbarOpen = () => asBehavior(this.isWidgetToolbarOpen$);
+    closeWidgetToolbar = () => this.isWidgetToolbarOpen$.next(false);
+    toggleWidgetToolbar = () => this.isWidgetToolbarOpen$.next(!this.isWidgetToolbarOpen$.value);
 
-    @observable
-    isUserAgreementVisible: boolean;
+    isAboutVisible = () => asBehavior(this.isAboutVisible$);
+    showAboutDialog = () => this.isAboutVisible$.next(true);
+    hideAboutDialog = () => this.isAboutVisible$.next(false);
 
-    @observable
-    isAboutVisible: boolean;
+    isCreateDashboardDialogVisible = () => asBehavior(this.isCreateDashboardDialogVisible$);
+    showCreateDashboardDialog = () => this.isCreateDashboardDialogVisible$.next(true);
+    hideCreateDashboardDialog = () => this.isCreateDashboardDialogVisible$.next(false);
 
-    @observable
-    isHelpDialogVisible: boolean;
+    isLoginDialogOpen = () => asBehavior(this.isLoginDialogOpen$);
+    showLoginDialog = () => this.isLoginDialogOpen$.next(true);
+    hideLoginDialog = () => this.isLoginDialogOpen$.next(false);
 
-    @observable
-    isAdminToolsDialogOpen: boolean;
+    isWarningDialogVisible = () => asBehavior(this.isWarningDialogVisible$);
+    showWarningDialog = () => this.isWarningDialogVisible$.next(true);
+    hideWarningDialog = () => this.isWarningDialogVisible$.next(false);
 
-    @observable
-    isDashboardDialogVisible: boolean;
+    isUserAgreementVisible = () => asBehavior(this.isUserAgreementVisible$);
+    showUserAgreement = () => this.isUserAgreementVisible$.next(true);
+    hideUserAgreement = () => this.isUserAgreementVisible$.next(false);
 
-    @observable
-    isUserProfileDialogVisible: boolean;
+    isHelpDialogVisible = () => asBehavior(this.isHelpDialogVisible$);
+    showHelpDialog = () => this.isHelpDialogVisible$.next(true);
+    hideHelpDialog = () => this.isHelpDialogVisible$.next(false);
 
-    @observable
-    isWidgetToolbarOpen: boolean;
+    isUserProfileDialogVisible = () => asBehavior(this.isUserProfileDialogVisible$);
+    showUserProfileDialog = () => this.isUserProfileDialogVisible$.next(true);
+    hideUserProfileDialog = () => this.isUserProfileDialogVisible$.next(false);
 
-    @observable
-    darkTheme: boolean;
+    isAdminToolsDialogOpen = () => asBehavior(this.isAdminToolsDialogOpen$);
+    showAdminToolsDialog = () => this.isAdminToolsDialogOpen$.next(true);
+    hideAdminToolsDialog = () => this.isAdminToolsDialogOpen$.next(false);
 
-    @observable
-    darkClass: string;
-
-    @observable
-    widgetFilter: string | undefined;
-
-    constructor() {
-        runInAction("initialize", () => {
-            this.isConfirmationTrue = false;
-            this.isConfirmationDialogVisible = false;
-            this.isCreateDashboardDialogVisible = false;
-            this.isAboutVisible = false;
-            this.isWarningDialogVisible = false;
-            this.isUserAgreementVisible = false;
-            this.isHelpDialogVisible = false;
-            this.isUserProfileDialogVisible = false;
-            this.isAdminToolsDialogOpen = false;
-            this.isDashboardDialogVisible = false;
-            this.isWidgetToolbarOpen = false;
-            this.darkTheme = false;
-        });
-    }
-
-    @action.bound
-    showConfirmationDialog() {
-        this.isConfirmationDialogVisible = true;
-        this.isConfirmationTrue = false;
-    }
-
-    @action.bound
-    hideConfirmationDialogCancel() {
-        this.isConfirmationDialogVisible = false;
-    }
-
-    @action.bound
-    hideConfirmationDialogConfirm() {
-        this.isConfirmationDialogVisible = false;
-        this.isConfirmationTrue = true;
-    }
-
-    @action.bound
-    showCreateDashboardDialog() {
-        this.isCreateDashboardDialogVisible = true;
-    }
-
-    @action.bound
-    hideCreateDashboardDialog() {
-        this.isCreateDashboardDialogVisible = false;
-    }
-
-    @action.bound
-    showLoginDialog() {
-        this.isLoginDialogOpen = true;
-    }
-
-    @action.bound
-    hideLoginDialog() {
-        this.isLoginDialogOpen = false;
-    }
-
-    @action.bound
-    showWarningDialog() {
-        this.isWarningDialogVisible = true;
-    }
-
-    @action.bound
-    hideWarningDialog() {
-        this.isWarningDialogVisible = false;
-    }
-    @action.bound
-    showAboutDialog() {
-        this.isAboutVisible = true;
-    }
-
-    @action.bound
-    hideAboutDialog() {
-        this.isAboutVisible = false;
-    }
-
-    @action.bound
-    showUserAgreement() {
-        this.isUserAgreementVisible = true;
-    }
-
-    @action.bound
-    hideUserAgreement() {
-        this.isUserAgreementVisible = false;
-    }
-
-    @action.bound
-    showHelpDialog() {
-        this.isHelpDialogVisible = true;
-    }
-
-    @action.bound
-    showUserProfileDialog() {
-        this.isUserProfileDialogVisible = true;
-    }
-
-    @action.bound
-    hideUserProfileDialog() {
-        this.isUserProfileDialogVisible = false;
-    }
-
-    @action.bound
-    hideHelpDialog() {
-        this.isHelpDialogVisible = false;
-    }
-
-    @action.bound
-    showAdminToolsDialog() {
-        this.isAdminToolsDialogOpen = true;
-    }
-
-    @action.bound
-    hideAdminToolsDialog() {
-        this.isAdminToolsDialogOpen = false;
-    }
-
-    @action.bound
-    showDashboardDialog() {
-        this.isDashboardDialogVisible = true;
-    }
-
-    @action.bound
-    hideDashboardDialog() {
-        this.isDashboardDialogVisible = false;
-    }
-
-    @action.bound
-    closeWidgetToolbar() {
-        this.isWidgetToolbarOpen = false;
-    }
-
-    @action.bound
-    toggleWidgetToolbar() {
-        this.isWidgetToolbarOpen = !this.isWidgetToolbarOpen;
-    }
-
-    @action.bound
-    setWidgetFilter(value: string) {
-        this.widgetFilter = value;
-    }
-
-    @action.bound
-    toggleTheme() {
-        this.darkTheme = !this.darkTheme;
-        if (this.darkTheme === true) {
-            this.darkClass = "bp3-dark";
-        } else {
-            this.darkClass = "";
-        }
-    }
+    widgetFilter = () => asBehavior(this.widgetFilter$);
+    setWidgetFilter = (value: string) => this.widgetFilter$.next(value);
+    clearWidgetFilter = () => this.widgetFilter$.next(null);
 }
+
+export const mainStore = new MainStore();

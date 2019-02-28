@@ -1,11 +1,11 @@
-import * as styles from "./UserCreateForm.scss";
-
 import * as React from "react";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { object, string } from "yup";
 
-import { UserCreateRequest } from "../../../../api";
 import { CancelButton, FormError, SubmitButton, TextField } from "../../../form";
+
+import * as styles from "./UserCreateForm.scss";
+import { UserCreateRequest } from "../../../../api/models/UserDTO";
 
 interface UserCreateProps {
     onSubmit: (data: UserCreateRequest) => Promise<boolean>;
