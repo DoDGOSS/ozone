@@ -1,6 +1,5 @@
 import { isNil } from "../util";
 
-
 export async function getWidgetProxy<T>(widgetId: string): Promise<T> {
     return new Promise<T>((resolve, reject) => {
         try {
