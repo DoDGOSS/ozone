@@ -8,7 +8,10 @@
     "test": "lerna run test"
   },
   "devDependencies": {
+    "circular-dependency-plugin": "^5.0.2",
     "lerna": "3.10.7",
+    "react": "^16.8.4",
+    "rxjs-hooks": "^0.4.0",
     "tslint": "5.12.1",
     "typescript": "3.3.3"
   }
