@@ -1,67 +1,46 @@
-import * as styles from "./HomeScreen.scss";
-
 import * as React from "react";
+import { useBehavior } from "../../hooks";
 
-import { lazyInject } from "../../inject";
-import { AuthStore, ConfigStore } from "../../stores";
+import { mainStore } from "../../stores/MainStore";
 
+import { AboutDialog } from "../about/About";
+import { AdminToolsDialog } from "../admin-tools-dialog/AdminToolsDialog";
+import { CreateDashboardDialog } from "../create-dashboard-screen/CreateDashboardDialog";
+import { ReplaceWidgetDialog } from "../widget-dashboard/ReplaceWidgetDialog";
 import { DashboardDialog } from "../dashboard-screen/DashboardDialog";
 import { HelpDialog } from "../help-screen/HelpDialog";
-import { NavigationBar } from "../navigation/NavigationBar";
-import { UserAgreement, WarningDialog } from "../warning-screen/WarningDialog";
-import { WidgetToolbar } from "../widget-toolbar/WidgetToolbar";
-import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
-import { AdminToolsDialog } from "../admin-tools-dialog/AdminToolsDialog";
-import { UserProfileDialog } from "../user-profile/UserProfileDialog";
 import { LoginDialog } from "../login-dialog/LoginDialog";
-import { AboutDialog } from "../about/About";
-import { CreateDashboardDialog } from "../create-dashboard-screen/CreateDashboardDialog";
-import { ConfirmationDialog } from "../replaceConfirmationDialog/ConfirmationDialog";
+import { NavigationBar } from "../navigation/NavigationBar";
+import { WarningDialog } from "../warning-screen/WarningDialog";
+import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
+import { WidgetToolbar } from "../widget-toolbar/WidgetToolbar";
+import { UserAgreement } from "../warning-screen/UserAgreement";
+import { UserProfileDialog } from "../user-profile/UserProfileDialog";
 
-import { ClassificationBanner } from "./ClassificationBanner";
+import * as styles from "./index.scss";
 
-import { DashboardStore } from "../../stores";
+export const HomeScreen: React.FunctionComponent<{}> = () => {
+    const isAboutVisible = useBehavior(mainStore.isAboutVisible);
 
-export class HomeScreen extends React.Component {
-    @lazyInject(AuthStore)
-    private authStore: AuthStore;
+    // this.dashboardStore.setDashboard(LOGIN_DASHBOARD);
 
-    @lazyInject(ConfigStore)
-    private configStore: ConfigStore;
+    return (
+        <div className={styles.homeScreen}>
+            <NavigationBar className="bp3-dark" />
+            <WidgetToolbar className={styles.widgetToolbar} />
 
-    @lazyInject(DashboardStore)
-    private dashboardStore: DashboardStore;
+            <WidgetDashboard className={styles.widgetDashboard} />
 
-    componentWillMount() {
-        this.authStore.check();
-    }
-
-    render() {
-        const classification = this.configStore.classification;
-        return (
-            <div className={styles.homeScreen}>
-                {classification.disableTopBanner !== true && (
-                    <ClassificationBanner className={styles.classificationBanner} {...classification} />
-                )}
-                <NavigationBar className="bp3-dark" />
-                <WidgetToolbar className={styles.widgetToolbar} />
-
-                <WidgetDashboard className={styles.widgetDashboard} />
-
-                {classification.disableBottomBanner !== true && (
-                    <ClassificationBanner className={styles.classificationBanner} {...classification} />
-                )}
-                <CreateDashboardDialog />
-                <ConfirmationDialog />
-                <UserAgreement />
-                <AboutDialog />
-                <WarningDialog />
-                <HelpDialog />
-                <DashboardDialog />
-                <AdminToolsDialog />
-                <UserProfileDialog />
-                <LoginDialog />
-            </div>
-        );
-    }
-}
+            <CreateDashboardDialog />
+            <ReplaceWidgetDialog />
+            <UserAgreement />
+            <AboutDialog isVisible={isAboutVisible} onClose={() => mainStore.hideAboutDialog()} />
+            <WarningDialog />
+            <HelpDialog />
+            <DashboardDialog />
+            <AdminToolsDialog />
+            <UserProfileDialog />
+            <LoginDialog />
+        </div>
+    );
+};

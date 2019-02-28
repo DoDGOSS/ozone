@@ -1,69 +1,55 @@
-import * as styles from "./WidgetDashboard.scss";
-
 import React from "react";
-import { observer } from "mobx-react";
+import { useBehavior } from "../../hooks";
 
 import { Mosaic, MosaicBranch, MosaicWindow } from "react-mosaic-component";
 
-import { classNames } from "../util";
+import { PropsBase } from "../../common";
+import { DashboardNode } from "../../stores/interfaces";
 
-import { lazyInject } from "../../inject";
-import { DashboardNode, DashboardStore, MainStore } from "../../stores";
+import { dashboardStore } from "../../stores/DashboardStore";
+import { mainStore } from "../../stores/MainStore";
+
+import { classNames } from "../../utility";
+
+import * as styles from "./index.scss";
 
 const DashboardLayout = Mosaic.ofType<string>();
 const DashboardWindow = MosaicWindow.ofType<string>();
 
-export type WidgetDashboardProps = {
-    className?: string;
-};
+export const WidgetDashboard: React.FunctionComponent<PropsBase> = (props) => {
+    const { className } = props;
 
-@observer
-export class WidgetDashboard extends React.Component<WidgetDashboardProps, {}> {
-    @lazyInject(DashboardStore)
-    private dashboardStore: DashboardStore;
+    const themeClass = useBehavior(mainStore.themeClass);
+    const dashboard = useBehavior(dashboardStore.dashboard);
 
-    @lazyInject(MainStore)
-    private mainStore: MainStore;
+    const widgets = (dashboard && dashboard.widgets) || {};
 
-    render() {
-        const { className } = this.props;
-        const layout = this.dashboardStore.layout;
-        const widgets = this.dashboardStore.getDashboard().widgets;
-
-        return (
-            <div className={classNames(styles.widgetDashboard, className)}>
-                <DashboardLayout
-                    className={classNames(
-                        "mosaic-blueprint-theme",
-                        "mosaic",
-                        "mosaic-drop-target",
-                        this.mainStore.darkClass
-                    )}
-                    value={layout}
-                    onChange={this.onChange}
-                    renderTile={(id: string, path: MosaicBranch[]) => {
-                        const widget = widgets && widgets[id];
-                        if (!widget) {
-                            return (
-                                <DashboardWindow title="Error" path={path}>
-                                    <h1>Error: Widget not found </h1>
-                                </DashboardWindow>
-                            );
-                        }
-
-                        const widgetDef = widget.definition;
+    return (
+        <div className={classNames(styles.dashboard, className)}>
+            <DashboardLayout
+                className={classNames("mosaic-blueprint-theme", "mosaic", "mosaic-drop-target", themeClass)}
+                value={dashboard && dashboard.layout}
+                onChange={(currentNode: DashboardNode | null) => {
+                    dashboardStore.setLayout(currentNode);
+                }}
+                renderTile={(id: string, path: MosaicBranch[]) => {
+                    const widget = widgets[id];
+                    if (!widget) {
                         return (
-                            <DashboardWindow title={widgetDef.title} path={path}>
-                                {widgetDef.element}
+                            <DashboardWindow title="Error" path={path}>
+                                <h1>Error: Widget not found </h1>
                             </DashboardWindow>
                         );
-                    }}
-                />
-            </div>
-        );
-    }
+                    }
 
-    private onChange = (currentNode: DashboardNode | null) => {
-        this.dashboardStore.setLayout(currentNode);
-    };
-}
+                    const widgetDef = widget.definition;
+                    return (
+                        <DashboardWindow title={widgetDef.title} path={path}>
+                            {widgetDef.element}
+                        </DashboardWindow>
+                    );
+                }}
+            />
+        </div>
+    );
+};

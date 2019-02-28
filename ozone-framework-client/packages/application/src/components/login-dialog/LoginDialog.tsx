@@ -1,55 +1,31 @@
-import * as styles from "./LoginDialog.scss";
-
 import * as React from "react";
-import { observer } from "mobx-react";
-import { action } from "mobx";
+import { useBehavior } from "../../hooks";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
-import { lazyInject } from "../../inject";
-import { MainStore } from "../../stores";
-
+import { mainStore } from "../../stores/MainStore";
 import { LoginForm } from "./LoginForm";
 
-const loginDialogStyles = {
-    minHeight: "400px"
-};
+import { classNames } from "../../utility";
 
-const dialogBody = {
-    display: "flex",
-    justifyContent: "center"
-};
+import * as styles from "./LoginDialog.scss";
 
-@observer
-export class LoginDialog extends React.Component {
-    @lazyInject(MainStore)
-    private mainStore: MainStore;
+export const LoginDialog: React.FunctionComponent<{}> = () => {
+    const isOpen = useBehavior(mainStore.isLoginDialogOpen);
 
-    @action.bound
-    submitLogin() {
-        this.mainStore.hideWarningDialog();
-        this.mainStore.hideLoginDialog();
-        window.location.reload();
-    }
-
-    render() {
-        return (
-            <div>
-                <Dialog
-                    className="bp3-dark"
-                    isOpen={this.mainStore.isLoginDialogOpen}
-                    onClose={this.mainStore.hideLoginDialog}
-                    title="Login"
-                    icon="log-in"
-                    style={loginDialogStyles}
-                >
-                    <div className={Classes.DIALOG_BODY} data-element-id="login-dialog" style={dialogBody}>
-                        <div className={styles.tileContainer}>
-                            <LoginForm onSuccess={this.submitLogin} />
-                        </div>
+    return (
+        <div>
+            <Dialog className={classNames("bp3-dark", styles.dialog)} isOpen={isOpen} title="Login" icon="log-in">
+                <div className={classNames(Classes.DIALOG_BODY, styles.dialogBody)} data-element-id="login-dialog">
+                    <div className={styles.tileContainer}>
+                        <LoginForm
+                            onSuccess={() => {
+                                mainStore.hideLoginDialog();
+                            }}
+                        />
                     </div>
-                </Dialog>
-            </div>
-        );
-    }
-}
+                </div>
+            </Dialog>
+        </div>
+    );
+};

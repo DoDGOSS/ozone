@@ -3,12 +3,12 @@ import * as styles from "../Widgets.scss";
 import * as React from "react";
 import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
 
-import { lazyInject } from "../../../../inject";
-import { GroupAPI, GroupDTO, GroupQueryCriteria, GroupUpdateRequest, UserDTO } from "../../../../api";
-
 import { AdminTable } from "../../table/AdminTable";
 import { UserEditGroupsDialog } from "./UserEditGroupsDialog";
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
+import { GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
+import { UserDTO } from "../../../../api/models/UserDTO";
+import { groupApi, GroupQueryCriteria } from "../../../../api/clients/GroupAPI";
 
 interface UserEditGroupsProps {
     onUpdate: (update?: any) => void;
@@ -68,9 +68,6 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
             )
         }
     ];
-
-    @lazyInject(GroupAPI)
-    private groupAPI: GroupAPI;
 
     constructor(props: UserEditGroupsProps) {
         super(props);
@@ -166,7 +163,7 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
             user_id: currentUser.id
         };
 
-        const response = await this.groupAPI.getGroups(criteria);
+        const response = await groupApi.getGroups(criteria);
 
         // TODO: Handle failed request
         if (response.status !== 200) return;
@@ -188,7 +185,7 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
                 user_ids: [this.state.user.id]
             };
 
-            const response = await this.groupAPI.updateGroup(request);
+            const response = await groupApi.updateGroup(request);
 
             if (response.status !== 200) return;
 
@@ -242,7 +239,7 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
             user_ids: [this.state.user.id]
         };
 
-        const response = await this.groupAPI.updateGroup(request);
+        const response = await groupApi.updateGroup(request);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;

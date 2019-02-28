@@ -1,6 +1,7 @@
 import "reflect-metadata";
 
-import { UserAPI, UserDTO } from "../../src/api";
+import { UserAPI } from "../../src/api/clients/UserAPI";
+import { UserDTO } from "../../src/api/models/UserDTO";
 
 import { NodeGateway } from "./node-gateway";
 import { USERS } from "../unit/data";

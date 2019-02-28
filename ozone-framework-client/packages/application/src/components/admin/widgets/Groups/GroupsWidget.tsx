@@ -7,11 +7,10 @@ import { AdminTable } from "../../table/AdminTable";
 
 import { GroupCreateForm } from "./GroupCreateForm";
 
-import { lazyInject } from "../../../../inject";
-
-import { GroupAPI, GroupCreateRequest, GroupDTO } from "../../../../api";
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
 import { GroupEditTabGroup } from "../Users/GroupEditTabGroup";
+import { groupApi } from "../../../../api/clients/GroupAPI";
+import { GroupCreateRequest, GroupDTO } from "../../../../api/models/GroupDTO";
 
 interface State {
     groups: GroupDTO[];
@@ -43,9 +42,6 @@ enum GroupWidgetSubSection {
 }
 
 export class GroupsWidget extends React.Component<{}, State> {
-    @lazyInject(GroupAPI)
-    private groupAPI: GroupAPI;
-
     constructor(props: any) {
         super(props);
         this.state = {
@@ -202,7 +198,7 @@ export class GroupsWidget extends React.Component<{}, State> {
     }
 
     private getGroups = async () => {
-        const response = await this.groupAPI.getGroups();
+        const response = await groupApi.getGroups();
 
         // TODO: Handle failed request
         if (response.status !== 200) return;
@@ -220,7 +216,7 @@ export class GroupsWidget extends React.Component<{}, State> {
     private createGroup = async (data: GroupCreateRequest) => {
         data.status = data.active ? "active" : "inactive";
 
-        const response = await this.groupAPI.createGroup(data);
+        const response = await groupApi.createGroup(data);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;
@@ -252,7 +248,7 @@ export class GroupsWidget extends React.Component<{}, State> {
 
         const group: GroupDTO = payload;
 
-        const response = await this.groupAPI.deleteGroup(group.id);
+        const response = await groupApi.deleteGroup(group.id);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;

@@ -1,55 +1,32 @@
 import * as React from "react";
-import { observer } from "mobx-react";
+import { useEffect, useState } from "react";
 
-import { lazyInject } from "../../inject";
-import { DashboardAPI } from "../../api";
+import { dashboardApi } from "../../api/clients/DashboardAPI";
 
-import { DashboardDTO } from "../../api/models/dashboard-dto";
+import { DashboardDTO } from "../../api/models/DashboardDTO";
 
-import * as styles from "./CreateDashboardStyles.scss";
+import * as styles from "./index.scss";
 
-export interface State {
-    dashboards: DashboardDTO[];
-}
+export const DashboardSelect: React.FunctionComponent<{}> = () => {
+    const [dashboards, setDashboards] = useState<DashboardDTO[]>([]);
 
-@observer
-export class DashboardSelect extends React.Component<{}, State> {
-    @lazyInject(DashboardAPI)
-    private dashboardAPI: DashboardAPI;
-
-    constructor(props: any) {
-        super(props);
-        this.state = { dashboards: [] };
-    }
-
-    componentDidMount() {
-        this.getDashboards();
-    }
-
-    render() {
-        const Data = this.state.dashboards;
-
-        return (
-            <div className={styles.CopyStyles} data-element-id="DashboardSelect">
-                <select>
-                    {Data.map((Dash) => (
-                        <option key={Dash.guid} value={Dash.name}>
-                            {Dash.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
-        );
-    }
-    private getDashboards = async () => {
-        const response = await this.dashboardAPI.getDashboards();
-
+    useEffect(() => {
         // TODO: Handle failed request
-        if (response.status !== 200) return;
-
-        this.setState({
-            dashboards: response.data.data
-            // loading: false
+        dashboardApi.getDashboards().then((response) => {
+            if (response.status !== 200) return;
+            setDashboards(response.data.data);
         });
-    };
-}
+    }, []);
+
+    return (
+        <div className={styles.select} data-element-id="DashboardSelect">
+            <select>
+                {dashboards.map((dashboard) => (
+                    <option key={dashboard.guid} value={dashboard.name}>
+                        {dashboard.name}
+                    </option>
+                ))}
+            </select>
+        </div>
+    );
+};

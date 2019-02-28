@@ -1,0 +1,24 @@
+:local .dialog {
+  min-width: 600px !important;
+}
+
+:local .form {
+  display: flex !important;
+}
+
+:local .formIcon {
+  padding: 10px !important;
+  width: 20% !important;
+}
+
+:local .formField {
+  width: 80% !important;
+}
+
+:local .select {
+  padding-bottom: 15px !important;
+}
+
+:local .premadeLayout {
+  padding-bottom: 15px !important;
+}

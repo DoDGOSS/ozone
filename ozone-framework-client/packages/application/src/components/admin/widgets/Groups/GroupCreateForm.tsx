@@ -1,11 +1,11 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { boolean, object, string } from "yup";
 
-import { GroupCreateRequest } from "../../../../api";
+import { GroupCreateRequest } from "../../../../api/models/GroupDTO";
 import { CancelButton, CheckBox, FormError, SubmitButton, TextField } from "../../../form";
+
+import * as styles from "../Widgets.scss";
 
 interface GroupCreateProps {
     onSubmit: (data: GroupCreateRequest) => Promise<boolean>;

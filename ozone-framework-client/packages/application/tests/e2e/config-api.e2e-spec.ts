@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { SystemConfigAPI } from "../../src/api";
+import { SystemConfigAPI } from "../../src/api/clients/SystemConfigAPI";
 
 import { NodeGateway } from "./node-gateway";
 

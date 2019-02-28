@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useObservable } from "rxjs-hooks";
+import { useBehavior } from "../../../../hooks";
 
 import { Tab, Tabs } from "@blueprintjs/core";
 
-import { SystemConfigStore } from "../../../../stores/SystemConfigStore";
-import { ConfigDTO } from "../../../../api";
+import { systemConfigStore } from "../../../../stores/SystemConfigStore";
+import { ConfigDTO } from "../../../../api/models/ConfigDTO";
 
 import { groupBy, isNil, keys, mapValues } from "lodash";
-import { classNames } from "../../../util";
+import { classNames } from "../../../../utility";
 
 import * as styles from "./SystemConfigWidget.scss";
 
@@ -17,15 +17,13 @@ const ACCOUNTS_TAB = "accounts";
 const STORE_TAB = "store";
 
 export const SystemConfigWidget: React.FunctionComponent = () => {
-    const systemConfigStore = SystemConfigStore.instance();
-
     useEffect(() => {
         systemConfigStore.fetch();
     }, []);
 
     const [activeTabId, setActiveTabId] = useState(AUDITING_TAB);
 
-    const configs = useObservable(() => systemConfigStore.configs$, systemConfigStore.configs$.value);
+    const configs = useBehavior(systemConfigStore.configs);
 
     const auditing = getConfigGroup(configs, "AUDITING");
     const branding = getConfigGroup(configs, "BRANDING");

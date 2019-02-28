@@ -1,10 +1,7 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { object, string } from "yup";
 
-import { UserUpdateRequest } from "../../../../api";
 import { FormError, TextField } from "../../../form";
 import { Button } from "@blueprintjs/core";
 
@@ -12,6 +9,9 @@ interface UserEditProps {
     onUpdate: (data: UserUpdateRequest) => Promise<boolean>;
     user?: any;
 }
+
+import * as styles from "../Widgets.scss";
+import { UserUpdateRequest } from "../../../../api/models/UserDTO";
 
 export const UserEditForm: React.FunctionComponent<UserEditProps> = ({ onUpdate, user }) => (
     <Formik

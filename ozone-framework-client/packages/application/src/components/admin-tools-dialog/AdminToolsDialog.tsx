@@ -1,102 +1,51 @@
-import * as styles from "./WidgetTile.scss";
-
 import * as React from "react";
-import { observer } from "mobx-react";
-import { action, observable } from "mobx";
+import { useBehavior } from "../../hooks";
 
 import { Classes, Dialog } from "@blueprintjs/core";
+import { dashboardStore } from "../../stores/DashboardStore";
+import { mainStore } from "../../stores/MainStore";
+import { widgetStore } from "../../stores/WidgetStore";
 
-import { lazyInject } from "../../inject";
-import { DashboardStore, MainStore, WidgetStore } from "../../stores";
+import { WidgetTile } from "./WidgetTile";
 
-export interface Widget {
-    id: string;
-    definition: WidgetDefinition;
-}
+import { classNames } from "../../utility";
 
-export interface WidgetDefinition {
-    id: string;
-    title: string;
-    element: JSX.Element;
-}
+import * as styles from "./index.scss";
 
-@observer
-export class AdminToolsDialog extends React.Component {
-    @lazyInject(DashboardStore)
-    private dashboardStore: DashboardStore;
+export const AdminToolsDialog: React.FunctionComponent<{}> = () => {
+    const themeClass = useBehavior(mainStore.themeClass);
+    const isOpen = useBehavior(mainStore.isAdminToolsDialogOpen);
 
-    @lazyInject(MainStore)
-    private mainStore: MainStore;
+    const adminWidgets = useBehavior(widgetStore.adminWidgets);
 
-    @lazyInject(WidgetStore)
-    private widgetStore: WidgetStore;
-
-    @observable
-    private dashboard = this.dashboardStore.getDashboard();
-
-    @observable
-    private windowCount: number = Object.keys(this.dashboard.widgets).length;
-
-    @action.bound
-    addWidget(widget: Widget) {
-        const addWidget: Widget = {
-            id: widget.id,
-            definition: widget.definition
-        };
-        this.dashboard.widgets[String(++this.windowCount)] = addWidget;
-        this.dashboardStore.addToTopRight(this.dashboard, widget.id, this.windowCount);
-    }
-
-    render() {
-        const adminWidgets = this.widgetStore.adminWidgets;
-
-        return (
-            <div>
-                <Dialog
-                    className={[this.mainStore.darkClass, styles.adminToolsDialog].join(" ")}
-                    isOpen={this.mainStore.isAdminToolsDialogOpen}
-                    onClose={this.mainStore.hideAdminToolsDialog}
-                    title="Administration"
-                    icon="wrench"
-                >
-                    <div data-element-id="administration" className={Classes.DIALOG_BODY}>
-                        <div className={styles.tileContainer}>
-                            {adminWidgets.map((widget) => (
-                                <WidgetTile
-                                    key={widget.id}
-                                    title={widget.title}
-                                    iconUrl={widget.iconUrl}
-                                    onClick={() => {
-                                        this.addWidget(widget);
-                                        this.mainStore.hideAdminToolsDialog();
-                                    }}
-                                />
-                            ))}
-                        </div>
+    return (
+        <div>
+            <Dialog
+                className={classNames(styles.dialog, themeClass)}
+                isOpen={isOpen}
+                onClose={mainStore.hideAdminToolsDialog}
+                title="Administration"
+                icon="wrench"
+            >
+                <div data-element-id="administration" className={Classes.DIALOG_BODY}>
+                    <div className={styles.tileContainer}>
+                        {adminWidgets.map((widget) => (
+                            <WidgetTile
+                                key={widget.id}
+                                title={widget.title}
+                                iconUrl={widget.iconUrl}
+                                onClick={() => {
+                                    dashboardStore.addWidget({
+                                        id: widget.id,
+                                        definition: widget.definition
+                                    });
+                                    mainStore.hideAdminToolsDialog();
+                                }}
+                            />
+                        ))}
                     </div>
-                </Dialog>
-            </div>
-        );
-    }
-}
-
-export type WidgetTileProps = {
-    title: string;
-    iconUrl: string;
-    onClick: () => void;
+                </div>
+            </Dialog>
+        </div>
+    );
 };
-
-export class WidgetTile extends React.PureComponent<WidgetTileProps> {
-    render() {
-        const { title, iconUrl, onClick } = this.props;
-
-        return (
-            <div className={styles.widgetTile} data-element-id={title}>
-                <button onClick={onClick}>
-                    <img className={styles.tileIcon} src={iconUrl} />
-                    <span className={styles.tileTitle}>{title}</span>
-                </button>
-            </div>
-        );
-    }
-}

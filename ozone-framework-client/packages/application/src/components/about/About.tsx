@@ -1,12 +1,10 @@
 import * as React from "react";
-import { observer } from "mobx-react";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
-import { lazyInject } from "../../inject";
-import { MainStore } from "../../stores";
-
 import { ABOUT } from "../../messages";
+
+import { defaults } from "lodash";
 
 const DEFAULT_PROPS = {
     title: ABOUT.title,
@@ -14,38 +12,27 @@ const DEFAULT_PROPS = {
     version: ABOUT.version
 };
 
-export type AboutProps = Readonly<typeof DEFAULT_PROPS>;
+export type AboutProps = Partial<typeof DEFAULT_PROPS> & {
+    isVisible: boolean;
+    onClose: () => void;
+};
 
-@observer
-export class AboutDialog extends React.Component<AboutProps> {
-    static defaultProps = DEFAULT_PROPS;
+export const AboutDialog: React.FunctionComponent<AboutProps> = (props) => {
+    const { content, isVisible, onClose, title, version } = defaults({}, props, DEFAULT_PROPS);
 
-    @lazyInject(MainStore)
-    private mainStore: MainStore;
+    return (
+        <div>
+            <Dialog className="bp3-dark" isOpen={isVisible} onClose={onClose} isCloseButtonShown={true} title={title}>
+                <div
+                    data-element-id="about-dialog"
+                    className={Classes.DIALOG_BODY}
+                    dangerouslySetInnerHTML={{ __html: content || ABOUT.content }}
+                />
 
-    render() {
-        const { title, content, version } = this.props;
-
-        return (
-            <div>
-                <Dialog
-                    className="bp3-dark"
-                    isOpen={this.mainStore.isAboutVisible}
-                    onClose={this.mainStore.hideAboutDialog}
-                    isCloseButtonShown={true}
-                    title={title}
-                >
-                    <div
-                        data-element-id="about-dialog"
-                        className={Classes.DIALOG_BODY}
-                        dangerouslySetInnerHTML={{ __html: content }}
-                    />
-
-                    <div className={Classes.DIALOG_FOOTER}>
-                        <div className={Classes.DIALOG_FOOTER_ACTIONS}>{version}</div>
-                    </div>
-                </Dialog>
-            </div>
-        );
-    }
-}
+                <div className={Classes.DIALOG_FOOTER}>
+                    <div className={Classes.DIALOG_FOOTER_ACTIONS}>{version}</div>
+                </div>
+            </Dialog>
+        </div>
+    );
+};

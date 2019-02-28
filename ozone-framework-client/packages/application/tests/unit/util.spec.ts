@@ -1,4 +1,4 @@
-import { classNames } from "../../src/components/util";
+import { classNames } from "../../src/utility";
 
 describe("classNames", () => {
     it("converts varargs", () => {

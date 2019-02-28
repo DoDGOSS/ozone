@@ -1,15 +1,14 @@
-import * as styles from "../Widgets.scss";
+import * as React from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
 
-import * as React from "react";
-
 import { GroupEditForm } from "../Groups/GroupEditForm";
 import { GroupEditUsers } from "./GroupEditUsers";
-
-import { lazyInject } from "../../../../inject";
-import { GroupAPI, GroupUpdateRequest } from "../../../../api";
 import { CancelButton } from "../../../form";
+import { GroupUpdateRequest } from "../../../../api/models/GroupDTO";
+import { groupApi } from "../../../../api/clients/GroupAPI";
+
+import * as styles from "../Widgets.scss";
 
 export interface GroupEditTabGroupProps {
     onUpdate: (update?: any) => void;
@@ -23,9 +22,6 @@ export interface GroupEditTabGroupState {
 }
 
 export class GroupEditTabGroup extends React.Component<GroupEditTabGroupProps, GroupEditTabGroupState> {
-    @lazyInject(GroupAPI)
-    private groupAPI: GroupAPI;
-
     constructor(props: GroupEditTabGroupProps) {
         super(props);
 
@@ -67,7 +63,7 @@ export class GroupEditTabGroup extends React.Component<GroupEditTabGroupProps, G
             data.status = data.active ? "active" : "inactive";
         }
 
-        const response = await this.groupAPI.updateGroup(data);
+        const response = await groupApi.updateGroup(data);
         const result = response.status === 200;
 
         this.props.onUpdate(response.data.data);
