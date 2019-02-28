@@ -1,5 +1,4 @@
 declare namespace OWF {
-
     export function ready(callback: () => void): void;
 
     export function getOpenedWidgets(callback: (widgets: Widget[]) => void): void;
@@ -15,7 +14,6 @@ declare namespace OWF {
     }
 
     namespace Eventing {
-
         type MessageCallback = (sender: any, message: string, channel: string) => void;
 
         export function publish(channel: string, message: string): void;
@@ -23,11 +21,9 @@ declare namespace OWF {
         export function subscribe(channel: string, callback: MessageCallback): void;
 
         export function unsubscribe(channel: string): void;
-
     }
 
     namespace Preferences {
-
         interface UserPreference {
             id: number;
             namespace: string;
@@ -44,8 +40,8 @@ declare namespace OWF {
         }
 
         type GetUserPreferenceOptions = {
-            namespace: string,
-            name: string,
+            namespace: string;
+            name: string;
             onSuccess: (preference: UserPreference | UserPreferenceNotFound) => void;
             onFailure: (error: any) => void;
         };
@@ -53,9 +49,9 @@ declare namespace OWF {
         export function getUserPreference(options: GetUserPreferenceOptions): void;
 
         type SetUserPreferenceOptions = {
-            namespace: string,
-            name: string,
-            value: string,
+            namespace: string;
+            name: string;
+            value: string;
             onSuccess: (preference: UserPreference) => void;
             onFailure: (error: any) => void;
         };
@@ -63,18 +59,16 @@ declare namespace OWF {
         export function setUserPreference(options: SetUserPreferenceOptions): void;
 
         type DeleteUserPreferenceOptions = {
-            namespace: string,
-            name: string,
+            namespace: string;
+            name: string;
             onSuccess: (result: any) => void;
             onFailure: (error: any) => void;
         };
 
         export function deleteUserPreference(options: DeleteUserPreferenceOptions): void;
-
     }
 
     namespace RPC {
-
         type RegisterFunction = {
             name: string;
             fn: Function;
@@ -83,14 +77,10 @@ declare namespace OWF {
         export function registerFunctions(functions: RegisterFunction[]): void;
 
         export function getWidgetProxy(widgetId: string, callback: (proxy: any) => void): void;
-
     }
-
 }
 
-
 declare namespace Ozone {
-
     export interface WidgetDTO {
         id: string;
         value: {
@@ -100,7 +90,6 @@ declare namespace Ozone {
     }
 
     export namespace pref {
-
         export interface FindWidgetOptions {
             searchParams: any;
             onSuccess: (results: WidgetDTO[]) => void;
@@ -112,7 +101,5 @@ declare namespace Ozone {
         }
 
         export const PrefServer: PrefServer;
-
     }
-
 }

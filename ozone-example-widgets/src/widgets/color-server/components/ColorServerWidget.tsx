@@ -4,19 +4,16 @@ import React, { Component } from "react";
 
 import { SectionHeader } from "../../../common/SectionHeader";
 
-
 interface ColorResult {
     colors: string[];
     selected: string;
 }
-
 
 interface WidgetState {
     color: string;
 }
 
 export class ColorServerWidget extends Component<{}, WidgetState> {
-
     constructor(props: any) {
         super(props);
 
@@ -27,12 +24,7 @@ export class ColorServerWidget extends Component<{}, WidgetState> {
 
     getColors(): ColorResult {
         return {
-            colors: [
-                "white",
-                "red",
-                "blue",
-                "yellow"
-            ],
+            colors: ["white", "red", "blue", "yellow"],
             selected: this.state.color
         };
     }
@@ -52,12 +44,10 @@ export class ColorServerWidget extends Component<{}, WidgetState> {
     render() {
         return (
             <div className="app flex-column">
-                <SectionHeader text="Color Server Status"/>
+                <SectionHeader text="Color Server Status" />
 
-                <div className="color-box flex-grow"
-                     style={{ backgroundColor: this.state.color }}/>
+                <div className="color-box flex-grow" style={{ backgroundColor: this.state.color }} />
             </div>
         );
     }
-
 }

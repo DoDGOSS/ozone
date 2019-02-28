@@ -8,7 +8,6 @@ import ReactDataGrid from "react-data-grid";
 
 import { SectionHeader } from "../../../common/SectionHeader";
 
-
 interface WidgetRow {
     id: string;
     name: string;
@@ -28,14 +27,12 @@ const COLUMNS = [
     }
 ];
 
-
 interface WidgetState {
     query: string;
     results: WidgetRow[];
 }
 
 export class WidgetSearchWidget extends Component<{}, WidgetState> {
-
     constructor(props: any) {
         super(props);
 
@@ -56,33 +53,31 @@ export class WidgetSearchWidget extends Component<{}, WidgetState> {
         return (
             <div className="app flex-column">
                 <div>
-                    <SectionHeader text="Search"/>
+                    <SectionHeader text="Search" />
 
-                    <form onSubmit={(event) => {
-                        event.preventDefault();
-                        this.search();
-                    }}>
-                        <FormGroup inline={true}
-                                   label="Widget Name">
-                            <InputGroup value={this.state.query}
-                                        onChange={this.onQueryChanged}
-                                        spellCheck={false}
-                                        rightElement={
-                                            <Button icon="search"
-                                                    minimal={true}
-                                                    onClick={this.search}/>
-                                        }
+                    <form
+                        onSubmit={(event) => {
+                            event.preventDefault();
+                            this.search();
+                        }}
+                    >
+                        <FormGroup inline={true} label="Widget Name">
+                            <InputGroup
+                                value={this.state.query}
+                                onChange={this.onQueryChanged}
+                                spellCheck={false}
+                                rightElement={<Button icon="search" minimal={true} onClick={this.search} />}
                             />
                         </FormGroup>
                     </form>
                 </div>
 
                 <div className="search-results">
-                    <SectionHeader text="Results"/>
+                    <SectionHeader text="Results" />
 
                     <ReactDataGrid
                         columns={COLUMNS}
-                        rowGetter={i => this.state.results[i]}
+                        rowGetter={(i) => this.state.results[i]}
                         rowsCount={this.state.results.length}
                         minHeight={300}
                     />
@@ -103,7 +98,7 @@ export class WidgetSearchWidget extends Component<{}, WidgetState> {
                 widgetName: this.state.query
             },
             onSuccess: (dtos: Ozone.WidgetDTO[]) => {
-                const results = dtos.map(dto => ({
+                const results = dtos.map((dto) => ({
                     id: dto.id,
                     name: dto.value.namespace
                 }));
@@ -115,12 +110,10 @@ export class WidgetSearchWidget extends Component<{}, WidgetState> {
             }
         });
     }
-
 }
 
-
 const AppToaster = Toaster.create({
-    position: Position.BOTTOM,
+    position: Position.BOTTOM
 });
 
 function reportError(error: Error) {

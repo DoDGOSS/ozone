@@ -6,7 +6,6 @@
     [
       "@babel/env",
       {
-        "debug": true,
         "modules": false,
         "useBuiltIns": "entry"
       }

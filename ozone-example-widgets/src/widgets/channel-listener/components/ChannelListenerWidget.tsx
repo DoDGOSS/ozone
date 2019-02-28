@@ -4,12 +4,11 @@ import React, { Component } from "react";
 
 import { Field, FieldProps, Form, Formik, FormikActions, FormikProps } from "formik";
 
-import { Button, FormGroup, InputGroup} from "@blueprintjs/core";
+import { Button, FormGroup, InputGroup } from "@blueprintjs/core";
 
 import ReactDataGrid from "react-data-grid";
 
 import { SectionHeader } from "../../../common/SectionHeader";
-
 
 interface Subscription {
     channel: string;
@@ -22,14 +21,12 @@ interface Activity {
     timestamp: number;
 }
 
-
 interface WidgetState {
     subscriptions: Subscription[];
     activities: Activity[];
 }
 
 export class ChannelListenerWidget extends Component<{}, WidgetState> {
-
     private activityLogColumns = [
         {
             key: "timestamp",
@@ -64,7 +61,7 @@ export class ChannelListenerWidget extends Component<{}, WidgetState> {
 
         this.state = {
             subscriptions: [],
-            activities: [],
+            activities: []
         };
 
         this.addSubscription = this.addSubscription.bind(this);
@@ -88,7 +85,7 @@ export class ChannelListenerWidget extends Component<{}, WidgetState> {
         const { subscriptions } = this.state;
 
         this.setState({
-            subscriptions: subscriptions.filter(s => s.channel !== channel)
+            subscriptions: subscriptions.filter((s) => s.channel !== channel)
         });
 
         OWF.Eventing.unsubscribe(channel);
@@ -119,7 +116,7 @@ export class ChannelListenerWidget extends Component<{}, WidgetState> {
         return (
             <div className={styles.app}>
                 <div>
-                    <SectionHeader text="Channel Subscriptions"/>
+                    <SectionHeader text="Channel Subscriptions" />
 
                     <Formik
                         initialValues={{
@@ -131,21 +128,20 @@ export class ChannelListenerWidget extends Component<{}, WidgetState> {
                         }}
                         render={(formik: FormikProps<Subscription>) => (
                             <Form>
-                                <Field name="channel"
-                                       render={({ field }: FieldProps<Subscription>) => (
-                                           <FormGroup inline={true}
-                                                      className={styles.addChannelInput}>
-                                               <InputGroup {...field}
-                                                           placeholder="Add channel name..."
-                                                           spellCheck={false}
-                                                           rightElement={
-                                                               <Button icon="plus"
-                                                                       minimal={true}
-                                                                       onClick={formik.submitForm}/>
-                                                           }
-                                               />
-                                           </FormGroup>
-                                       )}
+                                <Field
+                                    name="channel"
+                                    render={({ field }: FieldProps<Subscription>) => (
+                                        <FormGroup inline={true} className={styles.addChannelInput}>
+                                            <InputGroup
+                                                {...field}
+                                                placeholder="Add channel name..."
+                                                spellCheck={false}
+                                                rightElement={
+                                                    <Button icon="plus" minimal={true} onClick={formik.submitForm} />
+                                                }
+                                            />
+                                        </FormGroup>
+                                    )}
                                 />
                             </Form>
                         )}
@@ -153,7 +149,7 @@ export class ChannelListenerWidget extends Component<{}, WidgetState> {
 
                     <ReactDataGrid
                         columns={this.subscriptionColumns}
-                        rowGetter={i => this.state.subscriptions[i]}
+                        rowGetter={(i) => this.state.subscriptions[i]}
                         rowsCount={this.state.subscriptions.length}
                         minHeight={150}
                     />
@@ -161,14 +157,12 @@ export class ChannelListenerWidget extends Component<{}, WidgetState> {
 
                 <div>
                     <SectionHeader text="Activity Log">
-                        <Button text="Clear"
-                                minimal={true}
-                                onClick={this.clearActivities}/>
+                        <Button text="Clear" minimal={true} onClick={this.clearActivities} />
                     </SectionHeader>
 
                     <ReactDataGrid
                         columns={this.activityLogColumns}
-                        rowGetter={i => this.state.activities[i]}
+                        rowGetter={(i) => this.state.activities[i]}
                         rowsCount={this.state.activities.length}
                         minHeight={200}
                     />
@@ -181,14 +175,10 @@ export class ChannelListenerWidget extends Component<{}, WidgetState> {
         return (row: any) => (
             <div className={styles.subscriptionCell}>
                 <span>{row.value}</span>
-                <Button icon="cross"
-                        minimal={true}
-                        onClick={() => this.removeSubscription(row.value)}/>
+                <Button icon="cross" minimal={true} onClick={() => this.removeSubscription(row.value)} />
             </div>
         );
     }
-
 }
 
-
-const TimestampFormatter = (row: any) => <span>{(new Date(row.value)).toISOString()}</span>;
+const TimestampFormatter = (row: any) => <span>{new Date(row.value).toISOString()}</span>;

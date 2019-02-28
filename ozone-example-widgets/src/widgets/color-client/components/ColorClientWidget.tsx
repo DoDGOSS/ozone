@@ -8,14 +8,12 @@ import { getColorServerProxy } from "../color-server";
 import { isNil } from "../../../util";
 import { SectionHeader } from "../../../common/SectionHeader";
 
-
 interface WidgetState {
     colors?: string[];
     selected?: string;
 }
 
 export class ColorClientWidget extends Component<{}, WidgetState> {
-
     constructor(props: any) {
         super(props);
 
@@ -30,23 +28,20 @@ export class ColorClientWidget extends Component<{}, WidgetState> {
 
         return (
             <div className="app flex-column">
-
-                <SectionHeader text="Color Client Controls"/>
+                <SectionHeader text="Color Client Controls" />
 
                 <FormGroup label="Color Selection">
-                    <HTMLSelect disabled={isNil(colors)}
-                                value={selected}
-                                fill={true}
-                                onChange={this.onColorSelected}>
-                        {!isNil(colors) && colors.map(color => (
-                            <option key={color} value={color}>{color}</option>
-                        ))}
+                    <HTMLSelect disabled={isNil(colors)} value={selected} fill={true} onChange={this.onColorSelected}>
+                        {!isNil(colors) &&
+                            colors.map((color) => (
+                                <option key={color} value={color}>
+                                    {color}
+                                </option>
+                            ))}
                     </HTMLSelect>
                 </FormGroup>
 
-                <Button text="Get Colors"
-                        icon="refresh"
-                        onClick={this.fetchColors}/>
+                <Button text="Get Colors" icon="refresh" onClick={this.fetchColors} />
             </div>
         );
     }
@@ -89,17 +84,13 @@ export class ColorClientWidget extends Component<{}, WidgetState> {
             selected: undefined
         });
     }
-
 }
 
-
 const AppToaster = Toaster.create({
-    position: Position.BOTTOM,
+    position: Position.BOTTOM
 });
 
 function reportError(error: Error) {
     AppToaster.show({ intent: Intent.WARNING, message: error.message });
     console.error(error);
 }
-
-

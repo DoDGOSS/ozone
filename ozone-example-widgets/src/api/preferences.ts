@@ -14,7 +14,11 @@ export function getUserPreference(namespace: string, path: string): Promise<OWF.
     });
 }
 
-export function setUserPreference(namespace: string, path: string, value: string): Promise<OWF.Preferences.UserPreference> {
+export function setUserPreference(
+    namespace: string,
+    path: string,
+    value: string
+): Promise<OWF.Preferences.UserPreference> {
     return new Promise<OWF.Preferences.UserPreference>((resolve, reject) => {
         OWF.Preferences.setUserPreference({
             namespace,

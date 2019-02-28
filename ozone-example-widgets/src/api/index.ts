@@ -1,6 +1,5 @@
 import { isNil } from "../util";
 
-
 export async function getOpenedWidgets(): Promise<OWF.Widget[]> {
     return new Promise<OWF.Widget[]>((resolve, reject) => {
         try {
@@ -16,7 +15,6 @@ export async function getOpenedWidgets(): Promise<OWF.Widget[]> {
     });
 }
 
-
 export async function findWidgetByUniversalName(universalName: string): Promise<OWF.Widget> {
     const widgets = await getOpenedWidgets();
 
@@ -28,4 +26,3 @@ export async function findWidgetByUniversalName(universalName: string): Promise<
 
     return widget;
 }
-
