@@ -231,7 +231,7 @@ export class GroupsWidget extends React.Component<{}, State> {
     private deleteGroup = async (group: GroupDTO) => {
         this.setState({
             showDelete: true,
-            confirmationMessage: `This action will permenantly delete <strong>${group.name}</strong>`,
+            confirmationMessage: `This action will permanently delete <strong>${group.name}</strong>`,
             manageGroup: group
         });
 
