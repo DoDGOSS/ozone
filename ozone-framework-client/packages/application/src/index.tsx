@@ -13,6 +13,11 @@ import registerServiceWorker from "./registerServiceWorker";
 
 import { App } from "./App";
 
+import { eventingService } from "./services/EventingService";
+
+eventingService.init();
+
+
 ReactDOM.render(<App />, document.getElementById("root") as HTMLElement);
 
 registerServiceWorker();

@@ -37,6 +37,8 @@ export class PreferencesWidget extends Component<{}, WidgetState> {
     }
 
     componentDidMount(): void {
+        OWF.notifyWidgetReady();
+
         this.fetchPreference(this.state.preference);
     }
 

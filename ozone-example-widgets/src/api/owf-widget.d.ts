@@ -1,5 +1,9 @@
 declare namespace OWF {
+    export function _init(window: Window, document: Document): void;
+
     export function ready(callback: () => void): void;
+
+    export function notifyWidgetReady(): void;
 
     export function getOpenedWidgets(callback: (widgets: Widget[]) => void): void;
 
@@ -101,5 +105,15 @@ declare namespace Ozone {
         }
 
         export const PrefServer: PrefServer;
+    }
+
+    export namespace util {
+        export function isInContainer(): boolean;
+    }
+
+    export namespace eventing {
+        export namespace Widget {
+            export let widgetRelayURL: string;
+        }
     }
 }

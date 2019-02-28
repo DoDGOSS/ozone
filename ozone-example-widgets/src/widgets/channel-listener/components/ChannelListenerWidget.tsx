@@ -69,6 +69,10 @@ export class ChannelListenerWidget extends Component<{}, WidgetState> {
         this.onMessage = this.onMessage.bind(this);
     }
 
+    componentDidMount() {
+        OWF.notifyWidgetReady();
+    }
+
     addSubscription(channel: string): void {
         const { subscriptions } = this.state;
 
