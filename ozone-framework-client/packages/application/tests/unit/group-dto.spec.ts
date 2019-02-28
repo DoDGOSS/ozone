@@ -125,7 +125,7 @@ const GROUP_JSON_SCHEMA = {
             type: ["string", "null"]
         },
         displayName: {
-            type: "string"
+            type: ["string", "null"]
         },
         email: {
             type: ["string", "null"]

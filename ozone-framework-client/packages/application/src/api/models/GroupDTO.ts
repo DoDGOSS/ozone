@@ -12,8 +12,8 @@ export class GroupDTO {
     @Property()
     name: string;
 
-    @Property()
-    displayName: string;
+    @Property({ nullable: true })
+    displayName?: string;
 
     @Property({ nullable: true })
     description?: string;

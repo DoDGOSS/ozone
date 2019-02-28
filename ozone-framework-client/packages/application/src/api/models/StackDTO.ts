@@ -1,26 +1,23 @@
 import { createValidator, Model, Property } from "@ozone/openapi-decorators";
-import { DefaultGroupDTO } from "./default-group-dto";
-import {UserDTO} from "./user-dto";
-import {GroupDTO} from "./group-dto";
 
+import { GroupDTO } from "./GroupDTO";
+import { UserDTO, UsernameDTO } from "./UserDTO";
 
 @Model({ name: "Stack" })
 export class StackDTO {
-
     static validate = createValidator(StackDTO);
 
     @Property()
     approved: boolean;
 
     @Property({ nullable: true })
-    imageUrl: string;
+    imageUrl?: string;
 
     @Property()
     id: number;
 
-    // Testing
     @Property({ nullable: true })
-    owner: OwnerUsernameDTO;
+    owner?: UsernameDTO;
 
     @Property()
     groups: any[];
@@ -29,13 +26,13 @@ export class StackDTO {
     stackContext: string;
 
     @Property()
-    defaultGroup: DefaultGroupDTO;
+    defaultGroup: GroupDTO;
 
     @Property({ nullable: true })
-    descriptorUrl: string;
+    descriptorUrl?: string;
 
     @Property({ nullable: true })
-    description: string;
+    description?: string;
 
     @Property()
     name: string;
@@ -55,7 +52,6 @@ export class StackDTO {
 
 @Model()
 export class StackGetResponse {
-
     static validate = createValidator(StackGetResponse);
 
     @Property()
@@ -63,7 +59,6 @@ export class StackGetResponse {
 
     @Property(() => StackDTO)
     data: StackDTO[];
-
 }
 
 export interface StackUpdateParams {
@@ -88,7 +83,6 @@ export interface StackUpdateRequest extends StackCreateRequest {
 
 @Model()
 export class StackUpdateResponse {
-
     static validate = createValidator(StackUpdateResponse);
 
     @Property()
@@ -96,13 +90,6 @@ export class StackUpdateResponse {
 
     @Property(() => StackDTO)
     data: StackDTO[];
-
-}
-
-@Model()
-export class OwnerUsernameDTO {
-    @Property()
-    username: string;
 }
 
 @Model()
@@ -113,7 +100,6 @@ export class StackDeleteIdDTO {
 
 @Model()
 export class StackDeleteResponse {
-
     static validate = createValidator(StackDeleteResponse);
 
     @Property()
@@ -121,8 +107,4 @@ export class StackDeleteResponse {
 
     @Property(() => StackDeleteIdDTO)
     data: StackDeleteIdDTO[];
-
 }
-
-
-

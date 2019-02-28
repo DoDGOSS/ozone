@@ -37,6 +37,12 @@ export class UserDTO {
     totalWidgets: number;
 }
 
+@Model({ name: "Username" })
+export class UsernameDTO {
+    @Property()
+    username: string;
+}
+
 @Model()
 export class UserGetResponse {
     static validate = createValidator(UserGetResponse);
