@@ -46,11 +46,13 @@ export const WidgetDashboard: React.FunctionComponent<PropsBase> = (props) => {
                     const widgetDef = widget.definition;
                     return (
                         <DashboardWindow title={widgetDef.title} path={path}>
-                            {(widgetDef.url !== undefined)
-                                ? <WidgetFrame widget={widget}/>
-                                : (widgetDef.element) !== undefined
-                                    ? widgetDef.element
-                                    : "Error: Widget must have either a URL or an Element property"}
+                            {widgetDef.url !== undefined ? (
+                                <WidgetFrame widget={widget} />
+                            ) : widgetDef.element !== undefined ? (
+                                widgetDef.element
+                            ) : (
+                                "Error: Widget must have either a URL or an Element property"
+                            )}
                         </DashboardWindow>
                     );
                 }}
@@ -60,7 +62,7 @@ export const WidgetDashboard: React.FunctionComponent<PropsBase> = (props) => {
 };
 
 interface WidgetFrameProps {
-    widget: Widget
+    widget: Widget;
 }
 
 const WidgetFrame: React.FunctionComponent<WidgetFrameProps> = ({ widget }) => {
@@ -87,10 +89,5 @@ const WidgetFrame: React.FunctionComponent<WidgetFrameProps> = ({ widget }) => {
         }
     });
 
-    return (
-        <iframe className={styles.widgetFrame}
-                src={def.url}
-                id={`widget-${widget.id}`}
-                name={nameJson}/>
-    );
+    return <iframe className={styles.widgetFrame} src={def.url} id={`widget-${widget.id}`} name={nameJson} />;
 };

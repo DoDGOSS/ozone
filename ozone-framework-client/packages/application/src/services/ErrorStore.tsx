@@ -11,7 +11,6 @@ interface ErrorReport {
 }
 
 export class ErrorStore {
-
     private readonly errors$ = new Subject<ErrorReport>();
 
     errors = () => asObservable(this.errors$);
@@ -24,10 +23,12 @@ export class ErrorStore {
         ErrorToaster.show({
             icon: "warning-sign",
             intent: Intent.DANGER,
-            message: <>
-                <div>{title}</div>
-                <div>{message}</div>
-            </>
+            message: (
+                <>
+                    <div>{title}</div>
+                    <div>{message}</div>
+                </>
+            )
         });
     };
 
@@ -39,14 +40,14 @@ export class ErrorStore {
         ErrorToaster.show({
             icon: "warning-sign",
             intent: Intent.WARNING,
-            message: <>
-                <div style={{fontWeight: "bold"}}>{title}</div>
-                <div>{message}</div>
-            </>
+            message: (
+                <>
+                    <div style={{ fontWeight: "bold" }}>{title}</div>
+                    <div>{message}</div>
+                </>
+            )
         });
     };
-
-
 }
 
 export const errorStore = new ErrorStore();
@@ -54,4 +55,3 @@ export const errorStore = new ErrorStore();
 const ErrorToaster = Toaster.create({
     position: Position.BOTTOM_RIGHT
 });
-
