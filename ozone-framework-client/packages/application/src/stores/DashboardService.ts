@@ -18,7 +18,6 @@ import { dashboardStore, DashboardStore } from "./DashboardStore";
 import { dropRight, isString, pick } from "lodash";
 
 export class DashboardService {
-
     private readonly store: DashboardStore;
 
     private readonly isConfirmationDialogVisible$ = new BehaviorSubject(false);
@@ -136,7 +135,6 @@ export class DashboardService {
 }
 
 export const dashboardService = new DashboardService();
-
 
 function findWidgetIds(node: DashboardNode | null): string[] {
     if (node === null) return [];

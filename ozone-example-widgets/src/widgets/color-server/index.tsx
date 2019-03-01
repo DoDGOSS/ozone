@@ -9,22 +9,12 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import "./index.scss";
 
 import { ColorServerWidget } from "./components/ColorServerWidget";
-
-const ENABLE_DEBUG_MESSAGE_LOGGING = false;
+import { ENABLE_DEBUG_MESSAGE_LOGGING, enableMessageLogging } from "../../common/debug";
 
 OWF.ready(() => {
     ReactDOM.render(<ColorServerWidget />, document.getElementById("root"));
 });
 
 if (ENABLE_DEBUG_MESSAGE_LOGGING) {
-    window.addEventListener(
-        "message",
-        (message: any) => {
-            if (typeof message.data === "string") {
-                console.log("ColorServer:");
-                console.dir(message);
-            }
-        },
-        false
-    );
+    enableMessageLogging("ColorServerWidget");
 }

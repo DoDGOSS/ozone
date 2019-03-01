@@ -74,8 +74,7 @@ export function classNames(...classes: ClassValue[]): string {
     return _classNames(classes);
 }
 
-interface ClassArray extends Array<ClassValue> {
-}
+interface ClassArray extends Array<ClassValue> {}
 
 type ClassValue = string | number | ClassDictionary | ClassArray | undefined | null | boolean;
 

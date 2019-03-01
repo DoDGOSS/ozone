@@ -24,7 +24,12 @@ export const DashboardDialog: React.FunctionComponent<{}> = () => {
 
     return (
         <div>
-            <Dialog className={themeClass} isOpen={isVisible} onClose={mainStore.hideDashboardDialog} title="Dashboards">
+            <Dialog
+                className={themeClass}
+                isOpen={isVisible}
+                onClose={mainStore.hideDashboardDialog}
+                title="Dashboards"
+            >
                 <div className={Classes.DIALOG_BODY}>
                     {dashboards.map((dashboard) => (
                         <button className="layout" key={dashboard.guid} value={dashboard.name}>

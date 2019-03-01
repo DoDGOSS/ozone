@@ -29,7 +29,7 @@ export const WidgetToolbar: React.FunctionComponent<PropsBase> = ({ className })
     useEffect(() => widgetStore.fetchWidgets(), []);
 
     if (sortOrder === "asc") {
-        widgets.sort((a, b) => a.value.namespace.localeCompare(b.value.namespace))
+        widgets.sort((a, b) => a.value.namespace.localeCompare(b.value.namespace));
     } else {
         widgets.sort((a, b) => b.value.namespace.localeCompare(a.value.namespace));
     }
@@ -80,10 +80,10 @@ export const WidgetToolbar: React.FunctionComponent<PropsBase> = ({ className })
                         active={sortOrder === "dsc"}
                         data-element-id="widget-sort-descending"
                     />
-                    <Button minimal icon="pin"/>
-                    <Button minimal icon="cross" onClick={mainStore.closeWidgetToolbar}/>
+                    <Button minimal icon="pin" />
+                    <Button minimal icon="cross" onClick={mainStore.closeWidgetToolbar} />
                 </div>
-                <hr/>
+                <hr />
 
                 <div className={Classes.DIALOG_BODY}>
                     <ul className={styles.widgetList}>
@@ -104,11 +104,11 @@ export const WidgetToolbar: React.FunctionComponent<PropsBase> = ({ className })
             </div>
             <div className={styles.toolbarFooter}>
                 <div className={styles.buttonBar}>
-                    <Button text="Prev" icon="undo" small={true}/>
+                    <Button text="Prev" icon="undo" small={true} />
                     <p>
                         <b>Page 1</b>
                     </p>
-                    <Button text="Next" icon="fast-forward" small={true}/>
+                    <Button text="Next" icon="fast-forward" small={true} />
                 </div>
             </div>
         </Overlay>
@@ -128,7 +128,7 @@ export const Widget: React.FunctionComponent<WidgetProps> = (props) => {
     return (
         <li>
             <a href={url}>
-                <img className={styles.tileIcon} src={smallIconUrl}/>
+                <img className={styles.tileIcon} src={smallIconUrl} />
                 <span className={styles.tileTitle}>{name}</span>
             </a>
         </li>

@@ -9,7 +9,8 @@ import { map } from "lodash";
 import { getIn, isBlank, isNil, isString, isStringArray, TypeGuard } from "../utility";
 
 // Enable to log received messages to the developer console
-const DEBUG = false;
+const ENABLE_DEBUG_MESSAGE_LOGGING = false;
+const ENABLE_DEBUG_VERBOSE_MESSAGE_LOGGING = false;
 
 interface Widget2 {
     id: string;
@@ -30,12 +31,18 @@ interface WidgetClient {
     ready: boolean;
 }
 
+/**
+ * TODO: Handlers for subscriptions to event channels: _dragStart, _dragOutName, _dragStopInContainer, and _dropReceiveData.
+ *
+ * TODO: Handlers for _WIDGET_STATE_CHANNEL_{$widgetGuid} messages: activateWidget
+ */
 
 export class EventingService {
-
     private readonly events$ = new Subject<RpcMessage>();
 
     private widgets: { [id: string]: WidgetClient } = {};
+
+    private subscriptions: { [channel: string]: WidgetClient[] } = {};
 
     init() {
         if (isNil(window.name) || (isString(window.name) && isBlank(window.name))) {
@@ -52,6 +59,7 @@ export class EventingService {
         this.register("FUNCTION_CALL_RESULT").subscribe(this.onFunctionCallResult.bind(this));
         this.register("LIST_WIDGETS").subscribe(this.onListWidgets.bind(this));
         this.register("GET_FUNCTIONS").subscribe(this.onGetFunctions.bind(this));
+        this.register("pubsub").subscribe(this.onPubSub.bind(this));
     }
 
     register(service: string): Observable<RpcMessage> {
@@ -66,12 +74,12 @@ export class EventingService {
         return widget;
     }
 
-    private call(widgetId: string, service: string, args: any): void {
-        const widget = this.requireWidget(widgetId);
+    private call(widget: WidgetClient | string, service: string, args: any): void {
+        const target = typeof widget === "string" ? this.requireWidget(widget) : widget;
 
-        const target = widget.iframeWindow;
+        const message = formatRpcMessage(service, "..", args);
 
-        target.postMessage(formatRpcMessage(service, "..", args), widget.origin);
+        target.iframeWindow.postMessage(message, target.origin);
     }
 
     private respond(message: RpcMessage, service: string, args: any): void {
@@ -85,13 +93,16 @@ export class EventingService {
     private receiveMessage(message: any): void {
         if (!isRpcMessage(message)) return;
 
-        if (DEBUG) {
-            console.log("EventingService receiveMessage");
-            console.dir(message);
-        }
-
         try {
             const rpcMessage = parseRpcMessage(message);
+
+            if (ENABLE_DEBUG_VERBOSE_MESSAGE_LOGGING) {
+                const widget = this.widgets[rpcMessage.senderId];
+                const source = (widget && widget.info.name) || rpcMessage.senderId;
+                console.groupCollapsed(`EventingService ← ${source}`);
+                console.dir(message);
+                console.groupEnd();
+            }
 
             this.events$.next(rpcMessage);
         } catch (error) {
@@ -213,6 +224,57 @@ export class EventingService {
         }
     }
 
+    private onPubSub(message: RpcMessage): void {
+        try {
+            const widget = this.requireWidget(message.senderId);
+
+            const action = expectArgument(message, 0, isString);
+
+            if (ENABLE_DEBUG_MESSAGE_LOGGING) {
+                console.groupCollapsed(`PubSub: ${widget.info.name} → ${action}`);
+                console.dir(message);
+                console.groupEnd();
+            }
+
+            if (action === "subscribe") {
+                const channel = expectArgument(message, 1, isString);
+                this.addSubscription(widget, channel);
+            } else if (action === "publish") {
+                const channel = expectArgument(message, 1, isString);
+                const data = expectArgument(message, 2);
+
+                this.broadcastMessage(widget, channel, data);
+            }
+        } catch (error) {
+            errorStore.warning("EventingService Error", `onPubSub error: ${error.message}`);
+        }
+    }
+
+    private addSubscription(client: WidgetClient, channel: string): void {
+        if (!this.isSubscribed(client, channel)) {
+            if (ENABLE_DEBUG_MESSAGE_LOGGING) {
+                console.log(`PubSub: ${client.info.name} subscribed to '${channel}' channel`);
+            }
+            this.subscriptions[channel] = (this.subscriptions[channel] || []).concat(client);
+        }
+    }
+
+    private isSubscribed(client: WidgetClient, channel: string): boolean {
+        const subscriptions = this.subscriptions[channel] || [];
+        for (const subscriber of subscriptions) {
+            if (subscriber.id === client.id) return true;
+        }
+        return false;
+    }
+
+    private broadcastMessage(client: WidgetClient, channel: string, message: any): void {
+        const senderId = client.id;
+
+        const subscriptions = this.subscriptions[channel] || [];
+        for (const subscriber of subscriptions) {
+            this.call(subscriber, "pubsub", [channel, senderId, message]);
+        }
+    }
 }
 
 function expectArgument<T>(message: RpcMessage, index: number, guard?: TypeGuard<T>): T {
