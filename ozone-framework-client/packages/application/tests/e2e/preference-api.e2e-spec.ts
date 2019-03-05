@@ -32,29 +32,55 @@ describe("Preference API", () => {
     });
 
     test("getPreferences - GET /prefs/preference/", async () => {
-        const response = await preferenceApi.getPreferences();
+        let response;
+        try {
+            response = await preferenceApi.getPreferences();
+        }
+        catch (ex) {
+            console.dir(ex.errors);
+            return fail();
+        }
 
         expect(response.status).toEqual(200);
-        // expect(response.data).toEqual({
-        //     success: true,
-        //     results: 5,
-        //     rows: PREFERENCES
-        // });
+
+        // Example to show received data while developing / debugging
+        console.dir(response.data, {depth: null});
+
+        expect(response.data).toEqual({
+            success: true,
+            results: 5,
+            rows: PREFERENCES
+        });
     });
 
     test("getPreferences by namespace - GET /prefs/preference/:namespace/", async () => {
-        const response = await preferenceApi.getPreferences("owf.admin.WidgetEditCopy");
+        let response;
+        try {
+            response = await preferenceApi.getPreferences("owf.admin.WidgetEditCopy");
+        }
+        catch (ex) {
+            console.dir(ex.errors);
+            return fail();
+        }
 
         expect(response.status).toEqual(200);
-        // expect(response.data).toEqual({
-        //     success: true,
-        //     results: 1,
-        //     rows: [PREFERENCES[1]]
-        // });
+
+        expect(response.data).toEqual({
+            success: true,
+            results: 1,
+            rows: [PREFERENCES[1]]
+        });
     });
 
     test("getPreference - GET /prefs/preference/:namespace/:path/", async () => {
-        const response = await preferenceApi.getPreference("owf.admin.WidgetEditCopy", "guid_to_launch");
+        let response;
+        try {
+            response = await preferenceApi.getPreference("owf.admin.WidgetEditCopy", "guid_to_launch");
+        }
+        catch (ex) {
+            console.dir(ex.errors);
+            return fail();
+        }
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual(PREFERENCES[1]);
