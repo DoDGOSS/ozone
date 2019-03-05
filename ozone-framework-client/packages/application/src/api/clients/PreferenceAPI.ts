@@ -73,7 +73,8 @@ export class PreferenceAPI {
 
     async deletePreference(data: PreferenceUpdateRequest): Promise<Response<PreferenceDeleteResponse>> {
         const requestData = qs.stringify({
-            _method: "DELETE"
+            _method: "DELETE",
+            value: data.value
         });
 
         return this.gateway.post(`prefs/preference/${data.namespace}/${data.path}/`, requestData, {
