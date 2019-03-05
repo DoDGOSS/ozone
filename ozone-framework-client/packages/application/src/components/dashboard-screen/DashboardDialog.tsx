@@ -7,7 +7,7 @@ import { Button, ButtonGroup, Card, Classes, Dialog, Divider, Intent } from "@bl
 import { mainStore } from "../../stores/MainStore";
 
 import { dashboardApi } from "../../api/clients/DashboardAPI";
-import { DashboardDTO } from "../../api/models/DashboardDTO";
+import {DashboardDTO, DashboardUpdateRequest} from "../../api/models/DashboardDTO";
 import { ConfirmationDialog } from "../confirmation-dialog/ConfirmationDialog";
 import { EditDashboardForm } from "../create-dashboard-screen/EditDashboardForm";
 
@@ -16,12 +16,19 @@ import { EditDashboardForm } from "../create-dashboard-screen/EditDashboardForm"
 //TODO - style image
 
 export const DashboardDialog: React.FunctionComponent<{}> = () => {
+    const initialDashboardState = {
+        name: '',
+        guid: '',
+        description: '',
+        iconImageUrl: ''
+    };
+
     const themeClass = useBehavior(mainStore.themeClass);
     const isVisible = useBehavior(mainStore.isDashboardDialogVisible);
 
     const [showDelete, setDelete] = useState(false);
     const [showEdit, setEdit] = useState(false);
-    const [dashboard, setDashboard] = useState<DashboardDTO>(null);
+    const [dashboard, setDashboard] = useState<DashboardUpdateRequest>(initialDashboardState);
     const [confirmationMessage, setConfirmationMessage] = useState("");
     const [dashboards, setDashboards] = useState<DashboardDTO[]>([]);
 
@@ -46,10 +53,9 @@ export const DashboardDialog: React.FunctionComponent<{}> = () => {
 
     const handleConfirmationConfirmDelete = async () => {
         setDelete(false);
-        setDashboard(null);
+        setDashboard(initialDashboardState);
         setConfirmationMessage("");
 
-        // const dashboard: DashboardDTO = payload;
         const response = await dashboardApi.deleteDashboard(dashboard.guid);
 
         if (response.status !== 200) return false;
@@ -59,7 +65,7 @@ export const DashboardDialog: React.FunctionComponent<{}> = () => {
 
     const handleConfirmationCancel = () => {
         setDelete(false);
-        setDashboard(null);
+        setDashboard(initialDashboardState);
     };
 
     const handleUpdate = () => {
@@ -90,7 +96,8 @@ export const DashboardDialog: React.FunctionComponent<{}> = () => {
                     <div className={Classes.DIALOG_BODY} data-element-id={"dashboard-dialog"}>
                         {dashboards.map((dashboard) => (
                             <Card key={dashboard.guid}>
-                                <h5>{dashboard.name}</h5>
+                                <h4>{dashboard.name}</h4>
+                                <p>{dashboard.description}</p>
                                 <img src={dashboard.iconImageUrl} />
                                 <ButtonGroup>
                                     <Button
@@ -107,8 +114,6 @@ export const DashboardDialog: React.FunctionComponent<{}> = () => {
                                         text="Delete"
                                         intent={Intent.DANGER}
                                         icon="trash"
-                                        small={true}
-                                        disabled={false}
                                         onClick={() => deleteDashboard(dashboard)}
                                     />
                                 </ButtonGroup>
