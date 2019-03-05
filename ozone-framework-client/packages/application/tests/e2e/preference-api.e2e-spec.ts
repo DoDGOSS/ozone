@@ -17,7 +17,7 @@ describe("Preference API", () => {
 
         newSetting = {
           namespace: "owf.admin.WidgetEditCopy",
-          path: "newSetting2",
+          path: "newSetting",
           value: "someValue2"
         }
 
@@ -42,10 +42,6 @@ describe("Preference API", () => {
         }
 
         expect(response.status).toEqual(200);
-
-        // Example to show received data while developing / debugging
-        console.dir(response.data, {depth: null});
-
         expect(response.data).toEqual({
             success: true,
             results: 5,

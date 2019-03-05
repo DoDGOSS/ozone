@@ -77,7 +77,7 @@ export class PreferenceUpdateResponse {
     success: boolean;
 
     @Property(() => PreferenceDTO)
-    preference: PreferenceDTO[];
+    data: PreferenceDTO[];
 
 }
 
