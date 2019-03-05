@@ -4,9 +4,9 @@ import { createValidator, Model, Property } from "@ozone/openapi-decorators";
 export class PreferenceDTO {
 
     static validate = createValidator(PreferenceDTO);
-
-    @Property()
-    id: number;
+    //
+    // @Property()
+    // id: number;
 
     @Property()
     namespace: string;
@@ -29,7 +29,7 @@ export class PreferenceGetResponse {
     results: number;
 
     @Property(() => PreferenceDTO)
-    data: PreferenceDTO[];
+    preference: PreferenceDTO[];
 
 }
 
@@ -50,16 +50,12 @@ export class PreferenceCreateResponse {
     success: boolean;
 
     @Property(() => PreferenceDTO)
-    data: PreferenceDTO;
+    data: PreferenceDTO[];
 
 }
 
 
 export interface PreferenceUpdateRequest extends PreferenceCreateRequest {
-  namespace: string;
-  path: string;
-  value?: string;
-
 }
 
 
@@ -72,7 +68,7 @@ export class PreferenceUpdateResponse {
     success: boolean;
 
     @Property(() => PreferenceDTO)
-    data: PreferenceDTO;
+    preference: PreferenceDTO[];
 
 }
 

@@ -39,7 +39,8 @@ export class PreferenceAPI {
 
     async createPreference(data: PreferenceCreateRequest): Promise<Response<PreferenceCreateResponse>> {
         const requestData = qs.stringify({
-            data: JSON.stringify([data])
+            _method: "POST",
+            value: data.value
         });
 
         return this.gateway.post(`prefs/preference/${data.namespace}/${data.path}/`, requestData, {
@@ -52,7 +53,8 @@ export class PreferenceAPI {
 
     async updatePreference(data: PreferenceUpdateRequest): Promise<Response<PreferenceUpdateResponse>> {
         const requestData = qs.stringify({
-            data: JSON.stringify([data])
+            _method: "PUT",
+            value: data.value
         });
 
         return this.gateway.put(`prefs/preference/${data.namespace}/${data.path}/`, requestData, {
@@ -63,7 +65,7 @@ export class PreferenceAPI {
         });
     }
 
-    async deletePreference(data: PreferenceCreateRequest): Promise<Response<PreferenceDeleteResponse>> {
+    async deletePreference(data: PreferenceUpdateRequest): Promise<Response<PreferenceDeleteResponse>> {
         const requestData = qs.stringify({
             _method: "DELETE"
         });
