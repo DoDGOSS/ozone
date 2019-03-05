@@ -5,11 +5,13 @@ import {
 	Response
 } from "../interfaces";
 import {
-	PreferenceCreateResponse,
-	PreferenceDeleteResponse,
-	PreferenceUpdateResponse,
-	PreferenceCreateRequest,
-	PreferenceUpdateRequest
+    PreferenceCreateRequest,
+    PreferenceCreateResponse,
+    PreferenceDeleteResponse,
+    PreferenceDTO,
+    PreferenceGetResponse,
+    PreferenceUpdateRequest,
+    PreferenceUpdateResponse
 } from "../models/PreferenceDTO";
 import * as qs from "qs";
 
@@ -25,11 +27,15 @@ export class PreferenceAPI {
             return this.gateway.get(`prefs/preference/${namespace}/`);
         }
 
-        return this.gateway.get("prefs/preference/");
+        return this.gateway.get("prefs/preference/", {
+            validate: PreferenceGetResponse.validate
+        });
     }
 
     async getPreference(namespace: string, path: string): Promise<Response<any>> {
-        return this.gateway.get(`prefs/preference/${namespace}/${path}/`);
+        return this.gateway.get(`prefs/preference/${namespace}/${path}/`, {
+            validate: PreferenceDTO.validate
+        });
     }
 
     async getServerResources(): Promise<Response<any>> {

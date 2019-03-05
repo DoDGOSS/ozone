@@ -1,12 +1,15 @@
 import { createValidator, Model, Property } from "@ozone/openapi-decorators";
 
+import { UserReference } from "./dashboard-dto";
+
+
 @Model({ name: "Preference" })
 export class PreferenceDTO {
 
     static validate = createValidator(PreferenceDTO);
-    //
-    // @Property()
-    // id: number;
+
+    @Property()
+    id: number;
 
     @Property()
     namespace: string;
@@ -17,6 +20,9 @@ export class PreferenceDTO {
     @Property()
     value: string;
 
+    @Property()
+    user: UserReference;
+
 }
 
 
@@ -26,10 +32,13 @@ export class PreferenceGetResponse {
     static validate = createValidator(PreferenceGetResponse);
 
     @Property()
+    success: boolean;
+
+    @Property()
     results: number;
 
     @Property(() => PreferenceDTO)
-    preference: PreferenceDTO[];
+    rows: PreferenceDTO[];
 
 }
 
