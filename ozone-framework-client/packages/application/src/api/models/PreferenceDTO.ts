@@ -44,9 +44,11 @@ export class PreferenceGetResponse {
 
 
 export interface PreferenceCreateRequest {
+    id: number;
     namespace: string;
     path: string;
     value?: string;
+    user: {userId: string}
 }
 
 
@@ -54,13 +56,25 @@ export interface PreferenceCreateRequest {
 export class PreferenceCreateResponse {
 
     static validate = createValidator(PreferenceCreateResponse);
-
     @Property()
-    success: boolean;
-
-    @Property(() => PreferenceDTO)
-    data: PreferenceDTO[];
-
+    id: number;
+    @Property()
+    namespace: string;
+    @Property()
+    path: string;
+    @Property()
+    value?: string;
+    @Property()
+    user: {userId: string}
+    //
+    // @Property()
+    // success: boolean;
+    //
+    // @Property()
+    // results: number;
+    //
+    // @Property(() => PreferenceDTO)
+    // rows: PreferenceDTO[];
 }
 
 
@@ -74,10 +88,23 @@ export class PreferenceUpdateResponse {
     static validate = createValidator(PreferenceUpdateResponse);
 
     @Property()
-    success: boolean;
-
-    @Property(() => PreferenceDTO)
-    data: PreferenceDTO[];
+    id: number;
+    @Property()
+    namespace: string;
+    @Property()
+    path: string;
+    @Property()
+    value?: string;
+    @Property()
+    user: {userId: string}
+    // @Property()
+    // success: boolean;
+    //
+    // @Property()
+    // results: number;
+    //
+    // @Property(() => PreferenceDTO)
+    // rows: PreferenceDTO[];
 
 }
 
@@ -88,9 +115,23 @@ export class PreferenceDeleteResponse {
     static validate = createValidator(PreferenceDeleteResponse);
 
     @Property()
-    success: boolean;
+    id: number;
+    @Property()
+    namespace: string;
+    @Property()
+    path: string;
+    @Property()
+    value?: string;
+    @Property()
+    user: {userId: string}
+    // @Property()
+    // success: boolean;
+    //
+    // @Property()
+    // results: number;
+    //
+    // @Property(() => PreferenceDTO)
+    // rows: PreferenceDTO[];
 
-    @Property(() => PreferenceDTO)
-    data: PreferenceDTO;
 
 }
