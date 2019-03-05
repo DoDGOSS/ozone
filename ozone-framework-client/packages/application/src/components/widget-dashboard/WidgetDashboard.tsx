@@ -4,8 +4,9 @@ import { useBehavior } from "../../hooks";
 import { Mosaic, MosaicBranch, MosaicWindow } from "react-mosaic-component";
 
 import { PropsBase } from "../../common";
-import { DashboardNode } from "../../stores/interfaces";
+import { DashboardNode, Widget } from "../../stores/interfaces";
 
+import { dashboardService } from "../../stores/DashboardService";
 import { dashboardStore } from "../../stores/DashboardStore";
 import { mainStore } from "../../stores/MainStore";
 
@@ -30,7 +31,7 @@ export const WidgetDashboard: React.FunctionComponent<PropsBase> = (props) => {
                 className={classNames("mosaic-blueprint-theme", "mosaic", "mosaic-drop-target", themeClass)}
                 value={dashboard && dashboard.layout}
                 onChange={(currentNode: DashboardNode | null) => {
-                    dashboardStore.setLayout(currentNode);
+                    dashboardService.setLayout(currentNode);
                 }}
                 renderTile={(id: string, path: MosaicBranch[]) => {
                     const widget = widgets[id];
@@ -45,11 +46,48 @@ export const WidgetDashboard: React.FunctionComponent<PropsBase> = (props) => {
                     const widgetDef = widget.definition;
                     return (
                         <DashboardWindow title={widgetDef.title} path={path}>
-                            {widgetDef.element}
+                            {widgetDef.url !== undefined ? (
+                                <WidgetFrame widget={widget} />
+                            ) : widgetDef.element !== undefined ? (
+                                widgetDef.element
+                            ) : (
+                                "Error: Widget must have either a URL or an Element property"
+                            )}
                         </DashboardWindow>
                     );
                 }}
             />
         </div>
     );
+};
+
+interface WidgetFrameProps {
+    widget: Widget;
+}
+
+const WidgetFrame: React.FunctionComponent<WidgetFrameProps> = ({ widget }) => {
+    const def = widget.definition;
+
+    const id = widget.id;
+    const nameJson = JSON.stringify({
+        id,
+        guid: def.id,
+        url: def.url,
+        owf: true,
+        version: "1.0",
+        containerVersion: "7.15.1",
+        locked: false,
+        layout: "tabbed",
+        webContextPath: "/",
+        preferenceLocation: "http://localhost:8080/prefs",
+        relayUrl: "http://localhost:3000/rpc_relay.uncompressed.html",
+        lang: "en_US",
+        currentTheme: {
+            themeName: "a_default",
+            themeContrast: "standard",
+            themeFontSize: 12
+        }
+    });
+
+    return <iframe className={styles.widgetFrame} src={def.url} id={`widget-${widget.id}`} name={nameJson} />;
 };

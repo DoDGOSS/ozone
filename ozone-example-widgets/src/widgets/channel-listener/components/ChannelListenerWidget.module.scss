@@ -1,0 +1,25 @@
+.app {
+  padding: .5em;
+
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  > div:not(:first-child) {
+    margin-top: .5em;
+  }
+}
+
+.subscriptionCell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.addChannelInput {
+  justify-content: flex-end;
+  margin-bottom: .25em;
+}
