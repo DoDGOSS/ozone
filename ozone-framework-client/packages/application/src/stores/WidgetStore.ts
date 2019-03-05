@@ -9,7 +9,6 @@ import { ADMIN_WIDGETS } from "./admin-widgets";
 import { widgetApi as widgetApiDefault } from "../api/clients/WidgetAPI";
 
 export class WidgetStore {
-
     private readonly adminWidgets$ = new BehaviorSubject(ADMIN_WIDGETS);
 
     private readonly error$ = new BehaviorSubject<string | null>(null);

@@ -3,7 +3,9 @@ import { MosaicNode } from "react-mosaic-component";
 export interface WidgetDefinition {
     id: string;
     title: string;
-    element: JSX.Element;
+    url?: string;
+    element?: JSX.Element;
+    universalName: string;
 }
 
 export interface Widget {

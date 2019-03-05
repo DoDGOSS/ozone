@@ -6,7 +6,7 @@ import {
     systemConfigWidgetDef,
     userAdminWidgetDef,
     widgetAdminWidgetDef
-} from "./default-dashboard";
+} from "./system-widgets";
 
 const IMAGE_ROOT_URL = "http://localhost:3000/images";
 

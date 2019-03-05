@@ -4,7 +4,7 @@ import { useBehavior } from "../../hooks";
 import { Button, Classes, Dialog, Intent } from "@blueprintjs/core";
 
 import { mainStore } from "../../stores/MainStore";
-import { dashboardStore } from "../../stores/DashboardStore";
+import { dashboardService } from "../../stores/DashboardService";
 
 import { defaults } from "lodash";
 
@@ -23,14 +23,14 @@ export const ReplaceWidgetDialog: React.FunctionComponent<ConfirmationProps> = (
     const { title, content, confirm, cancel } = defaults({}, props, DEFAULT_PROPS);
 
     const themeClass = useBehavior(mainStore.themeClass);
-    const isOpen = useBehavior(dashboardStore.isConfirmationDialogVisible);
+    const isOpen = useBehavior(dashboardService.isConfirmationDialogVisible);
 
     return (
         <div>
             <Dialog
                 className={themeClass}
                 isOpen={isOpen}
-                onClose={dashboardStore.cancelReplaceWidget}
+                onClose={dashboardService.cancelReplaceWidget}
                 isCloseButtonShown={true}
                 title={title}
             >
@@ -43,7 +43,7 @@ export const ReplaceWidgetDialog: React.FunctionComponent<ConfirmationProps> = (
                 <div className={Classes.DIALOG_FOOTER}>
                     <div className={Classes.DIALOG_FOOTER_ACTIONS}>
                         <Button
-                            onClick={dashboardStore.confirmReplaceWidget}
+                            onClick={dashboardService.confirmReplaceWidget}
                             intent={Intent.SUCCESS}
                             rightIcon="tick"
                             data-element-id="confirmation-dialog-confirm"
@@ -51,7 +51,7 @@ export const ReplaceWidgetDialog: React.FunctionComponent<ConfirmationProps> = (
                             {confirm.text}
                         </Button>
                         <Button
-                            onClick={dashboardStore.cancelReplaceWidget}
+                            onClick={dashboardService.cancelReplaceWidget}
                             intent={Intent.DANGER}
                             rightIcon="cross"
                             data-element-id="confirmation-cancel"
