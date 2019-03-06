@@ -66,15 +66,6 @@ export class PreferenceCreateResponse {
     value?: string;
     @Property()
     user: {userId: string}
-    //
-    // @Property()
-    // success: boolean;
-    //
-    // @Property()
-    // results: number;
-    //
-    // @Property(() => PreferenceDTO)
-    // rows: PreferenceDTO[];
 }
 
 
@@ -97,14 +88,6 @@ export class PreferenceUpdateResponse {
     value?: string;
     @Property()
     user: {userId: string}
-    // @Property()
-    // success: boolean;
-    //
-    // @Property()
-    // results: number;
-    //
-    // @Property(() => PreferenceDTO)
-    // rows: PreferenceDTO[];
 
 }
 
@@ -124,14 +107,6 @@ export class PreferenceDeleteResponse {
     value?: string;
     @Property()
     user: {userId: string}
-    // @Property()
-    // success: boolean;
-    //
-    // @Property()
-    // results: number;
-    //
-    // @Property(() => PreferenceDTO)
-    // rows: PreferenceDTO[];
 
 
 }
