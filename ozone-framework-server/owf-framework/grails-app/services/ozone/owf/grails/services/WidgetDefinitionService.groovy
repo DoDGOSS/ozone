@@ -6,6 +6,7 @@ import grails.converters.JSON
 import grails.core.GrailsApplication
 import grails.util.AbstractTypeConvertingMap
 import grails.util.TypeConvertingMap
+import org.springframework.transaction.annotation.Transactional
 
 import org.hibernate.CacheMode
 
@@ -306,6 +307,7 @@ class WidgetDefinitionService {
         [success:true,data:results.flatten()]
     }
 
+    @Transactional(readOnly = false)
     def updateWidget(params) {
         def widgetDefinition
         def returnValue = null
@@ -537,11 +539,14 @@ class WidgetDefinitionService {
                         results?.eachWithIndex { nestedIt, j ->
                             if (!nestedIt.groupWidget) {
                                 // If widget is not assigned directly or via a group, remove the pwd.
+                                log.error("DEBUG: In REMOVE Line 542 Option 1")
+                                log.error("Nested it" + nestedIt)
                                 person.removeFromPersonWidgetDefinitions(nestedIt)
                                 widgetDefinition.removeFromPersonWidgetDefinitions(nestedIt)
                             }
                             else {
                                 // Otherwise, just un-flag the direct widget to user association.
+                                log.error("DEBUG: In REMOVE Line 548 Option 2")
                                 nestedIt.userWidget = false
                                 nestedIt.save(flush:true)
                             }

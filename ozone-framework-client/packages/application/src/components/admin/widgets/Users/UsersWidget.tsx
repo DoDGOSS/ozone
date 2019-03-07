@@ -5,7 +5,7 @@ import { AdminTable } from "../../table/AdminTable";
 
 import { UserCreateForm } from "./UserCreateForm";
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
-import { UserEditTabGroup } from "../Groups/UserEditTabGroup";
+import { UserEditTabs } from "./UserEditTabs";
 
 import { UserCreateRequest, UserDTO } from "../../../../api/models/UserDTO";
 import { userApi } from "../../../../api/clients/UserAPI";
@@ -84,11 +84,11 @@ export class UsersWidget extends React.Component<{}, State> {
                                         this.showSubSection(UserWidgetSubSection.EDIT),
                                         this.setState({ updatingUser: row.original })
                                     )}
-                                    data-element-id={"user-admin-widget-edit-" + row.original.email}
+                                    data-element-id={"user-admin-widget-edit-button"}
                                 />
                                 <Divider />
                                 <Button
-                                    data-element-id={"user-admin-widget-delete-" + row.original.email}
+                                    data-element-id={"user-admin-widget-delete-button"}
                                     text="Delete"
                                     intent={Intent.DANGER}
                                     icon="trash"
@@ -117,8 +117,7 @@ export class UsersWidget extends React.Component<{}, State> {
         let data = this.state.users;
         const filter = this.state.filter.toLowerCase();
 
-        // TODO - Improve this - this will be slow if there are many users.
-        // Minimally could wait to hit enter before filtering. Pagination handling
+        // TODO - Improve this - this will be slow if there are many users. Add pagination
         if (filter) {
             data = data.filter((row) => {
                 return (
@@ -174,7 +173,7 @@ export class UsersWidget extends React.Component<{}, State> {
                 )}
 
                 {showEditUser && (
-                    <UserEditTabGroup
+                    <UserEditTabs
                         user={this.state.updatingUser}
                         onUpdate={this.handleUpdate}
                         onBack={() => {
@@ -191,19 +190,6 @@ export class UsersWidget extends React.Component<{}, State> {
                     cancelHandler={this.handleConfirmationCancel}
                     payload={this.state.manageUser}
                 />
-
-                {/* {this.state.alertIsOpen && (
-                    <Alert cancelButtonText="Cancel"
-                           confirmButtonText="Delete User"
-                           icon="trash"
-                           intent={Intent.DANGER}
-                           isOpen={this.state.alertIsOpen}
-                           className="delete-user-alert"
-                           onCancel={this.handleAlertCancel}
-                           onConfirm={() => this.handleAlertConfirm(this.state.deleteUser.id)}>
-                        <p>Are you sure you want to delete <br/><b>User: {this.state.deleteUser.userRealName}</b>?</p>
-                    </Alert>
-                )} */}
             </div>
         );
     }

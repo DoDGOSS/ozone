@@ -1,8 +1,62 @@
 import { NightwatchAPI } from "nightwatch";
 
-import { AdminWidget, GlobalElements } from "./selectors";
+import { AdminWidget, GlobalElements, UserAdminWidget } from "./selectors";
 
 import { AdminWidgetType, loggedInAs, openAdminWidget } from "./helpers";
+import { NightwatchCallbackResult } from "./nightwatch";
+
+const LOGIN_USERNAME: string = "testAdmin1";
+const LOGIN_PASSWORD: string = "password";
+
+const USER_ADD_WIDGET: string = "testUser1";
+const SEARCH_WIDGET: string = "Color";
+const ADDED_WIDGETS = ["Color Client", "Color Server"];
+
+function openEditSectionForUser(browser: NightwatchAPI, userDisplayName: string, section?: string) {
+    let relevant_row: number = 0;
+
+    browser.elements(
+        "css selector",
+        `${UserAdminWidget.Main.DIALOG} div[role='rowgroup'] div[role='row'] > div:first-child`,
+        (elements: NightwatchCallbackResult) => {
+            elements.value.forEach((element: any, i: number) => {
+                browser.elementIdText(element.ELEMENT, (result) => {
+                    if (result.value === userDisplayName) {
+                        relevant_row = i;
+                        browser.getAttribute(
+                            `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
+                                1}) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-edit-button']`,
+                            "disabled",
+                            function(isDisabled) {
+                                this.assert.equal(
+                                    isDisabled.value,
+                                    null,
+                                    "[User Admin Widget] created user can be edited"
+                                );
+                            }
+                        );
+                    }
+                });
+            });
+        }
+    );
+    browser.click(
+        `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
+            1}) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-edit-button']`
+    );
+
+    if (section) {
+        return browser.click(section);
+    } else {
+        return browser.waitForElementPresent(
+            UserAdminWidget.PropertiesGroup.FORM,
+            1000,
+            undefined,
+            undefined,
+            "[Edit User Form] is present"
+        );
+    }
+}
 
 module.exports = {
     // TODO - Change test to launch the widget when functionality is implemented
@@ -44,7 +98,7 @@ module.exports = {
         browser.closeWindow().end();
     },
 
-    "As an Administrator, I want to create a new User": (browser: NightwatchAPI) => {
+    "As an Administrator, I can create a new User": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
         openAdminWidget(browser, AdminWidgetType.USERS);
 
@@ -90,7 +144,7 @@ module.exports = {
         browser.closeWindow().end();
     },
 
-    "As an Administrator, I want to edit a User": (browser: NightwatchAPI) => {
+    "As an Administrator, I can edit a User": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
         openAdminWidget(browser, AdminWidgetType.USERS);
 
@@ -143,7 +197,129 @@ module.exports = {
         browser.closeWindow().end();
     },
 
-    "As an Administrator, I want to search for a User": (browser: NightwatchAPI) => {
+    "As an Administrator, I can add a widget to a user": (browser: NightwatchAPI) => {
+        loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.USERS);
+
+        browser.waitForElementVisible(UserAdminWidget.Main.DIALOG, 2000, "[User Admin Widget] is visible");
+
+        browser.expect.element(UserAdminWidget.Main.DIALOG).text.to.contain(USER_ADD_WIDGET);
+
+        openEditSectionForUser(
+            browser,
+            USER_ADD_WIDGET,
+            `${UserAdminWidget.EditUser.TAB_WIDGETS}`
+        ).waitForElementVisible(UserAdminWidget.WidgetsUser.ADD_BUTTON, 2000, "[User Widgets Interface] is visible");
+
+        // Could check here to see if there are no widgets
+        browser
+            .click(UserAdminWidget.WidgetsUser.ADD_BUTTON)
+            .waitForElementPresent(
+                GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
+                1000,
+                undefined,
+                undefined,
+                "[Widget Selection Dialog] is present"
+            );
+
+        browser
+            .setValue(GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD, SEARCH_WIDGET)
+            .pause(1000)
+            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup']:nth-child(1)`)
+            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup']:nth-child(2)`)
+            .click(GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON)
+            .waitForElementNotPresent(
+                GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
+                1000,
+                undefined,
+                undefined,
+                "[Widget Selection Dialog] is closed"
+            );
+
+        ADDED_WIDGETS.forEach((widget: string) => {
+            browser.expect.element(UserAdminWidget.Main.DIALOG).text.to.contain(widget);
+        });
+
+        browser
+            .click(UserAdminWidget.Main.BACK_BUTTON)
+            .waitForElementNotPresent(UserAdminWidget.WidgetsUser.ADD_BUTTON, 1000, "[Edit User Form] is closed");
+
+        browser.closeWindow().end();
+    },
+
+    "As an Administrator, I can remove a widget from a user": (browser: NightwatchAPI) => {
+        loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.USERS);
+
+        browser.waitForElementVisible(UserAdminWidget.Main.DIALOG, 2000, "[User Admin Widget] is visible");
+
+        openEditSectionForUser(
+            browser,
+            USER_ADD_WIDGET,
+            `${UserAdminWidget.EditUser.TAB_WIDGETS}`
+        ).waitForElementVisible(UserAdminWidget.WidgetsUser.ADD_BUTTON, 2000, "[User Widgets Interface] is visible");
+
+        ADDED_WIDGETS.forEach((widget: string) => {
+            browser.expect.element(UserAdminWidget.Main.DIALOG).text.to.contain(widget);
+        });
+
+        browser
+            .click(
+                `${
+                    UserAdminWidget.WidgetsUser.TAB
+                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-delete-widget-button']`
+            )
+            .pause(3500)
+            .waitForElementPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                1000,
+                undefined,
+                undefined,
+                "[Confirmation Dialog] is present"
+            )
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .pause(500)
+            .waitForElementNotPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                1000,
+                "[Confirmation Dialog] is not present"
+            );
+
+        browser
+            .click(
+                `${
+                    UserAdminWidget.WidgetsUser.TAB
+                } div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-delete-widget-button']`
+            )
+            .pause(250)
+            .waitForElementPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                1000,
+                undefined,
+                undefined,
+                "[Confirmation Dialog] is present"
+            )
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .pause(500)
+            .waitForElementNotPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                1000,
+                "[Confirmation Dialog] is not present"
+            );
+
+        // TODO - UNCOMMENT WHEN BACKEND IS FIXED
+        // ADDED_WIDGETS.forEach((widget: string) => {
+        //     browser.expect.element(UserAdminWidget.Main.DIALOG).text.to.not.contain(widget);
+        // });
+
+        browser
+            .click(UserAdminWidget.Main.BACK_BUTTON)
+            .waitForElementNotPresent(UserAdminWidget.WidgetsUser.ADD_BUTTON, 1000, "[Edit User Form] is closed");
+
+        browser.closeWindow().end();
+    },
+
+    "As an Administrator, I can search for a User": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
         openAdminWidget(browser, AdminWidgetType.USERS);
 
@@ -172,7 +348,7 @@ module.exports = {
         browser.closeWindow().end();
     },
 
-    "As an Administrator, I want to delete a User": (browser: NightwatchAPI) => {
+    "As an Administrator, I can delete a User": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
         openAdminWidget(browser, AdminWidgetType.USERS);
 
