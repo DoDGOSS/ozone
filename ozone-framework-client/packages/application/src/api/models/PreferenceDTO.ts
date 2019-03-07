@@ -1,6 +1,6 @@
 import { createValidator, Model, Property } from "@ozone/openapi-decorators";
 
-import { UserReference } from "./dashboard-dto";
+import { UserReference } from "./DashboardDTO";
 
 
 @Model({ name: "Preference" })

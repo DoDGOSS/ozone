@@ -1,6 +1,7 @@
 import "reflect-metadata";
 
-import { PreferenceAPI, PreferenceCreateRequest, PreferenceUpdateRequest } from "../../src/api/clients/PreferenceAPI";
+import { PreferenceAPI } from "../../src/api/clients/PreferenceAPI";
+import { PreferenceCreateRequest, PreferenceUpdateRequest } from "../../src/api/models/PreferenceDTO";
 
 import { NodeGateway } from "./node-gateway";
 import { PREFERENCES } from "../unit/data";
