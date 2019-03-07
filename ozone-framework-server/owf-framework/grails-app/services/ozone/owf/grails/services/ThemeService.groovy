@@ -66,6 +66,7 @@ class ThemeService implements GrailsConfigurationAware {
     }
 
     JSONObject getCurrentTheme() {
+		setUserTheme("test");
         //if there is a stored preference for this user's theme, use that
         String userTheme = getUserThemePref()
         if (userTheme != null && !userTheme.isEmpty()) {
@@ -128,6 +129,30 @@ class ThemeService implements GrailsConfigurationAware {
                     exceptionType: OwfExceptionTypes.GeneralServerError)
 
         return parseThemeDefinitionFromResource(resource)
+    }
+
+
+    void setUserTheme(String newTheme) {
+		Collection<JSONObject> allThemes = getAvailableThemes();
+
+		for (JSONObject theme : allThemes) {
+		   System.out.println(theme.toString());
+		   log.error(theme.toString());
+		}
+		return;
+		//
+		// JSONObject checkedNewTheme;
+		//
+		// Preference newThemePreference = new Preference();
+	    // newThemePreference.namespace = 'owf';
+	    // newThemePreference.path = 'selected_theme';
+	    // newThemePreference.value = checkedNewTheme;
+		//
+		// updateForUser(params)
+		//
+        // Map result = (Map) preferenceService.show([namespace: 'owf', path: 'selected_theme'])
+        // Preference preference = (Preference) result.get("preference")
+        // return preference?.value
     }
 
 }
