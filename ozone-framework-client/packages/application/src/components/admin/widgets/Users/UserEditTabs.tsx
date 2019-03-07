@@ -2,27 +2,28 @@ import * as React from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
 
-import { UserEditForm } from "../Users/UserEditForm";
-import { CancelButton } from "../../../form";
-import { UserEditGroups } from "./UserEditGroups";
+import { UserEditForm } from "./UserEditForm";
+import { CancelButton } from "../../../form/index";
+import { UserEditGroups } from "../Groups/UserEditGroups";
+import { UserEditWidgets } from "../Widgets/UserEditWidgets";
 import { userApi } from "../../../../api/clients/UserAPI";
 import { UserUpdateRequest } from "../../../../api/models/UserDTO";
 import { UserEditPreferences } from "../Users/UserEditPreferences";
 
 import * as styles from "../Widgets.scss";
 
-export interface UserEditTabGroupProps {
+export interface UserEditTabsProps {
     onUpdate: (update?: any) => void;
     onBack: () => void;
     user: any;
 }
 
-export interface UserEditTabGroupState {
+export interface UserEditTabsState {
     user: any;
 }
 
-export class UserEditTabGroup extends React.Component<UserEditTabGroupProps, UserEditTabGroupState> {
-    constructor(props: UserEditTabGroupProps) {
+export class UserEditTabs extends React.Component<UserEditTabsProps, UserEditTabsState> {
+    constructor(props: UserEditTabsProps) {
         super(props);
 
         this.state = {
@@ -43,6 +44,11 @@ export class UserEditTabGroup extends React.Component<UserEditTabGroupProps, Use
                         id="user_groups"
                         title="Groups"
                         panel={<UserEditGroups onUpdate={this.props.onUpdate} user={this.state.user} />}
+                    />
+                    <Tab
+                        id="user_widgets"
+                        title="Widgets"
+                        panel={<UserEditWidgets onUpdate={this.props.onUpdate} user={this.state.user} />}
                     />
                     <Tab
                         id="user_preferences"

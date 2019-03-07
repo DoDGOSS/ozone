@@ -13,6 +13,12 @@ import {
     WidgetUpdateUsersResponse
 } from "../models/WidgetDTO";
 
+export interface WidgetQueryCriteria {
+    limit?: number;
+    offset?: number;
+    user_id?: number;
+}
+
 export class WidgetAPI {
     private readonly gateway: Gateway;
 
@@ -20,8 +26,9 @@ export class WidgetAPI {
         this.gateway = gateway || getGateway();
     }
 
-    async getWidgets(): Promise<Response<WidgetGetResponse>> {
+    async getWidgets(criteria?: WidgetQueryCriteria): Promise<Response<WidgetGetResponse>> {
         return this.gateway.get("widget/", {
+            params: getOptionParams(criteria),
             validate: WidgetGetResponse.validate
         });
     }
@@ -66,6 +73,8 @@ export class WidgetAPI {
             update_action: "add"
         });
 
+        console.log(requestData);
+
         return this.gateway.put(`widget/${widgetId}/`, requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -84,6 +93,8 @@ export class WidgetAPI {
             tab: "users",
             update_action: "remove"
         });
+
+        console.log(requestData);
 
         return this.gateway.put(`widget/${widgetId}/`, requestData, {
             headers: {
@@ -147,3 +158,13 @@ export class WidgetAPI {
 }
 
 export const widgetApi = new WidgetAPI();
+
+function getOptionParams(options?: WidgetQueryCriteria): any | undefined {
+    if (!options) return undefined;
+
+    const params: any = {};
+    if (options.limit) params.max = options.limit;
+    if (options.offset) params.offset = options.offset;
+    if (options.user_id) params.user_id = options.user_id;
+    return params;
+}

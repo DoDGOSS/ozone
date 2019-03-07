@@ -8,7 +8,7 @@ import { AdminTable } from "../../table/AdminTable";
 import { GroupCreateForm } from "./GroupCreateForm";
 
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
-import { GroupEditTabGroup } from "../Users/GroupEditTabGroup";
+import { GroupEditTabs } from "./GroupEditTabs";
 import { groupApi } from "../../../../api/clients/GroupAPI";
 import { GroupCreateRequest, GroupDTO } from "../../../../api/models/GroupDTO";
 
@@ -168,7 +168,7 @@ export class GroupsWidget extends React.Component<{}, State> {
                 )}
 
                 {showEditGroup && (
-                    <GroupEditTabGroup
+                    <GroupEditTabs
                         group={this.state.updatingGroup}
                         onUpdate={this.handleUpdate}
                         onBack={() => {

@@ -2,27 +2,27 @@ import * as React from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
 
-import { GroupEditForm } from "../Groups/GroupEditForm";
-import { GroupEditUsers } from "./GroupEditUsers";
-import { CancelButton } from "../../../form";
+import { GroupEditForm } from "./GroupEditForm";
+import { GroupEditUsers } from "../Users/GroupEditUsers";
+import { CancelButton } from "../../../form/index";
 import { GroupUpdateRequest } from "../../../../api/models/GroupDTO";
 import { groupApi } from "../../../../api/clients/GroupAPI";
 
 import * as styles from "../Widgets.scss";
 
-export interface GroupEditTabGroupProps {
+export interface GroupEditTabsProps {
     onUpdate: (update?: any) => void;
     onBack: () => void;
     group: any;
 }
 
-export interface GroupEditTabGroupState {
+export interface GroupEditTabsState {
     group: any;
     updated: boolean;
 }
 
-export class GroupEditTabGroup extends React.Component<GroupEditTabGroupProps, GroupEditTabGroupState> {
-    constructor(props: GroupEditTabGroupProps) {
+export class GroupEditTabs extends React.Component<GroupEditTabsProps, GroupEditTabsState> {
+    constructor(props: GroupEditTabsProps) {
         super(props);
 
         this.state = {
