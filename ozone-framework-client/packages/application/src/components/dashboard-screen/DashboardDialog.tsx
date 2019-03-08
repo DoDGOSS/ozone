@@ -5,72 +5,78 @@ import { useBehavior } from "../../hooks";
 import { Button, ButtonGroup, Card, Classes, Dialog, Divider, Intent } from "@blueprintjs/core";
 
 import { mainStore } from "../../stores/MainStore";
+import { errorStore } from "../../services/ErrorStore";
 
 import { dashboardApi } from "../../api/clients/DashboardAPI";
-import {DashboardDTO, DashboardUpdateRequest} from "../../api/models/DashboardDTO";
+import { DashboardDTO } from "../../api/models/DashboardDTO";
 import { ConfirmationDialog } from "../confirmation-dialog/ConfirmationDialog";
 import { EditDashboardForm } from "../create-dashboard-screen/EditDashboardForm";
 
-//TODO - convert to edit stacks
-//TODO - iconImageUrl not saving to database - clientAPI
-//TODO - style image
+// TODO - convert to edit stacks
+// TODO - iconImageUrl not saving to database - clientAPI
+// TODO - style image
+
+const fetchDashboards = (dispatchResult: (dashboards: DashboardDTO[]) => void) => {
+    dashboardApi.getDashboards().then((response) => {
+        if (response.status !== 200) return;
+
+        dispatchResult(response.data.data);
+    });
+};
 
 export const DashboardDialog: React.FunctionComponent<{}> = () => {
-    const initialDashboardState = {
-        name: '',
-        guid: '',
-        description: '',
-        iconImageUrl: ''
-    };
-
     const themeClass = useBehavior(mainStore.themeClass);
     const isVisible = useBehavior(mainStore.isDashboardDialogVisible);
 
     const [showDelete, setDelete] = useState(false);
     const [showEdit, setEdit] = useState(false);
-    const [dashboard, setDashboard] = useState<DashboardUpdateRequest>(initialDashboardState);
+    const [currentDashboard, setCurrentDashboard] = useState<DashboardDTO | null>(null);
     const [confirmationMessage, setConfirmationMessage] = useState("");
     const [dashboards, setDashboards] = useState<DashboardDTO[]>([]);
 
+    // Fetch the Dashboards when isVisible changes to `true`
     useEffect(() => {
-        // TODO: Handle failed request
-        dashboardApi.getDashboards().then((response) => {
-            if (response.status !== 200) return;
-            setDashboards(response.data.data);
-        });
-    }, [dashboards]);
+        if (isVisible) fetchDashboards(setDashboards);
+    }, [isVisible]);
 
-    const editDashboard = async (dashboard: DashboardDTO) => {
+    const showEditDialog = async (dashboard: DashboardDTO) => {
         setEdit(true);
-        setDashboard(dashboard);
+        setCurrentDashboard(dashboard);
     };
 
-    const deleteDashboard = async (dashboard: DashboardDTO) => {
+    const onEditSubmitted = () => {
+        setEdit(false);
+        fetchDashboards(setDashboards);
+        return true;
+    };
+
+    const showDeleteConfirmation = async (dashboard: DashboardDTO) => {
         setDelete(true);
         setConfirmationMessage(`This action will permanently delete <strong>${dashboard.name}</strong>`);
-        setDashboard(dashboard);
+        setCurrentDashboard(dashboard);
     };
 
-    const handleConfirmationConfirmDelete = async () => {
-        setDelete(false);
-        setDashboard(initialDashboardState);
-        setConfirmationMessage("");
+    const onDeleteConfirmed = async () => {
+        if (currentDashboard === null) {
+            errorStore.warning("Assertion Error", "DashboardDialog: expected currentDashboard to not be null");
+            return false;
+        }
 
-        const response = await dashboardApi.deleteDashboard(dashboard.guid);
-
+        const response = await dashboardApi.deleteDashboard(currentDashboard.guid);
         if (response.status !== 200) return false;
 
-        return true;
-    };
-
-    const handleConfirmationCancel = () => {
         setDelete(false);
-        setDashboard(initialDashboardState);
+        setCurrentDashboard(null);
+        setConfirmationMessage("");
+
+        fetchDashboards(setDashboards);
+
+        return true;
     };
 
-    const handleUpdate = () => {
-        setEdit(false);
-        return true;
+    const onDeleteCancelled = () => {
+        setDelete(false);
+        setCurrentDashboard(null);
     };
 
     return (
@@ -80,9 +86,9 @@ export const DashboardDialog: React.FunctionComponent<{}> = () => {
                     show={showDelete}
                     title={"Warning"}
                     content={confirmationMessage}
-                    confirmHandler={handleConfirmationConfirmDelete}
-                    cancelHandler={handleConfirmationCancel}
-                    payload={dashboard}
+                    confirmHandler={onDeleteConfirmed}
+                    cancelHandler={onDeleteCancelled}
+                    payload={currentDashboard}
                 />
             )}
 
@@ -98,7 +104,7 @@ export const DashboardDialog: React.FunctionComponent<{}> = () => {
                             <Card key={dashboard.guid}>
                                 <h4>{dashboard.name}</h4>
                                 <p>{dashboard.description}</p>
-                                <img src={dashboard.iconImageUrl} />
+                                <img src={dashboard.iconImageUrl}/>
                                 <ButtonGroup>
                                     <Button
                                         key={dashboard.guid}
@@ -106,15 +112,15 @@ export const DashboardDialog: React.FunctionComponent<{}> = () => {
                                         icon="edit"
                                         text="Edit"
                                         data-element-id={"dashboard-edit-button-" + dashboard.name}
-                                        onClick={() => editDashboard(dashboard)}
+                                        onClick={() => showEditDialog(dashboard)}
                                     />
-                                    <Divider />
+                                    <Divider/>
                                     <Button
                                         data-element-id={"dashboard-delete-button-" + dashboard.name}
                                         text="Delete"
                                         intent={Intent.DANGER}
                                         icon="trash"
-                                        onClick={() => deleteDashboard(dashboard)}
+                                        onClick={() => showDeleteConfirmation(dashboard)}
                                     />
                                 </ButtonGroup>
                             </Card>
@@ -139,11 +145,11 @@ export const DashboardDialog: React.FunctionComponent<{}> = () => {
             ) : (
                 <Dialog className={themeClass} isOpen={showEdit} onClose={() => setEdit(false)} title="Edit Dashboard">
                     <div data-element-id="EditDashboardDialog" className={Classes.DIALOG_BODY}>
-                        <EditDashboardForm dashboard={dashboard} onSubmit={handleUpdate} />
+                        <EditDashboardForm dashboard={currentDashboard} onSubmit={onEditSubmitted}/>
                     </div>
 
                     <div className={Classes.DIALOG_FOOTER}>
-                        <div className={Classes.DIALOG_FOOTER_ACTIONS} />
+                        <div className={Classes.DIALOG_FOOTER_ACTIONS}/>
                     </div>
                 </Dialog>
             )}

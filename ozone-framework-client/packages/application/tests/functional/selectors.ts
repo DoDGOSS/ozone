@@ -53,7 +53,6 @@ export namespace MainPage {
 }
 
 export namespace DashboardDialog {
-
     export const CREATE_DASHBOARD_BUTTON = "button[data-element-id='dashboard-create-button']";
 
     export const DASHBOARD_DIALOG = "div[data-element-id='dashboard-dialog']";
@@ -89,7 +88,6 @@ export namespace DashboardDialog {
 
         export const EDIT_DASHBOARD_NAME = "test2";
     }
-
 }
 
 export namespace LoginForm {
