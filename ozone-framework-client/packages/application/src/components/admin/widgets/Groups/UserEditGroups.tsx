@@ -213,7 +213,7 @@ export class UserEditGroups extends React.Component<UserEditGroupsProps, UserEdi
 
         this.setState({
             showDelete: true,
-            confirmationMessage: `This action will permenantly delete <strong>${
+            confirmationMessage: `This action will permanently delete <strong>${
                 group.displayName
             }</strong> from the user <strong>${currentUser.userRealName}</strong>`,
             manageGroup: group

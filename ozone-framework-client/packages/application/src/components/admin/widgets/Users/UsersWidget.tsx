@@ -261,7 +261,7 @@ export class UsersWidget extends React.Component<{}, State> {
     private deleteUser = async (user: UserDTO) => {
         this.setState({
             showDelete: true,
-            confirmationMessage: `This action will permenantly delete <strong>${user.username}</strong>`,
+            confirmationMessage: `This action will permanently delete <strong>${user.username}</strong>`,
             manageUser: user
         });
 
