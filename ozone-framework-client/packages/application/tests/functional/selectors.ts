@@ -19,11 +19,15 @@ export namespace MainPage {
 
     export const USER_MENU_ADMIN_BUTTON = "div[data-element-id='Users']";
 
+    export const DASHBOARDS_MENU_ADMIN_BUTTON = "div[data-element-id='Dashboards']";
+
     export const USER_ADMINISTRATION_WIDGET = "div[data-element-id='user-admin-widget-dialog']";
 
     export const GROUPS_ADMIN_BUTTON = "div[data-element-id='Groups']";
 
     export const GROUPS_ADMIN_WIDGET = "div[data-element-id='group-admin-widget-dialog']";
+
+    export const DASHBOARD_ADMIN_WIDGET = "div[data-element-id='dashboard-admin-widget-dialog']";
 
     export const WARNING_DIALOG = "div[data-element-id='warning-dialog']";
 
@@ -124,6 +128,10 @@ export namespace AdminWidget {
     export const CONFIRM_DELETE_BUTTON = "div.delete-user-alert > div.bp3-alert-footer > button.bp3-intent-danger";
 
     export const SEARCH_FIELD = "input[data-element-id='search-field']";
+}
+
+export namespace DashboardAdminWidget {
+    export const DIALOG = "div[data-element-id='dashboard-admin-widget-dialog']";
 }
 
 export namespace GroupAdminWidget {
