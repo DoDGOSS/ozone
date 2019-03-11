@@ -187,7 +187,7 @@ class PreferenceService extends BaseService {
 		}
 		catch (e)
 		{
-			log.error(e)
+			log.error(e.toString())
 			throw new OwfException (message: 'A fatal error occurred while trying to delete a preference. Params: ' + params.toString(),exceptionType: OwfExceptionTypes.Database)
 		}
 	}

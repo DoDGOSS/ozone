@@ -15,6 +15,7 @@ import org.grails.web.json.JSONObject
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
 import ozone.owf.grails.domain.Preference
+import ozone.owf.grails.domain.Person
 
 
 @CompileStatic
@@ -131,28 +132,8 @@ class ThemeService implements GrailsConfigurationAware {
         return parseThemeDefinitionFromResource(resource)
     }
 
-
     void setUserTheme(String newTheme) {
-		Collection<JSONObject> allThemes = getAvailableThemes();
-
-		for (JSONObject theme : allThemes) {
-		   System.out.println(theme.toString());
-		   log.error(theme.toString());
-		}
-		return;
-		//
-		// JSONObject checkedNewTheme;
-		//
-		// Preference newThemePreference = new Preference();
-	    // newThemePreference.namespace = 'owf';
-	    // newThemePreference.path = 'selected_theme';
-	    // newThemePreference.value = checkedNewTheme;
-		//
-		// updateForUser(params)
-		//
-        // Map result = (Map) preferenceService.show([namespace: 'owf', path: 'selected_theme'])
-        // Preference preference = (Preference) result.get("preference")
-        // return preference?.value
+		preferenceService.updateForUser([namespace: 'owf', path: 'selected_theme', value: newTheme])
     }
 
 }
