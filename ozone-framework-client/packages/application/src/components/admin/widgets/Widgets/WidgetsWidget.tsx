@@ -222,7 +222,7 @@ export class WidgetsWidget extends React.Component<{}, State> {
     private deleteWidget = async (widget: WidgetDTO) => {
         this.setState({
             showDelete: true,
-            confirmationMessage: `This action will permenantly delete <strong>${widget.value.namespace}</strong>`,
+            confirmationMessage: `This action will permanently delete <strong>${widget.value.namespace}</strong>`,
             manageWidget: widget
         });
 
