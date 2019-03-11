@@ -5,6 +5,8 @@ import { Gateway, getGateway } from "../api/interfaces";
 
 import { AuthUserDTO } from "../api/models/AuthUserDTO";
 
+import { mainStore } from "./MainStore";
+
 export enum AuthStatus {
     PENDING,
     LOGGED_IN,
@@ -58,6 +60,7 @@ export class AuthStore {
     };
 
     private onAuthenticateSuccess = (user: AuthUserDTO) => {
+		mainStore.setTheme(user.theme)
         this.user$.next(user);
         this.status$.next(AuthStatus.LOGGED_IN);
     };

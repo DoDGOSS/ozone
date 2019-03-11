@@ -63,13 +63,18 @@ export class PreferenceCreateResponse {
     @Property()
     path: string;
     @Property()
-    value?: string;
+    value: string;
     @Property()
     user: {userId: string}
 }
 
 
-export interface PreferenceUpdateRequest extends PreferenceCreateRequest {
+export interface PreferenceUpdateRequest {
+	id?: number;
+	namespace: string;
+	path: string;
+	value: string;
+	user?: {userId: string}
 }
 
 
@@ -79,15 +84,15 @@ export class PreferenceUpdateResponse {
     static validate = createValidator(PreferenceUpdateResponse);
 
     @Property()
-    id: number;
+    id?: number;
     @Property()
     namespace: string;
     @Property()
     path: string;
     @Property()
-    value?: string;
+    value: string;
     @Property()
-    user: {userId: string}
+    user?: {userId: string}
 
 }
 
@@ -98,7 +103,7 @@ export class PreferenceDeleteResponse {
     static validate = createValidator(PreferenceDeleteResponse);
 
     @Property()
-    id: number;
+    id?: number;
     @Property()
     namespace: string;
     @Property()
