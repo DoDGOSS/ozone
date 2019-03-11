@@ -30,7 +30,8 @@ export function loggedInAs(browser: NightwatchAPI, username: string, password: s
 export enum AdminWidgetType {
     WIDGETS,
     USERS,
-    GROUPS
+    GROUPS,
+    DASHBOARDS
 }
 
 export function openAdminWidget(browser: NightwatchAPI, type: AdminWidgetType) {
@@ -65,6 +66,11 @@ export function openAdminWidget(browser: NightwatchAPI, type: AdminWidgetType) {
             browser
                 .click(MainPage.GROUPS_ADMIN_BUTTON)
                 .waitForElementVisible(MainPage.GROUPS_ADMIN_WIDGET, 2000, "[Groups Administration Widget] is visible");
+            break;
+        case AdminWidgetType.DASHBOARDS:
+            browser
+                .click(MainPage.DASHBOARDS_MENU_ADMIN_BUTTON)
+                .waitForElementVisible(MainPage.DASHBOARD_ADMIN_WIDGET, 2000, "[Dashboards Administration Widget] is visible");
             break;
     }
 }

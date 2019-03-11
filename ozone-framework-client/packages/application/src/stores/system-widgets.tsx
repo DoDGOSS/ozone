@@ -6,6 +6,8 @@ import { GroupsWidget } from "../components/admin/widgets/Groups/GroupsWidget";
 import { SystemConfigWidget } from "../components/admin/widgets/SystemConfig/SystemConfigWidget";
 import { UsersWidget } from "../components/admin/widgets/Users/UsersWidget";
 import { WidgetsWidget } from "../components/admin/widgets/Widgets/WidgetsWidget";
+import { DashboardsWidget } from "../components/admin/widgets/Dashboards/DashboardsWidget";
+
 
 export const widgetAdminWidgetDef: WidgetDefinition = {
     id: "0b7a39e0-87a2-4077-801b-2e5160fb2287",
@@ -17,6 +19,18 @@ export const widgetAdminWidgetDef: WidgetDefinition = {
 export const widgetAdminWidget: Widget = {
     id: "48edfe94-4291-4991-a648-c19a903a663b",
     definition: widgetAdminWidgetDef
+};
+
+export const dashboardAdminWidgetDef: WidgetDefinition = {
+    id: "0b7a39e0-87a2-4077-801b-2e5160fb2288",
+    title: "Dashboard Administration",
+    element: <DashboardsWidget />,
+    universalName: "org.owfgoss.owf.admin.DashboardAdmin"
+};
+
+export const dashboardAdminWidget: Widget = {
+    id: "391dd2af-a207-41a3-8e51-2b20ec3e7241",
+    definition: dashboardAdminWidgetDef
 };
 
 export const userAdminWidgetDef: WidgetDefinition = {
