@@ -220,7 +220,7 @@ export class GroupEditUsers extends React.Component<GroupEditUsersProps, GroupEd
 
         this.setState({
             showDelete: true,
-            confirmationMessage: `This action will permenantly delete <strong>${
+            confirmationMessage: `This action will permanently delete <strong>${
                 user.userRealName
             }</strong> from the group <strong>${currentGroup.name}</strong>`,
             manageUser: user
