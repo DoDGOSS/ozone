@@ -8,6 +8,9 @@ import { WidgetCreateRequest, WidgetDTO } from "../../../../api/models/WidgetDTO
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 
 import * as styles from "../Widgets.scss";
+import { WidgetCreateForm } from './WidgetCreateForm';
+import { WidgetTypeReference } from '../../../../api/models/WidgetTypeDTO';
+import { widgetTypeApi } from '../../../../api/clients/WidgetTypeAPI';
 
 interface State {
     widgets: WidgetDTO[];
@@ -23,6 +26,7 @@ interface State {
     confirmationMessage: string;
     manageWidget: WidgetDTO | undefined;
     updatingWidget?: any;
+    widgetTypes: WidgetTypeReference[];
 }
 
 // TODO
@@ -41,8 +45,10 @@ enum WidgetWidgetSubSection {
 export class WidgetsWidget extends React.Component<{}, State> {
     constructor(props: any) {
         super(props);
+        
         this.state = {
             widgets: [],
+            widgetTypes: [],
             filtered: [],
             filter: "",
             loading: true,
@@ -102,6 +108,7 @@ export class WidgetsWidget extends React.Component<{}, State> {
 
     componentDidMount() {
         this.getWidgets();
+        this.getWidgetTypes();
     }
 
     render() {
@@ -155,14 +162,15 @@ export class WidgetsWidget extends React.Component<{}, State> {
                     </div>
                 )}
 
-                {/* {showCreate &&
-                <GroupCreateForm
-                onSubmit={this.createGroup}
-                onCancel={() => {this.showSubSection(GroupWidgetSubSection.TABLE);}}
+                {showCreate &&
+                <WidgetCreateForm
+                onSubmit={this.createWidget}
+                onCancel={() => {this.showSubSection(WidgetWidgetSubSection.TABLE);}}
+                items={this.state.widgetTypes}
                 />
                 }
 
-                {showEditGroup &&
+                {/* {showEditGroup &&
                 <GroupEditTabGroup
                     group={this.state.updatingGroup}
                     onUpdate={this.handleUpdate}
@@ -202,19 +210,31 @@ export class WidgetsWidget extends React.Component<{}, State> {
         });
     };
 
+    private getWidgetTypes = async () => {
+        const response = await widgetTypeApi.getWidgetTypes();
+        
+        // TODO: Handle failed request
+        if (response.status !== 200) return;
+
+        this.setState({
+            widgetTypes: response.data.data,
+        });
+    };
+
     private handleUpdate(update?: any) {
         this.getWidgets();
     }
 
     private createWidget = async (data: WidgetCreateRequest) => {
-        const response = await widgetApi.createWidget(data);
+        // console.log(data);
+        // const response = await widgetApi.createWidget(data);
 
-        // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        // // TODO: Handle failed request
+        // if (response.status !== 200) return false;
 
-        this.showSubSection(WidgetWidgetSubSection.TABLE);
-        this.setState({ loading: true });
-        this.getWidgets();
+        // this.showSubSection(WidgetWidgetSubSection.TABLE);
+        // this.setState({ loading: true });
+        // this.getWidgets();
 
         return true;
     };
