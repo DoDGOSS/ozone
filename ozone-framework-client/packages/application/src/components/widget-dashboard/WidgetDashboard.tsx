@@ -45,7 +45,7 @@ export const WidgetDashboard: React.FunctionComponent<PropsBase> = (props) => {
 
                     const widgetDef = widget.definition;
                     return (
-                        <DashboardWindow title={widgetDef.title} path={path}>
+                        <DashboardWindow title={widgetDef.title} path={path} className={styles.dashboardWindow}>
                             {widgetDef.url !== undefined ? (
                                 <WidgetFrame widget={widget} />
                             ) : widgetDef.element !== undefined ? (

@@ -12,6 +12,9 @@ export interface TextFieldProps {
     labelInfo?: string;
     type?: string;
     disabled?: boolean;
+    placeholder?: string;
+    inline?: boolean;
+    className?: string;
 }
 
 const _TextField: React.FunctionComponent<TextFieldProps & FieldProps<any>> = (props) => {
@@ -19,7 +22,7 @@ const _TextField: React.FunctionComponent<TextFieldProps & FieldProps<any>> = (p
     const showError = errors && props.form.touched[props.field.name];
 
     return (
-        <FormGroup label={props.label} labelFor={props.name} labelInfo={props.labelInfo}>
+        <FormGroup label={props.label} labelFor={props.name} labelInfo={props.labelInfo} inline={props.inline} className={props.className}>
             <InputGroup
                 name={props.name}
                 data-role="field"
@@ -27,6 +30,7 @@ const _TextField: React.FunctionComponent<TextFieldProps & FieldProps<any>> = (p
                 intent={showError ? Intent.DANGER : Intent.NONE}
                 {...props.field}
                 disabled={props.disabled}
+                placeholder={props.placeholder}
             />
             {showError && <div className={styles.validationError}>{errors}</div>}
         </FormGroup>
