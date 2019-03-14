@@ -13,20 +13,20 @@ import ozone.owf.grails.services.WidgetDefinitionService
 
 
 class WidgetDefinitionController extends BaseOwfRestController {
-	
+
     AccountService accountService
 
     WidgetDefinitionService widgetDefinitionService
 
     MarketplaceService marketplaceService
-	
+
     def modelName = 'widgetDefinition'
-	
+
     def show = {
         def statusCode
         def jsonResult
         StopWatch stopWatch = null;
-	
+
         if (log.isInfoEnabled()) {
             stopWatch = new StopWatch();
             stopWatch.start();
@@ -42,9 +42,9 @@ class WidgetDefinitionController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during show: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-		
+
         renderResult(jsonResult, statusCode)
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed widgetDefinitionService: show in "+stopWatch);
         }
@@ -70,14 +70,14 @@ class WidgetDefinitionController extends BaseOwfRestController {
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during list: " + owe.exceptionType.generalMessage + " " + owe.message
         }
-		
+
         renderResult(jsonResult, statusCode)
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed preferenceService: list in "+stopWatch);
         }
     }
-	
+
     def create = {
         def jsonResult
         StopWatch stopWatch = null;
@@ -94,14 +94,14 @@ class WidgetDefinitionController extends BaseOwfRestController {
         catch (Exception e) {
             jsonResult = handleError(e)
         }
-		
+
         renderResult(jsonResult)
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed widgetDefinitionService: createOrUpdate in "+stopWatch);
         }
     }
-	
+
     def update = {
         def jsonResult
         StopWatch stopWatch = null;
@@ -123,14 +123,14 @@ class WidgetDefinitionController extends BaseOwfRestController {
         catch (Exception e) {
             jsonResult = handleError(e)
         }
-		
+
         renderResult(jsonResult)
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed widgetDefinitionService: createOrUpdate in "+stopWatch);
         }
     }
-	
+
     def delete = {
         def jsonResult
         StopWatch stopWatch = null;
@@ -148,9 +148,9 @@ class WidgetDefinitionController extends BaseOwfRestController {
         {
             jsonResult = handleError(e)
         }
-		
+
         renderResult(jsonResult)
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed widgetDefinitionService: delete in "+stopWatch);
         }
@@ -172,19 +172,19 @@ class WidgetDefinitionController extends BaseOwfRestController {
         catch (Exception e) {
             jsonResult = handleError(e)
         }
-		
+
         renderResult(jsonResult)
-		
+
         if (log.isInfoEnabled()) {
             log.info("Executed widgetDefinitionService: bulkDelete in "+stopWatch);
         }
     }
-    
+
     def dependents = {
-        
+
         def jsonResult
         StopWatch stopWatch = null;
-        
+
         if (log.isInfoEnabled()) {
             stopWatch = new StopWatch();
             stopWatch.start();
@@ -193,16 +193,16 @@ class WidgetDefinitionController extends BaseOwfRestController {
         try
         {
             def result = widgetDefinitionService.getDependents(params)
-            
+
             jsonResult = [msg: result as JSON, status: HttpServletResponse.SC_OK]
         }
         catch (Exception e) {
             jsonResult = handleError(e)
-            
+
         }
-        
+
         renderResult(jsonResult)
-        
+
         if (log.isInfoEnabled()) {
             log.info("Executed widgetDefinitionService: dependents in "+stopWatch);
         }
@@ -234,10 +234,14 @@ class WidgetDefinitionController extends BaseOwfRestController {
         }
 
     }
-	
+
 	def groupOwnedWidget = {
+		log.error(params.toString())
+		log.error(params.widgetId.toString())
+		log.error(params.personId.toString())
+		log.error(params.isAdmin.toString())
 		def ownedResult = widgetDefinitionService.groupOwnedWidget(params.widgetId, params.personId, params.isAdmin)
-		
+
 		render ([isOwnedByGroup:ownedResult] as JSON)
 	}
 }
