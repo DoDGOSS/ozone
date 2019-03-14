@@ -30,6 +30,7 @@ class PreferenceController extends BaseOwfRestController {
         }
         try {
             params.namespace = params.prefNamespace
+            params.isExtAjaxFormat = 'true'
 
             def result = preferenceService.show(params)
             if (result?.success == true) {
@@ -135,6 +136,7 @@ class PreferenceController extends BaseOwfRestController {
         }
         try {
             params.namespace = params.prefNamespace
+            params.isExtAjaxFormat = 'true'
             def result = preferenceService.create(params)
             statusCode = 200
             jsonResult = getJsonResult(result, modelName, params)
@@ -164,6 +166,7 @@ class PreferenceController extends BaseOwfRestController {
         }
         try {
             params.namespace = params.prefNamespace
+            params.isExtAjaxFormat = 'true'
             def result = preferenceService.update(params)
             statusCode = 200
             jsonResult = getJsonResult(result, modelName, params)
@@ -193,6 +196,7 @@ class PreferenceController extends BaseOwfRestController {
         }
         try {
             params.namespace = params.prefNamespace
+            params.isExtAjaxFormat = 'true'
             def result = preferenceService.delete(params)
             statusCode = 200
             jsonResult = getJsonResult(result, modelName, params)

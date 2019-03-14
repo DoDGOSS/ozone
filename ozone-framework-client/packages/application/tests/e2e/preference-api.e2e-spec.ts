@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 import { PreferenceAPI } from "../../src/api/clients/PreferenceAPI";
-import { PreferenceCreateRequest, PreferenceUpdateRequest } from "../../src/api/models/PreferenceDTO";
+import { PreferenceDTO } from "../../src/api/models/PreferenceDTO";
 
 import { NodeGateway } from "./node-gateway";
 import { PREFERENCES } from "../unit/data";
@@ -9,8 +9,8 @@ import { PREFERENCES } from "../unit/data";
 describe("Preference API", () => {
     let gateway: NodeGateway;
     let preferenceApi: PreferenceAPI;
-    let newSetting: PreferenceCreateRequest;
-    let newPreference: PreferenceCreateRequest;
+    let newSetting: PreferenceDTO;
+    let newPreference: PreferenceDTO;
 
     beforeAll(async () => {
         gateway = new NodeGateway();
@@ -29,7 +29,7 @@ describe("Preference API", () => {
             namespace: "newField",
             path: "newSetting3",
             value: "someOtherValue",
-            user: {userId: ""}
+            user: {userId: "testAdmin1"}
         }
 
         await gateway.login("testAdmin1", "password");
@@ -84,7 +84,27 @@ describe("Preference API", () => {
         }
 
         expect(response.status).toEqual(200);
-        expect(response.data).toEqual(PREFERENCES[1]);
+        expect(response.data).toEqual({
+			success: true,
+			data: PREFERENCES[1]
+		});
+    });
+
+    test("getPreference failure - GET /prefs/preference/:namespace/:path/", async () => {
+        let response;
+        try {
+            response = await preferenceApi.getPreference("nonexistant", "setting");
+        }
+        catch (ex) {
+            console.dir(ex.errors);
+            return fail();
+        }
+
+        expect(response.status).toEqual(200);
+        expect(response.data).toEqual({
+			data: null,
+			success: true
+		});
     });
 
     test("getServerResources - GET /prefs/server/resources/", async () => {
@@ -106,8 +126,11 @@ describe("Preference API", () => {
             return fail();
         }
         expect(createSettingResponse.status).toEqual(200);
-        newSetting.id = createSettingResponse.data.id;
-        expect(createSettingResponse.data).toEqual(newSetting);
+        newSetting.id = createSettingResponse.data.data.id;
+        expect(createSettingResponse.data).toEqual({
+			success: true,
+			data: newSetting
+		});
 
 
 
@@ -120,9 +143,10 @@ describe("Preference API", () => {
             return fail();
         }
         expect(getNewSettingResponse.status).toEqual(200);
-        console.dir(getNewSettingResponse.data);
-
-        expect(getNewSettingResponse.data).toEqual(newSetting);
+        expect(getNewSettingResponse.data).toEqual({
+			success: true,
+			data: newSetting
+		});
 
 
 
@@ -135,7 +159,10 @@ describe("Preference API", () => {
             return fail();
         }
         expect(deleteSettingResponse.status).toEqual(200);
-        expect(deleteSettingResponse.data).toEqual(newSetting);
+        expect(deleteSettingResponse.data).toEqual({
+			success: true,
+			data: newSetting
+		});
 
 
 
@@ -155,7 +182,6 @@ describe("Preference API", () => {
         });
 
 
-        // past here has not yet been tested, at all. Don't worry about until delete is fixed on backend.
         let prefResponse;
         try {
             prefResponse = await preferenceApi.createPreference(newPreference);
@@ -165,45 +191,59 @@ describe("Preference API", () => {
             return fail();
         }
         expect(prefResponse.status).toEqual(200);
-        newPreference.id = prefResponse.data.id;
-        expect(prefResponse.data).toEqual(newPreference);
+        newPreference.id = prefResponse.data.data.id;
+        expect(prefResponse.data).toEqual({
+			success: true,
+			data: newPreference
+		});
 
 
+		let getNewPreferenceResponse;
         try {
-            const getNewPreferenceResponse = await preferenceApi.getPreference(newPreference.namespace, newPreference.path);
-            expect(getNewPreferenceResponse.status).toEqual(200);
-            expect(getNewPreferenceResponse.data).toEqual(newPreference);
+            getNewPreferenceResponse = await preferenceApi.getPreference(newPreference.namespace, newPreference.path);
         }
         catch(e) {
             console.dir(e.errors);
             return fail();
         }
+		expect(getNewPreferenceResponse.status).toEqual(200);
+		expect(getNewPreferenceResponse.data).toEqual({
+			success: true,
+			data: newPreference
+		});
 
 
+
+		let deletePrefResponse;
         try {
-            let deletePrefResponse = await preferenceApi.deletePreference(newPreference);
-            expect(deletePrefResponse.status).toEqual(200);
-            expect(deletePrefResponse.data).toEqual(newPreference);
+            deletePrefResponse = await preferenceApi.deletePreference(newPreference);
         }
         catch(e) {
             console.dir(e.errors);
             return fail();
         }
+		expect(deletePrefResponse.status).toEqual(200);
+		expect(deletePrefResponse.data).toEqual({
+			success: true,
+			data: newPreference
+		});
 
 
+
+		let getBaseResponse2;
         try {
-            const getBaseResponse2 = await preferenceApi.getPreferences();
-            expect(getBaseResponse2.status).toEqual(200);
-            expect(getBaseResponse2.data).toEqual({
-                success: true,
-                results: 5,
-                rows: PREFERENCES
-            });
+            getBaseResponse2 = await preferenceApi.getPreferences();
         }
         catch(e) {
             console.dir(e.errors);
             return fail();
         }
+		expect(getBaseResponse2.status).toEqual(200);
+		expect(getBaseResponse2.data).toEqual({
+			success: true,
+			results: 5,
+			rows: PREFERENCES
+		});
 
     });
 
@@ -222,7 +262,10 @@ describe("Preference API", () => {
             return fail();
         }
         expect(updateSettingResponse.status).toEqual(200);
-        expect(updateSettingResponse.data).toEqual(updatedPref);
+        expect(updateSettingResponse.data).toEqual({
+			success: true,
+			data: updatedPref
+		});
 
 
         let updateSettingResponse2;
@@ -235,6 +278,9 @@ describe("Preference API", () => {
             return fail();
         }
         expect(updateSettingResponse2.status).toEqual(200);
-        expect(updateSettingResponse2.data).toEqual(updatedPref);
+        expect(updateSettingResponse2.data).toEqual({
+			success: true,
+			data: updatedPref
+		});
     });
 });

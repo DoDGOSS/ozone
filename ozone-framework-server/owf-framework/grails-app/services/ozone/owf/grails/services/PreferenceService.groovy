@@ -1,6 +1,7 @@
 package ozone.owf.grails.services
 
 import grails.converters.JSON
+import org.springframework.transaction.annotation.Transactional
 
 import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
@@ -126,6 +127,7 @@ class PreferenceService extends BaseService {
 		update(params)
 	}
 
+	@Transactional(readOnly = false)
 	def deleteForAdmin(params)
 	{
 		if (!accountService.getLoggedInUserIsAdmin())
@@ -145,7 +147,7 @@ class PreferenceService extends BaseService {
 
 		try
 		{
-			preference?.each{ it?.delete() }
+			preference.delete(flush: true)
 			return [success: true, preference: preference]
 		}
 		catch (e)
@@ -155,6 +157,7 @@ class PreferenceService extends BaseService {
 		}
 	}
 
+	@Transactional(readOnly = false)
 	def deleteForUser(params)
 	{
 		def preference
@@ -172,7 +175,7 @@ class PreferenceService extends BaseService {
 		}
 
 		if(params.preference){
-			preference = params.preference // fails if you try to cast this to a Preference
+			preference = findPreference(params.preference)
 		} else {
 			params.user = user
 			preference = findPreference(params)
@@ -182,7 +185,7 @@ class PreferenceService extends BaseService {
 		//However we might need to change and check auth if this paradigm changes.
 		try
 		{
-			preference?.each{ it?.delete() } // This should not iterate - preference is not a list.
+			preference.delete(flush: true)
 			return [success: true, preference: preference]
 		}
 		catch (e)

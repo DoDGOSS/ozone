@@ -43,6 +43,19 @@ export class PreferenceGetResponse {
 }
 
 
+@Model()
+export class PreferenceGetSingleResponse {
+
+    static validate = createValidator(PreferenceGetSingleResponse);
+
+	@Property()
+	success: boolean;
+
+	@Property({nullable: true})
+	data: PreferenceDTO;
+
+}
+
 export interface PreferenceCreateRequest {
     id: number;
     namespace: string;
@@ -56,16 +69,12 @@ export interface PreferenceCreateRequest {
 export class PreferenceCreateResponse {
 
     static validate = createValidator(PreferenceCreateResponse);
+
     @Property()
-    id: number;
-    @Property()
-    namespace: string;
-    @Property()
-    path: string;
-    @Property()
-    value: string;
-    @Property()
-    user: {userId: string}
+    success: boolean;
+
+    @Property({nullable: true})
+    data: PreferenceDTO;
 }
 
 
@@ -84,15 +93,10 @@ export class PreferenceUpdateResponse {
     static validate = createValidator(PreferenceUpdateResponse);
 
     @Property()
-    id?: number;
-    @Property()
-    namespace: string;
-    @Property()
-    path: string;
-    @Property()
-    value: string;
-    @Property()
-    user?: {userId: string}
+    success: boolean;
+
+    @Property({nullable: true})
+    data: PreferenceDTO;
 
 }
 
@@ -103,15 +107,9 @@ export class PreferenceDeleteResponse {
     static validate = createValidator(PreferenceDeleteResponse);
 
     @Property()
-    id?: number;
-    @Property()
-    namespace: string;
-    @Property()
-    path: string;
-    @Property()
-    value?: string;
-    @Property()
-    user: {userId: string}
+    success: boolean;
 
+    @Property({nullable: true})
+    data: PreferenceDTO;
 
 }
