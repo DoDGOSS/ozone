@@ -17,11 +17,20 @@ class BaseOwfRestController {
     ServiceModelService serviceModelService
 
     protected getJsonResult(result, targetProperty, params) {
-        def gotFromTargetProperty = result.get(targetProperty)
+		def hasTargetProperty = result.containsKey(targetProperty)
+
+		// I think it should be null even if the property doesn't exist but am afraid that that may break existing error-functionality somewhere
+		def resultObject = hasTargetProperty ? null : result // just the initial value
+
+		def jsonObject = result.get(targetProperty)
+		if (jsonObject != null) {
+			resultObject = serviceModelService.createServiceModel( jsonObject )
+		}
+
         if (params.isExtAjaxFormat != null && params.isExtAjaxFormat == 'true') {
-            return [success: result.success, data: ((gotFromTargetProperty) ? serviceModelService.createServiceModel(gotFromTargetProperty) : result)] as JSON
+            return [success: result.success, data: resultObject] as JSON
         } else {
-            return (gotFromTargetProperty) ? serviceModelService.createServiceModel(gotFromTargetProperty) as JSON : result as JSON
+            return resultObject as JSON
         }
     }
 
