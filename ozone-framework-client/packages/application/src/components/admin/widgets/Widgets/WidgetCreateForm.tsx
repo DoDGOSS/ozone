@@ -71,9 +71,9 @@ export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ o
 
                         <HiddenField inline={true} className={styles.inline_form_label} name="widgetGuid" label="GUID" />
 
-                        <TextField inline={true} className={styles.inline_form_label} name="url" label="URL" placeholder="https://mycompany.com/appcomponent/MyAppComponent.html" />
-                        <TextField inline={true} className={styles.inline_form_label} name="headerIcon" label="Small Icon URL" placeholder="https://mycompany.com/appcomponent/images/containerIcon.png" />
-                        <TextField inline={true} className={styles.inline_form_label} name="image" label="Medium Icon URL" placeholder="https://mycompany.com/appcomponent/images/launchMenuIcon.png" />
+                        <TextField inline={true} className={styles.inline_form_label} name="url" label="URL" labelInfo="(required)" placeholder="https://mycompany.com/appcomponent/MyAppComponent.html" />
+                        <TextField inline={true} className={styles.inline_form_label} name="headerIcon" label="Small Icon URL" labelInfo="(required)" placeholder="https://mycompany.com/appcomponent/images/containerIcon.png" />
+                        <TextField inline={true} className={styles.inline_form_label} name="image" label="Medium Icon URL" labelInfo="(required)" placeholder="https://mycompany.com/appcomponent/images/launchMenuIcon.png" />
 
                         <TextField inline={true} className={styles.inline_form_label} name="width" label="Width" />
                         <TextField inline={true} className={styles.inline_form_label} name="height" label="Height" />
@@ -117,8 +117,8 @@ const CreateWidgetSchema = object().shape({
     description: string(),
     headerIcon: string().required("Required"),
     image: string().required("Required"),
-    width: number().integer("Must be an integer").min(1),
-    height: number().integer("Must be an integer").min(1), 
+    width: number().integer("Must be an integer").min(1).required("Required"),
+    height: number().integer("Must be an integer").min(1).required("Required"), 
     widgetGuid: string(),
     universalName: string(),
     visible: boolean(),
