@@ -34,12 +34,12 @@ const renderWidgetType: ItemRenderer<WidgetTypeReference> = (widgetType: WidgetT
 export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ onSubmit, onCancel, items }) => (
     <Formik
         initialValues={{
-            name: "",
-            version: "",
+            displayName: "",
+            widgetVersion: "",
             description: "",
-            url: "",
-            headerIcon: "",
-            image: "",
+            widgetUrl: "",
+            imageUrlSmall: "",
+            imageUrlMedium: "",
             width: 200,
             height: 200, 
             widgetGuid: uuidv4.default(),
@@ -55,6 +55,9 @@ export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ o
         validationSchema={CreateWidgetSchema}
 
         onSubmit={async (values: WidgetCreateRequest, actions: FormikActions<WidgetCreateRequest>) => {
+            values.height = Number(values.height)
+            values.width = Number(values.width)
+
             const isSuccess = await onSubmit(values);
             actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
             actions.setSubmitting(false);
@@ -64,16 +67,16 @@ export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ o
             <div data-element-id="widget-admin-widget-create-form">
                 <Form className={styles.form}>
                     <div>
-                        <TextField inline={true} className={styles.inline_form_label} name="name" label="Name" labelInfo="(required)" placeholder="MyAppComponent" />
+                        <TextField inline={true} className={styles.inline_form_label} name="displayName" label="Name" placeholder="MyAppComponent" />
                         <TextField inline={true} className={styles.inline_form_label} name="description" label="Description" placeholder="Describe the App Component" />
-                        <TextField inline={true} className={styles.inline_form_label} name="version" label="Version" placeholder="1.0" />
+                        <TextField inline={true} className={styles.inline_form_label} name="widgetVersion" label="Version" placeholder="1.0" />
                         <TextField inline={true} className={styles.inline_form_label} name="universalName" label="Universal Name" placeholder="MyAppComponent.mycompany.com" />
 
                         <HiddenField inline={true} className={styles.inline_form_label} name="widgetGuid" label="GUID" />
 
-                        <TextField inline={true} className={styles.inline_form_label} name="url" label="URL" labelInfo="(required)" placeholder="https://mycompany.com/appcomponent/MyAppComponent.html" />
-                        <TextField inline={true} className={styles.inline_form_label} name="headerIcon" label="Small Icon URL" labelInfo="(required)" placeholder="https://mycompany.com/appcomponent/images/containerIcon.png" />
-                        <TextField inline={true} className={styles.inline_form_label} name="image" label="Medium Icon URL" labelInfo="(required)" placeholder="https://mycompany.com/appcomponent/images/launchMenuIcon.png" />
+                        <TextField inline={true} className={styles.inline_form_label} name="widgetUrl" label="URL" placeholder="https://mycompany.com/appcomponent/MyAppComponent.html" />
+                        <TextField inline={true} className={styles.inline_form_label} name="imageUrlSmall" label="Small Icon URL" placeholder="https://mycompany.com/appcomponent/images/containerIcon.png" />
+                        <TextField inline={true} className={styles.inline_form_label} name="imageUrlMedium" label="Medium Icon URL" placeholder="https://mycompany.com/appcomponent/images/launchMenuIcon.png" />
 
                         <TextField inline={true} className={styles.inline_form_label} name="width" label="Width" />
                         <TextField inline={true} className={styles.inline_form_label} name="height" label="Height" />
@@ -111,14 +114,14 @@ export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ o
 );
 
 const CreateWidgetSchema = object().shape({
-    name: string().required("Required"),
-    url: string().required("Required"),
-    version: string(),
+    displayName: string().required("Required"),
+    widgetUrl: string().required("Required"),
+    widgetVersion: string(),
     description: string(),
-    headerIcon: string().required("Required"),
-    image: string().required("Required"),
-    width: number().integer("Must be an integer").min(1).required("Required"),
-    height: number().integer("Must be an integer").min(1).required("Required"), 
+    imageUrlSmall: string().required("Required"),
+    imageUrlMedium: string().required("Required"),
+    width: number().integer("Must be an integer").min(200).required("Required"),
+    height: number().integer("Must be an integer").min(200).required("Required"), 
     widgetGuid: string(),
     universalName: string(),
     visible: boolean(),

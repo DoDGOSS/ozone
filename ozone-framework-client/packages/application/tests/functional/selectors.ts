@@ -190,6 +190,34 @@ export namespace WidgetAdminWidget {
 
         export const BACK_BUTTON = `${Main.DIALOG} span[data-element-id='group-admin-widget-edit-back-button'] button`;
     }
+    
+    export namespace CreateWidget {
+        export const FORM = "div[data-element-id='widget-admin-widget-create-form']";
+
+        export const NAME_INPUT = `${CreateWidget.FORM} input[name='displayName']`;
+
+        export const DESCRIPTION_INPUT = `${CreateWidget.FORM} input[name='description']`;
+
+        export const VERSION_INPUT = `${CreateWidget.FORM} input[name='widgetVersion']`;
+
+        export const UNIVERSAL_NAME_INPUT = `${CreateWidget.FORM} input[name='universalName']`;
+
+        export const URL_INPUT = `${CreateWidget.FORM} input[name='widgetUrl']`;
+
+        export const SMALL_ICON_INPUT = `${CreateWidget.FORM} input[name='imageUrlSmall']`;
+
+        export const MEDIUM_ICON_INPUT = `${CreateWidget.FORM} input[name='imageUrlMedium']`;
+
+        export const WIDTH_INPUT = `${CreateWidget.FORM} input[name='width']`;
+
+        export const HEIGHT_INPUT = `${CreateWidget.FORM} input[name='height']`;
+
+        export const WIDGET_TYPE_BUTTON = `${CreateWidget.FORM} button[name='widgetType']`;
+
+        export const SHOW_CREATE_FORM = "a[data-element-id='widget-admin-widget-show-create-form']";
+
+        export const SUBMIT_BUTTON = "div[data-element-id='widget-admin-widget-create-submit-button'] > button[data-element-id='form-submit-button']";
+    }
 }
 
 export namespace GlobalElements {

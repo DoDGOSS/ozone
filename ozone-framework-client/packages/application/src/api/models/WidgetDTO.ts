@@ -107,12 +107,12 @@ export class WidgetDTO {
 }
 
 export interface WidgetCreateRequest {
-    name: string;
-    version: string;
+    displayName: string;
+    widgetVersion: string;
     description: string;
-    url: string;
-    headerIcon: string; // Small Icon
-    image: string; // Large Icon
+    widgetUrl: string;
+    imageUrlSmall: string; // Small Icon
+    imageUrlMedium: string; // Large Icon
     width: number;
     height: number;
     widgetGuid: string;
@@ -123,8 +123,7 @@ export interface WidgetCreateRequest {
     mobileReady: boolean;
     widgetTypes: WidgetTypeReference[];
     descriptorUrl?: string;
-    title: string;
-    intents?: IntentsDTO;
+    // intents?: IntentsDTO;
 }
 
 export interface WidgetUpdateRequest extends WidgetCreateRequest {
