@@ -8,6 +8,7 @@ import { CancelButton, CheckBox, FormError, HiddenField, SelectField, SubmitButt
 import * as uuidv4 from "uuid/v4";
 
 import * as styles from "../Widgets.scss";
+
 import { WidgetTypeReference } from '../../../../api/models/WidgetTypeDTO';
 import { MenuItem } from '@blueprintjs/core';
 import { ItemRenderer } from '@blueprintjs/select';
@@ -54,7 +55,6 @@ export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ o
         validationSchema={CreateWidgetSchema}
 
         onSubmit={async (values: WidgetCreateRequest, actions: FormikActions<WidgetCreateRequest>) => {
-            console.log(values);
             const isSuccess = await onSubmit(values);
             actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
             actions.setSubmitting(false);
