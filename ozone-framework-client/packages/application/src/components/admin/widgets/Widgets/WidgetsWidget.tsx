@@ -21,6 +21,7 @@ interface State {
     columns: any;
     showTable: boolean;
     showCreate: boolean;
+    showCreateForm: boolean;
     showEditGroup: boolean;
     showDelete: boolean;
     confirmationMessage: string;
@@ -55,6 +56,7 @@ export class WidgetsWidget extends React.Component<{}, State> {
             pageSize: 5,
             showTable: true,
             showCreate: false,
+            showCreateForm: false,
             showEditGroup: false,
             showDelete: false,
             confirmationMessage: "",
@@ -114,6 +116,7 @@ export class WidgetsWidget extends React.Component<{}, State> {
     render() {
         const showTable = this.state.showTable;
         const showCreate = this.state.showCreate;
+        const showCreateForm = this.state.showCreateForm;
         const showEditGroup = this.state.showEditGroup;
 
         let data = this.state.widgets;
@@ -162,13 +165,19 @@ export class WidgetsWidget extends React.Component<{}, State> {
                     </div>
                 )}
 
-                {showCreate &&
-                <WidgetCreateForm
-                onSubmit={this.createWidget}
-                onCancel={() => {this.showSubSection(WidgetWidgetSubSection.TABLE);}}
-                items={this.state.widgetTypes}
-                />
-                }
+                <div className={styles.widget_body}>
+                    {showCreate && !showCreateForm &&
+                    <a onClick={() => { this.setState({showCreateForm: true}); }}>Don't have a descriptor URL?</a>
+                    }
+
+                    {showCreate && showCreateForm &&
+                    <WidgetCreateForm
+                    onSubmit={this.createWidget}
+                    onCancel={() => {this.showSubSection(WidgetWidgetSubSection.TABLE);}}
+                    items={this.state.widgetTypes}
+                    />
+                    }
+                </div>
 
                 {/* {showEditGroup &&
                 <GroupEditTabGroup
@@ -226,15 +235,14 @@ export class WidgetsWidget extends React.Component<{}, State> {
     }
 
     private createWidget = async (data: WidgetCreateRequest) => {
-        // console.log(data);
-        // const response = await widgetApi.createWidget(data);
+        const response = await widgetApi.createWidget(data);
 
-        // // TODO: Handle failed request
-        // if (response.status !== 200) return false;
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
 
-        // this.showSubSection(WidgetWidgetSubSection.TABLE);
-        // this.setState({ loading: true });
-        // this.getWidgets();
+        this.showSubSection(WidgetWidgetSubSection.TABLE);
+        this.setState({ loading: true });
+        this.getWidgets();
 
         return true;
     };
