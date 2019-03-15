@@ -65,6 +65,7 @@ export class SelectField<T> extends React.Component<SelectFieldProps<T>, SelectF
                             }}
                         >
                             <Button
+                                name={this.props.name}
                                 rightIcon="caret-down"
                                 text={(this.state && this.state.item) ? `${this.props.extractLabel(this.state.item)}` : "(No selection)"}
                             />                        

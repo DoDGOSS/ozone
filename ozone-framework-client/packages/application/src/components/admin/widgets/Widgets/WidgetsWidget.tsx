@@ -167,7 +167,9 @@ export class WidgetsWidget extends React.Component<{}, State> {
 
                 <div className={styles.widget_body}>
                     {showCreate && !showCreateForm &&
-                    <a onClick={() => { this.setState({showCreateForm: true}); }}>Don't have a descriptor URL?</a>
+                    <a  data-element-id="widget-admin-widget-show-create-form"
+                        onClick={() => { this.setState({showCreateForm: true}); }}
+                    >Don't have a descriptor URL?</a>
                     }
 
                     {showCreate && showCreateForm &&
@@ -235,6 +237,7 @@ export class WidgetsWidget extends React.Component<{}, State> {
     }
 
     private createWidget = async (data: WidgetCreateRequest) => {
+        console.log(data);
         const response = await widgetApi.createWidget(data);
 
         // TODO: Handle failed request
