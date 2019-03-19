@@ -1,36 +1,46 @@
-import grails.util.BuildSettings
-import grails.util.Environment
-import org.springframework.boot.logging.logback.ColorConverter
-import org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter
-
 import java.nio.charset.Charset
+import grails.util.Environment
 
-conversionRule 'clr', ColorConverter
-conversionRule 'wex', WhitespaceThrowableProxyConverter
+// Configuration variables
+def LOG_PATH = "./logs"
 
-// See http://logback.qos.ch/manual/groovy.html for details on configuration
-appender('STDOUT', ConsoleAppender) {
+// Status listener to display changes to the logging configuration
+// statusListener(OnConsoleStatusListener)
+
+// Enable periodically scanning the logging configuration for changes
+scan("30 seconds")
+
+// Console appender
+appender("CONSOLE", ConsoleAppender) {
     encoder(PatternLayoutEncoder) {
-        charset = Charset.forName('UTF-8')
-
-        pattern =
-                '%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} ' + // Date
-                        '%clr(%5p) ' + // Log level
-                        '%clr(---){faint} %clr([%15.15t]){faint} ' + // Thread
-                        '%clr(%-40.40logger{39}){cyan} %clr(:){faint} ' + // Logger
-                        '%m%n%wex' // Message
+        charset = Charset.forName("UTF-8")
+        pattern = "%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%logger] %msg%n"
     }
 }
 
-def targetDir = BuildSettings.TARGET_DIR
-if (Environment.isDevelopmentMode() && targetDir != null) {
-    appender("FULL_STACKTRACE", FileAppender) {
-        file = "${targetDir}/stacktrace.log"
+if (Environment.getCurrent() == Environment.TEST) {
+    root(ERROR, ["CONSOLE"])
+} else {
+    // File appender
+    appender("FILE", RollingFileAppender) {
         append = true
         encoder(PatternLayoutEncoder) {
-            pattern = "%level %logger - %msg%n"
+            charset = Charset.forName("UTF-8")
+            pattern = "%d{yyyy-MM-dd HH:mm:ss.SSS} %level [%logger] %msg%n"
+        }
+        rollingPolicy(TimeBasedRollingPolicy) {
+            FileNamePattern = "${LOG_PATH}/ozone-framework_%d.log"
         }
     }
-    logger("StackTrace", ERROR, ['FULL_STACKTRACE'], false)
+
+    // Default root logging level
+    root(ERROR, ["CONSOLE", "FILE"])
 }
-root(ERROR, ['STDOUT'])
+
+
+// Logging for the Ozone namespaces -- set to INFO or DEBUG for more verbose logging
+logger("ozone", WARN)
+logger("org.ozoneplatform", WARN)
+
+// Logging for all AJAX requests
+logger("ozone.owf.grails.controllers.RequestLogInterceptor", INFO)

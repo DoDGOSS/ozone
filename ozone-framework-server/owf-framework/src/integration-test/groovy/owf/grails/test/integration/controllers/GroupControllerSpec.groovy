@@ -111,6 +111,8 @@ class GroupControllerSpec extends Specification
 
         controller.createOrUpdate()
 
+        flushSession()
+
         then:
         responseStatus == HttpStatus.OK
 
@@ -131,6 +133,8 @@ class GroupControllerSpec extends Specification
         params([data: /{ "id": "${group1.id}" }/])
 
         controller.delete()
+
+        flushSession()
 
         then:
         responseStatus == HttpStatus.OK
