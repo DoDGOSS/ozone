@@ -482,6 +482,7 @@ class GroupService {
         }
     }
 
+    @Transactional
     def delete(params) {
         //only admins may delete groups
         ensureAdmin()
@@ -502,7 +503,7 @@ class GroupService {
             groups = params.list('id').collect { [id:it] }
         }
 
-        groups.each { deleteGroupById(it.id) }
+        groups.each { deleteGroupById(it.id as Long) }
 
         return [success: true, data: groups]
     }
