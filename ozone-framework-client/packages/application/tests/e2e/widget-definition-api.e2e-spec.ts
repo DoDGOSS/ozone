@@ -8,12 +8,12 @@ import { GroupAPI } from "../../src/api/clients/GroupAPI";
 import { GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../src/api/models/GroupDTO";
 
 import { NodeGateway } from "./node-gateway";
-import { WIDGET_DEFINITION } from "../unit/data";
+import { WIDGET_DEFINITION, WIDGETS } from "../unit/data";
 
 // TODO: 404?
 describe("Widget Definition API", () => {
     let gateway: NodeGateway;
-	let groupApi: GroupAPI;
+    let groupApi: GroupAPI;
     let widgetDefApi: WidgetDefinitionAPI;
 
     beforeAll(async () => {
@@ -24,6 +24,18 @@ describe("Widget Definition API", () => {
         expect(gateway.isAuthenticated).toEqual(true);
     });
 
+    test("getWidgetDefinitions - GET /prefs/widgetDefinition/", async () => {
+        // This response returns 21 widgets, the first ten of which are the same as WIDGETS[0:9], and none of which
+        // include WIDGET_DEFINITION. What should this be returning?
+        const response = await widgetDefApi.getWidgetDefinitions();
+        // console.dir(response.data)
+        expect(response.status).toEqual(200);
+        expect(response.data).toMatchObject({
+            success: true,
+            results: 21
+        });
+    });
+
     test.skip("getWidgetDefinitionById - GET /prefs/widgetDefinition/:id/", async () => {
         const response = await widgetDefApi.getWidgetDefinitionById(WIDGET_DEFINITION.id);
 
@@ -31,16 +43,40 @@ describe("Widget Definition API", () => {
         expect(response.data).toEqual(WIDGET_DEFINITION);
     });
 
-    test("groupOwnsWidget - POST /widgetDefinition/groupOwnedWidget/", async () => {
+    test.skip("groupOwnsWidget - POST /widgetDefinition/groupOwnedWidget/ - basic", async () => {
         const response = await widgetDefApi.groupOwnsWidget({
-			widgetId: '679294b3-ccc3-4ace-a061-e3f27ed86451',
-			personId: 'testAdmin1',
-			isAdmin: 'true'
-		});
-		console.dir(response.data)
+            widgetId: WIDGET_DEFINITION.id,
+            personId: 1,
+            isAdmin: 'true'
+        });
 
         expect(response.status).toEqual(200);
-        // expect(response.data).toEqual(WIDGET_DEFINITION);
+        expect(response.data).toEqual({ isOwnedByGroup: true });
+    });
+
+
+    test("groupOwnsWidget - POST /widgetDefinition/groupOwnedWidget/ - invalid user", async () => {
+        // test invalid user - note the personId isn't checked for 'OWF-User'-level widgets,
+        // so this needs to query a widget definition with specifically admin privileges.
+        // const response = await widgetDefApi.groupOwnsWidget({
+        //     widgetId: ,
+        //     personId: 1234568,
+        //     isAdmin: 'false'
+        // });
+        //
+        // expect(response.status).toEqual(200);
+        // expect(response.data).toEqual({ isOwnedByGroup: true });
+    });
+
+    test("groupOwnsWidget - POST /widgetDefinition/groupOwnedWidget/ - invalid widget", async () => {
+        const response = await widgetDefApi.groupOwnsWidget({
+            widgetId: 'Not-a-widget',
+            personId: 1,
+            isAdmin: 'true'
+        });
+
+        expect(response.status).toEqual(200);
+        expect(response.data).toEqual({ isOwnedByGroup: false });
     });
 
 });

@@ -236,10 +236,6 @@ class WidgetDefinitionController extends BaseOwfRestController {
     }
 
 	def groupOwnedWidget = {
-		log.error(params.toString())
-		log.error(params.widgetId.toString())
-		log.error(params.personId.toString())
-		log.error(params.isAdmin.toString())
 		def ownedResult = widgetDefinitionService.groupOwnedWidget(params.widgetId, params.personId, params.isAdmin)
 
 		render ([isOwnedByGroup:ownedResult] as JSON)
