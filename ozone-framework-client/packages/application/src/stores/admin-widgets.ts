@@ -5,8 +5,10 @@ import {
     sampleWidgetDef,
     systemConfigWidgetDef,
     userAdminWidgetDef,
-    widgetAdminWidgetDef
+    widgetAdminWidgetDef,
+    dashboardAdminWidgetDef
 } from "./system-widgets";
+
 
 const IMAGE_ROOT_URL = "http://localhost:3000/images";
 
@@ -28,10 +30,10 @@ export const ADMIN_WIDGETS: Widget[] = [
     },
     {
         id: "391dd2af-a207-41a3-8e51-2b20ec3e7241",
-        universalName: "org.ozoneplatform.owf.admin.appmanagement",
+        universalName: "org.ozoneplatform.owf.admin.dashboardmanagement",
         title: "Dashboards",
         iconUrl: `${IMAGE_ROOT_URL}/widgets/stacks-manager.png`,
-        definition: sampleWidgetDef
+        definition: dashboardAdminWidgetDef
     },
     {
         id: "af180bfc-3924-4111-93de-ad6e9bfc060e",
