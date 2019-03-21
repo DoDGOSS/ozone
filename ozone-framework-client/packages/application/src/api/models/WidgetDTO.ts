@@ -123,7 +123,7 @@ export interface WidgetCreateRequest {
     mobileReady: boolean;
     widgetTypes: WidgetTypeReference[];
     descriptorUrl?: string;
-    // intents?: IntentsDTO;
+    intents?: IntentsDTO;
 }
 
 export interface WidgetUpdateRequest extends WidgetCreateRequest {
