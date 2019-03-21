@@ -27,6 +27,4 @@ const _SubmitButton: React.FC<SubmitButtonProps & { formik: FormikContext<any> }
     );
 };
 
-_SubmitButton.displayName = "SubmitButton";
-
 export const SubmitButton = connect<SubmitButtonProps>(_SubmitButton);

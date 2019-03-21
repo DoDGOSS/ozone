@@ -1,21 +1,19 @@
 import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
-import {
-    Corner,
-    getNodeAtPath,
-    getOtherDirection,
-    getPathToCorner,
-    MosaicDirection,
-    MosaicNode,
-    MosaicParent,
-    updateTree
-} from "react-mosaic-component";
-
-import { Dashboard, DashboardNode, Widget } from "./interfaces";
+import { DashboardNode, Widget } from "./interfaces";
 import { dashboardStore, DashboardStore } from "./DashboardStore";
+import { LayoutType, Panel, PanelState } from "../components/widget-dashboard/model/types";
+import { DashboardPath } from "../components/widget-dashboard/types";
+import { Dashboard } from "../components/widget-dashboard/model/Dashboard";
 
-import { dropRight, isString, pick } from "lodash";
+import uuid from "uuid/v4";
+import { colorClientDef, colorServerDef } from "./example-widgets";
+import { FitPanel } from "../components/widget-dashboard/model/FitPanel";
+import { TabbedPanel } from "../components/widget-dashboard/model/TabbedPanel";
+import { ObservableWidget } from "../components/widget-dashboard/model/ObservableWidget";
+import { Tab } from "@blueprintjs/core";
+import { ExpandoPanel } from "../components/widget-dashboard/model/ExpandoPanel";
 
 export class DashboardService {
     private readonly store: DashboardStore;
@@ -47,97 +45,101 @@ export class DashboardService {
         this.replaceWidgetCallback = undefined;
     };
 
-    setLayout = (dashboardNode: DashboardNode | null) => {
+    getCurrentDashboard = (): Dashboard => {
         const dashboard = this.store.currentDashboard();
-        if (!dashboard) {
-            console.warn("Failed to set Dashboard layout: no Dashboard is available");
-            return;
+        if (dashboard === null) {
+            throw new Error("No Dashboard is available");
         }
+        return dashboard;
+    };
 
-        this.store.setDashboard({
-            ...dashboard,
-            widgets: pick(dashboard.widgets, findWidgetIds(dashboardNode)),
-            layout: dashboardNode
-        });
+    setLayout = (tree: DashboardNode | null) => {
+        this.getCurrentDashboard().setLayout(tree);
+    };
+
+    setPanelLayout = (panel: Panel<PanelState>, path: DashboardPath, layout: LayoutType) => {
+        this.getCurrentDashboard().setPanelLayout(panel, path, layout);
     };
 
     addWidget = (widget: Widget) => {
-        const dashboard = this.store.currentDashboard();
-        if (!dashboard) {
-            console.warn("Failed to add Widget to Dashboard: no Dashboard is available");
-            return;
-        }
+        this.getCurrentDashboard().addWidget(widget);
+    };
 
-        switch (dashboard.type) {
+    addLayout_TEMP = (layout: LayoutType) => {
+        const dashboard = this.getCurrentDashboard();
+
+        switch (layout) {
             case "fit":
-                this.addFitWidget(dashboard, widget);
-                return;
-            case "tile":
-                this.addTileWidget(dashboard, widget);
-                return;
+                dashboard.addPanel(createSampleFitPanel());
+                break;
+
+            case "tabbed":
+                dashboard.addPanel(createSampleTabbedPanel());
+                break;
+
+            case "accordion":
+                dashboard.addPanel(createSampleAccordionPanel());
+                break;
+
+            case "portal":
+                dashboard.addPanel(createSamplePortalPanel());
+                break;
         }
     };
+}
 
-    addFitWidget = (dashboard: Dashboard, widget: Widget) => {
-        if (dashboard.layout == null) {
-            dashboard.widgets[widget.id] = widget;
-            this.setLayout(widget.id);
-            return;
-        }
+function createSampleFitPanel(): FitPanel {
+    const widget = ObservableWidget.fromWidget({
+        id: uuid(),
+        definition: colorClientDef
+    });
 
-        this.showConfirmationDialog(() => {
-            dashboard.widgets[widget.id] = widget;
-            this.setLayout(widget.id);
-        });
-    };
+    return new FitPanel(null, widget);
+}
 
-    addTileWidget = (dashboard: Dashboard, widget: Widget) => {
-        dashboard.widgets[widget.id] = widget;
+function createSampleTabbedPanel(): TabbedPanel {
+    const widgets = [
+        ObservableWidget.fromWidget({
+            id: uuid(),
+            definition: colorClientDef
+        }),
+        ObservableWidget.fromWidget({
+            id: uuid(),
+            definition: colorServerDef
+        })
+    ];
 
-        const { layout } = dashboard;
-        if (!layout) {
-            this.setLayout(widget.id);
-        } else {
-            this.addToTopRight(layout, widget);
-        }
-    };
+    return new TabbedPanel(null, "New Tabbed Panel", widgets);
+}
 
-    private addToTopRight = (layout: DashboardNode, widget: Widget) => {
-        const path = getPathToCorner(layout, Corner.TOP_RIGHT);
-        const parent = getNodeAtPath(layout, dropRight(path)) as MosaicParent<string>;
-        const destination = getNodeAtPath(layout, path) as MosaicNode<string>;
-        const direction: MosaicDirection = parent ? getOtherDirection(parent.direction) : "row";
-        let first: MosaicNode<string>;
-        let second: MosaicNode<string>;
-        if (direction === "row") {
-            first = destination;
-            second = widget.id;
-        } else {
-            first = widget.id;
-            second = destination;
-        }
+function createSampleAccordionPanel(): ExpandoPanel {
+    const widgets = [
+        ObservableWidget.fromWidget({
+            id: uuid(),
+            definition: colorClientDef
+        }),
+        ObservableWidget.fromWidget({
+            id: uuid(),
+            definition: colorServerDef
+        })
+    ];
 
-        const update = {
-            path,
-            spec: {
-                $set: {
-                    direction,
-                    first,
-                    second
-                }
-            }
-        };
+    return new ExpandoPanel(null, "New Accordion Panel", "accordion", widgets);
+}
 
-        const updatedLayout = updateTree(layout, [update]);
+function createSamplePortalPanel(): ExpandoPanel {
+    const widgets = [
+        ObservableWidget.fromWidget({
+            id: uuid(),
+            definition: colorClientDef
+        }),
+        ObservableWidget.fromWidget({
+            id: uuid(),
+            definition: colorServerDef
+        })
+    ];
 
-        this.setLayout(updatedLayout);
-    };
+    return new ExpandoPanel(null, "New Portal Panel", "portal", widgets);
 }
 
 export const dashboardService = new DashboardService();
-
-function findWidgetIds(node: DashboardNode | null): string[] {
-    if (node === null) return [];
-    if (isString(node)) return [node];
-    return [...findWidgetIds(node.first), ...findWidgetIds(node.second)];
-}

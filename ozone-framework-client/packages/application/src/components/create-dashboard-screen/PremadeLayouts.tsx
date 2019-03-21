@@ -25,8 +25,6 @@ const _PremadeLayouts: React.FC<PremadeLayoutsProps & FieldProps<any>> = ({ onCh
     </div>
 );
 
-_PremadeLayouts.displayName = "PremadeLayouts";
-
 export const PremadeLayouts: React.FC<PremadeLayoutsProps> = (props) => (
     <Field component={_PremadeLayouts} {...props} />
 );
