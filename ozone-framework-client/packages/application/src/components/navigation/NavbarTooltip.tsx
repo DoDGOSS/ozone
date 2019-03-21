@@ -1,4 +1,4 @@
-import * as styles from "./NavbarTooltip.scss";
+import * as styles from "./index.scss";
 
 import * as React from "react";
 
@@ -20,11 +20,11 @@ export class NavbarTooltip extends React.PureComponent<NavbarTooltipProps> {
 
         const content = (
             <div className={styles.tooltip}>
-                <div className={styles.header}>
-                    <span className={styles.title}>{title}</span>
-                    {shortcut && <span className={styles.shortcut}>({shortcut})</span>}
+                <div className={styles.tooltipHeader}>
+                    <span className={styles.tooltipTitle}>{title}</span>
+                    {shortcut && <span className={styles.tooltipShortcut}>({shortcut})</span>}
                 </div>
-                <div className={styles.description}>{description}</div>
+                <div className={styles.tooltipDescription}>{description}</div>
             </div>
         );
 

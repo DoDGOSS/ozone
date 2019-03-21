@@ -43,8 +43,6 @@ const _TextField: React.FC<TextFieldProps & FieldProps<any>> = (props) => {
     );
 };
 
-_TextField.displayName = "TextField";
-
 export const TextField: React.FC<TextFieldProps> = (props) => (
     <Field name={props.name} component={_TextField} {...props} />
 );

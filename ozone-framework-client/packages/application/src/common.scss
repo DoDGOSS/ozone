@@ -1,18 +1,12 @@
-$hover-background: rgba(167, 182, 194, 0.3);
+$dark-theme: bp3-dark;
 
-$navbar-height: 40px !important;
-$navbar-background: #2b3036 !important;
-$navbar-hover-color:#009dd3 !important;
-$navbar-padding:15px !important;
+$text-color_dark: #f5f8fa;
+$text-color_light: #182026;
 
-$dark-theme-background:#293742 !important;
-//$widget-toolbar-height: 150px;
-//$widget-toolbar-background-color: rgba(115, 134, 148, 0.3);
-// New sidebar
-$widget-toolbar-background-color: #ebf1f5;
-$widget-toolbar-height: 100%;
-// End sidebar
-$widget-toolbar-border: 1px solid rgba(16, 22, 26, .2);
-$widget-toolbar-shadow: 0 0 1px rgba(0, 0, 0, .2);
+$hover-color_light: rgba(0, 0, 0, 0.1);
+$hover-color_dark: rgba(0, 0, 0, 0.2);
 
-$desktop-background-color: #a7b6c2;
+$desktop-background-color_dark: #a7b6c2;
+
+$background-color_dark: #293742;
+

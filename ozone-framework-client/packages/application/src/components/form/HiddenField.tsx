@@ -26,8 +26,6 @@ const _HiddenField: React.FC<HiddenFieldProps & FieldProps<any>> = (props) => (
     </FormGroup>
 );
 
-_HiddenField.displayName = "HiddenField";
-
 export const HiddenField: React.FC<HiddenFieldProps> = (props) => (
     <Field name={props.name} component={_HiddenField} {...props} />
 );

@@ -33,8 +33,6 @@ const _CheckBox: React.FC<CheckBoxProps & FieldProps<any>> = (props) => (
     </FormGroup>
 );
 
-_CheckBox.displayName = "CheckBox";
-
 export const CheckBox: React.FC<CheckBoxProps> = (props) => (
     <Field name={props.name} component={_CheckBox} {...props} />
 );

@@ -98,3 +98,13 @@ export function some<T>(collection: T[], predicate: Predicate<T>): boolean {
     }
     return false;
 }
+
+export function omitIndex<T>(array: T[], index: number): T[] {
+    const result: T[] = [];
+    for (let i = 0; i < array.length; i++) {
+        if (i !== index) {
+            result.push(array[i]);
+        }
+    }
+    return result;
+}

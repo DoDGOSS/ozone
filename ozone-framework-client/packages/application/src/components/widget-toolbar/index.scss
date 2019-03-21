@@ -1,15 +1,17 @@
 @import "../../common";
 
 :local .toolbar {
-    padding: 0.25rem;
-    min-height: $widget-toolbar-height;
+    min-height: 100%;
 
-    border-bottom: $widget-toolbar-border;
-    border-left: $widget-toolbar-border;
-    border-right: $widget-toolbar-border;
+    padding: 0.25rem;
+
+    border-bottom: 1px solid rgba(16, 22, 26, .2);
+    border-left: 1px solid rgba(16, 22, 26, .2);
+    border-right: 1px solid rgba(16, 22, 26, .2);
     border-radius: 0 0 4px 4px;
-    background-color: $widget-toolbar-background-color;
-    box-shadow: $widget-toolbar-shadow;
+
+    background-color: #ebf1f5;
+    box-shadow: 0 0 1px rgba(0, 0, 0, .2);
 }
 
 
@@ -35,9 +37,6 @@
     padding: 0;
     color: inherit;
 }
-
-$text-color_light: #182026;
-$text-color_dark: #f5f8fa;
 
 :local .currentPage {
     color: $text-color_light;
@@ -75,7 +74,7 @@ $text-color_dark: #f5f8fa;
     margin: 1rem 0;
 
     &:hover {
-        background: $hover-background;
+        background: $hover-color_light;
     }
 }
 

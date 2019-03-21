@@ -1,0 +1,97 @@
+@import "../../common";
+
+$menuItemPadding: 12px;
+$navbarHeight: 2.5rem;
+$navbarHovorColor: #009dd3;
+$hoverIndicatorWidth: 4px;
+
+:local(.navbar) {
+  height: $navbarHeight;
+  background-color: $background-color_dark;
+  border-color: $background-color_dark;
+
+  display: flex;
+  justify-content: space-between;
+
+  padding-left: 0;
+  padding-right: 0;
+
+  .bp3-button {
+    outline: none;
+    height: $navbarHeight;
+
+    &.bp3-minimal {
+      &:hover, &:active, &.bp3-active {
+        color: $navbarHovorColor;
+        background: $background-color_dark;
+
+        border-top: $hoverIndicatorWidth solid $navbarHovorColor;
+        border-bottom: $hoverIndicatorWidth solid transparent;
+        border-radius: 0;
+
+        .bp3-icon {
+          color: $navbarHovorColor;
+        }
+
+        .bp3-button-text {
+          color: $navbarHovorColor;
+        }
+      }
+    }
+  }
+}
+
+:local(.navbar).bp3-dark {
+  background-color: $background-color_dark;
+}
+
+:local(.group) {
+  justify-self: center;
+  height: $navbarHeight;
+
+  &.bp3-align-left {
+    justify-self: left;
+    margin-left: 0.5rem;
+  }
+
+  &.bp3-align-right {
+    justify-self: right;
+    margin-right: 0.5rem;
+  }
+}
+
+:local .tooltip {
+  font-size: .75rem;
+}
+
+:local .tooltipHeader {
+}
+
+:local .tooltipTitle {
+  font-weight: bold;
+}
+
+:local .tooltipShortcut {
+  font-style: italic;
+  margin-left: .5rem;
+}
+
+:local .tooltipDescription {
+}
+
+:local(.userMenu).bp3-menu {
+  background: $background-color_dark;
+  padding-left: 0;
+}
+
+:local(.menuItem).bp3-menu-item {
+  padding-left: $menuItemPadding;
+
+  &:hover {
+    color: $navbarHovorColor;
+    background: $background-color_dark;
+    border-left: $hoverIndicatorWidth solid $navbarHovorColor;
+    padding-left: $menuItemPadding - $hoverIndicatorWidth;
+    border-radius: 0;
+  }
+}
