@@ -4,6 +4,7 @@ import { AdministrationAPI } from "../../src/api/clients/AdministrationAPI";
 
 import { NodeGateway } from "./node-gateway";
 import { PREFERENCES } from "../unit/data";
+import { checkForDefaultPrefs } from './preference-api.e2e-spec';
 
 describe("Administration API", () => {
     let gateway: NodeGateway;
@@ -28,11 +29,7 @@ describe("Administration API", () => {
         const response = await adminApi.getPreferences();
 
         expect(response.status).toEqual(200);
-        expect(response.data).toEqual({
-            success: true,
-            results: 5,
-            rows: PREFERENCES
-        });
+        checkForDefaultPrefs(response.data);
     });
 
     test("getDashboards - GET /administration/listDashboards/", async () => {

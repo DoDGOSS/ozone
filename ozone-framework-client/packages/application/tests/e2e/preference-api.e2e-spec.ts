@@ -6,38 +6,48 @@ import { PreferenceDTO } from "../../src/api/models/PreferenceDTO";
 import { NodeGateway } from "./node-gateway";
 import { PREFERENCES } from "../unit/data";
 
+
+export let checkForDefaultPrefs = (data: any) => {
+    data.results = 5
+    expect(data).toEqual({
+        success: true,
+        results: expect.anything(),
+        rows: expect.arrayContaining(PREFERENCES)
+    });
+    expect(data.results === 5 || data.results === 6).toBeTruthy();
+}
+
+
 describe("Preference API", () => {
     let gateway: NodeGateway;
     let preferenceApi: PreferenceAPI;
-    let newSetting: PreferenceDTO;
-    let newPreference: PreferenceDTO;
+    let newSetting: PreferenceDTO  = {
+        id: 6,
+        namespace: "owf.admin.WidgetEditCopy",
+        path: "newSetting",
+        value: "someValue2",
+        user: {userId: "testAdmin1"}
+    };
+    let newPreference: PreferenceDTO = {
+        id: 7,
+        namespace: "newField",
+        path: "newSetting3",
+        value: "someOtherValue",
+        user: {userId: "testAdmin1"}
+    };
 
     beforeAll(async () => {
         gateway = new NodeGateway();
         preferenceApi = new PreferenceAPI(gateway);
 
-        newSetting = {
-            id: 6,
-            namespace: "owf.admin.WidgetEditCopy",
-            path: "newSetting",
-            value: "someValue2",
-            user: {userId: "testAdmin1"}
-        }
-
-        newPreference = {
-            id: 7,
-            namespace: "newField",
-            path: "newSetting3",
-            value: "someOtherValue",
-            user: {userId: "testAdmin1"}
-        }
-
         await gateway.login("testAdmin1", "password");
         expect(gateway.isAuthenticated).toEqual(true);
     });
 
+
     test("getPreferences - GET /prefs/preference/", async () => {
         let response;
+
         try {
             response = await preferenceApi.getPreferences();
         }
@@ -47,11 +57,7 @@ describe("Preference API", () => {
         }
 
         expect(response.status).toEqual(200);
-        expect(response.data).toEqual({
-            success: true,
-            results: 5,
-            rows: PREFERENCES
-        });
+        checkForDefaultPrefs(response.data);
     });
 
     test("getPreferences by namespace - GET /prefs/preference/:namespace/", async () => {
@@ -166,20 +172,21 @@ describe("Preference API", () => {
 
 
 
-        let getBaseResponse;
+
+        let getRemovedSettingResponse;
         try {
-            getBaseResponse = await preferenceApi.getPreferences();
+            getRemovedSettingResponse = await preferenceApi.getPreference(newSetting.namespace, newSetting.path);
         }
         catch(e) {
             console.dir(e.errors);
             return fail();
         }
-        expect(getBaseResponse.status).toEqual(200);
-        expect(getBaseResponse.data).toEqual({
-            success: true,
-            results: 5,
-            rows: PREFERENCES
-        });
+        expect(getRemovedSettingResponse.status).toEqual(200);
+        expect(getRemovedSettingResponse.data).toEqual({
+			data: null,
+			success: true
+		});
+
 
 
         let prefResponse;
@@ -230,19 +237,18 @@ describe("Preference API", () => {
 
 
 
-		let getBaseResponse2;
+		let getRemovedSettingResponse2;
         try {
-            getBaseResponse2 = await preferenceApi.getPreferences();
+            getRemovedSettingResponse2 = await preferenceApi.getPreference(newSetting.namespace, newSetting.path);
         }
         catch(e) {
             console.dir(e.errors);
             return fail();
         }
-		expect(getBaseResponse2.status).toEqual(200);
-		expect(getBaseResponse2.data).toEqual({
-			success: true,
-			results: 5,
-			rows: PREFERENCES
+        expect(getRemovedSettingResponse.status).toEqual(200);
+        expect(getRemovedSettingResponse.data).toEqual({
+			data: null,
+			success: true
 		});
 
     });
