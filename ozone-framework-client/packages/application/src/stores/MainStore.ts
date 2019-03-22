@@ -1,8 +1,7 @@
 import { BehaviorSubject } from "rxjs";
 
 import { asBehavior } from "../observables";
-import { isBlank } from "../utility";
-import { preferenceApi } from "../api/clients/PreferenceAPI";
+import { themeApi } from "../api/clients/ThemeAPI";
 
 
 export class MainStore {
@@ -21,17 +20,8 @@ export class MainStore {
     private readonly widgetFilter$ = new BehaviorSubject<string | null>(null);
 
     themeClass = () => asBehavior(this.themeClass$);
-    toggleTheme = () => {
-        this.setTheme(isBlank(this.themeClass$.value) ? "bp3-dark" : "")
-	};
     setTheme = (newTheme: string) => {
-		// make sure no one's trying to use this css class to inject something nefarious.
-		// Mixed claims about whether it's possible, but it doesn't hurt to check.
-		// https://stackoverflow.com/questions/5855398/user-defined-css-what-can-go-wrong
-		newTheme = isBlank(newTheme) ? "" : "bp3-dark";
-
 		this.themeClass$.next(newTheme);
-		preferenceApi.updatePreference({namespace: 'owf', path: 'selected_theme', value: newTheme})
     };
 	getTheme = () => this.themeClass$.value;
 
