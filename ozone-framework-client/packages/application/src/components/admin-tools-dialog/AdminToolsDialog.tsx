@@ -12,7 +12,7 @@ import { classNames } from "../../utility";
 
 import * as styles from "./index.scss";
 
-export const AdminToolsDialog: React.FunctionComponent<{}> = () => {
+export const AdminToolsDialog: React.FC<{}> = () => {
     const themeClass = useBehavior(mainStore.themeClass);
     const isOpen = useBehavior(mainStore.isAdminToolsDialogOpen);
 

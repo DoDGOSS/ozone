@@ -21,7 +21,7 @@ const DEFAULT_PROPS = {
 
 export type UserAgreementProps = Partial<typeof DEFAULT_PROPS>;
 
-export const UserAgreement: React.FunctionComponent<UserAgreementProps> = (props) => {
+export const UserAgreement: React.FC<UserAgreementProps> = (props) => {
     const { title, content, buttonText, buttonIcon } = defaults({}, props, DEFAULT_PROPS);
 
     const isOpen = useBehavior(mainStore.isUserAgreementVisible);

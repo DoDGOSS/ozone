@@ -13,7 +13,7 @@ export interface PremadeLayoutsProps {
     selectedValue?: string;
 }
 
-const _PremadeLayouts: React.FunctionComponent<PremadeLayoutsProps & FieldProps<any>> = ({ onChange }) => (
+const _PremadeLayouts: React.FC<PremadeLayoutsProps & FieldProps<any>> = ({ onChange }) => (
     <div className={styles.premadeLayout} data-element-id="PremadeLayoutsList">
         <RadioGroup onChange={onChange}>
             {DEFAULT_LAYOUTS.map((layout) => (
@@ -27,6 +27,6 @@ const _PremadeLayouts: React.FunctionComponent<PremadeLayoutsProps & FieldProps<
 
 _PremadeLayouts.displayName = "PremadeLayouts";
 
-export const PremadeLayouts: React.FunctionComponent<PremadeLayoutsProps> = (props) => (
+export const PremadeLayouts: React.FC<PremadeLayoutsProps> = (props) => (
     <Field component={_PremadeLayouts} {...props} />
 );

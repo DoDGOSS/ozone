@@ -74,10 +74,27 @@ export function classNames(...classes: ClassValue[]): string {
     return _classNames(classes);
 }
 
-interface ClassArray extends Array<ClassValue> {}
+export interface ClassArray extends Array<ClassValue> {}
 
-type ClassValue = string | number | ClassDictionary | ClassArray | undefined | null | boolean;
+export type ClassValue = string | number | ClassDictionary | ClassArray | undefined | null | boolean;
 
-interface ClassDictionary {
+export interface ClassDictionary {
     [id: string]: any;
+}
+
+export type Predicate<T> = (value: T) => boolean;
+
+export function not<T>(predicate: Predicate<T>): Predicate<T> {
+    return (value: T) => !predicate(value);
+}
+
+/**
+ * Checks if predicate returns truthy for any element of collection.
+ * Iteration is stopped once predicate returns truthy.
+ */
+export function some<T>(collection: T[], predicate: Predicate<T>): boolean {
+    for (const item of collection) {
+        if (predicate(item)) return true;
+    }
+    return false;
 }

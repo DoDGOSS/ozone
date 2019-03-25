@@ -17,7 +17,7 @@ export interface TextFieldProps {
     className?: string;
 }
 
-const _TextField: React.FunctionComponent<TextFieldProps & FieldProps<any>> = (props) => {
+const _TextField: React.FC<TextFieldProps & FieldProps<any>> = (props) => {
     const errors = props.form.errors[props.field.name];
     const showError = errors && props.form.touched[props.field.name];
 
@@ -45,6 +45,6 @@ const _TextField: React.FunctionComponent<TextFieldProps & FieldProps<any>> = (p
 
 _TextField.displayName = "TextField";
 
-export const TextField: React.FunctionComponent<TextFieldProps> = (props) => (
+export const TextField: React.FC<TextFieldProps> = (props) => (
     <Field name={props.name} component={_TextField} {...props} />
 );

@@ -7,7 +7,7 @@ import { ClassificationBanner } from "./ClassificationBanner";
 
 import * as styles from "./index.scss";
 
-export const ClassificationWrapper: React.FunctionComponent<{}> = ({ children }) => {
+export const ClassificationWrapper: React.FC<{}> = ({ children }) => {
     const classification = useBehavior(configStore.classification);
 
     return (

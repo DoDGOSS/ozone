@@ -1,56 +1,27 @@
-import { createValidator, Model, Property } from "@ozone/openapi-decorators";
+import { createValidator } from "./validate";
+import { AUTH_GROUP_SCHEMA, AUTH_USER_SCHEMA } from "./schemas/auth.schema";
 
-@Model({ name: "AuthUser" })
-export class AuthUserDTO {
-    static validate = createValidator(AuthUserDTO);
-
-    @Property()
+export interface AuthUserDTO {
     id: number;
-
-    @Property()
     username: string;
-
-    @Property()
     userRealName: string;
-
-    @Property({ nullable: true })
     email?: string;
-
-    @Property()
     theme: string;
-
-    @Property()
     isAdmin: boolean;
-
-    @Property(() => String)
     roles: string[];
-
-    @Property(() => AuthGroupDTO)
     groups: AuthGroupDTO[];
 }
 
-@Model({ name: "AuthGroup" })
-export class AuthGroupDTO {
-    static validate = createValidator(AuthGroupDTO);
+export const validateAuthUser = createValidator<AuthUserDTO>(AUTH_USER_SCHEMA);
 
-    @Property()
+export interface AuthGroupDTO {
     id: number;
-
-    @Property()
     name: string;
-
-    @Property()
     displayName: string;
-
-    @Property({ nullable: true })
     description?: string;
-
-    @Property({ nullable: true })
     email?: string;
-
-    @Property({ enum: ["active", "inactive"] })
     status: "active" | "inactive";
-
-    @Property()
     automatic: boolean;
 }
+
+export const validateAuthGroup = createValidator<AuthGroupDTO>(AUTH_GROUP_SCHEMA);

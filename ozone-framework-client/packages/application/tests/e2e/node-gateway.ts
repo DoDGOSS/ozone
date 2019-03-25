@@ -1,12 +1,9 @@
 import axios from "axios";
-
-import { ValidationError } from "@ozone/openapi-decorators";
+import { get, isNil, trimEnd, trimStart } from "lodash";
 
 import { Gateway, RequestOptions, Response } from "../../src/api/interfaces";
-import { AuthenticationError } from "../../src/api/errors";
-import { AuthUserDTO } from "../../src/api/models/AuthUserDTO";
-
-import { get, isNil, trimEnd, trimStart } from "lodash";
+import { AuthenticationError, ValidationError } from "../../src/api/errors";
+import { AuthUserDTO, validateAuthUser } from "../../src/api/models/AuthUserDTO";
 
 export class NodeGateway implements Gateway {
     private readonly rootUrl: string;
@@ -30,7 +27,7 @@ export class NodeGateway implements Gateway {
                 }
             });
 
-            AuthUserDTO.validate(response.data);
+            validateAuthUser(response.data);
 
             this.sessionCookie = getSessionCookie(response.headers);
 
@@ -53,7 +50,7 @@ export class NodeGateway implements Gateway {
     async getLoginStatus(): Promise<Response<AuthUserDTO>> {
         try {
             return await this.get(`login/status`, {
-                validate: AuthUserDTO.validate
+                validate: validateAuthUser
             });
         } catch (ex) {
             if (ex instanceof ValidationError) throw ex;

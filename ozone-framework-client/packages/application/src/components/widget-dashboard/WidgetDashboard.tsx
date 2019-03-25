@@ -17,7 +17,7 @@ import * as styles from "./index.scss";
 const DashboardLayout = Mosaic.ofType<string>();
 const DashboardWindow = MosaicWindow.ofType<string>();
 
-export const WidgetDashboard: React.FunctionComponent<PropsBase> = (props) => {
+export const WidgetDashboard: React.FC<PropsBase> = (props) => {
     const { className } = props;
 
     const themeClass = useBehavior(mainStore.themeClass);
@@ -65,7 +65,7 @@ interface WidgetFrameProps {
     widget: Widget;
 }
 
-const WidgetFrame: React.FunctionComponent<WidgetFrameProps> = ({ widget }) => {
+const WidgetFrame: React.FC<WidgetFrameProps> = ({ widget }) => {
     const def = widget.definition;
 
     const id = widget.id;

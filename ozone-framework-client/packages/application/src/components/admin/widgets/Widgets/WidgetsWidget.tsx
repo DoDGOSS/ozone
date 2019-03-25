@@ -11,6 +11,7 @@ import * as styles from "../Widgets.scss";
 import { WidgetCreateForm } from "./WidgetCreateForm";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
+import { isNil } from "../../../../utility";
 
 interface State {
     widgets: WidgetDTO[];
@@ -83,10 +84,10 @@ export class WidgetsWidget extends React.Component<{}, State> {
                                     intent={Intent.PRIMARY}
                                     icon="edit"
                                     small={true}
-                                    onClick={() => (
-                                        this.showSubSection(WidgetWidgetSubSection.EDIT),
-                                        this.setState({ updatingWidget: row.original })
-                                    )}
+                                    onClick={() => {
+                                        this.showSubSection(WidgetWidgetSubSection.EDIT);
+                                        this.setState({ updatingWidget: row.original });
+                                    }}
                                 />
                                 <Divider />
                                 <Button
@@ -126,9 +127,10 @@ export class WidgetsWidget extends React.Component<{}, State> {
         // Minimally could wait to hit enter before filtering. Pagination handling
         if (filter) {
             data = data.filter((row) => {
+                const { universalName, namespace } = row.value;
                 return (
-                    row.value.universalName.toLowerCase().includes(filter) ||
-                    row.value.namespace.toLowerCase().includes(filter)
+                    (!isNil(universalName) && universalName.toLowerCase().includes(filter)) ||
+                    (!isNil(namespace) && namespace.toLowerCase().includes(filter))
                 );
             });
         }

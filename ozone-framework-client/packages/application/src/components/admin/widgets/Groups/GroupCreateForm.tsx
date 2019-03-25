@@ -12,7 +12,7 @@ interface GroupCreateProps {
     onCancel: () => void;
 }
 
-export const GroupCreateForm: React.FunctionComponent<GroupCreateProps> = ({ onSubmit, onCancel }) => (
+export const GroupCreateForm: React.FC<GroupCreateProps> = ({ onSubmit, onCancel }) => (
     <Formik
         initialValues={{
             name: "",

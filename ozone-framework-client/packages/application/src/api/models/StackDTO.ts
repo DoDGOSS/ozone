@@ -1,65 +1,39 @@
-import { createValidator, Model, Property } from "@ozone/openapi-decorators";
-
 import { GroupDTO } from "./GroupDTO";
 import { UserDTO, UsernameDTO } from "./UserDTO";
+import { createValidator } from "./validate";
+import {
+    STACK_CREATE_RESPONSE_SCHEMA,
+    STACK_DELETE_RESPONSE_SCHEMA,
+    STACK_GET_RESPONSE_SCHEMA,
+    STACK_SCHEMA,
+    STACK_UPDATE_RESPONSE_SCHEMA
+} from "./schemas/stack.schema";
 
-@Model({ name: "Stack" })
-export class StackDTO {
-    static validate = createValidator(StackDTO);
-
-    @Property()
+export interface StackDTO {
     approved: boolean;
-
-    @Property({ nullable: true })
     imageUrl?: string;
-
-    @Property()
     id: number;
-
-    @Property({ nullable: true })
     owner?: UsernameDTO;
-
-    @Property()
     groups: any[];
-
-    @Property()
     stackContext: string;
-
-    @Property()
     defaultGroup: GroupDTO;
-
-    @Property({ nullable: true })
     descriptorUrl?: string;
-
-    @Property({ nullable: true })
     description?: string;
-
-    @Property()
     name: string;
-
-    @Property({ readOnly: true })
     totalWidgets: number;
-
-    @Property({ readOnly: true })
     totalGroups: number;
-
-    @Property({ readOnly: true })
     totalUsers: number;
-
-    @Property({ readOnly: true })
     totalDashboards: number;
 }
 
-@Model()
-export class StackGetResponse {
-    static validate = createValidator(StackGetResponse);
+export const validateStack = createValidator<StackDTO>(STACK_SCHEMA);
 
-    @Property()
+export interface StackGetResponse {
     results: number;
-
-    @Property(() => StackDTO)
     data: StackDTO[];
 }
+
+export const validateStackGetResponse = createValidator<StackGetResponse>(STACK_GET_RESPONSE_SCHEMA);
 
 export interface StackUpdateParams {
     adminEnabled?: boolean;
@@ -74,6 +48,13 @@ export interface StackCreateRequest {
     description?: string;
 }
 
+export interface StackCreateResponse {
+    success: boolean;
+    data: StackDTO[];
+}
+
+export const validateStackCreateResponse = createValidator<StackUpdateResponse>(STACK_CREATE_RESPONSE_SCHEMA);
+
 export interface StackUpdateRequest extends StackCreateRequest {
     id: number;
     update_action?: "add" | "remove";
@@ -81,30 +62,17 @@ export interface StackUpdateRequest extends StackCreateRequest {
     data?: UserDTO[] | GroupDTO[];
 }
 
-@Model()
-export class StackUpdateResponse {
-    static validate = createValidator(StackUpdateResponse);
+export type StackUpdateResponse = StackCreateResponse;
 
-    @Property()
-    success: boolean;
+export const validateStackUpdateResponse = createValidator<StackUpdateResponse>(STACK_UPDATE_RESPONSE_SCHEMA);
 
-    @Property(() => StackDTO)
-    data: StackDTO[];
-}
-
-@Model()
-export class StackDeleteIdDTO {
-    @Property()
+export interface StackDeleteIdDTO {
     id: number;
 }
 
-@Model()
-export class StackDeleteResponse {
-    static validate = createValidator(StackDeleteResponse);
-
-    @Property()
+export interface StackDeleteResponse {
     success: boolean;
-
-    @Property(() => StackDeleteIdDTO)
     data: StackDeleteIdDTO[];
 }
+
+export const validateStackDeleteResponse = createValidator<StackDeleteResponse>(STACK_DELETE_RESPONSE_SCHEMA);

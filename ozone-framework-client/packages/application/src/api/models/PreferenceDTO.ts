@@ -1,51 +1,37 @@
-import { createValidator, Model, Property } from "@ozone/openapi-decorators";
+import { UserReference } from "./UserDTO";
+import { createValidator } from "./validate";
+import {
+    PREFERENCE_GET_RESPONSE_SCHEMA,
+    PREFERENCE_GET_SINGLE_RESPONSE_SCHEMA,
+    PREFERENCE_SCHEMA
+} from "./schemas/preference.schema";
 
-import { UserReference } from "./DashboardDTO";
-
-@Model({ name: "Preference" })
-export class PreferenceDTO {
-    static validate = createValidator(PreferenceDTO);
-
-    @Property()
+export interface PreferenceDTO {
     id: number;
-
-    @Property()
     namespace: string;
-
-    @Property()
     path: string;
-
-    @Property()
     value: string;
-
-    @Property()
     user: UserReference;
 }
 
-@Model()
-export class PreferenceGetResponse {
-    static validate = createValidator(PreferenceGetResponse);
+export const validatePreference = createValidator<PreferenceDTO>(PREFERENCE_SCHEMA);
 
-    @Property()
+export interface PreferenceGetResponse {
     success: boolean;
-
-    @Property()
     results: number;
-
-    @Property(() => PreferenceDTO)
     rows: PreferenceDTO[];
 }
 
-@Model()
-export class PreferenceGetSingleResponse {
-    static validate = createValidator(PreferenceGetSingleResponse);
+export const validatePreferenceGetResponse = createValidator<PreferenceGetResponse>(PREFERENCE_GET_RESPONSE_SCHEMA);
 
-    @Property()
+export interface PreferenceGetSingleResponse {
     success: boolean;
-
-    @Property({ nullable: true })
     preference?: PreferenceDTO;
 }
+
+export const validatePreferenceGetSingleResponse = createValidator<PreferenceGetSingleResponse>(
+    PREFERENCE_GET_SINGLE_RESPONSE_SCHEMA
+);
 
 export interface PreferenceCreateRequest {
     namespace: string;

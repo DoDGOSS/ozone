@@ -18,7 +18,7 @@ export const Paths = {
     LOGIN: "/"
 };
 
-export const App: React.FunctionComponent<{}> = () => {
+export const App: React.FC<{}> = () => {
     const authStatus = useBehavior(authStore.status);
 
     useEffect(() => {

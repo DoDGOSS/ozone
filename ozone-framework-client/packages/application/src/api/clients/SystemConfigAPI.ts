@@ -1,6 +1,6 @@
 import { Gateway, getGateway, Response } from "../interfaces";
 
-import { ConfigDTO, ConfigUpdateRequest } from "../models/ConfigDTO";
+import { ConfigDTO, ConfigUpdateRequest, validateConfig, validateConfigList } from "../models/ConfigDTO";
 
 export class SystemConfigAPI {
     private readonly gateway: Gateway;
@@ -11,13 +11,13 @@ export class SystemConfigAPI {
 
     async getConfigs(): Promise<Response<ConfigDTO[]>> {
         return this.gateway.get("applicationConfiguration/configs/", {
-            validate: ConfigDTO.validateList
+            validate: validateConfigList
         });
     }
 
     async updateConfig(data: ConfigUpdateRequest): Promise<Response<ConfigDTO>> {
         return this.gateway.put(`applicationConfiguration/configs/${data.id}/`, data, {
-            validate: ConfigDTO.validate
+            validate: validateConfig
         });
     }
 }

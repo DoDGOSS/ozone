@@ -1,6 +1,7 @@
 import { TableSelectionDialog, TableSelectionDialogProps } from "../../../table-selection-dialog/TableSelectionDialog";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
+import { isNil } from "../../../../utility";
 
 export class UserEditWidgetsDialog extends TableSelectionDialog<WidgetDTO> {
     constructor(props: TableSelectionDialogProps<WidgetDTO>) {
@@ -16,10 +17,12 @@ export class UserEditWidgetsDialog extends TableSelectionDialog<WidgetDTO> {
     }
 
     protected filterMatch(filter: string, widget: WidgetDTO): boolean {
+        const { namespace, description, universalName } = widget.value;
+
         return (
-            widget.value.namespace.toLowerCase().includes(filter) ||
-            widget.value.description.toLowerCase().includes(filter) ||
-            widget.value.universalName.toLowerCase().includes(filter)
+            namespace.toLowerCase().includes(filter) ||
+            (!isNil(description) && description.toLowerCase().includes(filter)) ||
+            (!isNil(universalName) && universalName.toLowerCase().includes(filter))
         );
     }
 

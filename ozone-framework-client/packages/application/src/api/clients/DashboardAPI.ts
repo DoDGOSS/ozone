@@ -1,4 +1,6 @@
 import * as qs from "qs";
+import { isNil } from "lodash";
+
 import { Gateway, getGateway, Response } from "../interfaces";
 
 import {
@@ -6,10 +8,11 @@ import {
     DashboardGetResponse,
     DashboardUpdateParams,
     DashboardUpdateRequest,
-    DashboardUpdateResponse
+    DashboardUpdateResponse,
+    validateDashboard,
+    validateDashboardGetResponse,
+    validateDashboardUpdateResponse
 } from "../models/DashboardDTO";
-
-import { isNil } from "lodash";
 
 export class DashboardAPI {
     private readonly gateway: Gateway;
@@ -20,7 +23,7 @@ export class DashboardAPI {
 
     async getDashboards(): Promise<Response<DashboardGetResponse>> {
         return this.gateway.get("dashboard/", {
-            validate: DashboardGetResponse.validate
+            validate: validateDashboardGetResponse
         });
     }
 
@@ -34,7 +37,7 @@ export class DashboardAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: DashboardUpdateResponse.validate
+            validate: validateDashboardUpdateResponse
         });
     }
 
@@ -48,7 +51,7 @@ export class DashboardAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: DashboardUpdateResponse.validate
+            validate: validateDashboardUpdateResponse
         });
     }
 
@@ -61,7 +64,7 @@ export class DashboardAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: DashboardDTO.validate
+            validate: validateDashboard
         });
     }
 }

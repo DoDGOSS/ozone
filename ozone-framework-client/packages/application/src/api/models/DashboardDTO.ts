@@ -1,104 +1,45 @@
-import { createValidator, Model, Property } from "@ozone/openapi-decorators";
+import { ProfileReference, UserReference } from "./UserDTO";
+import { createValidator } from "./validate";
+import {
+    DASHBOARD_GET_RESPONSE_SCHEMA,
+    DASHBOARD_SCHEMA,
+    DASHBOARD_UPDATE_RESPONSE_SCHEMA
+} from "./schemas/dashboard.schema";
 
-@Model()
-export class ProfileReference {
-    @Property({ nullable: true })
-    userId?: string;
-
-    @Property({ nullable: true })
-    userRealName?: string;
-}
-
-@Model()
-export class UserReference {
-    @Property()
-    userId: string;
-}
-
-@Model({ name: "Dashboard" })
-export class DashboardDTO {
-    static validate = createValidator(DashboardDTO);
-
-    @Property()
+export interface DashboardDTO {
     EDashboardLayoutList: string;
-
-    @Property()
     alteredByAdmin: string;
-
-    @Property()
     createdBy: ProfileReference;
-
-    @Property()
     createdDate: string;
-
-    @Property()
     dashboardPosition: number;
-
-    @Property({ nullable: true })
     description?: string;
-
-    @Property()
     editedDate: string;
-
-    @Property()
     groups: any[];
-
-    @Property()
     guid: string;
-
-    @Property({ nullable: true })
     iconImageUrl?: string;
-
-    @Property()
     isGroupDashboard: boolean;
-
-    @Property()
     isdefault: boolean;
-
-    @Property()
     layoutConfig: string;
-
-    @Property()
     locked: boolean;
-
-    @Property()
     markedForDeletion: boolean;
-
-    @Property()
     name: string;
-
-    @Property()
     prettyCreatedDate: string;
-
-    @Property()
     prettyEditedDate: string;
-
-    @Property()
     publishedToStore: boolean;
-
-    @Property({ nullable: true })
     stack?: any;
-
-    @Property({ nullable: true })
     type?: any;
-
-    @Property()
     user: UserReference;
 }
 
-@Model()
-export class DashboardGetResponse {
-    static validate = createValidator(DashboardGetResponse);
+export const validateDashboard = createValidator<DashboardDTO>(DASHBOARD_SCHEMA);
 
-    @Property()
+export interface DashboardGetResponse {
     success: boolean;
-
-    @Property()
     results: number;
-
-    @Property(() => DashboardDTO)
     data: DashboardDTO[];
 }
+
+export const validateDashboardGetResponse = createValidator<DashboardGetResponse>(DASHBOARD_GET_RESPONSE_SCHEMA);
 
 export interface DashboardUpdateRequest {
     name: string;
@@ -117,13 +58,11 @@ export interface DashboardUpdateParams {
     adminEnabled?: boolean;
 }
 
-@Model()
-export class DashboardUpdateResponse {
-    static validate = createValidator(DashboardUpdateResponse);
-
-    @Property()
+export interface DashboardUpdateResponse {
     success: boolean;
-
-    @Property(() => DashboardDTO)
     data: DashboardDTO[];
 }
+
+export const validateDashboardUpdateResponse = createValidator<DashboardUpdateResponse>(
+    DASHBOARD_UPDATE_RESPONSE_SCHEMA
+);

@@ -17,7 +17,7 @@ export interface EditDashboardFormProps {
     dashboard: any;
 }
 
-export const EditDashboardForm: React.FunctionComponent<EditDashboardFormProps> = ({ onSubmit, dashboard }) => {
+export const EditDashboardForm: React.FC<EditDashboardFormProps> = ({ onSubmit, dashboard }) => {
     return (
         <Formik
             initialValues={dashboard}

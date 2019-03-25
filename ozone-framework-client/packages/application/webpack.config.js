@@ -5,6 +5,8 @@ const HTMLWebpackPlugin = require("html-webpack-plugin");
 const { CheckerPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 const { getLocalIdent } = require("./scripts/getCSSModuleLocalIdent");
 
 
@@ -57,10 +59,7 @@ module.exports = {
         rules: [
             {
                 test: /\.tsx?$/,
-                loader: require.resolve("awesome-typescript-loader"),
-                options: {
-                    configFileName: "./src/tsconfig.json",
-                },
+                loader: require.resolve("babel-loader")
             },
 
             {
@@ -117,12 +116,35 @@ module.exports = {
             cwd: process.cwd(),
         }),
         new webpack.HotModuleReplacementPlugin(),
-        HTMLTemplateConfig
+        HTMLTemplateConfig,
+        new BundleAnalyzerPlugin({
+            analyzerMode: "static",
+            openAnalyzer: false,
+            reportFilename: "bundle-analysis.html"
+        })
     ] : [
         new CheckerPlugin(),
         DefinePluginConfig,
-        HTMLTemplateConfig
-    ]
+        HTMLTemplateConfig,
+        new BundleAnalyzerPlugin({
+            analyzerMode: "static",
+            openAnalyzer: false,
+            reportFilename: "bundle-analysis.html"
+        })
+    ],
+
+    optimization: {
+        splitChunks: {
+            chunks: "all",
+            cacheGroups: {
+                vendor: {
+                    filename: "vendor.js",
+                    test: /[\\/]node_modules[\\/]/,
+                    priority: -10
+                }
+            }
+        }
+    }
 
 };
 
