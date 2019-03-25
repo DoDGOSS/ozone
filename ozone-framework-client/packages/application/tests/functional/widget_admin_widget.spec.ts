@@ -1,6 +1,6 @@
-import { NightwatchAPI } from "nightwatch";
+import { NightwatchAPI, NightwatchCallbackResult } from "nightwatch";
 
-import { WidgetAdminWidget } from "./selectors";
+import { GlobalElements, WidgetAdminWidget } from "./selectors";
 
 import { AdminWidgetType, loggedInAs, openAdminWidget } from "./helpers";
 
@@ -8,25 +8,24 @@ const LOGIN_USERNAME: string = "testAdmin1";
 const LOGIN_PASSWORD: string = "password";
 
 module.exports = {
-    // TODO - Change test to launch the widget when functionality is implemented
-    // "As an Administrator, I can view all Widgets in the Widget Admin Widget": (browser: NightwatchAPI) => {
-    //     loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-    //     openAdminWidget(browser, AdminWidgetType.WIDGETS);
+    "As an Administrator, I can view all Widgets in the Widget Admin Widget": (browser: NightwatchAPI) => {
+        loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.WIDGETS);
 
-    //     browser.assert.containsText(
-    //         WidgetAdminWidget.Main.DIALOG,
-    //         "Group Editor",
-    //         "[Widget Admin Widget] Displays widgets"
-    //     );
+        browser.assert.containsText(
+            WidgetAdminWidget.Main.DIALOG,
+            "Group Editor",
+            "[Widget Admin Widget] Displays widgets"
+        );
 
-    //     browser.assert.containsText(
-    //         WidgetAdminWidget.Main.DIALOG,
-    //         "admin/GroupEdit",
-    //         "[Widget Admin Widget] Displays widgets"
-    //     );
+        browser.assert.containsText(
+            WidgetAdminWidget.Main.DIALOG,
+            "admin/GroupEdit",
+            "[Widget Admin Widget] Displays widgets"
+        );
 
-    //     browser.closeWindow().end();
-    // },
+        browser.closeWindow().end();
+    },
 
     "As an Administrator, I can create a new widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
@@ -111,7 +110,76 @@ module.exports = {
             .pause(1000)
             .waitForElementNotPresent(WidgetAdminWidget.CreateWidget.FORM, 1000, "[Create Widget Form] is closed");
 
-        // browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_NAME);
+
+        browser.waitForElementVisible(WidgetAdminWidget.Main.DIALOG, 1000, "[Widget Admin Widget] is visible");
+
+        browser.setValue(WidgetAdminWidget.Main.SEARCH_FIELD, NEW_WIDGET_NAME);
+
+        browser.expect.element(WidgetAdminWidget.Main.DIALOG).text.to.contain(NEW_WIDGET_NAME);
+
+        browser.closeWindow().end();
+    },
+
+    "As an Administrator, I can delete a widget": (browser: NightwatchAPI) => {
+        loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.WIDGETS);
+
+        const NEW_WIDGET_NAME: string = "ExampleOzoneWidget";
+
+        browser.waitForElementVisible(WidgetAdminWidget.Main.DIALOG, 1000, "[Widget Admin Widget] is visible");
+
+        browser.setValue(WidgetAdminWidget.Main.SEARCH_FIELD, NEW_WIDGET_NAME);
+
+        browser.elements(
+            "css selector",
+            `${WidgetAdminWidget.Main.DIALOG} div[role='rowgroup'] div[role='row'] > div:first-child`,
+            (elements: NightwatchCallbackResult) => {
+                let relevant_row: number = 0;
+
+                elements.value.forEach((element: any, i: number) => {
+                    browser.elementIdText(element.ELEMENT, (result) => {
+                        if (result.value === NEW_WIDGET_NAME) {
+                            relevant_row = i;
+                            browser.getAttribute(
+                                `${WidgetAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
+                                    1}) div[role='row'] > div:last-child button[data-element-id='widget-admin-widget-delete-button']`,
+                                "disabled",
+                                function(modifiedResult) {
+                                    this.assert.equal(
+                                        modifiedResult.value,
+                                        null,
+                                        "[Widget Admin Widget] created widget can be deleted"
+                                    );
+                                }
+                            );
+                        }
+                    });
+                });
+
+                browser
+                    .click(
+                        `${WidgetAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
+                            1}) div[role='row'] > div:last-child button[data-element-id='widget-admin-widget-delete-button']`
+                    )
+                    .pause(250)
+                    .waitForElementPresent(
+                        GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                        1000,
+                        undefined,
+                        undefined,
+                        "[Confirmation Dialog] is present"
+                    )
+                    .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+                    .pause(500)
+                    .waitForElementNotPresent(
+                        GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                        1000,
+                        "[Confirmation Dialog] is not present"
+                    );
+            }
+        );
+
+        browser.expect.element(WidgetAdminWidget.Main.DIALOG).text.to.not.contain(NEW_WIDGET_NAME);
 
         browser.closeWindow().end();
     },
