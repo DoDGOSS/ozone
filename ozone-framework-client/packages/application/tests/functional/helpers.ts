@@ -70,7 +70,11 @@ export function openAdminWidget(browser: NightwatchAPI, type: AdminWidgetType) {
         case AdminWidgetType.DASHBOARDS:
             browser
                 .click(MainPage.DASHBOARDS_MENU_ADMIN_BUTTON)
-                .waitForElementVisible(MainPage.DASHBOARD_ADMIN_WIDGET, 2000, "[Dashboards Administration Widget] is visible");
+                .waitForElementVisible(
+                    MainPage.DASHBOARD_ADMIN_WIDGET,
+                    2000,
+                    "[Dashboards Administration Widget] is visible"
+                );
             break;
     }
 }

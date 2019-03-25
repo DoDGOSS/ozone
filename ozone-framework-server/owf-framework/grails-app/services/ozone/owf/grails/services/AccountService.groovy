@@ -40,6 +40,8 @@ class AccountService {
 
     DashboardService dashboardService
 
+	ThemeService themeService
+
     GroupService groupService
 
     PersonWidgetDefinitionService personWidgetDefinitionService
@@ -141,6 +143,14 @@ class AccountService {
             email = p?.email ?: email
         }
         return email
+    }
+
+	String getLoggedInUserTheme() {
+		def theme = themeService.getUserThemePref()
+		if (theme == null) {
+			theme = ""
+		}
+		return theme;
     }
 
     /**
@@ -573,6 +583,8 @@ class AccountService {
         def isAdmin = getLoggedInUserIsAdmin()
         def roleAuthorityNames = getLoggedInUserRoles().collect { it.authority }
 
+		def theme = getLoggedInUserTheme()
+
         def groups = user.groups
                          .findAll { !it.stackDefault }
                          .collect { serializeGroup(it) }
@@ -582,6 +594,7 @@ class AccountService {
                                userRealName: user.userRealName,
                                email       : user.email,
                                groups      : groups,
+                               theme       : theme,
                                isAdmin     : isAdmin,
                                roles       : roleAuthorityNames])
     }

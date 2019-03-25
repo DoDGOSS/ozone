@@ -17,6 +17,9 @@ export class AuthUserDTO {
     email?: string;
 
     @Property()
+    theme: string;
+
+    @Property()
     isAdmin: boolean;
 
     @Property(() => String)

@@ -16,7 +16,8 @@
     "nightwatch": "nightwatch",
     "test": "jest --config ./jest-unit.config.js",
     "test:e2e": "jest --config ./jest-e2e.config.js --runInBand",
-    "test:functional": "run-s build:test nightwatch"
+    "test:functional": "run-s build:test nightwatch",
+    "test:clean": "jest --clearCache"
   },
   "dependencies": {
     "@blueprintjs/core": "3.12.0",

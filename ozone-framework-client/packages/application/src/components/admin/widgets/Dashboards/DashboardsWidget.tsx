@@ -75,10 +75,10 @@ export class DashboardsWidget extends React.Component<{}, State> {
                                     intent={Intent.PRIMARY}
                                     icon="edit"
                                     small={true}
-                                    onClick={() => (
-                                        this.showSubSection(DashboardWidgetSubSection.EDIT),
-                                        this.setState({ updatingDashboard: row.original })
-                                    )}
+                                    onClick={() => {
+                                        this.showSubSection(DashboardWidgetSubSection.EDIT);
+                                        this.setState({ updatingDashboard: row.original });
+                                    }}
                                     data-element-id={"dashboard-admin-widget-edit-" + row.original}
                                 />
                                 <Divider />
@@ -88,7 +88,7 @@ export class DashboardsWidget extends React.Component<{}, State> {
                                     intent={Intent.DANGER}
                                     icon="trash"
                                     small={true}
-                                    //onClick={() => this.deleteDashboard(row.original)}
+                                    // onClick={() => this.deleteDashboard(row.original)}
                                 />
                             </ButtonGroup>
                         </div>
@@ -106,7 +106,7 @@ export class DashboardsWidget extends React.Component<{}, State> {
 
     render() {
         const showTable = this.state.showTable;
-        //const showCreate = this.state.showCreate;
+        // const showCreate = this.state.showCreate;
         const showEditUser = this.state.showEditDashboard;
 
         let data = this.state.dashboards;
@@ -114,14 +114,11 @@ export class DashboardsWidget extends React.Component<{}, State> {
 
         if (filter) {
             data = data.filter((row) => {
-                return (
-                    row.name.toLowerCase().includes(filter) 
-                );
+                return row.name.toLowerCase().includes(filter);
             });
         }
 
-        return ( 
-            
+        return (
             <div data-element-id="dashboard-admin-widget-dialog">
                 {showTable && (
                     <div className={styles.actionBar}>
@@ -146,7 +143,7 @@ export class DashboardsWidget extends React.Component<{}, State> {
                     </div>
                 )}
 
-                 {/*showEditDashboard && (
+                {/*showEditDashboard && (
                     <DashboardEditTabGroup
                         dashboard={this.state.updatingDashboard}
                         onUpdate={this.handleUpdate}
@@ -154,8 +151,8 @@ export class DashboardsWidget extends React.Component<{}, State> {
                             this.showSubSection(DashboardWidgetSubSection.TABLE);
                         }}
                     />
-                )*/} 
-            
+                )*/}
+
                 {/* <ConfirmationDialog
                     show={this.state.showDelete}
                     title="Warning"
@@ -185,7 +182,7 @@ export class DashboardsWidget extends React.Component<{}, State> {
         this.setState({
             showTable: subSection === DashboardWidgetSubSection.TABLE,
             showCreate: subSection === DashboardWidgetSubSection.CREATE
-            //showEditDashboard: subSection === DashboardWidgetSubSection.EDIT
+            // showEditDashboard: subSection === DashboardWidgetSubSection.EDIT
         });
     }
 
@@ -231,7 +228,7 @@ export class DashboardsWidget extends React.Component<{}, State> {
          return true;
      } */
 
-   /*  private deleteUser = async (user: UserDTO) => {
+    /*  private deleteUser = async (user: UserDTO) => {
         this.setState({
             showDelete: true,
             confirmationMessage: `This action will permenantly delete <strong>${user.username}</strong>`,
