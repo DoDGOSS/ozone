@@ -8,6 +8,8 @@ import ozone.owf.grails.OwfExceptionTypes
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.Preference
 
+import static ozone.owf.util.TypeSafety.asLong
+
 
 class PreferenceService extends BaseService {
 
@@ -43,7 +45,7 @@ class PreferenceService extends BaseService {
 
 	Preference findPreference(params) {
 		return (Preference) Preference.createCriteria().get() {
-			if (params?.id != null && params?.id != "") eq("id", Long.parseLong(params.id))
+			if (params?.id != null && params?.id != "") eq("id", asLong(params.id))
 			else {
 				and {
 					if (params?.user != null) eq("user", params.user)
@@ -147,7 +149,7 @@ class PreferenceService extends BaseService {
 
 		try
 		{
-			preference.delete(flush: true)
+			preference?.delete(flush: true)
 			return [success: true, preference: preference]
 		}
 		catch (e)
@@ -185,7 +187,7 @@ class PreferenceService extends BaseService {
 		//However we might need to change and check auth if this paradigm changes.
 		try
 		{
-			preference.delete(flush: true)
+			preference?.delete(flush: true)
 			return [success: true, preference: preference]
 		}
 		catch (e)

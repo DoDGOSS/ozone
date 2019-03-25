@@ -28,27 +28,27 @@ describe("Group API", () => {
         //     data: GROUPS
         // });
     });
-	//
+    //
     // test("getGroupById - GET /group/:id/", async () => {
     //     const response = await groupApi.getGroupById(1);
-	//
+    //
     //     expect(response.status).toEqual(200);
     //     expect(response.data).toEqual({
     //         results: 1,
     //         data: [GROUPS[0]]
     //     });
     // });
-	//
+    //
     // describe("create, update, and delete", () => {
     //     let group: GroupDTO;
-	//
+    //
     //     test("createGroup - POST /group/", async () => {
     //         const request: GroupCreateRequest = {
     //             name: "Test Group 2"
     //         };
-	//
+    //
     //         const response = await groupApi.createGroup(request);
-	//
+    //
     //         expect(response.status).toEqual(200);
     //         expect(response.data).toEqual({
     //             success: true,
@@ -68,10 +68,10 @@ describe("Group API", () => {
     //                 }
     //             ]
     //         });
-	//
+    //
     //         group = response.data.data[0];
     //     });
-	//
+    //
     //     test("updateGroup - PUT /group/:id/", async () => {
     //         const request: GroupUpdateRequest = {
     //             id: group.id,
@@ -83,9 +83,9 @@ describe("Group API", () => {
     //             status: group.status,
     //             active: group.status === "active"
     //         };
-	//
+    //
     //         const response = await groupApi.updateGroup(request);
-	//
+    //
     //         expect(response.status).toEqual(200);
     //         expect(response.data).toEqual({
     //             success: true,
@@ -106,10 +106,10 @@ describe("Group API", () => {
     //             ]
     //         });
     //     });
-	//
+    //
     //     test("deleteGroup - POST (override) /group/", async () => {
     //         const response = await groupApi.deleteGroup(group.id);
-	//
+    //
     //         expect(response.status).toEqual(200);
     //         expect(response.data).toEqual({
     //             success: true,

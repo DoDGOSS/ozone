@@ -104,7 +104,7 @@ export const DashboardDialog: React.FunctionComponent<{}> = () => {
                             <Card key={dashboard.guid}>
                                 <h4>{dashboard.name}</h4>
                                 <p>{dashboard.description}</p>
-                                <img src={dashboard.iconImageUrl}/>
+                                <img src={dashboard.iconImageUrl} />
                                 <ButtonGroup>
                                     <Button
                                         key={dashboard.guid}
@@ -114,7 +114,7 @@ export const DashboardDialog: React.FunctionComponent<{}> = () => {
                                         data-element-id={"dashboard-edit-button-" + dashboard.name}
                                         onClick={() => showEditDialog(dashboard)}
                                     />
-                                    <Divider/>
+                                    <Divider />
                                     <Button
                                         data-element-id={"dashboard-delete-button-" + dashboard.name}
                                         text="Delete"
@@ -145,11 +145,11 @@ export const DashboardDialog: React.FunctionComponent<{}> = () => {
             ) : (
                 <Dialog className={themeClass} isOpen={showEdit} onClose={() => setEdit(false)} title="Edit Dashboard">
                     <div data-element-id="EditDashboardDialog" className={Classes.DIALOG_BODY}>
-                        <EditDashboardForm dashboard={currentDashboard} onSubmit={onEditSubmitted}/>
+                        <EditDashboardForm dashboard={currentDashboard} onSubmit={onEditSubmitted} />
                     </div>
 
                     <div className={Classes.DIALOG_FOOTER}>
-                        <div className={Classes.DIALOG_FOOTER_ACTIONS}/>
+                        <div className={Classes.DIALOG_FOOTER_ACTIONS} />
                     </div>
                 </Dialog>
             )}

@@ -3,8 +3,7 @@ import "reflect-metadata";
 import { AdministrationAPI } from "../../src/api/clients/AdministrationAPI";
 
 import { NodeGateway } from "./node-gateway";
-import { PREFERENCES } from "../unit/data";
-import { checkForDefaultPrefs } from './preference-api.e2e-spec';
+import { checkForDefaultPrefs } from "./assertions";
 
 describe("Administration API", () => {
     let gateway: NodeGateway;
