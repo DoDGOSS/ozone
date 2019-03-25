@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import { WidgetAPI } from "../../src/api/clients/WidgetAPI";
 import { WidgetCreateRequest, WidgetCreateResponse, WidgetUpdateRequest } from "../../src/api/models/WidgetDTO";
 

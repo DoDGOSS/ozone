@@ -35,8 +35,9 @@
 }
 
 :local .tileTitle {
+  max-width: 120px;
   margin-top: 0.25rem;
-  font-weight: 600;
 
+  font-weight: 600;
   text-align: center;
 }

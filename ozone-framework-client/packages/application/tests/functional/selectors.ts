@@ -41,9 +41,7 @@ export namespace MainPage {
 
     export const WIDGETS_SEARCH = "input[data-element-id='widget-search-field']";
 
-    export const WIDGETS_SORT_ASC = "button[data-element-id='widget-sort-ascending']";
-
-    export const WIDGETS_SORT_DSC = "button[data-element-id='widget-sort-descending']";
+    export const WIDGETS_SORT = "button[data-element-id='widget-sort']";
 
     export const USER_AGREEMENT_LINK = "a[data-element-id='user-agreement-link']";
 

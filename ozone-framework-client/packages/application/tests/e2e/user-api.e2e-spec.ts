@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import { UserAPI } from "../../src/api/clients/UserAPI";
 import { UserDTO } from "../../src/api/models/UserDTO";
 

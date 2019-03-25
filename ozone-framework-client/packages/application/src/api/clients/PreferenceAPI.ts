@@ -1,15 +1,19 @@
+import * as qs from "qs";
+import { has } from "lodash";
+
 import { Gateway, getGateway, Response } from "../interfaces";
+
 import {
     PreferenceCreateRequest,
     PreferenceDeleteRequest,
     PreferenceDTO,
     PreferenceGetResponse,
     PreferenceGetSingleResponse,
-    PreferenceUpdateRequest
+    PreferenceUpdateRequest,
+    validatePreference,
+    validatePreferenceGetResponse,
+    validatePreferenceGetSingleResponse
 } from "../models/PreferenceDTO";
-
-import { has } from "lodash";
-import * as qs from "qs";
 
 export class PreferenceAPI {
     private readonly gateway: Gateway;
@@ -24,7 +28,7 @@ export class PreferenceAPI {
         }
 
         return this.gateway.get("prefs/preference/", {
-            validate: PreferenceGetResponse.validate
+            validate: validatePreferenceGetResponse
         });
     }
 
@@ -39,7 +43,7 @@ export class PreferenceAPI {
             };
         }
 
-        PreferenceGetSingleResponse.validate(response.data);
+        validatePreferenceGetSingleResponse(response.data);
 
         return response as Response<PreferenceGetSingleResponse>;
     }
@@ -59,7 +63,7 @@ export class PreferenceAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: PreferenceDTO.validate
+            validate: validatePreference
         });
     }
 
@@ -75,7 +79,7 @@ export class PreferenceAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: PreferenceDTO.validate
+            validate: validatePreference
         });
     }
 
@@ -90,7 +94,7 @@ export class PreferenceAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: PreferenceDTO.validate
+            validate: validatePreference
         });
     }
 }

@@ -9,7 +9,7 @@ export interface LoginFormProps {
     onSuccess: () => void;
 }
 
-export const LoginForm: React.FunctionComponent<LoginFormProps> = (props) => {
+export const LoginForm: React.FC<LoginFormProps> = (props) => {
     return (
         <Formik
             initialValues={{
@@ -24,7 +24,6 @@ export const LoginForm: React.FunctionComponent<LoginFormProps> = (props) => {
 
                 if (isSuccess) {
                     props.onSuccess();
-                    actions.setStatus(null);
                 } else {
                     actions.setStatus({ error: "An unexpected error has occurred" });
                 }

@@ -28,7 +28,7 @@ const renderWidgetType: ItemRenderer<WidgetTypeReference> = (
     return <MenuItem key={widgetType.name} onClick={handleClick} text={widgetType.name} />;
 };
 
-export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ onSubmit, onCancel, items }) => (
+export const WidgetCreateForm: React.FC<WidgetCreateProps> = ({ onSubmit, onCancel, items }) => (
     <Formik
         initialValues={{
             displayName: "",

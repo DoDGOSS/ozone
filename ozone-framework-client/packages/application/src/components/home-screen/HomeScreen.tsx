@@ -19,7 +19,7 @@ import { UserProfileDialog } from "../user-profile/UserProfileDialog";
 
 import * as styles from "./index.scss";
 
-export const HomeScreen: React.FunctionComponent<{}> = () => {
+export const HomeScreen: React.FC<{}> = () => {
     const isAboutVisible = useBehavior(mainStore.isAboutVisible);
 
     // this.dashboardStore.setDashboard(LOGIN_DASHBOARD);

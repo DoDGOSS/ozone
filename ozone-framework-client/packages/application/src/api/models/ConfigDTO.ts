@@ -1,47 +1,25 @@
-import { createArrayValidator, createValidator, Model, Property } from "@ozone/openapi-decorators";
+import { createValidator } from "./validate";
+import { CONFIG_LIST_SCHEMA, CONFIG_SCHEMA } from "./schemas/config.schema";
 
-@Model({ name: "Config" })
-export class ConfigDTO {
-    static validate = createValidator(ConfigDTO);
-
-    static validateList = createArrayValidator(ConfigDTO);
-
-    @Property()
+export interface ConfigDTO {
     id: number;
-
-    @Property({ maxLength: 255 })
     code: string;
-
-    @Property({ nullable: true, maxLength: 2000 })
     value?: string;
-
-    @Property({ maxLength: 255 })
     type: string;
-
-    @Property({ maxLength: 255 })
     title: string;
-
-    @Property({ nullable: true, maxLength: 2000 })
     description?: string;
-
-    @Property({ nullable: true, maxLength: 2000 })
     help?: string;
-
-    @Property()
     mutable: boolean;
-
-    @Property({ maxLength: 255 })
     groupName: string;
-
-    @Property({ nullable: true, maxLength: 255 })
     subGroupName?: string;
-
-    @Property({ nullable: true })
     subGroupOrder?: number;
 }
 
+export const validateConfig = createValidator<ConfigDTO>(CONFIG_SCHEMA);
+
+export const validateConfigList = createValidator<ConfigDTO[]>(CONFIG_LIST_SCHEMA);
+
 export interface ConfigUpdateRequest {
     id: number;
-
     value?: string;
 }

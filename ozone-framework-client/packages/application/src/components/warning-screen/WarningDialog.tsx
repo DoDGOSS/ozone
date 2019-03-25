@@ -19,7 +19,7 @@ const DEFAULT_PROPS = {
 
 export type WarningDialogProps = Partial<typeof DEFAULT_PROPS>;
 
-export const WarningDialog: React.FunctionComponent<WarningDialogProps> = (props) => {
+export const WarningDialog: React.FC<WarningDialogProps> = (props) => {
     const { title, content, link, buttonText, buttonIcon } = defaults({}, props, DEFAULT_PROPS);
 
     const isOpen = useBehavior(mainStore.isWarningDialogVisible);

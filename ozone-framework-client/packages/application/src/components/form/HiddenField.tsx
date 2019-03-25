@@ -13,7 +13,7 @@ export interface HiddenFieldProps {
     className?: string;
 }
 
-const _HiddenField: React.FunctionComponent<HiddenFieldProps & FieldProps<any>> = (props) => (
+const _HiddenField: React.FC<HiddenFieldProps & FieldProps<any>> = (props) => (
     <FormGroup
         label={props.label}
         labelFor={props.name}
@@ -28,6 +28,6 @@ const _HiddenField: React.FunctionComponent<HiddenFieldProps & FieldProps<any>> 
 
 _HiddenField.displayName = "HiddenField";
 
-export const HiddenField: React.FunctionComponent<HiddenFieldProps> = (props) => (
+export const HiddenField: React.FC<HiddenFieldProps> = (props) => (
     <Field name={props.name} component={_HiddenField} {...props} />
 );

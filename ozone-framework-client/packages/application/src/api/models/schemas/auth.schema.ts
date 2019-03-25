@@ -1,18 +1,5 @@
-import "reflect-metadata";
-
-import { convertToJsonSchema } from "@ozone/openapi-decorators";
-
-import { AuthUserDTO } from "../../src/api/models/AuthUserDTO";
-
-describe("AuthUserDTO", () => {
-    describe("schema generation", () => {
-        it("convert to JSON schema", () => {
-            expect(convertToJsonSchema(AuthUserDTO)).toEqual(AUTH_USER_JSON_SCHEMA);
-        });
-    });
-});
-
-const AUTH_GROUP_JSON_SCHEMA = {
+export const AUTH_GROUP_SCHEMA = {
+    title: "AuthGroup",
     type: "object",
     required: ["automatic", "description", "displayName", "email", "id", "name", "status"],
     additionalProperties: false,
@@ -42,9 +29,10 @@ const AUTH_GROUP_JSON_SCHEMA = {
     }
 };
 
-const AUTH_USER_JSON_SCHEMA = {
+export const AUTH_USER_SCHEMA = {
+    title: "AuthUser",
     type: "object",
-    required: ["email", "groups", "id", "isAdmin", "roles", "userRealName", "username"],
+    required: ["email", "groups", "id", "isAdmin", "roles", "theme", "userRealName", "username"],
     additionalProperties: false,
     properties: {
         email: {
@@ -62,6 +50,9 @@ const AUTH_USER_JSON_SCHEMA = {
         isAdmin: {
             type: "boolean"
         },
+        theme: {
+            type: "string"
+        },
         roles: {
             type: "array",
             items: {
@@ -76,6 +67,6 @@ const AUTH_USER_JSON_SCHEMA = {
         }
     },
     definitions: {
-        AuthGroup: AUTH_GROUP_JSON_SCHEMA
+        AuthGroup: AUTH_GROUP_SCHEMA
     }
 };

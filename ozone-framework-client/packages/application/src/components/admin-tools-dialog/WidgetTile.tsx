@@ -8,15 +8,13 @@ export type WidgetTileProps = {
     onClick: () => void;
 };
 
-export const WidgetTile: React.FunctionComponent<WidgetTileProps> = (props) => {
+export const WidgetTile: React.FC<WidgetTileProps> = (props) => {
     const { title, iconUrl, onClick } = props;
 
     return (
-        <div className={styles.tile} data-element-id={title}>
-            <button onClick={onClick}>
-                <img className={styles.tileIcon} src={iconUrl} />
-                <span className={styles.tileTitle}>{title}</span>
-            </button>
+        <div className={styles.tile} data-element-id={title} onClick={onClick}>
+            <img className={styles.tileIcon} src={iconUrl} />
+            <span className={styles.tileTitle}>{title}</span>
         </div>
     );
 };

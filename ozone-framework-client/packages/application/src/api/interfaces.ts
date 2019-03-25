@@ -1,6 +1,6 @@
 import { AuthUserDTO } from "./models/AuthUserDTO";
+import { Validator } from "./models/validate";
 
-import { Validator } from "@ozone/openapi-decorators";
 import { OzoneGateway } from "../services/OzoneGateway";
 
 export interface Gateway {

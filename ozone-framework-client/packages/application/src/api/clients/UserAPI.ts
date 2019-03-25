@@ -2,14 +2,18 @@ import * as qs from "qs";
 
 import { Gateway, getGateway, Response } from "../interfaces";
 
-import { IdDTO } from "../models/IdDTO";
+import { mapIds } from "../models/IdDTO";
 import {
     UserCreateRequest,
     UserCreateResponse,
     UserDeleteResponse,
     UserGetResponse,
     UserUpdateRequest,
-    UserUpdateResponse
+    UserUpdateResponse,
+    validateUserCreateResponse,
+    validateUserDeleteResponse,
+    validateUserGetResponse,
+    validateUserUpdateResponse
 } from "../models/UserDTO";
 
 export interface UserQueryCriteria {
@@ -28,13 +32,13 @@ export class UserAPI {
     getUsers(criteria?: UserQueryCriteria): Promise<Response<UserGetResponse>> {
         return this.gateway.get("user/", {
             params: getOptionParams(criteria),
-            validate: UserGetResponse.validate
+            validate: validateUserGetResponse
         });
     }
 
     getUserById(id: number): Promise<Response<UserGetResponse>> {
         return this.gateway.get(`user/${id}/`, {
-            validate: UserGetResponse.validate
+            validate: validateUserGetResponse
         });
     }
 
@@ -47,7 +51,7 @@ export class UserAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: UserCreateResponse.validate
+            validate: validateUserCreateResponse
         });
     }
 
@@ -60,21 +64,21 @@ export class UserAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: UserUpdateResponse.validate
+            validate: validateUserUpdateResponse
         });
     }
 
     deleteUser(id: number | number[]): Promise<Response<UserDeleteResponse>> {
         const requestData = qs.stringify({
             _method: "DELETE",
-            data: JSON.stringify(IdDTO.fromValues(id))
+            data: JSON.stringify(mapIds(id))
         });
 
         return this.gateway.post("user/", requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: UserDeleteResponse.validate
+            validate: validateUserDeleteResponse
         });
     }
 }

@@ -19,7 +19,7 @@ const DEFAULT_PROPS = {
 
 export type ConfirmationProps = Partial<typeof DEFAULT_PROPS>;
 
-export const ReplaceWidgetDialog: React.FunctionComponent<ConfirmationProps> = (props) => {
+export const ReplaceWidgetDialog: React.FC<ConfirmationProps> = (props) => {
     const { title, content, confirm, cancel } = defaults({}, props, DEFAULT_PROPS);
 
     const themeClass = useBehavior(mainStore.themeClass);

@@ -7,7 +7,7 @@ import { DashboardDTO } from "../../api/models/DashboardDTO";
 
 import * as styles from "./index.scss";
 
-export const DashboardSelect: React.FunctionComponent<{}> = () => {
+export const DashboardSelect: React.FC<{}> = () => {
     const [dashboards, setDashboards] = useState<DashboardDTO[]>([]);
 
     useEffect(() => {

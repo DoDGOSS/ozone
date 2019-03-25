@@ -10,7 +10,7 @@ import { classNames } from "../../utility";
 
 import * as styles from "./index.scss";
 
-export const CreateDashboardDialog: React.FunctionComponent<{}> = () => {
+export const CreateDashboardDialog: React.FC<{}> = () => {
     const themeClass = useBehavior(mainStore.themeClass);
     const isVisible = useBehavior(mainStore.isCreateDashboardDialogVisible);
 

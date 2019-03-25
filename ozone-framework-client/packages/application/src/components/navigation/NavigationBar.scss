@@ -8,8 +8,9 @@
     padding-right: $navbar-padding;
     padding-bottom: 40px !important;
 
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 
     padding: 0;
 }
@@ -45,14 +46,6 @@ a.bp3-menu-item:hover{
 }
 
 .bp3-navbar-group {
-    justify-self: center;
+    flex: 0 0 auto;
     height: $navbar-height;
-}
-
-.bp3-navbar-group.bp3-align-left {
-    justify-self: left;
-}
-
-.bp3-navbar-group.bp3-align-right {
-    justify-self: right;
 }

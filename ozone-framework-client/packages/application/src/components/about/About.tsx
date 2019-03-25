@@ -17,7 +17,7 @@ export type AboutProps = Partial<typeof DEFAULT_PROPS> & {
     onClose: () => void;
 };
 
-export const AboutDialog: React.FunctionComponent<AboutProps> = (props) => {
+export const AboutDialog: React.FC<AboutProps> = (props) => {
     const { content, isVisible, onClose, title, version } = defaults({}, props, DEFAULT_PROPS);
 
     return (

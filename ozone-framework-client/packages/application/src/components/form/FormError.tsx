@@ -8,7 +8,7 @@ export interface FormErrorProps {
     message: string;
 }
 
-export const FormError: React.FunctionComponent<FormErrorProps> = ({ message }) => (
+export const FormError: React.FC<FormErrorProps> = ({ message }) => (
     <Callout title="Error" data-element-id="form-error-callout" intent={Intent.DANGER} className={styles.errorCallout}>
         {message}
     </Callout>

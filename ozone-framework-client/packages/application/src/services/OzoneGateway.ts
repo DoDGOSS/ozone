@@ -1,13 +1,11 @@
 import axios from "axios";
 
-import { ValidationError } from "@ozone/openapi-decorators";
-
 import { Gateway, RequestOptions, Response } from "../api/interfaces";
-import { AuthUserDTO } from "../api/models/AuthUserDTO";
+import { AuthUserDTO, validateAuthUser } from "../api/models/AuthUserDTO";
 
 import { trimEnd, trimStart } from "lodash";
 import { lazy } from "../utility";
-import { AuthenticationError } from "../api/errors";
+import { AuthenticationError, ValidationError } from "../api/errors";
 
 export class OzoneGateway implements Gateway {
     static readonly instance = lazy(() => new OzoneGateway());
@@ -31,7 +29,7 @@ export class OzoneGateway implements Gateway {
                     username,
                     password
                 },
-                validate: AuthUserDTO.validate
+                validate: validateAuthUser
             });
             this._isAuthenticated = true;
             return response;
@@ -62,7 +60,7 @@ export class OzoneGateway implements Gateway {
     async getLoginStatus(): Promise<Response<AuthUserDTO>> {
         try {
             const response = await this.get(`login/status`, {
-                validate: AuthUserDTO.validate
+                validate: validateAuthUser
             });
             this._isAuthenticated = true;
             return response;

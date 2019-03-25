@@ -1,22 +1,15 @@
-import { Model, Property } from "@ozone/openapi-decorators";
+import { createValidator } from "./validate";
+import { WIDGET_TYPE_SCHEMA } from "./schemas/widget.schema";
 
-@Model({ name: "WidgetType" })
 export class WidgetTypeDTO {
-    @Property()
     id: number;
-
-    @Property()
     name: string;
-
-    @Property()
     displayName: string;
 }
 
-@Model()
-export class WidgetTypeReference {
-    @Property()
-    id: number;
+export const validateWidgetType = createValidator<WidgetTypeDTO>(WIDGET_TYPE_SCHEMA);
 
-    @Property()
+export class WidgetTypeReference {
+    id: number;
     name: string;
 }

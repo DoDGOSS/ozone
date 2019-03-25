@@ -1,8 +1,9 @@
+import { get } from "lodash";
+
 import { Response } from "../interfaces";
 import { preferenceApi, PreferenceAPI } from "./PreferenceAPI";
 
 import { isBlank } from "../../utility";
-import { get } from "lodash";
 
 import { DARK_THEME } from "../../constants";
 

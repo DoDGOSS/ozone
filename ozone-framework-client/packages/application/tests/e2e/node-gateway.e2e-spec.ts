@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import { NodeGateway } from "./node-gateway";
 
 test("login (POST /perform_login)", async () => {
