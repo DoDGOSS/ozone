@@ -30,7 +30,6 @@ class PreferenceController extends BaseOwfRestController {
         }
         try {
             params.namespace = params.prefNamespace
-            params.isExtAjaxFormat = 'true'
 
             def result = preferenceService.show(params)
             if (result?.success == true) {
@@ -40,8 +39,8 @@ class PreferenceController extends BaseOwfRestController {
                 // Currently success always = true to the users
                 jsonResult = [success: true, data: null] as JSON
             }
-		}
-		catch (OwfException owe) {
+        }
+        catch (OwfException owe) {
             handleError(owe)
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during show " + owe.exceptionType.generalMessage + " " + owe.message
@@ -69,8 +68,8 @@ class PreferenceController extends BaseOwfRestController {
                 statusCode = 200
                 preferenceExist = false
             }
-		}
-		catch(OwfException owe) {
+        }
+        catch(OwfException owe) {
             handleError(owe)
             statusCode = owe.exceptionType.normalReturnCode
             preferenceExist = false
@@ -102,16 +101,16 @@ class PreferenceController extends BaseOwfRestController {
             statusCode = 200
             def preferenceList = new JSONArray()
             result.preference.each { preferenceList.add(serviceModelService.createServiceModel(it)) }
-			if (result.count != null)
-			{
+            if (result.count != null)
+            {
                 jsonResult = [success: result.success, results: result.count, rows: preferenceList] as JSON
             }
-			else
-			{
+            else
+            {
                 jsonResult = preferenceList as JSON
             }
-		}
-		catch (OwfException owe) {
+        }
+        catch (OwfException owe) {
             handleError(owe)
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during list: " + owe.exceptionType.generalMessage + " " + owe.message
@@ -136,12 +135,11 @@ class PreferenceController extends BaseOwfRestController {
         }
         try {
             params.namespace = params.prefNamespace
-            params.isExtAjaxFormat = 'true'
             def result = preferenceService.create(params)
             statusCode = 200
             jsonResult = getJsonResult(result, modelName, params)
-		}
-		catch (OwfException owe) {
+        }
+        catch (OwfException owe) {
             handleError(owe)
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during create: " + owe.exceptionType.generalMessage + " " + owe.message
@@ -166,12 +164,11 @@ class PreferenceController extends BaseOwfRestController {
         }
         try {
             params.namespace = params.prefNamespace
-            params.isExtAjaxFormat = 'true'
             def result = preferenceService.update(params)
             statusCode = 200
             jsonResult = getJsonResult(result, modelName, params)
-		}
-		catch (OwfException owe) {
+        }
+        catch (OwfException owe) {
             handleError(owe)
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during update: " + owe.exceptionType.generalMessage + " " + owe.message
@@ -196,12 +193,11 @@ class PreferenceController extends BaseOwfRestController {
         }
         try {
             params.namespace = params.prefNamespace
-            params.isExtAjaxFormat = 'true'
             def result = preferenceService.delete(params)
             statusCode = 200
             jsonResult = getJsonResult(result, modelName, params)
-		}
-		catch (OwfException owe) {
+        }
+        catch (OwfException owe) {
             handleError(owe)
             statusCode = owe.exceptionType.normalReturnCode
             jsonResult = "Error during delete: " + owe.exceptionType.generalMessage + " " + owe.message

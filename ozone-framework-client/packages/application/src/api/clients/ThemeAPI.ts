@@ -1,62 +1,52 @@
-
-import {
-	Gateway,
-	getGateway,
-	Response
-} from "../interfaces";
-import { PreferenceAPI } from './PreferenceAPI';
-import { mainStore } from "../../stores/MainStore";
+import { Response } from "../interfaces";
+import { preferenceApi, PreferenceAPI } from "./PreferenceAPI";
 
 import { isBlank } from "../../utility";
-import * as qs from "qs";
+import { get } from "lodash";
+
+import { DARK_THEME } from "../../constants";
 
 export class ThemeAPI {
     private readonly preferenceApi: PreferenceAPI;
 
-
-    constructor(gateway?: Gateway) {
-        if (gateway) {
-            this.preferenceApi = new PreferenceAPI(gateway);
-        }
-        else {
-            this.preferenceApi = new PreferenceAPI();
-        }
+    constructor(api?: PreferenceAPI) {
+        this.preferenceApi = api || preferenceApi;
     }
 
-    private formatResponse(response: Response<any>): Response<any> {
-        if (response.data && response.data.data && response.data.data.value !== undefined) {
-            response.data = response.data.data.value;
-        }
-        else {
-            response.data = "";
-        }
-        return response;
+    getTheme(): Promise<Response<string>> {
+        return this.preferenceApi.getPreference("owf", "selected_theme").then(formatResponseFromGet);
     }
 
-    getTheme(): Promise<Response<any>> {
-        return this.preferenceApi.getPreference('owf','selected_theme').then(
-            (response) => this.formatResponse(response)
-        );
-    }
-
-    async setTheme(newTheme: string): Promise<Response<any>> {
-		// make sure no one's trying to use this css class to inject something nefarious.
-		// Mixed claims about whether it's possible, but it doesn't hurt to check.
-		// https://stackoverflow.com/questions/5855398/user-defined-css-what-can-go-wrong
-		newTheme = isBlank(newTheme) ? "" : "bp3-dark";
-        mainStore.setTheme(newTheme);
-        return this.preferenceApi.updatePreference({namespace: 'owf', path: 'selected_theme', value: newTheme}).then(
-            (response) => this.formatResponse(response)
-        );
+    async setTheme(newTheme: string): Promise<Response<string>> {
+        // make sure no one is trying to use this css class to inject something nefarious.
+        // Mixed claims about whether it's possible, but it doesn't hurt to check.
+        // https://stackoverflow.com/questions/5855398/user-defined-css-what-can-go-wrong
+        newTheme = isBlank(newTheme) ? "" : DARK_THEME;
+        return this.preferenceApi
+            .updatePreference({
+                namespace: "owf",
+                path: "selected_theme",
+                value: newTheme
+            })
+            .then(formatResponseFromUpdate);
     }
 
     async toggle(): Promise<Response<any>> {
-        return this.getTheme().then( response => {
-            let newTheme: string = isBlank(response.data) ? "bp3-dark" : "";
+        return this.getTheme().then((response) => {
+            const newTheme = isBlank(response.data) ? DARK_THEME : "";
             return this.setTheme(newTheme);
         });
-
     }
 }
 
 export const themeApi = new ThemeAPI();
+
+function formatResponseFromGet(response: Response<any>): Response<string> {
+    response.data = get(response, "data.preference.value", "");
+    return response;
+}
+
+function formatResponseFromUpdate(response: Response<any>): Response<string> {
+    response.data = get(response, "data.value", "");
+    return response;
+}

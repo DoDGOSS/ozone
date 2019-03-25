@@ -18,16 +18,12 @@ export class WidgetDefinitionAPI {
     }
 
     async groupOwnsWidget(data: any): Promise<Response<any>> {
-		const requestData = qs.stringify(data);
-        return this.gateway.post(
-			`/widgetDefinition/groupOwnedWidget`,
-			requestData,
-			{
-				headers: {
-	                "Content-Type": "application/x-www-form-urlencoded"
-	            }
-        	}
-		);
+        const requestData = qs.stringify(data);
+        return this.gateway.post(`/widgetDefinition/groupOwnedWidget`, requestData, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        });
     }
 }
 

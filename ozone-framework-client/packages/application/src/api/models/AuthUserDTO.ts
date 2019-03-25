@@ -16,8 +16,8 @@ export class AuthUserDTO {
     @Property({ nullable: true })
     email?: string;
 
-	@Property()
-	theme: string
+    @Property()
+    theme: string;
 
     @Property()
     isAdmin: boolean;

@@ -1,11 +1,14 @@
 import { BehaviorSubject } from "rxjs";
-
 import { asBehavior } from "../observables";
+
 import { themeApi } from "../api/clients/ThemeAPI";
 
+import { isBlank } from "../utility";
+
+import { DARK_THEME } from "../constants";
 
 export class MainStore {
-    private readonly themeClass$ = new BehaviorSubject("bp3-dark");
+    private readonly themeClass$ = new BehaviorSubject(DARK_THEME);
 
     private readonly isAboutVisible$ = new BehaviorSubject(false);
     private readonly isAdminToolsDialogOpen$ = new BehaviorSubject(false);
@@ -17,13 +20,23 @@ export class MainStore {
     private readonly isUserProfileDialogVisible$ = new BehaviorSubject(false);
     private readonly isWarningDialogVisible$ = new BehaviorSubject(false);
     private readonly isWidgetToolbarOpen$ = new BehaviorSubject(false);
-    private readonly widgetFilter$ = new BehaviorSubject<string | null>(null);
 
     themeClass = () => asBehavior(this.themeClass$);
+
+    getTheme = () => this.themeClass$.value;
+
     setTheme = (newTheme: string) => {
-		this.themeClass$.next(newTheme);
+        this.themeClass$.next(newTheme);
     };
-	getTheme = () => this.themeClass$.value;
+
+    updateTheme = async (newTheme: string) => {
+        const result = await themeApi.setTheme(newTheme);
+        this.themeClass$.next(result.data);
+    };
+
+    toggleTheme = () => {
+        this.updateTheme(isBlank(this.themeClass$.value) ? DARK_THEME : "");
+    };
 
     isDashboardDialogVisible = () => asBehavior(this.isDashboardDialogVisible$);
     showDashboardDialog = () => this.isDashboardDialogVisible$.next(true);
@@ -64,10 +77,6 @@ export class MainStore {
     isAdminToolsDialogOpen = () => asBehavior(this.isAdminToolsDialogOpen$);
     showAdminToolsDialog = () => this.isAdminToolsDialogOpen$.next(true);
     hideAdminToolsDialog = () => this.isAdminToolsDialogOpen$.next(false);
-
-    widgetFilter = () => asBehavior(this.widgetFilter$);
-    setWidgetFilter = (value: string) => this.widgetFilter$.next(value);
-    clearWidgetFilter = () => this.widgetFilter$.next(null);
 }
 
 export const mainStore = new MainStore();

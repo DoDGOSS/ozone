@@ -2,7 +2,6 @@ import "reflect-metadata";
 
 import { WidgetDefinitionAPI } from "../../src/api/clients/WidgetDefinitionAPI";
 
-
 import { GROUPS } from "../unit/data";
 import { GroupAPI } from "../../src/api/clients/GroupAPI";
 import { GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../src/api/models/GroupDTO";
@@ -47,13 +46,12 @@ describe("Widget Definition API", () => {
         const response = await widgetDefApi.groupOwnsWidget({
             widgetId: WIDGET_DEFINITION.id,
             personId: 1,
-            isAdmin: 'true'
+            isAdmin: "true"
         });
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({ isOwnedByGroup: true });
     });
-
 
     test("groupOwnsWidget - POST /widgetDefinition/groupOwnedWidget/ - invalid user", async () => {
         // test invalid user - note the personId isn't checked for 'OWF-User'-level widgets,
@@ -70,13 +68,12 @@ describe("Widget Definition API", () => {
 
     test("groupOwnsWidget - POST /widgetDefinition/groupOwnedWidget/ - invalid widget", async () => {
         const response = await widgetDefApi.groupOwnsWidget({
-            widgetId: 'Not-a-widget',
+            widgetId: "Not-a-widget",
             personId: 1,
-            isAdmin: 'true'
+            isAdmin: "true"
         });
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({ isOwnedByGroup: false });
     });
-
 });

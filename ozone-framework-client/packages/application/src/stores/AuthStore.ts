@@ -60,7 +60,7 @@ export class AuthStore {
     };
 
     private onAuthenticateSuccess = (user: AuthUserDTO) => {
-		mainStore.setTheme(user.theme)
+        mainStore.setTheme(user.theme);
         this.user$.next(user);
         this.status$.next(AuthStatus.LOGGED_IN);
     };

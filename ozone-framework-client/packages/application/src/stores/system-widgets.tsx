@@ -8,7 +8,6 @@ import { UsersWidget } from "../components/admin/widgets/Users/UsersWidget";
 import { WidgetsWidget } from "../components/admin/widgets/Widgets/WidgetsWidget";
 import { DashboardsWidget } from "../components/admin/widgets/Dashboards/DashboardsWidget";
 
-
 export const widgetAdminWidgetDef: WidgetDefinition = {
     id: "0b7a39e0-87a2-4077-801b-2e5160fb2287",
     title: "Widget Administration",
