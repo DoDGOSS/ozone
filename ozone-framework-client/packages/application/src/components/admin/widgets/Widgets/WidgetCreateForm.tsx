@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
-import { boolean, number, object, string } from "yup";
+import { array, boolean, number, object, string } from "yup";
 
 import { WidgetCreateRequest } from "../../../../api/models/WidgetDTO";
 import { CancelButton, CheckBox, FormError, HiddenField, SelectField, SubmitButton, TextField } from "../../../form";
@@ -92,6 +92,7 @@ export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ o
                             extractLabel={(item: WidgetTypeReference) => item.name}
                             onSelectItem={(widgetType: WidgetTypeReference) => {
                                 formik.values.widgetTypes = [widgetType];
+                                formik.validateForm();
                             }}
                         />
 
@@ -128,4 +129,5 @@ const CreateWidgetSchema = object().shape({
     background: boolean(),
     singleton: boolean(),
     mobileReady: boolean(),
+    widgetTypes: array().required("Required")
 });
