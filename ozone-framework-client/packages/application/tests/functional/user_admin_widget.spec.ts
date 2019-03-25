@@ -12,6 +12,11 @@ const USER_ADD_WIDGET: string = "testUser1";
 const SEARCH_WIDGET: string = "Color";
 const ADDED_WIDGETS = ["Color Client", "Color Server"];
 
+const ADMIN_EMAIL = "testAdmin1@ozone.test";
+const NEW_USER_EMAIL = "new_user_email@email.com";
+const NEW_USER_DISPLAY_NAME = "Edited User";
+const NEW_USER_USERNAME = "newUser1";
+
 function openEditSectionForUser(browser: NightwatchAPI, userDisplayName: string, section?: string) {
     let relevant_row: number = 0;
 
@@ -102,10 +107,6 @@ module.exports = {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
         openAdminWidget(browser, AdminWidgetType.USERS);
 
-        const newDisplayName = "New User Test";
-        const newUserName = "newUser1";
-        const newUserEmail = "newUserEmail1@email.com";
-
         browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 1000, "[User Admin Widget] is visible");
 
         browser.assert.containsText(
@@ -125,9 +126,9 @@ module.exports = {
         );
 
         browser
-            .setValue(AdminWidget.USER_NAME_FIELD, newUserName)
-            .setValue(AdminWidget.FULL_NAME_FIELD, newDisplayName)
-            .setValue(AdminWidget.EMAIL_FIELD, newUserEmail);
+            .setValue(AdminWidget.USER_NAME_FIELD, NEW_USER_USERNAME)
+            .setValue(AdminWidget.FULL_NAME_FIELD, NEW_USER_DISPLAY_NAME)
+            .setValue(AdminWidget.EMAIL_FIELD, NEW_USER_EMAIL);
 
         browser.click(AdminWidget.SUBMIT_BUTTON);
 
@@ -137,7 +138,7 @@ module.exports = {
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
-            newDisplayName,
+            NEW_USER_DISPLAY_NAME,
             "[User Admin Widget] New user successfully created"
         );
 
@@ -148,21 +149,24 @@ module.exports = {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
         openAdminWidget(browser, AdminWidgetType.USERS);
 
-        const newUserEmail = "newUserEmail1@email.com";
-        const newDisplayName = "Edited User";
-        const newUserName = "newUser1";
-
         browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 1000, "[User Admin Widget] is visible");
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
-            newUserName,
+            NEW_USER_USERNAME,
             "[User Admin Widget] Displays user information we wish to edit"
         );
 
-        browser.click(AdminWidget.EDIT_USER_ID);
+        // browser.click(AdminWidget.EDIT_USER_ID);
+        browser
+            .setValue(AdminWidget.SEARCH_FIELD, NEW_USER_EMAIL)
+            .click(
+                `${
+                    UserAdminWidget.Main.DIALOG
+                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-edit-button']`
+            );
 
-        browser.pause(1000);
+        browser.pause(5000);
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
@@ -172,7 +176,9 @@ module.exports = {
 
         browser.clearValue(AdminWidget.FULL_NAME_FIELD).clearValue(AdminWidget.EMAIL_FIELD);
 
-        browser.setValue(AdminWidget.FULL_NAME_FIELD, newDisplayName).setValue(AdminWidget.EMAIL_FIELD, newUserEmail);
+        browser
+            .setValue(AdminWidget.FULL_NAME_FIELD, NEW_USER_DISPLAY_NAME)
+            .setValue(AdminWidget.EMAIL_FIELD, NEW_USER_EMAIL);
 
         browser.click(AdminWidget.SUBMIT_BUTTON);
 
@@ -190,7 +196,7 @@ module.exports = {
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
-            newDisplayName,
+            NEW_USER_DISPLAY_NAME,
             "[User Admin Widget] User successfully edited"
         );
 
@@ -269,7 +275,7 @@ module.exports = {
                     UserAdminWidget.WidgetsUser.TAB
                 } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-delete-widget-button']`
             )
-            .pause(3500)
+            .pause(250)
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,
@@ -323,25 +329,21 @@ module.exports = {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
         openAdminWidget(browser, AdminWidgetType.USERS);
 
-        const adminEmail = "testAdmin1@ozone.test";
-        const newUserEmail = "newUserEmail1@email.com";
-        const newDisplayName = "Edited User";
-
         browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 1000, "[User Admin Widget] is visible");
 
-        browser.setValue(AdminWidget.SEARCH_FIELD, newUserEmail);
+        browser.setValue(AdminWidget.SEARCH_FIELD, NEW_USER_EMAIL);
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
-            newUserEmail,
+            NEW_USER_EMAIL,
             "[User Admin Widget] Displays user information we searched for"
         );
 
-        browser.expect.element(AdminWidget.USER_ADMIN_WIDGET_DIALOG).text.to.not.contain(adminEmail);
+        browser.expect.element(AdminWidget.USER_ADMIN_WIDGET_DIALOG).text.to.not.contain(ADMIN_EMAIL);
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
-            newDisplayName,
+            NEW_USER_DISPLAY_NAME,
             "[User Admin Widget] User successfully edited"
         );
 
@@ -352,18 +354,21 @@ module.exports = {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
         openAdminWidget(browser, AdminWidgetType.USERS);
 
-        const newUserEmail = "newUserEmail1@email.com";
-
         browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 1000, "[User Admin Widget] is visible");
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
-            newUserEmail,
+            NEW_USER_EMAIL,
             "[User Admin Widget] Displays user information we wish to delete"
         );
 
         browser
-            .click(AdminWidget.DELETE_USER_ID)
+            .setValue(AdminWidget.SEARCH_FIELD, NEW_USER_EMAIL)
+            .click(
+                `${
+                    UserAdminWidget.Main.DIALOG
+                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-delete-button']`
+            )
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,
@@ -380,7 +385,7 @@ module.exports = {
 
         browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
 
-        browser.expect.element(AdminWidget.USER_ADMIN_WIDGET_DIALOG).text.to.not.contain(newUserEmail);
+        browser.expect.element(AdminWidget.USER_ADMIN_WIDGET_DIALOG).text.to.not.contain(NEW_USER_EMAIL);
 
         browser.closeWindow().end();
     }
