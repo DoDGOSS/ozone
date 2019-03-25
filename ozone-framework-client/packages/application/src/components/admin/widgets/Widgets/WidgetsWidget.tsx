@@ -126,7 +126,8 @@ export class WidgetsWidget extends React.Component<{}, State> {
         // Minimally could wait to hit enter before filtering. Pagination handling
         if (filter) {
             data = data.filter((row) => {
-                return row.value.universalName.toLowerCase().includes(filter);
+                return  row.value.universalName.toLowerCase().includes(filter) ||
+                        row.value.namespace.toLowerCase().includes(filter);
             });
         }
 
@@ -237,7 +238,6 @@ export class WidgetsWidget extends React.Component<{}, State> {
     }
 
     private createWidget = async (data: WidgetCreateRequest) => {
-        console.log(data);
         const response = await widgetApi.createWidget(data);
 
         // TODO: Handle failed request
