@@ -9,6 +9,11 @@ describe("Dashboard API", () => {
     let gateway: NodeGateway;
     let dashboardApi: DashboardAPI;
 
+    const createRequest: DashboardUpdateRequest = {
+        guid: "12345678-1234-1234-1234-1234567890a0",
+        name: "Dashboard 1"
+    };
+
     beforeAll(async () => {
         gateway = new NodeGateway();
         dashboardApi = new DashboardAPI(gateway);
@@ -16,11 +21,6 @@ describe("Dashboard API", () => {
         await gateway.login("testAdmin1", "password");
         expect(gateway.isAuthenticated).toEqual(true);
     });
-
-    const createRequest: DashboardUpdateRequest = {
-        guid: "12345678-1234-1234-1234-1234567890a0",
-        name: "Dashboard 1"
-    };
 
     test("getDashboards - GET /dashboard/ - no results", async () => {
         const response = await dashboardApi.getDashboards();

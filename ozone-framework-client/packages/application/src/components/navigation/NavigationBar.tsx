@@ -5,6 +5,7 @@ import { Alignment, Button, Navbar, NavbarGroup, NavbarHeading, Popover, Positio
 
 import { authStore } from "../../stores/AuthStore";
 import { mainStore } from "../../stores/MainStore";
+import { preferenceApi } from "../../api/clients/PreferenceAPI";
 
 import { NavbarTooltip } from "./NavbarTooltip";
 import { UserMenu } from "./UserMenu";

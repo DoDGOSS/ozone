@@ -1,14 +1,12 @@
 import { WidgetDefinition } from "./interfaces";
 
 import {
+    dashboardAdminWidgetDef,
     groupAdminWidgetDef,
-    sampleWidgetDef,
     systemConfigWidgetDef,
     userAdminWidgetDef,
-    widgetAdminWidgetDef,
-    dashboardAdminWidgetDef
+    widgetAdminWidgetDef
 } from "./system-widgets";
-
 
 const IMAGE_ROOT_URL = "http://localhost:3000/images";
 

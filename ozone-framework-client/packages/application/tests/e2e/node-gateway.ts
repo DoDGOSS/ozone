@@ -22,18 +22,27 @@ export class NodeGateway implements Gateway {
     }
 
     async login(username: string, password: string): Promise<Response<AuthUserDTO>> {
-        const response = await axios.post(`${this.rootUrl}/perform_login`, null, {
-            params: {
-                username,
-                password
+        try {
+            const response = await axios.post(`${this.rootUrl}/perform_login`, null, {
+                params: {
+                    username,
+                    password
+                }
+            });
+
+            AuthUserDTO.validate(response.data);
+
+            this.sessionCookie = getSessionCookie(response.headers);
+
+            return response;
+        } catch (ex) {
+            if (ex instanceof ValidationError) throw ex;
+
+            if (ex.response.status === 401) {
+                throw new AuthenticationError("Invalid username or password", ex);
             }
-        });
-
-        AuthUserDTO.validate(response.data);
-
-        this.sessionCookie = getSessionCookie(response.headers);
-
-        return response;
+            throw new AuthenticationError("Unknown error", ex);
+        }
     }
 
     async logout(): Promise<Response<{}>> {
