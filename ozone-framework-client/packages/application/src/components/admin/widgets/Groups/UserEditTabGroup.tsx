@@ -7,6 +7,7 @@ import { CancelButton } from "../../../form";
 import { UserEditGroups } from "./UserEditGroups";
 import { userApi } from "../../../../api/clients/UserAPI";
 import { UserUpdateRequest } from "../../../../api/models/UserDTO";
+import { UserEditPreferences } from "../Users/UserEditPreferences";
 
 import * as styles from "../Widgets.scss";
 
@@ -42,6 +43,11 @@ export class UserEditTabGroup extends React.Component<UserEditTabGroupProps, Use
                         id="user_groups"
                         title="Groups"
                         panel={<UserEditGroups onUpdate={this.props.onUpdate} user={this.state.user} />}
+                    />
+                    <Tab
+                        id="user_preferences"
+                        title="Preferences"
+                        panel={<UserEditPreferences onUpdate={this.props.onUpdate} user={this.state.user} />}
                     />
                     <Tabs.Expander />
                     <span data-element-id="user-admin-widget-edit-back-button">
