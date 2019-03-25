@@ -21,6 +21,30 @@ module.exports = {
         browser.closeWindow().end();
     },
 
+    "As an Administrator, I can view all Preferences in the User Admin Widget": (browser: NightwatchAPI) => {
+        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.USERS);
+
+        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
+        
+        browser.click(AdminWidget.EDIT_PREFERENCE_USER_ID);
+
+        browser.pause(1000);
+        //click preferences tab
+        browser.click(AdminWidget.PREFERENCES_TAB);
+
+        browser.pause(1000);
+
+        browser.assert.containsText(
+            AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+            "Namespace",
+            "[User Admin Widget] Displays preference information"
+        );
+
+        browser.closeWindow().end();
+    },
+
+
     "As an Administrator, I want to create a new User": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
         openAdminWidget(browser, AdminWidgetType.USERS);
