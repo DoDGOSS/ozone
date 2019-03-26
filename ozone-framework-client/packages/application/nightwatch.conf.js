@@ -2,6 +2,11 @@ var seleniumServer = require("selenium-server");
 var chromedriver = require("chromedriver");
 var geckodriver = require("geckodriver");
 
+
+// Bugfix for MaxListenersExceededWarning
+// Reference: https://github.com/nightwatchjs/nightwatch/issues/408
+require("events").EventEmitter.defaultMaxListeners = 100;
+
 module.exports = {
 
     custom_commands_path: "tests/functional/custom_commands",
