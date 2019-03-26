@@ -73,8 +73,6 @@ export class WidgetAPI {
             update_action: "add"
         });
 
-        console.log(requestData);
-
         return this.gateway.put(`widget/${widgetId}/`, requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -93,8 +91,6 @@ export class WidgetAPI {
             tab: "users",
             update_action: "remove"
         });
-
-        console.log(requestData);
 
         return this.gateway.put(`widget/${widgetId}/`, requestData, {
             headers: {

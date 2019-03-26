@@ -36,18 +36,14 @@ export class AdminTable extends React.Component<AdminTableProps, {}> {
 
     render() {
         return (
-            <div>
-                <React.Fragment>
-                    <ReactTable
-                        data={this.props.data}
-                        columns={this.props.columns}
-                        className="-striped -highlight"
-                        loading={this.props.loading}
-                        pageSize={this.props.pageSize}
-                        getTrProps={this.props.getTrProps}
-                    />
-                </React.Fragment>
-            </div>
+            <ReactTable
+                data={this.props.data}
+                columns={this.props.columns}
+                className="-striped -highlight"
+                loading={this.props.loading}
+                pageSize={this.props.pageSize}
+                getTrProps={this.props.getTrProps}
+            />
         );
     }
 }

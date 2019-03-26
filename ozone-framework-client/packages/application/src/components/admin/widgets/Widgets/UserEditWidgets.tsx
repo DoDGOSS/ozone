@@ -184,8 +184,6 @@ export class UserEditWidgets extends React.Component<UserEditWidgetsProps, UserE
             // };
 
             const response = await widgetApi.addWidgetUsers(widget.id, this.state.user.id);
-            console.log(response.data.data);
-
             if (response.status !== 200) return;
 
             responses.push(response.data.data);
@@ -239,8 +237,6 @@ export class UserEditWidgets extends React.Component<UserEditWidgetsProps, UserE
         // };
 
         const response = await widgetApi.removeWidgetUsers(widget.id, this.state.user.id);
-
-        console.log(response);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;

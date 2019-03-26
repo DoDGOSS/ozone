@@ -131,6 +131,14 @@ export namespace AdminWidget {
 
     export const DELETE_USER_ID = "button[data-element-id='user-admin-widget-delete-newUserEmail1@email.com']";
 
+    export function userTableActions(username: string): string {
+        return `div[data-role="user-admin-widget-actions"][data-username="${username}"]`;
+    }
+
+    export function userTableEditButton(username: string): string {
+        return `${userTableActions(username)} button[data-element-id="user-admin-widget-edit-button"]`;
+    }
+
     export const CONFIRM_DELETE_ALERT = "div.delete-user-alert";
 
     export const CONFIRM_DELETE_BUTTON = "div.delete-user-alert > div.bp3-alert-footer > button.bp3-intent-danger";
