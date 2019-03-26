@@ -9,9 +9,9 @@ import * as uuidv4 from "uuid/v4";
 
 import * as styles from "../Widgets.scss";
 
-import { WidgetTypeReference } from '../../../../api/models/WidgetTypeDTO';
-import { MenuItem } from '@blueprintjs/core';
-import { ItemRenderer } from '@blueprintjs/select';
+import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+import { MenuItem } from "@blueprintjs/core";
+import { ItemRenderer } from "@blueprintjs/select";
 
 interface WidgetCreateProps {
     onSubmit: (data: WidgetCreateRequest) => Promise<boolean>;
@@ -21,14 +21,11 @@ interface WidgetCreateProps {
 
 const WidgetTypeSelect = SelectField.ofType<WidgetTypeReference>();
 
-const renderWidgetType: ItemRenderer<WidgetTypeReference> = (widgetType: WidgetTypeReference, { handleClick, modifiers }) => {
-    return (
-        <MenuItem
-            key={widgetType.name}
-            onClick={handleClick}
-            text={widgetType.name}
-        />
-    );
+const renderWidgetType: ItemRenderer<WidgetTypeReference> = (
+    widgetType: WidgetTypeReference,
+    { handleClick, modifiers }
+) => {
+    return <MenuItem key={widgetType.name} onClick={handleClick} text={widgetType.name} />;
 };
 
 export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ onSubmit, onCancel, items }) => (
@@ -41,22 +38,20 @@ export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ o
             imageUrlSmall: "",
             imageUrlMedium: "",
             width: 200,
-            height: 200, 
+            height: 200,
             widgetGuid: uuidv4.default(),
             universalName: "",
             visible: true,
             background: false,
             singleton: false,
             mobileReady: false,
-            widgetTypes: [],            
-            title: "",
+            widgetTypes: [],
+            title: ""
         }}
-
         validationSchema={CreateWidgetSchema}
-
         onSubmit={async (values: WidgetCreateRequest, actions: FormikActions<WidgetCreateRequest>) => {
-            values.height = Number(values.height)
-            values.width = Number(values.width)
+            values.height = Number(values.height);
+            values.width = Number(values.width);
 
             const isSuccess = await onSubmit(values);
             actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
@@ -67,26 +62,72 @@ export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ o
             <div data-element-id="widget-admin-widget-create-form">
                 <Form className={styles.form}>
                     <div>
-                        <TextField inline={true} className={styles.inline_form_label} name="displayName" label="Name" placeholder="MyAppComponent" />
-                        <TextField inline={true} className={styles.inline_form_label} name="description" label="Description" placeholder="Describe the App Component" />
-                        <TextField inline={true} className={styles.inline_form_label} name="widgetVersion" label="Version" placeholder="1.0" />
-                        <TextField inline={true} className={styles.inline_form_label} name="universalName" label="Universal Name" placeholder="MyAppComponent.mycompany.com" />
+                        <TextField
+                            inline={true}
+                            className={styles.inline_form_label}
+                            name="displayName"
+                            label="Name"
+                            placeholder="MyAppComponent"
+                        />
+                        <TextField
+                            inline={true}
+                            className={styles.inline_form_label}
+                            name="description"
+                            label="Description"
+                            placeholder="Describe the App Component"
+                        />
+                        <TextField
+                            inline={true}
+                            className={styles.inline_form_label}
+                            name="widgetVersion"
+                            label="Version"
+                            placeholder="1.0"
+                        />
+                        <TextField
+                            inline={true}
+                            className={styles.inline_form_label}
+                            name="universalName"
+                            label="Universal Name"
+                            placeholder="MyAppComponent.mycompany.com"
+                        />
 
-                        <HiddenField inline={true} className={styles.inline_form_label} name="widgetGuid" label="GUID" />
+                        <HiddenField
+                            inline={true}
+                            className={styles.inline_form_label}
+                            name="widgetGuid"
+                            label="GUID"
+                        />
 
-                        <TextField inline={true} className={styles.inline_form_label} name="widgetUrl" label="URL" placeholder="https://mycompany.com/appcomponent/MyAppComponent.html" />
-                        <TextField inline={true} className={styles.inline_form_label} name="imageUrlSmall" label="Small Icon URL" placeholder="https://mycompany.com/appcomponent/images/containerIcon.png" />
-                        <TextField inline={true} className={styles.inline_form_label} name="imageUrlMedium" label="Medium Icon URL" placeholder="https://mycompany.com/appcomponent/images/launchMenuIcon.png" />
+                        <TextField
+                            inline={true}
+                            className={styles.inline_form_label}
+                            name="widgetUrl"
+                            label="URL"
+                            placeholder="https://mycompany.com/appcomponent/MyAppComponent.html"
+                        />
+                        <TextField
+                            inline={true}
+                            className={styles.inline_form_label}
+                            name="imageUrlSmall"
+                            label="Small Icon URL"
+                            placeholder="https://mycompany.com/appcomponent/images/containerIcon.png"
+                        />
+                        <TextField
+                            inline={true}
+                            className={styles.inline_form_label}
+                            name="imageUrlMedium"
+                            label="Medium Icon URL"
+                            placeholder="https://mycompany.com/appcomponent/images/launchMenuIcon.png"
+                        />
 
                         <TextField inline={true} className={styles.inline_form_label} name="width" label="Width" />
                         <TextField inline={true} className={styles.inline_form_label} name="height" label="Height" />
 
                         <WidgetTypeSelect
                             inline={true}
-                            className={styles.inline_form_label} 
+                            className={styles.inline_form_label}
                             name="widgetType"
                             label="Widget Type"
-
                             items={items}
                             itemRenderer={renderWidgetType}
                             extractLabel={(item: WidgetTypeReference) => item.name}
@@ -96,10 +137,25 @@ export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ o
                             }}
                         />
 
-                        <CheckBox inline={true} className={styles.inline_form_label} name="singleton" label="Singleton" />
-                        <CheckBox inline={true} className={styles.inline_form_label} name="mobileReady" label="Mobile Ready" />
+                        <CheckBox
+                            inline={true}
+                            className={styles.inline_form_label}
+                            name="singleton"
+                            label="Singleton"
+                        />
+                        <CheckBox
+                            inline={true}
+                            className={styles.inline_form_label}
+                            name="mobileReady"
+                            label="Mobile Ready"
+                        />
                         <CheckBox inline={true} className={styles.inline_form_label} name="visible" label="Visible" />
-                        <CheckBox inline={true} className={styles.inline_form_label} name="background" label="Background" />
+                        <CheckBox
+                            inline={true}
+                            className={styles.inline_form_label}
+                            name="background"
+                            label="Background"
+                        />
 
                         {formik.status && formik.status.error && <FormError message={formik.status.error} />}
                     </div>
@@ -121,8 +177,14 @@ const CreateWidgetSchema = object().shape({
     description: string(),
     imageUrlSmall: string().required("Required"),
     imageUrlMedium: string().required("Required"),
-    width: number().integer("Must be an integer").min(200).required("Required"),
-    height: number().integer("Must be an integer").min(200).required("Required"), 
+    width: number()
+        .integer("Must be an integer")
+        .min(200)
+        .required("Required"),
+    height: number()
+        .integer("Must be an integer")
+        .min(200)
+        .required("Required"),
     widgetGuid: string(),
     universalName: string(),
     visible: boolean(),

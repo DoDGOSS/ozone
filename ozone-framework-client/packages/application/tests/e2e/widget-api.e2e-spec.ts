@@ -192,7 +192,7 @@ describe("Widget API", () => {
                                 }
                             ],
                             receive: []
-                        },                        
+                        },
                         widgetTypes: [
                             {
                                 id: createRequest.widgetTypes[0].id,

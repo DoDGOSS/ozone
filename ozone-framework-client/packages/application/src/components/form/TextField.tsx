@@ -22,7 +22,13 @@ const _TextField: React.FunctionComponent<TextFieldProps & FieldProps<any>> = (p
     const showError = errors && props.form.touched[props.field.name];
 
     return (
-        <FormGroup label={props.label} labelFor={props.name} labelInfo={props.labelInfo} inline={props.inline} className={props.className}>
+        <FormGroup
+            label={props.label}
+            labelFor={props.name}
+            labelInfo={props.labelInfo}
+            inline={props.inline}
+            className={props.className}
+        >
             <InputGroup
                 name={props.name}
                 data-role="field"

@@ -14,14 +14,15 @@ export interface HiddenFieldProps {
 }
 
 const _HiddenField: React.FunctionComponent<HiddenFieldProps & FieldProps<any>> = (props) => (
-    <FormGroup label={props.label} labelFor={props.name} labelInfo={props.labelInfo} inline={props.inline} className={props.className}>
+    <FormGroup
+        label={props.label}
+        labelFor={props.name}
+        labelInfo={props.labelInfo}
+        inline={props.inline}
+        className={props.className}
+    >
         <span>{props.field.value}</span>
-        <input
-            name={props.name}
-            data-role="field"
-            type="hidden"
-            {...props.field}
-        />
+        <input name={props.name} data-role="field" type="hidden" {...props.field} />
     </FormGroup>
 );
 
