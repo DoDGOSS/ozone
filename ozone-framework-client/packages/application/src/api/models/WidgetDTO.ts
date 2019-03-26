@@ -7,13 +7,17 @@ import { WidgetTypeDTO, WidgetTypeReference } from "./WidgetTypeDTO";
 
 @Model({ name: "WidgetProperties" })
 export class WidgetPropertiesDTO {
-    @Property()
+    @Property({
+        nullable: true
+    })
     universalName: string;
 
     @Property()
     namespace: string;
 
-    @Property()
+    @Property({
+        nullable: true
+    })
     description: string;
 
     @Property()
@@ -49,7 +53,9 @@ export class WidgetPropertiesDTO {
     @Property()
     maximized: boolean;
 
-    @Property()
+    @Property({
+        nullable: true
+    })
     widgetVersion: string;
 
     @Property({ readOnly: true })
@@ -107,12 +113,12 @@ export class WidgetDTO {
 }
 
 export interface WidgetCreateRequest {
-    name: string;
-    version: string;
+    displayName: string;
+    widgetVersion: string;
     description: string;
-    url: string;
-    headerIcon: string; // Small Icon
-    image: string; // Large Icon
+    widgetUrl: string;
+    imageUrlSmall: string; // Small Icon
+    imageUrlMedium: string; // Large Icon
     width: number;
     height: number;
     widgetGuid: string;
@@ -123,7 +129,6 @@ export interface WidgetCreateRequest {
     mobileReady: boolean;
     widgetTypes: WidgetTypeReference[];
     descriptorUrl?: string;
-    title: string;
     intents?: IntentsDTO;
 }
 
