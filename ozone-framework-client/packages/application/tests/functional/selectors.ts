@@ -121,6 +121,8 @@ export namespace AdminWidget {
 
     export const EDIT_USER_ID = "button[data-element-id='user-admin-widget-edit-newUserEmail1@email.com']";
 
+    export const EDIT_PREFERENCE_USER_ID = "button[data-element-id='user-admin-widget-edit-testUser1@ozone.test']";
+
     export const DELETE_USER_ID = "button[data-element-id='user-admin-widget-delete-newUserEmail1@email.com']";
 
     export const CONFIRM_DELETE_ALERT = "div.delete-user-alert";
@@ -128,6 +130,8 @@ export namespace AdminWidget {
     export const CONFIRM_DELETE_BUTTON = "div.delete-user-alert > div.bp3-alert-footer > button.bp3-intent-danger";
 
     export const SEARCH_FIELD = "input[data-element-id='search-field']";
+
+    export const PREFERENCES_TAB = "div[data-tab-id='user_preferences']";
 }
 
 export namespace DashboardAdminWidget {
