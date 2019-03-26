@@ -59,14 +59,13 @@ module.exports = {
                 "[Create Widget Form] is present"
             );
 
-        browser
-            .waitForElementPresent(
-                WidgetAdminWidget.CreateWidget.SUBMIT_BUTTON,
-                1000,
-                undefined,
-                undefined,
-                "[Create Widget Submit Button] is present"
-            );
+        browser.waitForElementPresent(
+            WidgetAdminWidget.CreateWidget.SUBMIT_BUTTON,
+            1000,
+            undefined,
+            undefined,
+            "[Create Widget Submit Button] is present"
+        );
 
         browser.getAttribute(WidgetAdminWidget.CreateWidget.SUBMIT_BUTTON, "disabled", function(result) {
             this.assert.equal(result.value, "true", "[Create Widget Submit Button] is disabled");
@@ -109,7 +108,6 @@ module.exports = {
             .click(WidgetAdminWidget.CreateWidget.SUBMIT_BUTTON)
             .pause(1000)
             .waitForElementNotPresent(WidgetAdminWidget.CreateWidget.FORM, 1000, "[Create Widget Form] is closed");
-
 
         browser.waitForElementVisible(WidgetAdminWidget.Main.DIALOG, 1000, "[Widget Admin Widget] is visible");
 
@@ -182,5 +180,5 @@ module.exports = {
         browser.expect.element(WidgetAdminWidget.Main.DIALOG).text.to.not.contain(NEW_WIDGET_NAME);
 
         browser.closeWindow().end();
-    },
+    }
 };

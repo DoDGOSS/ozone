@@ -28,7 +28,6 @@ export interface SelectFieldState<T> {
 }
 
 export class SelectField<T> extends React.Component<SelectFieldProps<T>, SelectFieldState<T>> {
-
     static ofType<T>() {
         return SelectField as new (props: SelectFieldProps<T>) => SelectField<T>;
     }
@@ -36,9 +35,9 @@ export class SelectField<T> extends React.Component<SelectFieldProps<T>, SelectF
     constructor(props: any) {
         super(props);
 
-        this.setState({
+        this.state = {
             item: this.props.items ? this.props.items[0] : undefined
-        });
+        };
     }
 
     render() {
@@ -47,33 +46,40 @@ export class SelectField<T> extends React.Component<SelectFieldProps<T>, SelectF
             <Field
                 name={this.props.name}
                 render={(props: FieldProps<any>) => (
-                    
                     <FormGroup
                         label={this.props.label}
                         labelFor={this.props.name}
                         labelInfo={this.props.labelInfo}
                         inline={this.props.inline}
-                        className={this.props.className}>
-
+                        className={this.props.className}
+                    >
                         <SelectType
                             filterable={false}
                             items={this.props.items}
                             itemRenderer={this.props.itemRenderer}
                             onItemSelect={(item: T, event?: React.SyntheticEvent<HTMLElement>) => {
-                                this.setState({item});
+                                this.setState({ item });
                                 this.props.onSelectItem(item);
                             }}
                         >
                             <Button
                                 name={this.props.name}
                                 rightIcon="caret-down"
-                                text={(this.state && this.state.item) ? `${this.props.extractLabel(this.state.item)}` : "(No selection)"}
-                            />                        
+                                text={
+                                    this.state && this.state.item
+                                        ? `${this.props.extractLabel(this.state.item)}`
+                                        : "(No selection)"
+                                }
+                            />
                         </SelectType>
-                        
-                        {(props.form.errors[props.field.name] && props.form.touched[props.field.name]) && <div className={styles.validationError}>{props.form.errors}</div>}
+
+                        {props.form.errors[props.field.name] && props.form.touched[props.field.name] && (
+                            <div className={styles.validationError}>{props.form.errors}</div>
+                        )}
                     </FormGroup>
-                )} {...this.props} />
-        )
+                )}
+                {...this.props}
+            />
+        );
     }
 }

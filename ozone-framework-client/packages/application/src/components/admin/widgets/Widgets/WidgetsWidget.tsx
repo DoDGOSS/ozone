@@ -8,9 +8,9 @@ import { WidgetCreateRequest, WidgetDTO } from "../../../../api/models/WidgetDTO
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 
 import * as styles from "../Widgets.scss";
-import { WidgetCreateForm } from './WidgetCreateForm';
-import { WidgetTypeReference } from '../../../../api/models/WidgetTypeDTO';
-import { widgetTypeApi } from '../../../../api/clients/WidgetTypeAPI';
+import { WidgetCreateForm } from "./WidgetCreateForm";
+import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
 
 interface State {
     widgets: WidgetDTO[];
@@ -46,7 +46,7 @@ enum WidgetWidgetSubSection {
 export class WidgetsWidget extends React.Component<{}, State> {
     constructor(props: any) {
         super(props);
-        
+
         this.state = {
             widgets: [],
             widgetTypes: [],
@@ -126,8 +126,10 @@ export class WidgetsWidget extends React.Component<{}, State> {
         // Minimally could wait to hit enter before filtering. Pagination handling
         if (filter) {
             data = data.filter((row) => {
-                return  row.value.universalName.toLowerCase().includes(filter) ||
-                        row.value.namespace.toLowerCase().includes(filter);
+                return (
+                    row.value.universalName.toLowerCase().includes(filter) ||
+                    row.value.namespace.toLowerCase().includes(filter)
+                );
             });
         }
 
@@ -167,19 +169,26 @@ export class WidgetsWidget extends React.Component<{}, State> {
                 )}
 
                 <div className={styles.widget_body}>
-                    {showCreate && !showCreateForm &&
-                    <a  data-element-id="widget-admin-widget-show-create-form"
-                        onClick={() => { this.setState({showCreateForm: true}); }}
-                    >Don't have a descriptor URL?</a>
-                    }
+                    {showCreate && !showCreateForm && (
+                        <a
+                            data-element-id="widget-admin-widget-show-create-form"
+                            onClick={() => {
+                                this.setState({ showCreateForm: true });
+                            }}
+                        >
+                            Don't have a descriptor URL?
+                        </a>
+                    )}
 
-                    {showCreate && showCreateForm &&
-                    <WidgetCreateForm
-                    onSubmit={this.createWidget}
-                    onCancel={() => {this.showSubSection(WidgetWidgetSubSection.TABLE);}}
-                    items={this.state.widgetTypes}
-                    />
-                    }
+                    {showCreate && showCreateForm && (
+                        <WidgetCreateForm
+                            onSubmit={this.createWidget}
+                            onCancel={() => {
+                                this.showSubSection(WidgetWidgetSubSection.TABLE);
+                            }}
+                            items={this.state.widgetTypes}
+                        />
+                    )}
                 </div>
 
                 {/* {showEditGroup &&
@@ -224,12 +233,12 @@ export class WidgetsWidget extends React.Component<{}, State> {
 
     private getWidgetTypes = async () => {
         const response = await widgetTypeApi.getWidgetTypes();
-        
+
         // TODO: Handle failed request
         if (response.status !== 200) return;
 
         this.setState({
-            widgetTypes: response.data.data,
+            widgetTypes: response.data.data
         });
     };
 

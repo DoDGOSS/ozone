@@ -190,7 +190,7 @@ export namespace WidgetAdminWidget {
 
         export const BACK_BUTTON = `${Main.DIALOG} span[data-element-id='group-admin-widget-edit-back-button'] button`;
     }
-    
+
     export namespace CreateWidget {
         export const FORM = "div[data-element-id='widget-admin-widget-create-form']";
 
@@ -216,7 +216,8 @@ export namespace WidgetAdminWidget {
 
         export const SHOW_CREATE_FORM = "a[data-element-id='widget-admin-widget-show-create-form']";
 
-        export const SUBMIT_BUTTON = "div[data-element-id='widget-admin-widget-create-submit-button'] > button[data-element-id='form-submit-button']";
+        export const SUBMIT_BUTTON =
+            "div[data-element-id='widget-admin-widget-create-submit-button'] > button[data-element-id='form-submit-button']";
     }
 }
 
