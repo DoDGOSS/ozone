@@ -41,7 +41,7 @@ export const WidgetToolbar: React.FunctionComponent<PropsBase> = ({ className })
     }
 
     if (isLoading) {
-        return <span>Loading...</span>;
+        return null;
     }
 
     return (
