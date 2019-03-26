@@ -57,7 +57,7 @@ export class UserEditPreferences extends React.Component<UserEditPreferencesProp
                             intent={Intent.DANGER}
                             icon="trash"
                             small={true}
-                            //onClick={() => this.deletePreference(row.original)}
+                            // onClick={() => this.deletePreference(row.original)}
                         />
                     </ButtonGroup>
                 </div>
@@ -165,7 +165,7 @@ export class UserEditPreferences extends React.Component<UserEditPreferencesProp
         if (response.status !== 200) return;
 
         this.setState({
-            preferences: response.rows,
+            preferences: response.data.rows,
             loading: false
         });
     };
