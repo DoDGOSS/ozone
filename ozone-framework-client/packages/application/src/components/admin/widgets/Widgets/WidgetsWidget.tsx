@@ -8,6 +8,9 @@ import { WidgetCreateRequest, WidgetDTO } from "../../../../api/models/WidgetDTO
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 
 import * as styles from "../Widgets.scss";
+import { WidgetCreateForm } from "./WidgetCreateForm";
+import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
 
 interface State {
     widgets: WidgetDTO[];
@@ -18,11 +21,13 @@ interface State {
     columns: any;
     showTable: boolean;
     showCreate: boolean;
+    showCreateForm: boolean;
     showEditGroup: boolean;
     showDelete: boolean;
     confirmationMessage: string;
     manageWidget: WidgetDTO | undefined;
     updatingWidget?: any;
+    widgetTypes: WidgetTypeReference[];
 }
 
 // TODO
@@ -41,14 +46,17 @@ enum WidgetWidgetSubSection {
 export class WidgetsWidget extends React.Component<{}, State> {
     constructor(props: any) {
         super(props);
+
         this.state = {
             widgets: [],
+            widgetTypes: [],
             filtered: [],
             filter: "",
             loading: true,
             pageSize: 5,
             showTable: true,
             showCreate: false,
+            showCreateForm: false,
             showEditGroup: false,
             showDelete: false,
             confirmationMessage: "",
@@ -102,11 +110,13 @@ export class WidgetsWidget extends React.Component<{}, State> {
 
     componentDidMount() {
         this.getWidgets();
+        this.getWidgetTypes();
     }
 
     render() {
         const showTable = this.state.showTable;
         const showCreate = this.state.showCreate;
+        const showCreateForm = this.state.showCreateForm;
         const showEditGroup = this.state.showEditGroup;
 
         let data = this.state.widgets;
@@ -116,7 +126,10 @@ export class WidgetsWidget extends React.Component<{}, State> {
         // Minimally could wait to hit enter before filtering. Pagination handling
         if (filter) {
             data = data.filter((row) => {
-                return row.value.universalName.toLowerCase().includes(filter);
+                return (
+                    row.value.universalName.toLowerCase().includes(filter) ||
+                    row.value.namespace.toLowerCase().includes(filter)
+                );
             });
         }
 
@@ -155,14 +168,30 @@ export class WidgetsWidget extends React.Component<{}, State> {
                     </div>
                 )}
 
-                {/* {showCreate &&
-                <GroupCreateForm
-                onSubmit={this.createGroup}
-                onCancel={() => {this.showSubSection(GroupWidgetSubSection.TABLE);}}
-                />
-                }
+                <div className={styles.widget_body}>
+                    {showCreate && !showCreateForm && (
+                        <a
+                            data-element-id="widget-admin-widget-show-create-form"
+                            onClick={() => {
+                                this.setState({ showCreateForm: true });
+                            }}
+                        >
+                            Don't have a descriptor URL?
+                        </a>
+                    )}
 
-                {showEditGroup &&
+                    {showCreate && showCreateForm && (
+                        <WidgetCreateForm
+                            onSubmit={this.createWidget}
+                            onCancel={() => {
+                                this.showSubSection(WidgetWidgetSubSection.TABLE);
+                            }}
+                            items={this.state.widgetTypes}
+                        />
+                    )}
+                </div>
+
+                {/* {showEditGroup &&
                 <GroupEditTabGroup
                     group={this.state.updatingGroup}
                     onUpdate={this.handleUpdate}
@@ -199,6 +228,17 @@ export class WidgetsWidget extends React.Component<{}, State> {
         this.setState({
             widgets: response.data.data,
             loading: false
+        });
+    };
+
+    private getWidgetTypes = async () => {
+        const response = await widgetTypeApi.getWidgetTypes();
+
+        // TODO: Handle failed request
+        if (response.status !== 200) return;
+
+        this.setState({
+            widgetTypes: response.data.data
         });
     };
 
