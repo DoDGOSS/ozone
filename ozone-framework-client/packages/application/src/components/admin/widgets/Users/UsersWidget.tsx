@@ -5,7 +5,7 @@ import { AdminTable } from "../../table/AdminTable";
 
 import { UserCreateForm } from "./UserCreateForm";
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
-import { UserEditTabGroup } from "../Groups/UserEditTabGroup";
+import { UserEditTabs } from "./UserEditTabs";
 
 import { UserCreateRequest, UserDTO } from "../../../../api/models/UserDTO";
 import { userApi } from "../../../../api/clients/UserAPI";
@@ -72,32 +72,33 @@ export class UsersWidget extends React.Component<{}, State> {
                 // TODO - Abstract this to only have to provide onclick function name with styled buttons
                 {
                     Header: "Actions",
-                    Cell: (row: any) => (
-                        <div>
-                            <ButtonGroup>
+                    Cell: (row: any) => {
+                        const user: UserDTO = row.original;
+                        return (
+                            <ButtonGroup data-role={"user-admin-widget-actions"} data-username={user.username}>
                                 <Button
                                     text="Edit"
                                     intent={Intent.PRIMARY}
                                     icon="edit"
                                     small={true}
-                                    onClick={() => (
-                                        this.showSubSection(UserWidgetSubSection.EDIT),
-                                        this.setState({ updatingUser: row.original })
-                                    )}
-                                    data-element-id={"user-admin-widget-edit-" + row.original.email}
+                                    onClick={() => {
+                                        this.showSubSection(UserWidgetSubSection.EDIT);
+                                        this.setState({ updatingUser: user });
+                                    }}
+                                    data-element-id={"user-admin-widget-edit-button"}
                                 />
                                 <Divider />
                                 <Button
-                                    data-element-id={"user-admin-widget-delete-" + row.original.email}
+                                    data-element-id={"user-admin-widget-delete-button"}
                                     text="Delete"
                                     intent={Intent.DANGER}
                                     icon="trash"
                                     small={true}
-                                    onClick={() => this.deleteUser(row.original)}
+                                    onClick={() => this.deleteUser(user)}
                                 />
                             </ButtonGroup>
-                        </div>
-                    )
+                        );
+                    }
                 }
             ]
         };
@@ -117,8 +118,7 @@ export class UsersWidget extends React.Component<{}, State> {
         let data = this.state.users;
         const filter = this.state.filter.toLowerCase();
 
-        // TODO - Improve this - this will be slow if there are many users.
-        // Minimally could wait to hit enter before filtering. Pagination handling
+        // TODO - Improve this - this will be slow if there are many users. Add pagination
         if (filter) {
             data = data.filter((row) => {
                 return (
@@ -132,36 +132,32 @@ export class UsersWidget extends React.Component<{}, State> {
         return (
             <div data-element-id="user-admin-widget-dialog">
                 {showTable && (
-                    <div className={styles.actionBar}>
-                        <InputGroup
-                            placeholder="Search..."
-                            leftIcon="search"
-                            value={this.state.filter}
-                            onChange={(e: any) => this.setState({ filter: e.target.value })}
-                            data-element-id="search-field"
-                        />
-                    </div>
-                )}
-
-                {showTable && (
-                    <div className={styles.table}>
-                        <AdminTable
-                            data={data}
-                            columns={this.state.columns}
-                            loading={this.state.loading}
-                            pageSize={this.state.pageSize}
-                        />
-                    </div>
-                )}
-
-                {showTable && (
-                    <div className={styles.buttonBar}>
-                        <Button
-                            text="Create"
-                            onClick={() => this.showSubSection(UserWidgetSubSection.CREATE)}
-                            data-element-id="user-admin-widget-create-button"
-                        />
-                    </div>
+                    <>
+                        <div className={styles.actionBar}>
+                            <InputGroup
+                                placeholder="Search..."
+                                leftIcon="search"
+                                value={this.state.filter}
+                                onChange={(e: any) => this.setState({ filter: e.target.value })}
+                                data-element-id="search-field"
+                            />
+                        </div>
+                        <div className={styles.table}>
+                            <AdminTable
+                                data={data}
+                                columns={this.state.columns}
+                                loading={this.state.loading}
+                                pageSize={this.state.pageSize}
+                            />
+                        </div>
+                        <div className={styles.buttonBar}>
+                            <Button
+                                text="Create"
+                                onClick={() => this.showSubSection(UserWidgetSubSection.CREATE)}
+                                data-element-id="user-admin-widget-create-button"
+                            />
+                        </div>
+                    </>
                 )}
 
                 {showCreate && (
@@ -174,12 +170,13 @@ export class UsersWidget extends React.Component<{}, State> {
                 )}
 
                 {showEditUser && (
-                    <UserEditTabGroup
+                    <UserEditTabs
                         user={this.state.updatingUser}
                         onUpdate={this.handleUpdate}
                         onBack={() => {
                             this.showSubSection(UserWidgetSubSection.TABLE);
                         }}
+                        data-element-id="user-admin-widget-edit-view"
                     />
                 )}
 
@@ -191,19 +188,6 @@ export class UsersWidget extends React.Component<{}, State> {
                     cancelHandler={this.handleConfirmationCancel}
                     payload={this.state.manageUser}
                 />
-
-                {/* {this.state.alertIsOpen && (
-                    <Alert cancelButtonText="Cancel"
-                           confirmButtonText="Delete User"
-                           icon="trash"
-                           intent={Intent.DANGER}
-                           isOpen={this.state.alertIsOpen}
-                           className="delete-user-alert"
-                           onCancel={this.handleAlertCancel}
-                           onConfirm={() => this.handleAlertConfirm(this.state.deleteUser.id)}>
-                        <p>Are you sure you want to delete <br/><b>User: {this.state.deleteUser.userRealName}</b>?</p>
-                    </Alert>
-                )} */}
             </div>
         );
     }

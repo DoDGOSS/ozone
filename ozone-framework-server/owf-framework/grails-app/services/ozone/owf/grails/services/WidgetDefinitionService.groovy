@@ -6,6 +6,7 @@ import grails.converters.JSON
 import grails.core.GrailsApplication
 import grails.util.AbstractTypeConvertingMap
 import grails.util.TypeConvertingMap
+import org.springframework.transaction.annotation.Transactional
 
 import org.hibernate.CacheMode
 
@@ -306,6 +307,7 @@ class WidgetDefinitionService {
         [success:true,data:results.flatten()]
     }
 
+    @Transactional(readOnly = false)
     def updateWidget(params) {
         def widgetDefinition
         def returnValue = null

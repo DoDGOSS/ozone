@@ -13,6 +13,12 @@ import {
     WidgetUpdateUsersResponse
 } from "../models/WidgetDTO";
 
+export interface WidgetQueryCriteria {
+    limit?: number;
+    offset?: number;
+    user_id?: number;
+}
+
 export class WidgetAPI {
     private readonly gateway: Gateway;
 
@@ -20,8 +26,9 @@ export class WidgetAPI {
         this.gateway = gateway || getGateway();
     }
 
-    async getWidgets(): Promise<Response<WidgetGetResponse>> {
+    async getWidgets(criteria?: WidgetQueryCriteria): Promise<Response<WidgetGetResponse>> {
         return this.gateway.get("widget/", {
+            params: getOptionParams(criteria),
             validate: WidgetGetResponse.validate
         });
     }
@@ -147,3 +154,13 @@ export class WidgetAPI {
 }
 
 export const widgetApi = new WidgetAPI();
+
+function getOptionParams(options?: WidgetQueryCriteria): any | undefined {
+    if (!options) return undefined;
+
+    const params: any = {};
+    if (options.limit) params.max = options.limit;
+    if (options.offset) params.offset = options.offset;
+    if (options.user_id) params.user_id = options.user_id;
+    return params;
+}

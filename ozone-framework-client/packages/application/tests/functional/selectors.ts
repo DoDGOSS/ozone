@@ -105,11 +105,17 @@ export namespace LoginForm {
 }
 
 export namespace AdminWidget {
+    // TODO - Refactor further into namespaces
     export const USER_ADMIN_WIDGET_DIALOG = "div[data-element-id='user-admin-widget-dialog']";
 
     export const USER_ADMIN_CREATE_BUTTON = "button[data-element-id='user-admin-widget-create-button']";
 
     export const USER_ADMIN_BACK_BUTTON = `${USER_ADMIN_WIDGET_DIALOG} span[data-element-id='user-admin-widget-edit-back-button'] button`;
+
+    // Widgets
+    export const TAB_WIDGETS = `div[data-tab-id='user_widgets']`;
+    export const ADD_BUTTON = "button[data-element-id='user-edit-add-user-dialog-add-button']";
+    // End widgets
 
     export const USER_NAME_FIELD = "input[data-role='field'][name='username']";
 
@@ -125,6 +131,14 @@ export namespace AdminWidget {
 
     export const DELETE_USER_ID = "button[data-element-id='user-admin-widget-delete-newUserEmail1@email.com']";
 
+    export function userTableActions(username: string): string {
+        return `div[data-role="user-admin-widget-actions"][data-username="${username}"]`;
+    }
+
+    export function userTableEditButton(username: string): string {
+        return `${userTableActions(username)} button[data-element-id="user-admin-widget-edit-button"]`;
+    }
+
     export const CONFIRM_DELETE_ALERT = "div.delete-user-alert";
 
     export const CONFIRM_DELETE_BUTTON = "div.delete-user-alert > div.bp3-alert-footer > button.bp3-intent-danger";
@@ -136,6 +150,33 @@ export namespace AdminWidget {
 
 export namespace DashboardAdminWidget {
     export const DIALOG = "div[data-element-id='dashboard-admin-widget-dialog']";
+}
+
+export namespace UserAdminWidget {
+    export namespace Main {
+        export const DIALOG = "div[data-element-id='user-admin-widget-dialog']";
+
+        export const BACK_BUTTON = `${Main.DIALOG} span[data-element-id='user-admin-widget-edit-back-button'] button`;
+    }
+
+    export namespace PropertiesGroup {
+        export const FORM = "div[data-element-id='user-admin-widget-edit-form']";
+
+        export const SUBMIT_BUTTON =
+            "div[data-element-id='user-admin-widget-edit-submit-button'] > button[data-element-id='form-submit-button']";
+    }
+
+    export namespace EditUser {
+        export const TAB_PROPERTIES = `div[data-tab-id='user_properties']`;
+
+        export const TAB_WIDGETS = `div[data-tab-id='user_widgets']`;
+    }
+
+    export namespace WidgetsUser {
+        export const TAB = "div[data-element-id='user-admin-add-widget']";
+
+        export const ADD_BUTTON = "button[data-element-id='user-edit-add-widget-dialog-add-button']";
+    }
 }
 
 export namespace GroupAdminWidget {
@@ -233,4 +274,6 @@ export namespace GlobalElements {
     export const GENERIC_TABLE_SELECTOR_DIALOG = "div[data-element-id='table-selector-dialog']";
 
     export const GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON = "button[data-element-id='table-selector-confirm']";
+
+    export const GENERIC_TABLE_ADD_SEARCH_FIELD = "input[data-element-id='table-selector-search-field']";
 }
