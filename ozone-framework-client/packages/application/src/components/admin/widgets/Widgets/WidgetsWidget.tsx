@@ -10,6 +10,7 @@ import { WidgetCreateRequest, WidgetDTO } from "../../../../api/models/WidgetDTO
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 
 import * as styles from "../Widgets.scss";
+import { WidgetCreateForm } from "./WidgetCreateForm";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
 import { isNil } from "../../../../utility";
@@ -87,11 +88,7 @@ export class WidgetsWidget extends React.Component<{}, State> {
                                     icon="edit"
                                     small={true}
                                     onClick={() => {
-<<<<<<< HEAD
-                                        this.showSubSection(WidgetWidgetSubSection.EDIT);
-=======
                                         this.showSubSection(WidgetWidgetSubSection.SETUP);
->>>>>>> 5849ca2... Almost working - widget setup now in its own component. Table exists for viewing/searching intents. Can create/edit/delete intents. Widgets can almost be edited; need to convert existing WidgetDTO into a format the WidgetCreateForm can understand. Just saving progress.
                                         this.setState({ updatingWidget: row.original });
                                     }}
                                 />
@@ -130,12 +127,8 @@ export class WidgetsWidget extends React.Component<{}, State> {
         // TODO - Improve this - this will be slow if there are many users.
         // Minimally could wait to hit enter before filtering. Pagination handling
         if (filter) {
-<<<<<<< HEAD
-            data = data.filter((row) => {
-                const { universalName, namespace } = row.value;
-=======
             widgets = widgets.filter((row) => {
->>>>>>> 5849ca2... Almost working - widget setup now in its own component. Table exists for viewing/searching intents. Can create/edit/delete intents. Widgets can almost be edited; need to convert existing WidgetDTO into a format the WidgetCreateForm can understand. Just saving progress.
+            const { universalName, namespace } = row.value;
                 return (
                     (!isNil(universalName) && universalName.toLowerCase().includes(filter)) ||
                     (!isNil(namespace) && namespace.toLowerCase().includes(filter))
@@ -181,10 +174,11 @@ export class WidgetsWidget extends React.Component<{}, State> {
                     </div>
                 )}
 
+
                 <div className={styles.widget_body}>
                     {showWidgetSetup && (
                         <WidgetSetup
-                            widget={this.state.updatingWidget}
+                            updatingWidget={this.state.updatingWidget}
                             widgetTypes={this.state.widgetTypes}
                             closeSetup={() => {
                                 this.handleUpdate();
