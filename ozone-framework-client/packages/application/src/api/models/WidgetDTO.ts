@@ -1,124 +1,71 @@
-import { createValidator, Model, Property } from "@ozone/openapi-decorators";
-
 import { GroupDTO } from "./GroupDTO";
 import { IntentsDTO } from "./IntentDTO";
 import { UserDTO } from "./UserDTO";
 import { WidgetTypeDTO, WidgetTypeReference } from "./WidgetTypeDTO";
+import { createValidator } from "./validate";
+import {
+    WIDGET_CREATE_RESPONSE_SCHEMA,
+    WIDGET_DELETE_RESPONSE_SCHEMA,
+    WIDGET_GET_RESPONSE_SCHEMA,
+    WIDGET_SCHEMA,
+    WIDGET_UPDATE_GROUPS_RESPONSE_SCHEMA,
+    WIDGET_UPDATE_USERS_RESPONSE_SCHEMA
+} from "./schemas/widget.schema";
 
-@Model({ name: "WidgetProperties" })
-export class WidgetPropertiesDTO {
-    @Property({
-        nullable: true
-    })
-    universalName: string;
-
-    @Property()
+export interface WidgetDTO {
+    id: string;
     namespace: string;
+    path: string;
+    value: WidgetPropertiesDTO;
+}
 
-    @Property({
-        nullable: true
-    })
-    description: string;
+export const validateWidget = createValidator<WidgetDTO>(WIDGET_SCHEMA);
 
-    @Property()
+export interface WidgetPropertiesDTO {
+    universalName?: string;
+    namespace: string;
+    description?: string;
     url: string;
-
-    @Property()
     headerIcon: string;
-
-    @Property()
     image: string;
-
-    @Property()
     smallIconUrl: string;
-
-    @Property()
     mediumIconUrl: string;
-
-    @Property()
     width: number;
-
-    @Property()
     height: number;
-
-    @Property()
     x: number;
-
-    @Property()
     y: number;
-
-    @Property()
     minimized: boolean;
-
-    @Property()
     maximized: boolean;
-
-    @Property({
-        nullable: true
-    })
-    widgetVersion: string;
-
-    @Property({ readOnly: true })
+    widgetVersion?: string;
     totalUsers: number;
-
-    @Property({ readOnly: true })
     totalGroups: number;
-
-    @Property()
     singleton: boolean;
-
-    @Property()
     visible: boolean;
-
-    @Property()
     background: boolean;
-
-    @Property()
     mobileReady: boolean;
-
-    @Property({ nullable: true })
     descriptorUrl?: string;
-
-    @Property()
     definitionVisible: boolean;
-
-    @Property()
     directRequired: any[];
-
-    @Property()
     allRequired: any[];
-
-    @Property(() => IntentsDTO)
     intents: IntentsDTO;
-
-    @Property(() => WidgetTypeDTO)
     widgetTypes: WidgetTypeDTO[];
 }
 
-@Model({ name: "Widget" })
-export class WidgetDTO {
-    static validate = createValidator(WidgetDTO);
-
-    @Property()
-    id: string;
-
-    @Property()
-    namespace: string;
-
-    @Property()
-    path: string;
-
-    @Property(() => WidgetPropertiesDTO)
-    value: WidgetPropertiesDTO;
+export interface WidgetGetResponse {
+    success: boolean;
+    results: number;
+    data: WidgetDTO[];
 }
+
+export const validateWidgetGetResponse = createValidator<WidgetGetResponse>(WIDGET_GET_RESPONSE_SCHEMA);
 
 export interface WidgetCreateRequest {
     displayName: string;
     widgetVersion: string;
     description: string;
     widgetUrl: string;
-    imageUrlSmall: string; // Small Icon
-    imageUrlMedium: string; // Large Icon
+    imageUrlSmall: string;
+    imageUrlMedium: string;
     width: number;
     height: number;
     widgetGuid: string;
@@ -132,73 +79,43 @@ export interface WidgetCreateRequest {
     intents?: IntentsDTO;
 }
 
+export interface WidgetCreateResponse {
+    success: boolean;
+    data: WidgetDTO[];
+}
+
+export const validateWidgetCreateResponse = createValidator<WidgetCreateResponse>(WIDGET_CREATE_RESPONSE_SCHEMA);
+
 export interface WidgetUpdateRequest extends WidgetCreateRequest {
     id: string;
 }
 
-@Model()
-export class WidgetUpdateUsersResponse {
-    static validate = createValidator(WidgetUpdateUsersResponse);
-
-    @Property()
-    success: boolean;
-
-    @Property(() => UserDTO)
-    data: UserDTO[];
-}
-
-@Model()
-export class WidgetUpdateGroupsResponse {
-    static validate = createValidator(WidgetUpdateGroupsResponse);
-
-    @Property()
-    success: boolean;
-
-    @Property(() => GroupDTO)
-    data: GroupDTO[];
-}
-
-@Model()
-export class WidgetCreateResponse {
-    static validate = createValidator(WidgetCreateResponse);
-
-    @Property()
-    success: boolean;
-
-    @Property(() => WidgetDTO)
-    data: WidgetDTO[];
-}
-
-@Model()
-export class WidgetDeleteIdDTO {
-    @Property()
+export interface WidgetDeleteIdDTO {
     id: string;
-
-    @Property()
     value: object;
 }
 
-@Model()
-export class WidgetDeleteResponse {
-    static validate = createValidator(WidgetDeleteResponse);
-
-    @Property()
+export interface WidgetDeleteResponse {
     success: boolean;
-
-    @Property(() => WidgetDeleteIdDTO)
     data: WidgetDeleteIdDTO[];
 }
 
-@Model()
-export class WidgetGetResponse {
-    static validate = createValidator(WidgetGetResponse);
+export const validateWidgetDeleteResponse = createValidator<WidgetDeleteResponse>(WIDGET_DELETE_RESPONSE_SCHEMA);
 
-    @Property()
+export interface WidgetUpdateUsersResponse {
     success: boolean;
-
-    @Property()
-    results: number;
-
-    @Property(() => WidgetDTO)
-    data: WidgetDTO[];
+    data: UserDTO[];
 }
+
+export const validateWidgetUpdateUsersResponse = createValidator<WidgetUpdateUsersResponse>(
+    WIDGET_UPDATE_USERS_RESPONSE_SCHEMA
+);
+
+export interface WidgetUpdateGroupsResponse {
+    success: boolean;
+    data: GroupDTO[];
+}
+
+export const validateWidgetUpdateGroupsResponse = createValidator<WidgetUpdateGroupsResponse>(
+    WIDGET_UPDATE_GROUPS_RESPONSE_SCHEMA
+);

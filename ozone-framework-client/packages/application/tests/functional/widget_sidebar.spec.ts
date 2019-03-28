@@ -42,11 +42,7 @@ module.exports = {
             .click(MainPage.WIDGETS_BUTTON)
             .waitForElementVisible(MainPage.WIDGETS_DIALOG, 1500, "[Widget Sidebar] is visible");
 
-        browser
-            .click(MainPage.WIDGETS_SORT_DSC)
-            .pause(1500)
-            .click(MainPage.WIDGETS_SORT_ASC)
-            .click(MainPage.WIDGETS_SORT_DSC);
+        browser.click(MainPage.WIDGETS_SORT);
 
         browser.closeWindow().end();
     }

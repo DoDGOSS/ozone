@@ -10,7 +10,7 @@ export interface CancelButtonProps {
     className?: string;
 }
 
-export const CancelButton: React.FunctionComponent<CancelButtonProps> = ({ onClick, className }) => (
+export const CancelButton: React.FC<CancelButtonProps> = ({ onClick, className }) => (
     <Button
         className={classNames(styles.cancelButton, className)}
         text="Back"

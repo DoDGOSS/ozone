@@ -2,11 +2,11 @@ import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
 import { WidgetDTO } from "../api/models/WidgetDTO";
-import { WidgetAPI } from "../api/clients/WidgetAPI";
+import { WidgetAPI, widgetApi as widgetApiDefault } from "../api/clients/WidgetAPI";
+
+import { not, some } from "../utility";
 
 import { ADMIN_WIDGETS } from "./admin-widgets";
-
-import { widgetApi as widgetApiDefault } from "../api/clients/WidgetAPI";
 
 export class WidgetStore {
     private readonly adminWidgets$ = new BehaviorSubject(ADMIN_WIDGETS);
@@ -33,15 +33,11 @@ export class WidgetStore {
             .then((results) => {
                 this.onWidgetSuccess(results.data.data);
             })
-            .catch((error) => {
-                this.onWidgetFailure(error);
-            });
+            .catch(this.onWidgetFailure);
     };
 
     private onWidgetSuccess = (widgets: WidgetDTO[]) => {
-        const result = widgets
-            .filter((widget) => !widget.value.universalName.includes("admin"))
-            .sort((a, b) => a.value.namespace.localeCompare(b.value.namespace));
+        const result = widgets.filter(not(isAdminWidget)).sort(byNamespace);
 
         this.standardWidgets$.next(result);
         this.loadingWidgets$.next(false);
@@ -56,3 +52,11 @@ export class WidgetStore {
 }
 
 export const widgetStore = new WidgetStore();
+
+function isAdminWidget(widget: WidgetDTO): boolean {
+    return some(widget.value.widgetTypes, (widgetType) => widgetType.name === "administration");
+}
+
+function byNamespace(a: WidgetDTO, b: WidgetDTO): number {
+    return a.value.namespace.localeCompare(b.value.namespace);
+}

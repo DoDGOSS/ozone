@@ -8,7 +8,7 @@ import { mainStore } from "../../stores/MainStore";
 
 import * as styles from "./index.scss";
 
-export const LoginScreen: React.FunctionComponent<{}> = () => {
+export const LoginScreen: React.FC<{}> = () => {
     useEffect(() => {
         mainStore.showWarningDialog();
     }, []);

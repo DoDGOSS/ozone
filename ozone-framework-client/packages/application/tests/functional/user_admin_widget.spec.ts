@@ -30,7 +30,7 @@ function openEditSectionForUser(browser: NightwatchAPI, userDisplayName: string,
                         relevant_row = i;
                         browser.getAttribute(
                             `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                            1}) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-edit-button']`,
+                                1}) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-edit-button']`,
                             "disabled",
                             function(isDisabled) {
                                 this.assert.equal(
@@ -47,7 +47,7 @@ function openEditSectionForUser(browser: NightwatchAPI, userDisplayName: string,
     );
     browser.click(
         `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
-        1}) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-edit-button']`
+            1}) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-edit-button']`
     );
 
     if (section) {
@@ -162,7 +162,7 @@ module.exports = {
             .click(
                 `${
                     UserAdminWidget.Main.DIALOG
-                    } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-edit-button']`
+                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-edit-button']`
             );
 
         browser.pause(5000);
@@ -270,7 +270,7 @@ module.exports = {
             .click(
                 `${
                     UserAdminWidget.WidgetsUser.TAB
-                    } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-delete-widget-button']`
+                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-delete-widget-button']`
             )
             .pause(250)
             .waitForElementPresent(
@@ -292,7 +292,7 @@ module.exports = {
             .click(
                 `${
                     UserAdminWidget.WidgetsUser.TAB
-                    } div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-delete-widget-button']`
+                } div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-delete-widget-button']`
             )
             .pause(250)
             .waitForElementPresent(
@@ -364,7 +364,7 @@ module.exports = {
             .click(
                 `${
                     UserAdminWidget.Main.DIALOG
-                    } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-delete-button']`
+                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-delete-button']`
             )
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,

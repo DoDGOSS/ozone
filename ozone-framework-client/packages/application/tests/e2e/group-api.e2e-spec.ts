@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import { GroupAPI } from "../../src/api/clients/GroupAPI";
 import { GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../src/api/models/GroupDTO";
 

@@ -9,7 +9,7 @@ import { useBehavior } from "../../hooks";
 import { authStore } from "../../stores/AuthStore";
 import { mainStore } from "../../stores/MainStore";
 
-export const UserProfileDialog: React.FunctionComponent = () => {
+export const UserProfileDialog: React.FC = () => {
     const themeClass = useBehavior(mainStore.themeClass);
 
     const user = useBehavior(authStore.user);
@@ -53,7 +53,7 @@ interface DataSectionProps {
     children?: React.ReactNode;
 }
 
-const DataSection: React.FunctionComponent<DataSectionProps> = ({ title, children }) => (
+const DataSection: React.FC<DataSectionProps> = ({ title, children }) => (
     <div className={styles.dataSection}>
         <header>{title}</header>
         <div className={styles.dataGrid}>{children}</div>
@@ -65,7 +65,7 @@ interface DataItemProps {
     children?: React.ReactNode;
 }
 
-const DataItem: React.FunctionComponent<DataItemProps> = ({ label, children }) => (
+const DataItem: React.FC<DataItemProps> = ({ label, children }) => (
     <>
         <label>{label}</label>
         <span>{children}</span>

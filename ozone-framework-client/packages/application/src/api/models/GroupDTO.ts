@@ -1,55 +1,35 @@
-import { createValidator, Model, Property } from "@ozone/openapi-decorators";
-
 import { IdDTO } from "./IdDTO";
+import { createValidator } from "./validate";
+import {
+    GROUP_CREATE_RESPONSE_SCHEMA,
+    GROUP_DELETE_RESPONSE_SCHEMA,
+    GROUP_GET_RESPONSE_SCHEMA,
+    GROUP_SCHEMA,
+    GROUP_UPDATE_RESPONSE_SCHEMA
+} from "./schemas/group.schema";
 
-@Model({ name: "Group" })
-export class GroupDTO {
-    static validate = createValidator(GroupDTO);
-
-    @Property()
+export interface GroupDTO {
     id: number;
-
-    @Property()
     name: string;
-
-    @Property({ nullable: true })
     displayName?: string;
-
-    @Property({ nullable: true })
     description?: string;
-
-    @Property({ nullable: true })
     email?: string;
-
-    @Property({ enum: ["active", "inactive"] })
     status: "active" | "inactive";
-
-    @Property()
     automatic: boolean;
-
-    @Property({ readOnly: true })
     stackDefault: boolean;
-
-    @Property({ readOnly: true })
     totalStacks: number;
-
-    @Property({ readOnly: true })
     totalUsers: number;
-
-    @Property({ readOnly: true })
     totalWidgets: number;
 }
 
-@Model()
-export class GroupGetResponse {
-    static validate = createValidator(GroupGetResponse);
+export const validateGroup = createValidator<GroupDTO>(GROUP_SCHEMA);
 
-    @Property()
+export interface GroupGetResponse {
     results: number;
-
-    @Property(() => GroupDTO)
     data: GroupDTO[];
 }
+
+export const validateGroupGetResponse = createValidator<GroupGetResponse>(GROUP_GET_RESPONSE_SCHEMA);
 
 export interface GroupCreateRequest {
     name: string;
@@ -61,41 +41,29 @@ export interface GroupCreateRequest {
     active?: boolean;
 }
 
-@Model()
-export class GroupCreateResponse {
-    static validate = createValidator(GroupCreateResponse);
-
-    @Property()
+export interface GroupCreateResponse {
     success: boolean;
-
-    @Property(() => GroupDTO)
     data: GroupDTO[];
 }
+
+export const validateGroupCreateResponse = createValidator<GroupCreateResponse>(GROUP_CREATE_RESPONSE_SCHEMA);
 
 export interface GroupUpdateRequest extends GroupCreateRequest {
     id: number;
     update_action?: "add" | "remove";
-    user_ids?: Array<number>;
+    user_ids?: number[];
 }
 
-@Model()
-export class GroupUpdateResponse {
-    static validate = createValidator(GroupUpdateResponse);
-
-    @Property()
+export interface GroupUpdateResponse {
     success: boolean;
-
-    @Property(() => GroupDTO)
     data: GroupDTO[];
 }
 
-@Model()
-export class GroupDeleteResponse {
-    static validate = createValidator(GroupDeleteResponse);
+export const validateGroupUpdateResponse = createValidator<GroupUpdateResponse>(GROUP_UPDATE_RESPONSE_SCHEMA);
 
-    @Property()
+export interface GroupDeleteResponse {
     success: boolean;
-
-    @Property(() => IdDTO)
     data: IdDTO[];
 }
+
+export const validateGroupDeleteResponse = createValidator<GroupDeleteResponse>(GROUP_DELETE_RESPONSE_SCHEMA);

@@ -11,7 +11,7 @@ interface ConfirmationDialogProps {
     payload: any;
 }
 
-export const ConfirmationDialog: React.FunctionComponent<ConfirmationDialogProps> = (props) => {
+export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = (props) => {
     return (
         <div>
             <Dialog

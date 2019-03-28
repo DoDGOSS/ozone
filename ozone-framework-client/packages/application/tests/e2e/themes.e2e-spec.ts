@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import { NodeGateway } from "./node-gateway";
 import { ThemeAPI } from "../../src/api/clients/ThemeAPI";
 import { logResponse } from "./assertions";

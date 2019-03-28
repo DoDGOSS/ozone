@@ -2,8 +2,13 @@ import * as qs from "qs";
 
 import { Gateway, getGateway, Response } from "../interfaces";
 
-import { IdDTO, UuidDTO } from "../models/IdDTO";
+import { mapIds, mapUuids } from "../models/IdDTO";
 import {
+    validateWidgetCreateResponse,
+    validateWidgetDeleteResponse,
+    validateWidgetGetResponse,
+    validateWidgetUpdateGroupsResponse,
+    validateWidgetUpdateUsersResponse,
     WidgetCreateRequest,
     WidgetCreateResponse,
     WidgetDeleteResponse,
@@ -29,13 +34,13 @@ export class WidgetAPI {
     async getWidgets(criteria?: WidgetQueryCriteria): Promise<Response<WidgetGetResponse>> {
         return this.gateway.get("widget/", {
             params: getOptionParams(criteria),
-            validate: WidgetGetResponse.validate
+            validate: validateWidgetGetResponse
         });
     }
 
     async getWidgetById(id: string): Promise<Response<WidgetGetResponse>> {
         return this.gateway.get(`widget/${id}/`, {
-            validate: WidgetGetResponse.validate
+            validate: validateWidgetGetResponse
         });
     }
 
@@ -48,7 +53,7 @@ export class WidgetAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: WidgetCreateResponse.validate
+            validate: validateWidgetCreateResponse
         });
     }
 
@@ -61,14 +66,14 @@ export class WidgetAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: WidgetCreateResponse.validate
+            validate: validateWidgetCreateResponse
         });
     }
 
     async addWidgetUsers(widgetId: string, userIds: number | number[]): Promise<Response<WidgetUpdateUsersResponse>> {
         const requestData = qs.stringify({
             widget_id: widgetId,
-            data: JSON.stringify(IdDTO.fromValues(userIds)),
+            data: JSON.stringify(mapIds(userIds)),
             tab: "users",
             update_action: "add"
         });
@@ -77,7 +82,7 @@ export class WidgetAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: WidgetUpdateUsersResponse.validate
+            validate: validateWidgetUpdateUsersResponse
         });
     }
 
@@ -87,7 +92,7 @@ export class WidgetAPI {
     ): Promise<Response<WidgetUpdateUsersResponse>> {
         const requestData = qs.stringify({
             widget_id: widgetId,
-            data: JSON.stringify(IdDTO.fromValues(userIds)),
+            data: JSON.stringify(mapIds(userIds)),
             tab: "users",
             update_action: "remove"
         });
@@ -96,7 +101,7 @@ export class WidgetAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: WidgetUpdateUsersResponse.validate
+            validate: validateWidgetUpdateUsersResponse
         });
     }
 
@@ -106,7 +111,7 @@ export class WidgetAPI {
     ): Promise<Response<WidgetUpdateGroupsResponse>> {
         const requestData = qs.stringify({
             widget_id: widgetId,
-            data: JSON.stringify(IdDTO.fromValues(groupIds)),
+            data: JSON.stringify(mapIds(groupIds)),
             tab: "groups",
             update_action: "add"
         });
@@ -115,7 +120,7 @@ export class WidgetAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: WidgetUpdateGroupsResponse.validate
+            validate: validateWidgetUpdateGroupsResponse
         });
     }
 
@@ -125,7 +130,7 @@ export class WidgetAPI {
     ): Promise<Response<WidgetUpdateGroupsResponse>> {
         const requestData = qs.stringify({
             widget_id: widgetId,
-            data: JSON.stringify(IdDTO.fromValues(groupIds)),
+            data: JSON.stringify(mapIds(groupIds)),
             tab: "groups",
             update_action: "remove"
         });
@@ -134,21 +139,21 @@ export class WidgetAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: WidgetUpdateGroupsResponse.validate
+            validate: validateWidgetUpdateGroupsResponse
         });
     }
 
     async deleteWidget(id: string | string[]): Promise<Response<WidgetDeleteResponse>> {
         const requestData = qs.stringify({
             _method: "DELETE",
-            data: JSON.stringify(UuidDTO.fromValues(id))
+            data: JSON.stringify(mapUuids(id))
         });
 
         return this.gateway.post("widget/", requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: WidgetDeleteResponse.validate
+            validate: validateWidgetDeleteResponse
         });
     }
 }

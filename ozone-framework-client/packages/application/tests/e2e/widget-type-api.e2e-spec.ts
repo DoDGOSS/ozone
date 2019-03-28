@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import { WidgetTypeAPI } from "../../src/api/clients/WidgetTypeAPI";
 
 import { NodeGateway } from "./node-gateway";

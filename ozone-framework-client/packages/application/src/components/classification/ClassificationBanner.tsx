@@ -8,7 +8,7 @@ export interface ClassificationBannerProps {
     foregroundColor: string;
 }
 
-export const ClassificationBanner: React.FunctionComponent<ClassificationBannerProps> = (props) => {
+export const ClassificationBanner: React.FC<ClassificationBannerProps> = (props) => {
     const { text, backgroundColor, foregroundColor } = props;
 
     return (
