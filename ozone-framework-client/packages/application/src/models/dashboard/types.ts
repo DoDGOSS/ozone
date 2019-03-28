@@ -1,6 +1,7 @@
-import { BehaviorObservable } from "../../../observables";
-import { Widget } from "../../../stores/interfaces";
-import { ObservableWidget } from "./ObservableWidget";
+import { BehaviorObservable } from "../../observables";
+
+import { UserWidget } from "../UserWidget";
+
 import { FitPanel } from "./FitPanel";
 import { TabbedPanel } from "./TabbedPanel";
 import { ExpandoPanel } from "./ExpandoPanel";
@@ -11,7 +12,7 @@ export interface PanelState {
     id: string;
     title: string;
     type: LayoutType;
-    widgets: ObservableWidget[];
+    widgets: UserWidget[];
 }
 
 export interface Panel<T extends PanelState> {
@@ -23,7 +24,7 @@ export interface Panel<T extends PanelState> {
 
     closeWidget(widgetId: string): void;
 
-    findWidgetById(widgetId: string): Widget | undefined;
+    findWidgetById(widgetId: string): UserWidget | undefined;
 }
 
 export function isFitPanel(panel: Panel<any>): panel is FitPanel {

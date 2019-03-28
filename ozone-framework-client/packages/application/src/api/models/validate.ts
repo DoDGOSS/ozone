@@ -2,6 +2,7 @@ import ajv, { Ajv, ErrorObject, ValidateFunction } from "ajv";
 import { isNil } from "lodash";
 
 import { ValidationError } from "../errors";
+import { Validator } from "../interfaces";
 
 export function createValidator<T>(schema: any): Validator<T> {
     let validate: ValidateFunction;
@@ -34,10 +35,3 @@ function formatValidationErrors(errors: ErrorObject[] | null | undefined): strin
 
     return errors.map((e) => `${e.schemaPath} - ${e.message}`).join("; ");
 }
-
-export interface Type<T> extends Function {
-    // tslint:disable-next-line:callable-types
-    new (...args: any[]): T;
-}
-
-export type Validator<T> = (data: any) => T;

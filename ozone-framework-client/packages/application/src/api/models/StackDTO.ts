@@ -3,7 +3,8 @@ import { UserDTO, UsernameDTO } from "./UserDTO";
 import { createValidator } from "./validate";
 import {
     STACK_CREATE_RESPONSE_SCHEMA,
-    STACK_DELETE_RESPONSE_SCHEMA,
+    STACK_DELETE_ADMIN_RESPONSE_SCHEMA,
+    STACK_DELETE_USER_RESPONSE_SCHEMA,
     STACK_GET_RESPONSE_SCHEMA,
     STACK_SCHEMA,
     STACK_UPDATE_RESPONSE_SCHEMA
@@ -11,14 +12,14 @@ import {
 
 export interface StackDTO {
     approved: boolean;
-    imageUrl?: string;
-    id: number;
-    owner?: UsernameDTO;
-    groups: any[];
-    stackContext: string;
     defaultGroup: GroupDTO;
-    descriptorUrl?: string;
     description?: string;
+    descriptorUrl?: string;
+    groups: GroupDTO[];
+    id: number;
+    imageUrl?: string;
+    owner?: UsernameDTO;
+    stackContext: string;
     name: string;
     totalWidgets: number;
     totalGroups: number;
@@ -66,13 +67,42 @@ export type StackUpdateResponse = StackCreateResponse;
 
 export const validateStackUpdateResponse = createValidator<StackUpdateResponse>(STACK_UPDATE_RESPONSE_SCHEMA);
 
-export interface StackDeleteIdDTO {
+export interface StackDeleteAdminView {
     id: number;
 }
 
-export interface StackDeleteResponse {
+export interface StackDeleteAdminResponse {
     success: boolean;
-    data: StackDeleteIdDTO[];
+    data: StackDeleteAdminView[];
 }
 
-export const validateStackDeleteResponse = createValidator<StackDeleteResponse>(STACK_DELETE_RESPONSE_SCHEMA);
+export const validateStackDeleteAdminResponse = createValidator<StackDeleteAdminResponse>(
+    STACK_DELETE_ADMIN_RESPONSE_SCHEMA
+);
+
+export interface StackDeleteUserView {
+    approved: boolean;
+    defaultGroup?: {
+        id: number;
+    };
+    description?: null;
+    descriptorUrl?: string;
+    groups: any[];
+    id: number;
+    imageUrl?: string;
+    name: string;
+    owner?: {
+        id: number;
+    };
+    stackContext: string;
+    uniqueWidgetCount: number;
+}
+
+export interface StackDeleteUserResponse {
+    data: StackDeleteUserView[];
+    success: boolean;
+}
+
+export const validateStackDeleteUserResponse = createValidator<StackDeleteUserResponse>(
+    STACK_DELETE_USER_RESPONSE_SCHEMA
+);

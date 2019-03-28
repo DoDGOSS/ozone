@@ -2,13 +2,12 @@ import React, { useCallback } from "react";
 import { useBehavior } from "../../hooks";
 
 import { PropsBase } from "../../common";
-import { DashboardNode } from "../../stores/interfaces";
 
 import { dashboardService } from "../../stores/DashboardService";
 import { dashboardStore } from "../../stores/DashboardStore";
 import { mainStore } from "../../stores/MainStore";
 
-import { DashboardLayout, DashboardPath } from "./types";
+import { DashboardLayout, DashboardNode, DashboardPath } from "./types";
 import { DashboardPanel } from "./layout/DashboardPanel";
 
 import { classNames } from "../../utility";
