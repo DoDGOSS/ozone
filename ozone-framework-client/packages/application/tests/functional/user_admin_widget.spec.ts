@@ -17,6 +17,10 @@ const NEW_USER_EMAIL = "new_user_email@email.com";
 const NEW_USER_DISPLAY_NAME = "Edited User";
 const NEW_USER_USERNAME = "newUser1";
 
+const NEW_USER_PREFERENCE_NAMESPACE = "owf";
+const NEW_USER_PREFERENCE_PATH = "owf.test.preference";
+const NEW_USER_PREFERENCE_VALUE = "myTestPreference";
+
 function openEditSectionForUser(browser: NightwatchAPI, userDisplayName: string, section?: string) {
     let relevant_row: number = 0;
 
@@ -88,10 +92,10 @@ module.exports = {
 
         browser.click(AdminWidget.userTableEditButton("testUser1"));
 
-        browser.waitForElementVisible(AdminWidget.PREFERENCES_TAB, 1000);
+        browser.waitForElementVisible(AdminWidget.PREFERENCES_TAB, 2000);
         browser.click(AdminWidget.PREFERENCES_TAB);
 
-        browser.pause(1000);
+        browser.pause(2000);
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
@@ -385,5 +389,62 @@ module.exports = {
         browser.expect.element(AdminWidget.USER_ADMIN_WIDGET_DIALOG).text.to.not.contain(NEW_USER_EMAIL);
 
         browser.closeWindow().end();
-    }
+    },
+
+    "As an Administrator, I can create a new preference for a user": (browser: NightwatchAPI) => {
+        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.USERS);
+
+        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 1000, "[User Admin Widget] is visible");
+
+        browser.assert.containsText(
+            AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+            "Test Administrator 1",
+            "[User Admin Widget] Displays user information"
+        );
+
+        browser.click(AdminWidget.userTableEditButton("testUser1"));
+
+        browser.waitForElementVisible(AdminWidget.PREFERENCES_TAB, 2000);
+        browser.click(AdminWidget.PREFERENCES_TAB);
+
+        browser.assert.containsText(
+            AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+            "Namespace",
+            "[User Admin Preference table] is visible"
+        );
+
+        browser.click(AdminWidget.USER_ADMIN_CREATE_BUTTON);
+
+        browser.pause(2000);
+
+        browser.assert.containsText(
+            AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+            "Namespace",
+            "[User Admin Create Preference Form] is visible"
+        );
+
+
+        browser
+            .setValue(AdminWidget.NAMESPACE_FIELD, NEW_USER_PREFERENCE_NAMESPACE)
+            .setValue(AdminWidget.PATH_FIELD, NEW_USER_PREFERENCE_PATH)
+            .setValue(AdminWidget.VALUE_FIELD, NEW_USER_PREFERENCE_VALUE);
+
+
+        browser.click(AdminWidget.SUBMIT_BUTTON);
+
+        browser.assert.containsText(
+            AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+            "Namespace",
+            "[User Admin Preference table] is visible"
+        );
+
+            browser.assert.containsText(
+                AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+                NEW_USER_PREFERENCE_NAMESPACE,
+                "[User Admin Widget] New User Preference successfully created"
+            );
+
+        browser.closeWindow().end();
+    },
 };
