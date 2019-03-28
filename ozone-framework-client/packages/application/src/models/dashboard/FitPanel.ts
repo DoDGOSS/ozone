@@ -1,14 +1,15 @@
-import { PanelState } from "./types";
-import { AbstractPanel } from "./AbstractPanel";
-import { ObservableWidget } from "./ObservableWidget";
-
 import uuid from "uuid/v4";
 
+import { UserWidget } from "../UserWidget";
+
+import { PanelState } from "./types";
+import { AbstractPanel } from "./AbstractPanel";
+
 export class FitPanel extends AbstractPanel<PanelState> {
-    constructor(id: string | null, widget: ObservableWidget | null = null) {
+    constructor(id: string | null, widget: UserWidget | null = null) {
         super({
             id: id || uuid(),
-            title: widget ? widget.definition.title : "",
+            title: widget ? widget.widget.title : "",
             type: "fit",
             widgets: widget ? [widget] : []
         });

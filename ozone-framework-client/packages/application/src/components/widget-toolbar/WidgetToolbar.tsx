@@ -28,14 +28,14 @@ export const WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
     useEffect(() => widgetStore.fetchWidgets(), []);
 
     if (sortOrder === "asc") {
-        widgets.sort((a, b) => a.value.namespace.localeCompare(b.value.namespace));
+        widgets.sort((a, b) => a.title.localeCompare(b.title));
     } else {
-        widgets.sort((a, b) => b.value.namespace.localeCompare(a.value.namespace));
+        widgets.sort((a, b) => b.title.localeCompare(a.title));
     }
 
     if (!isBlank(filter)) {
         widgets = widgets.filter((row) => {
-            return row.value.namespace.toLowerCase().includes(filter.toLocaleLowerCase());
+            return row.title.toLowerCase().includes(filter.toLocaleLowerCase());
         });
     }
 
@@ -81,13 +81,10 @@ export const WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
                         {widgets.map((widget) => (
                             <li key={widget.id}>
                                 <Widget
-                                    name={widget.value.namespace}
+                                    name={widget.title}
                                     // TODO - Replace this temp fix to display images
                                     // smallIconUrl={widget.value.smallIconUrl}
-                                    smallIconUrl={
-                                        IMAGE_ROOT_URL +
-                                        widget.value.smallIconUrl.replace("static/themes/common/images", "")
-                                    }
+                                    smallIconUrl={widget.images.smallUrl}
                                 />
                             </li>
                         ))}

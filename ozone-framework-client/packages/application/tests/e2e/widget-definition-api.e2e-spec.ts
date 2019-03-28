@@ -3,6 +3,7 @@ import { WidgetDefinitionAPI } from "../../src/api/clients/WidgetDefinitionAPI";
 import { NodeGateway } from "./node-gateway";
 
 import { WIDGET_DEFINITION } from "../unit/data";
+import { logResponse } from "./assertions";
 
 // TODO: 404?
 describe("Widget Definition API", () => {
@@ -21,6 +22,8 @@ describe("Widget Definition API", () => {
         // This response returns 21 widgets, the first ten of which are the same as WIDGETS[0:9], and none of which
         // include WIDGET_DEFINITION. What should this be returning?
         const response = await widgetDefApi.getWidgetDefinitions();
+        logResponse(response);
+
         // console.dir(response.data)
         expect(response.status).toEqual(200);
         expect(response.data).toMatchObject({

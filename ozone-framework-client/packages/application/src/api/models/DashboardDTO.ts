@@ -5,6 +5,7 @@ import {
     DASHBOARD_SCHEMA,
     DASHBOARD_UPDATE_RESPONSE_SCHEMA
 } from "./schemas/dashboard.schema";
+import { StackDTO } from "./StackDTO";
 
 export interface DashboardDTO {
     EDashboardLayoutList: string;
@@ -26,7 +27,7 @@ export interface DashboardDTO {
     prettyCreatedDate: string;
     prettyEditedDate: string;
     publishedToStore: boolean;
-    stack?: any;
+    stack?: StackDTO;
     type?: any;
     user: UserReference;
 }

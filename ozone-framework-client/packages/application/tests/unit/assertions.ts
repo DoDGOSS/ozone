@@ -1,3 +1,6 @@
+import { Validator } from "../../src/api/interfaces";
+import { ValidationError } from "../../src/api/errors";
+
 export function expectToThrow(callable: () => any): any {
     try {
         callable();
@@ -17,4 +20,15 @@ export function expectSuccessfulValidation(callable: () => any): any {
     }
 
     expect(result).toBeDefined();
+}
+
+export function expectValidationSuccess(validate: Validator<any>, data: any): void {
+    try {
+        validate(data);
+    } catch (ex) {
+        if (ex instanceof ValidationError) {
+            console.log(JSON.stringify(ex.errors, null, 4));
+        }
+        fail(ex);
+    }
 }

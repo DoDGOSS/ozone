@@ -94,7 +94,7 @@ export const DASHBOARD_SCHEMA = {
             type: "boolean"
         },
         stack: {
-            type: ["null"] // TODO
+            oneOf: [{ type: "null" }, { type: "object" }]
         },
         type: {
             type: ["null"] // TODO

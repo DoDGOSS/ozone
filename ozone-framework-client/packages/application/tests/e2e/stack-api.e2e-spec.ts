@@ -3,8 +3,9 @@ import { StackCreateRequest, StackDTO, StackUpdateRequest } from "../../src/api/
 
 import { NodeGateway } from "./node-gateway";
 import { STACKS } from "../unit/data";
+import { logResponse } from "./assertions";
 
-describe("Stack API", () => {
+describe(StackAPI.name, () => {
     let gateway: NodeGateway;
     let stackApi: StackAPI;
 
@@ -16,8 +17,10 @@ describe("Stack API", () => {
         expect(gateway.isAuthenticated).toEqual(true);
     });
 
-    test("getStacks - GET /stack/", async () => {
+    test(`${StackAPI.prototype.getStacks.name} - GET /stack/`, async () => {
         const response = await stackApi.getStacks();
+        logResponse(response);
+
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
             results: 3,
@@ -25,8 +28,9 @@ describe("Stack API", () => {
         });
     });
 
-    test("getStackById - GET /stack/:id/", async () => {
+    test(`${StackAPI.prototype.getStackById.name} - GET /stack/:id/`, async () => {
         const response = await stackApi.getStackById(1);
+        logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
@@ -46,6 +50,7 @@ describe("Stack API", () => {
             };
 
             const createResponse = await stackApi.createStack(request);
+            logResponse(createResponse);
 
             expect(createResponse.status).toEqual(200);
             expect(createResponse.data).toEqual({
@@ -94,6 +99,7 @@ describe("Stack API", () => {
             };
 
             const response = await stackApi.updateStack(request);
+            logResponse(response);
 
             expect(response.status).toEqual(200);
             expect(response.data).toEqual({
@@ -131,8 +137,9 @@ describe("Stack API", () => {
             });
         });
 
-        test("deleteStack - DELETE /stack/:id/", async () => {
-            const response = await stackApi.deleteStack(stack.id, { adminEnabled: true });
+        test(`${StackAPI.prototype.deleteStackAsAdmin.name} - DELETE /stack/:id/`, async () => {
+            const response = await stackApi.deleteStackAsAdmin(stack.id);
+            logResponse(response);
 
             expect(response.status).toEqual(200);
             expect(response.data).toEqual({

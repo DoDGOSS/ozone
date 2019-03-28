@@ -6,41 +6,48 @@ import { WidgetAPI, widgetApi as widgetApiDefault } from "../api/clients/WidgetA
 
 import { not, some } from "../utility";
 
-import { ADMIN_WIDGETS } from "./admin-widgets";
+import { Widget } from "../models/Widget";
+import { ADMIN_WIDGETS } from "../test-data/admin-widgets";
+import { widgetFromJson } from "../codecs/Widget.codec";
+import { EXAMPLE_WIDGETS } from "../test-data/example-widgets";
+
+// TODO: Fetch the real widgets after the backend has been updated
 
 export class WidgetStore {
-    private readonly adminWidgets$ = new BehaviorSubject(ADMIN_WIDGETS);
-
-    private readonly error$ = new BehaviorSubject<string | null>(null);
-
-    private readonly loadingWidgets$ = new BehaviorSubject(true);
-
-    private readonly standardWidgets$ = new BehaviorSubject<WidgetDTO[]>([]);
-
     private readonly widgetApi: WidgetAPI;
+
+    private readonly adminWidgets$ = new BehaviorSubject<Widget[]>(ADMIN_WIDGETS);
+    private readonly standardWidgets$ = new BehaviorSubject<Widget[]>(EXAMPLE_WIDGETS);
+    private readonly isLoading$ = new BehaviorSubject(true);
+    private readonly error$ = new BehaviorSubject<string | null>(null);
 
     constructor(widgetApi?: WidgetAPI) {
         this.widgetApi = widgetApi || widgetApiDefault;
     }
 
     adminWidgets = () => asBehavior(this.adminWidgets$);
-    isLoading = () => asBehavior(this.loadingWidgets$);
     standardWidgets = () => asBehavior(this.standardWidgets$);
+    isLoading = () => asBehavior(this.isLoading$);
 
     fetchWidgets = () => {
-        this.widgetApi
-            .getWidgets()
-            .then((results) => {
-                this.onWidgetSuccess(results.data.data);
-            })
-            .catch(this.onWidgetFailure);
+        this.isLoading$.next(false);
+
+        // this.widgetApi
+        //     .getWidgets()
+        //     .then((results) => {
+        //         this.onWidgetSuccess(results.data.data);
+        //     })
+        //     .catch(this.onWidgetFailure);
     };
 
     private onWidgetSuccess = (widgets: WidgetDTO[]) => {
-        const result = widgets.filter(not(isAdminWidget)).sort(byNamespace);
+        const result = widgets
+            .filter(not(isAdminWidget))
+            .sort(byNamespace)
+            .map(widgetFromJson);
 
         this.standardWidgets$.next(result);
-        this.loadingWidgets$.next(false);
+        this.isLoading$.next(false);
         this.error$.next(null);
     };
 

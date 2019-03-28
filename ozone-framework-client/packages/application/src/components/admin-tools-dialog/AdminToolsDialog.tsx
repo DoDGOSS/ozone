@@ -1,7 +1,10 @@
+import * as styles from "./index.scss";
+
 import * as React from "react";
 import { useBehavior } from "../../hooks";
 
 import { Classes, Dialog } from "@blueprintjs/core";
+
 import { dashboardService } from "../../stores/DashboardService";
 import { mainStore } from "../../stores/MainStore";
 import { widgetStore } from "../../stores/WidgetStore";
@@ -9,8 +12,6 @@ import { widgetStore } from "../../stores/WidgetStore";
 import { WidgetTile } from "./WidgetTile";
 
 import { classNames } from "../../utility";
-
-import * as styles from "./index.scss";
 
 export const AdminToolsDialog: React.FC<{}> = () => {
     const themeClass = useBehavior(mainStore.themeClass);
@@ -33,12 +34,9 @@ export const AdminToolsDialog: React.FC<{}> = () => {
                             <WidgetTile
                                 key={widget.id}
                                 title={widget.title}
-                                iconUrl={widget.iconUrl}
+                                iconUrl={widget.images.largeUrl}
                                 onClick={() => {
-                                    dashboardService.addWidget({
-                                        id: widget.id,
-                                        definition: widget.definition
-                                    });
+                                    dashboardService.addWidget(widget);
                                     mainStore.hideAdminToolsDialog();
                                 }}
                             />

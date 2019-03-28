@@ -1,5 +1,7 @@
+import { dropRight, isString, keyBy, omit, pick, set } from "lodash";
+
 import { BehaviorSubject } from "rxjs";
-import { asBehavior } from "../../../observables";
+import { asBehavior } from "../../observables";
 
 import {
     Corner,
@@ -12,16 +14,14 @@ import {
     updateTree
 } from "react-mosaic-component";
 
-import { ExpandoPanel } from "./ExpandoPanel";
+import { UserWidget } from "../UserWidget";
 
-import { DashboardNode, DashboardPath, PanelMap } from "../types";
-import { Widget } from "../../../stores/interfaces";
-import { ObservableWidget } from "./ObservableWidget";
+import { DashboardNode, DashboardPath, PanelMap } from "../../components/widget-dashboard/types";
 import { LayoutType, Panel, PanelState } from "./types";
+
+import { ExpandoPanel } from "./ExpandoPanel";
 import { TabbedPanel } from "./TabbedPanel";
 import { FitPanel } from "./FitPanel";
-
-import { dropRight, isString, keyBy, omit, pick, set } from "lodash";
 
 export interface DashboardState {
     tree: DashboardNode | null;
@@ -40,7 +40,7 @@ export class Dashboard {
 
     state = () => asBehavior(this.state$);
 
-    findWidgetById = (widgetId: string): Widget | undefined => {
+    findWidgetById = (widgetId: string): UserWidget | undefined => {
         const { panels } = this.state$.value;
 
         for (const panelId in panels) {
@@ -56,14 +56,14 @@ export class Dashboard {
         return undefined;
     };
 
-    addWidget = (widget: Widget) => {
-        const existingWidget = this.findWidgetById(widget.id);
+    addWidget = (widget: UserWidget) => {
+        const existingWidget = this.findWidgetById(widget.widget.id);
         if (existingWidget) return;
 
         const prev = this.state$.value;
         const { panels, tree } = prev;
 
-        const panel = new FitPanel(null, ObservableWidget.fromWidget(widget));
+        const panel = new FitPanel(null, widget);
 
         const newTree = tree !== null ? addToTopRightOfLayout(tree, panel.id) : panel.id;
 
@@ -174,4 +174,4 @@ function addToTopRightOfLayout(layout: DashboardNode, id: string): DashboardNode
     return updateTree(layout, [update]);
 }
 
-export const EMPTY_DASHBOARD = new Dashboard(null, []);
+export const EMPTY_DASHBOARD = new Dashboard();

@@ -1,7 +1,13 @@
 import { AuthUserDTO } from "./models/AuthUserDTO";
-import { Validator } from "./models/validate";
 
 import { OzoneGateway } from "../services/OzoneGateway";
+
+export interface Type<T> extends Function {
+    // tslint:disable-next-line:callable-types
+    new (...args: any[]): T;
+}
+
+export type Validator<T> = (data: unknown) => T;
 
 export interface Gateway {
     readonly isAuthenticated: boolean;

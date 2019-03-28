@@ -1,5 +1,4 @@
 import * as qs from "qs";
-import { isNil } from "lodash";
 
 import { Gateway, getGateway, Response } from "../interfaces";
 
@@ -7,13 +6,14 @@ import { mapIds } from "../models/IdDTO";
 import {
     StackCreateRequest,
     StackCreateResponse,
-    StackDeleteResponse,
+    StackDeleteAdminResponse,
+    StackDeleteUserResponse,
     StackGetResponse,
-    StackUpdateParams,
     StackUpdateRequest,
     StackUpdateResponse,
     validateStackCreateResponse,
-    validateStackDeleteResponse,
+    validateStackDeleteAdminResponse,
+    validateStackDeleteUserResponse,
     validateStackGetResponse,
     validateStackUpdateResponse
 } from "../models/StackDTO";
@@ -40,7 +40,7 @@ export class StackAPI {
 
     async getStackById(id: number): Promise<Response<StackGetResponse>> {
         return this.gateway.get(`stack/${id}/`, {
-            // TODO: validate: StackGetResponse.validate
+            validate: validateStackGetResponse
         });
     }
 
@@ -70,29 +70,34 @@ export class StackAPI {
         });
     }
 
-    deleteStack(id: number, options?: StackUpdateParams): Promise<Response<StackDeleteResponse>> {
-        const requestData = buildStackDeleteRequest(id, options);
+    deleteStackAsAdmin(id: number): Promise<Response<StackDeleteAdminResponse>> {
+        const requestData = qs.stringify({
+            _method: "DELETE",
+            adminEnabled: true,
+            data: JSON.stringify(mapIds(id))
+        });
 
         return this.gateway.post("stack/", requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateStackDeleteResponse
+            validate: validateStackDeleteAdminResponse
         });
     }
-}
 
-function buildStackDeleteRequest(id: number, options?: StackUpdateParams): string {
-    const request: any = {
-        data: JSON.stringify(mapIds(id)),
-        _method: "DELETE"
-    };
+    deleteStackAsUser(id: number): Promise<Response<StackDeleteUserResponse>> {
+        const requestData: any = qs.stringify({
+            _method: "DELETE",
+            data: JSON.stringify(mapIds(id))
+        });
 
-    if (options && !isNil(options.adminEnabled)) {
-        request.adminEnabled = options.adminEnabled;
+        return this.gateway.post("stack/", requestData, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            validate: validateStackDeleteUserResponse
+        });
     }
-
-    return qs.stringify(request);
 }
 
 function getOptionParams(options?: StackQueryCriteria): any | undefined {

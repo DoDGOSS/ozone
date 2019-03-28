@@ -4,6 +4,12 @@ import { isArray } from "lodash";
 
 import { default as _classNames } from "classnames";
 
+import { default as _uuid } from "uuid/v4";
+
+export function uuid(): string {
+    return _uuid();
+}
+
 export type TypeGuard<T> = (value: unknown) => value is T;
 
 export function lazy<T>(factory: () => T): () => T {
@@ -20,7 +26,7 @@ export function isBlank(value: string): boolean {
     return value.trim().length === 0;
 }
 
-export function toArray<T>(value: T | T[]): T[] {
+export function toArray<T>(value: T | T[] | undefined): T[] {
     if (isUndefined(value)) return [];
     if (isArray(value)) return value;
 
@@ -107,4 +113,11 @@ export function omitIndex<T>(array: T[], index: number): T[] {
         }
     }
     return result;
+}
+
+/**
+ * Returns the value, or undefined if value is null.
+ */
+export function optional<T extends any>(value: any): T | undefined {
+    return value === null ? undefined : value;
 }

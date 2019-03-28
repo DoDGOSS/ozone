@@ -11,9 +11,9 @@ import {
 export interface GroupDTO {
     id: number;
     name: string;
-    displayName?: string;
-    description?: string;
-    email?: string;
+    displayName: string | null;
+    description: string | null;
+    email: string | null;
     status: "active" | "inactive";
     automatic: boolean;
     stackDefault: boolean;

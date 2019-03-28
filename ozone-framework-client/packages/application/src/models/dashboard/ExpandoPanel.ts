@@ -1,15 +1,17 @@
+import { clone, findIndex } from "lodash";
+import uuid from "uuid/v4";
+
+import { UserWidget } from "../UserWidget";
+
 import { LayoutType, PanelState } from "./types";
 import { AbstractPanel } from "./AbstractPanel";
-import { ObservableWidget } from "./ObservableWidget";
 
-import { clone, findIndex } from "lodash";
 import { getNextActiveWidget } from "./common";
-import { omitIndex } from "../../../utility";
-import uuid from "uuid/v4";
+import { omitIndex } from "../../utility";
 
 export interface ExpandoPanelState extends PanelState {
     collapsed: boolean[];
-    activeWidget: ObservableWidget | null;
+    activeWidget: UserWidget | null;
 }
 
 export class ExpandoPanel extends AbstractPanel<ExpandoPanelState> {
@@ -17,9 +19,9 @@ export class ExpandoPanel extends AbstractPanel<ExpandoPanelState> {
         id: string | null,
         title: string,
         type: "accordion" | "portal",
-        widgets: ObservableWidget[] = [],
+        widgets: UserWidget[] = [],
         collapsed: boolean[] = [],
-        activeWidget: ObservableWidget | null = null
+        activeWidget: UserWidget | null = null
     ) {
         super({
             id: id || uuid(),
@@ -35,7 +37,7 @@ export class ExpandoPanel extends AbstractPanel<ExpandoPanelState> {
         const prev = this.state$.value;
         const { widgets, collapsed } = prev;
 
-        const widgetIdx = findIndex(widgets, (w) => w.id === widgetId);
+        const widgetIdx = findIndex(widgets, (w) => w.widget.id === widgetId);
         const nextCollapsed = clone(collapsed);
         nextCollapsed[widgetIdx] = value;
 
@@ -49,7 +51,7 @@ export class ExpandoPanel extends AbstractPanel<ExpandoPanelState> {
         const prev = this.state$.value;
         const { activeWidget, widgets, collapsed } = prev;
 
-        const widgetIdx = findIndex(widgets, (w) => w.id === widgetId);
+        const widgetIdx = findIndex(widgets, (w) => w.widget.id === widgetId);
         const nextWidgets = omitIndex(widgets, widgetIdx);
         const nextCollapsed = omitIndex(collapsed, widgetIdx);
         const nextActive = getNextActiveWidget(activeWidget, widgetId, nextWidgets);

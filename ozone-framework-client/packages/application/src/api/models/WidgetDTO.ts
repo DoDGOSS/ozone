@@ -22,33 +22,33 @@ export interface WidgetDTO {
 export const validateWidget = createValidator<WidgetDTO>(WIDGET_SCHEMA);
 
 export interface WidgetPropertiesDTO {
-    universalName?: string;
-    namespace: string;
-    description?: string;
-    url: string;
+    allRequired: any[];
+    directRequired: any[];
+    background: boolean;
+    definitionVisible: boolean;
+    description: string | null;
+    descriptorUrl: string | null;
     headerIcon: string;
-    image: string;
-    smallIconUrl: string;
-    mediumIconUrl: string;
-    width: number;
     height: number;
+    image: string;
+    intents: IntentsDTO;
+    maximized: boolean;
+    mediumIconUrl: string;
+    minimized: boolean;
+    mobileReady: boolean;
+    namespace: string;
+    singleton: boolean;
+    smallIconUrl: string;
+    totalGroups: number;
+    totalUsers: number;
+    universalName: string | null;
+    url: string;
+    visible: boolean;
+    widgetTypes: WidgetTypeDTO[];
+    widgetVersion: string | null;
+    width: number;
     x: number;
     y: number;
-    minimized: boolean;
-    maximized: boolean;
-    widgetVersion?: string;
-    totalUsers: number;
-    totalGroups: number;
-    singleton: boolean;
-    visible: boolean;
-    background: boolean;
-    mobileReady: boolean;
-    descriptorUrl?: string;
-    definitionVisible: boolean;
-    directRequired: any[];
-    allRequired: any[];
-    intents: IntentsDTO;
-    widgetTypes: WidgetTypeDTO[];
 }
 
 export interface WidgetGetResponse {

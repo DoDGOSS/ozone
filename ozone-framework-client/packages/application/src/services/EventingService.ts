@@ -1,11 +1,13 @@
+import { map } from "lodash";
+
 import { Observable, Subject } from "rxjs";
 import { filter } from "rxjs/operators";
 
-import { Widget } from "../stores/interfaces";
+import { UserWidget } from "../models/UserWidget";
+
 import { dashboardStore } from "../stores/DashboardStore";
 import { errorStore } from "./ErrorStore";
 
-import { map } from "lodash";
 import { getIn, isBlank, isNil, isString, isStringArray, TypeGuard } from "../utility";
 
 // Enable to log received messages to the developer console
@@ -119,25 +121,25 @@ export class EventingService {
     private onWidgetInit(message: RpcMessage): void {
         try {
             const widget = findWidgetInDashboard(message.senderId);
-            const iframeWindow = findWidgetIFrameWindow(widget.id);
+            const iframeWindow = findWidgetIFrameWindow(widget.widget.id);
 
-            this.widgets[widget.id] = {
-                id: widget.id,
+            this.widgets[widget.widget.id] = {
+                id: widget.widget.id,
                 info: {
-                    id: widget.id,
-                    name: widget.definition.title,
-                    url: widget.definition.url!,
-                    frameId: `widget-${widget.id}`,
-                    widgetGuid: widget.definition.id,
-                    widgetName: widget.definition.title,
-                    universalName: widget.definition.universalName
+                    id: widget.widget.id,
+                    name: widget.widget.title,
+                    url: widget.widget.url,
+                    frameId: `widget-${widget.widget.id}`,
+                    widgetGuid: widget.widget.id,
+                    widgetName: widget.widget.title,
+                    universalName: widget.widget.universalName || ""
                 },
                 ready: false,
                 origin: message.raw.origin,
                 iframeWindow
             };
 
-            this.call(widget.id, "after_container_init", [window.name, `{"id":"${window.name}"}`]);
+            this.call(widget.widget.id, "after_container_init", [window.name, `{"id":"${window.name}"}`]);
         } catch (error) {
             errorStore.warning("EventingService Error", `onWidgetInit error: ${error.message}`);
         }
@@ -363,7 +365,7 @@ function findWidgetIFrameWindow(id: string): Window {
     return contentWindow;
 }
 
-function findWidgetInDashboard(widgetId: string): Widget {
+function findWidgetInDashboard(widgetId: string): UserWidget {
     const dashboard = dashboardStore.currentDashboard();
     if (isNil(dashboard)) {
         throw new Error("no current Dashboard exists");
@@ -374,7 +376,7 @@ function findWidgetInDashboard(widgetId: string): Widget {
         throw new Error(`Widget [id: ${widgetId}] not in current Dashboard`);
     }
 
-    if (isNil(widget.definition.url)) {
+    if (isNil(widget.widget.url)) {
         throw new Error(`Widget [id: ${widgetId}] has no URL property`);
     }
 
