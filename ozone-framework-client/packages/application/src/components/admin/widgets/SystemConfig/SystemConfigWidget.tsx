@@ -16,7 +16,7 @@ const BRANDING_TAB = "branding";
 const ACCOUNTS_TAB = "accounts";
 const STORE_TAB = "store";
 
-export const SystemConfigWidget: React.FunctionComponent = () => {
+export const SystemConfigWidget: React.FC = () => {
     useEffect(() => {
         systemConfigStore.fetch();
     }, []);
@@ -54,7 +54,7 @@ interface ConfigPanelProps {
     configGroup: ConfigGroup;
 }
 
-export const ConfigPanel: React.FunctionComponent<ConfigPanelProps> = ({ configGroup }) => {
+export const ConfigPanel: React.FC<ConfigPanelProps> = ({ configGroup }) => {
     const sections = keys(configGroup).sort();
 
     return (
@@ -71,7 +71,7 @@ interface ConfigSectionProps {
     configs: ConfigDTO[];
 }
 
-export const ConfigSection: React.FunctionComponent<ConfigSectionProps> = ({ title, configs }) => (
+export const ConfigSection: React.FC<ConfigSectionProps> = ({ title, configs }) => (
     <>
         {title !== "$DEFAULT$" && <FormRow className={styles.sectionTitle}>{title}</FormRow>}
 
@@ -85,7 +85,7 @@ interface ConfigFieldProps {
     config: ConfigDTO;
 }
 
-export const ConfigField: React.FunctionComponent<ConfigFieldProps> = ({ config }) => (
+export const ConfigField: React.FC<ConfigFieldProps> = ({ config }) => (
     <FormRow>
         <FormCell>
             <div className={styles.fieldTitle}>{config.title}</div>
@@ -104,15 +104,15 @@ interface Props {
     className?: string;
 }
 
-export const FormRow: React.FunctionComponent<Props> = (props) => (
+export const FormRow: React.FC<Props> = (props) => (
     <div className={classNames(styles.formRow, props.className)}>{props.children}</div>
 );
 
-export const FormCell: React.FunctionComponent<Props> = (props) => (
+export const FormCell: React.FC<Props> = (props) => (
     <div className={classNames(styles.formCell, props.className)}>{props.children}</div>
 );
 
-export const StorePanel: React.FunctionComponent = () => <div>Store</div>;
+export const StorePanel: React.FC = () => <div>Store</div>;
 
 function sortBySubgroupOrder(a: ConfigDTO, b: ConfigDTO): number {
     if (isNil(a.subGroupOrder)) {

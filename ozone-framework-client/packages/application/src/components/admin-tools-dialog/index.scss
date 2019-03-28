@@ -13,7 +13,7 @@
   justify-content: center;
 }
 
-:local .tile {
+:local(.tile) {
   display: flex;
   flex-direction: column;
 
@@ -27,16 +27,33 @@
   width: 120px;
 
   &:hover {
-    background: $hover-background;
+    background: $hover-color_light;
   }
 }
 
-:local .tileIcon {
+.#{$dark-theme} :local(.tile):hover {
+  background: $hover-color_dark;
 }
 
-:local .tileTitle {
+:local .tileButton {
+  border: none;
+  background: none;
+  outline: none;
+}
+
+:local(.tileIcon) {
+  width: 64px;
+  height: 64px;
+}
+
+:local(.tileTitle) {
   margin-top: 0.25rem;
   font-weight: 600;
-
   text-align: center;
+
+  color: $text-color_light;
+}
+
+.#{$dark-theme} :local(.tileTitle) {
+  color: $text-color_dark;
 }

@@ -1,18 +1,22 @@
 import * as qs from "qs";
+import { isNil } from "lodash";
 
 import { Gateway, getGateway, Response } from "../interfaces";
 
-import { IdDTO } from "../models/IdDTO";
+import { mapIds } from "../models/IdDTO";
 import {
     StackCreateRequest,
+    StackCreateResponse,
     StackDeleteResponse,
     StackGetResponse,
     StackUpdateParams,
     StackUpdateRequest,
-    StackUpdateResponse
+    StackUpdateResponse,
+    validateStackCreateResponse,
+    validateStackDeleteResponse,
+    validateStackGetResponse,
+    validateStackUpdateResponse
 } from "../models/StackDTO";
-
-import { isNil } from "lodash";
 
 export interface StackQueryCriteria {
     limit?: number;
@@ -30,17 +34,17 @@ export class StackAPI {
     async getStacks(criteria?: StackQueryCriteria): Promise<Response<StackGetResponse>> {
         return this.gateway.get("stack/", {
             params: getOptionParams(criteria),
-            validate: StackGetResponse.validate
+            validate: validateStackGetResponse
         });
     }
 
     async getStackById(id: number): Promise<Response<StackGetResponse>> {
         return this.gateway.get(`stack/${id}/`, {
-            validate: StackGetResponse.validate
+            // TODO: validate: StackGetResponse.validate
         });
     }
 
-    async createStack(data: StackCreateRequest): Promise<Response<StackUpdateResponse>> {
+    async createStack(data: StackCreateRequest): Promise<Response<StackCreateResponse>> {
         const requestData = qs.stringify({
             data: JSON.stringify([data])
         });
@@ -49,7 +53,7 @@ export class StackAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: StackUpdateResponse.validate
+            validate: validateStackCreateResponse
         });
     }
 
@@ -62,7 +66,7 @@ export class StackAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: StackUpdateResponse.validate
+            validate: validateStackUpdateResponse
         });
     }
 
@@ -73,14 +77,14 @@ export class StackAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: StackDeleteResponse.validate
+            validate: validateStackDeleteResponse
         });
     }
 }
 
 function buildStackDeleteRequest(id: number, options?: StackUpdateParams): string {
     const request: any = {
-        data: JSON.stringify(IdDTO.fromValues(id)),
+        data: JSON.stringify(mapIds(id)),
         _method: "DELETE"
     };
 

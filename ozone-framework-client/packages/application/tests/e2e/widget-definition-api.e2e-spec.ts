@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import { WidgetDefinitionAPI } from "../../src/api/clients/WidgetDefinitionAPI";
 
 import { GROUPS } from "../unit/data";

@@ -8,9 +8,13 @@ import {
     GroupDeleteResponse,
     GroupGetResponse,
     GroupUpdateRequest,
-    GroupUpdateResponse
+    GroupUpdateResponse,
+    validateGroupCreateResponse,
+    validateGroupDeleteResponse,
+    validateGroupGetResponse,
+    validateGroupUpdateResponse
 } from "../models/GroupDTO";
-import { IdDTO } from "../models/IdDTO";
+import { mapIds } from "../models/IdDTO";
 
 export interface GroupQueryCriteria {
     limit?: number;
@@ -28,13 +32,13 @@ export class GroupAPI {
     getGroups(criteria?: GroupQueryCriteria): Promise<Response<GroupGetResponse>> {
         return this.gateway.get("group/", {
             params: getOptionParams(criteria),
-            validate: GroupGetResponse.validate
+            validate: validateGroupGetResponse
         });
     }
 
     getGroupById(id: number): Promise<Response<GroupGetResponse>> {
         return this.gateway.get(`group/${id}/`, {
-            validate: GroupGetResponse.validate
+            validate: validateGroupGetResponse
         });
     }
 
@@ -47,7 +51,7 @@ export class GroupAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: GroupCreateResponse.validate
+            validate: validateGroupCreateResponse
         });
     }
 
@@ -60,21 +64,21 @@ export class GroupAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: GroupUpdateResponse.validate
+            validate: validateGroupUpdateResponse
         });
     }
 
     deleteGroup(id: number | number[]): Promise<Response<GroupDeleteResponse>> {
         const requestData = qs.stringify({
             _method: "DELETE",
-            data: JSON.stringify(IdDTO.fromValues(id))
+            data: JSON.stringify(mapIds(id))
         });
 
         return this.gateway.post("group/", requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: GroupDeleteResponse.validate
+            validate: validateGroupDeleteResponse
         });
     }
 }

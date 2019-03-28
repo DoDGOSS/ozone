@@ -24,7 +24,7 @@ const fetchDashboards = (dispatchResult: (dashboards: DashboardDTO[]) => void) =
     });
 };
 
-export const DashboardDialog: React.FunctionComponent<{}> = () => {
+export const DashboardDialog: React.FC<{}> = () => {
     const themeClass = useBehavior(mainStore.themeClass);
     const isVisible = useBehavior(mainStore.isDashboardDialogVisible);
 

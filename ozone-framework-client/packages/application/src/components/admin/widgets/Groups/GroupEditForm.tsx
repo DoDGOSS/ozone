@@ -13,7 +13,7 @@ interface GroupEditProps {
     group: any;
 }
 
-export const GroupEditForm: React.FunctionComponent<GroupEditProps> = ({ onUpdate, group }) => (
+export const GroupEditForm: React.FC<GroupEditProps> = ({ onUpdate, group }) => (
     <Formik
         initialValues={group}
         validationSchema={EditGroupSchema}

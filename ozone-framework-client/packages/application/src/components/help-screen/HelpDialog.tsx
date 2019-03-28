@@ -9,7 +9,7 @@ import { classNames } from "../../utility";
 
 import * as styles from "./index.scss";
 
-export const HelpDialog: React.FunctionComponent = () => {
+export const HelpDialog: React.FC = () => {
     const themeClass = useBehavior(mainStore.themeClass);
     const isOpen = useBehavior(mainStore.isHelpDialogVisible);
 

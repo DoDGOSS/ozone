@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import { AdministrationAPI } from "../../src/api/clients/AdministrationAPI";
 
 import { NodeGateway } from "./node-gateway";

@@ -12,7 +12,7 @@ interface UserCreateProps {
     onCancel: () => void;
 }
 
-export const UserCreateForm: React.FunctionComponent<UserCreateProps> = ({ onSubmit, onCancel }) => (
+export const UserCreateForm: React.FC<UserCreateProps> = ({ onSubmit, onCancel }) => (
     <Formik
         initialValues={{
             username: "",

@@ -10,7 +10,7 @@ import { classNames } from "../../utility";
 
 import * as styles from "./LoginDialog.scss";
 
-export const LoginDialog: React.FunctionComponent<{}> = () => {
+export const LoginDialog: React.FC<{}> = () => {
     const isOpen = useBehavior(mainStore.isLoginDialogOpen);
 
     return (

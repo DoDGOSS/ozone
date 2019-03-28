@@ -14,7 +14,7 @@ export interface CheckBoxProps {
     className?: string;
 }
 
-const _CheckBox: React.FunctionComponent<CheckBoxProps & FieldProps<any>> = (props) => (
+const _CheckBox: React.FC<CheckBoxProps & FieldProps<any>> = (props) => (
     <FormGroup
         label={props.label}
         labelFor={props.name}
@@ -33,8 +33,6 @@ const _CheckBox: React.FunctionComponent<CheckBoxProps & FieldProps<any>> = (pro
     </FormGroup>
 );
 
-_CheckBox.displayName = "CheckBox";
-
-export const CheckBox: React.FunctionComponent<CheckBoxProps> = (props) => (
+export const CheckBox: React.FC<CheckBoxProps> = (props) => (
     <Field name={props.name} component={_CheckBox} {...props} />
 );

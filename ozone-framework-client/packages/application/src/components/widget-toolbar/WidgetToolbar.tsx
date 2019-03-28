@@ -7,6 +7,7 @@ import { Button, Classes, InputGroup, Overlay } from "@blueprintjs/core";
 import { widgetStore } from "../../stores/WidgetStore";
 import { mainStore } from "../../stores/MainStore";
 import { PropsBase } from "../../common";
+import { SortButton, SortOrder } from "./SortButton";
 
 import { classNames, handleStringChange, isBlank } from "../../utility";
 
@@ -14,9 +15,7 @@ import { IMAGE_ROOT_URL } from "../../stores/default-layouts";
 
 import * as styles from "./index.scss";
 
-type SortOrder = "asc" | "dsc";
-
-export const WidgetToolbar: React.FunctionComponent<PropsBase> = ({ className }) => {
+export const WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
     const isOpen = useBehavior(mainStore.isWidgetToolbarOpen);
     const themeClass = useBehavior(mainStore.themeClass);
 
@@ -66,49 +65,33 @@ export const WidgetToolbar: React.FunctionComponent<PropsBase> = ({ className })
                         onChange={handleStringChange(setFilter)}
                         data-element-id="widget-search-field"
                     />
-                    <Button
-                        minimal
-                        icon="sort-alphabetical"
-                        onClick={() => setSortOrder("asc")}
-                        active={sortOrder === "asc"}
-                        data-element-id="widget-sort-ascending"
-                    />
-                    <Button
-                        minimal
-                        icon="sort-alphabetical-desc"
-                        onClick={() => setSortOrder("dsc")}
-                        active={sortOrder === "dsc"}
-                        data-element-id="widget-sort-descending"
-                    />
+                    <SortButton order={sortOrder} onClick={setSortOrder} />
                     <Button minimal icon="pin" />
                     <Button minimal icon="cross" onClick={mainStore.closeWidgetToolbar} />
                 </div>
                 <hr />
 
                 <div className={Classes.DIALOG_BODY}>
+                    <div className={styles.buttonBar}>
+                        <Button text="Prev" icon="caret-left" small={true} disabled={true} />
+                        <span className={styles.currentPage}>Page 1</span>
+                        <Button text="Next" icon="caret-right" small={true} disabled={true} />
+                    </div>
                     <ul className={styles.widgetList}>
                         {widgets.map((widget) => (
-                            <Widget
-                                key={widget.id}
-                                name={widget.value.namespace}
-                                // TODO - Replace this temp fix to display images
-                                // smallIconUrl={widget.value.smallIconUrl}
-                                smallIconUrl={
-                                    IMAGE_ROOT_URL +
-                                    widget.value.smallIconUrl.replace("static/themes/common/images", "")
-                                }
-                            />
+                            <li key={widget.id}>
+                                <Widget
+                                    name={widget.value.namespace}
+                                    // TODO - Replace this temp fix to display images
+                                    // smallIconUrl={widget.value.smallIconUrl}
+                                    smallIconUrl={
+                                        IMAGE_ROOT_URL +
+                                        widget.value.smallIconUrl.replace("static/themes/common/images", "")
+                                    }
+                                />
+                            </li>
                         ))}
                     </ul>
-                </div>
-            </div>
-            <div className={styles.toolbarFooter}>
-                <div className={styles.buttonBar}>
-                    <Button text="Prev" icon="undo" small={true} />
-                    <p>
-                        <b>Page 1</b>
-                    </p>
-                    <Button text="Next" icon="fast-forward" small={true} />
                 </div>
             </div>
         </Overlay>
@@ -122,15 +105,13 @@ export type WidgetProps = {
     url?: string;
 };
 
-export const Widget: React.FunctionComponent<WidgetProps> = (props) => {
-    const { name, smallIconUrl, url } = props;
+export const Widget: React.FC<WidgetProps> = (props) => {
+    const { name, smallIconUrl } = props;
 
     return (
-        <li>
-            <a href={url}>
-                <img className={styles.tileIcon} src={smallIconUrl} />
-                <span className={styles.tileTitle}>{name}</span>
-            </a>
-        </li>
+        <div className={styles.tile}>
+            <img className={styles.tileIcon} src={smallIconUrl} />
+            <span className={styles.tileTitle}>{name}</span>
+        </div>
     );
 };

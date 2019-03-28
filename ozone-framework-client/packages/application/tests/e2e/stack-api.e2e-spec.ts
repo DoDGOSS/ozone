@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import { StackAPI } from "../../src/api/clients/StackAPI";
 import { StackCreateRequest, StackDTO, StackUpdateRequest } from "../../src/api/models/StackDTO";
 

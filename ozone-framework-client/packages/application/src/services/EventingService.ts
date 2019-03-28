@@ -369,7 +369,7 @@ function findWidgetInDashboard(widgetId: string): Widget {
         throw new Error("no current Dashboard exists");
     }
 
-    const widget = dashboard.widgets[widgetId];
+    const widget = dashboard.findWidgetById(widgetId);
     if (isNil(widget)) {
         throw new Error(`Widget [id: ${widgetId}] not in current Dashboard`);
     }

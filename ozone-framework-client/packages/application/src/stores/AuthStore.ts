@@ -6,6 +6,10 @@ import { Gateway, getGateway } from "../api/interfaces";
 import { AuthUserDTO } from "../api/models/AuthUserDTO";
 
 import { mainStore } from "./MainStore";
+import { AuthenticationError } from "../api/errors";
+import { AxiosError } from "axios";
+import { isNil } from "../utility";
+import { get } from "lodash";
 
 export enum AuthStatus {
     PENDING,
@@ -54,9 +58,7 @@ export class AuthStore {
             .then((result) => {
                 this.onAuthenticateSuccess(result.data);
             })
-            .catch((error) => {
-                this.onAuthenticationFailure(error);
-            });
+            .catch(this.onAuthenticationFailure);
     };
 
     private onAuthenticateSuccess = (user: AuthUserDTO) => {
@@ -68,9 +70,14 @@ export class AuthStore {
     private onAuthenticationFailure = (ex: Error) => {
         this.user$.next(null);
         this.status$.next(AuthStatus.LOGGED_OUT);
-        console.log("Authentication failure");
-        console.dir(ex);
+        if (!isUnauthorized(ex)) {
+            console.error(`Authentication failure: ${ex}`);
+        }
     };
 }
 
 export const authStore = new AuthStore();
+
+function isUnauthorized(error: Error): boolean {
+    return error instanceof AuthenticationError && !isNil(error.cause.response) && error.cause.response.status === 401;
+}

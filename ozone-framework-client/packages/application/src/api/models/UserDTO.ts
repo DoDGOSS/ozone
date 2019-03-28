@@ -1,61 +1,48 @@
-import { createValidator, Model, Property } from "@ozone/openapi-decorators";
-
 import { IdDTO } from "./IdDTO";
+import { createValidator } from "./validate";
+import {
+    USER_CREATE_RESPONSE_SCHEMA,
+    USER_DELETE_RESPONSE_SCHEMA,
+    USER_GET_RESPONSE_SCHEMA,
+    USER_SCHEMA,
+    USER_UPDATE_RESPONSE_SCHEMA
+} from "./schemas/user.schema";
 
-@Model({ name: "User" })
-export class UserDTO {
-    static validate = createValidator(UserDTO);
-
-    @Property()
+export interface UserDTO {
     id: number;
-
-    @Property()
     username: string;
-
-    @Property()
     userRealName: string;
-
-    @Property()
     email: string;
-
-    @Property({ nullable: true })
     hasPWD?: string;
-
-    @Property({ nullable: true, readOnly: true })
     lastLogin?: string;
-
-    @Property({ readOnly: true })
     totalDashboards: number;
-
-    @Property({ readOnly: true })
     totalGroups: number;
-
-    @Property({ readOnly: true })
     totalStacks: number;
-
-    @Property({ readOnly: true })
     totalWidgets: number;
 }
 
-@Model({ name: "Username" })
-export class UsernameDTO {
-    @Property()
+export const validateUser = createValidator<UserDTO>(USER_SCHEMA);
+
+export interface UsernameDTO {
     username: string;
 }
 
-@Model()
-export class UserGetResponse {
-    static validate = createValidator(UserGetResponse);
+export interface UserReference {
+    userId: string;
+}
 
-    @Property()
+export interface ProfileReference {
+    userId?: string;
+    userRealName?: string;
+}
+
+export interface UserGetResponse {
     success: boolean;
-
-    @Property()
     results: number;
-
-    @Property(() => UserDTO)
     data: UserDTO[];
 }
+
+export const validateUserGetResponse = createValidator<UserGetResponse>(USER_GET_RESPONSE_SCHEMA);
 
 export interface UserCreateRequest {
     username: string;
@@ -63,16 +50,12 @@ export interface UserCreateRequest {
     email: string;
 }
 
-@Model()
-export class UserCreateResponse {
-    static validate = createValidator(UserCreateResponse);
-
-    @Property()
+export interface UserCreateResponse {
     success: boolean;
-
-    @Property(() => UserDTO)
     data: UserDTO[];
 }
+
+export const validateUserCreateResponse = createValidator<UserCreateResponse>(USER_CREATE_RESPONSE_SCHEMA);
 
 export interface UserUpdateRequest {
     id: number;
@@ -81,24 +64,16 @@ export interface UserUpdateRequest {
     email: string;
 }
 
-@Model()
-export class UserUpdateResponse {
-    static validate = createValidator(UserUpdateResponse);
-
-    @Property()
+export interface UserUpdateResponse {
     success: boolean;
-
-    @Property(() => UserDTO)
     data: UserDTO[];
 }
 
-@Model()
-export class UserDeleteResponse {
-    static validate = createValidator(UserDeleteResponse);
+export const validateUserUpdateResponse = createValidator<UserUpdateResponse>(USER_UPDATE_RESPONSE_SCHEMA);
 
-    @Property()
+export interface UserDeleteResponse {
     success: boolean;
-
-    @Property(() => IdDTO)
     data: IdDTO[];
 }
+
+export const validateUserDeleteResponse = createValidator<UserDeleteResponse>(USER_DELETE_RESPONSE_SCHEMA);

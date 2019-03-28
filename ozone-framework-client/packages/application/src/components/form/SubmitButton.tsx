@@ -12,7 +12,7 @@ interface SubmitButtonProps {
     className?: string;
 }
 
-const _SubmitButton: React.FunctionComponent<SubmitButtonProps & { formik: FormikContext<any> }> = (props) => {
+const _SubmitButton: React.FC<SubmitButtonProps & { formik: FormikContext<any> }> = (props) => {
     const { dirty, isValid, isSubmitting } = props.formik;
 
     return (
@@ -26,7 +26,5 @@ const _SubmitButton: React.FunctionComponent<SubmitButtonProps & { formik: Formi
         />
     );
 };
-
-_SubmitButton.displayName = "SubmitButton";
 
 export const SubmitButton = connect<SubmitButtonProps>(_SubmitButton);

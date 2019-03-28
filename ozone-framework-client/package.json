@@ -3,7 +3,6 @@
   "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "compile": "lerna run compile",
     "start": "npm run --prefix packages/application start",
     "test": "lerna run test"
   },

@@ -58,10 +58,10 @@ export class DashboardsWidget extends React.Component<{}, State> {
                     Header: "Dashboards",
                     columns: [
                         { Header: "Name", accessor: "name" }
-                        /*{ Header: "Pages", accessor: "" }
-                         { Header: "Widgets", accessor: "" },
-                        { Header: "Groups", accessor: "" },
-                        { Header: "Users", accessor: "" } */
+                        // { Header: "Pages", accessor: "" }
+                        // { Header: "Widgets", accessor: "" },
+                        // { Header: "Groups", accessor: "" },
+                        // { Header: "Users", accessor: "" }
                     ]
                 },
                 // TODO - Abstract this to only have to provide onclick function name with styled buttons

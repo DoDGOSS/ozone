@@ -24,7 +24,7 @@ export interface CreateDashboardFormProps {
     onSubmit: () => void;
 }
 
-export const CreateDashboardForm: React.FunctionComponent<CreateDashboardFormProps> = ({ onSubmit }) => {
+export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubmit }) => {
     const [selectedValue, setValue] = useState("");
     const handleRadioChange = handleStringChange(setValue);
 
