@@ -2,7 +2,7 @@ import * as styles from "../Widgets.scss";
 
 import * as React from "react";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
-import { object, string } from "yup";
+import { array, boolean, number, object, string } from "yup";
 
 import { WidgetDTO, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
 import { CheckBox, FormError, HiddenField, TextField } from "../../../form";
@@ -52,7 +52,7 @@ export const WidgetEditForm: React.FunctionComponent<WidgetEditProps> = ({ onUpd
             <div data-element-id="widget-admin-widget-edit-form">
                 <Form className={styles.form}>
                     <div className={styles.formBody}>
-                    <TextField
+                        <TextField
                             inline={true}
                             className={styles.inline_form_label}
                             name="displayName"
@@ -118,12 +118,12 @@ export const WidgetEditForm: React.FunctionComponent<WidgetEditProps> = ({ onUpd
                             className={styles.inline_form_label}
                             name="widgetType"
                             label="Widget Type"
+                            selected={(formik.values.widgetTypes && formik.values.widgetTypes.length > 0) ? formik.values.widgetTypes[0] : undefined}
                             items={items}
                             itemRenderer={renderWidgetType}
                             extractLabel={(item: WidgetTypeReference) => item.name}
                             onSelectItem={(widgetType: WidgetTypeReference) => {
-                                formik.values.widgetTypes = [widgetType];
-                                formik.validateForm();
+                                formik.setFieldValue("widgetTypes", [widgetType]);
                             }}
                         />
 
@@ -132,19 +132,28 @@ export const WidgetEditForm: React.FunctionComponent<WidgetEditProps> = ({ onUpd
                             className={styles.inline_form_label}
                             name="singleton"
                             label="Singleton"
+                            defaultChecked={widget.value.singleton}
                         />
                         <CheckBox
                             inline={true}
                             className={styles.inline_form_label}
                             name="mobileReady"
                             label="Mobile Ready"
+                            defaultChecked={widget.value.mobileReady}
                         />
-                        <CheckBox inline={true} className={styles.inline_form_label} name="visible" label="Visible" />
+                        <CheckBox
+                            inline={true}
+                            className={styles.inline_form_label}
+                            name="visible"
+                            label="Visible"
+                            defaultChecked={widget.value.visible}
+                        />
                         <CheckBox
                             inline={true}
                             className={styles.inline_form_label}
                             name="background"
                             label="Background"
+                            defaultChecked={widget.value.background}
                         />
                         
                         {formik.status && formik.status.error && <FormError message={formik.status.error} />}
@@ -165,13 +174,25 @@ export const WidgetEditForm: React.FunctionComponent<WidgetEditProps> = ({ onUpd
 );
 
 const EditWidgetSchema = object().shape({
-    name: string().required("Required"),
-
     displayName: string().required("Required"),
-
-    description: string().required("Required"),
-
-    active: string(),
-
-    userManagement: string()
+    widgetUrl: string().required("Required"),
+    widgetVersion: string(),
+    description: string(),
+    imageUrlSmall: string().required("Required"),
+    imageUrlMedium: string().required("Required"),
+    width: number()
+        .integer("Must be an integer")
+        .min(200)
+        .required("Required"),
+    height: number()
+        .integer("Must be an integer")
+        .min(200)
+        .required("Required"),
+    widgetGuid: string(),
+    universalName: string(),
+    visible: boolean(),
+    background: boolean(),
+    singleton: boolean(),
+    mobileReady: boolean(),
+    widgetTypes: array().required("Required")
 });

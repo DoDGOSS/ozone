@@ -128,12 +128,12 @@ export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ o
                             className={styles.inline_form_label}
                             name="widgetType"
                             label="Widget Type"
+                            selected={(formik.values.widgetTypes && formik.values.widgetTypes.length > 0) ? formik.values.widgetTypes[0] : undefined}
                             items={items}
                             itemRenderer={renderWidgetType}
                             extractLabel={(item: WidgetTypeReference) => item.name}
                             onSelectItem={(widgetType: WidgetTypeReference) => {
-                                formik.values.widgetTypes = [widgetType];
-                                formik.validateForm();
+                                formik.setFieldValue("widgetTypes", [widgetType]);
                             }}
                         />
 
