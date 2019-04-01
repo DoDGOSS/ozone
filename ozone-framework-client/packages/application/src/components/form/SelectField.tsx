@@ -15,7 +15,6 @@ export interface SelectFieldProps<T> {
     disabled?: boolean;
     inline?: boolean;
     className?: string;
-
     initialValue: T;
     items: T[];
     itemRenderer: ItemRenderer<T>;
