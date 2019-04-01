@@ -7,6 +7,65 @@ import { AdminWidgetType, loggedInAs, openAdminWidget } from "./helpers";
 const LOGIN_USERNAME: string = "testAdmin1";
 const LOGIN_PASSWORD: string = "password";
 
+const NEW_WIDGET_NAME: string = "Example Functional Test Widget";
+const NEW_WIDGET_DESCRIPTION: string = "An Example Functional Testing Ozone Widget";
+const NEW_WIDGET_VERSION: string = "3.14";
+const NEW_WIDGET_UNIVERSAL_NAME: string = "mil.navy.spawar.geocent.widgets.example";
+const NEW_WIDGET_URL: string = "http://example.mil/index.html";
+const NEW_WIDGET_SMALL_ICON_URL: string = "http://example.mil/images/icon-small.png";
+const NEW_WIDGET_MEDIUM_ICON_URL: string = "http://example.mil/images/icon-medium.png";
+const NEW_WIDGET_WIDTH: string = "250";
+const NEW_WIDGET_HEIGHT: string = "300";
+
+const NEW_WIDGET_MODIFIED_NAME: string = "Example Modified Functional Test Widget";
+
+function openEditSectionForWidget(browser: NightwatchAPI, primaryDisplayName: string, section?: string) {
+    let relevant_row: number = 0;
+
+    browser.elements(
+        "css selector",
+        `${WidgetAdminWidget.Main.DIALOG} div[role='rowgroup'] div[role='row'] > div:first-child`,
+        (elements: NightwatchCallbackResult) => {
+            elements.value.forEach((element: any, i: number) => {
+                browser.elementIdText(element.ELEMENT, (result) => {
+                    if (result.value === primaryDisplayName) {
+                        relevant_row = i;
+                        browser.getAttribute(
+                            `${WidgetAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
+                                1}) div[role='row'] > div:last-child button[data-element-id='widget-admin-widget-edit-button']`,
+                            "disabled",
+                            function(isDisabled) {
+                                this.assert.equal(
+                                    isDisabled.value,
+                                    null,
+                                    "[Widget Admin Widget] created widget can be edited"
+                                );
+                            }
+                        );
+                    }
+                });
+            });
+        }
+    );
+    browser.click(
+        `${WidgetAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
+            1}) div[role='row'] > div:last-child button[data-element-id='widget-admin-widget-edit-button']`
+    );
+
+    if (section) {
+        return browser.click(section);
+    } else {
+        return browser.waitForElementPresent(
+            WidgetAdminWidget.PropertiesGroup.FORM,
+            1000,
+            undefined,
+            undefined,
+            "[Edit Widget Form] is present"
+        );
+    }
+}
+
+
 module.exports = {
     "As an Administrator, I can view all Widgets in the Widget Admin Widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
@@ -71,16 +130,6 @@ module.exports = {
             this.assert.equal(result.value, "true", "[Create Widget Submit Button] is disabled");
         });
 
-        const NEW_WIDGET_NAME: string = "ExampleOzoneWidget";
-        const NEW_WIDGET_DESCRIPTION: string = "An Example Ozone Widget";
-        const NEW_WIDGET_VERSION: string = "3.14";
-        const NEW_WIDGET_UNIVERSAL_NAME: string = "mil.navy.spawar.geocent.widgets.example";
-        const NEW_WIDGET_URL: string = "http://example.mil/index.html";
-        const NEW_WIDGET_SMALL_ICON_URL: string = "http://example.mil/images/icon-small.png";
-        const NEW_WIDGET_MEDIUM_ICON_URL: string = "http://example.mil/images/icon-medium.png";
-        const NEW_WIDGET_WIDTH: string = "250";
-        const NEW_WIDGET_HEIGHT: string = "300";
-
         browser
             .setValue(WidgetAdminWidget.CreateWidget.NAME_INPUT, NEW_WIDGET_NAME)
             .setValue(WidgetAdminWidget.CreateWidget.DESCRIPTION_INPUT, NEW_WIDGET_DESCRIPTION)
@@ -118,15 +167,52 @@ module.exports = {
         browser.closeWindow().end();
     },
 
-    "As an Administrator, I can delete a widget": (browser: NightwatchAPI) => {
+    "As an Administrator, I can edit a widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
         openAdminWidget(browser, AdminWidgetType.WIDGETS);
-
-        const NEW_WIDGET_NAME: string = "ExampleOzoneWidget";
 
         browser.waitForElementVisible(WidgetAdminWidget.Main.DIALOG, 1000, "[Widget Admin Widget] is visible");
 
         browser.setValue(WidgetAdminWidget.Main.SEARCH_FIELD, NEW_WIDGET_NAME);
+
+        openEditSectionForWidget(browser, NEW_WIDGET_NAME);
+
+        browser
+            .clearValue(WidgetAdminWidget.PropertiesGroup.NAME_INPUT)
+            .setValue(WidgetAdminWidget.PropertiesGroup.NAME_INPUT, NEW_WIDGET_MODIFIED_NAME)
+            .pause(1000);
+
+        browser.getAttribute(WidgetAdminWidget.PropertiesGroup.SUBMIT_BUTTON, "disabled", function(result) {
+            this.assert.equal(result.value, null, "[Edit Widget Submit Button] is enabled");
+        });
+
+        browser.click(WidgetAdminWidget.PropertiesGroup.SUBMIT_BUTTON).pause(1000);
+
+        browser.getAttribute(WidgetAdminWidget.PropertiesGroup.SUBMIT_BUTTON, "disabled", function(result) {
+            this.assert.equal(result.value, "true", "[Edit Widget Submit Button] is disabled");
+        });
+
+        browser
+            .click(WidgetAdminWidget.Main.BACK_BUTTON)
+            .waitForElementNotPresent(WidgetAdminWidget.PropertiesGroup.FORM, 1000, "[Edit Widget Form] is closed");
+
+        browser
+            .clearValue(WidgetAdminWidget.Main.SEARCH_FIELD)
+            .setValue(WidgetAdminWidget.Main.SEARCH_FIELD, NEW_WIDGET_MODIFIED_NAME);
+
+        browser.expect.element(WidgetAdminWidget.Main.DIALOG).text.to.contain(NEW_WIDGET_MODIFIED_NAME);
+        browser.expect.element(WidgetAdminWidget.Main.DIALOG).text.to.not.contain(NEW_WIDGET_NAME);
+
+        browser.closeWindow().end();
+    },
+
+    "As an Administrator, I can delete a widget": (browser: NightwatchAPI) => {
+        loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.WIDGETS);
+
+        browser.waitForElementVisible(WidgetAdminWidget.Main.DIALOG, 1000, "[Widget Admin Widget] is visible");
+
+        browser.setValue(WidgetAdminWidget.Main.SEARCH_FIELD, NEW_WIDGET_MODIFIED_NAME);
 
         browser.elements(
             "css selector",
@@ -136,7 +222,7 @@ module.exports = {
 
                 elements.value.forEach((element: any, i: number) => {
                     browser.elementIdText(element.ELEMENT, (result) => {
-                        if (result.value === NEW_WIDGET_NAME) {
+                        if (result.value === NEW_WIDGET_MODIFIED_NAME) {
                             relevant_row = i;
                             browser.getAttribute(
                                 `${WidgetAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +

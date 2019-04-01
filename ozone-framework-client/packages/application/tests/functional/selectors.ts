@@ -241,7 +241,7 @@ export namespace WidgetAdminWidget {
 
         export const CREATE_BUTTON = `${Main.DIALOG} button[data-element-id='widget-admin-widget-create-button']`;
 
-        export const BACK_BUTTON = `${Main.DIALOG} span[data-element-id='group-admin-widget-edit-back-button'] button`;
+        export const BACK_BUTTON = `${Main.DIALOG} span[data-element-id='widget-admin-widget-edit-back-button'] button`;
     }
 
     export namespace CreateWidget {
@@ -271,6 +271,16 @@ export namespace WidgetAdminWidget {
 
         export const SUBMIT_BUTTON =
             "div[data-element-id='widget-admin-widget-create-submit-button'] > button[data-element-id='form-submit-button']";
+    }
+
+
+    export namespace PropertiesGroup {
+        export const FORM = "div[data-element-id='widget-admin-widget-edit-form']";
+
+        export const NAME_INPUT = `${PropertiesGroup.FORM} input[name='displayName']`;
+
+        export const SUBMIT_BUTTON =
+            "div[data-element-id='widget-admin-widget-edit-submit-button'] > button[data-element-id='form-submit-button']";
     }
 }
 
