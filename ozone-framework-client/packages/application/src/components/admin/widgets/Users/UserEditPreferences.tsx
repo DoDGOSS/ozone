@@ -5,8 +5,10 @@ import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
 
 import { AdminTable } from "../../table/AdminTable";
 import { UserDTO } from "../../../../api/models/UserDTO";
-import { PreferenceDTO } from "../../../../api/models/PreferenceDTO";
+import { PreferenceCreateRequest, PreferenceDTO } from "../../../../api/models/PreferenceDTO";
 import { preferenceApi } from "../../../../api/clients/PreferenceAPI";
+import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
+import { PreferenceCreateForm } from "./UserCreatePreferenceForm";
 
 interface UserEditPreferencesProps {
     onUpdate: (update?: any) => void;
@@ -20,10 +22,17 @@ export interface UserEditPreferencesState {
     loading: boolean;
     pageSize: number;
     user: any;
-    showAdd: boolean;
     showDelete: boolean;
+    showCreate: boolean;
+    showTable: boolean;
     confirmationMessage: string;
     managePreference: PreferenceDTO | undefined;
+}
+
+enum UserPreferenceWidgetSubSection {
+    TABLE,
+    CREATE,
+    EDIT
 }
 
 export class UserEditPreferences extends React.Component<UserEditPreferencesProps, UserEditPreferencesState> {
@@ -74,8 +83,9 @@ export class UserEditPreferences extends React.Component<UserEditPreferencesProp
             loading: true,
             pageSize: 5,
             user: this.props.user,
-            showAdd: false,
+            showCreate: false,
             showDelete: false,
+            showTable: true,
             confirmationMessage: "",
             managePreference: undefined
         };
@@ -88,6 +98,8 @@ export class UserEditPreferences extends React.Component<UserEditPreferencesProp
     render() {
         let data = this.state.preferences;
         const filter = this.state.filter.toLowerCase();
+        const showCreate = this.state.showCreate;
+        const showTable = this.state.showTable;
 
         // TODO - Improve this - this will be slow if there are many users.
         // Minimally could wait to hit enter before filtering. Pagination handling
@@ -99,65 +111,76 @@ export class UserEditPreferences extends React.Component<UserEditPreferencesProp
 
         return (
             <div data-element-id="preference-admin-widget-dialog">
-                <div className={styles.actionBar}>
-                    <InputGroup
-                        placeholder="Search..."
-                        leftIcon="search"
-                        value={this.state.filter}
-                        onChange={(e: any) => this.setState({ filter: e.target.value })}
-                        data-element-id="search-field"
-                    />
-                </div>
+                {showTable && (
+                    <>
+                        <div className={styles.actionBar}>
+                            <InputGroup
+                                placeholder="Search..."
+                                leftIcon="search"
+                                value={this.state.filter}
+                                onChange={(e: any) => this.setState({ filter: e.target.value })}
+                                data-element-id="search-field"
+                            />
+                        </div>
 
-                <div className={styles.table}>
-                    <AdminTable
-                        data={data}
-                        columns={this.PREFERENCES_COLUMN_DEFINITION}
-                        loading={this.state.loading}
-                        pageSize={this.state.pageSize}
-                    />
-                </div>
+                        <div className={styles.table}>
+                            <AdminTable
+                                data={data}
+                                columns={this.PREFERENCES_COLUMN_DEFINITION}
+                                loading={this.state.loading}
+                                pageSize={this.state.pageSize}
+                            />
+                        </div>
 
-                {/* <div className={styles.buttonBar}>
-                    <Button
-                        text="Add"
-                        onClick={() => this.toggleShowAdd()}
-                        data-element-id="preference-add-group-dialog-add-button"
-                    />
-                </div>
+                        <div className={styles.buttonBar}>
+                            <Button
+                                text="Create"
+                                onClick={() => this.showSubSection(UserPreferenceWidgetSubSection.CREATE)}
+                                data-element-id="user-admin-widget-create-button"
+                            />
+                        </div>
+                    </>
+                )}
 
-                <UserEditGroupsDialog
+                {showCreate && (
+                    <PreferenceCreateForm
+                        onSubmit={this.createPreference}
+                        onCancel={() => {
+                            this.showSubSection(UserPreferenceWidgetSubSection.TABLE);
+                        }}
+                    />
+                )}
+
+                {/* <UserEditPreferenceDialog
                     show={this.state.showAdd}
-                    title="Add Group(s) to User"
-                    confirmHandler={this.handleAddGroupResponse}
-                    cancelHandler={this.handleAddGroupCancel}
-                    columns={UserEditGroups.SELECT_GROUPS_COLUMN_DEFINITION}
-                />
+                    title="Add Preference(s) to User"
+                    confirmHandler={this.handleAddPreferenceResponse}
+                    cancelHandler={this.handleAddPreferenceCancel}
+                    columns={UserEditPreferences.SELECT_PREFERENCES_COLUMN_DEFINITION}
+                /> */}
 
-                <ConfirmationDialog
+                {/* <ConfirmationDialog
                     show={this.state.showDelete}
                     title="Warning"
                     content={this.state.confirmationMessage}
                     confirmHandler={this.handleConfirmationConfirmDelete}
                     cancelHandler={this.handleConfirmationCancel}
-                    payload={this.state.manageGroup}
-                /> */}
+                    payload={this.state.managePreference}
+                />  */}
             </div>
         );
     }
 
-    private toggleShowAdd() {
+    private showSubSection(subSection: UserPreferenceWidgetSubSection) {
         this.setState({
-            showAdd: true
+            showTable: subSection === UserPreferenceWidgetSubSection.TABLE,
+            showCreate: subSection === UserPreferenceWidgetSubSection.CREATE
+            // showEditUser: subSection === UserPreferenceWidgetSubSection.EDIT
         });
     }
 
     private getPreferences = async () => {
         const currentUser: UserDTO = this.state.user;
-
-        /* const criteria: PreferenceQueryCriteria = {
-            user_id: currentUser.id
-        }; */
 
         const response = await preferenceApi.getPreferences();
 
@@ -170,78 +193,15 @@ export class UserEditPreferences extends React.Component<UserEditPreferencesProp
         });
     };
 
-    /* private handleAddGroupResponse = async (groups: Array<GroupDTO>) => {
-        // const responses = await Promise.all(groups.map( async (group: GroupDTO) => {
-        const responses = [];
-        for (const group of groups) {
-            const request: GroupUpdateRequest = {
-                id: group.id,
-                name: group.name,
-                update_action: "add",
-                user_ids: [this.state.user.id]
-            };
-
-            const response = await groupApi.updateGroup(request);
-
-            if (response.status !== 200) return;
-
-            responses.push(response.data.data);
-        }
-
-        this.setState({
-            showAdd: false
-        });
-
-        this.getGroups();
-        this.props.onUpdate(responses);
-
-        return responses;
-    };
-
-    private handleAddGroupCancel = () => {
-        this.setState({
-            showAdd: false
-        });
-    };
-
-    private deleteGroup = async (group: GroupDTO) => {
-        const currentUser: UserDTO = this.state.user;
-
-        this.setState({
-            showDelete: true,
-            confirmationMessage: `This action will permanently delete <strong>${
-                group.displayName
-            }</strong> from the user <strong>${currentUser.userRealName}</strong>`,
-            manageGroup: group
-        });
-
-        this.getGroups();
-
-        return true;
-    };
-
-    private handleConfirmationConfirmDelete = async (payload: any) => {
-        this.setState({
-            showDelete: false,
-            manageGroup: undefined
-        });
-
-        const group: GroupDTO = payload;
-
-        const request: GroupUpdateRequest = {
-            id: group.id,
-            name: group.name,
-            update_action: "remove",
-            user_ids: [this.state.user.id]
-        };
-
-        const response = await groupApi.updateGroup(request);
+    private createPreference = async (data: PreferenceCreateRequest) => {
+        const response = await preferenceApi.createPreference(data);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;
 
-        this.getGroups();
-        this.props.onUpdate();
+        this.showSubSection(UserPreferenceWidgetSubSection.TABLE);
+        this.setState({ loading: true });
+        this.getPreferences();
 
         return true;
     };
@@ -249,7 +209,7 @@ export class UserEditPreferences extends React.Component<UserEditPreferencesProp
     private handleConfirmationCancel = (payload: any) => {
         this.setState({
             showDelete: false,
-            manageGroup: undefined
+            managePreference: undefined
         });
-    }; */
+    };
 }
