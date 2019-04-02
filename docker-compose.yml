@@ -14,6 +14,14 @@ services:
     environment:
       OZONE_API_SERVER_URL: "http://ozone_server:8080"
 
+  ozone_widgets:
+    image: "ozone/widgets"
+    build:
+      context: "./ozone-example-widgets"
+    container_name: "ozone_widgets"
+    ports:
+      - "4000:4000"
+
   ozone_server:
     image: "ozone/server"
     build:

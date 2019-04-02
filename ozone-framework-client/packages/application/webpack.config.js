@@ -32,7 +32,7 @@ const HTMLTemplateConfig = new HTMLWebpackPlugin({
 module.exports = {
 
     devServer: {
-        host: "localhost",
+        host: "0.0.0.0",
         port: "3000",
         hot: true,
         publicPath: PUBLIC_PATH,
