@@ -424,14 +424,12 @@ module.exports = {
             "[User Admin Create Preference Form] is visible"
         );
 
-
         browser
             .setValue(AdminWidget.NAMESPACE_FIELD, NEW_USER_PREFERENCE_NAMESPACE)
             .setValue(AdminWidget.PATH_FIELD, NEW_USER_PREFERENCE_PATH)
             .setValue(AdminWidget.VALUE_FIELD, NEW_USER_PREFERENCE_VALUE);
 
-
-        browser.click(AdminWidget.SUBMIT_BUTTON);
+        browser.click(`div[data-element-id="preference-admin-widget-dialog"] ${AdminWidget.SUBMIT_BUTTON}`);
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
@@ -439,12 +437,12 @@ module.exports = {
             "[User Admin Preference table] is visible"
         );
 
-            browser.assert.containsText(
-                AdminWidget.USER_ADMIN_WIDGET_DIALOG,
-                NEW_USER_PREFERENCE_NAMESPACE,
-                "[User Admin Widget] New User Preference successfully created"
-            );
+        browser.assert.containsText(
+            AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+            NEW_USER_PREFERENCE_NAMESPACE,
+            "[User Admin Widget] New User Preference successfully created"
+        );
 
         browser.closeWindow().end();
-    },
+    }
 };

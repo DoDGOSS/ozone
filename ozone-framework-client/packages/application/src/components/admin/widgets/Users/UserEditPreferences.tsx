@@ -5,7 +5,7 @@ import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
 
 import { AdminTable } from "../../table/AdminTable";
 import { UserDTO } from "../../../../api/models/UserDTO";
-import { PreferenceDTO, PreferenceCreateRequest } from "../../../../api/models/PreferenceDTO";
+import { PreferenceCreateRequest, PreferenceDTO } from "../../../../api/models/PreferenceDTO";
 import { preferenceApi } from "../../../../api/clients/PreferenceAPI";
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
 import { PreferenceCreateForm } from "./UserCreatePreferenceForm";
@@ -111,28 +111,28 @@ export class UserEditPreferences extends React.Component<UserEditPreferencesProp
 
         return (
             <div data-element-id="preference-admin-widget-dialog">
-            { showTable && (
-                <>
-                <div className={styles.actionBar}>
-                    <InputGroup
-                        placeholder="Search..."
-                        leftIcon="search"
-                        value={this.state.filter}
-                        onChange={(e: any) => this.setState({ filter: e.target.value })}
-                        data-element-id="search-field"
-                    />
-                </div>
+                {showTable && (
+                    <>
+                        <div className={styles.actionBar}>
+                            <InputGroup
+                                placeholder="Search..."
+                                leftIcon="search"
+                                value={this.state.filter}
+                                onChange={(e: any) => this.setState({ filter: e.target.value })}
+                                data-element-id="search-field"
+                            />
+                        </div>
 
-                <div className={styles.table}>
-                    <AdminTable
-                        data={data}
-                        columns={this.PREFERENCES_COLUMN_DEFINITION}
-                        loading={this.state.loading}
-                        pageSize={this.state.pageSize}
-                    />
-                </div>
+                        <div className={styles.table}>
+                            <AdminTable
+                                data={data}
+                                columns={this.PREFERENCES_COLUMN_DEFINITION}
+                                loading={this.state.loading}
+                                pageSize={this.state.pageSize}
+                            />
+                        </div>
 
-                <div className={styles.buttonBar}>
+                        <div className={styles.buttonBar}>
                             <Button
                                 text="Create"
                                 onClick={() => this.showSubSection(UserPreferenceWidgetSubSection.CREATE)}
@@ -174,8 +174,8 @@ export class UserEditPreferences extends React.Component<UserEditPreferencesProp
     private showSubSection(subSection: UserPreferenceWidgetSubSection) {
         this.setState({
             showTable: subSection === UserPreferenceWidgetSubSection.TABLE,
-            showCreate: subSection === UserPreferenceWidgetSubSection.CREATE,
-            //showEditUser: subSection === UserPreferenceWidgetSubSection.EDIT
+            showCreate: subSection === UserPreferenceWidgetSubSection.CREATE
+            // showEditUser: subSection === UserPreferenceWidgetSubSection.EDIT
         });
     }
 
@@ -211,5 +211,5 @@ export class UserEditPreferences extends React.Component<UserEditPreferencesProp
             showDelete: false,
             managePreference: undefined
         });
-    }; 
+    };
 }
