@@ -121,6 +121,14 @@ export namespace AdminWidget {
 
     export const EMAIL_FIELD = "input[data-role='field'][name='email']";
 
+    //Preferences
+    export const NAMESPACE_FIELD = "input[data-role='field'][name='namespace']";
+
+    export const PATH_FIELD = "input[data-role='field'][name='path']";
+
+    export const VALUE_FIELD = "input[data-role='field'][name='value']";
+    //end Preferences
+
     export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
 
     export const EDIT_USER_ID = "button[data-element-id='user-admin-widget-edit-newUserEmail1@email.com']";

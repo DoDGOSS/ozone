@@ -174,7 +174,4 @@ function addToTopRightOfLayout(layout: DashboardNode, id: string): DashboardNode
     return updateTree(layout, [update]);
 }
 
-export const EMPTY_DASHBOARD_STATE: DashboardState = {
-    tree: null,
-    panels: {}
-};
+export const EMPTY_DASHBOARD = new Dashboard(null, []);
