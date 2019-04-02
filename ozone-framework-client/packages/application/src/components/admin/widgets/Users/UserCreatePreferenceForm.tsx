@@ -44,11 +44,9 @@ export const PreferenceCreateForm: React.FunctionComponent<PreferenceCreateProps
 );
 
 const CreatePreferenceSchema = object().shape({
-    namespace: string()
-        .required("Required"),
+    namespace: string().required("Required"),
 
     path: string().required("Required"),
 
-    value: string()
-        .required("Required")
+    value: string().required("Required")
 });
