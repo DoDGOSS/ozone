@@ -14,9 +14,9 @@ import { MenuItem } from "@blueprintjs/core";
 import { ItemRenderer } from "@blueprintjs/select";
 
 interface WidgetCreateProps {
+    currentWidgetValues: any;
     onSubmit: (data: WidgetCreateRequest) => Promise<boolean>;
-    onCancel: () => void;
-    items: WidgetTypeReference[];
+    widgetTypes: WidgetTypeReference[];
 }
 
 const WidgetTypeSelect = SelectField.ofType<WidgetTypeReference>();
@@ -28,34 +28,18 @@ const renderWidgetType: ItemRenderer<WidgetTypeReference> = (
     return <MenuItem key={widgetType.name} onClick={handleClick} text={widgetType.name} />;
 };
 
-export const WidgetCreateForm: React.FC<WidgetCreateProps> = ({ onSubmit, onCancel, items }) => (
+
+export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ currentWidgetValues, onSubmit, widgetTypes }) => (
     <Formik
-        initialValues={{
-            displayName: "",
-            widgetVersion: "",
-            description: "",
-            widgetUrl: "",
-            imageUrlSmall: "",
-            imageUrlMedium: "",
-            width: 200,
-            height: 200,
-            widgetGuid: uuidv4.default(),
-            universalName: "",
-            visible: true,
-            background: false,
-            singleton: false,
-            mobileReady: false,
-            widgetTypes: [],
-            title: ""
-        }}
+        initialValues={currentWidgetValues}
         validationSchema={CreateWidgetSchema}
         onSubmit={async (values: WidgetCreateRequest, actions: FormikActions<WidgetCreateRequest>) => {
             values.height = Number(values.height);
             values.width = Number(values.width);
 
             const isSuccess = await onSubmit(values);
-            actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
-            actions.setSubmitting(false);
+            //actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
+            //actions.setSubmitting(false);
         }}
     >
         {(formik: FormikProps<WidgetCreateRequest>) => (
@@ -128,7 +112,7 @@ export const WidgetCreateForm: React.FC<WidgetCreateProps> = ({ onSubmit, onCanc
                             className={styles.inline_form_label}
                             name="widgetType"
                             label="Widget Type"
-                            items={items}
+                            items={widgetTypes}
                             itemRenderer={renderWidgetType}
                             extractLabel={(item: WidgetTypeReference) => item.name}
                             onSelectItem={(widgetType: WidgetTypeReference) => {
@@ -161,7 +145,6 @@ export const WidgetCreateForm: React.FC<WidgetCreateProps> = ({ onSubmit, onCanc
                     </div>
 
                     <div className={styles.buttonBar} data-element-id="widget-admin-widget-create-submit-button">
-                        <CancelButton className={styles.cancelButton} onClick={onCancel} />
                         <SubmitButton className={styles.submitButton} />
                     </div>
                 </Form>
