@@ -88,7 +88,7 @@ export class IntentsPanel extends React.Component<Props, State> {
             }
             SubComponent={(rowObject) => this.getIntentActionGroup(rowObject.original.intents)}
             defaultPageSize={20}
-            minRows={0}
+            minRows={5}
             onExpandedChange={(newExpanded, index, event) => this.handleRowExpanded(newExpanded, index, event)}
             expanded={this.state.expandedRows}
             getTheadThProps={this.removeHideableHeaders}
@@ -341,7 +341,7 @@ export class IntentsPanel extends React.Component<Props, State> {
             getTheadThProps={this.removeHideableHeaders}
             showPagination={false}
             getTrProps={this.makeRowsClickableProps}
-            minRows={5}
+            minRows={0}
             className="-striped -highlight"
         />
     }

@@ -72,7 +72,10 @@ export class WidgetSetup extends React.Component<Props, State> {
         this.setState({
             widgetExists: true
         });
-        this.props.closeSetup();
+        // Since there are multiple tabs which each call save individually, they shouldn't close on save.
+        // Legacy app didn't close the widget-editor on save either.
+        // Could maybe close on the FormSubmit, but certainly not on every change to the intents/groups/users.
+        // this.props.closeSetup();
 
         return true;
     };
