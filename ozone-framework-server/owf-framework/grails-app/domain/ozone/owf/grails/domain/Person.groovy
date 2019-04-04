@@ -45,7 +45,7 @@ class Person implements Serializable {
                 joinTable: [name: 'person_role', key: 'person_authorities_id', column: 'role_id']
         groups cache: true
         dashboards lazy: true, cascade: "delete-orphan", cache: true
-        personWidgetDefinitions lazy: true, cascade: "delete-orphan", cache: true
+        personWidgetDefinitions lazy: true, cascade: "all-delete-orphan", cache: true
         preferences lazy: true, cascade: "delete-orphan", cache: true
     }
 
