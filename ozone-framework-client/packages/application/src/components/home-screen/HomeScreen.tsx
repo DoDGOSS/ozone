@@ -18,11 +18,15 @@ import { UserAgreement } from "../warning-screen/UserAgreement";
 import { UserProfileDialog } from "../user-profile/UserProfileDialog";
 
 import * as styles from "./index.scss";
+import { useEffect } from "react";
+import { dashboardStore } from "../../stores/DashboardStore";
 
 export const HomeScreen: React.FC<{}> = () => {
     const isAboutVisible = useBehavior(mainStore.isAboutVisible);
 
-    // this.dashboardStore.setDashboard(LOGIN_DASHBOARD);
+    useEffect(() => {
+        dashboardStore.fetchUserDashboards();
+    }, []);
 
     return (
         <div className={styles.homeScreen}>

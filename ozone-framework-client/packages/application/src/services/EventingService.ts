@@ -366,7 +366,7 @@ function findWidgetIFrameWindow(id: string): Window {
 }
 
 function findWidgetInDashboard(widgetId: string): UserWidget {
-    const dashboard = dashboardStore.currentDashboard();
+    const dashboard = dashboardStore.currentDashboard().value;
     if (isNil(dashboard)) {
         throw new Error("no current Dashboard exists");
     }

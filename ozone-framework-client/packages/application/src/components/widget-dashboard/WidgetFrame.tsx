@@ -4,7 +4,7 @@ import React from "react";
 
 import { UserWidget } from "../../models/UserWidget";
 
-import { SYSTEM_WIDGET_URLS } from "../../test-data/system-widgets";
+import { SYSTEM_WIDGET_URLS } from "../../stores/system-widgets";
 
 export interface WidgetFrameProps {
     widget: UserWidget;

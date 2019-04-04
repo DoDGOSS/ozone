@@ -25,6 +25,7 @@ import { UserMenu } from "./UserMenu";
 import { PropsBase } from "../../common";
 
 import { classNames } from "../../utility";
+import { dashboardStore } from "../../stores/DashboardStore";
 
 export const NavigationBar: React.FC<PropsBase> = ({ className }) => {
     const user = useBehavior(authStore.user);
@@ -53,6 +54,7 @@ export const NavigationBar: React.FC<PropsBase> = ({ className }) => {
             </NavbarGroup>
 
             <NavbarGroup className={styles.group} align={Alignment.RIGHT}>
+                <Button minimal icon="floppy-disk" onClick={() => dashboardStore.saveCurrentDashboard()} />
                 <Popover position={Position.BOTTOM_RIGHT} minimal={true} content={<AddLayoutMenu />}>
                     <Button minimal icon="add" />
                 </Popover>

@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useBehavior } from "../../hooks";
+import { useBehavior, useBehavior2 } from "../../hooks";
 
 import { PropsBase } from "../../common";
 
@@ -18,9 +18,8 @@ export const WidgetDashboard: React.FC<PropsBase> = (props) => {
     const { className } = props;
 
     const themeClass = useBehavior(mainStore.themeClass);
-    const dashboard = useBehavior(dashboardStore.dashboard);
-
-    const { tree, panels } = useBehavior(dashboard.state);
+    const dashboard = useBehavior2(dashboardStore.currentDashboard);
+    const { tree, panels } = useBehavior2(dashboard.state);
 
     const setLayout = useCallback((currentNode: DashboardNode | null) => dashboardService.setLayout(currentNode), []);
 

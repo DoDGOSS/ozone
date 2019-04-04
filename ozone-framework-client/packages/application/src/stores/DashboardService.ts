@@ -9,10 +9,7 @@ import { Dashboard } from "../models/dashboard/Dashboard";
 import { FitPanel } from "../models/dashboard/FitPanel";
 import { TabbedPanel } from "../models/dashboard/TabbedPanel";
 import { ExpandoPanel } from "../models/dashboard/ExpandoPanel";
-import { Widget } from "../models/Widget";
-import { createUserWidget } from "../test-data/user-widget";
-
-let lastId = 10;
+import { UserWidget } from "../models/UserWidget";
 
 export class DashboardService {
     private readonly store: DashboardStore;
@@ -45,7 +42,7 @@ export class DashboardService {
     };
 
     getCurrentDashboard = (): Dashboard => {
-        const dashboard = this.store.currentDashboard();
+        const dashboard = this.store.currentDashboard().value;
         if (dashboard === null) {
             throw new Error("No Dashboard is available");
         }
@@ -60,14 +57,8 @@ export class DashboardService {
         this.getCurrentDashboard().setPanelLayout(panel, path, layout);
     };
 
-    addWidget = (widget: Widget) => {
-        const userWidget = createUserWidget({
-            id: lastId + 1,
-            position: 0,
-            widget
-        });
-        lastId++;
-        this.getCurrentDashboard().addWidget(userWidget);
+    addWidget = (widget: UserWidget) => {
+        this.getCurrentDashboard().addWidget(widget);
     };
 
     addLayout_TEMP = (layout: LayoutType) => {
