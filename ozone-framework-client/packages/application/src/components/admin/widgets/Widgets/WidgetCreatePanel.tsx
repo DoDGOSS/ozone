@@ -6,23 +6,23 @@ import * as uuidv4 from "uuid/v4";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { array, boolean, number, object, string } from "yup";
 
-import { CancelButton, CheckBox, FormError, HiddenField, SelectField, SubmitButton, TextField } from "../../../form";
+import { CancelButton, FormError, SubmitButton } from "../../../form";
 
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
-import { WidgetCreateRequest, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
+import { WidgetCreateRequest, WidgetUpdateRequest, WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 import { WidgetCreateForm } from "./WidgetCreateForm";
 
 import * as styles from "../Widgets.scss";
 
 interface State {
-    showImportWidgetFromURL: boolean
+    showImportWidgetFromURL: boolean,
+    widget: WidgetCreateRequest | WidgetUpdateRequest
 }
 
 interface Props {
-    updatingWidget?: any,
-    onSubmit: (data: WidgetCreateRequest) => Promise<boolean>,
-    onReturn: () => void,
+    widget: undefined | WidgetUpdateRequest,
+    onSubmit: (data: WidgetCreateRequest | WidgetUpdateRequest) => Promise<boolean>,
     widgetTypes: WidgetTypeReference[]
 }
 
@@ -32,7 +32,8 @@ export class WidgetCreatePanel extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            showImportWidgetFromURL: (this.props.updatingWidget === undefined)
+            showImportWidgetFromURL: (this.props.widget === undefined),
+            widget: (this.props.widget !== undefined) ? this.props.widget : this.getBlankWidget()
         };
     }
 
@@ -50,9 +51,8 @@ export class WidgetCreatePanel extends React.Component<Props, State> {
                 </a>)
         }
         else {
-            console.log(this.props.updatingWidget);
             toDisplay = <WidgetCreateForm
-                currentWidgetValues={this.props.updatingWidget}
+                currentWidget={this.state.widget}
                 onSubmit={this.props.onSubmit}
                 widgetTypes={this.props.widgetTypes}
             />
@@ -61,10 +61,29 @@ export class WidgetCreatePanel extends React.Component<Props, State> {
         return (
             <div>
                 {toDisplay}
-                <div data-element-id="widget-admin-widget-create-submit-button" className={styles.buttonBar}>
-                    <CancelButton className={styles.cancelButton} onClick={this.props.onReturn} />
-                </div>
             </div>
         )
+    }
+
+
+    private getBlankWidget(): WidgetCreateRequest {
+        return {
+            displayName: "",
+            widgetVersion: "",
+            description: "",
+            widgetUrl: "",
+            imageUrlSmall: "",
+            imageUrlMedium: "",
+            width: 200,
+            height: 200,
+            widgetGuid: uuidv4.default(),
+            universalName: "",
+            visible: true,
+            background: false,
+            singleton: false,
+            mobileReady: false,
+            widgetTypes: [this.props.widgetTypes[1]], // assume more than one option. Default option of administrator breaks stuff.
+            intents: {send: [], receive: []}
+        }
     }
 }

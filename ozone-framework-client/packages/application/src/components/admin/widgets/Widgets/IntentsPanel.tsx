@@ -10,7 +10,7 @@ import * as styles from "../Widgets.scss";
 
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
-import { CancelButton, CheckBox, FormError, HiddenField, SelectField, SubmitButton, TextField } from "../../../form";
+import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../form";
 
 import { Intent } from '../../../../models/Intent';
 import { IntentDialog } from './IntentDialog';
@@ -355,9 +355,6 @@ export class IntentsPanel extends React.Component<Props, State> {
       }
 
     private getIntentGroupsFromWidget(widget: any): IntentGroup[] {
-        console.log(widget);
-        // let widgetIntents: IntentsGroupedByPermission = {"send":[{"action":"a","dataTypes":["d", "e"]}, {"action":"b","dataTypes":["c", "e"]}],
-        //     "receive":[{"action":"a","dataTypes":["d", "f"]}, {"action":"c","dataTypes":["c", "g"]}]};
         let widgetIntents: IntentsGroupedByPermission = widget.intents;
 
         let permittedSendingGroups = this.getGroupsFromFormattedIntents(widgetIntents.send, 'send');

@@ -188,7 +188,8 @@ export class WidgetsWidget extends React.Component<{}, State> {
                         <WidgetSetup
                             updatingWidget={this.state.updatingWidget}
                             widgetTypes={this.state.widgetTypes}
-                            onReturn={() => {
+                            closeSetup={() => {
+                                this.handleUpdate();
                                 this.showSubSection(WidgetWidgetSubSection.TABLE);
                             }}
                         />

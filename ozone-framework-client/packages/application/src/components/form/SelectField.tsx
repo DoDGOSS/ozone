@@ -16,6 +16,7 @@ export interface SelectFieldProps<T> {
     inline?: boolean;
     className?: string;
 
+    initialValue: T;
     items: T[];
     itemRenderer: ItemRenderer<T>;
     extractLabel: (item: T) => void;
@@ -35,9 +36,22 @@ export class SelectField<T> extends React.Component<SelectFieldProps<T>, SelectF
     constructor(props: any) {
         super(props);
 
+        let defaultValue: T | undefined = this.props.items ? this.props.items[0] : undefined;
+        let initialValue: T | undefined = this.props.initialValue;
+
+        if ( !this.isValidOption(initialValue) ) {
+            initialValue = defaultValue;
+        }
         this.state = {
-            item: this.props.items ? this.props.items[0] : undefined
+            item: initialValue
         };
+    }
+
+    isValidOption(value: T): boolean {
+        return (this.props.items !== undefined)
+            && (this.props.items.find(
+                    (i) => this.props.extractLabel(i) === this.props.extractLabel(value)
+                 ) !== undefined);
     }
 
     render() {
@@ -58,7 +72,7 @@ export class SelectField<T> extends React.Component<SelectFieldProps<T>, SelectF
                             items={this.props.items}
                             itemRenderer={this.props.itemRenderer}
                             onItemSelect={(item: T, event?: React.SyntheticEvent<HTMLElement>) => {
-                                this.setState({ item });
+                                this.setState({ item: item });
                                 this.props.onSelectItem(item);
                             }}
                         >
