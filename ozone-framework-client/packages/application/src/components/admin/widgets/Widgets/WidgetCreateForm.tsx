@@ -2,7 +2,7 @@ import * as React from "react";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { array, boolean, number, object, string } from "yup";
 
-import { WidgetCreateRequest } from "../../../../api/models/WidgetDTO";
+import { WidgetCreateRequest, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
 import { CancelButton, CheckBox, FormError, HiddenField, SelectField, SubmitButton, TextField } from "../../../form";
 
 import * as uuidv4 from "uuid/v4";
@@ -14,7 +14,7 @@ import { MenuItem } from "@blueprintjs/core";
 import { ItemRenderer } from "@blueprintjs/select";
 
 interface WidgetCreateProps {
-    currentWidgetValues: any;
+    currentWidget: WidgetCreateRequest | WidgetUpdateRequest;
     onSubmit: (data: WidgetCreateRequest) => Promise<boolean>;
     widgetTypes: WidgetTypeReference[];
 }
@@ -29,9 +29,9 @@ const renderWidgetType: ItemRenderer<WidgetTypeReference> = (
 };
 
 
-export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ currentWidgetValues, onSubmit, widgetTypes }) => (
+export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ currentWidget, onSubmit, widgetTypes }) => (
     <Formik
-        initialValues={currentWidgetValues}
+        initialValues={currentWidget}
         validationSchema={CreateWidgetSchema}
         onSubmit={async (values: WidgetCreateRequest, actions: FormikActions<WidgetCreateRequest>) => {
             values.height = Number(values.height);
@@ -107,16 +107,21 @@ export const WidgetCreateForm: React.FunctionComponent<WidgetCreateProps> = ({ c
                         <TextField inline={true} className={styles.inline_form_label} name="width" label="Width" />
                         <TextField inline={true} className={styles.inline_form_label} name="height" label="Height" />
 
+                        {/* The initial value of the dropdown needs to be set manually. */}
                         <WidgetTypeSelect
                             inline={true}
                             className={styles.inline_form_label}
                             name="widgetType"
                             label="Widget Type"
+                            initialValue={(() => {
+                                return currentWidget.widgetTypes[0];
+                            })()} // NOT necessarily the same as widgetTypes[0]
                             items={widgetTypes}
                             itemRenderer={renderWidgetType}
                             extractLabel={(item: WidgetTypeReference) => item.name}
                             onSelectItem={(widgetType: WidgetTypeReference) => {
-                                formik.values.widgetTypes = [widgetType];
+                                // if you set it manually, without this function, the form isn't marked as dirty.
+                                formik.setFieldValue('widgetTypes', [widgetType]);
                                 formik.validateForm();
                             }}
                         />

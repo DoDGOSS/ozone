@@ -4,7 +4,7 @@ import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { array, boolean, number, object, string } from "yup";
 import * as uuidv4 from "uuid/v4";
 
-import { CancelButton, CheckBox, FormError, HiddenField, SelectField, SubmitButton, TextField } from "../../../form";
+import { CancelButton, CheckBox, FormError, SubmitButton, TextField } from "../../../form";
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 import { Intent } from '../../../../models/Intent';
