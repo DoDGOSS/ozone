@@ -1,47 +1,47 @@
+import * as styles from "./index.scss";
+
 import * as React from "react";
-import { useEffect, useState } from "react";
-import { useBehavior } from "../../hooks";
+import { useMemo, useState } from "react";
+import { useBehavior, useBehavior2 } from "../../hooks";
+
+import { values } from "lodash";
 
 import { Button, Classes, InputGroup, Overlay } from "@blueprintjs/core";
 
-import { widgetStore } from "../../stores/WidgetStore";
 import { mainStore } from "../../stores/MainStore";
+import { dashboardStore } from "../../stores/DashboardStore";
+import { dashboardService } from "../../stores/DashboardService";
+import { UserWidget } from "../../models/UserWidget";
+
 import { PropsBase } from "../../common";
 import { SortButton, SortOrder } from "./SortButton";
 
 import { classNames, handleStringChange, isBlank } from "../../utility";
 
-import { IMAGE_ROOT_URL } from "../../stores/default-layouts";
-
-import * as styles from "./index.scss";
-
 export const WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
     const isOpen = useBehavior(mainStore.isWidgetToolbarOpen);
     const themeClass = useBehavior(mainStore.themeClass);
 
-    const isLoading = useBehavior(widgetStore.isLoading);
-    let widgets = useBehavior(widgetStore.standardWidgets);
+    const userDashboards = useBehavior2(dashboardStore.userDashboards);
 
     const [filter, setFilter] = useState("");
     const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 
-    useEffect(() => widgetStore.fetchWidgets(), []);
+    const userWidgets = useMemo(() => {
+        let _userWidgets = values(userDashboards.widgets).filter((w) => w.widget.isVisible);
 
-    if (sortOrder === "asc") {
-        widgets.sort((a, b) => a.title.localeCompare(b.title));
-    } else {
-        widgets.sort((a, b) => b.title.localeCompare(a.title));
-    }
-
-    if (!isBlank(filter)) {
-        widgets = widgets.filter((row) => {
-            return row.title.toLowerCase().includes(filter.toLocaleLowerCase());
-        });
-    }
-
-    if (isLoading) {
-        return null;
-    }
+        if (sortOrder === "asc") {
+            _userWidgets.sort((a, b) => a.widget.title.localeCompare(b.widget.title));
+        } else {
+            _userWidgets.sort((a, b) => b.widget.title.localeCompare(a.widget.title));
+        }
+        if (!isBlank(filter)) {
+            _userWidgets = _userWidgets.filter((row) => {
+                return row.widget.title.toLowerCase().includes(filter.toLocaleLowerCase());
+            });
+        }
+        return _userWidgets;
+    }, [userDashboards, sortOrder, filter]);
 
     return (
         <Overlay
@@ -78,14 +78,9 @@ export const WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
                         <Button text="Next" icon="caret-right" small={true} disabled={true} />
                     </div>
                     <ul className={styles.widgetList}>
-                        {widgets.map((widget) => (
-                            <li key={widget.id}>
-                                <Widget
-                                    name={widget.title}
-                                    // TODO - Replace this temp fix to display images
-                                    // smallIconUrl={widget.value.smallIconUrl}
-                                    smallIconUrl={widget.images.smallUrl}
-                                />
+                        {userWidgets.map((userWidget) => (
+                            <li key={userWidget.id}>
+                                <UserWidgetTile userWidget={userWidget} />
                             </li>
                         ))}
                     </ul>
@@ -95,20 +90,15 @@ export const WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
     );
 };
 
-export type WidgetProps = {
-    name: string;
-    smallIconUrl: string;
-    description?: string;
-    url?: string;
-};
+export interface WidgetProps {
+    userWidget: UserWidget;
+}
 
-export const Widget: React.FC<WidgetProps> = (props) => {
-    const { name, smallIconUrl } = props;
-
+export const UserWidgetTile: React.FC<WidgetProps> = ({ userWidget }) => {
     return (
-        <div className={styles.tile}>
-            <img className={styles.tileIcon} src={smallIconUrl} />
-            <span className={styles.tileTitle}>{name}</span>
+        <div className={styles.tile} onClick={() => dashboardService.addWidget(userWidget)}>
+            <img className={styles.tileIcon} src={userWidget.widget.images.smallUrl} />
+            <span className={styles.tileTitle}>{userWidget.widget.title}</span>
         </div>
     );
 };

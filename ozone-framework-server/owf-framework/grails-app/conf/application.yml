@@ -209,7 +209,7 @@ owf:
 
     exampleWidgets:
         enabled: true
-        baseUrl: "widgets"
+        baseUrl: "http://localhost:4000"
 
     metric:
         enabled: false

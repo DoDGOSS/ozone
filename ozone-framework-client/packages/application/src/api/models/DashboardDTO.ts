@@ -43,14 +43,14 @@ export interface DashboardGetResponse {
 export const validateDashboardGetResponse = createValidator<DashboardGetResponse>(DASHBOARD_GET_RESPONSE_SCHEMA);
 
 export interface DashboardUpdateRequest {
-    name: string;
+    dashboardPosition?: number;
+    description?: string;
     guid: string;
     iconImageUrl?: string;
     isdefault?: boolean;
-    locked?: boolean;
-    description?: string;
     layoutConfig?: string;
-    dashboardPosition?: number;
+    locked?: boolean;
+    name: string;
 }
 
 export interface DashboardUpdateParams {

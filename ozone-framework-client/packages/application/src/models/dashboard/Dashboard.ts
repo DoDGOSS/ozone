@@ -1,4 +1,4 @@
-import { dropRight, isString, keyBy, omit, pick, set } from "lodash";
+import { dropRight, isString, omit, pick, set } from "lodash";
 
 import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../../observables";
@@ -22,20 +22,44 @@ import { LayoutType, Panel, PanelState } from "./types";
 import { ExpandoPanel } from "./ExpandoPanel";
 import { TabbedPanel } from "./TabbedPanel";
 import { FitPanel } from "./FitPanel";
+import { ProfileReference } from "../../api/models/UserDTO";
+import { StackDTO } from "../../api/models/StackDTO";
+import { PropertiesOf } from "../../types";
 
-export interface DashboardState {
-    tree: DashboardNode | null;
+export interface DashboardProps {
+    description?: string;
+    guid: string;
+    imageUrl?: string;
+    isAlteredByAdmin: boolean;
+    isDefault: boolean;
+    isGroupDashboard: boolean;
+    isLocked: boolean;
+    isMarkedForDeletion: boolean;
+    isPublishedToStore: boolean;
+    metadata?: {
+        createdBy: ProfileReference;
+        createdDate: string;
+        editedDate: string;
+    };
+    name: string;
     panels: PanelMap;
+    position: number;
+    stack?: StackDTO; // TODO
+    tree: DashboardNode | null;
+    user: {
+        username: string;
+    };
 }
 
 export class Dashboard {
-    private readonly state$: BehaviorSubject<DashboardState>;
+    private readonly state$: BehaviorSubject<DashboardProps>;
 
-    constructor(tree: DashboardNode | null = null, panels: Panel<any>[] = []) {
-        this.state$ = new BehaviorSubject({
-            tree,
-            panels: keyBy(panels, "id")
-        });
+    constructor(props: PropertiesOf<DashboardProps>) {
+        this.state$ = new BehaviorSubject(props);
+    }
+
+    get guid() {
+        return this.state$.value.guid;
     }
 
     state = () => asBehavior(this.state$);
@@ -174,4 +198,19 @@ function addToTopRightOfLayout(layout: DashboardNode, id: string): DashboardNode
     return updateTree(layout, [update]);
 }
 
-export const EMPTY_DASHBOARD = new Dashboard();
+export const EMPTY_DASHBOARD = new Dashboard({
+    guid: "",
+    isAlteredByAdmin: false,
+    isDefault: true,
+    isGroupDashboard: false,
+    isLocked: false,
+    isMarkedForDeletion: false,
+    isPublishedToStore: false,
+    name: "",
+    panels: {},
+    position: 0,
+    tree: null,
+    user: {
+        username: ""
+    }
+});

@@ -1,23 +1,30 @@
 import * as styles from "./index.scss";
 
 import * as React from "react";
-import { useBehavior } from "../../hooks";
+import { useMemo } from "react";
+import { useBehavior, useBehavior2 } from "../../hooks";
+
+import { values } from "lodash";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
+import { dashboardStore } from "../../stores/DashboardStore";
+import { UserWidget } from "../../models/UserWidget";
+import { UserDashboardsState } from "../../codecs/Dashboard.codec";
+
 import { dashboardService } from "../../stores/DashboardService";
 import { mainStore } from "../../stores/MainStore";
-import { widgetStore } from "../../stores/WidgetStore";
 
 import { WidgetTile } from "./WidgetTile";
 
-import { classNames } from "../../utility";
+import { classNames, some } from "../../utility";
 
 export const AdminToolsDialog: React.FC<{}> = () => {
     const themeClass = useBehavior(mainStore.themeClass);
     const isOpen = useBehavior(mainStore.isAdminToolsDialogOpen);
 
-    const adminWidgets = useBehavior(widgetStore.adminWidgets);
+    const userDashboards = useBehavior2(dashboardStore.userDashboards);
+    const adminWidgets = useAdminWidgets(userDashboards);
 
     return (
         <div>
@@ -30,13 +37,13 @@ export const AdminToolsDialog: React.FC<{}> = () => {
             >
                 <div data-element-id="administration" className={Classes.DIALOG_BODY}>
                     <div className={styles.tileContainer}>
-                        {adminWidgets.map((widget) => (
+                        {adminWidgets.map((userWidget) => (
                             <WidgetTile
-                                key={widget.id}
-                                title={widget.title}
-                                iconUrl={widget.images.largeUrl}
+                                key={userWidget.id}
+                                title={userWidget.widget.title}
+                                iconUrl={userWidget.widget.images.largeUrl}
                                 onClick={() => {
-                                    dashboardService.addWidget(widget);
+                                    dashboardService.addWidget(userWidget);
                                     mainStore.hideAdminToolsDialog();
                                 }}
                             />
@@ -47,3 +54,11 @@ export const AdminToolsDialog: React.FC<{}> = () => {
         </div>
     );
 };
+
+function useAdminWidgets(state: UserDashboardsState): UserWidget[] {
+    return useMemo(() => values(state.widgets).filter(isAdminWidget), [state]);
+}
+
+function isAdminWidget(userWidget: UserWidget): boolean {
+    return some(userWidget.widget.types, (widgetType) => widgetType.name === "administration");
+}

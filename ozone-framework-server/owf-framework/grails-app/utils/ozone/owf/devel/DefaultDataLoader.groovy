@@ -69,11 +69,10 @@ class DefaultDataLoader {
         def adminWidgets = initializeAdminWidgetDefinitions()
 
         adminWidgets.eachWithIndex { widget, index ->
-                create(PersonWidgetDefinition, [
-                        person: admin1,
-                        widgetDefinition: widget,
-                        visible: true,
-                        pwdPosition: index])
+            create(PersonWidgetDefinition, [person          : admin1,
+                                            widgetDefinition: widget,
+                                            visible         : true,
+                                            pwdPosition     : index])
         }
 
         initializeStacks()
@@ -122,9 +121,9 @@ class DefaultDataLoader {
     }
 
     private List<WidgetDefinition> initializeAdminWidgetDefinitions() {
-        def widgets = ADMIN_WIDGET_DEFINITIONS.
-                collect { Map definition -> create(WidgetDefinition, definition, [widgetTypes: [adminWidgetType]])
-                }
+        def widgets = ADMIN_WIDGET_DEFINITIONS.collect {
+            Map definition -> create(WidgetDefinition, definition, [widgetTypes: [adminWidgetType]])
+        }
 
         widgets.eachWithIndex {
             widget, index -> domainMappingService.createMapping(adminGroup, RelationshipType.owns, widget)
@@ -137,11 +136,6 @@ class DefaultDataLoader {
         adminStack = create(Stack, ADMIN_STACK, [
                 groups: [adminGroup],
                 defaultGroup: adminGroup
-        ])
-
-        investmentStack = create(Stack, INVESTMENT_STACK, [
-                groups: [userGroup],
-                defaultGroup: userGroup
         ])
 
         sampleStack = create(Stack, SAMPLE_STACK, [

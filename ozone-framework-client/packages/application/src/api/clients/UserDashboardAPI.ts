@@ -29,7 +29,10 @@ export class UserDashboardAPI {
             guid: uuid(),
             isdefault: true,
             state: [],
-            layoutConfig: {},
+            layoutConfig: {
+                tree: null,
+                panels: []
+            },
             publishedToStore: true
         };
 
