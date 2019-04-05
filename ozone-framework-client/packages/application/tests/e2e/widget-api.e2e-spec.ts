@@ -78,7 +78,11 @@ describe("Widget API", () => {
                     id: 1,
                     name: "standard"
                 }
-            ]
+            ],
+            intents: {
+                send: [],
+                receive: []
+            }
         };
 
         const response = await widgetApi.createWidget(createRequest);
