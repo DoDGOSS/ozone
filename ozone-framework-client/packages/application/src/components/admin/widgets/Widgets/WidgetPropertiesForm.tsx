@@ -29,11 +29,11 @@ const renderWidgetType: ItemRenderer<WidgetTypeReference> = (
 };
 
 
-export const WidgetCreateForm: React.FunctionComponent<WidgetFormProps> = ({ currentWidget, onSubmit, widgetTypes }) => (
+export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({ currentWidget, onSubmit, widgetTypes }) => (
     // <div key={currentWidget}>
         <Formik
             initialValues={(() => {console.log(currentWidget); return currentWidget})()}
-            validationSchema={CreateWidgetSchema}
+            validationSchema={WidgetPropertiesSchema}
             onSubmit={async (values: WidgetCreateRequest | WidgetUpdateRequest, actions: FormikActions<WidgetCreateRequest>) => {
                 console.log(values)
                 values.height = Number(values.height);
@@ -47,8 +47,8 @@ export const WidgetCreateForm: React.FunctionComponent<WidgetFormProps> = ({ cur
             }}
             enableReinitialize={true}
         >
-            {(formik: FormikProps<WidgetCreateRequest>) => (
-                <div data-element-id="widget-admin-widget-create-form">
+            {(formik: FormikProps<WidgetCreateRequest | WidgetUpdateRequest>) => (
+                <div data-element-id="widget-admin-widget-properties-form">
                     <Form className={styles.form}>
                         <div>
                             <TextField
@@ -154,7 +154,7 @@ export const WidgetCreateForm: React.FunctionComponent<WidgetFormProps> = ({ cur
                             {formik.status && formik.status.error && <FormError message={formik.status.error} />}
                         </div>
 
-                        <div className={styles.buttonBar} data-element-id="widget-admin-widget-create-submit-button">
+                        <div className={styles.buttonBar} data-element-id="admin-widget-properties-submit-button">
                             <SubmitButton className={styles.submitButton} />
                         </div>
                     </Form>
@@ -164,7 +164,7 @@ export const WidgetCreateForm: React.FunctionComponent<WidgetFormProps> = ({ cur
     // </div>
 );
 
-const CreateWidgetSchema = object().shape({
+const WidgetPropertiesSchema = object().shape({
     displayName: string().required("Required"),
     widgetUrl: string().required("Required"),
     widgetVersion: string(),

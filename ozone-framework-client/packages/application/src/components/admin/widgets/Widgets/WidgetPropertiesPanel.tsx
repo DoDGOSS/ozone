@@ -11,7 +11,7 @@ import { CancelButton, FormError, SubmitButton } from "../../../form";
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { WidgetCreateRequest, WidgetUpdateRequest, WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
-import { WidgetCreateForm } from "./WidgetCreateForm";
+import { WidgetPropertiesForm } from "./WidgetPropertiesForm";
 
 import * as styles from "../Widgets.scss";
 
@@ -26,7 +26,7 @@ interface Props {
 }
 
 
-export class WidgetCreatePanel extends React.Component<Props, State> {
+export class WidgetPropertiesPanel extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
@@ -40,7 +40,7 @@ export class WidgetCreatePanel extends React.Component<Props, State> {
         if (this.state.showImportWidgetFromURL) {
             toDisplay = (
                 <a
-                    data-element-id="widget-admin-widget-show-create-form"
+                    data-element-id="widget-admin-widget-show-properties-form"
                     onClick={() => {
                         this.setState({ showImportWidgetFromURL: false });
                     }}
@@ -50,7 +50,7 @@ export class WidgetCreatePanel extends React.Component<Props, State> {
         }
         else {
             // console.log(this.getWidget())
-            toDisplay = <WidgetCreateForm
+            toDisplay = <WidgetPropertiesForm
                 currentWidget={this.getWidget()}
                 onSubmit={this.props.onSubmit}
                 widgetTypes={this.props.widgetTypes}

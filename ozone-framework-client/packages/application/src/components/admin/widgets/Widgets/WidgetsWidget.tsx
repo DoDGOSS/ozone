@@ -10,7 +10,6 @@ import { WidgetCreateRequest, WidgetDTO } from "../../../../api/models/WidgetDTO
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 
 import * as styles from "../Widgets.scss";
-import { WidgetCreateForm } from "./WidgetCreateForm";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
 import { isNil } from "../../../../utility";
