@@ -2,7 +2,7 @@ import * as styles from "./index.scss";
 
 import * as React from "react";
 import { useMemo } from "react";
-import { useBehavior, useBehavior2 } from "../../hooks";
+import { useBehavior } from "../../hooks";
 
 import { values } from "lodash";
 
@@ -10,7 +10,7 @@ import { Classes, Dialog } from "@blueprintjs/core";
 
 import { dashboardStore } from "../../stores/DashboardStore";
 import { UserWidget } from "../../models/UserWidget";
-import { UserDashboardsState } from "../../codecs/Dashboard.codec";
+import { UserState } from "../../codecs/Dashboard.codec";
 
 import { dashboardService } from "../../stores/DashboardService";
 import { mainStore } from "../../stores/MainStore";
@@ -23,7 +23,7 @@ export const AdminToolsDialog: React.FC<{}> = () => {
     const themeClass = useBehavior(mainStore.themeClass);
     const isOpen = useBehavior(mainStore.isAdminToolsDialogOpen);
 
-    const userDashboards = useBehavior2(dashboardStore.userDashboards);
+    const userDashboards = useBehavior(dashboardStore.userDashboards);
     const adminWidgets = useAdminWidgets(userDashboards);
 
     return (
@@ -55,7 +55,7 @@ export const AdminToolsDialog: React.FC<{}> = () => {
     );
 };
 
-function useAdminWidgets(state: UserDashboardsState): UserWidget[] {
+function useAdminWidgets(state: UserState): UserWidget[] {
     return useMemo(() => values(state.widgets).filter(isAdminWidget), [state]);
 }
 

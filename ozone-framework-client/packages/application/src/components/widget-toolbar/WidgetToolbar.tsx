@@ -2,7 +2,7 @@ import * as styles from "./index.scss";
 
 import * as React from "react";
 import { useMemo, useState } from "react";
-import { useBehavior, useBehavior2 } from "../../hooks";
+import { useBehavior } from "../../hooks";
 
 import { values } from "lodash";
 
@@ -22,7 +22,7 @@ export const WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
     const isOpen = useBehavior(mainStore.isWidgetToolbarOpen);
     const themeClass = useBehavior(mainStore.themeClass);
 
-    const userDashboards = useBehavior2(dashboardStore.userDashboards);
+    const userDashboards = useBehavior(dashboardStore.userDashboards);
 
     const [filter, setFilter] = useState("");
     const [sortOrder, setSortOrder] = useState<SortOrder>("asc");

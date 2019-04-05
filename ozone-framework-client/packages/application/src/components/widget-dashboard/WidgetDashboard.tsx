@@ -1,5 +1,9 @@
+import * as styles from "./index.scss";
+
 import React, { useCallback } from "react";
-import { useBehavior, useBehavior2 } from "../../hooks";
+import { useBehavior } from "../../hooks";
+
+import { Spinner } from "@blueprintjs/core";
 
 import { PropsBase } from "../../common";
 
@@ -12,16 +16,20 @@ import { DashboardPanel } from "./layout/DashboardPanel";
 
 import { classNames } from "../../utility";
 
-import * as styles from "./index.scss";
-
 export const WidgetDashboard: React.FC<PropsBase> = (props) => {
     const { className } = props;
 
     const themeClass = useBehavior(mainStore.themeClass);
-    const dashboard = useBehavior2(dashboardStore.currentDashboard);
-    const { tree, panels } = useBehavior2(dashboard.state);
+
+    const isLoading = useBehavior(dashboardStore.isLoading);
+    const dashboard = useBehavior(dashboardStore.currentDashboard);
+    const { tree, panels } = useBehavior(dashboard.state);
 
     const setLayout = useCallback((currentNode: DashboardNode | null) => dashboardService.setLayout(currentNode), []);
+
+    if (isLoading) {
+        return <Spinner className={styles.loadingSpinner} />;
+    }
 
     return (
         <div className={classNames(styles.dashboard, className)}>
