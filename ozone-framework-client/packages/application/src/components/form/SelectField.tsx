@@ -38,7 +38,7 @@ export class SelectField<T> extends React.Component<SelectFieldProps<T>, SelectF
         let defaultValue: T | undefined = this.props.items ? this.props.items[0] : undefined;
         let initialValue: T | undefined = this.props.initialValue;
 
-        if ( !this.isValidOption(initialValue) ) {
+        if ( initialValue === undefined || !this.isValidOption(initialValue) ) {
             initialValue = defaultValue;
         }
         this.state = {

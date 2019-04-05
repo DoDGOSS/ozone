@@ -6,15 +6,15 @@ import { AdminTable } from "../../table/AdminTable";
 import * as uuidv4 from "uuid/v4";
 
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
-import { WidgetCreateRequest, WidgetDTO } from "../../../../api/models/WidgetDTO";
+import { WidgetSetup } from './WidgetSetup'
+
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
+import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
+import { WidgetCreateRequest, WidgetDTO } from "../../../../api/models/WidgetDTO";
+import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+import { isNil } from "../../../../utility";
 
 import * as styles from "../Widgets.scss";
-import { WidgetCreateForm } from "./WidgetCreateForm";
-import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
-import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
-import { isNil } from "../../../../utility";
-import { WidgetSetup } from './WidgetSetup'
 
 interface State {
     widgets: WidgetDTO[];
@@ -24,8 +24,7 @@ interface State {
     pageSize: number;
     columns: any;
     showTable: boolean;
-    showWidgetSetup: boolean,
-    showEditGroup: boolean;
+    showWidgetSetup: boolean;
     showDelete: boolean;
     confirmationMessage: string;
     manageWidget: WidgetDTO | undefined;
@@ -42,9 +41,7 @@ interface State {
 
 enum WidgetWidgetSubSection {
     TABLE,
-    CREATE,
-    SETUP,
-    EDIT
+    SETUP
 }
 
 export class WidgetsWidget extends React.Component<{}, State> {
@@ -203,9 +200,7 @@ export class WidgetsWidget extends React.Component<{}, State> {
     private showSubSection(subSection: WidgetWidgetSubSection) {
         this.setState({
             showTable: subSection === WidgetWidgetSubSection.TABLE,
-            // showCreate: subSection === WidgetWidgetSubSection.CREATE,
-            showWidgetSetup: subSection === WidgetWidgetSubSection.SETUP,
-            showEditGroup: subSection === WidgetWidgetSubSection.EDIT
+            showWidgetSetup: subSection === WidgetWidgetSubSection.SETUP
         });
     }
 

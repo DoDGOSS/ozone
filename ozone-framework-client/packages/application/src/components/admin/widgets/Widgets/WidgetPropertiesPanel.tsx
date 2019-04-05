@@ -71,6 +71,10 @@ export class WidgetPropertiesPanel extends React.Component<Props, State> {
     }
 
     private getBlankWidget(): WidgetCreateRequest {
+        let defaultType = this.props.widgetTypes.find(type => type.name === 'standard');
+        if (defaultType === undefined && this.props.widgetTypes && this.props.widgetTypes.length > 0) {
+            defaultType = this.props.widgetTypes[0];
+        }
         return {
             displayName: "",
             widgetVersion: "",
@@ -86,7 +90,7 @@ export class WidgetPropertiesPanel extends React.Component<Props, State> {
             background: false,
             singleton: false,
             mobileReady: false,
-            widgetTypes: [this.props.widgetTypes[1]], // assume more than one option. Default option of administrator breaks stuff.
+            widgetTypes: [defaultType],
             intents: {send: [], receive: []}
         }
     }

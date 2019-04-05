@@ -64,7 +64,7 @@ export const WIDGET_PROPERTIES_SCHEMA = {
             type: "boolean"
         },
         description: {
-            type: "string"
+            type: ["string", "null"]
         },
         descriptorUrl: {
             type: ["string", "null"]
@@ -112,7 +112,7 @@ export const WIDGET_PROPERTIES_SCHEMA = {
             type: "number"
         },
         universalName: {
-            type: "string"
+            type: ["string", "null"]
         },
         url: {
             type: "string"
@@ -127,7 +127,7 @@ export const WIDGET_PROPERTIES_SCHEMA = {
             }
         },
         widgetVersion: {
-            type: "string"
+            type: ["string", "null"]
         },
         width: {
             type: "number"
