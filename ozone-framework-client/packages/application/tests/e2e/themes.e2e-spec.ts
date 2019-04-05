@@ -21,7 +21,7 @@ describe("Theme API", () => {
 
     test("getTheme - GET prefs/preference/owf/selected_theme", async () => {
         const response = await themeApi.getTheme();
-        logResponse(response);
+        // logResponse(response);
 
         expect(response.status).toEqual(200);
         expect([LIGHT_THEME, DARK_THEME]).toContain(response.data);
@@ -29,7 +29,7 @@ describe("Theme API", () => {
 
     test("setTheme to dark theme - POST prefs/preference/owf/selected_theme", async () => {
         const response = await themeApi.setTheme(DARK_THEME);
-        logResponse(response);
+        // logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual(DARK_THEME);
@@ -40,7 +40,7 @@ describe("Theme API", () => {
 
     test("setTheme to light theme - POST prefs/preference/owf/selected_theme", async () => {
         const response = await themeApi.setTheme(LIGHT_THEME);
-        logResponse(response);
+        // logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual(LIGHT_THEME);
@@ -51,7 +51,7 @@ describe("Theme API", () => {
 
     test("setTheme to invalid theme - POST prefs/preference/owf/selected_theme", async () => {
         const response = await themeApi.setTheme('"<script>alert()</script>"class="');
-        logResponse(response);
+        // logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual(DARK_THEME);
@@ -62,7 +62,7 @@ describe("Theme API", () => {
 
     test("toggleTheme from dark to light - POST prefs/preference/owf/selected_theme", async () => {
         let response = await themeApi.toggle();
-        logResponse(response);
+        // logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual(LIGHT_THEME);
@@ -73,7 +73,7 @@ describe("Theme API", () => {
 
     test("toggleTheme from light to dark - POST prefs/preference/owf/selected_theme", async () => {
         let response = await themeApi.toggle();
-        logResponse(response);
+        // logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual(DARK_THEME);
