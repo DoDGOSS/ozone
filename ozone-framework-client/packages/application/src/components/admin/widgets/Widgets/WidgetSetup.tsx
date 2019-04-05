@@ -48,7 +48,7 @@ export class WidgetSetup extends React.Component<Props, State> {
                     <Tab id="groups" disabled={!this.state.widgetExists} title="Groups" panel={<div/>} />
                     <Tabs.Expander />
                 </Tabs>
-                <div data-element-id="widget-admin-widget-create-submit-button" className={styles.buttonBar}>
+                <div data-element-id="widget-admin-widget-setup-return-button" className={styles.buttonBar}>
                     <CancelButton className={styles.cancelButton} onClick={this.props.closeSetup} />
                 </div>
             </div>
@@ -56,7 +56,6 @@ export class WidgetSetup extends React.Component<Props, State> {
     }
 
     private saveWidget = async (widget: WidgetCreateRequest | WidgetUpdateRequest) => {
-        console.log(widget)
         let updatedWidget: WidgetUpdateRequest;
         let response: any;
         if ('id' in widget) { // if widget is updateRequest. TS can't follow if I put the check in its own function though.
