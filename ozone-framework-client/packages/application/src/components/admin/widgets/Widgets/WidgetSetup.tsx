@@ -17,11 +17,11 @@ import { IntentsPanel } from './IntentsPanel'
 
 interface State {
     widgetExists: boolean,
-    widget: any
+    widget:  WidgetUpdateRequest | undefined
 }
 
 interface Props {
-    updatingWidget?: any,
+    widget?: WidgetDTO,
     closeSetup: () => void,
     widgetTypes: WidgetTypeReference[]
 }
@@ -32,19 +32,16 @@ export class WidgetSetup extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            widgetExists: (this.props.updatingWidget !== undefined),
-            widget: this.props.updatingWidget ? this.convertDTOtoUpdateRequest(this.props.updatingWidget) : undefined
+            widgetExists: (this.props.widget !== undefined),
+            widget: this.props.widget ? this.convertDTOtoUpdateRequest(this.props.widget) : undefined
         };
-    }
-
-    componentDidMount() {
     }
 
     render() {
         return (
             <div>
                 <Tabs id="Tabs">
-                    <Tab id="properties" title="Properties" panel={this.getCreatePanel()}/>
+                    <Tab id="properties" title="Properties" panel={this.getPropertiesPanel()}/>
                     <Tab id="intents" disabled={!this.state.widgetExists} title="Intents" panel={this.getIntentsPanel()}/>
                     <Tab id="users" disabled={!this.state.widgetExists} title="Users" panel={<div/>} />
                     <Tab id="groups" disabled={!this.state.widgetExists} title="Groups" panel={<div/>} />
@@ -58,25 +55,30 @@ export class WidgetSetup extends React.Component<Props, State> {
     }
 
     private saveWidget = async (widget: WidgetCreateRequest | WidgetUpdateRequest) => {
+        console.log(widget)
+        let updatedWidget: WidgetUpdateRequest;
         let response: any;
         if ('id' in widget) { // if widget is updateRequest. TS can't follow if I put the check in its own function though.
             response = await widgetApi.updateWidget(widget);
+            updatedWidget = widget;
         }
         else {
             response = await widgetApi.createWidget(widget);
+            updatedWidget = {id: widget.widgetGuid, ...widget};
         }
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;
 
+
         this.setState({
-            widgetExists: true
+            widgetExists: true,
+            widget: updatedWidget
         });
         // Since there are multiple tabs which each call save individually, they shouldn't close on save.
         // Legacy app didn't close the widget-editor on save either.
         // Could maybe close on the FormSubmit, but certainly not on every change to the intents/groups/users.
         // this.props.closeSetup();
-
         return true;
     };
 
@@ -86,6 +88,15 @@ export class WidgetSetup extends React.Component<Props, State> {
             this.state.widget.intents = intentGroups;
             this.saveWidget(this.state.widget);
         }
+    }
+
+    private getPropertiesPanel() {
+        return <WidgetCreatePanel
+            widget={this.state.widget}
+            onSubmit={this.saveWidget}
+            /* onReturn={this.props.closeSetup} */
+            widgetTypes={this.props.widgetTypes}
+        />
     }
 
     private getIntentsPanel() {
@@ -98,16 +109,6 @@ export class WidgetSetup extends React.Component<Props, State> {
         else {
             return <div/>
         }
-    }
-
-    // this can/should be encampsulated in the WidgetCreateForm file when building the import-via-url feature, if we have time.
-    private getCreatePanel() {
-        return <WidgetCreatePanel
-            widget={this.state.widget}
-            onSubmit={this.saveWidget}
-            /* onReturn={this.props.closeSetup} */
-            widgetTypes={this.props.widgetTypes}
-        />
     }
 
     convertDTOtoUpdateRequest(dto: WidgetDTO): WidgetUpdateRequest {

@@ -182,11 +182,10 @@ export class WidgetsWidget extends React.Component<{}, State> {
                     </div>
                 )}
 
-
                 <div className={styles.widget_body}>
                     {showWidgetSetup && (
                         <WidgetSetup
-                            updatingWidget={this.state.updatingWidget}
+                            widget={this.state.updatingWidget}
                             widgetTypes={this.state.widgetTypes}
                             closeSetup={() => {
                                 this.handleUpdate();

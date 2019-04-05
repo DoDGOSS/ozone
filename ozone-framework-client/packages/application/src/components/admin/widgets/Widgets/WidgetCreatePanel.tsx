@@ -16,8 +16,7 @@ import { WidgetCreateForm } from "./WidgetCreateForm";
 import * as styles from "../Widgets.scss";
 
 interface State {
-    showImportWidgetFromURL: boolean,
-    widget: WidgetCreateRequest | WidgetUpdateRequest
+    showImportWidgetFromURL: boolean
 }
 
 interface Props {
@@ -32,8 +31,7 @@ export class WidgetCreatePanel extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            showImportWidgetFromURL: (this.props.widget === undefined),
-            widget: (this.props.widget !== undefined) ? this.props.widget : this.getBlankWidget()
+            showImportWidgetFromURL: (this.props.widget === undefined)
         };
     }
 
@@ -51,8 +49,9 @@ export class WidgetCreatePanel extends React.Component<Props, State> {
                 </a>)
         }
         else {
+            // console.log(this.getWidget())
             toDisplay = <WidgetCreateForm
-                currentWidget={this.state.widget}
+                currentWidget={this.getWidget()}
                 onSubmit={this.props.onSubmit}
                 widgetTypes={this.props.widgetTypes}
             />
@@ -65,6 +64,11 @@ export class WidgetCreatePanel extends React.Component<Props, State> {
         )
     }
 
+    private getWidget(): WidgetCreateRequest | WidgetUpdateRequest {
+        // I used to have this in state, but the object wasn't re-created when I told it to re-render with new props.
+        // So the state didn't change, causing the form to try to create the widget on submit, rather than update it.
+        return (this.props.widget !== undefined) ? this.props.widget : this.getBlankWidget()
+    }
 
     private getBlankWidget(): WidgetCreateRequest {
         return {

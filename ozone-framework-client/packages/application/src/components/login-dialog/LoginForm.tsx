@@ -24,6 +24,8 @@ export const LoginForm: React.FC<LoginFormProps> = (props) => {
 
                 if (isSuccess) {
                     props.onSuccess();
+                    // this setStatus causes error since the form closes during onSuccess().
+                    /* actions.setStatus(null); */
                 } else {
                     actions.setStatus({ error: "An unexpected error has occurred" });
                 }
