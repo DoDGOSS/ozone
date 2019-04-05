@@ -85,8 +85,8 @@ export class WidgetsWidget extends React.Component<{}, State> {
                                     icon="edit"
                                     small={true}
                                     onClick={() => {
-                                        this.showSubSection(WidgetWidgetSubSection.SETUP);
                                         this.setState({ updatingWidget: row.original });
+                                        this.showSubSection(WidgetWidgetSubSection.SETUP);
                                     }}
                                 />
                                 <Divider />
@@ -125,7 +125,7 @@ export class WidgetsWidget extends React.Component<{}, State> {
         // Minimally could wait to hit enter before filtering. Pagination handling
         if (filter) {
             widgets = widgets.filter((row) => {
-            const { universalName, namespace } = row.value;
+                const { universalName, namespace } = row.value;
                 return (
                     (!isNil(universalName) && universalName.toLowerCase().includes(filter)) ||
                     (!isNil(namespace) && namespace.toLowerCase().includes(filter))
@@ -163,8 +163,8 @@ export class WidgetsWidget extends React.Component<{}, State> {
                         <Button
                             text="Create"
                             onClick={() => {
-                                this.showSubSection(WidgetWidgetSubSection.SETUP);
                                 this.setState({ updatingWidget: undefined });
+                                this.showSubSection(WidgetWidgetSubSection.SETUP);
                             }}
                             data-element-id="widget-admin-widget-create-button"
                         />

@@ -116,9 +116,7 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
                             className={styles.inline_form_label}
                             name="widgetType"
                             label="Widget Type"
-                            initialValue={(() => {
-                                return currentWidget.widgetTypes[0];
-                            })()} // NOT necessarily the same as widgetTypes[0]
+                            initialValue={currentWidget.widgetTypes[0]} // NOT `widgetTypes[0]`
                             items={widgetTypes}
                             itemRenderer={renderWidgetType}
                             extractLabel={(item: WidgetTypeReference) => item.name}
