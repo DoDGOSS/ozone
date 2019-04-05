@@ -9,10 +9,11 @@ import { CancelButton, FormError, SubmitButton } from "../../../form";
 import { WidgetCreateRequest, WidgetUpdateRequest, WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
-import { WidgetCreatePanel } from "./WidgetCreatePanel";
-import * as styles from "../Widgets.scss";
 
+import { WidgetPropertiesPanel } from "./WidgetPropertiesPanel";
 import { IntentsPanel } from './IntentsPanel'
+
+import * as styles from "../Widgets.scss";
 
 
 interface State {
@@ -91,10 +92,9 @@ export class WidgetSetup extends React.Component<Props, State> {
     }
 
     private getPropertiesPanel() {
-        return <WidgetCreatePanel
+        return <WidgetPropertiesPanel
             widget={this.state.widget}
             onSubmit={this.saveWidget}
-            /* onReturn={this.props.closeSetup} */
             widgetTypes={this.props.widgetTypes}
         />
     }
