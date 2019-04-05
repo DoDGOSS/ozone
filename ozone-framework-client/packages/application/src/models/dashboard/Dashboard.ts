@@ -23,7 +23,6 @@ import { ExpandoPanel } from "./ExpandoPanel";
 import { TabbedPanel } from "./TabbedPanel";
 import { FitPanel } from "./FitPanel";
 import { ProfileReference } from "../../api/models/UserDTO";
-import { StackDTO } from "../../api/models/StackDTO";
 import { PropertiesOf } from "../../types";
 
 export interface DashboardProps {
@@ -44,7 +43,7 @@ export interface DashboardProps {
     name: string;
     panels: PanelMap;
     position: number;
-    stack?: StackDTO; // TODO
+    stackId: number;
     tree: DashboardNode | null;
     user: {
         username: string;
@@ -209,6 +208,7 @@ export const EMPTY_DASHBOARD = new Dashboard({
     name: "",
     panels: {},
     position: 0,
+    stackId: 0,
     tree: null,
     user: {
         username: ""

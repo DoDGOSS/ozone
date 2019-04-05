@@ -1,4 +1,4 @@
-import { LoginForm, MainPage, WidgetAdminWidget } from "./selectors";
+import { AdminWidgetsDialog, LoginForm, MainPage, WidgetAdminWidget } from "./selectors";
 import { NightwatchAPI } from "./nightwatch";
 
 export function loggedInAs(browser: NightwatchAPI, username: string, password: string, displayName: string) {
@@ -46,30 +46,33 @@ export function openAdminWidget(browser: NightwatchAPI, type: AdminWidgetType) {
     switch (type) {
         case AdminWidgetType.WIDGETS:
             browser
-                .click(MainPage.WIDGETS_MENU_ADMIN_BUTTON)
+                .click(AdminWidgetsDialog.WIDGETS_MENU_ADMIN_BUTTON)
                 .waitForElementVisible(
                     WidgetAdminWidget.Main.DIALOG,
                     2000,
                     "[Widget Administration Widget] is visible"
                 );
             break;
+
         case AdminWidgetType.USERS:
             browser
-                .click(MainPage.USER_MENU_ADMIN_BUTTON)
+                .click(AdminWidgetsDialog.USER_MENU_ADMIN_BUTTON)
                 .waitForElementVisible(
                     MainPage.USER_ADMINISTRATION_WIDGET,
                     2000,
                     "[User Administration Widget] is visible"
                 );
             break;
+
         case AdminWidgetType.GROUPS:
             browser
-                .click(MainPage.GROUPS_ADMIN_BUTTON)
+                .click(AdminWidgetsDialog.GROUPS_ADMIN_BUTTON)
                 .waitForElementVisible(MainPage.GROUPS_ADMIN_WIDGET, 2000, "[Groups Administration Widget] is visible");
             break;
+
         case AdminWidgetType.DASHBOARDS:
             browser
-                .click(MainPage.DASHBOARDS_MENU_ADMIN_BUTTON)
+                .click(AdminWidgetsDialog.DASHBOARDS_MENU_ADMIN_BUTTON)
                 .waitForElementVisible(
                     MainPage.DASHBOARD_ADMIN_WIDGET,
                     2000,
