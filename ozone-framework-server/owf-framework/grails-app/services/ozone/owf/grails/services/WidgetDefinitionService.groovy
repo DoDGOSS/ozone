@@ -525,8 +525,9 @@ class WidgetDefinitionService {
                                 visible: true,
                                 pwdPosition: maxPosition)
 
-                            person.addToPersonWidgetDefinitions(personWidgetDefinition)
-                            widgetDefinition.addToPersonWidgetDefinitions(personWidgetDefinition)
+                            personWidgetDefinition.save(flush:true)
+                            person.addToPersonWidgetDefinitions(personWidgetDefinition).save(flush:true)
+                            widgetDefinition.addToPersonWidgetDefinitions(personWidgetDefinition).save(flush:true)
                         }
                         else {
                             results.each { result ->
@@ -539,8 +540,12 @@ class WidgetDefinitionService {
                         results?.eachWithIndex { nestedIt, j ->
                             if (!nestedIt.groupWidget) {
                                 // If widget is not assigned directly or via a group, remove the pwd.
-                                person.removeFromPersonWidgetDefinitions(nestedIt)
-                                widgetDefinition.removeFromPersonWidgetDefinitions(nestedIt)
+                                def foundpwd = PersonWidgetDefinition.find(nestedIt)
+                                if (foundpwd) {
+                                    person.removeFromPersonWidgetDefinitions(foundpwd).save(flush:true)
+                                    widgetDefinition.removeFromPersonWidgetDefinitions(foundpwd).save(flush:true)
+                                    foundpwd.delete()
+                                }
                             }
                             else {
                                 // Otherwise, just un-flag the direct widget to user association.
