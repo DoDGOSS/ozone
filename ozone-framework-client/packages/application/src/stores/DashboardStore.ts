@@ -4,9 +4,14 @@ import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
 import { Dashboard, EMPTY_DASHBOARD } from "../models/dashboard/Dashboard";
-import { userDashboardApi, UserDashboardAPI } from "../api/clients/UserDashboardAPI";
+import { DashboardCreateOpts, userDashboardApi, UserDashboardAPI } from "../api/clients/UserDashboardAPI";
 import { dashboardApi, DashboardAPI } from "../api/clients/DashboardAPI";
 import { dashboardToUpdateRequest, deserializeUserState, UserState } from "../codecs/Dashboard.codec";
+import { CreateDashboardOptions } from "../components/create-dashboard-screen/CreateDashboardForm";
+import { DashboardNode, PanelMap } from "../components/widget-dashboard/types";
+import { createPresetLayout } from "./default-layouts";
+import { isNil } from "../utility";
+import { create } from "domain";
 
 const EMPTY_USER_DASHBOARDS_STATE: UserState = {
     dashboards: {},
@@ -34,7 +39,7 @@ export class DashboardStore {
 
     isLoading = () => asBehavior(this.isLoading$);
 
-    fetchUserDashboards = async () => {
+    fetchUserDashboards = async (newCurrentGuid?: string) => {
         this.isLoading$.next(true);
 
         let response = await this.userDashboardApi.getOwnDashboards();
@@ -47,7 +52,7 @@ export class DashboardStore {
         }
 
         const userDashboards = deserializeUserState(response.data.dashboards, response.data.widgets);
-        this.updateUserState(userDashboards);
+        this.updateUserState(userDashboards, newCurrentGuid);
 
         this.isLoading$.next(false);
     };
@@ -66,6 +71,25 @@ export class DashboardStore {
         return refetchResponse;
     };
 
+    createDashboard = async (dashboard: CreateDashboardOptions) => {
+        const { tree, panels } = createPresetLayout(dashboard.presetLayoutName);
+
+        const opts: DashboardCreateOpts = {
+            name: dashboard.name,
+            tree,
+            panels
+        };
+
+        const createResponse = await this.userDashboardApi.createDashboard(opts);
+        if (createResponse.status !== 200) {
+            throw new Error("Failed to create new dashboard");
+        }
+
+        const createdDashboard = createResponse.data;
+
+        await this.fetchUserDashboards(createdDashboard.guid);
+    };
+
     saveCurrentDashboard = async () => {
         const currentDashboard = this.currentDashboard$.value;
         if (currentDashboard === null) return;
@@ -79,7 +103,7 @@ export class DashboardStore {
         }
     };
 
-    private updateUserState = (state: UserState) => {
+    private updateUserState = (state: UserState, newCurrentGuid?: string) => {
         this.userDashboards$.next(state);
 
         const currentDashboard = this.currentDashboard$.value;
@@ -95,7 +119,7 @@ export class DashboardStore {
             return;
         }
 
-        const currentGuid = currentDashboard.guid;
+        const currentGuid = !isNil(newCurrentGuid) ? newCurrentGuid : currentDashboard.guid;
         const newCurrentDashboard = dashboards.find((dashboard) => dashboard.guid === currentGuid);
         if (newCurrentDashboard === undefined) {
             this.currentDashboard$.next(dashboards[0]);
