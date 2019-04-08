@@ -2,6 +2,7 @@ package ozone.owf.grails.services
 
 import grails.converters.JSON
 import grails.core.GrailsApplication
+import grails.gorm.transactions.Transactional
 import org.hibernate.CacheMode
 import org.hibernate.SessionFactory
 import org.hibernate.transform.DistinctRootEntityResultTransformer
@@ -11,6 +12,7 @@ import ozone.owf.grails.OwfExceptionTypes
 import ozone.owf.grails.domain.Group
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.PersonWidgetDefinition
+import ozone.owf.grails.domain.RelationshipType
 import ozone.owf.grails.domain.WidgetDefinition
 
 class PersonWidgetDefinitionService {
@@ -508,6 +510,7 @@ class PersonWidgetDefinitionService {
         }
     }
 
+    @Transactional
     def delete (params) {
         def personWidgetDefinition
 

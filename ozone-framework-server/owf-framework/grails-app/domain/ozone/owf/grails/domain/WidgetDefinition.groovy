@@ -55,7 +55,7 @@ class WidgetDefinition implements Serializable {
     static mapping = {
         cache true
         //TODO: I don't think "all,delete-orphan" is correct - need to see if this really should be all-delete-orphan
-        personWidgetDefinitions lazy: true, cascade: "all,delete-orphan", cache: true
+        personWidgetDefinitions lazy: true, cascade: "all-delete-orphan", cache: true
         widgetTypes fetch: 'join'
         widgetDefinitionIntents cascade: 'all-delete-orphan', cache: true, batchSize: 50
     }

@@ -1,16 +1,12 @@
 import { WidgetDefinitionAPI } from "../../src/api/clients/WidgetDefinitionAPI";
 
-import { GROUPS } from "../unit/data";
-import { GroupAPI } from "../../src/api/clients/GroupAPI";
-import { GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../src/api/models/GroupDTO";
-
 import { NodeGateway } from "./node-gateway";
-import { WIDGET_DEFINITION, WIDGETS } from "../unit/data";
+
+import { WIDGET_DEFINITION } from "../unit/data";
 
 // TODO: 404?
 describe("Widget Definition API", () => {
     let gateway: NodeGateway;
-    let groupApi: GroupAPI;
     let widgetDefApi: WidgetDefinitionAPI;
 
     beforeAll(async () => {

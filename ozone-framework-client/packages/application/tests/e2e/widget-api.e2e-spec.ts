@@ -1,23 +1,36 @@
+import { UserWidgetAPI } from "../../src/api/clients/UserWidgetAPI";
 import { WidgetAPI } from "../../src/api/clients/WidgetAPI";
+
+import { AuthUserDTO } from "../../src/api/models/AuthUserDTO";
 import { WidgetCreateRequest, WidgetCreateResponse, WidgetUpdateRequest } from "../../src/api/models/WidgetDTO";
 
 import { NodeGateway } from "./node-gateway";
+
+import { logResponse } from "./assertions";
+
 import { WIDGETS } from "../unit/data";
 
 describe("Widget API", () => {
     let gateway: NodeGateway;
     let widgetApi: WidgetAPI;
+    let userWidgetApi: UserWidgetAPI;
+
+    let testAdmin1: AuthUserDTO;
 
     beforeAll(async () => {
         gateway = new NodeGateway();
         widgetApi = new WidgetAPI(gateway);
+        userWidgetApi = new UserWidgetAPI(gateway);
 
-        await gateway.login("testAdmin1", "password");
+        const loginResponse = await gateway.login("testAdmin1", "password");
+        testAdmin1 = loginResponse.data;
+
         expect(gateway.isAuthenticated).toEqual(true);
     });
 
     test("getWidgets - GET /widget/", async () => {
         const response = await widgetApi.getWidgets();
+        logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toMatchObject({
@@ -30,6 +43,7 @@ describe("Widget API", () => {
         const widget = WIDGETS[0];
 
         const response = await widgetApi.getWidgetById(widget.id);
+        logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
@@ -67,6 +81,7 @@ describe("Widget API", () => {
         };
 
         const response = await widgetApi.createWidget(createRequest);
+        logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
@@ -123,6 +138,7 @@ describe("Widget API", () => {
 
     test("getWidgets - GET /widget/ - additional result after created", async () => {
         const response = await widgetApi.getWidgets();
+        logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toMatchObject({
@@ -147,6 +163,7 @@ describe("Widget API", () => {
         };
 
         const response = await widgetApi.updateWidget(updateRequest);
+        logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
@@ -204,9 +221,20 @@ describe("Widget API", () => {
         });
     });
 
+    let userWidgets: number;
+
+    test(`${UserWidgetAPI.prototype.getUserWidgets.name} -- before add`, async () => {
+        const response = await userWidgetApi.getUserWidgets();
+        logResponse(response);
+
+        expect(response.status).toEqual(200);
+        userWidgets = response.data.length;
+    });
+
     test("addWidgetUsers - PUT /widget/:guid/", async () => {
         const widget = createResponse.data[0];
-        const response = await widgetApi.addWidgetUsers(widget.id, 1);
+        const response = await widgetApi.addWidgetUsers(widget.id, testAdmin1.id);
+        logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toMatchObject({
@@ -215,20 +243,38 @@ describe("Widget API", () => {
         });
     });
 
+    test(`${UserWidgetAPI.prototype.getUserWidgets.name} -- after add / before remove`, async () => {
+        const response = await userWidgetApi.getUserWidgets();
+        logResponse(response);
+
+        expect(response.status).toEqual(200);
+        expect(response.data).toHaveLength(userWidgets + 1);
+    });
+
     test("removeWidgetUsers - PUT /widget/:guid/", async () => {
         const widget = createResponse.data[0];
-        const response = await widgetApi.removeWidgetUsers(widget.id, 1);
+        const response = await widgetApi.removeWidgetUsers(widget.id, testAdmin1.id);
+        logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toMatchObject({
             success: true,
             data: [{ id: 1 }]
         });
+    });
+
+    test(`${UserWidgetAPI.prototype.getUserWidgets.name} -- after remove`, async () => {
+        const response = await userWidgetApi.getUserWidgets();
+        logResponse(response);
+
+        expect(response.status).toEqual(200);
+        expect(response.data).toHaveLength(userWidgets);
     });
 
     test("addWidgetGroups - PUT /widget/:guid/", async () => {
         const widget = createResponse.data[0];
         const response = await widgetApi.addWidgetGroups(widget.id, 1);
+        logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toMatchObject({
@@ -240,6 +286,7 @@ describe("Widget API", () => {
     test("removeWidgetGroups - PUT /widget/:guid/", async () => {
         const widget = createResponse.data[0];
         const response = await widgetApi.removeWidgetGroups(widget.id, 1);
+        logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toMatchObject({
@@ -250,6 +297,7 @@ describe("Widget API", () => {
 
     test("deleteWidget - DELETE /widget/", async () => {
         const response = await widgetApi.deleteWidget(createRequest.widgetGuid);
+        logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
@@ -263,6 +311,7 @@ describe("Widget API", () => {
         });
 
         const response2 = await widgetApi.getWidgets();
+        logResponse(response2);
 
         expect(response2.status).toEqual(200);
         expect(response2.data).toMatchObject({
