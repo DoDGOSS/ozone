@@ -162,7 +162,12 @@ export function dashboardToUpdateRequest(dashboard: Dashboard): DashboardUpdateR
     };
 }
 
-export function dashboardLayoutToJson(state: DashboardProps): DashboardLayoutDTO {
+export interface DashboardLayout {
+    tree: DashboardNode | null;
+    panels: PanelMap;
+}
+
+export function dashboardLayoutToJson(state: DashboardLayout): DashboardLayoutDTO {
     return {
         tree: state.tree,
         panels: values(state.panels).map(panelToJson)

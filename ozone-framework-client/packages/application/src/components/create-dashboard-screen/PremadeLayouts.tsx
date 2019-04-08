@@ -1,29 +1,36 @@
+import * as styles from "./index.scss";
+
 import * as React from "react";
 
 import { Field, FieldProps } from "formik";
 
-import { RadioGroup } from "@blueprintjs/core";
-
-import { DEFAULT_LAYOUTS, IMAGE_ROOT_URL } from "../../stores/default-layouts";
-
-import * as styles from "./index.scss";
+import { DEFAULT_LAYOUTS } from "../../stores/default-layouts";
 
 export interface PremadeLayoutsProps {
     onChange: (event: React.FormEvent<HTMLElement>) => void;
-    selectedValue?: string;
+    selectedValue: string | null;
 }
 
-const _PremadeLayouts: React.FC<PremadeLayoutsProps & FieldProps<any>> = ({ onChange }) => (
-    <div className={styles.premadeLayout} data-element-id="PremadeLayoutsList">
-        <RadioGroup onChange={onChange}>
+const _PremadeLayouts: React.FC<PremadeLayoutsProps & FieldProps<any>> = (props) => {
+    const { onChange, selectedValue } = props;
+
+    return (
+        <div className={styles.premadeLayout} data-element-id="PremadeLayoutsList">
             {DEFAULT_LAYOUTS.map((layout) => (
-                <button className="layout" key={layout.name} value={layout.name}>
-                    <img src={IMAGE_ROOT_URL + layout.iconUrl} />
-                </button>
+                <label key={layout.name} className={styles.premadeLayoutOption}>
+                    <input
+                        className={styles.premadeLayoutRadio}
+                        type="radio"
+                        onChange={onChange}
+                        checked={layout.name === selectedValue}
+                        value={layout.name}
+                    />
+                    <img className={styles.layoutIcon} src={layout.iconUrl} />
+                </label>
             ))}
-        </RadioGroup>
-    </div>
-);
+        </div>
+    );
+};
 
 export const PremadeLayouts: React.FC<PremadeLayoutsProps> = (props) => (
     <Field component={_PremadeLayouts} {...props} />

@@ -3,8 +3,9 @@ import * as qs from "qs";
 import { Gateway, getGateway, Response } from "../interfaces";
 import { UserDashboardsGetResponse, validateUserDashboardsGetResponse } from "../models/UserDashboardDTO";
 import { DashboardDTO, validateDashboard } from "../models/DashboardDTO";
+import { DashboardLayout, dashboardLayoutToJson } from "../../codecs/Dashboard.codec";
 
-import { uuid } from "../../utility";
+import { isNil, uuid } from "../../utility";
 
 export class UserDashboardAPI {
     private readonly gateway: Gateway;
@@ -20,20 +21,29 @@ export class UserDashboardAPI {
     }
 
     async createDefaultDashboard(): Promise<Response<DashboardDTO>> {
-        const defaultStack = {
-            name: "Untitled"
+        return this.createDashboard({
+            name: "Untitled",
+            tree: null,
+            panels: {},
+            isDefault: true
+        });
+    }
+
+    async createDashboard(opts: DashboardCreateOpts): Promise<Response<DashboardDTO>> {
+        const stack = {
+            name: opts.name
         };
 
-        const defaultDashboard = {
-            name: "Untitled",
+        const dashboard = {
+            name: opts.name,
             guid: uuid(),
-            isdefault: true,
+            isdefault: !isNil(opts.isDefault) ? opts.isDefault : false,
             state: [],
-            layoutConfig: {
-                tree: null,
-                panels: []
-            },
-            publishedToStore: true
+            layoutConfig: dashboardLayoutToJson({
+                tree: opts.tree || null,
+                panels: opts.panels || {}
+            }),
+            publishedToStore: false
         };
 
         const requestData = qs.stringify({
@@ -41,8 +51,8 @@ export class UserDashboardAPI {
             adminEnabled: false,
             tab: "dashboards",
             update_action: "createAndAddDashboard",
-            stackData: JSON.stringify(defaultStack),
-            dashboardData: JSON.stringify(defaultDashboard)
+            stackData: JSON.stringify(stack),
+            dashboardData: JSON.stringify(dashboard)
         });
 
         return this.gateway.post("stack/addPage/", requestData, {
@@ -55,3 +65,8 @@ export class UserDashboardAPI {
 }
 
 export const userDashboardApi = new UserDashboardAPI();
+
+export interface DashboardCreateOpts extends DashboardLayout {
+    name: string;
+    isDefault?: boolean;
+}
