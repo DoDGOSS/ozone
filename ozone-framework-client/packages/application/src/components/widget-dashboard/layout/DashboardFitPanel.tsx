@@ -1,7 +1,7 @@
 import React from "react";
 import { useBehavior } from "../../../hooks";
 
-import { FitPanel } from "../model/FitPanel";
+import { FitPanel } from "../../../models/dashboard/FitPanel";
 import { WidgetFrame } from "../WidgetFrame";
 
 export interface DashboardFitPanelProps {

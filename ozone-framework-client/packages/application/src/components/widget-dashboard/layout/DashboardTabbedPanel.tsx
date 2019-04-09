@@ -1,15 +1,15 @@
+import * as styles from "./DashboardTabbedPanel.scss";
+
 import React, { useCallback, useMemo } from "react";
 import { useBehavior } from "../../../hooks";
 
 import { Button, Tab, Tabs } from "@blueprintjs/core";
 
-import { Widget } from "../../../stores/interfaces";
+import { Panel } from "../../../models/dashboard/types";
+import { TabbedPanel } from "../../../models/dashboard/TabbedPanel";
+import { UserWidget } from "../../../models/UserWidget";
 
-import { TabbedPanel } from "../model/TabbedPanel";
 import { WidgetFrame } from "../WidgetFrame";
-
-import * as styles from "./DashboardTabbedPanel.scss";
-import { Panel } from "../model/types";
 
 export interface DashboardTabbedPanelProps {
     panel: TabbedPanel;
@@ -41,15 +41,15 @@ export const DashboardTabbedPanel: React.FC<DashboardTabbedPanelProps> = ({ pane
     );
 };
 
-function createWidgetTabTitle(panel: Panel<any>, widget: Widget): JSX.Element {
+function createWidgetTabTitle(panel: Panel<any>, widget: UserWidget): JSX.Element {
     return (
         <>
-            <span className={styles.tabTitle}>{widget.definition.title}</span>
+            <span className={styles.tabTitle}>{widget.widget.title}</span>
             <Button
                 className={styles.tabTitleClose}
                 icon="cross"
                 minimal={true}
-                onClick={() => panel.closeWidget(widget.id)}
+                onClick={() => panel.closeWidget(widget.widget.id)}
             />
         </>
     );

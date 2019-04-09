@@ -9,6 +9,7 @@ import { NodeGateway } from "./node-gateway";
 import { logResponse } from "./assertions";
 
 import { WIDGETS } from "../unit/data";
+import { logResponse } from "./assertions";
 
 describe("Widget API", () => {
     let gateway: NodeGateway;

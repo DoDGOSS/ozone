@@ -5,6 +5,7 @@ import {
     DASHBOARD_SCHEMA,
     DASHBOARD_UPDATE_RESPONSE_SCHEMA
 } from "./schemas/dashboard.schema";
+import { StackDTO } from "./StackDTO";
 
 export interface DashboardDTO {
     EDashboardLayoutList: string;
@@ -26,7 +27,7 @@ export interface DashboardDTO {
     prettyCreatedDate: string;
     prettyEditedDate: string;
     publishedToStore: boolean;
-    stack?: any;
+    stack?: StackDTO;
     type?: any;
     user: UserReference;
 }
@@ -42,14 +43,14 @@ export interface DashboardGetResponse {
 export const validateDashboardGetResponse = createValidator<DashboardGetResponse>(DASHBOARD_GET_RESPONSE_SCHEMA);
 
 export interface DashboardUpdateRequest {
-    name: string;
+    dashboardPosition?: number;
+    description?: string;
     guid: string;
     iconImageUrl?: string;
     isdefault?: boolean;
-    locked?: boolean;
-    description?: string;
     layoutConfig?: string;
-    dashboardPosition?: number;
+    locked?: boolean;
+    name: string;
 }
 
 export interface DashboardUpdateParams {

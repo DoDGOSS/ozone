@@ -1,19 +1,15 @@
 import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
-import { DashboardNode, Widget } from "./interfaces";
 import { dashboardStore, DashboardStore } from "./DashboardStore";
-import { LayoutType, Panel, PanelState } from "../components/widget-dashboard/model/types";
-import { DashboardPath } from "../components/widget-dashboard/types";
-import { Dashboard } from "../components/widget-dashboard/model/Dashboard";
+import { LayoutType, Panel, PanelState } from "../models/dashboard/types";
+import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
+import { Dashboard } from "../models/dashboard/Dashboard";
 
-import uuid from "uuid/v4";
-import { colorClientDef, colorServerDef } from "./example-widgets";
-import { FitPanel } from "../components/widget-dashboard/model/FitPanel";
-import { TabbedPanel } from "../components/widget-dashboard/model/TabbedPanel";
-import { ObservableWidget } from "../components/widget-dashboard/model/ObservableWidget";
-import { Tab } from "@blueprintjs/core";
-import { ExpandoPanel } from "../components/widget-dashboard/model/ExpandoPanel";
+import { FitPanel } from "../models/dashboard/FitPanel";
+import { TabbedPanel } from "../models/dashboard/TabbedPanel";
+import { ExpandoPanel } from "../models/dashboard/ExpandoPanel";
+import { UserWidget } from "../models/UserWidget";
 
 export class DashboardService {
     private readonly store: DashboardStore;
@@ -46,7 +42,7 @@ export class DashboardService {
     };
 
     getCurrentDashboard = (): Dashboard => {
-        const dashboard = this.store.currentDashboard();
+        const dashboard = this.store.currentDashboard().value;
         if (dashboard === null) {
             throw new Error("No Dashboard is available");
         }
@@ -61,7 +57,7 @@ export class DashboardService {
         this.getCurrentDashboard().setPanelLayout(panel, path, layout);
     };
 
-    addWidget = (widget: Widget) => {
+    addWidget = (widget: UserWidget) => {
         this.getCurrentDashboard().addWidget(widget);
     };
 
@@ -89,57 +85,19 @@ export class DashboardService {
 }
 
 function createSampleFitPanel(): FitPanel {
-    const widget = ObservableWidget.fromWidget({
-        id: uuid(),
-        definition: colorClientDef
-    });
-
-    return new FitPanel(null, widget);
+    return new FitPanel(null, null);
 }
 
 function createSampleTabbedPanel(): TabbedPanel {
-    const widgets = [
-        ObservableWidget.fromWidget({
-            id: uuid(),
-            definition: colorClientDef
-        }),
-        ObservableWidget.fromWidget({
-            id: uuid(),
-            definition: colorServerDef
-        })
-    ];
-
-    return new TabbedPanel(null, "New Tabbed Panel", widgets);
+    return new TabbedPanel(null, "New Tabbed Panel", []);
 }
 
 function createSampleAccordionPanel(): ExpandoPanel {
-    const widgets = [
-        ObservableWidget.fromWidget({
-            id: uuid(),
-            definition: colorClientDef
-        }),
-        ObservableWidget.fromWidget({
-            id: uuid(),
-            definition: colorServerDef
-        })
-    ];
-
-    return new ExpandoPanel(null, "New Accordion Panel", "accordion", widgets);
+    return new ExpandoPanel(null, "New Accordion Panel", "accordion", []);
 }
 
 function createSamplePortalPanel(): ExpandoPanel {
-    const widgets = [
-        ObservableWidget.fromWidget({
-            id: uuid(),
-            definition: colorClientDef
-        }),
-        ObservableWidget.fromWidget({
-            id: uuid(),
-            definition: colorServerDef
-        })
-    ];
-
-    return new ExpandoPanel(null, "New Portal Panel", "portal", widgets);
+    return new ExpandoPanel(null, "New Portal Panel", "portal", []);
 }
 
 export const dashboardService = new DashboardService();
