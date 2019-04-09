@@ -6,6 +6,10 @@
   display: flex;
 }
 
+:local .loadingSpinner {
+  height: 100%;
+}
+
 .mosaic {
   height: 100%
 }

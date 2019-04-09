@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 
-import { isExpandoPanel, isFitPanel, isTabbedPanel, Panel, PanelState } from "../model/types";
+import { isExpandoPanel, isFitPanel, isTabbedPanel, Panel, PanelState } from "../../../models/dashboard/types";
 import { DashboardPath, DashboardWindow } from "../types";
 
 import { DashboardTabbedPanel } from "./DashboardTabbedPanel";

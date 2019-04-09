@@ -1,5 +1,7 @@
+import { dropRight, isString, omit, pick, set } from "lodash";
+
 import { BehaviorSubject } from "rxjs";
-import { asBehavior } from "../../../observables";
+import { asBehavior } from "../../observables";
 
 import {
     Corner,
@@ -12,35 +14,56 @@ import {
     updateTree
 } from "react-mosaic-component";
 
-import { ExpandoPanel } from "./ExpandoPanel";
+import { UserWidget } from "../UserWidget";
 
-import { DashboardNode, DashboardPath, PanelMap } from "../types";
-import { Widget } from "../../../stores/interfaces";
-import { ObservableWidget } from "./ObservableWidget";
+import { DashboardNode, DashboardPath, PanelMap } from "../../components/widget-dashboard/types";
 import { LayoutType, Panel, PanelState } from "./types";
+
+import { ExpandoPanel } from "./ExpandoPanel";
 import { TabbedPanel } from "./TabbedPanel";
 import { FitPanel } from "./FitPanel";
+import { ProfileReference } from "../../api/models/UserDTO";
+import { PropertiesOf } from "../../types";
 
-import { dropRight, isString, keyBy, omit, pick, set } from "lodash";
-
-export interface DashboardState {
-    tree: DashboardNode | null;
+export interface DashboardProps {
+    description?: string;
+    guid: string;
+    imageUrl?: string;
+    isAlteredByAdmin: boolean;
+    isDefault: boolean;
+    isGroupDashboard: boolean;
+    isLocked: boolean;
+    isMarkedForDeletion: boolean;
+    isPublishedToStore: boolean;
+    metadata?: {
+        createdBy: ProfileReference;
+        createdDate: string;
+        editedDate: string;
+    };
+    name: string;
     panels: PanelMap;
+    position: number;
+    stackId: number;
+    tree: DashboardNode | null;
+    user: {
+        username: string;
+    };
 }
 
 export class Dashboard {
-    private readonly state$: BehaviorSubject<DashboardState>;
+    private readonly state$: BehaviorSubject<DashboardProps>;
 
-    constructor(tree: DashboardNode | null = null, panels: Panel<any>[] = []) {
-        this.state$ = new BehaviorSubject({
-            tree,
-            panels: keyBy(panels, "id")
-        });
+    constructor(props: PropertiesOf<DashboardProps>) {
+        this.state$ = new BehaviorSubject(props);
+    }
+
+    get guid() {
+        return this.state$.value.guid;
     }
 
     state = () => asBehavior(this.state$);
 
-    findWidgetById = (widgetId: string): Widget | undefined => {
+    findWidgetById = (widgetId: string): UserWidget | undefined => {
         const { panels } = this.state$.value;
 
         for (const panelId in panels) {
@@ -56,14 +79,14 @@ export class Dashboard {
         return undefined;
     };
 
-    addWidget = (widget: Widget) => {
-        const existingWidget = this.findWidgetById(widget.id);
+    addWidget = (widget: UserWidget) => {
+        const existingWidget = this.findWidgetById(widget.widget.id);
         if (existingWidget) return;
 
         const prev = this.state$.value;
         const { panels, tree } = prev;
 
-        const panel = new FitPanel(null, ObservableWidget.fromWidget(widget));
+        const panel = new FitPanel(null, widget);
 
         const newTree = tree !== null ? addToTopRightOfLayout(tree, panel.id) : panel.id;
 
@@ -174,4 +197,20 @@ function addToTopRightOfLayout(layout: DashboardNode, id: string): DashboardNode
     return updateTree(layout, [update]);
 }
 
-export const EMPTY_DASHBOARD = new Dashboard(null, []);
+export const EMPTY_DASHBOARD = new Dashboard({
+    guid: "",
+    isAlteredByAdmin: false,
+    isDefault: true,
+    isGroupDashboard: false,
+    isLocked: false,
+    isMarkedForDeletion: false,
+    isPublishedToStore: false,
+    name: "",
+    panels: {},
+    position: 0,
+    stackId: 0,
+    tree: null,
+    user: {
+        username: ""
+    }
+});

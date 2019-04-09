@@ -12,7 +12,7 @@ import ozone.owf.grails.OwfException
 import ozone.owf.grails.OwfExceptionTypes
 import ozone.owf.grails.domain.*
 
-
+@Transactional
 class StackService {
 
     GrailsApplication grailsApplication
@@ -504,8 +504,9 @@ class StackService {
         if(stack.groups) {
             groups.addAll(stack.groups)
         }
-        groups.add(groupService.allUsersGroup)
-        if (accountService.isUserAdmin(user)) groups.add(groupService.allAdminsGroup)
+
+        // groups.add(groupService.allUsersGroup)
+        // if (accountService.isUserAdmin(user)) groups.add(groupService.allAdminsGroup)
 
         groups.find { Group group ->
             group?.people?.contains(user)

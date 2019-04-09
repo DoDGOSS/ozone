@@ -14,13 +14,13 @@ module.exports = {
 
         browser.assert.containsText(
             WidgetAdminWidget.Main.DIALOG,
-            "Group Editor",
+            "Widget Administration",
             "[Widget Admin Widget] Displays widgets"
         );
 
         browser.assert.containsText(
             WidgetAdminWidget.Main.DIALOG,
-            "admin/GroupEdit",
+            "local:widget_admin",
             "[Widget Admin Widget] Displays widgets"
         );
 

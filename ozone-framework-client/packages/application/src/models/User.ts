@@ -1,15 +1,22 @@
-export interface User {
-    id: number;
+import { PropertiesOf } from "../types";
 
-    username: string;
-    userRealName: string;
+export class UserProps {
+    displayName: string;
     email: string;
+    hasPWD?: string;
+    id: number;
+    lastLogin?: string;
+    metadata?: {
+        totalDashboards?: number;
+        totalStacks?: number;
+        totalGroups?: number;
+        totalWidgets?: number;
+    };
+    username: string;
 
-    lastLogin: any | null;
-    hasPWD: null;
-
-    totalDashboards: number;
-    totalStacks: number;
-    totalGroups: number;
-    totalWidgets: number;
+    constructor(props: PropertiesOf<UserProps>) {
+        Object.assign(this, props);
+    }
 }
+
+export class User extends UserProps {}

@@ -1,29 +1,29 @@
-import React from "react";
-
-import { Widget } from "../../stores/interfaces";
-
 import * as styles from "./index.scss";
 
+import React from "react";
+
+import { UserWidget } from "../../models/UserWidget";
+
+import { SYSTEM_WIDGET_URLS } from "../../stores/system-widgets";
+
 export interface WidgetFrameProps {
-    widget: Widget;
+    widget: UserWidget;
 }
 
 const _WidgetFrame: React.FC<WidgetFrameProps> = ({ widget }) => {
-    const element = widget.definition.element;
-    if (element !== null && element !== undefined) {
+    const url = widget.widget.url;
+    if (url.startsWith("local:")) {
+        const element = SYSTEM_WIDGET_URLS[url];
+        if (!element) {
+            return <div />;
+        }
         return element;
     }
 
-    const url = widget.definition.url;
-    if (url === null || url === undefined) {
-        return <div />;
-    }
+    const def = widget.widget;
 
-    const def = widget.definition;
-
-    const id = widget.id;
     const nameJson = JSON.stringify({
-        id,
+        id: def.id,
         guid: def.id,
         url: def.url,
         owf: true,
@@ -42,7 +42,7 @@ const _WidgetFrame: React.FC<WidgetFrameProps> = ({ widget }) => {
         }
     });
 
-    return <iframe className={styles.widgetFrame} src={def.url} id={`widget-${widget.id}`} name={nameJson} />;
+    return <iframe className={styles.widgetFrame} src={def.url} id={`widget-${def.id}`} name={nameJson} />;
 };
 
 export const WidgetFrame = React.memo(_WidgetFrame);

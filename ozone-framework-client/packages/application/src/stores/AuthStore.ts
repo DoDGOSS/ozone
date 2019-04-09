@@ -7,9 +7,7 @@ import { AuthUserDTO } from "../api/models/AuthUserDTO";
 
 import { mainStore } from "./MainStore";
 import { AuthenticationError } from "../api/errors";
-import { AxiosError } from "axios";
 import { isNil } from "../utility";
-import { get } from "lodash";
 
 export enum AuthStatus {
     PENDING,

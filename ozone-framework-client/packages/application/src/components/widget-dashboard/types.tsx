@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Mosaic, MosaicBranch, MosaicNode, MosaicParent, MosaicWindow } from "react-mosaic-component";
-import { Panel } from "./model/types";
+import { Panel } from "../../models/dashboard/types";
 
 export const DashboardLayout = Mosaic.ofType<string>();
 

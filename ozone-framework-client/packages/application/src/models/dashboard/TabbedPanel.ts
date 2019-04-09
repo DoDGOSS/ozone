@@ -1,23 +1,20 @@
-import { PanelState } from "./types";
-import { AbstractPanel } from "./AbstractPanel";
-import { ObservableWidget } from "./ObservableWidget";
-
 import { findIndex } from "lodash";
-import { omitIndex } from "../../../utility";
-import { getNextActiveWidget } from "./common";
 import uuid from "uuid/v4";
 
+import { UserWidget } from "../UserWidget";
+
+import { PanelState } from "./types";
+import { AbstractPanel } from "./AbstractPanel";
+
+import { omitIndex } from "../../utility";
+import { getNextActiveWidget } from "./common";
+
 export interface TabbedPanelState extends PanelState {
-    activeWidget: ObservableWidget | null;
+    activeWidget: UserWidget | null;
 }
 
 export class TabbedPanel extends AbstractPanel<TabbedPanelState> {
-    constructor(
-        id: string | null,
-        title: string,
-        widgets: ObservableWidget[] = [],
-        activeWidget: ObservableWidget | null = null
-    ) {
+    constructor(id: string | null, title: string, widgets: UserWidget[] = [], activeWidget: UserWidget | null = null) {
         super({
             id: id || uuid(),
             title,
@@ -31,7 +28,7 @@ export class TabbedPanel extends AbstractPanel<TabbedPanelState> {
         const prev = this.state$.value;
         const { activeWidget, widgets } = prev;
 
-        const widgetIdx = findIndex(widgets, (w) => w.id === widgetId);
+        const widgetIdx = findIndex(widgets, (w) => w.widget.id === widgetId);
         const nextWidgets = omitIndex(widgets, widgetIdx);
         const nextActive = getNextActiveWidget(activeWidget, widgetId, nextWidgets);
 
@@ -45,7 +42,7 @@ export class TabbedPanel extends AbstractPanel<TabbedPanelState> {
     setActiveWidget = (widgetId: string): void => {
         const prev = this.state$.value;
 
-        const widget = prev.widgets.find((w) => w.id === widgetId) || null;
+        const widget = prev.widgets.find((w) => w.widget.id === widgetId) || null;
 
         this.state$.next({
             ...prev,
