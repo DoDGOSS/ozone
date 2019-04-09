@@ -60,6 +60,10 @@ export function createPresetLayout(layoutName: string | null): DashboardLayout {
             return createFitLayout();
         case "Fit-4":
             return createFit4Layout();
+        case "FitBSB":
+          return createSplitVertical();
+        case "Fit-Stack":
+          return createSplitHorizontal();
         default:
             return {
                 tree: null,
@@ -77,6 +81,38 @@ function createFitLayout(): DashboardLayout {
             [fitPanel.id]: fitPanel
         }
     };
+}
+
+function createSplitVertical(): DashboardLayout {
+  const fitPanel1 = new FitPanel();
+  const fitPanel2 = new FitPanel();
+  return {
+      tree: {
+              direction: "row",
+              first: fitPanel1.id,
+              second: fitPanel2.id
+      },
+      panels: {
+          [fitPanel1.id]: fitPanel1,
+          [fitPanel2.id]: fitPanel2,
+      }
+  };
+}
+
+function createSplitHorizontal(): DashboardLayout {
+  const fitPanel1 = new FitPanel();
+  const fitPanel2 = new FitPanel();
+  return {
+      tree: {
+              direction: "column",
+              first: fitPanel1.id,
+              second: fitPanel2.id
+      },
+      panels: {
+          [fitPanel1.id]: fitPanel1,
+          [fitPanel2.id]: fitPanel2,
+      }
+  };
 }
 
 function createFit4Layout(): DashboardLayout {
