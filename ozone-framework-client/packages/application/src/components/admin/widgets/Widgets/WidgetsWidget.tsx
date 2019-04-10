@@ -1,19 +1,21 @@
+import * as styles from "../Widgets.scss";
+
 import * as React from "react";
 
 import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
-import { AdminTable } from "../../table/AdminTable";
 
-import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
-import { WidgetCreateRequest, WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
-
-import * as styles from "../Widgets.scss";
-import { WidgetCreateForm } from "./WidgetCreateForm";
-import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
+import { WidgetDTO } from "../../../../api/models/WidgetDTO";
+import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+
+import { AdminTable } from "../../table/AdminTable";
+import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
+import { WidgetSetup } from "./WidgetSetup";
+
 import { isNil } from "../../../../utility";
 
-interface State {
+interface WidgetsWidgetState {
     widgets: WidgetDTO[];
     filtered: WidgetDTO[];
     filter: string;
@@ -21,13 +23,11 @@ interface State {
     pageSize: number;
     columns: any;
     showTable: boolean;
-    showCreate: boolean;
-    showCreateForm: boolean;
-    showEditGroup: boolean;
+    showWidgetSetup: boolean;
     showDelete: boolean;
     confirmationMessage: string;
     manageWidget: WidgetDTO | undefined;
-    updatingWidget?: any;
+    updatingWidget: any | undefined;
     widgetTypes: WidgetTypeReference[];
 }
 
@@ -40,11 +40,10 @@ interface State {
 
 enum WidgetWidgetSubSection {
     TABLE,
-    CREATE,
-    EDIT
+    SETUP
 }
 
-export class WidgetsWidget extends React.Component<{}, State> {
+export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
     constructor(props: any) {
         super(props);
 
@@ -54,14 +53,13 @@ export class WidgetsWidget extends React.Component<{}, State> {
             filtered: [],
             filter: "",
             loading: true,
-            pageSize: 5,
+            pageSize: 25,
             showTable: true,
-            showCreate: false,
-            showCreateForm: false,
-            showEditGroup: false,
+            showWidgetSetup: false,
             showDelete: false,
             confirmationMessage: "",
             manageWidget: undefined,
+            updatingWidget: undefined,
             columns: [
                 {
                     Header: "Widgets",
@@ -75,28 +73,30 @@ export class WidgetsWidget extends React.Component<{}, State> {
                 // TODO - Abstract this to only have to provide onclick function name with styled buttons
                 {
                     Header: "Actions",
-                    Cell: (row: any) => (
+                    Cell: (row: { original: WidgetDTO }) => (
                         <div>
                             <ButtonGroup>
                                 <Button
                                     data-element-id="widget-admin-widget-edit-button"
+                                    data-widget-title={row.original.value.namespace}
                                     text="Edit"
                                     intent={Intent.PRIMARY}
                                     icon="edit"
                                     small={true}
                                     onClick={() => {
-                                        this.showSubSection(WidgetWidgetSubSection.EDIT);
                                         this.setState({ updatingWidget: row.original });
+                                        this.showSubSection(WidgetWidgetSubSection.SETUP);
                                     }}
                                 />
                                 <Divider />
                                 <Button
                                     data-element-id="widget-admin-widget-delete-button"
+                                    data-widget-title={row.original.value.namespace}
                                     text="Delete"
                                     intent={Intent.DANGER}
                                     icon="trash"
                                     small={true}
-                                    disabled={row.original.totalStacks > 0}
+                                    disabled={row.original.value.totalUsers > 0 || row.original.value.totalGroups > 0}
                                     onClick={() => this.deleteWidget(row.original)}
                                 />
                             </ButtonGroup>
@@ -116,17 +116,15 @@ export class WidgetsWidget extends React.Component<{}, State> {
 
     render() {
         const showTable = this.state.showTable;
-        const showCreate = this.state.showCreate;
-        const showCreateForm = this.state.showCreateForm;
-        const showEditGroup = this.state.showEditGroup;
+        const showWidgetSetup = this.state.showWidgetSetup;
 
-        let data = this.state.widgets;
+        let widgets = this.state.widgets;
         const filter = this.state.filter.toLowerCase();
 
         // TODO - Improve this - this will be slow if there are many users.
         // Minimally could wait to hit enter before filtering. Pagination handling
         if (filter) {
-            data = data.filter((row) => {
+            widgets = widgets.filter((row) => {
                 const { universalName, namespace } = row.value;
                 return (
                     (!isNil(universalName) && universalName.toLowerCase().includes(filter)) ||
@@ -152,7 +150,7 @@ export class WidgetsWidget extends React.Component<{}, State> {
                 {showTable && (
                     <div className={styles.table}>
                         <AdminTable
-                            data={data}
+                            data={widgets}
                             columns={this.state.columns}
                             loading={this.state.loading}
                             pageSize={this.state.pageSize}
@@ -164,42 +162,27 @@ export class WidgetsWidget extends React.Component<{}, State> {
                     <div className={styles.buttonBar}>
                         <Button
                             text="Create"
-                            onClick={() => this.showSubSection(WidgetWidgetSubSection.CREATE)}
+                            onClick={() => {
+                                this.setState({ updatingWidget: undefined });
+                                this.showSubSection(WidgetWidgetSubSection.SETUP);
+                            }}
                             data-element-id="widget-admin-widget-create-button"
                         />
                     </div>
                 )}
 
                 <div className={styles.widget_body}>
-                    {showCreate && !showCreateForm && (
-                        <a
-                            data-element-id="widget-admin-widget-show-create-form"
-                            onClick={() => {
-                                this.setState({ showCreateForm: true });
-                            }}
-                        >
-                            Don't have a descriptor URL?
-                        </a>
-                    )}
-
-                    {showCreate && showCreateForm && (
-                        <WidgetCreateForm
-                            onSubmit={this.createWidget}
-                            onCancel={() => {
+                    {showWidgetSetup && (
+                        <WidgetSetup
+                            widget={this.state.updatingWidget}
+                            widgetTypes={this.state.widgetTypes}
+                            closeSetup={() => {
+                                this.handleUpdate();
                                 this.showSubSection(WidgetWidgetSubSection.TABLE);
                             }}
-                            items={this.state.widgetTypes}
                         />
                     )}
                 </div>
-
-                {/* {showEditGroup &&
-                <GroupEditTabGroup
-                    group={this.state.updatingGroup}
-                    onUpdate={this.handleUpdate}
-                    onBack={() => {this.showSubSection(GroupWidgetSubSection.TABLE);}}
-                />
-                } */}
 
                 <ConfirmationDialog
                     show={this.state.showDelete}
@@ -216,14 +199,12 @@ export class WidgetsWidget extends React.Component<{}, State> {
     private showSubSection(subSection: WidgetWidgetSubSection) {
         this.setState({
             showTable: subSection === WidgetWidgetSubSection.TABLE,
-            showCreate: subSection === WidgetWidgetSubSection.CREATE,
-            showEditGroup: subSection === WidgetWidgetSubSection.EDIT
+            showWidgetSetup: subSection === WidgetWidgetSubSection.SETUP
         });
     }
 
     private getWidgets = async () => {
         const response = await widgetApi.getWidgets();
-
         // TODO: Handle failed request
         if (response.status !== 200) return;
 
@@ -247,19 +228,6 @@ export class WidgetsWidget extends React.Component<{}, State> {
     private handleUpdate(update?: any) {
         this.getWidgets();
     }
-
-    private createWidget = async (data: WidgetCreateRequest) => {
-        const response = await widgetApi.createWidget(data);
-
-        // TODO: Handle failed request
-        if (response.status !== 200) return false;
-
-        this.showSubSection(WidgetWidgetSubSection.TABLE);
-        this.setState({ loading: true });
-        this.getWidgets();
-
-        return true;
-    };
 
     private deleteWidget = async (widget: WidgetDTO) => {
         this.setState({

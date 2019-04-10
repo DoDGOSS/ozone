@@ -35,7 +35,7 @@ enum UserPreferenceWidgetSubSection {
     EDIT
 }
 
-export class UserEditPreferences extends React.Component<UserEditPreferencesProps, UserEditPreferencesState> {
+export class UserPreferencesPanel extends React.Component<UserEditPreferencesProps, UserEditPreferencesState> {
     private static readonly SELECT_PREFERENCES_COLUMN_DEFINITION = [
         {
             Header: "Preferences",

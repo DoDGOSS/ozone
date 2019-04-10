@@ -60,7 +60,7 @@ describe("Preference API", () => {
 
     test("getPreference - GET /prefs/preference/:namespace/:path/", async () => {
         const response = await preferenceApi.getPreference("owf.admin.WidgetEditCopy", "guid_to_launch");
-        logResponse(response);
+        // logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
@@ -71,7 +71,7 @@ describe("Preference API", () => {
 
     test("getPreference failure - GET /prefs/preference/:namespace/:path/", async () => {
         const response = await preferenceApi.getPreference("nonexistant", "setting");
-        logResponse(response);
+        // logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
@@ -82,7 +82,7 @@ describe("Preference API", () => {
 
     test("getServerResources - GET /prefs/server/resources/", async () => {
         const response = await preferenceApi.getServerResources();
-        logResponse(response);
+        // logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
@@ -101,7 +101,7 @@ describe("Preference API", () => {
             };
 
             const response = await preferenceApi.createPreference(request);
-            logResponse(response);
+            // logResponse(response);
 
             expect(response.status).toEqual(200);
             expect(response.data).toEqual({
@@ -126,7 +126,7 @@ describe("Preference API", () => {
             };
 
             const response = await preferenceApi.updatePreference(request);
-            logResponse(response);
+            // logResponse(response);
 
             expect(response.status).toEqual(200);
             expect(response.data).toEqual({
@@ -150,7 +150,7 @@ describe("Preference API", () => {
             };
 
             const response = await preferenceApi.deletePreference(request);
-            logResponse(response);
+            // logResponse(response);
 
             expect(response.status).toEqual(200);
             expect(response.data).toEqual({
