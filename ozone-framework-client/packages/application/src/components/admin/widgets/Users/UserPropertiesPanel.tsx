@@ -13,7 +13,7 @@ interface UserEditProps {
 import * as styles from "../Widgets.scss";
 import { UserUpdateRequest } from "../../../../api/models/UserDTO";
 
-export const UserEditForm: React.FC<UserEditProps> = ({ onUpdate, user }) => (
+export const UserPropertiesPanel: React.FC<UserEditProps> = ({ onUpdate, user }) => (
     <Formik
         initialValues={user}
         validationSchema={EditUserSchema}

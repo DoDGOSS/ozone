@@ -78,7 +78,11 @@ describe("Widget API", () => {
                     id: 1,
                     name: "standard"
                 }
-            ]
+            ],
+            intents: {
+                send: [],
+                receive: []
+            }
         };
 
         const response = await widgetApi.createWidget(createRequest);
@@ -108,6 +112,89 @@ describe("Widget API", () => {
                         minimized: false,
                         maximized: false,
                         widgetVersion: createRequest.widgetVersion,
+                        totalUsers: 0,
+                        totalGroups: 0,
+                        singleton: createRequest.singleton,
+                        visible: createRequest.visible,
+                        background: createRequest.background,
+                        mobileReady: createRequest.mobileReady,
+                        descriptorUrl: null,
+                        definitionVisible: true,
+                        directRequired: [],
+                        allRequired: [],
+                        intents: {
+                            send: [],
+                            receive: []
+                        },
+                        widgetTypes: [
+                            {
+                                id: createRequest.widgetTypes[0].id,
+                                name: createRequest.widgetTypes[0].name,
+                                displayName: createRequest.widgetTypes[0].name
+                            }
+                        ]
+                    }
+                }
+            ]
+        });
+
+        createResponse = response.data;
+    });
+
+    test("createWidget - POST /widget/ - minimal", async () => {
+        createRequest = {
+            displayName: "My Test Widget",
+            widgetVersion: "",
+            description: "",
+            widgetUrl: "http://www.ozone.test/widget1/",
+            imageUrlSmall: "http://www.ozone.test/widget1/small_icon.png",
+            imageUrlMedium: "http://www.ozone.test/widget1/large_icon.png",
+            width: 200,
+            height: 200,
+            widgetGuid: "12345678-1234-1234-1234-1234567890a0",
+            universalName: "",
+            visible: true,
+            background: false,
+            singleton: false,
+            mobileReady: false,
+            widgetTypes: [
+                {
+                    id: 1,
+                    name: "standard"
+                }
+            ],
+            intents: {
+                send: [],
+                receive: []
+            }
+        };
+
+        const response = await widgetApi.createWidget(createRequest);
+
+        expect(response.status).toEqual(200);
+        expect(response.data).toEqual({
+            success: true,
+            data: [
+                {
+                    id: createRequest.widgetGuid,
+                    namespace: "widget",
+                    path: createRequest.widgetGuid,
+                    value: {
+                        universalName: null,
+                        namespace: createRequest.displayName,
+                        description: null,
+                        url: createRequest.widgetUrl,
+                        headerIcon: createRequest.imageUrlSmall,
+                        smallIconUrl: createRequest.imageUrlSmall,
+                        mediumIconUrl: createRequest.imageUrlMedium,
+                        image: createRequest.imageUrlMedium,
+                        width: createRequest.width,
+                        height: createRequest.height,
+                        x: 0,
+                        y: 0,
+                        minimized: false,
+                        maximized: false,
+                        widgetVersion: null,
                         totalUsers: 0,
                         totalGroups: 0,
                         singleton: createRequest.singleton,

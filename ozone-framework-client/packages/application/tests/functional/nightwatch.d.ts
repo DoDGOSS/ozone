@@ -2312,6 +2312,7 @@ export interface SharedFunctions {
      * @param message: Optional message to be shown in the output; the message supports two placeholders: %s for current selector and %d for the time
      * (e.g. Element %s was not in the page for %d ms).
      */
+    waitForElementPresent(selector: string, time?: number, message?: string): this;
     waitForElementPresent(
         selector: string,
         time?: number,

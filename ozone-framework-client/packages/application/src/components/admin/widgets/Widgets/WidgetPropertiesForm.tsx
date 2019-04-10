@@ -1,22 +1,22 @@
-import * as React from "react";
-import { Form, Formik, FormikActions, FormikProps } from "formik";
-import { array, boolean, number, object, string } from "yup";
-
-import { WidgetCreateRequest } from "../../../../api/models/WidgetDTO";
-import { CancelButton, CheckBox, FormError, HiddenField, SelectField, SubmitButton, TextField } from "../../../form";
-
-import * as uuidv4 from "uuid/v4";
-
 import * as styles from "../Widgets.scss";
 
-import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+import * as React from "react";
+
 import { MenuItem } from "@blueprintjs/core";
 import { ItemRenderer } from "@blueprintjs/select";
 
-interface WidgetCreateProps {
+import { Form, Formik, FormikActions, FormikProps } from "formik";
+import { array, boolean, number, object, string } from "yup";
+
+import { WidgetCreateRequest, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
+import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+
+import { CheckBox, FormError, HiddenField, SelectField, SubmitButton, TextField } from "../../../form";
+
+interface WidgetFormProps {
+    currentWidget: WidgetCreateRequest | WidgetUpdateRequest;
     onSubmit: (data: WidgetCreateRequest) => Promise<boolean>;
-    onCancel: () => void;
-    items: WidgetTypeReference[];
+    widgetTypes: WidgetTypeReference[];
 }
 
 const WidgetTypeSelect = SelectField.ofType<WidgetTypeReference>();
@@ -28,38 +28,31 @@ const renderWidgetType: ItemRenderer<WidgetTypeReference> = (
     return <MenuItem key={widgetType.name} onClick={handleClick} text={widgetType.name} />;
 };
 
-export const WidgetCreateForm: React.FC<WidgetCreateProps> = ({ onSubmit, onCancel, items }) => (
+export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
+    currentWidget,
+    onSubmit,
+    widgetTypes
+}) => (
     <Formik
-        initialValues={{
-            displayName: "",
-            widgetVersion: "",
-            description: "",
-            widgetUrl: "",
-            imageUrlSmall: "",
-            imageUrlMedium: "",
-            width: 200,
-            height: 200,
-            widgetGuid: uuidv4.default(),
-            universalName: "",
-            visible: true,
-            background: false,
-            singleton: false,
-            mobileReady: false,
-            widgetTypes: [],
-            title: ""
-        }}
-        validationSchema={CreateWidgetSchema}
-        onSubmit={async (values: WidgetCreateRequest, actions: FormikActions<WidgetCreateRequest>) => {
+        initialValues={currentWidget}
+        validationSchema={WidgetPropertiesSchema}
+        onSubmit={async (
+            values: WidgetCreateRequest | WidgetUpdateRequest,
+            actions: FormikActions<WidgetCreateRequest>
+        ) => {
             values.height = Number(values.height);
             values.width = Number(values.width);
 
             const isSuccess = await onSubmit(values);
+            // the following lines should be removed (I think) if we make it quit on submit. They try to update state on
+            // the now-unmounted component, and may mean the memory stays live.
             actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
             actions.setSubmitting(false);
         }}
+        enableReinitialize={true}
     >
-        {(formik: FormikProps<WidgetCreateRequest>) => (
-            <div data-element-id="widget-admin-widget-create-form">
+        {(formik: FormikProps<WidgetCreateRequest | WidgetUpdateRequest>) => (
+            <div data-element-id="widget-admin-widget-properties-form">
                 <Form className={styles.form}>
                     <div>
                         <TextField
@@ -123,16 +116,19 @@ export const WidgetCreateForm: React.FC<WidgetCreateProps> = ({ onSubmit, onCanc
                         <TextField inline={true} className={styles.inline_form_label} name="width" label="Width" />
                         <TextField inline={true} className={styles.inline_form_label} name="height" label="Height" />
 
+                        {/* The initial value of the dropdown needs to be set manually. */}
                         <WidgetTypeSelect
                             inline={true}
                             className={styles.inline_form_label}
                             name="widgetType"
                             label="Widget Type"
-                            items={items}
+                            initialValue={currentWidget.widgetTypes[0]} // NOT `widgetTypes[0]`
+                            items={widgetTypes}
                             itemRenderer={renderWidgetType}
                             extractLabel={(item: WidgetTypeReference) => item.name}
                             onSelectItem={(widgetType: WidgetTypeReference) => {
-                                formik.values.widgetTypes = [widgetType];
+                                // if you set it manually, without this function, the form isn't marked as dirty.
+                                formik.setFieldValue("widgetTypes", [widgetType]);
                                 formik.validateForm();
                             }}
                         />
@@ -160,8 +156,7 @@ export const WidgetCreateForm: React.FC<WidgetCreateProps> = ({ onSubmit, onCanc
                         {formik.status && formik.status.error && <FormError message={formik.status.error} />}
                     </div>
 
-                    <div className={styles.buttonBar} data-element-id="widget-admin-widget-create-submit-button">
-                        <CancelButton className={styles.cancelButton} onClick={onCancel} />
+                    <div className={styles.buttonBar} data-element-id="admin-widget-properties-submit-button">
                         <SubmitButton className={styles.submitButton} />
                     </div>
                 </Form>
@@ -170,7 +165,7 @@ export const WidgetCreateForm: React.FC<WidgetCreateProps> = ({ onSubmit, onCanc
     </Formik>
 );
 
-const CreateWidgetSchema = object().shape({
+const WidgetPropertiesSchema = object().shape({
     displayName: string().required("Required"),
     widgetUrl: string().required("Required"),
     widgetVersion: string(),

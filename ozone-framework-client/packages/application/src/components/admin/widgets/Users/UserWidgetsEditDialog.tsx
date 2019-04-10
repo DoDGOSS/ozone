@@ -1,9 +1,11 @@
-import { TableSelectionDialog, TableSelectionDialogProps } from "../../../table-selection-dialog/TableSelectionDialog";
-import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
+import { WidgetDTO } from "../../../../api/models/WidgetDTO";
+
+import { TableSelectionDialog, TableSelectionDialogProps } from "../../../table-selection-dialog/TableSelectionDialog";
+
 import { isNil } from "../../../../utility";
 
-export class UserEditWidgetsDialog extends TableSelectionDialog<WidgetDTO> {
+export class UserWidgetsEditDialog extends TableSelectionDialog<WidgetDTO> {
     constructor(props: TableSelectionDialogProps<WidgetDTO>) {
         super(props);
     }

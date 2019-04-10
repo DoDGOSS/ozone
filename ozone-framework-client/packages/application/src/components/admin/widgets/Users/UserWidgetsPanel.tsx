@@ -1,14 +1,16 @@
 import * as styles from "../Widgets.scss";
 
 import * as React from "react";
-import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
 
-import { AdminTable } from "../../table/AdminTable";
-import { UserEditWidgetsDialog } from "./UserEditWidgetsDialog";
-import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
-import { UserDTO } from "../../../../api/models/UserDTO";
+import { Button, InputGroup } from "@blueprintjs/core";
+
 import { widgetApi, WidgetQueryCriteria } from "../../../../api/clients/WidgetAPI";
-import { WidgetDTO, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
+import { UserDTO } from "../../../../api/models/UserDTO";
+import { WidgetDTO } from "../../../../api/models/WidgetDTO";
+
+import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
+import { UserWidgetsEditDialog } from "./UserWidgetsEditDialog";
+import { WidgetTable } from "../Widgets/WidgetTable";
 
 interface UserEditWidgetsProps {
     onUpdate: (update?: any) => void;
@@ -28,7 +30,7 @@ export interface UserEditWidgetsState {
     manageWidget: WidgetDTO | undefined;
 }
 
-export class UserEditWidgets extends React.Component<UserEditWidgetsProps, UserEditWidgetsState> {
+export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, UserEditWidgetsState> {
     private static readonly SELECT_WIDGETS_COLUMN_DEFINITION = [
         {
             Header: "Widgets",
@@ -38,34 +40,6 @@ export class UserEditWidgets extends React.Component<UserEditWidgetsProps, UserE
                 { Header: "Users", accessor: "value.totalUsers" },
                 { Header: "Groups", accessor: "value.totalGroups" }
             ]
-        }
-    ];
-    private readonly WIDGETS_COLUMN_DEFINITION = [
-        {
-            Header: "Widgets",
-            columns: [
-                { Header: "Title", accessor: "value.namespace" },
-                { Header: "URL", accessor: "value.url" },
-                { Header: "Users", accessor: "value.totalUsers" },
-                { Header: "Groups", accessor: "value.totalGroups" }
-            ]
-        },
-        {
-            Header: "Actions",
-            Cell: (row: any) => (
-                <div>
-                    <ButtonGroup>
-                        <Button
-                            data-element-id="user-admin-widget-delete-widget-button"
-                            text="Delete"
-                            intent={Intent.DANGER}
-                            icon="trash"
-                            small={true}
-                            onClick={() => this.deleteWidget(row.original)}
-                        />
-                    </ButtonGroup>
-                </div>
-            )
         }
     ];
 
@@ -83,6 +57,8 @@ export class UserEditWidgets extends React.Component<UserEditWidgetsProps, UserE
             confirmationMessage: "",
             manageWidget: undefined
         };
+
+        this.deleteWidget = this.deleteWidget.bind(this);
     }
 
     componentDidMount() {
@@ -111,14 +87,12 @@ export class UserEditWidgets extends React.Component<UserEditWidgetsProps, UserE
                     />
                 </div>
 
-                <div className={styles.table}>
-                    <AdminTable
-                        data={data}
-                        columns={this.WIDGETS_COLUMN_DEFINITION}
-                        loading={this.state.loading}
-                        pageSize={this.state.pageSize}
-                    />
-                </div>
+                <WidgetTable
+                    data={data}
+                    isLoading={this.state.loading}
+                    onDelete={this.deleteWidget}
+                    pageSize={this.state.pageSize}
+                />
 
                 <div className={styles.buttonBar}>
                     <Button
@@ -128,12 +102,12 @@ export class UserEditWidgets extends React.Component<UserEditWidgetsProps, UserE
                     />
                 </div>
 
-                <UserEditWidgetsDialog
+                <UserWidgetsEditDialog
                     show={this.state.showAdd}
                     title="Add Widget(s) to User"
                     confirmHandler={this.handleAddWidgetResponse}
                     cancelHandler={this.handleAddWidgetCancel}
-                    columns={UserEditWidgets.SELECT_WIDGETS_COLUMN_DEFINITION}
+                    columns={UserWidgetsPanel.SELECT_WIDGETS_COLUMN_DEFINITION}
                 />
 
                 <ConfirmationDialog
@@ -173,16 +147,8 @@ export class UserEditWidgets extends React.Component<UserEditWidgetsProps, UserE
     };
 
     private handleAddWidgetResponse = async (widgets: Array<WidgetDTO>) => {
-        // const responses = await Promise.all(widgets.map( async (widget: WidgetDTO) => {
         const responses = [];
         for (const widget of widgets) {
-            // const request: WidgetUpdateRequest = {
-            //     id: widget.id,
-            //     name: widget.name,
-            //     update_action: "add",
-            //     user_ids: [
-            // };
-
             const response = await widgetApi.addWidgetUsers(widget.id, this.state.user.id);
             if (response.status !== 200) return;
 
@@ -228,14 +194,6 @@ export class UserEditWidgets extends React.Component<UserEditWidgetsProps, UserE
         });
 
         const widget: WidgetDTO = payload;
-        //
-        // const request: WidgetUpdateRequest = {
-        //     id: widget.id,
-        //     name: widget.name,
-        //     update_action: "remove",
-        //     user_ids: [this.state.user.id]
-        // };
-
         const response = await widgetApi.removeWidgetUsers(widget.id, this.state.user.id);
 
         // TODO: Handle failed request
