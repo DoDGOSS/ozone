@@ -57,13 +57,7 @@ function openEditSectionForUser(browser: NightwatchAPI, userDisplayName: string,
     if (section) {
         return browser.click(section);
     } else {
-        return browser.waitForElementPresent(
-            UserAdminWidget.PropertiesGroup.FORM,
-            1000,
-            undefined,
-            undefined,
-            "[Edit User Form] is present"
-        );
+        return browser.waitForElementPresent(UserAdminWidget.PropertiesGroup.FORM, 1000, "[Edit User Form] is present");
     }
 }
 
@@ -224,8 +218,6 @@ module.exports = {
             .waitForElementPresent(
                 GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
                 1000,
-                undefined,
-                undefined,
                 "[Widget Selection Dialog] is present"
             );
 
@@ -238,8 +230,6 @@ module.exports = {
             .waitForElementNotPresent(
                 GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
                 1000,
-                undefined,
-                undefined,
                 "[Widget Selection Dialog] is closed"
             );
 
@@ -271,21 +261,13 @@ module.exports = {
         });
 
         browser
-            .click(
-                `${
-                    UserAdminWidget.WidgetsUser.TAB
-                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-delete-widget-button']`
-            )
-            .pause(250)
+            .click(`button[data-element-id="delete-widget-button"][data-widget-title="Color Client"]`)
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,
-                undefined,
-                undefined,
                 "[Confirmation Dialog] is present"
             )
             .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
-            .pause(500)
             .waitForElementNotPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,
@@ -293,21 +275,13 @@ module.exports = {
             );
 
         browser
-            .click(
-                `${
-                    UserAdminWidget.WidgetsUser.TAB
-                } div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-delete-widget-button']`
-            )
-            .pause(250)
+            .click(`button[data-element-id="delete-widget-button"][data-widget-title="Color Server"]`)
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,
-                undefined,
-                undefined,
                 "[Confirmation Dialog] is present"
             )
             .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
-            .pause(500)
             .waitForElementNotPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,
@@ -373,8 +347,6 @@ module.exports = {
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,
-                undefined,
-                undefined,
                 "[Confirmation Dialog] is present"
             )
             .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)

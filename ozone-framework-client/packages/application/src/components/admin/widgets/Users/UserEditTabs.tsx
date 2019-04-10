@@ -2,13 +2,13 @@ import * as React from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
 
-import { UserEditForm } from "./UserEditForm";
+import { UserPropertiesPanel } from "./UserPropertiesPanel";
 import { CancelButton } from "../../../form/index";
-import { UserEditGroups } from "../Groups/UserEditGroups";
-import { UserEditWidgets } from "../Widgets/UserEditWidgets";
+import { UserGroupsPanel } from "./UserGroupsPanel";
+import { UserWidgetsPanel } from "./UserWidgetsPanel";
 import { userApi } from "../../../../api/clients/UserAPI";
 import { UserUpdateRequest } from "../../../../api/models/UserDTO";
-import { UserEditPreferences } from "../Users/UserEditPreferences";
+import { UserPreferencesPanel } from "./UserPreferencesPanel";
 
 import * as styles from "../Widgets.scss";
 
@@ -38,22 +38,22 @@ export class UserEditTabs extends React.Component<UserEditTabsProps, UserEditTab
                     <Tab
                         id="user_properties"
                         title="Properties"
-                        panel={<UserEditForm onUpdate={this.updateGroup} user={this.state.user} />}
+                        panel={<UserPropertiesPanel onUpdate={this.updateGroup} user={this.state.user} />}
                     />
                     <Tab
                         id="user_groups"
                         title="Groups"
-                        panel={<UserEditGroups onUpdate={this.props.onUpdate} user={this.state.user} />}
+                        panel={<UserGroupsPanel onUpdate={this.props.onUpdate} user={this.state.user} />}
                     />
                     <Tab
                         id="user_widgets"
                         title="Widgets"
-                        panel={<UserEditWidgets onUpdate={this.props.onUpdate} user={this.state.user} />}
+                        panel={<UserWidgetsPanel onUpdate={this.props.onUpdate} user={this.state.user} />}
                     />
                     <Tab
                         id="user_preferences"
                         title="Preferences"
-                        panel={<UserEditPreferences onUpdate={this.props.onUpdate} user={this.state.user} />}
+                        panel={<UserPreferencesPanel onUpdate={this.props.onUpdate} user={this.state.user} />}
                     />
                     <Tabs.Expander />
                     <span data-element-id="user-admin-widget-edit-back-button">

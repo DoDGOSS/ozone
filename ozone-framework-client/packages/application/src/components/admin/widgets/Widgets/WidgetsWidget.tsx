@@ -1,22 +1,21 @@
+import * as styles from "../Widgets.scss";
+
 import * as React from "react";
 
 import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
-import { AdminTable } from "../../table/AdminTable";
-
-import * as uuidv4 from "uuid/v4";
-
-import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
-import { WidgetSetup } from './WidgetSetup'
 
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
-import { WidgetCreateRequest, WidgetDTO } from "../../../../api/models/WidgetDTO";
+import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+
+import { AdminTable } from "../../table/AdminTable";
+import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
+import { WidgetSetup } from "./WidgetSetup";
+
 import { isNil } from "../../../../utility";
 
-import * as styles from "../Widgets.scss";
-
-interface State {
+interface WidgetsWidgetState {
     widgets: WidgetDTO[];
     filtered: WidgetDTO[];
     filter: string;
@@ -44,7 +43,7 @@ enum WidgetWidgetSubSection {
     SETUP
 }
 
-export class WidgetsWidget extends React.Component<{}, State> {
+export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
     constructor(props: any) {
         super(props);
 
@@ -57,7 +56,6 @@ export class WidgetsWidget extends React.Component<{}, State> {
             pageSize: 25,
             showTable: true,
             showWidgetSetup: false,
-            showEditGroup: false,
             showDelete: false,
             confirmationMessage: "",
             manageWidget: undefined,
@@ -75,11 +73,12 @@ export class WidgetsWidget extends React.Component<{}, State> {
                 // TODO - Abstract this to only have to provide onclick function name with styled buttons
                 {
                     Header: "Actions",
-                    Cell: (row: any) => (
+                    Cell: (row: { original: WidgetDTO }) => (
                         <div>
                             <ButtonGroup>
                                 <Button
                                     data-element-id="widget-admin-widget-edit-button"
+                                    data-widget-title={row.original.value.namespace}
                                     text="Edit"
                                     intent={Intent.PRIMARY}
                                     icon="edit"
@@ -92,11 +91,12 @@ export class WidgetsWidget extends React.Component<{}, State> {
                                 <Divider />
                                 <Button
                                     data-element-id="widget-admin-widget-delete-button"
+                                    data-widget-title={row.original.value.namespace}
                                     text="Delete"
                                     intent={Intent.DANGER}
                                     icon="trash"
                                     small={true}
-                                    disabled={row.original.totalStacks > 0}
+                                    disabled={row.original.value.totalUsers > 0 || row.original.value.totalGroups > 0}
                                     onClick={() => this.deleteWidget(row.original)}
                                 />
                             </ButtonGroup>
@@ -171,11 +171,10 @@ export class WidgetsWidget extends React.Component<{}, State> {
                     </div>
                 )}
 
-
                 <div className={styles.widget_body}>
                     {showWidgetSetup && (
                         <WidgetSetup
-                            updatingWidget={this.state.updatingWidget}
+                            widget={this.state.updatingWidget}
                             widgetTypes={this.state.widgetTypes}
                             closeSetup={() => {
                                 this.handleUpdate();
