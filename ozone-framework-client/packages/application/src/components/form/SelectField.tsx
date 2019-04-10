@@ -35,10 +35,10 @@ export class SelectField<T> extends React.Component<SelectFieldProps<T>, SelectF
     constructor(props: any) {
         super(props);
 
-        let defaultValue: T | undefined = this.props.items ? this.props.items[0] : undefined;
+        const defaultValue: T | undefined = this.props.items ? this.props.items[0] : undefined;
         let initialValue: T | undefined = this.props.initialValue;
 
-        if ( initialValue === undefined || !this.isValidOption(initialValue) ) {
+        if (initialValue === undefined || !this.isValidOption(initialValue)) {
             initialValue = defaultValue;
         }
         this.state = {
@@ -47,10 +47,10 @@ export class SelectField<T> extends React.Component<SelectFieldProps<T>, SelectF
     }
 
     isValidOption(value: T): boolean {
-        return (this.props.items !== undefined)
-            && (this.props.items.find(
-                    (i) => this.props.extractLabel(i) === this.props.extractLabel(value)
-                 ) !== undefined);
+        return (
+            this.props.items !== undefined &&
+            this.props.items.find((i) => this.props.extractLabel(i) === this.props.extractLabel(value)) !== undefined
+        );
     }
 
     render() {
@@ -71,7 +71,7 @@ export class SelectField<T> extends React.Component<SelectFieldProps<T>, SelectF
                             items={this.props.items}
                             itemRenderer={this.props.itemRenderer}
                             onItemSelect={(item: T, event?: React.SyntheticEvent<HTMLElement>) => {
-                                this.setState({ item: item });
+                                this.setState({ item });
                                 this.props.onSelectItem(item);
                             }}
                         >

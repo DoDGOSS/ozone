@@ -245,7 +245,7 @@ export namespace WidgetAdminWidget {
     }
 
     export namespace CreateWidget {
-        export const FORM = "div[data-element-id='widget-admin-widget-create-form']";
+        export const FORM = "div[data-element-id='widget-admin-widget-properties-form']";
 
         export const NAME_INPUT = `${CreateWidget.FORM} input[name='displayName']`;
 
@@ -267,15 +267,14 @@ export namespace WidgetAdminWidget {
 
         export const WIDGET_TYPE_BUTTON = `${CreateWidget.FORM} button[name='widgetType']`;
 
-        export const SHOW_CREATE_FORM = "a[data-element-id='widget-admin-widget-show-create-form']";
+        export const SHOW_CREATE_FORM = "a[data-element-id='widget-admin-widget-show-properties-form']";
 
         export const SUBMIT_BUTTON =
-            "div[data-element-id='widget-admin-widget-create-submit-button'] > button[data-element-id='form-submit-button']";
+            "div[data-element-id='admin-widget-properties-submit-button'] > button[data-element-id='form-submit-button']";
     }
 
-
     export namespace PropertiesGroup {
-        export const FORM = "div[data-element-id='widget-admin-widget-edit-form']";
+        export const FORM = "div[data-element-id='widget-admin-widget-properties-form']";
 
         export const NAME_INPUT = `${PropertiesGroup.FORM} input[name='displayName']`;
 
@@ -287,7 +286,7 @@ export namespace WidgetAdminWidget {
 export namespace GlobalElements {
     export const CONFIRMATION_DIALOG = "div[data-element-id='confirmation-dialog']";
 
-    export const CONFIRMATION_DIALOG_CONFIRM_BUTTON = `button[data-element-id='confirmation-dialog-confirm'] `;
+    export const CONFIRMATION_DIALOG_CONFIRM_BUTTON = `button[data-element-id='confirmation-dialog-confirm']`;
 
     export const GENERIC_TABLE_SELECTOR_DIALOG = "div[data-element-id='table-selector-dialog']";
 

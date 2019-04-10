@@ -1,8 +1,9 @@
-import { NightwatchAPI, NightwatchCallbackResult } from "nightwatch";
+import { NightwatchAPI } from "nightwatch";
 
 import { GlobalElements, WidgetAdminWidget } from "./selectors";
 
-import { AdminWidgetType, loggedInAs, openAdminWidget } from "./helpers";
+import { loggedInAs } from "./helpers";
+import { MainPage } from "./pages";
 
 const LOGIN_USERNAME: string = "testAdmin1";
 const LOGIN_PASSWORD: string = "password";
@@ -19,116 +20,33 @@ const NEW_WIDGET_HEIGHT: string = "300";
 
 const NEW_WIDGET_MODIFIED_NAME: string = "Example Modified Functional Test Widget";
 
-function openEditSectionForWidget(browser: NightwatchAPI, primaryDisplayName: string, section?: string) {
-    let relevant_row: number = 0;
-
-    browser.elements(
-        "css selector",
-        `${WidgetAdminWidget.Main.DIALOG} div[role='rowgroup'] div[role='row'] > div:first-child`,
-        (elements: NightwatchCallbackResult) => {
-            elements.value.forEach((element: any, i: number) => {
-                browser.elementIdText(element.ELEMENT, (result) => {
-                    if (result.value === primaryDisplayName) {
-                        relevant_row = i;
-                        browser.getAttribute(
-                            `${WidgetAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                1}) div[role='row'] > div:last-child button[data-element-id='widget-admin-widget-edit-button']`,
-                            "disabled",
-                            function(isDisabled) {
-                                this.assert.equal(
-                                    isDisabled.value,
-                                    null,
-                                    "[Widget Admin Widget] created widget can be edited"
-                                );
-                            }
-                        );
-                    }
-                });
-            });
-        }
-    );
-    browser.click(
-        `${WidgetAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
-            1}) div[role='row'] > div:last-child button[data-element-id='widget-admin-widget-edit-button']`
-    );
-
-    if (section) {
-        return browser.click(section);
-    } else {
-        return browser.waitForElementPresent(
-            WidgetAdminWidget.PropertiesGroup.FORM,
-            1000,
-            undefined,
-            undefined,
-            "[Edit Widget Form] is present"
-        );
-    }
-}
-
-
 module.exports = {
     "As an Administrator, I can view all Widgets in the Widget Admin Widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.WIDGETS);
 
-        browser.assert.containsText(
-            WidgetAdminWidget.Main.DIALOG,
-            "Widget Administration",
-            "[Widget Admin Widget] Displays widgets"
-        );
+        const widgetAdmin = new MainPage(browser)
+            .openUserMenu()
+            .openAdminDialog()
+            .openWidgetAdminWidget();
 
-        browser.assert.containsText(
-            WidgetAdminWidget.Main.DIALOG,
-            "local:widget_admin",
-            "[Widget Admin Widget] Displays widgets"
-        );
+        widgetAdmin.assertContainsWidget("Widget Administration");
 
         browser.closeWindow().end();
     },
 
     "As an Administrator, I can create a new widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.WIDGETS);
 
-        browser.waitForElementVisible(WidgetAdminWidget.Main.DIALOG, 1000, "[Widget Admin Widget] is visible");
+        const widgetAdmin = new MainPage(browser)
+            .openUserMenu()
+            .openAdminDialog()
+            .openWidgetAdminWidget();
 
-        browser.waitForElementVisible(
-            WidgetAdminWidget.Main.CREATE_BUTTON,
-            1000,
-            "[Widget Admin Widget Create Button] is visible"
-        );
-
-        browser
-            .click(WidgetAdminWidget.Main.CREATE_BUTTON)
-            .waitForElementPresent(
-                WidgetAdminWidget.CreateWidget.SHOW_CREATE_FORM,
-                1000,
-                undefined,
-                undefined,
-                "[Show Create Form Link] is present"
-            );
-
-        browser
-            .click(WidgetAdminWidget.CreateWidget.SHOW_CREATE_FORM)
-            .waitForElementPresent(
-                WidgetAdminWidget.CreateWidget.FORM,
-                1000,
-                undefined,
-                undefined,
-                "[Create Widget Form] is present"
-            );
-
-        browser.waitForElementPresent(
-            WidgetAdminWidget.CreateWidget.SUBMIT_BUTTON,
-            1000,
-            undefined,
-            undefined,
-            "[Create Widget Submit Button] is present"
-        );
-
-        browser.getAttribute(WidgetAdminWidget.CreateWidget.SUBMIT_BUTTON, "disabled", function(result) {
-            this.assert.equal(result.value, "true", "[Create Widget Submit Button] is disabled");
-        });
+        const propertiesPanel = widgetAdmin
+            .clickCreateButton()
+            .clickCreateWithoutDescriptor()
+            .assertContainsSubmitButton()
+            .assertSubmitButtonIsDisabled();
 
         browser
             .setValue(WidgetAdminWidget.CreateWidget.NAME_INPUT, NEW_WIDGET_NAME)
@@ -149,16 +67,11 @@ module.exports = {
             .click("a.bp3-menu-item:first-child")
             .pause(1000);
 
-        browser.getAttribute(WidgetAdminWidget.CreateWidget.SUBMIT_BUTTON, "disabled", function(result) {
-            this.assert.equal(result.value, null, "[Create Widget Submit Button] is enabled");
-        });
-
-        browser
-            .click(WidgetAdminWidget.CreateWidget.SUBMIT_BUTTON)
-            .pause(1000)
-            .waitForElementNotPresent(WidgetAdminWidget.CreateWidget.FORM, 1000, "[Create Widget Form] is closed");
-
-        browser.waitForElementVisible(WidgetAdminWidget.Main.DIALOG, 1000, "[Widget Admin Widget] is visible");
+        propertiesPanel
+            .assertSubmitButtonIsEnabled()
+            .clickSubmitButton()
+            .assertSubmitButtonIsDisabled()
+            .clickBackButton();
 
         browser.setValue(WidgetAdminWidget.Main.SEARCH_FIELD, NEW_WIDGET_NAME);
 
@@ -169,32 +82,27 @@ module.exports = {
 
     "As an Administrator, I can edit a widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.WIDGETS);
 
-        browser.waitForElementVisible(WidgetAdminWidget.Main.DIALOG, 1000, "[Widget Admin Widget] is visible");
+        const widgetAdmin = new MainPage(browser)
+            .openUserMenu()
+            .openAdminDialog()
+            .openWidgetAdminWidget();
 
-        browser.setValue(WidgetAdminWidget.Main.SEARCH_FIELD, NEW_WIDGET_NAME);
-
-        openEditSectionForWidget(browser, NEW_WIDGET_NAME);
+        const propertiesPanel = widgetAdmin
+            .setSearchValue(NEW_WIDGET_NAME)
+            .assertCanEditWidget(NEW_WIDGET_NAME)
+            .editWidget(NEW_WIDGET_NAME);
 
         browser
             .clearValue(WidgetAdminWidget.PropertiesGroup.NAME_INPUT)
             .setValue(WidgetAdminWidget.PropertiesGroup.NAME_INPUT, NEW_WIDGET_MODIFIED_NAME)
-            .pause(1000);
+            .pause(500);
 
-        browser.getAttribute(WidgetAdminWidget.PropertiesGroup.SUBMIT_BUTTON, "disabled", function(result) {
-            this.assert.equal(result.value, null, "[Edit Widget Submit Button] is enabled");
-        });
-
-        browser.click(WidgetAdminWidget.PropertiesGroup.SUBMIT_BUTTON).pause(1000);
-
-        browser.getAttribute(WidgetAdminWidget.PropertiesGroup.SUBMIT_BUTTON, "disabled", function(result) {
-            this.assert.equal(result.value, "true", "[Edit Widget Submit Button] is disabled");
-        });
-
-        browser
-            .click(WidgetAdminWidget.Main.BACK_BUTTON)
-            .waitForElementNotPresent(WidgetAdminWidget.PropertiesGroup.FORM, 1000, "[Edit Widget Form] is closed");
+        propertiesPanel
+            .assertSubmitButtonIsEnabled()
+            .clickSubmitButton()
+            .assertSubmitButtonIsDisabled()
+            .clickBackButton();
 
         browser
             .clearValue(WidgetAdminWidget.Main.SEARCH_FIELD)
@@ -208,62 +116,34 @@ module.exports = {
 
     "As an Administrator, I can delete a widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.WIDGETS);
 
-        browser.waitForElementVisible(WidgetAdminWidget.Main.DIALOG, 1000, "[Widget Admin Widget] is visible");
+        const mainPage = new MainPage(browser)
+            .openUserMenu()
+            .openAdminDialog()
+            .openWidgetAdminWidget()
+            .setSearchValue(NEW_WIDGET_MODIFIED_NAME);
 
-        browser.setValue(WidgetAdminWidget.Main.SEARCH_FIELD, NEW_WIDGET_MODIFIED_NAME);
+        mainPage
+            .assertContainsWidget(NEW_WIDGET_MODIFIED_NAME)
+            .assertCanDeleteWidget(NEW_WIDGET_MODIFIED_NAME)
+            .deleteWidget(NEW_WIDGET_MODIFIED_NAME);
 
-        browser.elements(
-            "css selector",
-            `${WidgetAdminWidget.Main.DIALOG} div[role='rowgroup'] div[role='row'] > div:first-child`,
-            (elements: NightwatchCallbackResult) => {
-                let relevant_row: number = 0;
+        browser
+            .pause(500)
+            .waitForElementPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                1000,
+                "[Confirmation Dialog] is present"
+            )
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .pause(500)
+            .waitForElementNotPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                1000,
+                "[Confirmation Dialog] is not present"
+            );
 
-                elements.value.forEach((element: any, i: number) => {
-                    browser.elementIdText(element.ELEMENT, (result) => {
-                        if (result.value === NEW_WIDGET_MODIFIED_NAME) {
-                            relevant_row = i;
-                            browser.getAttribute(
-                                `${WidgetAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                    1}) div[role='row'] > div:last-child button[data-element-id='widget-admin-widget-delete-button']`,
-                                "disabled",
-                                function(modifiedResult) {
-                                    this.assert.equal(
-                                        modifiedResult.value,
-                                        null,
-                                        "[Widget Admin Widget] created widget can be deleted"
-                                    );
-                                }
-                            );
-                        }
-                    });
-                });
-
-                browser
-                    .click(
-                        `${WidgetAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
-                            1}) div[role='row'] > div:last-child button[data-element-id='widget-admin-widget-delete-button']`
-                    )
-                    .pause(250)
-                    .waitForElementPresent(
-                        GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
-                        1000,
-                        undefined,
-                        undefined,
-                        "[Confirmation Dialog] is present"
-                    )
-                    .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
-                    .pause(500)
-                    .waitForElementNotPresent(
-                        GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
-                        1000,
-                        "[Confirmation Dialog] is not present"
-                    );
-            }
-        );
-
-        browser.expect.element(WidgetAdminWidget.Main.DIALOG).text.to.not.contain(NEW_WIDGET_NAME);
+        mainPage.assertNotContainsWidget(NEW_WIDGET_MODIFIED_NAME);
 
         browser.closeWindow().end();
     }

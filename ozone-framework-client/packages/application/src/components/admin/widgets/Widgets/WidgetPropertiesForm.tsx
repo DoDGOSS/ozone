@@ -1,17 +1,17 @@
+import * as styles from "../Widgets.scss";
+
 import * as React from "react";
+
+import { MenuItem } from "@blueprintjs/core";
+import { ItemRenderer } from "@blueprintjs/select";
+
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { array, boolean, number, object, string } from "yup";
 
 import { WidgetCreateRequest, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
-import { CancelButton, CheckBox, FormError, HiddenField, SelectField, SubmitButton, TextField } from "../../../form";
-
-import * as uuidv4 from "uuid/v4";
-
-import * as styles from "../Widgets.scss";
-
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
-import { MenuItem } from "@blueprintjs/core";
-import { ItemRenderer } from "@blueprintjs/select";
+
+import { CheckBox, FormError, HiddenField, SelectField, SubmitButton, TextField } from "../../../form";
 
 interface WidgetFormProps {
     currentWidget: WidgetCreateRequest | WidgetUpdateRequest;
@@ -28,12 +28,18 @@ const renderWidgetType: ItemRenderer<WidgetTypeReference> = (
     return <MenuItem key={widgetType.name} onClick={handleClick} text={widgetType.name} />;
 };
 
-
-export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({ currentWidget, onSubmit, widgetTypes }) => (
+export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
+    currentWidget,
+    onSubmit,
+    widgetTypes
+}) => (
     <Formik
         initialValues={currentWidget}
         validationSchema={WidgetPropertiesSchema}
-        onSubmit={async (values: WidgetCreateRequest | WidgetUpdateRequest, actions: FormikActions<WidgetCreateRequest>) => {
+        onSubmit={async (
+            values: WidgetCreateRequest | WidgetUpdateRequest,
+            actions: FormikActions<WidgetCreateRequest>
+        ) => {
             values.height = Number(values.height);
             values.width = Number(values.width);
 
@@ -122,7 +128,7 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
                             extractLabel={(item: WidgetTypeReference) => item.name}
                             onSelectItem={(widgetType: WidgetTypeReference) => {
                                 // if you set it manually, without this function, the form isn't marked as dirty.
-                                formik.setFieldValue('widgetTypes', [widgetType]);
+                                formik.setFieldValue("widgetTypes", [widgetType]);
                                 formik.validateForm();
                             }}
                         />
