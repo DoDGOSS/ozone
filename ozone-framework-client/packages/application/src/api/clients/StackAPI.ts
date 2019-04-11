@@ -18,6 +18,7 @@ import {
     validateStackGetResponse,
     validateStackUpdateResponse
 } from "../models/StackDTO";
+import { GroupDTO } from "../models/GroupDTO";
 
 export interface StackQueryCriteria {
     limit?: number;
@@ -105,6 +106,38 @@ export class StackAPI {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             validate: validateStackDeleteUserResponse
+        });
+    }
+
+    async addStackGroups(id: number, groups: GroupDTO[]): Promise<Response<StackUpdateResponse>> {
+        const requestData = qs.stringify({
+            stack_id: id,
+            tab: "groups",
+            update_action: "add",
+            data: JSON.stringify(groups)
+        });
+
+        return this.gateway.put(`stack/${id}`, requestData, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            validate: validateStackUpdateResponse
+        });
+    }
+
+    async removeStackGroups(id: number, groups: GroupDTO[]): Promise<Response<StackUpdateResponse>> {
+        const requestData = qs.stringify({
+            stack_id: id,
+            tab: "groups",
+            update_action: "remove",
+            data: JSON.stringify(groups)
+        });
+
+        return this.gateway.put(`stack/${id}`, requestData, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            validate: validateStackUpdateResponse
         });
     }
 }
