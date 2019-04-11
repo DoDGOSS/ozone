@@ -316,7 +316,7 @@ class StackService {
                     }
                 }
                 if (!updatedGroups.isEmpty()) {
-                    returnValue = updatedGroups.collect{ serviceModelService.createServiceModel(it) }
+                    returnValue = updatedGroups.collect{ serviceModelService.createServiceModel(stack) }
                 }
             } else if ('users' == params.tab) {
 
