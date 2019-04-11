@@ -16,7 +16,7 @@ export interface ExpandoPanelState extends PanelState {
 
 export class ExpandoPanel extends AbstractPanel<ExpandoPanelState> {
     constructor(
-        id: string,
+        id: string | null,
         title: string,
         type: "accordion" | "portal",
         widgets: UserWidget[] = [],
