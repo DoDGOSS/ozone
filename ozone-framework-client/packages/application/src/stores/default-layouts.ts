@@ -89,7 +89,7 @@ export function createPresetLayout(layoutName: string | null): DashboardLayout {
 }
 
 function createTabbedFitFitLayout(): DashboardLayout {
-    const tabbed = new tabbedPanel();
+    const tabbed = new TabbedPanel(null, "Test 2");
     const fitPanel1 = new FitPanel();
     const fitPanel2 = new FitPanel();
 
@@ -137,7 +137,7 @@ function createAccordFitFitLayout(): DashboardLayout {
 
 function createTabbedAccordian(): DashboardLayout {
   const accordion = new ExpandoPanel(null, "", "accordion");;
-  const tabbed = new TabbedPanel();
+  const tabbed = new TabbedPanel(null, "");
   return {
       tree: {
               direction: "row",
@@ -152,12 +152,12 @@ function createTabbedAccordian(): DashboardLayout {
 }
 
 function createTabbedLayout(): DashboardLayout {
-    const tabbedPanel = new TabbedPanel();
+    const tabbed = new TabbedPanel(null, "");
 
     return {
-        tree: tabbedPanel.id,
+        tree: tabbed.id,
         panels: {
-            [tabbedPanel.id]: tabbedPanel
+            [tabbed.id]: tabbed
         }
     };
 }
@@ -197,12 +197,11 @@ function createAccordianFit(): DashboardLayout {
 
 function createFitTabbed(): DashboardLayout {
   const fitPanel = new FitPanel();
-  const tabbed = new TabbedPanel();
+  const tabbed = new TabbedPanel(null, "");
   return {
       tree: {
               direction: "row",
-              first: fitPanel.id,
-              second: fitPanel2.id
+              first: fitPanel.id
       },
       panels: {
           [fitPanel.id]: fitPanel,
