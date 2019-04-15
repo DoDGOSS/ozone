@@ -14,7 +14,12 @@ export interface TabbedPanelState extends PanelState {
 }
 
 export class TabbedPanel extends AbstractPanel<TabbedPanelState> {
-    constructor(id: string | null, title: string, widgets: UserWidget[] = [], activeWidget: UserWidget | null = null) {
+    constructor(
+        id: string | null = null,
+        title: string = "",
+        widgets: UserWidget[] = [],
+        activeWidget: UserWidget | null = null
+    ) {
         super({
             id: id || uuid(),
             title,

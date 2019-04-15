@@ -6,7 +6,7 @@ import { PanelState } from "./types";
 import { AbstractPanel } from "./AbstractPanel";
 
 export class FitPanel extends AbstractPanel<PanelState> {
-    constructor(id: string | null = null, widget: UserWidget | null = null, title: string | null = null) {
+    constructor(id: string | null = null, title: string | null = null, widget: UserWidget | null = null) {
         super({
             id: id || uuid(),
             title: title ? title : widget ? widget.widget.title : "",

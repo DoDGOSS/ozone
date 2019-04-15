@@ -137,13 +137,13 @@ class UserStateDeserializer {
 
         switch (dto.type) {
             case "fit":
-                return new FitPanel(dto.id, _widgets[0], dto.title);
+                return new FitPanel(dto.id, dto.title, _widgets[0]);
             case "tabbed":
                 return new TabbedPanel(dto.id, dto.title, _widgets, _activeWidget);
             case "accordion":
-                return new ExpandoPanel(dto.id, dto.title, "accordion", _widgets, dto.collapsed);
+                return new ExpandoPanel("accordion", dto.id, dto.title, _widgets, dto.collapsed);
             case "portal":
-                return new ExpandoPanel(dto.id, dto.title, "portal", _widgets, dto.collapsed);
+                return new ExpandoPanel("portal", dto.id, dto.title, _widgets, dto.collapsed);
         }
     }
 }

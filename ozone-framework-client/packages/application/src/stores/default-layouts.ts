@@ -2,7 +2,6 @@ import { DashboardLayout } from "../codecs/Dashboard.codec";
 import { FitPanel } from "../models/dashboard/FitPanel";
 import { TabbedPanel } from "../models/dashboard/TabbedPanel";
 import { ExpandoPanel } from "../models/dashboard/ExpandoPanel";
-import { AbstractPanel } from "../models/dashboard/AbstractPanel";
 
 interface Layout {
     name: string;
@@ -63,23 +62,23 @@ export function createPresetLayout(layoutName: string | null): DashboardLayout {
         case "Fit-4":
             return createFit4Layout();
         case "FitBSB":
-          return createSplitVertical();
+            return createSplitVertical();
         case "Fit-Stack":
-          return createSplitHorizontal();
+            return createSplitHorizontal();
         case "Tabbed":
-          return createTabbedLayout();
+            return createTabbedLayout();
         case "Accord-Fit":
-          return createAccordianFit();
+            return createAccordianFit();
         case "Fit-Tab":
-          return createFitTabbed();
+            return createFitTabbed();
         case "Portal":
-          return createPortalLayout();
+            return createPortalLayout();
         case "Tabbed-Accord":
-          return createTabbedAccordian();
+            return createTabbedAccordian();
         case "Accord-Fit-Fit":
-          return createAccordFitFitLayout();
+            return createAccordFitFitLayout();
         case "Tab-Fit-Fit":
-          return createTabbedFitFitLayout();
+            return createTabbedFitFitLayout();
         default:
             return {
                 tree: null,
@@ -89,30 +88,31 @@ export function createPresetLayout(layoutName: string | null): DashboardLayout {
 }
 
 function createTabbedFitFitLayout(): DashboardLayout {
-    const tabbed = new TabbedPanel(null, "Test 2");
+    const tabbed = new TabbedPanel();
     const fitPanel1 = new FitPanel();
     const fitPanel2 = new FitPanel();
 
     return {
         tree: {
-            direction: "row",
+            direction: "column",
             first: tabbed.id,
             second: {
-                direction: "column",
+                direction: "row",
                 first: fitPanel1.id,
                 second: fitPanel2.id
-            }
+            },
+            splitPercentage: 25
         },
         panels: {
             [fitPanel1.id]: fitPanel1,
             [fitPanel2.id]: fitPanel2,
-            [tabbed.id]: tabbed,
+            [tabbed.id]: tabbed
         }
     };
 }
 
 function createAccordFitFitLayout(): DashboardLayout {
-    const accordion = new ExpandoPanel(null, "", "accordion");
+    const accordion = new ExpandoPanel("accordion");
     const fitPanel1 = new FitPanel();
     const fitPanel2 = new FitPanel();
 
@@ -124,35 +124,36 @@ function createAccordFitFitLayout(): DashboardLayout {
                 direction: "column",
                 first: fitPanel1.id,
                 second: fitPanel2.id
-            }
+            },
+            splitPercentage: 25
         },
         panels: {
             [accordion.id]: accordion,
             [fitPanel1.id]: fitPanel1,
-            [fitPanel2.id]: fitPanel2,
-
+            [fitPanel2.id]: fitPanel2
         }
     };
 }
 
 function createTabbedAccordian(): DashboardLayout {
-  const accordion = new ExpandoPanel(null, "", "accordion");;
-  const tabbed = new TabbedPanel(null, "");
-  return {
-      tree: {
-              direction: "row",
-              first: tabbed.id,
-              second: accordion.id
-      },
-      panels: {
-          [accordion.id]: accordion,
-          [tabbed.id]: tabbed,
-      }
-  };
+    const accordion = new ExpandoPanel("accordion");
+    const tabbed = new TabbedPanel();
+    return {
+        tree: {
+            direction: "row",
+            first: tabbed.id,
+            second: accordion.id,
+            splitPercentage: 75
+        },
+        panels: {
+            [accordion.id]: accordion,
+            [tabbed.id]: tabbed
+        }
+    };
 }
 
 function createTabbedLayout(): DashboardLayout {
-    const tabbed = new TabbedPanel(null, "");
+    const tabbed = new TabbedPanel();
 
     return {
         tree: tabbed.id,
@@ -163,51 +164,54 @@ function createTabbedLayout(): DashboardLayout {
 }
 
 function createPortalLayout(): DashboardLayout {
-    const portal = new ExpandoPanel(null, "", "portal");
-    const portal1 = new ExpandoPanel(null, "", "portal");
+    const portal1 = new ExpandoPanel("portal");
+    const portal2 = new ExpandoPanel("portal");
 
     return {
         tree: {
-                direction: "row",
-                first: portal.id,
-                second: portal1.id
+            direction: "row",
+            first: portal1.id,
+            second: portal2.id
         },
         panels: {
-            [portal.id]: portal,
             [portal1.id]: portal1,
+            [portal2.id]: portal2
         }
     };
-  }
+}
 
 function createAccordianFit(): DashboardLayout {
-  const accordion = new ExpandoPanel(null, "", "accordion");
-  const fitPanel = new FitPanel();
-  return {
-      tree: {
-              direction: "row",
-              first: accordion.id,
-              second: fitPanel.id
-      },
-      panels: {
-          [accordion.id]: accordion,
-          [fitPanel.id]: fitPanel,
-      }
-  };
+    const accordion = new ExpandoPanel("accordion");
+    const fitPanel = new FitPanel();
+    return {
+        tree: {
+            direction: "row",
+            first: accordion.id,
+            second: fitPanel.id,
+            splitPercentage: 25
+        },
+        panels: {
+            [accordion.id]: accordion,
+            [fitPanel.id]: fitPanel
+        }
+    };
 }
 
 function createFitTabbed(): DashboardLayout {
-  const fitPanel = new FitPanel();
-  const tabbed = new TabbedPanel(null, "");
-  return {
-      tree: {
-              direction: "row",
-              first: fitPanel.id
-      },
-      panels: {
-          [fitPanel.id]: fitPanel,
-          [tabbed.id]: tabbed,
-      }
-  };
+    const fitPanel = new FitPanel();
+    const tabbed = new TabbedPanel();
+    return {
+        tree: {
+            direction: "column",
+            first: fitPanel.id,
+            second: tabbed.id,
+            splitPercentage: 75
+        },
+        panels: {
+            [fitPanel.id]: fitPanel,
+            [tabbed.id]: tabbed
+        }
+    };
 }
 
 function createFitLayout(): DashboardLayout {
@@ -222,35 +226,35 @@ function createFitLayout(): DashboardLayout {
 }
 
 function createSplitVertical(): DashboardLayout {
-  const fitPanel1 = new FitPanel();
-  const fitPanel2 = new FitPanel();
-  return {
-      tree: {
-              direction: "row",
-              first: fitPanel1.id,
-              second: fitPanel2.id
-      },
-      panels: {
-          [fitPanel1.id]: fitPanel1,
-          [fitPanel2.id]: fitPanel2,
-      }
-  };
+    const fitPanel1 = new FitPanel();
+    const fitPanel2 = new FitPanel();
+    return {
+        tree: {
+            direction: "row",
+            first: fitPanel1.id,
+            second: fitPanel2.id
+        },
+        panels: {
+            [fitPanel1.id]: fitPanel1,
+            [fitPanel2.id]: fitPanel2
+        }
+    };
 }
 
 function createSplitHorizontal(): DashboardLayout {
-  const fitPanel1 = new FitPanel();
-  const fitPanel2 = new FitPanel();
-  return {
-      tree: {
-              direction: "column",
-              first: fitPanel1.id,
-              second: fitPanel2.id
-      },
-      panels: {
-          [fitPanel1.id]: fitPanel1,
-          [fitPanel2.id]: fitPanel2,
-      }
-  };
+    const fitPanel1 = new FitPanel();
+    const fitPanel2 = new FitPanel();
+    return {
+        tree: {
+            direction: "column",
+            first: fitPanel1.id,
+            second: fitPanel2.id
+        },
+        panels: {
+            [fitPanel1.id]: fitPanel1,
+            [fitPanel2.id]: fitPanel2
+        }
+    };
 }
 
 function createFit4Layout(): DashboardLayout {

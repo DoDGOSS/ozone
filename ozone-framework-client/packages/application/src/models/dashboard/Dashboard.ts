@@ -86,7 +86,7 @@ export class Dashboard {
         const prev = this.state$.value;
         const { panels, tree } = prev;
 
-        const panel = new FitPanel(null, widget);
+        const panel = new FitPanel(null, null, widget);
 
         const newTree = tree !== null ? addToTopRightOfLayout(tree, panel.id) : panel.id;
 
@@ -140,13 +140,13 @@ export class Dashboard {
         let newPanel: Panel<PanelState> | undefined;
         if (layout === "fit") {
             const newWidget = widgets.length > 0 ? widgets[0] : null;
-            newPanel = new FitPanel(null, newWidget);
+            newPanel = new FitPanel(null, null, newWidget);
         } else if (layout === "tabbed") {
             newPanel = new TabbedPanel(null, "", widgets);
         } else if (layout === "accordion") {
-            newPanel = new ExpandoPanel(null, "", "accordion", widgets);
+            newPanel = new ExpandoPanel("accordion", null, "", widgets);
         } else if (layout === "portal") {
-            newPanel = new ExpandoPanel(null, "", "portal", widgets);
+            newPanel = new ExpandoPanel("portal", null, "", widgets);
         }
 
         if (newPanel !== undefined) {
