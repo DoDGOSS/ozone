@@ -1,14 +1,13 @@
+import * as styles from "./index.scss";
+
 import * as React from "react";
 import { useState } from "react";
 
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 
-import uuid from "uuid/v4";
-
 import { Radio, RadioGroup } from "@blueprintjs/core";
 
-import { dashboardApi } from "../../api/clients/DashboardAPI";
-
+import { dashboardStore } from "../../stores/DashboardStore";
 import { DashboardUpdateRequest } from "../../api/models/DashboardDTO";
 
 import { FormError, SubmitButton, TextField } from "../form";
@@ -18,32 +17,44 @@ import { DashboardSelect } from "./DashboardSelect";
 
 import { handleStringChange } from "../../utility";
 
-import * as styles from "./index.scss";
-
 export interface CreateDashboardFormProps {
     onSubmit: () => void;
+}
+
+export interface CreateDashboardOptions {
+    name: string;
+    iconImageUrl: string;
+    description: string;
+    presetLayoutName: string | null;
 }
 
 export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubmit }) => {
     const [selectedValue, setValue] = useState("");
     const handleRadioChange = handleStringChange(setValue);
 
+    const [selectedPresetLayout, setPresetLayout] = useState<string | null>(null);
+    const handlePresetLayoutChange = handleStringChange(setPresetLayout);
+
     return (
-        <Formik
+        <Formik<CreateDashboardOptions>
             initialValues={{
                 name: "",
-                guid: uuid(),
-                iconImageUrl: "https://cdn.onlinewebfonts.com/svg/img_301147.png",
-                description: ""
+                iconImageUrl: "/images/dashboard.png",
+                description: "",
+                presetLayoutName: null
             }}
-            onSubmit={async (values: DashboardUpdateRequest, actions: FormikActions<DashboardUpdateRequest>) => {
-                const isSuccess = await dashboardApi.createDashboard(values);
-                if (isSuccess) {
-                    onSubmit();
-                    actions.setStatus(null);
-                } else {
-                    actions.setStatus({ error: "An unexpected error has occurred" });
-                }
+            onSubmit={(values: CreateDashboardOptions, actions: FormikActions<CreateDashboardOptions>) => {
+                values.presetLayoutName = selectedPresetLayout;
+
+                dashboardStore
+                    .createDashboard(values)
+                    .then(() => {
+                        actions.setStatus(null);
+                        onSubmit();
+                    })
+                    .catch(() => {
+                        actions.setStatus({ error: "An unexpected error has occurred" });
+                    });
             }}
         >
             {(formik: FormikProps<DashboardUpdateRequest>) => (
@@ -60,9 +71,12 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
                             <TextField name="description" label="Description" />
                         </div>
                     </div>
+
                     <RadioGroup onChange={handleRadioChange} selectedValue={selectedValue}>
                         <Radio label="Choose a premade layout" value="premade" />
-                        {selectedValue === "premade" && <PremadeLayouts onChange={handleRadioChange} />}
+                        {selectedValue === "premade" && (
+                            <PremadeLayouts selectedValue={selectedPresetLayout} onChange={handlePresetLayoutChange} />
+                        )}
                         <Radio label="Copy the layout of an existing page" value="copy" />
                         {selectedValue === "copy" && <DashboardSelect />}
                         <Radio label="Create a new layout" value="new" />
