@@ -85,7 +85,7 @@ export class DashboardService {
 }
 
 function createSampleFitPanel(): FitPanel {
-    return new FitPanel(null, null);
+    return new FitPanel();
 }
 
 function createSampleTabbedPanel(): TabbedPanel {
@@ -93,11 +93,11 @@ function createSampleTabbedPanel(): TabbedPanel {
 }
 
 function createSampleAccordionPanel(): ExpandoPanel {
-    return new ExpandoPanel(null, "New Accordion Panel", "accordion", []);
+    return new ExpandoPanel("accordion", null, "New Accordion Panel", []);
 }
 
 function createSamplePortalPanel(): ExpandoPanel {
-    return new ExpandoPanel(null, "New Portal Panel", "portal", []);
+    return new ExpandoPanel("portal", null, "New Portal Panel", []);
 }
 
 export const dashboardService = new DashboardService();
