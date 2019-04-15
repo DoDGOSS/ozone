@@ -11,6 +11,10 @@ import { TabbedPanel } from "../models/dashboard/TabbedPanel";
 import { ExpandoPanel } from "../models/dashboard/ExpandoPanel";
 import { UserWidget } from "../models/UserWidget";
 
+import { WidgetLaunchArgs } from "../services/WidgetLaunchArgs";
+
+import { isNil, Predicate, values } from "../utility";
+
 export class DashboardService {
     private readonly store: DashboardStore;
 
@@ -61,9 +65,31 @@ export class DashboardService {
         this.getCurrentDashboard().setPanelLayout(panel, path, layout);
     };
 
-    addWidget = (widget: UserWidget) => {
-        this.getCurrentDashboard().addWidget(widget);
-    };
+    /**
+     * Add a UserWidget to the current Dashboard
+     *
+     * @returns true -- if the Widget was opened successfully
+     */
+    addWidget(widget: UserWidget, title?: string): boolean {
+        return this.getCurrentDashboard().addWidget(widget, title);
+    }
+
+    /**
+     * Find and launch a Widget (for the Widget Launcher API)
+     *
+     * @returns true -- if the Widget was launched successfully
+     */
+    launchWidget(args: WidgetLaunchArgs): boolean {
+        const userState = dashboardStore.userDashboards().value;
+        const userWidgets = values(userState.widgets);
+
+        const widget = userWidgets.find(byGuidOrUniversalName(args.guid, args.universalName));
+        if (!widget) return false;
+
+        widget.launchData = args.data;
+
+        return this.addWidget(widget, args.title);
+    }
 
     addLayout_TEMP = (layout: LayoutType) => {
         const dashboard = this.getCurrentDashboard();
@@ -86,6 +112,12 @@ export class DashboardService {
                 break;
         }
     };
+}
+
+function byGuidOrUniversalName(guid?: string, universalName?: string): Predicate<UserWidget> {
+    return (userWidget: UserWidget) =>
+        (!isNil(guid) && userWidget.widget.id === guid) ||
+        (!isNil(universalName) && userWidget.widget.universalName === universalName);
 }
 
 function createSampleFitPanel(): FitPanel {

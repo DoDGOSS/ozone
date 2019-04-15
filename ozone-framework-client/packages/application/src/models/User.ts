@@ -1,5 +1,3 @@
-import { PropertiesOf } from "../types";
-
 export class UserProps {
     displayName: string;
     email: string;

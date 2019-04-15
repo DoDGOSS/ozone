@@ -3,7 +3,8 @@ import * as qs from "qs";
 import { Gateway, getGateway, Response } from "../interfaces";
 import { UserDashboardsGetResponse, validateUserDashboardsGetResponse } from "../models/UserDashboardDTO";
 import { DashboardDTO, validateDashboard } from "../models/DashboardDTO";
-import { DashboardLayout, dashboardLayoutToJson } from "../../codecs/Dashboard.codec";
+import { dashboardLayoutToJson } from "../../codecs/Dashboard.codec";
+import { DashboardLayout } from "../../models/dashboard/Dashboard";
 
 import { isNil, uuid } from "../../utility";
 
