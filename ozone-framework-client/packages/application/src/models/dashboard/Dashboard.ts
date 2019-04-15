@@ -16,16 +16,21 @@ import {
 
 import { UserWidget } from "../UserWidget";
 
-import { DashboardNode, DashboardPath, PanelMap } from "../../components/widget-dashboard/types";
+import { DashboardNode, DashboardPath } from "../../components/widget-dashboard/types";
 import { LayoutType, Panel, PanelState } from "./types";
 
 import { ExpandoPanel } from "./ExpandoPanel";
 import { TabbedPanel } from "./TabbedPanel";
 import { FitPanel } from "./FitPanel";
 import { ProfileReference } from "../../api/models/UserDTO";
-import { PropertiesOf } from "../../types";
+import { isNil, orNull } from "../../utility";
 
-export interface DashboardProps {
+export interface DashboardLayout {
+    tree: DashboardNode | null;
+    panels: Dictionary<Panel<any>>;
+}
+
+export interface DashboardProps extends DashboardLayout {
     description?: string;
     guid: string;
     imageUrl?: string;
@@ -41,10 +46,8 @@ export interface DashboardProps {
         editedDate: string;
     };
     name: string;
-    panels: PanelMap;
     position: number;
     stackId: number;
-    tree: DashboardNode | null;
     user: {
         username: string;
     };
@@ -79,14 +82,14 @@ export class Dashboard {
         return undefined;
     };
 
-    addWidget = (widget: UserWidget) => {
+    addWidget = (widget: UserWidget, title?: string): boolean => {
         const existingWidget = this.findWidgetById(widget.widget.id);
-        if (existingWidget) return;
+        if (existingWidget) return false;
 
         const prev = this.state$.value;
         const { panels, tree } = prev;
 
-        const panel = new FitPanel(null, null, widget);
+        const panel = new FitPanel(null, orNull(title), widget);
 
         const newTree = tree !== null ? addToTopRightOfLayout(tree, panel.id) : panel.id;
 
@@ -98,6 +101,8 @@ export class Dashboard {
                 [panel.id]: panel
             }
         });
+
+        return true;
     };
 
     addPanel = (panel: Panel<PanelState>) => {

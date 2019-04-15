@@ -1,5 +1,3 @@
-import { values } from "lodash";
-
 import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
@@ -8,10 +6,9 @@ import { DashboardCreateOpts, userDashboardApi, UserDashboardAPI } from "../api/
 import { dashboardApi, DashboardAPI } from "../api/clients/DashboardAPI";
 import { dashboardToUpdateRequest, deserializeUserState, UserState } from "../codecs/Dashboard.codec";
 import { CreateDashboardOptions } from "../components/create-dashboard-screen/CreateDashboardForm";
-import { DashboardNode, PanelMap } from "../components/widget-dashboard/types";
 import { createPresetLayout } from "./default-layouts";
-import { isNil } from "../utility";
-import { create } from "domain";
+
+import { isNil, values } from "../utility";
 
 const EMPTY_USER_DASHBOARDS_STATE: UserState = {
     dashboards: {},

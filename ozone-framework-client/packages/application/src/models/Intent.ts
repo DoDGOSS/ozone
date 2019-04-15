@@ -1,5 +1,3 @@
-import { PropertiesOf } from "../types";
-
 export class IntentProps {
     action: string;
     dataTypes: string[];

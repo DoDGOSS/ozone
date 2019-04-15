@@ -1,12 +1,9 @@
-import { GroupDTO } from "../../api/models/GroupDTO";
-import { UsernameDTO } from "../../api/models/UserDTO";
-import { PropertiesOf } from "../../types";
-import { DashboardMap } from "../../codecs/Dashboard.codec";
+import { Dashboard } from "./Dashboard";
 
 export class StackProps {
     approved: boolean;
     context: string;
-    dashboards: DashboardMap;
+    dashboards: Dictionary<Dashboard>;
     description?: string;
     descriptorUrl?: string;
     id: number;
