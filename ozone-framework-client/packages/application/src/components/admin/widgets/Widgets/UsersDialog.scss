@@ -1,0 +1,12 @@
+
+:local .dialog {
+  min-height: 400px;
+  // min-width: 800px;
+}
+
+:local .dialogBody {
+  min-height: 400px;
+  // min-width: 800px;
+  display: flex;
+  justify-content: center;
+}

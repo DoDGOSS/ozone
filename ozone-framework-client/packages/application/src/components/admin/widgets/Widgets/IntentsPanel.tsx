@@ -427,11 +427,11 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
     }
 
     getMainTableColumns(): any {
-        const title = this.props.updatingWidget ? this.props.updatingWidget.namespace : "Intents";
+        const title1 = this.props.updatingWidget ? this.props.updatingWidget.displayName : "Intents";
 
         return [
             {
-                Header: () => this.getTableMainHeader(title),
+                Header: () => this.getTableMainHeader(title1),
                 columns: [
                     {
                         Header: "hideMe",
