@@ -148,6 +148,92 @@ describe("Widget API", () => {
         createResponse = response.data;
     });
 
+<<<<<<< HEAD
+=======
+    test("createWidget - POST /widget/ - minimal", async () => {
+        let createRequestMinimal = {
+            displayName: "My Test Widget",
+            widgetVersion: "",
+            description: "",
+            widgetUrl: "http://www.ozone.test/widget1/",
+            imageUrlSmall: "http://www.ozone.test/widget1/small_icon.png",
+            imageUrlMedium: "http://www.ozone.test/widget1/large_icon.png",
+            width: 200,
+            height: 200,
+            widgetGuid: "12345678-1234-1234-1234-1234567890a0",
+            universalName: "",
+            visible: true,
+            background: false,
+            singleton: false,
+            mobileReady: false,
+            widgetTypes: [
+                {
+                    id: 1,
+                    name: "standard"
+                }
+            ],
+            intents: {
+                send: [],
+                receive: []
+            }
+        };
+
+        const response = await widgetApi.createWidget(createRequestMinimal);
+
+        expect(response.status).toEqual(200);
+        expect(response.data).toEqual({
+            success: true,
+            data: [
+                {
+                    id: createRequestMinimal.widgetGuid,
+                    namespace: "widget",
+                    path: createRequestMinimal.widgetGuid,
+                    value: {
+                        universalName: null,
+                        namespace: createRequestMinimal.displayName,
+                        description: null,
+                        url: createRequestMinimal.widgetUrl,
+                        headerIcon: createRequestMinimal.imageUrlSmall,
+                        smallIconUrl: createRequestMinimal.imageUrlSmall,
+                        mediumIconUrl: createRequestMinimal.imageUrlMedium,
+                        image: createRequestMinimal.imageUrlMedium,
+                        width: createRequestMinimal.width,
+                        height: createRequestMinimal.height,
+                        x: 0,
+                        y: 0,
+                        minimized: false,
+                        maximized: false,
+                        widgetVersion: null,
+                        totalUsers: 0,
+                        totalGroups: 0,
+                        singleton: createRequestMinimal.singleton,
+                        visible: createRequestMinimal.visible,
+                        background: createRequestMinimal.background,
+                        mobileReady: createRequestMinimal.mobileReady,
+                        descriptorUrl: null,
+                        definitionVisible: true,
+                        directRequired: [],
+                        allRequired: [],
+                        intents: {
+                            send: [],
+                            receive: []
+                        },
+                        widgetTypes: [
+                            {
+                                id: createRequestMinimal.widgetTypes[0].id,
+                                name: createRequestMinimal.widgetTypes[0].name,
+                                displayName: createRequestMinimal.widgetTypes[0].name
+                            }
+                        ]
+                    }
+                }
+            ]
+        });
+
+        createResponse = response.data;
+    });
+
+>>>>>>> 60dcf95... Add assigned-user pane to widget-view, before rebase
     test("getWidgets - GET /widget/ - additional result after created", async () => {
         const response = await widgetApi.getWidgets();
         logResponse(response);
@@ -244,9 +330,9 @@ describe("Widget API", () => {
         userWidgets = response.data.length;
     });
 
-    test("addWidgetUsers - PUT /widget/:guid/", async () => {
+    test.skip("addWidgetUsers - PUT /widget/:guid/", async () => {
         const widget = createResponse.data[0];
-        const response = await widgetApi.addWidgetUsers(widget.id, testAdmin1.id);
+        const response = await widgetApi.addWidgetUsers(widget.id, [testAdmin1.id]);
         logResponse(response);
 
         expect(response.status).toEqual(200);
