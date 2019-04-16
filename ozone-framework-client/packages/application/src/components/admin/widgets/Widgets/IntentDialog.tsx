@@ -7,6 +7,8 @@ import { Dialog } from "@blueprintjs/core";
 import { Intent } from "../../../../models/compat";
 
 import { IntentForm } from "./IntentForm";
+import { mainStore } from "../../../../stores/MainStore";
+import { classNames } from "../../../../utility";
 
 export interface IntentDialogProps {
     isOpen: boolean;
@@ -20,7 +22,7 @@ export class IntentDialog extends React.Component<IntentDialogProps, {}> {
         return (
             <Dialog
                 title={this.getTitle()}
-                className={styles.loginScreen}
+                className={classNames(styles.createIntent,mainStore.getTheme())}
                 isOpen={this.props.isOpen}
                 onClose={this.props.onClose}
             >
