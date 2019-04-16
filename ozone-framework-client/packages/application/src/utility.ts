@@ -125,3 +125,7 @@ export function optional<T extends any>(value: any): T | undefined {
 export function isFunction(f: any) {
     return f !== null && f !== undefined && typeof f === "function";
 }
+
+export async function wait(ms: number) {
+    return new Promise((res) => setTimeout(res, 500));
+}
