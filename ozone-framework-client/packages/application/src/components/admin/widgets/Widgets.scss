@@ -1,3 +1,5 @@
+@import "../../../common";
+
 :local .formBody {
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.5);
@@ -26,3 +28,12 @@
 :local .inline_form_label > div {
   width: calc(100% - 170px);
 }
+
+ .bp3-dark > .pagination-bottom > .-pagination > .-previous > button,
+ .bp3-dark > .pagination-bottom > .-pagination > .-center > span > .-pageJump > input,
+ .bp3-dark > .pagination-bottom > .-pagination > .-next > button,
+ .bp3-dark > .pagination-bottom > .-pagination > .-center > span > select
+        {
+          color:$text-color_dark;
+          background-color: $background-color_dark;
+        }
