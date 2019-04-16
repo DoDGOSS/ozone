@@ -28,7 +28,7 @@ describe("Widget Definition API", () => {
         expect(response.status).toEqual(200);
         expect(response.data).toMatchObject({
             success: true,
-            results: 21
+            results: 11
         });
     });
 
