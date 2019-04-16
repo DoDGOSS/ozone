@@ -8,6 +8,8 @@ import ReactTable from "react-table";
 import { Intent } from "../../../../models/compat";
 
 import { IntentDialog } from "./IntentDialog";
+import { mainStore } from "../../../../stores/MainStore";
+import { classNames } from "../../../../utility";
 
 interface IntentsGroupedByPermission {
     send: CompressedIntentGroup[];
@@ -93,7 +95,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
                 onExpandedChange={(newExpanded, index, event) => this.handleRowExpanded(newExpanded, index, event)}
                 expanded={this.state.expandedRows}
                 getTheadThProps={this.removeHideableHeaders}
-                className="-striped -highlight"
+                className={classNames("-striped -highlight",mainStore.getTheme())}
             />
         );
     }
