@@ -1,14 +1,18 @@
+import "./matchers";
+
 import { UserWidgetAPI } from "../../src/api/clients/UserWidgetAPI";
 import { WidgetAPI } from "../../src/api/clients/WidgetAPI";
 
 import { AuthUserDTO } from "../../src/api/models/AuthUserDTO";
-import { WidgetCreateRequest, WidgetCreateResponse, WidgetUpdateRequest } from "../../src/api/models/WidgetDTO";
+import {
+    WidgetCreateRequest,
+    WidgetCreateResponse,
+    WidgetDTO,
+    WidgetUpdateRequest
+} from "../../src/api/models/WidgetDTO";
 
 import { NodeGateway } from "./node-gateway";
 
-import { logResponse } from "./assertions";
-
-import { WIDGETS } from "../unit/data";
 import { logResponse } from "./assertions";
 
 describe("Widget API", () => {
@@ -29,28 +33,31 @@ describe("Widget API", () => {
         expect(gateway.isAuthenticated).toEqual(true);
     });
 
+    let initialWidgets: WidgetDTO[];
+
     test("getWidgets - GET /widget/", async () => {
         const response = await widgetApi.getWidgets();
         logResponse(response);
 
         expect(response.status).toEqual(200);
-        expect(response.data).toMatchObject({
+        expect(response.data).toEqual({
             success: true,
-            results: 21
+            results: 11,
+            data: expect.arrayOfLength(11)
         });
+
+        initialWidgets = response.data.data;
     });
 
     test("getWidgetById - GET /widget/:id/", async () => {
-        const widget = WIDGETS[0];
-
-        const response = await widgetApi.getWidgetById(widget.id);
+        const response = await widgetApi.getWidgetById(initialWidgets[0].id);
         logResponse(response);
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
             success: true,
             results: 1,
-            data: [widget]
+            data: [initialWidgets[0]]
         });
     });
 
@@ -141,97 +148,15 @@ describe("Widget API", () => {
         createResponse = response.data;
     });
 
-    test("createWidget - POST /widget/ - minimal", async () => {
-        createRequest = {
-            displayName: "My Test Widget",
-            widgetVersion: "",
-            description: "",
-            widgetUrl: "http://www.ozone.test/widget1/",
-            imageUrlSmall: "http://www.ozone.test/widget1/small_icon.png",
-            imageUrlMedium: "http://www.ozone.test/widget1/large_icon.png",
-            width: 200,
-            height: 200,
-            widgetGuid: "12345678-1234-1234-1234-1234567890a0",
-            universalName: "",
-            visible: true,
-            background: false,
-            singleton: false,
-            mobileReady: false,
-            widgetTypes: [
-                {
-                    id: 1,
-                    name: "standard"
-                }
-            ],
-            intents: {
-                send: [],
-                receive: []
-            }
-        };
-
-        const response = await widgetApi.createWidget(createRequest);
-
-        expect(response.status).toEqual(200);
-        expect(response.data).toEqual({
-            success: true,
-            data: [
-                {
-                    id: createRequest.widgetGuid,
-                    namespace: "widget",
-                    path: createRequest.widgetGuid,
-                    value: {
-                        universalName: null,
-                        namespace: createRequest.displayName,
-                        description: null,
-                        url: createRequest.widgetUrl,
-                        headerIcon: createRequest.imageUrlSmall,
-                        smallIconUrl: createRequest.imageUrlSmall,
-                        mediumIconUrl: createRequest.imageUrlMedium,
-                        image: createRequest.imageUrlMedium,
-                        width: createRequest.width,
-                        height: createRequest.height,
-                        x: 0,
-                        y: 0,
-                        minimized: false,
-                        maximized: false,
-                        widgetVersion: null,
-                        totalUsers: 0,
-                        totalGroups: 0,
-                        singleton: createRequest.singleton,
-                        visible: createRequest.visible,
-                        background: createRequest.background,
-                        mobileReady: createRequest.mobileReady,
-                        descriptorUrl: null,
-                        definitionVisible: true,
-                        directRequired: [],
-                        allRequired: [],
-                        intents: {
-                            send: [],
-                            receive: []
-                        },
-                        widgetTypes: [
-                            {
-                                id: createRequest.widgetTypes[0].id,
-                                name: createRequest.widgetTypes[0].name,
-                                displayName: createRequest.widgetTypes[0].name
-                            }
-                        ]
-                    }
-                }
-            ]
-        });
-
-        createResponse = response.data;
-    });
-
     test("getWidgets - GET /widget/ - additional result after created", async () => {
         const response = await widgetApi.getWidgets();
         logResponse(response);
 
         expect(response.status).toEqual(200);
-        expect(response.data).toMatchObject({
+        expect(response.data).toEqual({
             success: true,
-            results: 22
+            results: initialWidgets.length + 1,
+            data: expect.arrayOfLength(initialWidgets.length + 1)
         });
     });
 
@@ -402,9 +327,10 @@ describe("Widget API", () => {
         logResponse(response2);
 
         expect(response2.status).toEqual(200);
-        expect(response2.data).toMatchObject({
+        expect(response2.data).toEqual({
             success: true,
-            results: 21
+            results: 11,
+            data: expect.arrayOfLength(11)
         });
     });
 });
