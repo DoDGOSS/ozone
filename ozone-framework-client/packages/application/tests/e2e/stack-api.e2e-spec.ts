@@ -2,7 +2,6 @@ import { StackAPI } from "../../src/api/clients/StackAPI";
 import { StackCreateRequest, StackDTO, StackUpdateRequest } from "../../src/api/models/StackDTO";
 
 import { NodeGateway } from "./node-gateway";
-import { STACKS } from "../unit/data";
 import { logResponse } from "./assertions";
 
 describe(StackAPI.name, () => {
@@ -22,9 +21,8 @@ describe(StackAPI.name, () => {
         logResponse(response);
 
         expect(response.status).toEqual(200);
-        expect(response.data).toEqual({
-            results: 3,
-            data: STACKS
+        expect(response.data).toMatchObject({
+            results: 2
         });
     });
 
@@ -33,9 +31,8 @@ describe(StackAPI.name, () => {
         logResponse(response);
 
         expect(response.status).toEqual(200);
-        expect(response.data).toEqual({
-            results: 1,
-            data: [STACKS[0]]
+        expect(response.data).toMatchObject({
+            results: 1
         });
     });
 
