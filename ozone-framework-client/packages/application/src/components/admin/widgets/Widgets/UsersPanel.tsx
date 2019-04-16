@@ -111,7 +111,7 @@ export class UsersPanel extends React.Component<Props, State> {
                 getColumns={() => [
                     { Header: "Full Name", id: "username", accessor: (user: User) => user.username },
                     { Header: "Last Sign In", id: "lastLogin", accessor: (user: User) => user.lastLogin },
-                    { Header: "Actions", Cell: this.rowActionButtons }
+                    { Header: "Remove", Cell: this.rowActionButtons }
                 ]}
             />
         );
