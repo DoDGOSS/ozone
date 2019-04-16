@@ -1,8 +1,11 @@
+import "./matchers";
+
 import { GroupAPI } from "../../src/api/clients/GroupAPI";
 import { GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../src/api/models/GroupDTO";
 
 import { NodeGateway } from "./node-gateway";
-import { GROUPS } from "../unit/data";
+
+import { optional } from "../../src/utility";
 
 describe("Group API", () => {
     let gateway: NodeGateway;
@@ -16,23 +19,27 @@ describe("Group API", () => {
         expect(gateway.isAuthenticated).toEqual(true);
     });
 
+    let initialGroups: GroupDTO[];
+
     test("getGroups - GET /group/", async () => {
         const response = await groupApi.getGroups();
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
             results: 2,
-            data: GROUPS
+            data: expect.arrayOfLength(2)
         });
+
+        initialGroups = response.data.data;
     });
 
     test("getGroupById - GET /group/:id/", async () => {
-        const response = await groupApi.getGroupById(1);
+        const response = await groupApi.getGroupById(initialGroups[0].id);
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
             results: 1,
-            data: [GROUPS[0]]
+            data: [initialGroups[0]]
         });
     });
 
@@ -74,8 +81,8 @@ describe("Group API", () => {
                 id: group.id,
                 name: "Test Group Update",
                 displayName: "Test Group Update Display",
-                description: group.description,
-                email: group.email,
+                description: optional(group.description),
+                email: optional(group.email),
                 automatic: group.automatic,
                 status: group.status,
                 active: group.status === "active"
@@ -92,8 +99,8 @@ describe("Group API", () => {
                         name: request.name,
                         displayName: request.displayName,
                         automatic: request.automatic,
-                        description: request.description,
-                        email: request.email,
+                        description: group.description,
+                        email: group.email,
                         status: request.status,
                         stackDefault: false,
                         totalStacks: 0,
