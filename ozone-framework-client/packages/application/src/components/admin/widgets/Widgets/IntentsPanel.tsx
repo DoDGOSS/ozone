@@ -262,8 +262,9 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
                     });
                 },
                 style: {
-                    background: rowInfo.original === this.state.selectedIntent ? "#00afec" : "white",
-                    color: rowInfo.original === this.state.selectedIntent ? "white" : "black"
+                    // background: rowInfo.original === this.state.selectedIntent ? "#00afec" : "white",
+                    // color: rowInfo.original === this.state.selectedIntent ? "white" : "black"
+                    border: rowInfo.original === this.state.selectedIntent ? "2px solid #48aff0":"none"
                 }
             };
         } else {
