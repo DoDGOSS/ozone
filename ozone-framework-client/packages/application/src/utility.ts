@@ -121,3 +121,7 @@ export function omitIndex<T>(array: T[], index: number): T[] {
 export function optional<T extends any>(value: any): T | undefined {
     return value === null ? undefined : value;
 }
+
+export function isFunction(f: any) {
+    return f !== null && f !== undefined && typeof f === "function";
+}

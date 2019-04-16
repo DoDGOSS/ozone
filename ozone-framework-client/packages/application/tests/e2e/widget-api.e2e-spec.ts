@@ -22,6 +22,8 @@ describe("Widget API", () => {
 
     let testAdmin1: AuthUserDTO;
 
+    let numWidgets: number = 0;
+
     beforeAll(async () => {
         gateway = new NodeGateway();
         widgetApi = new WidgetAPI(gateway);
@@ -148,10 +150,10 @@ describe("Widget API", () => {
         createResponse = response.data;
     });
 
-<<<<<<< HEAD
 =======
+    let createRequestMinimal: WidgetCreateRequest;
     test("createWidget - POST /widget/ - minimal", async () => {
-        let createRequestMinimal = {
+        createRequestMinimal = {
             displayName: "My Test Widget",
             widgetVersion: "",
             description: "",
@@ -160,7 +162,7 @@ describe("Widget API", () => {
             imageUrlMedium: "http://www.ozone.test/widget1/large_icon.png",
             width: 200,
             height: 200,
-            widgetGuid: "12345678-1234-1234-1234-1234567890a0",
+            widgetGuid: "12345678-1234-1234-1234-1234567890ab",
             universalName: "",
             visible: true,
             background: false,
@@ -229,11 +231,8 @@ describe("Widget API", () => {
                 }
             ]
         });
-
-        createResponse = response.data;
     });
 
->>>>>>> 60dcf95... Add assigned-user pane to widget-view, before rebase
     test("getWidgets - GET /widget/ - additional result after created", async () => {
         const response = await widgetApi.getWidgets();
         logResponse(response);
@@ -330,7 +329,7 @@ describe("Widget API", () => {
         userWidgets = response.data.length;
     });
 
-    test.skip("addWidgetUsers - PUT /widget/:guid/", async () => {
+    test("addWidgetUsers - PUT /widget/:guid/", async () => {
         const widget = createResponse.data[0];
         const response = await widgetApi.addWidgetUsers(widget.id, [testAdmin1.id]);
         logResponse(response);
@@ -395,11 +394,19 @@ describe("Widget API", () => {
     });
 
     test("deleteWidget - DELETE /widget/", async () => {
-        const response = await widgetApi.deleteWidget(createRequest.widgetGuid);
-        logResponse(response);
+        const getResponse = await widgetApi.getWidgets();
+        logResponse(getResponse);
+        expect(getResponse.status).toEqual(200);
+        expect(getResponse.data).toMatchObject({
+            success: true,
+            results: numWidgets + 2
+        });
 
-        expect(response.status).toEqual(200);
-        expect(response.data).toEqual({
+        const deleteResponse = await widgetApi.deleteWidget(createRequest.widgetGuid);
+        logResponse(deleteResponse);
+
+        expect(deleteResponse.status).toEqual(200);
+        expect(deleteResponse.data).toEqual({
             success: true,
             data: [
                 {
@@ -409,8 +416,18 @@ describe("Widget API", () => {
             ]
         });
 
-        const response2 = await widgetApi.getWidgets();
-        logResponse(response2);
+        const deleteResponse2 = await widgetApi.deleteWidget(createRequestMinimal.widgetGuid);
+        logResponse(deleteResponse2);
+        expect(deleteResponse2.status).toEqual(200);
+        expect(deleteResponse2.data).toEqual({
+            success: true,
+            data: [
+                {
+                    id: createRequestMinimal.widgetGuid,
+                    value: {}
+                }
+            ]
+        });
 
         expect(response2.status).toEqual(200);
         expect(response2.data).toEqual({
