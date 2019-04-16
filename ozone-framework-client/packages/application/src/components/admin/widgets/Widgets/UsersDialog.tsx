@@ -1,6 +1,6 @@
 import * as React from "react";
 import ReactTable, { Column } from "react-table";
-import { MenuItem, Tab, Tabs, Button, Classes, Dialog } from "@blueprintjs/core";
+import { Button, Classes, Dialog, MenuItem, Tab, Tabs } from "@blueprintjs/core";
 import { ItemRenderer } from "@blueprintjs/select";
 import * as uuidv4 from "uuid/v4";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
@@ -9,9 +9,9 @@ import { array, boolean, number, object, string } from "yup";
 import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../form";
 import { classNames } from "../../../../utility";
 
-import { User } from '../../../../models/User';
-import { mainStore } from '../../../../stores/MainStore';
-import { GenericTable } from '../../table/GenericTable';
+import { User } from "../../../../models/User";
+import { mainStore } from "../../../../stores/MainStore";
+import { GenericTable } from "../../table/GenericTable";
 import * as styles from "./UsersDialog.scss";
 
 interface State {
@@ -28,7 +28,6 @@ interface Props {
 }
 
 export class UsersDialog extends React.Component<Props, State> {
-
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -41,39 +40,46 @@ export class UsersDialog extends React.Component<Props, State> {
     render() {
         return (
             <Dialog
-                title={'Add User'}
+                title={"Add User"}
                 className={classNames(styles.dialog, mainStore.getTheme())}
                 isOpen={this.props.isOpen}
                 onClose={this.props.onClose}
             >
                 <div className={classNames(Classes.DIALOG_BODY, styles.dialogBody)}>
-                    <div style={{flex: 1, flexDirection: 'column'}}>
+                    <div style={{ flex: 1, flexDirection: "column" }}>
                         <GenericTable
-                            title='Users'
+                            title="Users"
                             items={this.props.allUsers}
                             getColumns={() => [
-                                { Header: "Full Name", id: 'userRealName', accessor: (user) => user.userRealName },
-                                { Header: "Last Sign In", id: 'lastLogin', accessor: (user) => user.lastLogin }
+                                {
+                                    Header: "Full Name",
+                                    id: "username",
+                                    accessor: (user: User) => user.username
+                                },
+                                { Header: "Last Sign In", id: "lastLogin", accessor: (user: User) => user.lastLogin }
                             ]}
                             onSelect={(selected: User) => {
                                 this.setState({
-                                  selectedUser: selected
-                                })
+                                    selectedUser: selected
+                                });
                             }}
                             {...this.props}
                         />
-                        <br/>
+                        <br />
                         <div>
                             <Button text="Add" disabled={this.state.selectedUser === undefined} onClick={this.submit} />
                             <Button text="Cancel" onClick={this.props.onClose} />
                         </div>
                     </div>
                 </div>
-            </Dialog>);
+            </Dialog>
+        );
     }
 
     submit = () => {
-        this.props.onSubmit(this.state.selectedUser)
-        this.props.onClose()
-    }
+        if (this.state.selectedUser) {
+            this.props.onSubmit(this.state.selectedUser);
+            this.props.onClose();
+        }
+    };
 }

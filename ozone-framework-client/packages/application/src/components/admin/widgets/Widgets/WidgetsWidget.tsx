@@ -74,34 +74,31 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
         const showTable = this.state.showTable;
         const showWidgetSetup = this.state.showWidgetSetup;
 
-        let widgets = this.state.widgets;
-
         return (
             <div data-element-id="widget-admin-widget-dialog">
                 {showTable && (
-                    <GenericTable
-                        items={widgets}
-                        getColumns={this.columns}
-                        loading={this.state.loading}
-                        pageSize={this.state.pageSize}
-                    />
-                )}
-
-                {showTable && (
-                    <div className={styles.buttonBar}>
-                        <Button
-                            text="Create"
-                            onClick={() => {
-                                this.setState({ updatingWidget: undefined });
-                                this.showSubSection(WidgetWidgetSubSection.SETUP);
-                            }}
-                            data-element-id="widget-admin-widget-create-button"
+                    <div>
+                        <GenericTable
+                            title={""}
+                            items={this.state.widgets}
+                            getColumns={this.columns}
+                            pageSize={this.state.pageSize}
                         />
+                        <div className={styles.buttonBar}>
+                            <Button
+                                text="Create"
+                                onClick={() => {
+                                    this.setState({ updatingWidget: undefined });
+                                    this.showSubSection(WidgetWidgetSubSection.SETUP);
+                                }}
+                                data-element-id="widget-admin-widget-create-button"
+                            />
+                        </div>
                     </div>
                 )}
 
-                <div className={styles.widget_body}>
-                    {showWidgetSetup && (
+                {showWidgetSetup && (
+                    <div className={styles.widget_body}>
                         <WidgetSetup
                             widget={this.state.updatingWidget}
                             widgetTypes={this.state.widgetTypes}
@@ -110,8 +107,8 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                                 this.showSubSection(WidgetWidgetSubSection.TABLE);
                             }}
                         />
-                    )}
-                </div>
+                    </div>
+                )}
 
                 <ConfirmationDialog
                     show={this.state.showDelete}
@@ -127,12 +124,14 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
 
     private columns = () => {
         return [
-                { Header: "Title", id: "title", accessor: (widget) => widget.value.namespace },
-                { Header: "URL", id: "url", accessor: (widget) => widget.value.url },
-                { Header: "Users", id: "users", accessor: (widget) => widget.value.totalUsers },
-                { Header: "Groups", id: "groups", accessor: (widget) => widget.value.totalGroups },
-                // TODO - Abstract this to only have to provide onclick function name with styled buttons
-                { Header: "Actions", Cell: (row: { original: WidgetDTO }) => (
+            { Header: "Title", id: "title", accessor: (widget: WidgetDTO) => widget.value.namespace },
+            { Header: "URL", id: "url", accessor: (widget: WidgetDTO) => widget.value.url },
+            { Header: "Users", id: "users", accessor: (widget: WidgetDTO) => widget.value.totalUsers },
+            { Header: "Groups", id: "groups", accessor: (widget: WidgetDTO) => widget.value.totalGroups },
+            // TODO - Abstract this to only have to provide onclick function name with styled buttons
+            {
+                Header: "Actions",
+                Cell: (row: { original: WidgetDTO }) => (
                     <div>
                         <ButtonGroup>
                             <Button
@@ -149,27 +148,31 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                             />
                             <Divider />
                             <Tooltip
-                                content={this.widgetPotentiallyInUse(row.original) ?
-                                        "Can't delete widget with assigned users or groups" : ""}>
-                                    <Button
-                                        data-element-id="widget-admin-widget-delete-button"
-                                        data-widget-title={row.original.value.namespace}
-                                        text={"Delete"}
-                                        intent={Intent.DANGER}
-                                        icon="trash"
-                                        small={true}
-                                        disabled={this.widgetPotentiallyInUse(row.original)}
-                                        onClick={() => this.deleteWidget(row.original)}
-                                    />
-                                </Tooltip>
-                            </ButtonGroup>
-                        </div>
-                    )
+                                content={
+                                    this.widgetPotentiallyInUse(row.original)
+                                        ? "Can't delete widget with assigned users or groups"
+                                        : ""
+                                }
+                            >
+                                <Button
+                                    data-element-id="widget-admin-widget-delete-button"
+                                    data-widget-title={row.original.value.namespace}
+                                    text={"Delete"}
+                                    intent={Intent.DANGER}
+                                    icon="trash"
+                                    small={true}
+                                    disabled={this.widgetPotentiallyInUse(row.original)}
+                                    onClick={() => this.deleteWidget(row.original)}
+                                />
+                            </Tooltip>
+                        </ButtonGroup>
+                    </div>
+                )
             }
         ];
-    }
+    };
 
-    widgetPotentiallyInUse(widget: WidgetDTO): boolean {
+    private widgetPotentiallyInUse(widget: WidgetDTO): boolean {
         return widget.value.totalUsers > 0 || widget.value.totalGroups > 0;
     }
 

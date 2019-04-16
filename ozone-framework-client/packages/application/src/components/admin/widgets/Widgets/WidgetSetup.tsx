@@ -4,11 +4,13 @@ import * as React from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
 
+import { CancelButton } from "../../../form";
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { WidgetCreateRequest, WidgetDTO, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
+import { IntentDTO, IntentsDTO } from "../../../../api/models/IntentDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+import { User } from "../../../../models/User";
 
-import { CancelButton } from "../../../form";
 import { WidgetPropertiesPanel } from "./WidgetPropertiesPanel";
 import { IntentsPanel } from "./IntentsPanel";
 import { UsersPanel } from "./UsersPanel";
@@ -38,9 +40,14 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
             <div>
                 <Tabs id="Tabs">
                     <Tab id="properties" title="Properties" panel={this.getPropertiesPanel()} />
-                    <Tab id="intents" disabled={!this.state.widgetExists}   title="Intents" panel={this.getIntentsPanel()}/>
-                    <Tab id="users" disabled={!this.state.widgetExists}     title="Users"   panel={this.getUsersPanel()} />
-                    <Tab id="groups" disabled={!this.state.widgetExists}    title="Groups"  panel={<div />} />
+                    <Tab
+                        id="intents"
+                        disabled={!this.state.widgetExists}
+                        title="Intents"
+                        panel={this.getIntentsPanel()}
+                    />
+                    <Tab id="users" disabled={!this.state.widgetExists} title="Users" panel={this.getUsersPanel()} />
+                    <Tab id="groups" disabled={!this.state.widgetExists} title="Groups" panel={<div />} />
                     <Tabs.Expander />
                 </Tabs>
                 <div data-element-id="widget-admin-widget-setup-return-button" className={styles.buttonBar}>
@@ -76,30 +83,29 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
         return true;
     };
 
-    addUsers = async (users: User[]): boolean => {
+    addUsers = async (users: User[]) => {
         if (this.state.widget === undefined) {
-            return;
+            return false;
         }
-        let userIds: number[] = [];
-        for (let u of users) {
+        const userIds: number[] = [];
+        for (const u of users) {
             userIds.push(u.id);
         }
         const response = await widgetApi.addWidgetUsers(this.state.widget.id, userIds);
         // TODO: Handle failed request
         if (response.status !== 200) return false;
         return true;
-    }
+    };
 
-    removeUser = async (user: User): boolean => {
+    removeUser = async (user: User) => {
         if (this.state.widget === undefined) {
-            return;
+            return false;
         }
         const response = await widgetApi.removeWidgetUsers(this.state.widget.id, user.id);
         // TODO: Handle failed request
         if (response.status !== 200) return false;
         return true;
-    }
-
+    };
 
     getPropertiesPanel() {
         return (
@@ -127,20 +133,12 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
         }
     }
 
-    onIntentsChange = (intentGroups: any[]) => {
+    onIntentsChange = (intentGroups: IntentsDTO) => {
         if (this.state.widget) {
             this.state.widget.intents = intentGroups;
             this.saveWidget(this.state.widget);
         }
     };
-
-    onUsersChange = (users: any[]) => {
-        if (this.state.widget) {
-            this.state.widget.users = users;
-            this.saveWidget(this.state.widget);
-        }
-    };
-
 
     convertDTOtoUpdateRequest(dto: WidgetDTO): WidgetUpdateRequest {
         return {

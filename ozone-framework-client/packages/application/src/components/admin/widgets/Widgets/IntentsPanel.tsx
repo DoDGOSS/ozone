@@ -6,18 +6,9 @@ import { Button } from "@blueprintjs/core";
 import ReactTable from "react-table";
 
 import { Intent } from "../../../../models/compat";
+import { IntentDTO, IntentsDTO } from "../../../../api/models/IntentDTO";
 
 import { IntentDialog } from "./IntentDialog";
-
-interface IntentsGroupedByPermission {
-    send: CompressedIntentGroup[];
-    receive: CompressedIntentGroup[];
-}
-
-interface CompressedIntentGroup {
-    action: string;
-    dataTypes: string[];
-}
 
 interface IntentGroup {
     action: string;
@@ -26,7 +17,7 @@ interface IntentGroup {
 
 export interface IntentsPanelProps {
     updatingWidget: any;
-    onChange: (intentGroups: IntentsGroupedByPermission) => any;
+    onChange: (intentGroups: IntentsDTO) => any;
 }
 
 interface IntentsPanelState {
@@ -228,19 +219,19 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
         this.props.onChange(formattedIntents);
     }
 
-    getIntentsInPartitionedFormat(): IntentsGroupedByPermission {
+    getIntentsInPartitionedFormat(): IntentsDTO {
         return {
             send: this.getIntentsWithPermission(this.state.allIntentGroups, "send"),
             receive: this.getIntentsWithPermission(this.state.allIntentGroups, "receive")
         };
     }
 
-    getIntentsWithPermission(allIntentGroups: IntentGroup[], permission: "send" | "receive"): CompressedIntentGroup[] {
-        const permitted: CompressedIntentGroup[] = [];
+    getIntentsWithPermission(allIntentGroups: IntentGroup[], permission: "send" | "receive"): IntentDTO[] {
+        const permitted: IntentDTO[] = [];
         for (const intentGroup of allIntentGroups) {
             const permittedIntents: Intent[] = intentGroup.intents.filter((intent) => intent[permission]);
             if (permittedIntents.length > 0) {
-                const newAction: CompressedIntentGroup = { action: intentGroup.action, dataTypes: [] };
+                const newAction: IntentDTO = { action: intentGroup.action, dataTypes: [] };
                 for (const pIntent of permittedIntents) {
                     newAction.dataTypes.push(pIntent.dataType);
                 }
@@ -350,7 +341,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
     }
 
     getIntentGroupsFromWidget(widget: any): IntentGroup[] {
-        const widgetIntents: IntentsGroupedByPermission = widget.intents;
+        const widgetIntents: IntentsDTO = widget.intents;
 
         const permittedSendingGroups = this.getGroupsFromFormattedIntents(widgetIntents.send, "send");
         const allIntentGroups = this.getGroupsFromFormattedIntents(
@@ -363,7 +354,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
     }
 
     getGroupsFromFormattedIntents(
-        actionGroups: CompressedIntentGroup[],
+        actionGroups: IntentDTO[],
         direction: "send" | "receive",
         existingGroups?: IntentGroup[]
     ): IntentGroup[] {
