@@ -1,8 +1,8 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
+
+import * as styles from "../Widgets.scss";
 
 import { CancelButton } from "../../../form";
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
@@ -10,6 +10,7 @@ import { WidgetCreateRequest, WidgetDTO, WidgetUpdateRequest } from "../../../..
 import { IntentDTO, IntentsDTO } from "../../../../api/models/IntentDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 import { User } from "../../../../models/User";
+import { wait } from "../../../../utility";
 
 import { WidgetPropertiesPanel } from "./WidgetPropertiesPanel";
 import { IntentsPanel } from "./IntentsPanel";

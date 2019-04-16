@@ -25,7 +25,7 @@ interface WidgetsWidgetState {
     showWidgetSetup: boolean;
     showDelete: boolean;
     confirmationMessage: string;
-    manageWidget: WidgetDTO | undefined;
+    widgetToDelete: WidgetDTO | undefined;
     updatingWidget: any | undefined;
     widgetTypes: WidgetTypeReference[];
 }
@@ -57,7 +57,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
             showWidgetSetup: false,
             showDelete: false,
             confirmationMessage: "",
-            manageWidget: undefined,
+            widgetToDelete: undefined,
             updatingWidget: undefined
         };
 
@@ -79,7 +79,6 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                 {showTable && (
                     <div>
                         <GenericTable
-                            title={""}
                             items={this.state.widgets}
                             getColumns={this.columns}
                             pageSize={this.state.pageSize}
@@ -116,7 +115,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                     content={this.state.confirmationMessage}
                     confirmHandler={this.handleConfirmationConfirmDelete}
                     cancelHandler={this.handleConfirmationCancel}
-                    payload={this.state.manageWidget}
+                    payload={this.state.widgetToDelete}
                 />
             </div>
         );
@@ -213,7 +212,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
         this.setState({
             showDelete: true,
             confirmationMessage: `This action will permanently delete <strong>${widget.value.namespace}</strong>`,
-            manageWidget: widget
+            widgetToDelete: widget
         });
 
         this.getWidgets();
@@ -224,7 +223,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
     private handleConfirmationConfirmDelete = async (payload: any) => {
         this.setState({
             showDelete: false,
-            manageWidget: undefined
+            widgetToDelete: undefined
         });
 
         const widget: WidgetDTO = payload;
@@ -242,7 +241,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
     private handleConfirmationCancel = (payload: any) => {
         this.setState({
             showDelete: false,
-            manageWidget: undefined
+            widgetToDelete: undefined
         });
     };
 }

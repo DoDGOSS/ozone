@@ -1,20 +1,20 @@
 import * as React from "react";
 import ReactTable, { Column } from "react-table";
-import { Button, MenuItem, Tab, Tabs } from "@blueprintjs/core";
+import { Button, ButtonGroup, Intent, MenuItem, Tab, Tabs } from "@blueprintjs/core";
 import { ItemRenderer } from "@blueprintjs/select";
 import * as uuidv4 from "uuid/v4";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { array, boolean, number, object, string } from "yup";
 
+import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../form";
+import { inPlaceConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import * as styles from "../Widgets.scss";
 
 import { userApi } from "../../../../api/clients/UserAPI";
-import { widgetApi } from "../../../../api/clients/WidgetAPI";
-import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
-import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../form";
 
 import { User } from "../../../../models/User";
 import { UserDTO } from "../../../../api/models/UserDTO";
+import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { userFromJson } from "../../../../codecs/User.codec";
 import { GenericTable } from "../../table/GenericTable";
 import { UsersDialog } from "./UsersDialog";
@@ -23,7 +23,6 @@ interface State {
     loading: boolean;
     widgetUsers: User[];
     allUsers: User[];
-    selectedUser: User | undefined;
     dialogOpen: boolean;
 }
 
@@ -40,8 +39,7 @@ export class UsersPanel extends React.Component<Props, State> {
             loading: true,
             widgetUsers: [],
             allUsers: [],
-            dialogOpen: false,
-            selectedUser: undefined
+            dialogOpen: false
         };
     }
 
@@ -90,7 +88,7 @@ export class UsersPanel extends React.Component<Props, State> {
             <div>
                 {dialog}
                 {this.getUserTable()}
-                {this.actionButtons()}
+                <Button text="Add" onClick={this.openDialog} />
             </div>
         );
     }
@@ -100,7 +98,7 @@ export class UsersPanel extends React.Component<Props, State> {
             <UsersDialog
                 isOpen={this.state.dialogOpen}
                 onClose={this.closeDialog}
-                onSubmit={this.onFormSubmit}
+                onSubmit={this.addSelectedUsers}
                 allUsers={this.state.allUsers}
             />
         );
@@ -109,40 +107,49 @@ export class UsersPanel extends React.Component<Props, State> {
     getUserTable() {
         return (
             <GenericTable
-                title={this.props.widget ? this.props.widget.displayName : "Users"}
                 items={this.state.widgetUsers}
                 getColumns={() => [
-                    { Header: "Full Name", id: "userRealName", accessor: (user: User) => user.username },
-                    { Header: "Last Sign In", id: "lastLogin", accessor: (user: User) => user.lastLogin }
+                    { Header: "Full Name", id: "username", accessor: (user: User) => user.username },
+                    { Header: "Last Sign In", id: "lastLogin", accessor: (user: User) => user.lastLogin },
+                    { Header: "Actions", Cell: this.rowActionButtons }
                 ]}
-                onSelect={(selected: User) => {
-                    this.setState({
-                        selectedUser: selected
-                    });
-                }}
             />
         );
     }
 
-    actionButtons(): any {
+    rowActionButtons = (row: { original: User }) => {
         return (
             <div>
-                <Button text="Add" onClick={this.openDialog} />
-                <Button
-                    text="Remove"
-                    disabled={this.state.selectedUser === undefined}
-                    onClick={this.removeUserAndSave}
-                />
+                <ButtonGroup>
+                    <Button
+                        data-element-id="widget-admin-user-remove-button"
+                        data-widget-title={row.original.username}
+                        text={"Remove"}
+                        intent={Intent.DANGER}
+                        icon="trash"
+                        small={true}
+                        onClick={() => this.confirmAndDeleteUser(row.original)}
+                    />
+                </ButtonGroup>
             </div>
         );
-    }
+    };
 
-    removeUserAndSave = (): void => {
-        if (this.state.selectedUser) {
-            this.removeUser(this.state.selectedUser);
-            this.props.removeUser(this.state.selectedUser);
-            this.deselectUser();
-        }
+    confirmAndDeleteUser = (userToRemove: User): void => {
+        inPlaceConfirmationDialog({
+            title: "Warning",
+            message:
+                "This action will permenantly delete " +
+                userToRemove.displayName +
+                " from the widget " +
+                this.props.widget.displayName,
+            onConfirm: () => this.removeUserAndSave(userToRemove)
+        });
+    };
+
+    removeUserAndSave = (userToRemove: User): void => {
+        this.removeUser(userToRemove);
+        this.props.removeUser(userToRemove);
     };
 
     openDialog = (): void => {
@@ -156,35 +163,22 @@ export class UsersPanel extends React.Component<Props, State> {
         });
     };
 
-    onFormSubmit = (newUser: any): void => {
-        if (this.state.widgetUsers.findIndex((u) => newUser.id === u.id) !== -1) {
-            return;
-        }
-
-        this.addUser(newUser);
-        // allow for potential multiple selection later
-        this.props.addUsers([newUser]);
-        // this.getWidgetUsers();
-    };
-
-    deselectUser(): void {
-        this.setState({
-            selectedUser: undefined
-        });
-    }
-
-    addUser(newUser: User): void {
-        const userList = [];
-        for (const u of this.state.widgetUsers) {
-            userList.push(u);
-        }
-        if (this.state.widgetUsers.findIndex((u) => newUser.id === u.id) < 0) {
+    addSelectedUsers = (newSelections: User[]): void => {
+        const userList: User[] = [];
+        for (const newUser of newSelections) {
+            if (this.state.widgetUsers.findIndex((u) => newUser.id === u.id) !== -1) {
+                continue;
+            }
             userList.push(newUser);
         }
-        this.setState({
-            widgetUsers: userList
-        });
-    }
+
+        if (userList.length > 0) {
+            this.setState({
+                widgetUsers: [...this.state.widgetUsers, ...userList]
+            });
+            this.props.addUsers(userList);
+        }
+    };
 
     removeUser(user: User): void {
         const userIndex = this.state.widgetUsers.findIndex((u) => user.id === u.id);

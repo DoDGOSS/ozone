@@ -16,14 +16,14 @@ import * as styles from "./UsersDialog.scss";
 
 interface State {
     loading: boolean;
-    selectedUser: User | undefined;
+    selectedUsers: User[];
     dialogOpen: boolean;
 }
 
 interface Props {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (newUser: User) => void;
+    onSubmit: (userSelections: User[]) => void;
     allUsers: User[];
 }
 
@@ -32,7 +32,7 @@ export class UsersDialog extends React.Component<Props, State> {
         super(props);
         this.state = {
             loading: false,
-            selectedUser: undefined,
+            selectedUsers: [],
             dialogOpen: false
         };
     }
@@ -58,16 +58,17 @@ export class UsersDialog extends React.Component<Props, State> {
                                 },
                                 { Header: "Last Sign In", id: "lastLogin", accessor: (user: User) => user.lastLogin }
                             ]}
-                            onSelect={(selected: User) => {
+                            multiSelection={true}
+                            onSelectionChange={(selections: User[]) => {
                                 this.setState({
-                                    selectedUser: selected
+                                    selectedUsers: selections
                                 });
                             }}
                             {...this.props}
                         />
                         <br />
                         <div>
-                            <Button text="Add" disabled={this.state.selectedUser === undefined} onClick={this.submit} />
+                            <Button text="Add" disabled={this.state.selectedUsers.length === 0} onClick={this.submit} />
                             <Button text="Cancel" onClick={this.props.onClose} />
                         </div>
                     </div>
@@ -77,9 +78,7 @@ export class UsersDialog extends React.Component<Props, State> {
     }
 
     submit = () => {
-        if (this.state.selectedUser) {
-            this.props.onSubmit(this.state.selectedUser);
-            this.props.onClose();
-        }
+        this.props.onSubmit(this.state.selectedUsers);
+        this.props.onClose();
     };
 }
