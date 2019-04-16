@@ -1,3 +1,5 @@
+import * as styles from "./DashboardPanel.scss";
+
 import React, { ReactNode } from "react";
 
 import { isExpandoPanel, isFitPanel, isTabbedPanel, Panel, PanelState } from "../../../models/dashboard/types";
@@ -16,7 +18,7 @@ export interface DashboardPanelProps {
 }
 
 const _DashboardPanel: React.FC<DashboardPanelProps> = ({ panel, path }) => (
-    <DashboardWindow path={path} title={panel.title} toolbarControls={createWidgetToolbar(panel, path)}>
+    <DashboardWindow className={styles.dashboardWindow} path={path} title={panel.title} toolbarControls={createWidgetToolbar(panel, path)}>
         {createPanel(panel)}
     </DashboardWindow>
 );
