@@ -77,6 +77,9 @@ export class WidgetAdmin extends PageObject {
 }
 
 export class CreateForm extends PageObject {
+    static DescriptorInput = `input[data-element-id="widget-admin-widget-descriptor-url-field"]`;
+    static LoadButton = `button[data-element-id="widget-admin-widget-load-descriptor-button"]`;
+    static LoadErrorMessage = `span[data-element-id="widget-admin-widget-descriptor-error-message"]`;
     static CreateWithoutDescriptor = `a[data-element-id="widget-admin-widget-show-properties-form"]`;
 
     constructor(browser: NightwatchAPI) {
@@ -88,10 +91,30 @@ export class CreateForm extends PageObject {
         return this;
     }
 
+    assertLoadButtonIsDisabled(): this {
+        this.browser.getAttribute(CreateForm.LoadButton, "disabled", (result) => {
+            this.browser.assert.equal(result.value, "true", this.msg("Load button is disabled"));
+        });
+        return this;
+    }
+
+    assertLoadButtonIsEnabled(): this {
+        this.browser.getAttribute(CreateForm.LoadButton, "disabled", (result) => {
+            this.browser.assert.equal(result.value, null, this.msg("Load button is enabled"));
+        });
+        return this;
+    }
+
+    clickLoadButton(): this {
+        this.clickWhenVisible(CreateForm.LoadButton, "'Load descriptor'");
+        return this;
+    }
+
     clickCreateWithoutDescriptor(): PropertiesPanel {
         this.clickWhenVisible(CreateForm.CreateWithoutDescriptor, "'Create without descriptor'");
         return new PropertiesPanel(this.browser).waitUntilVisible();
     }
+
 }
 
 export class PropertiesPanel extends PageObject {
