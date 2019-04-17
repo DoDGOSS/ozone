@@ -50,10 +50,10 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
                     <Tab id="users" disabled={!this.state.widgetExists} title="Users" panel={this.getUsersPanel()} />
                     <Tab id="groups" disabled={!this.state.widgetExists} title="Groups" panel={<div />} />
                     <Tabs.Expander />
+                    <div data-element-id="widget-admin-widget-setup-return-button" className={styles.buttonBar}>
+                        <CancelButton className={styles.cancelButton} onClick={this.props.closeSetup} />
+                    </div>
                 </Tabs>
-                <div data-element-id="widget-admin-widget-setup-return-button" className={styles.buttonBar}>
-                    <CancelButton className={styles.cancelButton} onClick={this.props.closeSetup} />
-                </div>
             </div>
         );
     }
