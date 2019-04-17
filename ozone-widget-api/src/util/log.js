@@ -10,9 +10,7 @@ var Ozone = window.Ozone;
 /*
  * The only function that can be called from gadgets is Ozone.log.gadgetLog
  */
-Ozone.log = {
-	
-};
+Ozone.log = {};
 
 Ozone.log.logEnabled = false; 
 
@@ -83,12 +81,12 @@ Ozone.log.launchPopupAppender = function() {
  * @param {Object} message
  */
 Ozone.log.widgetLog = function() { 
-    gadgets.rpc.call('..', 'Ozone.log',null, arguments);
+    Ozone.internal.rpc.send('Ozone.log', null, arguments);
 };
 
 
 Ozone.util.internal.onDocumentReady(function(){
-	gadgets.rpc.register('Ozone.log', function(args){
+	Ozone.internal.rpc.register('Ozone.log', function(args){
 		var logger = Ozone.log.getDefaultLogger();
 		logger.debug.apply(logger, args);
 	});
