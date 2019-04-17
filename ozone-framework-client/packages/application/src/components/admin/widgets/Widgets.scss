@@ -50,3 +50,22 @@
    color:$text-color_dark;
    background-color: $background-color_dark;
  }
+
+//chrome scroll bar fix
+ /* width */
+ ::-webkit-scrollbar {
+   width: 10px;
+ }
+ /* Track */
+ ::-webkit-scrollbar-track {
+   background: $background-color_dark;
+ }
+ /* Handle */
+ ::-webkit-scrollbar-thumb {
+   background: $text-color_dark;
+ }
+
+ /* Handle on hover */
+ ::-webkit-scrollbar-thumb:hover {
+   background: white; 
+ }
