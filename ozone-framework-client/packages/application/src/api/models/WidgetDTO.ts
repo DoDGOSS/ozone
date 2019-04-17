@@ -87,7 +87,7 @@ export interface WidgetCreateResponse {
 export const validateWidgetCreateResponse = createValidator<WidgetCreateResponse>(WIDGET_CREATE_RESPONSE_SCHEMA);
 
 export interface WidgetUpdateRequest extends WidgetCreateRequest {
-    id: string;
+    id: number;
 }
 
 export interface WidgetDeleteIdDTO {

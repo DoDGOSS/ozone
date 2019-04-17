@@ -45,6 +45,11 @@ export class GroupEditTabs extends React.Component<GroupEditTabsProps, GroupEdit
                         title="Users"
                         panel={<GroupUsersPanel onUpdate={this.props.onUpdate} group={this.state.group} />}
                     />
+                    <Tab
+                        id="group_widgets"
+                        title="Widgets"
+                        panel={<GroupUsersPanel onUpdate={this.props.onUpdate} group={this.state.group} />}
+                    />
                     <Tabs.Expander />
                     <span data-element-id="group-admin-widget-edit-back-button">
                         <CancelButton onClick={this.props.onBack} />
