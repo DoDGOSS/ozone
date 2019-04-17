@@ -1,20 +1,22 @@
 import * as React from "react";
-
 import { Tab, Tabs } from "@blueprintjs/core";
 
 import * as styles from "../Widgets.scss";
-
 import { CancelButton } from "../../../form";
+
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
+
 import { WidgetCreateRequest, WidgetDTO, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
-import { IntentDTO, IntentsDTO } from "../../../../api/models/IntentDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+import { IntentDTO, IntentsDTO } from "../../../../api/models/IntentDTO";
 import { User } from "../../../../models/User";
+import { Group } from "../../../../models/Group";
 import { wait } from "../../../../utility";
 
-import { WidgetPropertiesPanel } from "./WidgetPropertiesPanel";
-import { IntentsPanel } from "./IntentsPanel";
-import { UsersPanel } from "./UsersPanel";
+import { WidgetPropertiesPanel } from "./properties/WidgetPropertiesPanel";
+import { IntentsPanel } from "./intents/IntentsPanel";
+import { UsersPanel } from "./users/UsersPanel";
+import { GroupsPanel } from "./groups/GroupsPanel";
 
 export interface WidgetSetupProps {
     widget?: WidgetDTO;
@@ -48,7 +50,7 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
                         panel={this.getIntentsPanel()}
                     />
                     <Tab id="users" disabled={!this.state.widgetExists} title="Users" panel={this.getUsersPanel()} />
-                    <Tab id="groups" disabled={!this.state.widgetExists} title="Groups" panel={<div />} />
+                    <Tab id="groups" disabled={!this.state.widgetExists} title="Groups" panel={this.getGroupsPanel()} />
                     <Tabs.Expander />
                     <div data-element-id="widget-admin-widget-setup-return-button" className={styles.buttonBar}>
                         <CancelButton className={styles.cancelButton} onClick={this.props.closeSetup} />
@@ -56,6 +58,40 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
                 </Tabs>
             </div>
         );
+    }
+
+    getPropertiesPanel() {
+        return (
+            <WidgetPropertiesPanel
+                widget={this.state.widget}
+                onSubmit={this.saveWidget}
+                widgetTypes={this.props.widgetTypes}
+            />
+        );
+    }
+
+    getIntentsPanel() {
+        if (this.state.widget) {
+            return <IntentsPanel updatingWidget={this.state.widget} onChange={this.onIntentsChange} />;
+        } else {
+            return <div />;
+        }
+    }
+
+    getUsersPanel() {
+        if (this.state.widget) {
+            return <UsersPanel widget={this.state.widget} addUsers={this.addUsers} removeUser={this.removeUser} />;
+        } else {
+            return <div />;
+        }
+    }
+
+    getGroupsPanel() {
+        if (this.state.widget) {
+            return <GroupsPanel widget={this.state.widget} addGroups={this.addGroups} removeGroup={this.removeGroup} />;
+        } else {
+            return <div />;
+        }
     }
 
     saveWidget = async (widget: WidgetCreateRequest | WidgetUpdateRequest) => {
@@ -84,6 +120,13 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
         return true;
     };
 
+    onIntentsChange = (intentGroups: IntentsDTO) => {
+        if (this.state.widget) {
+            this.state.widget.intents = intentGroups;
+            this.saveWidget(this.state.widget);
+        }
+    };
+
     addUsers = async (users: User[]) => {
         if (this.state.widget === undefined) {
             return false;
@@ -108,37 +151,28 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
         return true;
     };
 
-    getPropertiesPanel() {
-        return (
-            <WidgetPropertiesPanel
-                widget={this.state.widget}
-                onSubmit={this.saveWidget}
-                widgetTypes={this.props.widgetTypes}
-            />
-        );
-    }
+    addGroups = async (groups: Group[]) => {
+        // if (this.state.widget === undefined) {
+        //     return false;
+        // }
+        // const groupIds: number[] = [];
+        // for (const g of groups) {
+        //     groupIds.push(g.id);
+        // }
+        // const response = await widgetApi.addWidgetGroups(this.state.widget.id, groupIds);
+        // // TODO: Handle failed request
+        // if (response.status !== 200) return false;
+        // return true;
+    };
 
-    getIntentsPanel() {
-        if (this.state.widget) {
-            return <IntentsPanel updatingWidget={this.state.widget} onChange={this.onIntentsChange} />;
-        } else {
-            return <div />;
-        }
-    }
-
-    getUsersPanel() {
-        if (this.state.widget) {
-            return <UsersPanel widget={this.state.widget} addUsers={this.addUsers} removeUser={this.removeUser} />;
-        } else {
-            return <div />;
-        }
-    }
-
-    onIntentsChange = (intentGroups: IntentsDTO) => {
-        if (this.state.widget) {
-            this.state.widget.intents = intentGroups;
-            this.saveWidget(this.state.widget);
-        }
+    removeGroup = async (group: Group) => {
+        // if (this.state.widget === undefined) {
+        //     return false;
+        // }
+        // const response = await widgetApi.removeWidgetGroups(this.state.widget.id, group.id);
+        // // TODO: Handle failed request
+        // if (response.status !== 200) return false;
+        // return true;
     };
 
     convertDTOtoUpdateRequest(dto: WidgetDTO): WidgetUpdateRequest {

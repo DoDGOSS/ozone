@@ -6,16 +6,16 @@ import {
     WidgetCreateRequest,
     WidgetGetDescriptorResponse,
     WidgetUpdateRequest
-} from "../../../../api/models/WidgetDTO";
-import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+} from "../../../../../api/models/WidgetDTO";
+import { WidgetTypeReference } from "../../../../../api/models/WidgetTypeDTO";
 
 import { WidgetPropertiesForm } from "./WidgetPropertiesForm";
 
-import { uuid } from "../../../../utility";
+import { uuid } from "../../../../../utility";
 import { Button, InputGroup } from "@blueprintjs/core";
 
 import * as styles from "./WidgetPropertiesPanel.scss";
-import { Gateway, getGateway } from "../../../../api/interfaces";
+import { Gateway, getGateway } from "../../../../../api/interfaces";
 
 export interface WidgetPropertiesPanelProps {
     widget: undefined | WidgetUpdateRequest;

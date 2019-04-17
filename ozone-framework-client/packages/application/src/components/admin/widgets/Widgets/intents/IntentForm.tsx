@@ -3,9 +3,9 @@ import * as React from "react";
 import { Form, Formik, FormikProps } from "formik";
 import * as yup from "yup";
 
-import { Intent } from "../../../../models/compat";
+import { Intent } from "../../../../../models/compat";
 
-import { CheckBox, FormError, SubmitButton, TextField } from "../../../form";
+import { CheckBox, FormError, SubmitButton, TextField } from "../../../../form";
 
 export interface IntentFormProps {
     onSubmit: (e: any) => void;
