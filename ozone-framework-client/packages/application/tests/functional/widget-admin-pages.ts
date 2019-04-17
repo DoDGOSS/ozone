@@ -114,7 +114,6 @@ export class CreateForm extends PageObject {
         this.clickWhenVisible(CreateForm.CreateWithoutDescriptor, "'Create without descriptor'");
         return new PropertiesPanel(this.browser).waitUntilVisible();
     }
-
 }
 
 export class PropertiesPanel extends PageObject {

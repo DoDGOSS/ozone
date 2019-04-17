@@ -4,7 +4,7 @@ import { GlobalElements, WidgetAdminWidget } from "./selectors";
 
 import { loggedInAs } from "./helpers";
 import { MainPage } from "./pages";
-import { CreateForm } from './widget-admin-pages';
+import { CreateForm } from "./widget-admin-pages";
 
 const LOGIN_USERNAME: string = "testAdmin1";
 const LOGIN_PASSWORD: string = "password";
@@ -43,29 +43,34 @@ module.exports = {
             .openAdminDialog()
             .openWidgetAdminWidget();
 
-        const propertiesPanel = widgetAdmin
-            .clickCreateButton()
-            .assertLoadButtonIsDisabled();
-        
+        const propertiesPanel = widgetAdmin.clickCreateButton().assertLoadButtonIsDisabled();
+
         browser.setValue(CreateForm.DescriptorInput, "http://localhost:3000/examples/descriptor.json");
 
-        propertiesPanel
-            .assertLoadButtonIsEnabled()
-            .clickLoadButton();
+        propertiesPanel.assertLoadButtonIsEnabled().clickLoadButton();
 
-        browser
-            .assert.value(WidgetAdminWidget.CreateWidget.NAME_INPUT, "Example OWF Widget")
-            .assert.value(WidgetAdminWidget.CreateWidget.DESCRIPTION_INPUT, "This example widget provides a reference for implementing widget descriptor files.")
+        browser.assert
+            .value(WidgetAdminWidget.CreateWidget.NAME_INPUT, "Example OWF Widget")
+            .assert.value(
+                WidgetAdminWidget.CreateWidget.DESCRIPTION_INPUT,
+                "This example widget provides a reference for implementing widget descriptor files."
+            )
             .assert.value(WidgetAdminWidget.CreateWidget.VERSION_INPUT, "1.0")
             .assert.value(WidgetAdminWidget.CreateWidget.UNIVERSAL_NAME_INPUT, "org.owfgoss.owf.examples.examplewidget")
             .assert.value(WidgetAdminWidget.CreateWidget.URL_INPUT, "examples/walkthrough/widgets/example.html")
-            .assert.value(WidgetAdminWidget.CreateWidget.SMALL_ICON_INPUT, "themes/common/images/widget-icons/example.png")
-            .assert.value(WidgetAdminWidget.CreateWidget.MEDIUM_ICON_INPUT, "themes/common/images/widget-icons/example.png")
+            .assert.value(
+                WidgetAdminWidget.CreateWidget.SMALL_ICON_INPUT,
+                "themes/common/images/widget-icons/example.png"
+            )
+            .assert.value(
+                WidgetAdminWidget.CreateWidget.MEDIUM_ICON_INPUT,
+                "themes/common/images/widget-icons/example.png"
+            )
             .assert.value(WidgetAdminWidget.CreateWidget.WIDTH_INPUT, "500")
             .assert.value(WidgetAdminWidget.CreateWidget.HEIGHT_INPUT, "525")
             .pause(1000);
 
-        browser.closeWindow().end();        
+        browser.closeWindow().end();
     },
 
     "As an Administrator, I can not load a widget descriptor file from an invalid URL": (browser: NightwatchAPI) => {
@@ -76,20 +81,17 @@ module.exports = {
             .openAdminDialog()
             .openWidgetAdminWidget();
 
-        const propertiesPanel = widgetAdmin
-            .clickCreateButton()
-            .assertLoadButtonIsDisabled();
-        
+        const propertiesPanel = widgetAdmin.clickCreateButton().assertLoadButtonIsDisabled();
+
         browser.setValue(CreateForm.DescriptorInput, "http://this.domain.does.not.exist/descriptor.json");
 
-        propertiesPanel
-            .assertLoadButtonIsEnabled()
-            .clickLoadButton();
-        
-        browser.expect.element(CreateForm.LoadErrorMessage).text.to.contain("Unable to retrieve descriptor information. Please check your URL and try again.");
+        propertiesPanel.assertLoadButtonIsEnabled().clickLoadButton();
 
+        browser.expect
+            .element(CreateForm.LoadErrorMessage)
+            .text.to.contain("Unable to retrieve descriptor information. Please check your URL and try again.");
 
-        browser.closeWindow().end();        
+        browser.closeWindow().end();
     },
 
     "As an Administrator, I can create a new widget": (browser: NightwatchAPI) => {
