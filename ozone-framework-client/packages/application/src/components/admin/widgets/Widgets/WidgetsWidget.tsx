@@ -2,14 +2,14 @@ import * as styles from "../Widgets.scss";
 
 import * as React from "react";
 
-import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
+import { Button, ButtonGroup, Divider, InputGroup, Intent, Tooltip } from "@blueprintjs/core";
 
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 
-import { AdminTable } from "../../table/AdminTable";
+import { GenericTable } from "../../table/GenericTable";
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
 import { WidgetSetup } from "./WidgetSetup";
 
@@ -21,12 +21,11 @@ interface WidgetsWidgetState {
     filter: string;
     loading: boolean;
     pageSize: number;
-    columns: any;
     showTable: boolean;
     showWidgetSetup: boolean;
     showDelete: boolean;
     confirmationMessage: string;
-    manageWidget: WidgetDTO | undefined;
+    widgetToDelete: WidgetDTO | undefined;
     updatingWidget: any | undefined;
     widgetTypes: WidgetTypeReference[];
 }
@@ -53,60 +52,17 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
             filtered: [],
             filter: "",
             loading: true,
-            pageSize: 25,
+            pageSize: 15,
             showTable: true,
             showWidgetSetup: false,
             showDelete: false,
             confirmationMessage: "",
-            manageWidget: undefined,
-            updatingWidget: undefined,
-            columns: [
-                {
-                    Header: "Widgets",
-                    columns: [
-                        { Header: "Title", accessor: "value.namespace" },
-                        { Header: "URL", accessor: "value.url" },
-                        { Header: "Users", accessor: "value.totalUsers" },
-                        { Header: "Groups", accessor: "value.totalGroups" }
-                    ]
-                },
-                // TODO - Abstract this to only have to provide onclick function name with styled buttons
-                {
-                    Header: "Actions",
-                    Cell: (row: { original: WidgetDTO }) => (
-                        <div>
-                            <ButtonGroup>
-                                <Button
-                                    data-element-id="widget-admin-widget-edit-button"
-                                    data-widget-title={row.original.value.namespace}
-                                    text="Edit"
-                                    intent={Intent.PRIMARY}
-                                    icon="edit"
-                                    small={true}
-                                    onClick={() => {
-                                        this.setState({ updatingWidget: row.original });
-                                        this.showSubSection(WidgetWidgetSubSection.SETUP);
-                                    }}
-                                />
-                                <Divider />
-                                <Button
-                                    data-element-id="widget-admin-widget-delete-button"
-                                    data-widget-title={row.original.value.namespace}
-                                    text="Delete"
-                                    intent={Intent.DANGER}
-                                    icon="trash"
-                                    small={true}
-                                    disabled={row.original.value.totalUsers > 0 || row.original.value.totalGroups > 0}
-                                    onClick={() => this.deleteWidget(row.original)}
-                                />
-                            </ButtonGroup>
-                        </div>
-                    )
-                }
-            ]
+            widgetToDelete: undefined,
+            updatingWidget: undefined
         };
 
         this.handleUpdate = this.handleUpdate.bind(this);
+        this.columns = this.columns.bind(this);
     }
 
     componentDidMount() {
@@ -118,61 +74,30 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
         const showTable = this.state.showTable;
         const showWidgetSetup = this.state.showWidgetSetup;
 
-        let widgets = this.state.widgets;
-        const filter = this.state.filter.toLowerCase();
-
-        // TODO - Improve this - this will be slow if there are many users.
-        // Minimally could wait to hit enter before filtering. Pagination handling
-        if (filter) {
-            widgets = widgets.filter((row) => {
-                const { universalName, namespace } = row.value;
-                return (
-                    (!isNil(universalName) && universalName.toLowerCase().includes(filter)) ||
-                    (!isNil(namespace) && namespace.toLowerCase().includes(filter))
-                );
-            });
-        }
-
         return (
             <div data-element-id="widget-admin-widget-dialog">
                 {showTable && (
-                    <div className={styles.actionBar}>
-                        <InputGroup
-                            placeholder="Search..."
-                            leftIcon="search"
-                            value={this.state.filter}
-                            onChange={(e: any) => this.setState({ filter: e.target.value })}
-                            data-element-id="search-field"
-                        />
-                    </div>
-                )}
-
-                {showTable && (
-                    <div className={styles.table}>
-                        <AdminTable
-                            data={widgets}
-                            columns={this.state.columns}
-                            loading={this.state.loading}
+                    <div>
+                        <GenericTable
+                            items={this.state.widgets}
+                            getColumns={this.columns}
                             pageSize={this.state.pageSize}
                         />
+                        <div className={styles.buttonBar}>
+                            <Button
+                                text="Create"
+                                onClick={() => {
+                                    this.setState({ updatingWidget: undefined });
+                                    this.showSubSection(WidgetWidgetSubSection.SETUP);
+                                }}
+                                data-element-id="widget-admin-widget-create-button"
+                            />
+                        </div>
                     </div>
                 )}
 
-                {showTable && (
-                    <div className={styles.buttonBar}>
-                        <Button
-                            text="Create"
-                            onClick={() => {
-                                this.setState({ updatingWidget: undefined });
-                                this.showSubSection(WidgetWidgetSubSection.SETUP);
-                            }}
-                            data-element-id="widget-admin-widget-create-button"
-                        />
-                    </div>
-                )}
-
-                <div className={styles.widget_body}>
-                    {showWidgetSetup && (
+                {showWidgetSetup && (
+                    <div className={styles.widget_body}>
                         <WidgetSetup
                             widget={this.state.updatingWidget}
                             widgetTypes={this.state.widgetTypes}
@@ -181,8 +106,8 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                                 this.showSubSection(WidgetWidgetSubSection.TABLE);
                             }}
                         />
-                    )}
-                </div>
+                    </div>
+                )}
 
                 <ConfirmationDialog
                     show={this.state.showDelete}
@@ -190,10 +115,64 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                     content={this.state.confirmationMessage}
                     confirmHandler={this.handleConfirmationConfirmDelete}
                     cancelHandler={this.handleConfirmationCancel}
-                    payload={this.state.manageWidget}
+                    payload={this.state.widgetToDelete}
                 />
             </div>
         );
+    }
+
+    private columns = () => {
+        return [
+            { Header: "Title", id: "title", accessor: (widget: WidgetDTO) => widget.value.namespace },
+            { Header: "URL", id: "url", accessor: (widget: WidgetDTO) => widget.value.url },
+            { Header: "Users", id: "users", accessor: (widget: WidgetDTO) => widget.value.totalUsers },
+            { Header: "Groups", id: "groups", accessor: (widget: WidgetDTO) => widget.value.totalGroups },
+            // TODO - Abstract this to only have to provide onclick function name with styled buttons
+            {
+                Header: "Actions",
+                Cell: (row: { original: WidgetDTO }) => (
+                    <div>
+                        <ButtonGroup>
+                            <Button
+                                data-element-id="widget-admin-widget-edit-button"
+                                data-widget-title={row.original.value.namespace}
+                                text="Edit"
+                                intent={Intent.PRIMARY}
+                                icon="edit"
+                                small={true}
+                                onClick={() => {
+                                    this.setState({ updatingWidget: row.original });
+                                    this.showSubSection(WidgetWidgetSubSection.SETUP);
+                                }}
+                            />
+                            <Divider />
+                            <Tooltip
+                                content={
+                                    this.widgetPotentiallyInUse(row.original)
+                                        ? "Can't delete widget with assigned users or groups"
+                                        : ""
+                                }
+                            >
+                                <Button
+                                    data-element-id="widget-admin-widget-delete-button"
+                                    data-widget-title={row.original.value.namespace}
+                                    text={"Delete"}
+                                    intent={Intent.DANGER}
+                                    icon="trash"
+                                    small={true}
+                                    disabled={this.widgetPotentiallyInUse(row.original)}
+                                    onClick={() => this.deleteWidget(row.original)}
+                                />
+                            </Tooltip>
+                        </ButtonGroup>
+                    </div>
+                )
+            }
+        ];
+    };
+
+    private widgetPotentiallyInUse(widget: WidgetDTO): boolean {
+        return widget.value.totalUsers > 0 || widget.value.totalGroups > 0;
     }
 
     private showSubSection(subSection: WidgetWidgetSubSection) {
@@ -233,7 +212,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
         this.setState({
             showDelete: true,
             confirmationMessage: `This action will permanently delete <strong>${widget.value.namespace}</strong>`,
-            manageWidget: widget
+            widgetToDelete: widget
         });
 
         this.getWidgets();
@@ -244,7 +223,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
     private handleConfirmationConfirmDelete = async (payload: any) => {
         this.setState({
             showDelete: false,
-            manageWidget: undefined
+            widgetToDelete: undefined
         });
 
         const widget: WidgetDTO = payload;
@@ -262,7 +241,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
     private handleConfirmationCancel = (payload: any) => {
         this.setState({
             showDelete: false,
-            manageWidget: undefined
+            widgetToDelete: undefined
         });
     };
 }
