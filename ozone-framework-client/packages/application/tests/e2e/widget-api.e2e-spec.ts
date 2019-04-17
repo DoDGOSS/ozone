@@ -22,8 +22,6 @@ describe("Widget API", () => {
 
     let testAdmin1: AuthUserDTO;
 
-    let numWidgets: number = 0;
-
     beforeAll(async () => {
         gateway = new NodeGateway();
         widgetApi = new WidgetAPI(gateway);
@@ -150,7 +148,6 @@ describe("Widget API", () => {
         createResponse = response.data;
     });
 
-=======
     let createRequestMinimal: WidgetCreateRequest;
     test("createWidget - POST /widget/ - minimal", async () => {
         createRequestMinimal = {
@@ -240,8 +237,8 @@ describe("Widget API", () => {
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
             success: true,
-            results: initialWidgets.length + 1,
-            data: expect.arrayOfLength(initialWidgets.length + 1)
+            results: initialWidgets.length + 2,
+            data: expect.arrayOfLength(initialWidgets.length + 2)
         });
     });
 
@@ -399,7 +396,8 @@ describe("Widget API", () => {
         expect(getResponse.status).toEqual(200);
         expect(getResponse.data).toMatchObject({
             success: true,
-            results: numWidgets + 2
+            results: initialWidgets.length + 2,
+            data: expect.arrayOfLength(initialWidgets.length + 2)
         });
 
         const deleteResponse = await widgetApi.deleteWidget(createRequest.widgetGuid);
@@ -429,11 +427,13 @@ describe("Widget API", () => {
             ]
         });
 
-        expect(response2.status).toEqual(200);
-        expect(response2.data).toEqual({
+        const getResponse2 = await widgetApi.getWidgets();
+        logResponse(getResponse2);
+        expect(getResponse2.status).toEqual(200);
+        expect(getResponse2.data).toEqual({
             success: true,
-            results: 11,
-            data: expect.arrayOfLength(11)
+            results: initialWidgets.length,
+            data: expect.arrayOfLength(initialWidgets.length)
         });
     });
 });
