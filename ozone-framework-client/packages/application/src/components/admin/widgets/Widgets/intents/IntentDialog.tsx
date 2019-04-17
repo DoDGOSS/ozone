@@ -2,16 +2,14 @@ import * as React from "react";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
-<<<<<<< HEAD:ozone-framework-client/packages/application/src/components/admin/widgets/Widgets/intents/IntentDialog.tsx
 import { classNames } from "../../../../../utility";
 import { Intent } from "../../../../../models/compat";
-=======
-import { Intent } from "../../../../models/compat";
->>>>>>> 2d2054733184e6a2ed8ae31b2419bc68cce911bd:ozone-framework-client/packages/application/src/components/admin/widgets/Widgets/IntentDialog.tsx
 
 import { IntentForm } from "./IntentForm";
 import { mainStore } from "../../../../stores/MainStore";
 import { classNames } from "../../../../utility";
+
+import * as styles from "../../Widgets.scss";
 
 import * as styles from "../../Widgets.scss";
 

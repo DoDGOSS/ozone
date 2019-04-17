@@ -12,6 +12,8 @@ import { classNames } from "../../../../utility";
 
 import * as styles from "../../Widgets.scss";
 
+import * as styles from "../../Widgets.scss";
+
 interface IntentGroup {
     action: string;
     intents: Intent[];
