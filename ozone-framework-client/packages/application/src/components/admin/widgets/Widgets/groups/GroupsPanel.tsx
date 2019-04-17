@@ -1,6 +1,6 @@
 import * as React from "react";
 import ReactTable, { Column } from "react-table";
-import { Button, MenuItem, Tab, Tabs } from "@blueprintjs/core";
+import { Button, ButtonGroup, Intent, MenuItem, Tab, Tabs } from "@blueprintjs/core";
 import { ItemRenderer } from "@blueprintjs/select";
 import * as uuidv4 from "uuid/v4";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
@@ -9,6 +9,7 @@ import { array, boolean, number, object, string } from "yup";
 import * as styles from "../../Widgets.scss";
 
 import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../../form";
+import { inPlaceConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { groupApi } from "../../../../../api/clients/GroupAPI";
 
 import { Group } from "../../../../../models/Group";
@@ -21,7 +22,6 @@ interface State {
     loading: boolean;
     widgetGroups: Group[];
     allGroups: Group[];
-    selectedGroup: Group | undefined;
     dialogOpen: boolean;
 }
 
@@ -38,8 +38,7 @@ export class GroupsPanel extends React.Component<Props, State> {
             loading: true,
             widgetGroups: [],
             allGroups: [],
-            dialogOpen: false,
-            selectedGroup: undefined
+            dialogOpen: false
         };
     }
 
@@ -88,7 +87,7 @@ export class GroupsPanel extends React.Component<Props, State> {
             <div>
                 {dialog}
                 {this.getGroupTable()}
-                {this.actionButtons()}
+                <Button text="Add" onClick={this.openDialog} />
             </div>
         );
     }
@@ -97,8 +96,8 @@ export class GroupsPanel extends React.Component<Props, State> {
         return (
             <GroupsDialog
                 isOpen={this.state.dialogOpen}
-                onClose={this.closeDialog}
-                onSubmit={this.onFormSubmit}
+                onClose={() => this.closeDialog()}
+                onSubmit={(selections: Group[]) => this.addSelectedGroups(selections)}
                 allGroups={this.state.allGroups}
             />
         );
@@ -107,94 +106,74 @@ export class GroupsPanel extends React.Component<Props, State> {
     getGroupTable() {
         return (
             <GenericTable
-                title={this.props.widget ? this.props.widget.displayName : "Groups"}
                 items={this.state.widgetGroups}
                 getColumns={() => [
                     { Header: "Name", id: "name", accessor: (group: Group) => group.name },
-                    { Header: "Description", id: "description", accessor: (group: Group) => group.description }
+                    { Header: "Description", id: "description", accessor: (group: Group) => group.description },
+                    { Header: "Remove", Cell: this.rowActionButtons }
                 ]}
-                onSelect={(selected: Group) => {
-                    this.setState({
-                        selectedGroup: selected
-                    });
-                }}
             />
         );
     }
 
-    actionButtons(): any {
+    rowActionButtons = (row: { original: Group }) => {
         return (
             <div>
-                <Button text="Add" onClick={this.openDialog} />
-                <Button
-                    text="Remove"
-                    disabled={this.state.selectedGroup === undefined}
-                    onClick={this.removeGroupAndSave}
-                />
+                <ButtonGroup>
+                    <Button
+                        data-element-id="widget-admin-group-remove-button"
+                        data-widget-title={row.original.name}
+                        text={"Remove"}
+                        intent={Intent.DANGER}
+                        icon="trash"
+                        small={true}
+                        onClick={() => this.confirmAndDeleteGroup(row.original)}
+                    />
+                </ButtonGroup>
             </div>
         );
+    };
+
+    confirmAndDeleteGroup(groupToRemove: Group): void {
+        inPlaceConfirmationDialog({
+            title: "Warning",
+            message:
+                "This action will permenantly remove " +
+                groupToRemove.name +
+                " from the widget " +
+                this.props.widget.displayName,
+            onConfirm: () => this.removeGroupAndSave(groupToRemove)
+        });
     }
 
-    removeGroupAndSave = (): void => {
-        if (this.state.selectedGroup) {
-            this.removeGroup(this.state.selectedGroup);
-            this.props.removeGroup(this.state.selectedGroup);
-            this.deselectGroup();
-        }
-    };
+    removeGroupAndSave(groupToRemove: Group): void {
+        this.props.removeGroup(groupToRemove).then(() => this.getWidgetGroups());
+    }
 
-    openDialog = (): void => {
-        this.setState({
-            dialogOpen: true
-        });
-    };
-    closeDialog = (): void => {
+    openDialog(): void {
+        this.getAllGroups().then(() =>
+            this.setState({
+                dialogOpen: true
+            })
+        );
+    }
+    closeDialog(): void {
         this.setState({
             dialogOpen: false
         });
-    };
-
-    onFormSubmit = (newGroup: any): void => {
-        if (this.state.widgetGroups.findIndex((u) => newGroup.id === u.id) !== -1) {
-            return;
-        }
-
-        this.addGroup(newGroup);
-        // allow for potential multiple selection later
-        this.props.addGroups([newGroup]);
-        // this.getWidgetGroups();
-    };
-
-    deselectGroup(): void {
-        this.setState({
-            selectedGroup: undefined
-        });
     }
 
-    addGroup(newGroup: Group): void {
-        const groupList = [];
-        for (const u of this.state.widgetGroups) {
-            groupList.push(u);
-        }
-        if (this.state.widgetGroups.findIndex((u) => newGroup.id === u.id) < 0) {
+    addSelectedGroups(newSelections: Group[]): void {
+        const groupList: Group[] = [];
+        for (const newGroup of newSelections) {
+            if (this.state.widgetGroups.findIndex((u) => newGroup.id === u.id) !== -1) {
+                continue;
+            }
             groupList.push(newGroup);
         }
-        this.setState({
-            widgetGroups: groupList
-        });
-    }
 
-    removeGroup(group: Group): void {
-        const groupIndex = this.state.widgetGroups.findIndex((u) => group.id === u.id);
-        if (groupIndex >= 0) {
-            this.state.widgetGroups.splice(groupIndex, 1);
+        if (groupList.length > 0) {
+            this.props.addGroups(groupList).then(() => this.getWidgetGroups());
         }
-        const groupList = [];
-        for (const u of this.state.widgetGroups) {
-            groupList.push(u);
-        }
-        this.setState({
-            widgetGroups: groupList
-        });
     }
 }
