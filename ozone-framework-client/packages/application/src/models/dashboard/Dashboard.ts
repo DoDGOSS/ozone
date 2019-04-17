@@ -116,19 +116,33 @@ export class Dashboard {
         });
     };
 
-    setLayout = (tree: DashboardNode | null) => {
-        const prev = this.state$.value;
-        const { panels } = prev;
+    /**
+     * Set the new dashboard layout and check for changes to open/closed panels.
+     */
+    setLayout(tree: DashboardNode | null): void {
+        const state = this.state$;
+        const prev = state.value;
 
         const panelIds = findPanelIds(tree);
-        const newPanels = pick(panels, panelIds);
+        const newPanels = pick(prev.panels, panelIds);
 
-        this.state$.next({
+        state.next({
             ...prev,
             tree,
             panels: newPanels
         });
-    };
+    }
+
+    /**
+     * Set the new dashboard layout without checking for changes to the panels.
+     */
+    setLayoutFast(tree: DashboardNode | null): void {
+        const state = this.state$;
+        state.next({
+            ...state.value,
+            tree
+        });
+    }
 
     setPanelLayout = (panel: Panel<PanelState>, path: DashboardPath, layout: LayoutType) => {
         const prev = this.state$.value;

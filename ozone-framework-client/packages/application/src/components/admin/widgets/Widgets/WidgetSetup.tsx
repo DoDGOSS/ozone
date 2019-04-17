@@ -1,16 +1,20 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
 
-import { widgetApi } from "../../../../api/clients/WidgetAPI";
-import { WidgetCreateRequest, WidgetDTO, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
-import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+import * as styles from "../Widgets.scss";
 
 import { CancelButton } from "../../../form";
-import { IntentsPanel } from "./IntentsPanel";
+import { widgetApi } from "../../../../api/clients/WidgetAPI";
+import { WidgetCreateRequest, WidgetDTO, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
+import { IntentDTO, IntentsDTO } from "../../../../api/models/IntentDTO";
+import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+import { User } from "../../../../models/User";
+import { wait } from "../../../../utility";
+
 import { WidgetPropertiesPanel } from "./WidgetPropertiesPanel";
+import { IntentsPanel } from "./IntentsPanel";
+import { UsersPanel } from "./UsersPanel";
 
 export interface WidgetSetupProps {
     widget?: WidgetDTO;
@@ -43,13 +47,13 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
                         title="Intents"
                         panel={this.getIntentsPanel()}
                     />
-                    <Tab id="users" disabled={!this.state.widgetExists} title="Users" panel={<div />} />
+                    <Tab id="users" disabled={!this.state.widgetExists} title="Users" panel={this.getUsersPanel()} />
                     <Tab id="groups" disabled={!this.state.widgetExists} title="Groups" panel={<div />} />
                     <Tabs.Expander />
+                    <div data-element-id="widget-admin-widget-setup-return-button" className={styles.buttonBar}>
+                        <CancelButton className={styles.cancelButton} onClick={this.props.closeSetup} />
+                    </div>
                 </Tabs>
-                <div data-element-id="widget-admin-widget-setup-return-button" className={styles.buttonBar}>
-                    <CancelButton className={styles.cancelButton} onClick={this.props.closeSetup} />
-                </div>
             </div>
         );
     }
@@ -80,11 +84,28 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
         return true;
     };
 
-    onIntentsChange = (intentGroups: any) => {
-        if (this.state.widget) {
-            this.state.widget.intents = intentGroups;
-            this.saveWidget(this.state.widget);
+    addUsers = async (users: User[]) => {
+        if (this.state.widget === undefined) {
+            return false;
         }
+        const userIds: number[] = [];
+        for (const u of users) {
+            userIds.push(u.id);
+        }
+        const response = await widgetApi.addWidgetUsers(this.state.widget.id, userIds);
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+        return true;
+    };
+
+    removeUser = async (user: User) => {
+        if (this.state.widget === undefined) {
+            return false;
+        }
+        const response = await widgetApi.removeWidgetUsers(this.state.widget.id, user.id);
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+        return true;
     };
 
     getPropertiesPanel() {
@@ -104,6 +125,21 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
             return <div />;
         }
     }
+
+    getUsersPanel() {
+        if (this.state.widget) {
+            return <UsersPanel widget={this.state.widget} addUsers={this.addUsers} removeUser={this.removeUser} />;
+        } else {
+            return <div />;
+        }
+    }
+
+    onIntentsChange = (intentGroups: IntentsDTO) => {
+        if (this.state.widget) {
+            this.state.widget.intents = intentGroups;
+            this.saveWidget(this.state.widget);
+        }
+    };
 
     convertDTOtoUpdateRequest(dto: WidgetDTO): WidgetUpdateRequest {
         return {
