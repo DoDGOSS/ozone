@@ -23,6 +23,8 @@ interface WidgetPropertiesPanelState {
     showImportWidgetFromURL: boolean;
     descriptorURL: string;
     widget: undefined | WidgetCreateRequest;
+    showError: boolean;
+    errorMessage: string;
 }
 
 export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanelProps, WidgetPropertiesPanelState> {
@@ -35,9 +37,9 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
             showImportWidgetFromURL: this.props.widget === undefined,
             descriptorURL: "",
             widget: undefined,
+            showError: false,
+            errorMessage: "",
         };
-
-        console.log(this.props.widgetTypes);
     }
 
     render() {
@@ -62,11 +64,19 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
                     </a>
 
                     <div className={styles.flexBox}>
-                        <span className={styles.fillSpace}/>
+                        <span className={styles.fillSpace}>
+                            {this.state.showError && (
+                                <div className={styles.error}>
+                                    {this.state.errorMessage}
+                                </div>
+                            )}                        
+                        </span>
                         <span>
                             <Button disabled={!this.state.descriptorURL} onClick={(e: any) => this.loadDescriptor(this.state.descriptorURL)}>Load</Button>
                         </span>
                     </div>
+
+
                 </div>
             );
         } else {
@@ -84,32 +94,43 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
     }
 
     private async loadDescriptor(descriptorURL: string) {
-        const response = await axios.get(descriptorURL, {
-            withCredentials: true,
-        });        
-        
-        const widgetData: WidgetGetDescriptorResponse = response.data;
-        const createWidget: WidgetCreateRequest = {
-            displayName: widgetData.displayName,
-            widgetVersion: widgetData.widgetVersion,
-            description: widgetData.description,
-            widgetUrl: widgetData.widgetUrl,
-            imageUrlSmall: widgetData.imageUrlSmall,
-            imageUrlMedium: widgetData.imageUrlMedium,
-            width: widgetData.width,
-            height: widgetData.height,
-            widgetGuid: uuid(),
-            universalName: widgetData.universalName,
-            visible: widgetData.visible,
-            background: widgetData.background,
-            singleton: widgetData.singleton,
-            mobileReady: widgetData.mobileReady,
-            widgetTypes: widgetData.widgetTypes.map((widgetType: string) => this.getWidgetType(widgetType)),
-            intents: widgetData.intents
-        };
+        this.setState({errorMessage: ""});
 
-        this.setState({ widget: createWidget });
-        this.setState({showImportWidgetFromURL: false});
+        try {
+            const response = await axios.get(descriptorURL, {
+                withCredentials: true,
+            });
+
+            const widgetData: WidgetGetDescriptorResponse = response.data;
+            const createWidget: WidgetCreateRequest = {
+                displayName: widgetData.displayName,
+                widgetVersion: widgetData.widgetVersion,
+                description: widgetData.description,
+                widgetUrl: widgetData.widgetUrl,
+                imageUrlSmall: widgetData.imageUrlSmall,
+                imageUrlMedium: widgetData.imageUrlMedium,
+                width: widgetData.width,
+                height: widgetData.height,
+                widgetGuid: uuid(),
+                universalName: widgetData.universalName,
+                visible: widgetData.visible,
+                background: widgetData.background,
+                singleton: widgetData.singleton,
+                mobileReady: widgetData.mobileReady,
+                widgetTypes: widgetData.widgetTypes.map((widgetType: string) => this.getWidgetType(widgetType)),
+                intents: widgetData.intents
+            };
+
+            this.setState({
+                showImportWidgetFromURL: false,
+                widget: createWidget
+            });
+        } catch(err) {
+            this.setState({
+                showError: true,
+                errorMessage: "Unable to retrieve descriptor information. Please check your URL and try again."
+            });
+        }
     }
 
     private getWidgetType(name: string): WidgetTypeReference {
