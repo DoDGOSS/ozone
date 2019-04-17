@@ -2,16 +2,20 @@ import * as React from "react";
 
 import axios from "axios";
 
-import { WidgetCreateRequest, WidgetGetDescriptorResponse, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
+import {
+    WidgetCreateRequest,
+    WidgetGetDescriptorResponse,
+    WidgetUpdateRequest
+} from "../../../../api/models/WidgetDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 
 import { WidgetPropertiesForm } from "./WidgetPropertiesForm";
 
 import { uuid } from "../../../../utility";
-import { Button, InputGroup } from '@blueprintjs/core';
+import { Button, InputGroup } from "@blueprintjs/core";
 
 import * as styles from "./WidgetPropertiesPanel.scss";
-import { Gateway, getGateway } from '../../../../api/interfaces';
+import { Gateway, getGateway } from "../../../../api/interfaces";
 
 export interface WidgetPropertiesPanelProps {
     widget: undefined | WidgetUpdateRequest;
@@ -38,7 +42,7 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
             descriptorURL: "",
             widget: undefined,
             showError: false,
-            errorMessage: "",
+            errorMessage: ""
         };
     }
 
@@ -55,32 +59,31 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
                     />
 
                     <a
-                    data-element-id="widget-admin-widget-show-properties-form"
-                    onClick={() => {
-                        this.setState({ showImportWidgetFromURL: false });
-                    }}
+                        data-element-id="widget-admin-widget-show-properties-form"
+                        onClick={() => {
+                            this.setState({ showImportWidgetFromURL: false });
+                        }}
                     >
                         Don't have a descriptor URL?
                     </a>
 
                     <div className={styles.flexBox}>
-                        <span className={styles.fillSpace} data-element-id="widget-admin-widget-descriptor-error-message">
-                            {this.state.showError && (
-                                <div className={styles.error}>
-                                    {this.state.errorMessage}
-                                </div>
-                            )}                        
+                        <span
+                            className={styles.fillSpace}
+                            data-element-id="widget-admin-widget-descriptor-error-message"
+                        >
+                            {this.state.showError && <div className={styles.error}>{this.state.errorMessage}</div>}
                         </span>
                         <span>
                             <Button
                                 disabled={!this.state.descriptorURL}
                                 onClick={(e: any) => this.loadDescriptor(this.state.descriptorURL)}
                                 data-element-id="widget-admin-widget-load-descriptor-button"
-                            >Load</Button>
+                            >
+                                Load
+                            </Button>
                         </span>
                     </div>
-
-
                 </div>
             );
         } else {
@@ -98,11 +101,11 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
     }
 
     private async loadDescriptor(descriptorURL: string) {
-        this.setState({errorMessage: ""});
+        this.setState({ errorMessage: "" });
 
         try {
             const response = await axios.get(descriptorURL, {
-                withCredentials: true,
+                withCredentials: true
             });
 
             const widgetData: WidgetGetDescriptorResponse = response.data;
@@ -129,7 +132,7 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
                 showImportWidgetFromURL: false,
                 widget: createWidget
             });
-        } catch(err) {
+        } catch (err) {
             this.setState({
                 showError: true,
                 errorMessage: "Unable to retrieve descriptor information. Please check your URL and try again."
@@ -138,11 +141,12 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
     }
 
     private getWidgetType(name: string): WidgetTypeReference {
-        const type: WidgetTypeReference | undefined = this.props.widgetTypes.find((widgetType: WidgetTypeReference) => widgetType.name === name);
-        if(!type) {
+        const type: WidgetTypeReference | undefined = this.props.widgetTypes.find(
+            (widgetType: WidgetTypeReference) => widgetType.name === name
+        );
+        if (!type) {
             return this.props.widgetTypes[0];
-        }
-        else {
+        } else {
             return type;
         }
     }
@@ -150,13 +154,11 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
     private getWidget(): WidgetCreateRequest | WidgetUpdateRequest {
         // I used to have this in state, but the object wasn't re-created when I told it to re-render with new props.
         // So the state didn't change, causing the form to try to create the widget on submit, rather than update it.
-        if(this.props.widget !== undefined) {
+        if (this.props.widget !== undefined) {
             return this.props.widget;
-        }
-        else if (this.state.widget !== undefined) {
+        } else if (this.state.widget !== undefined) {
             return this.state.widget;
-        }
-        else {
+        } else {
             return this.getBlankWidget();
         }
     }

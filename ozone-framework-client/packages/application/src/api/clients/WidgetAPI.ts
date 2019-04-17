@@ -16,7 +16,7 @@ import {
     WidgetGetResponse,
     WidgetUpdateGroupsResponse,
     WidgetUpdateRequest,
-    WidgetUpdateUsersResponse,
+    WidgetUpdateUsersResponse
 } from "../models/WidgetDTO";
 
 export interface WidgetQueryCriteria {

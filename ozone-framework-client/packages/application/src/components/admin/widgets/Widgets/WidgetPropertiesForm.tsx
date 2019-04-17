@@ -53,10 +53,7 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
     >
         {(formik: FormikProps<WidgetCreateRequest | WidgetUpdateRequest>) => (
             <div data-element-id="widget-admin-widget-properties-form">
-                <Form
-                    className={styles.form}
-                    onLoad={() => formik.validateForm()}
-                >
+                <Form className={styles.form} onLoad={() => formik.validateForm()}>
                     <div>
                         <TextField
                             inline={true}
