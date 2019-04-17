@@ -51,7 +51,7 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
                     <InputGroup
                         value={this.state.descriptorURL}
                         onChange={(e: any) => this.setState({ descriptorURL: e.target.value })}
-                        data-element-id="descriptor-url-field"
+                        data-element-id="widget-admin-widget-descriptor-url-field"
                     />
 
                     <a
@@ -64,7 +64,7 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
                     </a>
 
                     <div className={styles.flexBox}>
-                        <span className={styles.fillSpace}>
+                        <span className={styles.fillSpace} data-element-id="widget-admin-widget-descriptor-error-message">
                             {this.state.showError && (
                                 <div className={styles.error}>
                                     {this.state.errorMessage}
@@ -72,7 +72,11 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
                             )}                        
                         </span>
                         <span>
-                            <Button disabled={!this.state.descriptorURL} onClick={(e: any) => this.loadDescriptor(this.state.descriptorURL)}>Load</Button>
+                            <Button
+                                disabled={!this.state.descriptorURL}
+                                onClick={(e: any) => this.loadDescriptor(this.state.descriptorURL)}
+                                data-element-id="widget-admin-widget-load-descriptor-button"
+                            >Load</Button>
                         </span>
                     </div>
 
