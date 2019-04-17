@@ -22,8 +22,6 @@ export const UserCreateForm: React.FC<UserCreateProps> = ({ onSubmit, onCancel }
         validationSchema={CreateUserSchema}
         onSubmit={async (values: UserCreateRequest, actions: FormikActions<UserCreateRequest>) => {
             const isSuccess = await onSubmit(values);
-            actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
-            actions.setSubmitting(false);
         }}
     >
         {(formik: FormikProps<UserCreateRequest>) => (

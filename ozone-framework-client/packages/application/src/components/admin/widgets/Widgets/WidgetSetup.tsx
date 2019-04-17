@@ -152,27 +152,28 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
     };
 
     addGroups = async (groups: Group[]) => {
-        // if (this.state.widget === undefined) {
-        //     return false;
-        // }
-        // const groupIds: number[] = [];
-        // for (const g of groups) {
-        //     groupIds.push(g.id);
-        // }
-        // const response = await widgetApi.addWidgetGroups(this.state.widget.id, groupIds);
-        // // TODO: Handle failed request
-        // if (response.status !== 200) return false;
-        // return true;
+        if (this.state.widget === undefined) {
+            return false;
+        }
+        const groupIds: number[] = [];
+        for (const g of groups) {
+            groupIds.push(g.id);
+        }
+        console.log(groupIds);
+        const response = await widgetApi.addWidgetGroups(this.state.widget.id, groupIds);
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+        return true;
     };
 
     removeGroup = async (group: Group) => {
-        // if (this.state.widget === undefined) {
-        //     return false;
-        // }
-        // const response = await widgetApi.removeWidgetGroups(this.state.widget.id, group.id);
-        // // TODO: Handle failed request
-        // if (response.status !== 200) return false;
-        // return true;
+        if (this.state.widget === undefined) {
+            return false;
+        }
+        const response = await widgetApi.removeWidgetGroups(this.state.widget.id, group.id);
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+        return true;
     };
 
     convertDTOtoUpdateRequest(dto: WidgetDTO): WidgetUpdateRequest {
