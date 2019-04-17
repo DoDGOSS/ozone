@@ -12,38 +12,40 @@ import { mainStore } from "../../../stores/MainStore";
 import { classNames, isFunction } from "../../../utility";
 
 interface Props<T> {
-    title?: string;
+    title: string;
     getColumns: () => any[];
     items: T[];
-    customFilter?: (items: T[], query: string) => T[];
+    onSelect?: (newItem: T) => void;
+    customFilter?: (items: T[], query: string, queryMatches: (msg: string, query: string) => boolean) => T[];
     pageSize?: number;
     showPagination?: boolean;
     minRows?: number;
-    onSelect?: (newItem: T) => void;
-    onSelectionChange?: (newItems: T[]) => void;
-    multiSelection?: boolean;
+    filterable?: boolean;
+    tableProps?: any;
 }
 
 interface State<T> {
     pageSize: number;
-    selections: T[];
+    selected: T | undefined;
     query: string;
 }
 
 export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
+    filterable: boolean;
     constructor(props: Props<T>) {
         super(props);
         this.state = {
             pageSize: this.props.pageSize ? this.props.pageSize : 10,
-            selections: [],
+            selected: undefined,
             query: ""
         };
+        // undefined defaults to true.
+        this.filterable = !(props.filterable === false);
     }
 
     render() {
         return (
             <div className={styles.table}>
-                {this.getSearchBox()}
                 <ReactTable
                     data={this.getItems()}
                     showPagination={this.props.showPagination !== undefined ? this.props.showPagination : true}
@@ -51,33 +53,27 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                     getTrProps={this.rowsAreClickable() ? this.clickableRowProps : () => ""}
                     minRows={this.props.minRows !== undefined ? this.props.minRows : 5}
                     className={classNames("striped", mainStore.getTheme())}
-                    columns={this.getTableLayout()}
+                    columns={[
+                        {
+                            Header: this.getTableMainHeader(this.props.title),
+                            columns: this.props.getColumns()
+                        }
+                    ]}
+                    {...props.tableProps}
                 />
             </div>
         );
     }
 
-    private getTableLayout() {
-        if (this.props.title) {
-            return [
-                {
-                    Header: this.getTableMainHeader(this.props.title),
-                    columns: this.props.getColumns()
-                }
-            ];
-        } else {
-            return this.props.getColumns();
-        }
-    }
-
     private rowsAreClickable(): boolean {
-        return isFunction(this.props.onSelect) || isFunction(this.props.onSelectionChange);
+        // have to re-check here (in addition to check in isFunction because of typescript
+        return this.props.onSelect !== undefined && isFunction(this.props.onSelect);
     }
 
     private getItems(): any[] {
-        // have to re-check here (in addition to check in isFunction) because of typescript
+        // have to re-check here (in addition to check in isFunction because of typescript
         if (this.props.customFilter && isFunction(this.props.customFilter)) {
-            return this.props.customFilter(this.props.items, this.state.query);
+            return this.props.customFilter(this.props.items, this.state.query, this.queryMatches);
         } else {
             return this.filter(this.props.items, this.state.query);
         }
@@ -109,7 +105,12 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
     }
 
     private getTableMainHeader(title: string): any {
-        return <div>{this.alignedDiv(title, "left")}</div>;
+        return (
+            <div>
+                {(title) && (<AlignedDiv message={title} alignment="left" />)}
+                {this.filterable && (this.getSearchBox())}
+            </div>
+        );
     }
 
     // derived from https://stackoverflow.com/questions/44845372
@@ -118,14 +119,14 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         if (rowInfo && rowInfo.row) {
             propsForRow = {
                 onClick: (e: any) => {
-                    this.selectItem(rowInfo.original);
+                    this.setSelected(rowInfo.original);
                 }
             };
 
-            if (this.state.selections.find((select) => select === rowInfo.original) !== undefined) {
+            if (rowInfo.original === this.state.selected) {
                 propsForRow = {
                     onClick: (e: any) => {
-                        this.selectItem(rowInfo.original);
+                        this.setSelected(rowInfo.original);
                     },
                     style: {
                         background: "#00afec",
@@ -137,28 +138,15 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         return propsForRow;
     };
 
-    private selectItem(newItem: T): void {
-        if (!this.rowsAreClickable()) {
+    private setSelected(newItem: T): void {
+        // have to re-check here (in addition to check in isFunction because of typescript
+        if (!this.rowsAreClickable() || this.props.onSelect === undefined) {
             return;
         }
-        // have to re-check here (in addition to check in isFunction) because of typescript
-        if (this.props.multiSelection === true && this.props.onSelectionChange !== undefined) {
-            const selections: T[] = this.state.selections;
-            const existingItemIndex = this.state.selections.findIndex((select) => select === newItem);
-            if (existingItemIndex >= 0) {
-                selections.splice(existingItemIndex, 1);
-            } else {
-                selections.push(newItem);
-            }
-
-            this.setState({ selections });
-            this.props.onSelectionChange(this.state.selections);
-        } else if (this.props.onSelect !== undefined) {
-            this.setState({
-                selections: [newItem]
-            });
-            this.props.onSelect(newItem);
-        }
+        this.setState({
+            selected: newItem
+        });
+        this.props.onSelect(newItem);
     }
 
     private getSearchBox = () => {
@@ -182,8 +170,9 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
             });
         }
     }
-
-    private alignedDiv(message: any, alignment: "left" | "right" | "center"): any {
-        return <div style={{ textAlign: alignment }}>{message}</div>;
-    }
 }
+
+const AlignedDiv: React.FC<{ message: React.ReactNode; alignment: "left" | "right" | "center" }> = (props) => {
+    const { alignment, message } = props;
+    return <div style={{ textAlign: alignment }}>{message}</div>;
+};
