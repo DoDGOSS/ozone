@@ -3,11 +3,12 @@ import * as React from "react";
 import { Button } from "@blueprintjs/core";
 import ReactTable from "react-table";
 
-import * as styles from "../Widgets.scss";
-import { Intent } from "../../../../models/compat";
-import { IntentDTO, IntentsDTO } from "../../../../api/models/IntentDTO";
+import { Intent } from "../../../../../models/compat";
+import { IntentDTO, IntentsDTO } from "../../../../../api/models/IntentDTO";
 
 import { IntentDialog } from "./IntentDialog";
+
+import * as styles from "../../Widgets.scss";
 
 interface IntentGroup {
     action: string;
