@@ -94,10 +94,11 @@ export class WidgetAPI {
             widget_id: widgetId,
             data: JSON.stringify(mapIds(userIds)),
             tab: "users",
-            update_action: "remove"
+            update_action: "remove",
+            _method: "PUT"
         });
 
-        return this.gateway.put(`widget/${widgetId}/`, requestData, {
+        return this.gateway.put(`widget/`, requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
