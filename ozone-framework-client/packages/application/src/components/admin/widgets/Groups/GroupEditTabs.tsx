@@ -4,6 +4,7 @@ import { Tab, Tabs } from "@blueprintjs/core";
 
 import { GroupPropertiesPanel } from "./GroupPropertiesPanel";
 import { GroupUsersPanel } from "./GroupUsersPanel";
+import { GroupWidgetsPanel } from "./GroupWidgetsPanel";
 import { CancelButton } from "../../../form/index";
 import { GroupUpdateRequest } from "../../../../api/models/GroupDTO";
 import { groupApi } from "../../../../api/clients/GroupAPI";
@@ -48,7 +49,7 @@ export class GroupEditTabs extends React.Component<GroupEditTabsProps, GroupEdit
                     <Tab
                         id="group_widgets"
                         title="Widgets"
-                        panel={<GroupUsersPanel onUpdate={this.props.onUpdate} group={this.state.group} />}
+                        panel={<GroupWidgetsPanel onUpdate={this.props.onUpdate} group={this.state.group} />}
                     />
                     <Tabs.Expander />
                     <span data-element-id="group-admin-widget-edit-back-button">
