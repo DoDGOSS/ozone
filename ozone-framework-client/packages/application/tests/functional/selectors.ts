@@ -45,6 +45,8 @@ export namespace MainPage {
 
     export const WIDGETS_SORT = "button[data-element-id='widget-sort']";
 
+    export const WIDGET_DELETE_BUTTON = "button[data-element-id='widget-delete']";
+
     export const USER_AGREEMENT_LINK = "a[data-element-id='user-agreement-link']";
 
     export const USER_AGREEMENT = "div[data-element-id='user-agreement-dialog']";
@@ -123,13 +125,13 @@ export namespace AdminWidget {
 
     export const EMAIL_FIELD = "input[data-role='field'][name='email']";
 
-    //Preferences
+    // Preferences
     export const NAMESPACE_FIELD = "input[data-role='field'][name='namespace']";
 
     export const PATH_FIELD = "input[data-role='field'][name='path']";
 
     export const VALUE_FIELD = "input[data-role='field'][name='value']";
-    //end Preferences
+    // end Preferences
 
     export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
 
