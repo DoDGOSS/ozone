@@ -53,6 +53,10 @@ export class DashboardService {
         this.getCurrentDashboard().setLayout(tree);
     };
 
+    setLayoutFast = (tree: DashboardNode | null) => {
+        this.getCurrentDashboard().setLayoutFast(tree);
+    };
+
     setPanelLayout = (panel: Panel<PanelState>, path: DashboardPath, layout: LayoutType) => {
         this.getCurrentDashboard().setPanelLayout(panel, path, layout);
     };
