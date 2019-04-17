@@ -10,7 +10,7 @@ Ozone.eventing = Ozone.eventing ? Ozone.eventing : {};
 (function (window, document, undefined) {
 
     function rpcCall(widgetId, widgetIdCaller, functionName, var_args) {
-        gadgets.rpc.call("..", "FUNCTION_CALL", null, widgetId, widgetIdCaller, functionName, var_args);
+        Ozone.internal.rpc.send("FUNCTION_CALL", null, widgetId, widgetIdCaller, functionName, var_args);
     }
 
     /**
@@ -59,7 +59,7 @@ Ozone.eventing = Ozone.eventing ? Ozone.eventing : {};
                  * widgetProxy.sendMessage({data:'foo'});
                  */
                 sendMessage:function (dataToSend) {
-                    gadgets.rpc.call("..", 'DIRECT_MESSAGE', null, widgetId, dataToSend);
+                    Ozone.internal.rpc.send('DIRECT_MESSAGE', null, widgetId, dataToSend);
                 },
 
                 /**

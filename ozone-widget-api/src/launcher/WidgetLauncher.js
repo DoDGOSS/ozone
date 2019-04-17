@@ -84,8 +84,8 @@ Ozone.launcher = Ozone.launcher ? Ozone.launcher : {};
                 config.titleRegex = config.titleRegex.toString();
             }
 
-            var jsonString = gadgets.json.stringify(config);
-            gadgets.rpc.call('..', launchChannelName, callback, OWF.getIframeId(), jsonString);
+            var jsonString = JSON.stringify(config);
+            Ozone.internal.rpc.send(launchChannelName, callback, OWF.getIframeId(), jsonString);
         }
     };
 

@@ -16,7 +16,7 @@
     "gulp-gzip": "1.4.0",
     "gulp-rename": "1.2.2",
     "gulp-terser": "1.1.7",
-    "jest": "24.7.1",
+    "jest": "23.6.0",
     "koa": "2.5.3",
     "koa-mount": "4.0.0",
     "koa-static": "5.0.0",
