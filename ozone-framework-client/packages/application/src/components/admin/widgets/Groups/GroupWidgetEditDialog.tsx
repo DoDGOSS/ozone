@@ -1,15 +1,14 @@
 import { TableSelectionDialog, TableSelectionDialogProps } from "../../../table-selection-dialog/TableSelectionDialog";
-import { WidgetAPI } from "../../../../api/clients/WidgetApi";
+import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 
-export class GroupUsersEditDialog extends TableSelectionDialog<WidgetDTO> {
+export class GroupWidgetsEditDialog extends TableSelectionDialog<WidgetDTO> {
     constructor(props: TableSelectionDialogProps<WidgetDTO>) {
         super(props);
     }
 
-z
     protected async dataLoader(): Promise<Array<WidgetDTO>> {
-        const response = await WidgetAPI.getWidgets();
+        const response = await widgetApi.getWidgets();
 
         if (response.status !== 200) return [];
 
@@ -18,7 +17,9 @@ z
 
     protected filterMatch(filter: string, value: WidgetDTO): boolean {
         return (
-            value.namespace.toLowerCase().includes(filter)
+            value.displayName.toLowerCase().includes(filter) ||
+            value.description.toLowerCase().includes(filter) ||
+            value.widgetUrl.toLowerCase().includes(filter)
         );
     }
 

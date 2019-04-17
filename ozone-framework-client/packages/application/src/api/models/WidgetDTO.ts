@@ -14,6 +14,11 @@ import {
 
 export interface WidgetDTO {
     id: string;
+    displayName: string;
+    widgetVersion: string;
+    description: string;
+    widgetUrl: string;
+    widgetTypes: WidgetTypeReference[];
     namespace: string;
     path: string;
     value: WidgetPropertiesDTO;
@@ -88,6 +93,8 @@ export const validateWidgetCreateResponse = createValidator<WidgetCreateResponse
 
 export interface WidgetUpdateRequest extends WidgetCreateRequest {
     id: number;
+    update_action?: "add" | "remove";
+    widget_ids?: number[];
 }
 
 export interface WidgetDeleteIdDTO {
@@ -104,7 +111,7 @@ export const validateWidgetDeleteResponse = createValidator<WidgetDeleteResponse
 
 export interface WidgetUpdateUsersResponse {
     success: boolean;
-    data: UserDTO[];
+    data: WidgetDTO[];
 }
 
 export const validateWidgetUpdateUsersResponse = createValidator<WidgetUpdateUsersResponse>(
