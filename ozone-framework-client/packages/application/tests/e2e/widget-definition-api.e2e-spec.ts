@@ -24,7 +24,6 @@ describe("Widget Definition API", () => {
         const response = await widgetDefApi.getWidgetDefinitions();
         logResponse(response);
 
-        // console.dir(response.data)
         expect(response.status).toEqual(200);
         expect(response.data).toMatchObject({
             success: true,
