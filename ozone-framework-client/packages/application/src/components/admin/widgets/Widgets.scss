@@ -67,5 +67,12 @@
 
  /* Handle on hover */
  ::-webkit-scrollbar-thumb:hover {
-   background: white; 
+   background: white;
  }
+
+ //firefox drop arrow
+select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
