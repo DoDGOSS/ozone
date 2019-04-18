@@ -508,8 +508,6 @@ class WidgetDefinitionService {
                 def person = Person.findById(it.id.toLong(),[cache:true])
                 if (person) {
                     def criteria = PersonWidgetDefinition.createCriteria()
-                    log.error('[***] ' + person)
-                    log.error('      ' + criteria)
                     def results = criteria.list {
                         eq("person", person)
                         eq("widgetDefinition", widgetDefinition)
@@ -542,22 +540,12 @@ class WidgetDefinitionService {
                         results?.eachWithIndex { nestedIt, j ->
                             if (!nestedIt.groupWidget) {
                                 // If widget is not assigned directly or via a group, remove the pwd.
-                                log.error('      before query I think  ' + j)
-                                log.error('      ' + nestedIt)
-                                // this above line could be failing for some reason, potentially equality
                                 def foundpwd = PersonWidgetDefinition.find(nestedIt)
-                                log.error('      after query I think' + (results == null))
-                                log.error('-------\n')
                                 if (foundpwd) {
-                                    log.error('' + (foundpwd))
-                                    // person.removeFromPersonWidgetDefinitions(foundpwd).save(flush:true)
-                                    // log.error('after person save')
-                                    // widgetDefinition.removeFromPersonWidgetDefinitions(foundpwd).save(flush:true)
-                                    // log.error('after widget save')
-                                    // foundpwd.delete()
-                                    // log.error('after delete')
+                                    person.removeFromPersonWidgetDefinitions(foundpwd).save(flush:true)
+                                    widgetDefinition.removeFromPersonWidgetDefinitions(foundpwd).save(flush:true)
+                                    foundpwd.delete()
                                 }
-                                log.error('     \n\n')
                             }
                             else {
                                 // Otherwise, just un-flag the direct widget to user association.

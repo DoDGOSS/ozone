@@ -75,9 +75,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                             title={""}
                             items={this.state.widgets}
                             getColumns={this.columns}
-                            reactTableProps={{
-                                pageSize: this.state.pageSize
-                            }}
+                            pageSize={this.state.pageSize}
                         />
                         <div className={styles.buttonBar}>
                             <Button
