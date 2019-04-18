@@ -3,8 +3,6 @@ import * as React from "react";
 import { Button } from "@blueprintjs/core";
 import ReactTable from "react-table";
 
-import { GenericTable } from "../../../table/GenericTable";
-
 import { Intent } from "../../../../../models/compat";
 import { IntentDTO, IntentsDTO } from "../../../../../api/models/IntentDTO";
 
@@ -24,26 +22,35 @@ export interface IntentsPanelProps {
 
 interface IntentsPanelState {
     loading: boolean;
+    pageSize: number;
     allIntentGroups: IntentGroup[];
     expandedRows: { [Key: number]: boolean };
+    selectedIntent: Intent | undefined;
+    query: string;
     dialogOpen: boolean;
     dialog: React.ReactNode;
-    selectedIntent: Intent | undefined;
 }
 
 export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPanelState> {
     smallBoolBoxWidth = 100; // hard-coded pixel width for send/receive. Not good, but haven't found any way to use percentages
+    searchInput: any;
 
     constructor(props: IntentsPanelProps) {
         super(props);
         this.state = {
             loading: false,
+            pageSize: 10,
             allIntentGroups: this.getIntentGroupsFromWidget(this.props.updatingWidget),
             expandedRows: this.getAllGroupsAsExpanded(),
+            selectedIntent: undefined,
+            query: "",
             dialogOpen: false,
-            dialog: null,
-            selectedIntent: undefined
+            dialog: null
         };
+    }
+
+    componentDidUpdate() {
+        this.searchInput.focus();
     }
 
     render() {
@@ -62,34 +69,22 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
 
     mainTable(): any {
         return (
-            <GenericTable
-                items={this.state.widgetGroups}
-                getColumns={() => this.getMainTableColumns()}
-                customFilter={() => this.filterIntentGroups}
-                getTheadThProps={this.removeHideableHeaders}
+            <ReactTable
+                key="mainTable"
+                data={this.getIntentGroups()}
+                columns={this.getMainTableColumns()}
                 expanderDefaults={{
                     sortable: true,
                     resizable: true,
                     filterable: false
                 }}
-                SubComponent={(rowObject) => this.getIntentGroupSubTable(rowObject.original.intents)}
+                SubComponent={(rowObject) => this.getIntentActionGroup(rowObject.original.intents)}
                 defaultPageSize={20}
                 minRows={5}
                 onExpandedChange={(newExpanded, index, event) => this.handleRowExpanded(newExpanded, index, event)}
                 expanded={this.state.expandedRows}
-            />
-        );
-    }
-
-    getIntentGroupSubTable(intents: Intent[]) {
-        return (
-            <GenericTable
-                items={intents}
-                getColumns={() => this.getIntentSubTableColumns()}
                 getTheadThProps={this.removeHideableHeaders}
-                getTrProps={this.makeRowsClickableProps}
-                showPagination={false}
-                minRows={0}
+                className="-striped -highlight"
             />
         );
     }
@@ -98,6 +93,8 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
         return (
             <div>
                 <Button text="Create" onClick={this.createIntent} />
+                <Button text="Edit" onClick={this.editIntent} />
+                <Button text="Delete" onClick={this.deleteIntentAndSave} />
             </div>
         );
     }
@@ -244,6 +241,25 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
         return permitted;
     }
 
+    // derived from https://stackoverflow.com/questions/44845372
+    makeRowsClickableProps = (state: IntentsPanelState, rowInfo: any) => {
+        if (rowInfo && rowInfo.row) {
+            return {
+                onClick: () => {
+                    this.setState({
+                        selectedIntent: rowInfo.original
+                    });
+                },
+                style: {
+                    background: rowInfo.original === this.state.selectedIntent ? "#00afec" : "white",
+                    color: rowInfo.original === this.state.selectedIntent ? "white" : "black"
+                }
+            };
+        } else {
+            return {};
+        }
+    };
+
     /*
      * Must be done manually, otherwise sub-areas collapse on filter, sort, and tab-change.
      */
@@ -259,12 +275,61 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
         });
     }
 
+    getTableMainHeader(title: string): React.ReactNode {
+        return (
+            <div>
+                <AlignedDiv message={title} alignment="left" />
+                <AlignedDiv message={this.getSearchBox()} alignment="right" />
+            </div>
+        );
+    }
+
+    getSearchBox(): React.ReactNode {
+        // opted for the 'allow re-render but re-set focus and value on every render' approach,
+        // because I couldn't figure out how to easily tell it to re-use this input field without
+        // re-rendering it when its parent re-renders.
+        return (
+            <input
+                key="search"
+                ref={(input) => {
+                    this.searchInput = input;
+                }}
+                value={this.state.query}
+                placeholder="Search..."
+                onChange={(e) => this.handleFilterChange(e)}
+            />
+        );
+    }
+
+    handleFilterChange(event: any) {
+        if (event && event.target) {
+            this.setState({
+                query: event.target.value
+            });
+        }
+    }
+
     getAllGroupsAsExpanded() {
         const groupsToInitializeAsExpanded: any = {};
         for (let i: number = 0; i < this.getIntentGroupsFromWidget(this.props.updatingWidget).length; i++) {
             groupsToInitializeAsExpanded[i] = true;
         }
         return groupsToInitializeAsExpanded;
+    }
+
+    getIntentActionGroup(intents: Intent[]) {
+        return (
+            <ReactTable
+                key="intentActionGroup"
+                data={intents}
+                columns={this.getIntentSubTableColumns()}
+                getTheadThProps={this.removeHideableHeaders}
+                showPagination={false}
+                getTrProps={this.makeRowsClickableProps}
+                minRows={0}
+                className="-striped -highlight"
+            />
+        );
     }
 
     // derived from https://github.com/tannerlinsley/react-table/issues/508#issuecomment-380392755
@@ -325,14 +390,20 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
         return intentGroups;
     }
 
-    filterIntentGroups(
-        intentGroups: IntentGroup[],
-        query: string,
-        queryMatches: (msg: string, query: string) => boolean
-    ): IntentGroup[] {
+    getIntentGroups(): any {
+        return this.filterIntentGroups(this.state.allIntentGroups);
+    }
+
+    filterIntentGroups(intentGroups: IntentGroup[]): IntentGroup[] {
+        if (this.state === undefined || this.state.query === "") {
+            return intentGroups;
+        }
+
         // leave in all actionGroups containing `term`, as well as all intents whose dataType includes `term`.
         // Remember it's {action:string, dataTypes:string[] }[],
-        const filteredGroups: IntentGroup[] = intentGroups.filter((group) => queryMatches(group.action, query));
+        const filteredGroups: IntentGroup[] = intentGroups.filter((group) =>
+            queryMatches(group.action, this.state.query)
+        );
 
         for (const group of intentGroups) {
             if (listContainsObject(filteredGroups, group)) {
@@ -414,6 +485,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
 
 const AlignedDiv: React.FC<{ message: React.ReactNode; alignment: "left" | "right" | "center" }> = (props) => {
     const { alignment, message } = props;
+
     return <div style={{ textAlign: alignment }}>{message}</div>;
 };
 
@@ -426,4 +498,8 @@ function listContainsObject(list: any[], obj: any): boolean {
         if (o === obj) return true;
     }
     return false;
+}
+
+function queryMatches(text: string, query: string): boolean {
+    return text.includes(query);
 }
