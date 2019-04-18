@@ -9,6 +9,7 @@ import {
     StackDeleteAdminResponse,
     StackDeleteUserResponse,
     StackGetResponse,
+    StackShareResponse,
     StackUpdateRequest,
     StackUpdateResponse,
     validateStackCreateResponse,
@@ -70,6 +71,14 @@ export class StackAPI {
         });
     }
 
+    async shareStack(id: number): Promise<Response<StackShareResponse>> {
+        return this.gateway.post(`stack/share/${id}`, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        });
+    }
+
     deleteStackAsAdmin(id: number): Promise<Response<StackDeleteAdminResponse>> {
         const requestData = qs.stringify({
             _method: "DELETE",
@@ -99,6 +108,8 @@ export class StackAPI {
         });
     }
 }
+
+export const stackApi = new StackAPI();
 
 function getOptionParams(options?: StackQueryCriteria): any | undefined {
     if (!options) return undefined;

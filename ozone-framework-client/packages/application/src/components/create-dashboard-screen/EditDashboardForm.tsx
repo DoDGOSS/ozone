@@ -10,6 +10,7 @@ import { FormError, TextField } from "../form";
 
 import * as styles from "./index.scss";
 
+import { stackApi } from "../../api/clients/StackAPI";
 import { dashboardApi } from "../../api/clients/DashboardAPI";
 
 export interface EditDashboardFormProps {
@@ -22,7 +23,14 @@ export const EditDashboardForm: React.FC<EditDashboardFormProps> = ({ onSubmit, 
         <Formik
             initialValues={dashboard}
             onSubmit={async (values: DashboardUpdateRequest, actions: FormikActions<DashboardUpdateRequest>) => {
-                const isSuccess = await dashboardApi.updateDashboard(values);
+                const stackData = {
+                    id: values.stack!.id,
+                    stackContext: values.stack!.stackContext,
+                    name: values.name
+                };
+
+                const isSuccess = [await dashboardApi.updateDashboard(values), await stackApi.updateStack(stackData)];
+
                 actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
                 actions.setSubmitting(false);
 
