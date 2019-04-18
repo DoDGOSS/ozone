@@ -53,8 +53,8 @@ export class UsersDialog extends React.Component<Props, State> {
                             getColumns={() => [
                                 {
                                     Header: "Full Name",
-                                    id: "username",
-                                    accessor: (user: User) => user.username
+                                    id: "displayName",
+                                    accessor: (user: User) => user.displayName
                                 },
                                 { Header: "Last Sign In", id: "lastLogin", accessor: (user: User) => user.lastLogin }
                             ]}
