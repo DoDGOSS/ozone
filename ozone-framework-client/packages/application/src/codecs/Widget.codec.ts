@@ -1,11 +1,11 @@
-import { map } from "lodash";
-
-import { Widget } from "../models/Widget";
 import { WidgetDTO } from "../api/models/WidgetDTO";
 
-import { optional } from "../utility";
+import { Widget } from "../models/Widget";
+
 import { intentFromJson } from "./Intent.codec";
 import { widgetTypeFromJson } from "./WidgetType.codec";
+
+import { optional } from "../utility";
 
 export function widgetFromJson(dto: WidgetDTO): Widget {
     const props = dto.value;
@@ -20,8 +20,8 @@ export function widgetFromJson(dto: WidgetDTO): Widget {
             largeUrl: props.mediumIconUrl
         },
         intents: {
-            send: map(props.intents.send, intentFromJson),
-            receive: map(props.intents.receive, intentFromJson)
+            send: props.intents.send.map(intentFromJson),
+            receive: props.intents.receive.map(intentFromJson)
         },
         isBackground: props.background,
         isDefinitionVisible: props.definitionVisible,
@@ -39,7 +39,7 @@ export function widgetFromJson(dto: WidgetDTO): Widget {
         title: props.namespace,
         universalName: optional(props.universalName),
         url: props.url,
-        types: map(props.widgetTypes, widgetTypeFromJson),
+        types: props.widgetTypes.map(widgetTypeFromJson),
         version: optional(props.widgetVersion),
         width: props.width,
         x: props.x,

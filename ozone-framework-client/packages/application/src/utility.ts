@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { isArray } from "lodash";
+import { isArray, values as _values } from "lodash";
 
 import { default as _classNames } from "classnames";
 
@@ -116,10 +116,24 @@ export function omitIndex<T>(array: T[], index: number): T[] {
 }
 
 /**
- * Returns the value, or undefined if value is null.
+ * Returns the value, or undefined if value is null or undefined.
  */
-export function optional<T extends any>(value: any): T | undefined {
-    return value === null ? undefined : value;
+export function optional<T extends any>(value: T | null | undefined): T | undefined {
+    return isNil(value) ? undefined : value;
+}
+
+/**
+ * Returns the value, or null if value is null or undefined.
+ */
+export function orNull<T extends any>(value: T | null | undefined): T | null {
+    return isNil(value) ? null : value;
+}
+
+/**
+ * Creates an array of the own enumerable property values of object.
+ */
+export function values<T>(obj: Dictionary<T> | NumericDictionary<T>): T[] {
+    return _values(obj);
 }
 
 export function isFunction(f: any) {

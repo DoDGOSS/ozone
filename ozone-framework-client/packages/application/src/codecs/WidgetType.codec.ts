@@ -1,4 +1,5 @@
 import { WidgetTypeDTO } from "../api/models/WidgetTypeDTO";
+
 import { WidgetType } from "../models/WidgetType";
 
 export function widgetTypeFromJson(dto: WidgetTypeDTO) {

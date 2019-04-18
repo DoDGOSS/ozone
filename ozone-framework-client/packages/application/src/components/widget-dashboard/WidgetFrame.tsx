@@ -39,7 +39,8 @@ const _WidgetFrame: React.FC<WidgetFrameProps> = ({ widget }) => {
             themeName: "a_default",
             themeContrast: "standard",
             themeFontSize: 12
-        }
+        },
+        data: widget.launchData
     });
 
     return <iframe className={styles.widgetFrame} src={def.url} id={`widget-${def.id}`} name={nameJson} />;

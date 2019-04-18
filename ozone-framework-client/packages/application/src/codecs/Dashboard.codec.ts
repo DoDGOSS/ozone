@@ -1,32 +1,26 @@
-import { values } from "lodash";
-
 import { DashboardUpdateRequest } from "../api/models/DashboardDTO";
 import { UserDashboardDTO, UserDashboardStackDTO } from "../api/models/UserDashboardDTO";
 import { UserWidgetDTO } from "../api/models/UserWidgetDTO";
 
 import { UserWidget } from "../models/UserWidget";
 
-import { FitPanel } from "../models/dashboard/FitPanel";
-import { TabbedPanel } from "../models/dashboard/TabbedPanel";
+import { Dashboard, DashboardLayout, DashboardProps } from "../models/dashboard/Dashboard";
 import { ExpandoPanel } from "../models/dashboard/ExpandoPanel";
-import { Dashboard, DashboardProps } from "../models/dashboard/Dashboard";
+import { FitPanel } from "../models/dashboard/FitPanel";
+import { Stack } from "../models/dashboard/Stack";
+import { TabbedPanel } from "../models/dashboard/TabbedPanel";
 import { isExpandoPanelState, isTabbedPanelState, LayoutType, Panel, PanelState } from "../models/dashboard/types";
 
-import { DashboardNode, PanelMap } from "../components/widget-dashboard/types";
+import { DashboardNode } from "../components/widget-dashboard/types";
 
 import { userWidgetFromJson } from "./UserWidget.codec";
 
-import { optional } from "../utility";
-import { Stack } from "../models/dashboard/Stack";
-
-export type DashboardMap = { [id: string]: Dashboard };
-export type StackMap = { [id: number]: Stack };
-export type UserWidgetMap = { [id: number]: UserWidget };
+import { optional, values } from "../utility";
 
 export interface UserState {
-    dashboards: DashboardMap;
-    stacks: StackMap;
-    widgets: UserWidgetMap;
+    dashboards: Dictionary<Dashboard>;
+    stacks: NumericDictionary<Stack>;
+    widgets: NumericDictionary<UserWidget>;
 }
 
 export interface PanelDTO {
@@ -48,9 +42,9 @@ export function deserializeUserState(dashboards: UserDashboardDTO[], userWidgets
 }
 
 class UserStateDeserializer {
-    private dashboards: DashboardMap = {};
-    private stacks: StackMap = {};
-    private widgets: UserWidgetMap = {};
+    private dashboards: Dictionary<Dashboard> = {};
+    private stacks: NumericDictionary<Stack> = {};
+    private widgets: NumericDictionary<UserWidget> = {};
 
     deserialize(dashboards: UserDashboardDTO[], userWidgets: UserWidgetDTO[]): UserState {
         userWidgets.forEach((userWidget) => this.addWidget(userWidget));
@@ -99,7 +93,7 @@ class UserStateDeserializer {
 
         const layout = JSON.parse(dto.layoutConfig) as DashboardLayoutDTO;
 
-        const panels: PanelMap = {};
+        const panels: Dictionary<Panel<any>> = {};
         for (const panel of layout.panels) {
             const _panel = this.createPanel(panel);
             panels[_panel.id] = _panel;
@@ -160,11 +154,6 @@ export function dashboardToUpdateRequest(dashboard: Dashboard): DashboardUpdateR
         layoutConfig: JSON.stringify(dashboardLayoutToJson(state)),
         name: state.name
     };
-}
-
-export interface DashboardLayout {
-    tree: DashboardNode | null;
-    panels: PanelMap;
 }
 
 export function dashboardLayoutToJson(state: DashboardLayout): DashboardLayoutDTO {

@@ -1,4 +1,4 @@
-import { map } from "lodash";
+import { isRegExp, map } from "lodash";
 
 import { Observable, Subject } from "rxjs";
 import { filter } from "rxjs/operators";
@@ -8,7 +8,8 @@ import { UserWidget } from "../models/UserWidget";
 import { dashboardStore } from "../stores/DashboardStore";
 import { errorStore } from "./ErrorStore";
 
-import { getIn, isBlank, isNil, isString, isStringArray, TypeGuard } from "../utility";
+import { getIn, isBlank, isNil, isString, isStringArray, Predicate } from "../utility";
+import { expectArgument, RpcMessage } from "./RpcMessage";
 
 // Enable to log received messages to the developer console
 const ENABLE_DEBUG_MESSAGE_LOGGING = false;
@@ -26,7 +27,6 @@ interface Widget2 {
 
 interface WidgetClient {
     id: string;
-    iframeWindow: Window;
     info: Widget2;
     functions?: string[];
     origin: string;
@@ -38,6 +38,14 @@ interface WidgetClient {
  *
  * TODO: Handlers for _WIDGET_STATE_CHANNEL_{$widgetGuid} messages: activateWidget
  */
+
+function messageServiceMatches(service: string | RegExp): Predicate<RpcMessage> {
+    if (isRegExp(service)) {
+        return (message: RpcMessage) => service.test(message.service);
+    }
+
+    return (message: RpcMessage) => message.service === service;
+}
 
 export class EventingService {
     private readonly events$ = new Subject<RpcMessage>();
@@ -62,10 +70,15 @@ export class EventingService {
         this.register("LIST_WIDGETS").subscribe(this.onListWidgets.bind(this));
         this.register("GET_FUNCTIONS").subscribe(this.onGetFunctions.bind(this));
         this.register("pubsub").subscribe(this.onPubSub.bind(this));
+        this.register(/^_WIDGET_STATE_CHANNEL/).subscribe(this.onWidgetStateMessage.bind(this));
     }
 
-    register(service: string): Observable<RpcMessage> {
-        return this.events$.pipe(filter((message) => message.service === service));
+    register(service: string | RegExp): Observable<RpcMessage> {
+        return this.events$.pipe(filter(messageServiceMatches(service)));
+    }
+
+    callback(message: RpcMessage, response: any): void {
+        this.call(message.senderId, "__cb", [message.callback, response]);
     }
 
     private requireWidget(id: string): WidgetClient {
@@ -81,15 +94,13 @@ export class EventingService {
 
         const message = formatRpcMessage(service, "..", args);
 
-        target.iframeWindow.postMessage(message, target.origin);
+        const iframeWindow = findWidgetIFrameWindow(target.id);
+
+        iframeWindow.postMessage(message, target.origin);
     }
 
     private respond(message: RpcMessage, service: string, args: any): void {
         this.call(message.senderId, service, args);
-    }
-
-    private callback(message: RpcMessage, response: any): void {
-        this.call(message.senderId, "__cb", [message.callback, response]);
     }
 
     private receiveMessage(message: any): void {
@@ -121,7 +132,6 @@ export class EventingService {
     private onWidgetInit(message: RpcMessage): void {
         try {
             const widget = findWidgetInDashboard(message.senderId);
-            const iframeWindow = findWidgetIFrameWindow(widget.widget.id);
 
             this.widgets[widget.widget.id] = {
                 id: widget.widget.id,
@@ -135,8 +145,7 @@ export class EventingService {
                     universalName: widget.widget.universalName || ""
                 },
                 ready: false,
-                origin: message.raw.origin,
-                iframeWindow
+                origin: message.raw.origin
             };
 
             this.call(widget.widget.id, "after_container_init", [window.name, `{"id":"${window.name}"}`]);
@@ -252,6 +261,20 @@ export class EventingService {
         }
     }
 
+    private onWidgetStateMessage(message: RpcMessage) {
+        try {
+            const widget = this.requireWidget(message.senderId);
+
+            if (ENABLE_DEBUG_MESSAGE_LOGGING) {
+                console.groupCollapsed(`Widget State Channel: ${widget.info.name} →`);
+                console.dir(message);
+                console.groupEnd();
+            }
+        } catch (error) {
+            errorStore.warning("EventingService Error", `onWidgetStateMessage error: ${error.message}`);
+        }
+    }
+
     private addSubscription(client: WidgetClient, channel: string): void {
         if (!this.isSubscribed(client, channel)) {
             if (ENABLE_DEBUG_MESSAGE_LOGGING) {
@@ -279,21 +302,11 @@ export class EventingService {
     }
 }
 
-function expectArgument<T>(message: RpcMessage, index: number, guard?: TypeGuard<T>): T {
-    const value = message && message.arguments && message.arguments[index];
-
-    if (guard && !guard(value)) {
-        throw new Error(`expected message argument ${index} to be type '${guard.toString()}'`);
-    }
-
-    return value;
-}
-
-function parseJson(value: string): any | null {
+export function parseJson(value: string): any | undefined {
     try {
         return JSON.parse(value);
     } catch (error) {
-        return null;
+        return undefined;
     }
 }
 
@@ -305,17 +318,6 @@ function formatRpcMessage(service: string, from: string, args: any, callback?: a
         c: callback || 0,
         t: token || 0
     });
-}
-
-interface RpcMessage {
-    service: string;
-    sender: string;
-    senderId: string;
-    arguments: any[];
-    callback: any;
-    token: any;
-    origin: string;
-    raw: any;
 }
 
 export const eventingService = new EventingService();
