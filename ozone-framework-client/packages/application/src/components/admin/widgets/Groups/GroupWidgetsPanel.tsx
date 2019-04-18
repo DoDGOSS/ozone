@@ -106,6 +106,7 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         let data = this.state.widgets;
         const filter = this.state.filter.toLowerCase();
 
+
         // TODO - Improve this - this will be slow if there are many users.
         // Minimally could wait to hit enter before filtering. Pagination handling
         if (filter) {
@@ -174,6 +175,7 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         });
     }
 
+    // the group id is not filtering anything so all the widgets are being displayed
     private getWidgets = async () => {
         const currentGroup: GroupDTO = this.state.group;
 
@@ -181,7 +183,9 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
             group_id: currentGroup.id
         };
         // check the widget api get widget critieria
+        console.log(criteria)
         const response = await widgetApi.getWidgets(criteria);
+        console.log(response)
 
         // TODO: Handle failed request
         if (response.status !== 200) return;
