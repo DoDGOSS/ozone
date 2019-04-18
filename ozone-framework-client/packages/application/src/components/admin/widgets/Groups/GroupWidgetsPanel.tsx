@@ -4,7 +4,6 @@ import * as React from "react";
 import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
 
 import { AdminTable } from "../../table/AdminTable";
-import { GroupUsersEditDialog } from "./GroupUsersEditDialog";
 import { GroupWidgetsEditDialog } from './GroupWidgetEditDialog'
 
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
@@ -12,11 +11,10 @@ import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDia
 import { groupApi } from "../../../../api/clients/GroupAPI";
 import { GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
 
-import { userApi, UserQueryCriteria } from "../../../../api/clients/UserAPI";
-import { UserDTO } from "../../../../api/models/UserDTO";
+import { UserQueryCriteria } from "../../../../api/clients/UserAPI";
 
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
-import { WidgetDTO, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
+import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 
 interface GroupEditWidgetProps {
     onUpdate: (update?: any) => void;
@@ -191,8 +189,7 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
     };
 
     private handleAddWidgetResponse = async (widgets: Array<WidgetDTO>) => {
-        // check the group update response 
-        // possibly change to widget update response
+
         const request: GroupUpdateRequest = {
             id: this.state.group.id,
             tab: "Widgets",
