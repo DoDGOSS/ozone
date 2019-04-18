@@ -23,14 +23,14 @@ export const WidgetSearchWidget: React.FC<{}> = () => {
                 const results = dtos.map((dto) => ({
                     id: dto.id,
                     name: dto.value.namespace
-                }));
+                })).sort((a, b) => a.name.localeCompare(b.name));
                 setWidgets(results);
             },
             onFailure: (error: any) => {
                 reportError(error);
             }
         });
-    }, []);
+    }, [ query ]);
 
     useEffect(() => {
         OWF.notifyWidgetReady();
