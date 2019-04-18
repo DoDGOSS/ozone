@@ -87,7 +87,7 @@ export class GroupsPanel extends React.Component<Props, State> {
             <div>
                 {dialog}
                 {this.getGroupTable()}
-                <Button text="Add" onClick={this.openDialog} />
+                <Button text="Add" onClick={() => this.openDialog()} />
             </div>
         );
     }

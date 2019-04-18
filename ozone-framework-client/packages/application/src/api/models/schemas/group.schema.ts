@@ -69,6 +69,9 @@ export const GROUP_GET_RESPONSE_SCHEMA = {
         },
         results: {
             type: "number"
+        },
+        success: {
+            type: "boolean"
         }
     },
     definitions: {
