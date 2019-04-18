@@ -61,40 +61,35 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
     }
 
     mainTable(): any {
-        console.log('rerendering main table', this.state.expandedRows)
         return (
             <GenericTable
-                items={this.state.allIntentGroups}
+                items={this.state.widgetGroups}
                 getColumns={() => this.getMainTableColumns()}
-                customFilter={this.filterIntentGroups}
-                reactTableProps={{
-                    expanderDefaults: {
-                        sortable: true,
-                        resizable: true,
-                        filterable: false
-                    },
-                    SubComponent: (rowObject: any) => this.getIntentGroupSubTable(rowObject.original.intents),
-                    defaultPageSize: 20,
-                    minRows: 5,
-                    onExpandedChange: (newExpanded: any, index: number, event: any) =>
-                        {console.log(newExpanded, index, event); return this.handleRowExpanded(newExpanded, index, event)},
-                    expanded: this.state.expandedRows
+                customFilter={() => this.filterIntentGroups}
+                getTheadThProps={this.removeHideableHeaders}
+                expanderDefaults={{
+                    sortable: true,
+                    resizable: true,
+                    filterable: false
                 }}
+                SubComponent={(rowObject) => this.getIntentGroupSubTable(rowObject.original.intents)}
+                defaultPageSize={20}
+                minRows={5}
+                onExpandedChange={(newExpanded, index, event) => this.handleRowExpanded(newExpanded, index, event)}
+                expanded={this.state.expandedRows}
             />
         );
     }
 
     getIntentGroupSubTable(intents: Intent[]) {
-        console.log('rerendering subtable', intents[0].action)
         return (
             <GenericTable
                 items={intents}
                 getColumns={() => this.getIntentSubTableColumns()}
-                filterable={false}
-                reactTableProps={{
-                    showPagination: false,
-                    minRows: 0
-                }}
+                getTheadThProps={this.removeHideableHeaders}
+                getTrProps={this.makeRowsClickableProps}
+                showPagination={false}
+                minRows={0}
             />
         );
     }
@@ -252,14 +247,13 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
     /*
      * Must be done manually, otherwise sub-areas collapse on filter, sort, and tab-change.
      */
-    handleRowExpanded(newExpanded: any, index: number, event: any): void {
+    handleRowExpanded(newExpanded: any, index: number[], event: any): void {
         // clean newExpanded first. Don't know why it comes with {} instead of true, but it breaks if you keep it like that.
         for (let i = 0; i < newExpanded.length; i++) {
             if (newExpanded[i] === {}) {
                 newExpanded[i] = true;
             }
         }
-        console.log(newExpanded)
         this.setState({
             expandedRows: newExpanded
         });
@@ -271,6 +265,14 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
             groupsToInitializeAsExpanded[i] = true;
         }
         return groupsToInitializeAsExpanded;
+    }
+
+    // derived from https://github.com/tannerlinsley/react-table/issues/508#issuecomment-380392755
+    removeHideableHeaders(state: any, rowInfo: any, column: any) {
+        if (column.Header === "hideMe") {
+            return { style: { display: "none" } }; // override style
+        }
+        return {};
     }
 
     getIntentGroupsFromWidget(widget: any): IntentGroup[] {
@@ -336,7 +338,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
             if (listContainsObject(filteredGroups, group)) {
                 continue;
             }
-            const matchingIntents = group.intents.filter((intent) => queryMatches(intent.dataType, query));
+            const matchingIntents = group.intents.filter((intent) => queryMatches(intent.dataType, this.state.query));
             if (matchingIntents.length > 0) {
                 filteredGroups.push({ action: group.action, intents: matchingIntents });
             }
@@ -349,25 +351,30 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
 
         return [
             {
-                Header: "hideMe",
-                expander: true,
-                width: 35
-            },
-            {
-                expander: true,
-                Header: () => <AlignedDiv message="Intent" alignment="left" />,
-                Expander: ({ isExpanded, ...rest }: any) => <div>{rest.original.action}</div>,
-                style: {
-                    textAlign: "left"
-                }
-            },
-            {
-                Header: "Send",
-                width: this.smallBoolBoxWidth
-            },
-            {
-                Header: "Receive",
-                width: this.smallBoolBoxWidth
+                Header: () => this.getTableMainHeader(title1),
+                columns: [
+                    {
+                        Header: "hideMe",
+                        expander: true,
+                        width: 35
+                    },
+                    {
+                        expander: true,
+                        Header: () => <AlignedDiv message="Intent" alignment="left" />,
+                        Expander: ({ isExpanded, ...rest }: any) => <div>{rest.original.action}</div>,
+                        style: {
+                            textAlign: "left"
+                        }
+                    },
+                    {
+                        Header: "Send",
+                        width: this.smallBoolBoxWidth
+                    },
+                    {
+                        Header: "Receive",
+                        width: this.smallBoolBoxWidth
+                    }
+                ]
             }
         ];
     }
