@@ -2,8 +2,9 @@ import * as styles from "../Widgets.scss";
 
 import * as React from "react";
 
-import { Dialog } from "@blueprintjs/core";
+import { Classes, Dialog } from "@blueprintjs/core";
 
+import { classNames } from "../../../../utility";
 import { Intent } from "../../../../models/compat";
 
 import { IntentForm } from "./IntentForm";
@@ -20,11 +21,11 @@ export class IntentDialog extends React.Component<IntentDialogProps, {}> {
         return (
             <Dialog
                 title={this.getTitle()}
-                className={styles.loginScreen}
+                className={classNames("bp3-dark", styles.dialog)}
                 isOpen={this.props.isOpen}
                 onClose={this.props.onClose}
             >
-                <div>
+                <div className={classNames(Classes.DIALOG_BODY, styles.dialogBody)}>
                     <IntentForm
                         intentToEdit={this.props.intentToEdit}
                         onSubmit={(newI: any) => {
