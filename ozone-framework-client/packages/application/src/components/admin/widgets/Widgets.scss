@@ -54,7 +54,7 @@
 //chrome scroll bar fix
  /* width */
  ::-webkit-scrollbar {
-   width: 10px;
+   height: 4px;
  }
  /* Track */
  ::-webkit-scrollbar-track {
@@ -62,12 +62,13 @@
  }
  /* Handle */
  ::-webkit-scrollbar-thumb {
-   background: $text-color_dark;
+   border-radius: 8px;
+   background: #48aff0 !important;
  }
 
  /* Handle on hover */
  ::-webkit-scrollbar-thumb:hover {
-   background: white;
+   background: #48aff0;
  }
 
  //firefox drop arrow
