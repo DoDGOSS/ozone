@@ -4,7 +4,6 @@ import * as React from "react";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
-import { classNames } from "../../../../utility";
 import { Intent } from "../../../../models/compat";
 
 import { IntentForm } from "./IntentForm";
