@@ -6,9 +6,9 @@ import * as uuidv4 from "uuid/v4";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { array, boolean, number, object, string } from "yup";
 
+import { mainStore } from "../../../stores/MainStore";
 import * as styles from "../widgets/Widgets.scss";
 
-import { mainStore } from "../../../stores/MainStore";
 import { classNames, isFunction } from "../../../utility";
 
 interface Props<T> {
@@ -20,7 +20,8 @@ interface Props<T> {
     multiSelection?: boolean;
     customFilter?: (items: T[], query: string, queryMatches: (msg: string, query: string) => boolean) => T[];
     filterable?: boolean;
-    reactTableProps?: any;
+    getReactTableProps?: () => any;
+    classNames?: any;
 }
 
 interface State<T> {
@@ -31,17 +32,14 @@ interface State<T> {
 
 export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
     filterable: boolean;
-    minRows: number = 5;
-    showPagination: boolean = true;
-    reactTableProps: { [key: string]: any } = {};
 
     constructor(props: Props<T>) {
         super(props);
-
-        this.setReactTableProps();
-
         this.state = {
-            pageSize: this.reactTableProps.pageSize,
+            pageSize:
+                this.props.getReactTableProps && this.props.getReactTableProps().pageSize
+                    ? this.props.getReactTableProps().pageSize
+                    : 10,
             selections: [],
             query: ""
         };
@@ -57,30 +55,29 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                     pageSize={this.state.pageSize}
                     getTheadThProps={this.removeHideableHeaders}
                     getTrProps={this.rowsAreClickable() ? this.clickableRowProps : () => ""}
-                    className={classNames("striped", mainStore.getTheme())}
+                    className={classNames("striped", mainStore.getTheme(), this.props.classNames)}
                     columns={this.getTableLayout()}
-                    {...this.reactTableProps}
+                    {...this.buildReactTableProps()}
                 />
             </div>
         );
     }
 
-    private setReactTableProps() {
-        let reactProps: { [key: string]: any } = {};
-        if (this.props.reactTableProps !== undefined) {
-            reactProps = this.props.reactTableProps;
-        }
+    private buildReactTableProps() {
+        const reactTableProps: { [key: string]: any } = {};
 
-        this.reactTableProps["pageSize"] = 10;
-        this.reactTableProps["minRows"] = 5;
-        this.reactTableProps["showPagination"] = true;
+        reactTableProps["minRows"] = 5;
+        reactTableProps["showPagination"] = true;
 
-        for (const p in reactProps) {
-            if (reactProps.hasOwnProperty(p)) {
-                console.log(p, reactProps[p]);
-                this.reactTableProps[p] = reactProps[p];
+        if (this.props.getReactTableProps) {
+            const inputProps = this.props.getReactTableProps();
+            for (const p in inputProps) {
+                if (inputProps.hasOwnProperty(p)) {
+                    reactTableProps[p] = inputProps[p];
+                }
             }
         }
+        return reactTableProps;
     }
 
     private rowsAreClickable(): boolean {
