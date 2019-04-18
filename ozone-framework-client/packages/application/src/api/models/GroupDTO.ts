@@ -53,7 +53,7 @@ export interface GroupUpdateRequest extends GroupCreateRequest {
     tab?: string;
     update_action?: "add" | "remove";
     user_ids?: number[];
-    widget_ids?: string[];
+    data?: any;
 }
 
 export interface GroupUpdateResponse {
