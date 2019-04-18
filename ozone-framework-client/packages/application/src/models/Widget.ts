@@ -1,5 +1,3 @@
-import { PropertiesOf } from "../types";
-
 import { Intent } from "./Intent";
 import { WidgetType } from "./WidgetType";
 
