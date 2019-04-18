@@ -8,6 +8,7 @@ import { values } from "lodash";
 
 import { Button, Classes, InputGroup, Overlay } from "@blueprintjs/core";
 
+import { ConfirmationDialog } from "../confirmation-dialog/ConfirmationDialog";
 import { mainStore } from "../../stores/MainStore";
 import { dashboardStore } from "../../stores/DashboardStore";
 import { dashboardService } from "../../stores/DashboardService";
@@ -17,6 +18,7 @@ import { PropsBase } from "../../common";
 import { SortButton, SortOrder } from "./SortButton";
 
 import { classNames, handleStringChange, isBlank } from "../../utility";
+import { userWidgetApi } from "../../api/clients/UserWidgetAPI";
 
 export const WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
     const isOpen = useBehavior(mainStore.isWidgetToolbarOpen);
@@ -95,10 +97,53 @@ export interface WidgetProps {
 }
 
 export const UserWidgetTile: React.FC<WidgetProps> = ({ userWidget }) => {
+    const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+    const [showDeleteButton, setShowDeleteButton] = useState(false);
+
     return (
-        <div className={styles.tile} onClick={() => dashboardService.addWidget(userWidget)}>
-            <img className={styles.tileIcon} src={userWidget.widget.images.smallUrl} />
-            <span className={styles.tileTitle}>{userWidget.widget.title}</span>
+        <div
+            className={styles.tile}
+            onMouseEnter={() => setShowDeleteButton(true)}
+            onMouseLeave={() => setShowDeleteButton(false)}
+        >
+            <div className={styles.subtile} onClick={() => dashboardService.addWidget(userWidget)}>
+                <img className={styles.tileIcon} src={userWidget.widget.images.smallUrl} />
+                <span className={styles.tileTitle}>{userWidget.widget.title}</span>
+            </div>
+            <div>
+                {showDeleteButton ? (
+                    userWidget.isGroupWidget ? (
+                        <Button
+                            icon="trash"
+                            small
+                            disabled={userWidget.isGroupWidget}
+                            title="You may not delete this widget because it is required by a dashboard or it belongs to a group."
+                        />
+                    ) : (
+                        <Button
+                            icon="trash"
+                            minimal
+                            small
+                            data-element-id="widget-delete"
+                            onClick={() => setShowConfirmDelete(true)}
+                        />
+                    )
+                ) : null}
+                <ConfirmationDialog
+                    show={showConfirmDelete}
+                    title="Warning"
+                    content={`This action will permanently delete <strong>${
+                        userWidget.widget.title
+                    }</strong> from your available widgets!`}
+                    confirmHandler={() =>
+                        userWidgetApi.deleteUserWidget(userWidget.widget.id).then(() => {
+                            dashboardStore.fetchUserDashboards();
+                        })
+                    }
+                    cancelHandler={() => setShowConfirmDelete(false)}
+                    payload={userWidget}
+                />
+            </div>
         </div>
     );
 };
