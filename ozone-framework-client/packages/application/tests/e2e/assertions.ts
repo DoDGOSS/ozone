@@ -1,7 +1,7 @@
 import { PREFERENCES } from "../unit/data";
 import { Response } from "../../src/api/interfaces";
 
-const SHOW_RESPONSES = true;
+const SHOW_RESPONSES = false;
 
 export let checkForDefaultPrefs = (data: any) => {
     data.results = 5;

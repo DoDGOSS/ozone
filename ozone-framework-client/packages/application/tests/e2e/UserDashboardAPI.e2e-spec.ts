@@ -45,7 +45,7 @@ describe(UserDashboardAPI.name, () => {
         logResponse(response);
 
         expect(response.status).toEqual(200);
-        expect(response.data).toMatchObject({ results: 3 });
+        expect(response.data).toMatchObject({ results: 2 });
 
         initialStacks = response.data.data;
     });
@@ -56,7 +56,7 @@ describe(UserDashboardAPI.name, () => {
 
         expect(response.status).toEqual(200);
         expect(response.data.dashboards).toHaveLength(0);
-        expect(response.data.widgets).toHaveLength(11);
+        expect(response.data.widgets).toHaveLength(6);
     });
 
     let newDashboard: DashboardDTO;

@@ -1,6 +1,6 @@
 import * as styles from "./index.scss";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useBehavior } from "../../hooks";
 
 import { Spinner } from "@blueprintjs/core";
@@ -25,18 +25,29 @@ export const WidgetDashboard: React.FC<PropsBase> = (props) => {
     const dashboard = useBehavior(dashboardStore.currentDashboard);
     const { tree, panels } = useBehavior(dashboard.state);
 
-    const setLayout = useCallback((currentNode: DashboardNode | null) => dashboardService.setLayout(currentNode), []);
+    const [isDragging, setIsDragging] = useState(false);
+
+    const onChange = useCallback((currentNode: DashboardNode | null) => {
+        setIsDragging(true);
+        dashboardService.setLayoutFast(currentNode);
+    }, []);
+
+    const onRelease = useCallback((currentNode: DashboardNode | null) => {
+        setIsDragging(false);
+        dashboardService.setLayout(currentNode);
+    }, []);
 
     if (isLoading) {
         return <Spinner className={styles.loadingSpinner} />;
     }
 
     return (
-        <div className={classNames(styles.dashboard, className)}>
+        <div className={classNames(styles.dashboard, className, { dragging: isDragging })}>
             <DashboardLayout
                 className={classNames("mosaic-blueprint-theme", "mosaic", "mosaic-drop-target", themeClass)}
                 value={tree}
-                onChange={setLayout}
+                onChange={onChange}
+                onRelease={onRelease}
                 renderTile={(id: string, path: DashboardPath) => <DashboardPanel panel={panels[id]} path={path} />}
             />
         </div>
