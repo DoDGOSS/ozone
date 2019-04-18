@@ -11,13 +11,13 @@ export class GroupWidgetsEditDialog extends TableSelectionDialog<WidgetDTO> {
         const response = await widgetApi.getWidgets();
 
         if (response.status !== 200) return [];
-
+        console.log(response.data.data)
         return response.data.data;
     }
 
     protected filterMatch(filter: string, value: WidgetDTO): boolean {
         return (
-            value.displayName.toLowerCase().includes(filter) ||
+            value.namespace.toLowerCase().includes(filter) ||
             value.description.toLowerCase().includes(filter) ||
             value.widgetUrl.toLowerCase().includes(filter)
         );

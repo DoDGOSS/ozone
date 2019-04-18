@@ -16,6 +16,9 @@ import { UserQueryCriteria } from "../../../../api/clients/UserAPI";
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 
+// ask jeff which part of the panel is actually rendering the data that is set to widgets
+
+
 interface GroupEditWidgetProps {
     onUpdate: (update?: any) => void;
     group: any;
@@ -108,11 +111,12 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         if (filter) {
             data = data.filter((row) => {
                 return (
-                    row.displayName.toLowerCase().includes(filter) ||
+                    row.namespace.toLowerCase().includes(filter) ||
                     row.description.toLowerCase().includes(filter) ||
                     row.widgetUrl.toLowerCase().includes(filter) 
                 );
             });
+            console.log("filtered data: " + data)
         }
 
         return (
@@ -190,9 +194,11 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
 
     private handleAddWidgetResponse = async (widgets: Array<WidgetDTO>) => {
 
+        console.log(widgets.map((widget: WidgetDTO) => widget.id))
+
         const request: GroupUpdateRequest = {
             id: this.state.group.id,
-            tab: "Widgets",
+            tab: "widget",
             name: this.state.group.name,
             update_action: "add",
             data: widgets.map((widget: WidgetDTO) => widget.id)
@@ -246,7 +252,7 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         // to widget update request
         const request: GroupUpdateRequest = {
             id: this.state.group.id,
-            tab: "Widgets",
+            tab: "widget",
             name: this.state.group.name,
             update_action: "add",
             data: widget.id
