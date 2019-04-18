@@ -8,6 +8,7 @@ import { mainStore } from "../../stores/MainStore";
 import { errorStore } from "../../services/ErrorStore";
 
 import { dashboardApi } from "../../api/clients/DashboardAPI";
+import { stackApi } from "../../api/clients/StackAPI";
 import { DashboardDTO } from "../../api/models/DashboardDTO";
 import { ConfirmationDialog } from "../confirmation-dialog/ConfirmationDialog";
 import { EditDashboardForm } from "../create-dashboard-screen/EditDashboardForm";
@@ -15,6 +16,7 @@ import { EditDashboardForm } from "../create-dashboard-screen/EditDashboardForm"
 // TODO - convert to edit stacks
 // TODO - iconImageUrl not saving to database - clientAPI
 // TODO - style image
+// TODO - Modify share button when multipage support is added
 
 const fetchDashboards = (dispatchResult: (dashboards: DashboardDTO[]) => void) => {
     dashboardApi.getDashboards().then((response) => {
@@ -29,6 +31,7 @@ export const DashboardDialog: React.FC<{}> = () => {
     const isVisible = useBehavior(mainStore.isDashboardDialogVisible);
 
     const [showDelete, setDelete] = useState(false);
+    const [showShare, setShare] = useState(false);
     const [showEdit, setEdit] = useState(false);
     const [currentDashboard, setCurrentDashboard] = useState<DashboardDTO | null>(null);
     const [confirmationMessage, setConfirmationMessage] = useState("");
@@ -56,16 +59,42 @@ export const DashboardDialog: React.FC<{}> = () => {
         setCurrentDashboard(dashboard);
     };
 
+    const showShareConfirmation = async (dashboard: DashboardDTO) => {
+        setShare(true);
+        setConfirmationMessage(
+            `You are allowing <strong>${dashboard.name}</strong> to be shared with other users. Press OK to confirm.`
+        );
+        setCurrentDashboard(dashboard);
+    };
+
     const onDeleteConfirmed = async () => {
         if (currentDashboard === null) {
             errorStore.warning("Assertion Error", "DashboardDialog: expected currentDashboard to not be null");
             return false;
         }
 
-        const response = await dashboardApi.deleteDashboard(currentDashboard.guid);
+        const response = await stackApi.deleteStackAsUser(currentDashboard.stack!.id);
         if (response.status !== 200) return false;
 
         setDelete(false);
+        setCurrentDashboard(null);
+        setConfirmationMessage("");
+
+        fetchDashboards(setDashboards);
+
+        return true;
+    };
+
+    const onShareConfirmed = async () => {
+        if (currentDashboard === null) {
+            errorStore.warning("Assertion Error", "DashboardDialog: expected currentDashboard to not be null");
+            return false;
+        }
+
+        const response = await stackApi.shareStack(currentDashboard.stack!.id);
+        if (response.status !== 200) return false;
+
+        setShare(false);
         setCurrentDashboard(null);
         setConfirmationMessage("");
 
@@ -79,6 +108,11 @@ export const DashboardDialog: React.FC<{}> = () => {
         setCurrentDashboard(null);
     };
 
+    const onShareCancelled = () => {
+        setShare(false);
+        setCurrentDashboard(null);
+    };
+
     return (
         <div>
             {showDelete && (
@@ -88,6 +122,17 @@ export const DashboardDialog: React.FC<{}> = () => {
                     content={confirmationMessage}
                     confirmHandler={onDeleteConfirmed}
                     cancelHandler={onDeleteCancelled}
+                    payload={currentDashboard}
+                />
+            )}
+
+            {showShare && (
+                <ConfirmationDialog
+                    show={showShare}
+                    title={"Warning"}
+                    content={confirmationMessage}
+                    confirmHandler={onShareConfirmed}
+                    cancelHandler={onShareCancelled}
                     payload={currentDashboard}
                 />
             )}
@@ -113,6 +158,16 @@ export const DashboardDialog: React.FC<{}> = () => {
                                         text="Edit"
                                         data-element-id={"dashboard-edit-button-" + dashboard.name}
                                         onClick={() => showEditDialog(dashboard)}
+                                    />
+                                    <Divider />
+                                    <Button
+                                        value={dashboard.name}
+                                        icon="share"
+                                        text="Share"
+                                        intent={Intent.SUCCESS}
+                                        disabled={dashboard.publishedToStore}
+                                        data-element-id={"dashboard-share-button-" + dashboard.name}
+                                        onClick={() => showShareConfirmation(dashboard)}
                                     />
                                     <Divider />
                                     <Button
