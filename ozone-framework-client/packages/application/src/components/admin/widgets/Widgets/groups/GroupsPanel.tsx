@@ -13,10 +13,7 @@ import { array, boolean, number, object, string } from "yup";
 import * as styles from "../../Widgets.scss";
 
 import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../../form";
-<<<<<<< HEAD
 import { inPlaceConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
-=======
->>>>>>> 5bab739... re-organize admin/widget/widgets folder, base (not yet working) implementation of groups tab
 import { groupApi } from "../../../../../api/clients/GroupAPI";
 
 import { Group } from "../../../../../models/Group";
@@ -29,10 +26,6 @@ interface State {
     loading: boolean;
     widgetGroups: Group[];
     allGroups: Group[];
-<<<<<<< HEAD
-=======
-    selectedGroup: Group | undefined;
->>>>>>> 5bab739... re-organize admin/widget/widgets folder, base (not yet working) implementation of groups tab
     dialogOpen: boolean;
 }
 
@@ -49,12 +42,7 @@ export class GroupsPanel extends React.Component<Props, State> {
             loading: true,
             widgetGroups: [],
             allGroups: [],
-<<<<<<< HEAD
             dialogOpen: false
-=======
-            dialogOpen: false,
-            selectedGroup: undefined
->>>>>>> 5bab739... re-organize admin/widget/widgets folder, base (not yet working) implementation of groups tab
         };
     }
 
@@ -103,11 +91,7 @@ export class GroupsPanel extends React.Component<Props, State> {
             <div>
                 {dialog}
                 {this.getGroupTable()}
-<<<<<<< HEAD
                 <Button text="Add" onClick={() => this.openDialog()} />
-=======
-                {this.actionButtons()}
->>>>>>> 5bab739... re-organize admin/widget/widgets folder, base (not yet working) implementation of groups tab
             </div>
         );
     }
@@ -116,13 +100,8 @@ export class GroupsPanel extends React.Component<Props, State> {
         return (
             <GroupsDialog
                 isOpen={this.state.dialogOpen}
-<<<<<<< HEAD
                 onClose={() => this.closeDialog()}
                 onSubmit={(selections: Group[]) => this.addSelectedGroups(selections)}
-=======
-                onClose={this.closeDialog}
-                onSubmit={this.onFormSubmit}
->>>>>>> 5bab739... re-organize admin/widget/widgets folder, base (not yet working) implementation of groups tab
                 allGroups={this.state.allGroups}
             />
         );
@@ -131,31 +110,16 @@ export class GroupsPanel extends React.Component<Props, State> {
     getGroupTable() {
         return (
             <GenericTable
-<<<<<<< HEAD
                 items={this.state.widgetGroups}
                 getColumns={() => [
                     { Header: "Name", id: "name", accessor: (group: Group) => group.name },
                     { Header: "Description", id: "description", accessor: (group: Group) => group.description },
                     { Header: "Remove", Cell: this.rowActionButtons }
                 ]}
-=======
-                title={this.props.widget ? this.props.widget.displayName : "Groups"}
-                items={this.state.widgetGroups}
-                getColumns={() => [
-                    { Header: "Name", id: "name", accessor: (group: Group) => group.name },
-                    { Header: "Description", id: "description", accessor: (group: Group) => group.description }
-                ]}
-                onSelect={(selected: Group) => {
-                    this.setState({
-                        selectedGroup: selected
-                    });
-                }}
->>>>>>> 5bab739... re-organize admin/widget/widgets folder, base (not yet working) implementation of groups tab
             />
         );
     }
 
-<<<<<<< HEAD
     rowActionButtons = (row: { original: Group }) => {
         return (
             <div>
@@ -215,81 +179,5 @@ export class GroupsPanel extends React.Component<Props, State> {
         if (groupList.length > 0) {
             this.props.addGroups(groupList).then(() => this.getWidgetGroups());
         }
-=======
-    actionButtons(): any {
-        return (
-            <div>
-                <Button text="Add" onClick={this.openDialog} />
-                <Button
-                    text="Remove"
-                    disabled={this.state.selectedGroup === undefined}
-                    onClick={this.removeGroupAndSave}
-                />
-            </div>
-        );
-    }
-
-    removeGroupAndSave = (): void => {
-        if (this.state.selectedGroup) {
-            this.removeGroup(this.state.selectedGroup);
-            this.props.removeGroup(this.state.selectedGroup);
-            this.deselectGroup();
-        }
-    };
-
-    openDialog = (): void => {
-        this.setState({
-            dialogOpen: true
-        });
-    };
-    closeDialog = (): void => {
-        this.setState({
-            dialogOpen: false
-        });
-    };
-
-    onFormSubmit = (newGroup: any): void => {
-        if (this.state.widgetGroups.findIndex((u) => newGroup.id === u.id) !== -1) {
-            return;
-        }
-
-        this.addGroup(newGroup);
-        // allow for potential multiple selection later
-        this.props.addGroups([newGroup]);
-        // this.getWidgetGroups();
-    };
-
-    deselectGroup(): void {
-        this.setState({
-            selectedGroup: undefined
-        });
-    }
-
-    addGroup(newGroup: Group): void {
-        const groupList = [];
-        for (const u of this.state.widgetGroups) {
-            groupList.push(u);
-        }
-        if (this.state.widgetGroups.findIndex((u) => newGroup.id === u.id) < 0) {
-            groupList.push(newGroup);
-        }
-        this.setState({
-            widgetGroups: groupList
-        });
-    }
-
-    removeGroup(group: Group): void {
-        const groupIndex = this.state.widgetGroups.findIndex((u) => group.id === u.id);
-        if (groupIndex >= 0) {
-            this.state.widgetGroups.splice(groupIndex, 1);
-        }
-        const groupList = [];
-        for (const u of this.state.widgetGroups) {
-            groupList.push(u);
-        }
-        this.setState({
-            widgetGroups: groupList
-        });
->>>>>>> 5bab739... re-organize admin/widget/widgets folder, base (not yet working) implementation of groups tab
     }
 }
