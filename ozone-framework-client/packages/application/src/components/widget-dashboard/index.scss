@@ -1,9 +1,13 @@
 @import "../../common";
 @import "./common";
 
-:local .dashboard {
+:local(.dashboard) {
   height: 100%;
   display: flex;
+
+  iframe {
+    pointer-events: none;
+  }
 }
 
 :local .loadingSpinner {

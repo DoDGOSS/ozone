@@ -4,7 +4,7 @@ import { NodeGateway } from "./node-gateway";
 
 import { logResponse } from "./assertions";
 
-describe("Widget API", () => {
+describe("User Widget API", () => {
     let gateway: NodeGateway;
     let userWidgetApi: UserWidgetAPI;
 
@@ -21,6 +21,6 @@ describe("Widget API", () => {
         logResponse(response);
 
         expect(response.status).toEqual(200);
-        expect(response.data).toHaveLength(11);
+        expect(response.data).toHaveLength(6);
     });
 });
