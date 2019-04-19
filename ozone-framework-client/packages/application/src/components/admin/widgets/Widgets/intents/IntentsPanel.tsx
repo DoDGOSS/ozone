@@ -133,14 +133,12 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
     }
 
     createIntent(): void {
-        console.log('create selected')
         this.setState({
             dialog: this.createIntentDialog()
         });
     }
 
     editIntent(intent: Intent): void {
-        console.log('edit selected')
         this.setState({
             dialog: this.editIntentDialog(intent)
         });
