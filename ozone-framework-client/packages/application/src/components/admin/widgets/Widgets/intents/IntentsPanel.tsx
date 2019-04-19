@@ -50,9 +50,6 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
             pageSize: 10,
             allIntentGroups: this.getIntentGroupsFromWidget(this.props.updatingWidget),
             expandedRows: this.getAllGroupsAsExpanded(),
-            selectedIntent: undefined,
-            query: "",
-            dialogOpen: false,
             dialog: undefined
         };
     }
@@ -63,12 +60,9 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
 
     render() {
         let dialog = null;
-        if (this.state.dialogOpen) {
-            dialog = this.state.dialog;
-        }
         return (
             <div className={styles.table}>
-                {dialog}
+                {this.state.dialog}
                 {this.mainTable()}
                 <Button text="Create" onClick={() => this.createIntent()} />
             </div>
@@ -139,15 +133,15 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
     }
 
     createIntent(): void {
+        console.log('create selected')
         this.setState({
-            dialogOpen: true,
             dialog: this.createIntentDialog()
         });
     }
 
     editIntent(intent: Intent): void {
+        console.log('edit selected')
         this.setState({
-            dialogOpen: true,
             dialog: this.editIntentDialog(intent)
         });
     }
@@ -155,7 +149,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
     createIntentDialog() {
         return (
             <IntentDialog
-                isOpen={this.state.dialogOpen}
+                isOpen={true}
                 onClose={() => this.closeDialog()}
                 onSubmit={(newIntent: Intent) => this.onIntentFormSubmit(newIntent)}
             />
@@ -165,7 +159,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
     editIntentDialog(originalIntent: Intent) {
         return (
             <IntentDialog
-                isOpen={this.state.dialogOpen}
+                isOpen={true}
                 onClose={() => this.closeDialog()}
                 intentToEdit={originalIntent}
                 onSubmit={(newIntent: Intent) => this.onIntentFormSubmit(newIntent, originalIntent)}
@@ -175,7 +169,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
 
     closeDialog(): void {
         this.setState({
-            dialogOpen: false
+            dialog: undefined
         });
     }
 
@@ -353,27 +347,34 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
             },
             {
                 Header: () => <AlignedDiv message="Intent" alignment="left" />,
-                // these prevent sorting; accessor won't get called.
-                // They let you use the whole intents bar to collapse though.
-                // expander: true,
-                // Expander: ({ isExpanded, ...rest }: any) => {console.log('here!'); console.log(rest.original); return <div>{rest.original.action}</div>;},
+                // perhaps add a onClick function that calls the expander, so you can click the row instead of jsut the arrow.
                 style: {
                     textAlign: "left"
                 },
                 id: "action",
-                accessor: (intentGroup) => intentGroup.action
+                accessor: (intentGroup: IntentGroup) => intentGroup.action
             },
             {
                 Header: "Send",
                 id: "send",
+                sortable: false,
+                resizable: false,
                 width: this.smallBoolBoxWidth
             },
             {
                 Header: "Receive",
                 id: "receive",
+                sortable: false,
+                resizable: false,
                 width: this.smallBoolBoxWidth
             },
-            { Header: "Actions", Cell: () => <div />, width: this.buttonAreaWidth }
+            {
+                Header: "Actions",
+                sortable: false,
+                resizable: false,
+                Cell: () => <div />,
+                width: this.buttonAreaWidth
+            }
         ];
     }
 
