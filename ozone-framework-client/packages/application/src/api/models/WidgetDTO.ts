@@ -22,6 +22,10 @@ export interface WidgetDTO {
     namespace: string;
     path: string;
     value: WidgetPropertiesDTO;
+    totalDashboards: number;
+    totalGroups: number;
+    totalStacks: number;
+    totalWidgets: number;
 }
 
 export const validateWidget = createValidator<WidgetDTO>(WIDGET_SCHEMA);

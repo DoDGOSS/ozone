@@ -11,7 +11,7 @@ export class GroupWidgetsEditDialog extends TableSelectionDialog<WidgetDTO> {
         const response = await widgetApi.getWidgets();
 
         if (response.status !== 200) return [];
-        console.log(response.data.data)
+        console.log("data loader response:" + response.data.data)
         return response.data.data;
     }
 
@@ -24,6 +24,7 @@ export class GroupWidgetsEditDialog extends TableSelectionDialog<WidgetDTO> {
     }
 
     protected selectionMatch(selectedRow: WidgetDTO, value: WidgetDTO): boolean {
+        console.log('Matching Id\'s: ' + selectedRow.id + ' = ' + value.id)
         return selectedRow.id === value.id;
     }
 }
