@@ -3,7 +3,6 @@ import * as styles from "../Widgets.scss";
 import * as React from "react";
 import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
 
-import { AdminTable } from "../../table/AdminTable";
 import { GroupWidgetsEditDialog } from './GroupWidgetEditDialog'
 
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
@@ -15,7 +14,7 @@ import { UserQueryCriteria } from "../../../../api/clients/UserAPI";
 
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
-import { WidgetsWidget } from '../Widgets/WidgetsWidget';
+import { WidgetTable } from "../Widgets/WidgetTable";
 
 // ask jeff which part of the panel is actually rendering the data that is set to widgets
 
@@ -43,43 +42,12 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         {
             Header: "Widgets",
             columns: [
-                { Header: "Name", accessor: "namespace" },
-                { Header: "Description", accessor: "description" },
-                { Header: "Version", accessor: "version" },
-                { Header: "Groups", accessor: "totalGroups"},
-                { Header: "Users", accessor: "totalUsers"},
-                { Header: "Type", accessor: "widgetTypes" }
+                { Header: "Name", accessor: "value.namespace" },
+                { Header: "Description", accessor: "value.description" },
+                { Header: "Version", accessor: "value.version" },
+                { Header: "Groups", accessor: "value.totalGroups"},
+                { Header: "Users", accessor: "value.totalUsers"}
             ]
-        }
-    ];
-    private readonly WIDGET_COLUMN_DEFINITION = [
-        {
-            Header: "widgets",
-            columns: [
-                { Header: "Name", accessor: "namespace" },
-                { Header: "Description", accessor: "description" },
-                { Header: "Version", accessor: "version" },
-                { Header: "Groups", accessor: "totalGroups"},
-                { Header: "Users", accessor: "totalUsers"},
-                { Header: "Type", accessor: "widgetTypes" }
-            ]
-        },
-        {
-            Header: "Actions",
-            Cell: (row: any) => (
-                <div>
-                    <ButtonGroup>
-                        <Button
-                            data-element-id="group-admin-widget-delete-widget-button"
-                            text="Delete"
-                            intent={Intent.DANGER}
-                            icon="trash"
-                            small={true}
-                            onClick={() => this.deleteWidget(row.original)}
-                        />
-                    </ButtonGroup>
-                </div>
-            )
         }
     ];
 
@@ -107,14 +75,10 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         let data = this.state.widgets;
         const filter = this.state.filter.toLowerCase();
 
-        // TODO - Improve this - this will be slow if there are many users.
-        // Minimally could wait to hit enter before filtering. Pagination handling
         if (filter) {
             data = data.filter((row) => {
                 return (
-                    row.namespace.toLowerCase().includes(filter) ||
-                    row.description.toLowerCase().includes(filter) ||
-                    row.widgetUrl.toLowerCase().includes(filter) 
+                    row.namespace.toLowerCase().includes(filter) 
                 );
             });
         }
@@ -132,10 +96,11 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
                 </div>
 
                 <div className={styles.table}>
-                    <AdminTable
+                    <WidgetTable
                         data={data}
-                        columns={this.WIDGET_COLUMN_DEFINITION}
-                        loading={this.state.loading}
+                        // columns={this.WIDGET_COLUMN_DEFINITION}
+                        onDelete={this.deleteWidget}
+                        isLoading={this.state.loading}
                         pageSize={this.state.pageSize}
                     />
                 </div>
@@ -174,17 +139,13 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         });
     }
 
-    // the group id is not filtering anything so all the widgets are being displayed
     private getWidgets = async () => {
         const currentGroup: GroupDTO = this.state.group;
 
         const criteria: UserQueryCriteria = {
             group_id: currentGroup.id
         };
-        // check the widget api get widget critieria
         const response = await widgetApi.getWidgets(criteria);
-        console.log('response:')
-        console.log(response)
 
         // TODO: Handle failed request
         if (response.status !== 200) return;
@@ -197,25 +158,30 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
 
     private handleAddWidgetResponse = async (widgets: Array<WidgetDTO>) => {
 
-        const request: GroupUpdateRequest = {
-            id: this.state.group.id,
-            tab: "widget",
-            name: this.state.group.name,
-            update_action: "add",
-            data: widgets.map((widget: WidgetDTO) => widget.id)
-        };
+        // const request: GroupUpdateRequest = {
+        //     id: this.state.group.id,
+        //     tab: "widget",
+        //     name: this.state.group.name,
+        //     update_action: "add",
+        //     data: widgets.map((widget: WidgetDTO) => widget.id)
+        // };
 
-        const response = await groupApi.updateGroup(request);
-        console.log('response')
-        console.log(response)
+        const responses = [];
+        for (const widget of widgets){
+            const response = await widgetApi.addWidgetGroups(widget.id, this.state.group.id);
+            if(response.status !== 200) return;
 
-        if (response.status !== 200) return;
+            responses.push(response.data.data);
+        }
+
         this.setState({
             showAdd: false
         });
 
         this.getWidgets();
-        this.props.onUpdate(response.data.data.values);
+        this.props.onUpdate(responses);
+
+        return responses;
     };
 
     private handleAddWidgetCancel = () => {
@@ -250,17 +216,17 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
 
         const widget: WidgetDTO = payload;
 
-        // chekc to see if I have to change gorup update request
-        // to widget update request
-        const request: GroupUpdateRequest = {
-            id: this.state.group.id,
-            tab: "widget",
-            name: this.state.group.name,
-            update_action: "add",
-            data: widget.id
-        };
+        // const request: GroupUpdateRequest = {
+        //     id: this.state.group.id,
+        //     tab: "widget",
+        //     name: this.state.group.name,
+        //     update_action: "add",
+        //     data: widget.id
+        // };
 
-        const response = await groupApi.updateGroup(request);
+        // const response = await groupApi.updateGroup(request);
+
+        const response = await widgetApi.removeWidgetGroups(widget.id, this.state.group.id)
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;
