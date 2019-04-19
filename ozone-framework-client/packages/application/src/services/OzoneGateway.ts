@@ -165,9 +165,11 @@ export class OzoneGateway implements Gateway {
         }
     }
 
-    toLogin(): Promise<Response<T>> {
+    toLogin(): Promise<Response<any>> {
         // That doesn't work, but we can't include mainStore because that causes a circular depency chain. Or twenty.
         // this.logout();
-        return new Promise<Response<T>>(() => {});
+        return new Promise<Response<{}>>(() => {
+            return {};
+        });
     }
 }
