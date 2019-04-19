@@ -66,70 +66,108 @@ export class OzoneGateway implements Gateway {
             return response;
         } catch (ex) {
             this._isAuthenticated = false;
-
             if (ex instanceof ValidationError) throw ex;
+
             throw new AuthenticationError("Authentication Required", ex);
         }
     }
 
     async get<T>(url: string, options: RequestOptions<T> = {}): Promise<Response<T>> {
-        const { params, headers, validate } = options;
-        const normalizedUrl = trimStart(url, "/");
+        try {
+            const { params, headers, validate } = options;
+            const normalizedUrl = trimStart(url, "/");
 
-        const response = await axios.get(`${this.rootUrl}/${normalizedUrl}`, {
-            withCredentials: true,
-            headers,
-            params
-        });
+            const response = await axios.get(`${this.rootUrl}/${normalizedUrl}`, {
+                withCredentials: true,
+                headers,
+                params
+            });
 
-        if (validate) validate(response.data);
+            if (validate) validate(response.data);
 
-        return response;
+            return response;
+        } catch (ex) {
+            if (ex instanceof AuthenticationError) {
+                return this.toLogin();
+            } else {
+                throw ex;
+            }
+        }
     }
 
     async post<T>(url: string, data?: any, options: RequestOptions<T> = {}): Promise<Response<T>> {
-        const { params, headers, validate } = options;
-        const normalizedUrl = trimStart(url, "/");
+        try {
+            const { params, headers, validate } = options;
+            const normalizedUrl = trimStart(url, "/");
 
-        const response = await axios.post(`${this.rootUrl}/${normalizedUrl}`, data, {
-            withCredentials: true,
-            headers,
-            params
-        });
+            const response = await axios.post(`${this.rootUrl}/${normalizedUrl}`, data, {
+                withCredentials: true,
+                headers,
+                params
+            });
 
-        if (validate) validate(response.data);
+            if (validate) validate(response.data);
 
-        return response;
+            return response;
+        } catch (ex) {
+            if (ex instanceof AuthenticationError) {
+                return this.toLogin();
+            } else {
+                throw ex;
+            }
+        }
     }
 
     async put<T>(url: string, data?: any, options: RequestOptions<T> = {}): Promise<Response<T>> {
-        const { params, headers, validate } = options;
-        const normalizedUrl = trimStart(url, "/");
+        try {
+            const { params, headers, validate } = options;
+            const normalizedUrl = trimStart(url, "/");
 
-        const response = await axios.put(`${this.rootUrl}/${normalizedUrl}`, data, {
-            withCredentials: true,
-            headers,
-            params
-        });
+            const response = await axios.put(`${this.rootUrl}/${normalizedUrl}`, data, {
+                withCredentials: true,
+                headers,
+                params
+            });
 
-        if (validate) validate(response.data);
+            if (validate) validate(response.data);
 
-        return response;
+            return response;
+        } catch (ex) {
+            if (ex instanceof AuthenticationError) {
+                return this.toLogin();
+            } else {
+                throw ex;
+            }
+        }
     }
 
     async delete<T>(url: string, data?: any, options: RequestOptions<T> = {}): Promise<Response<T>> {
-        const { params, headers, validate } = options;
-        const normalizedUrl = trimStart(url, "/");
+        try {
+            const { params, headers, validate } = options;
+            const normalizedUrl = trimStart(url, "/");
 
-        const response = await axios.delete(`${this.rootUrl}/${normalizedUrl}`, {
-            withCredentials: true,
-            headers,
-            params,
-            data
-        });
+            const response = await axios.delete(`${this.rootUrl}/${normalizedUrl}`, {
+                withCredentials: true,
+                headers,
+                params,
+                data
+            });
 
-        if (validate) validate(response.data);
+            if (validate) validate(response.data);
 
-        return response;
+            return response;
+        } catch (ex) {
+            if (ex instanceof AuthenticationError) {
+                return this.toLogin();
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    toLogin(): Promise<Response<T>> {
+        // That doesn't work, but we can't include mainStore because that causes a circular depency chain. Or twenty.
+        // this.logout();
+        return new Promise<Response<T>>(() => {});
     }
 }
