@@ -22,10 +22,6 @@ export type AdminTableProps = {
 export class AdminTable extends React.Component<AdminTableProps, {}> {
 
     render() {
-        {
-            console.log('react table data: ')
-            console.log(this.props.data)
-        }
         return (
             <ReactTable
                 data={this.props.data}

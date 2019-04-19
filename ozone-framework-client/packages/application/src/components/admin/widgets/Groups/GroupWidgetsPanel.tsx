@@ -16,9 +16,6 @@ import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { WidgetTable } from "../Widgets/WidgetTable";
 
-// ask jeff which part of the panel is actually rendering the data that is set to widgets
-
-
 interface GroupEditWidgetProps {
     onUpdate: (update?: any) => void;
     group: any;
@@ -43,7 +40,6 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
             Header: "Widgets",
             columns: [
                 { Header: "Name", accessor: "value.namespace" },
-                { Header: "Description", accessor: "value.description" },
                 { Header: "Version", accessor: "value.version" },
                 { Header: "Groups", accessor: "value.totalGroups"},
                 { Header: "Users", accessor: "value.totalUsers"}
