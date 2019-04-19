@@ -33,9 +33,6 @@ interface IntentsPanelState {
     pageSize: number;
     allIntentGroups: IntentGroup[];
     expandedRows: { [Key: number]: boolean };
-    selectedIntent: Intent | undefined;
-    query: string;
-    dialogOpen: boolean;
     dialog: React.ReactNode;
 }
 
@@ -59,7 +56,6 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
     }
 
     render() {
-        let dialog = null;
         return (
             <div className={styles.table}>
                 {this.state.dialog}
