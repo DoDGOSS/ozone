@@ -15,6 +15,7 @@ import { UserQueryCriteria } from "../../../../api/clients/UserAPI";
 
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
+import { WidgetsWidget } from '../Widgets/WidgetsWidget';
 
 // ask jeff which part of the panel is actually rendering the data that is set to widgets
 
@@ -42,11 +43,11 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         {
             Header: "Widgets",
             columns: [
-                { Header: "Name", accessor: "displayName" },
+                { Header: "Name", accessor: "namespace" },
                 { Header: "Description", accessor: "description" },
                 { Header: "Version", accessor: "version" },
-                { Header: "Url", accessor: "url" },
-                { Header: "Widgets", accessor: "totalWidgets" },
+                { Header: "Groups", accessor: "totalGroups"},
+                { Header: "Users", accessor: "totalUsers"},
                 { Header: "Type", accessor: "widgetTypes" }
             ]
         }
@@ -55,11 +56,11 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         {
             Header: "widgets",
             columns: [
-                { Header: "Name", accessor: "displayName" },
+                { Header: "Name", accessor: "namespace" },
                 { Header: "Description", accessor: "description" },
                 { Header: "Version", accessor: "version" },
-                { Header: "Url", accessor: "url" },
-                { Header: "Widgets", accessor: "totalWidgets" },
+                { Header: "Groups", accessor: "totalGroups"},
+                { Header: "Users", accessor: "totalUsers"},
                 { Header: "Type", accessor: "widgetTypes" }
             ]
         },
@@ -106,7 +107,6 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         let data = this.state.widgets;
         const filter = this.state.filter.toLowerCase();
 
-
         // TODO - Improve this - this will be slow if there are many users.
         // Minimally could wait to hit enter before filtering. Pagination handling
         if (filter) {
@@ -117,7 +117,6 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
                     row.widgetUrl.toLowerCase().includes(filter) 
                 );
             });
-            console.log("filtered data: " + data)
         }
 
         return (
@@ -183,8 +182,8 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
             group_id: currentGroup.id
         };
         // check the widget api get widget critieria
-        console.log(criteria)
         const response = await widgetApi.getWidgets(criteria);
+        console.log('response:')
         console.log(response)
 
         // TODO: Handle failed request
@@ -198,8 +197,6 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
 
     private handleAddWidgetResponse = async (widgets: Array<WidgetDTO>) => {
 
-        console.log(widgets.map((widget: WidgetDTO) => widget.id))
-
         const request: GroupUpdateRequest = {
             id: this.state.group.id,
             tab: "widget",
@@ -209,15 +206,16 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         };
 
         const response = await groupApi.updateGroup(request);
+        console.log('response')
+        console.log(response)
 
         if (response.status !== 200) return;
-
         this.setState({
             showAdd: false
         });
 
         this.getWidgets();
-        this.props.onUpdate(response.data.data);
+        this.props.onUpdate(response.data.data.values);
     };
 
     private handleAddWidgetCancel = () => {
@@ -233,7 +231,7 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
             showDelete: true,
             confirmationMessage: `This action will permanently delete <strong>
             ${
-                widget.displayName
+                widget.value.namespace
             }
             </strong> from the group <strong>${currentGroup.name}</strong>`,
             manageWidget:widget

@@ -20,21 +20,12 @@ export type AdminTableProps = {
 // try new wrapped tabulator if necessary https://github.com/ngduc/react-tabulator#readme
 
 export class AdminTable extends React.Component<AdminTableProps, {}> {
-    //
-    // componentWillReceiveProps(newProps) {
-    //     if (this.props.y != newProps.y) {
-    //         // size row
-    //         let rowHeight = 32.88;
-    //         // size resizable panel
-    //         let panelHeight = newProps.y;
-    //         // size of the extra y of the table (header + footer)
-    //         let extraTable = 27 + (this.props.x < 650 ? 75 : 45);
-    //         // setting pageSize of the table
-    //         this.setState({pageSize: parseInt((panelHeight - extraTable) / rowHeight)});
-    //     }
-    // }
 
     render() {
+        {
+            console.log('react table data: ')
+            console.log(this.props.data)
+        }
         return (
             <ReactTable
                 data={this.props.data}
