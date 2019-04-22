@@ -13,7 +13,7 @@ import { array, boolean, number, object, string } from "yup";
 import * as styles from "../../Widgets.scss";
 
 import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../../form";
-import { inPlaceConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { showConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { groupApi } from "../../../../../api/clients/GroupAPI";
 
 import { Group } from "../../../../../models/Group";
@@ -139,7 +139,7 @@ export class GroupsPanel extends React.Component<Props, State> {
     };
 
     confirmAndDeleteGroup(groupToRemove: Group): void {
-        inPlaceConfirmationDialog({
+        showConfirmationDialog({
             title: "Warning",
             message:
                 "This action will permenantly remove " +

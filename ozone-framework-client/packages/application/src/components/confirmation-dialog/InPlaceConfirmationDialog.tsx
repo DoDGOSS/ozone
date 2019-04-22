@@ -12,7 +12,7 @@ interface InPlaceConfirmationDialogProps {
     onCancel?: () => void;
 }
 
-export const inPlaceConfirmationDialog = (props: InPlaceConfirmationDialogProps) => {
+export const showConfirmationDialog = (props: InPlaceConfirmationDialogProps) => {
     let cancel = () => {
         return;
     };
@@ -24,7 +24,6 @@ export const inPlaceConfirmationDialog = (props: InPlaceConfirmationDialogProps)
         onKeypressEscape: () => cancel(),
         onClickOutside: () => cancel(),
         customUI: ({ onClose }) => {
-            console.log("rendering dialog I think");
             return (
                 <div className={Classes.DIALOG}>
                     <div className={Classes.DIALOG_HEADER}>{props.title}</div>

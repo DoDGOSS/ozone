@@ -1,8 +1,8 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
 
 import { Button, InputGroup } from "@blueprintjs/core";
+
+import * as styles from "../Widgets.scss";
 
 import { widgetApi, WidgetQueryCriteria } from "../../../../api/clients/WidgetAPI";
 import { UserDTO } from "../../../../api/models/UserDTO";
@@ -14,16 +14,13 @@ import { WidgetTable } from "../Widgets/WidgetTable";
 
 interface UserEditWidgetsProps {
     onUpdate: (update?: any) => void;
-    user: any;
+    user: UserDTO;
 }
 
 export interface UserEditWidgetsState {
     widgets: WidgetDTO[];
-    filtered: WidgetDTO[];
-    filter: string;
     loading: boolean;
-    pageSize: number;
-    user: any;
+    defaultPageSize: number;
     showAdd: boolean;
     showDelete: boolean;
     confirmationMessage: string;
@@ -47,11 +44,8 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
         super(props);
         this.state = {
             widgets: [],
-            filtered: [],
-            filter: "",
             loading: true,
-            pageSize: 5,
-            user: this.props.user,
+            defaultPageSize: 5,
             showAdd: false,
             showDelete: false,
             confirmationMessage: "",
@@ -66,32 +60,13 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
     }
 
     render() {
-        let data = this.state.widgets;
-        const filter = this.state.filter.toLowerCase();
-
-        if (filter) {
-            data = data.filter((row) => {
-                return row.value.namespace.toLowerCase().includes(filter);
-            });
-        }
-
         return (
             <div data-element-id="user-admin-add-widget">
-                <div className={styles.actionBar}>
-                    <InputGroup
-                        placeholder="Search..."
-                        leftIcon="search"
-                        value={this.state.filter}
-                        onChange={(e: any) => this.setState({ filter: e.target.value })}
-                        data-element-id="search-field"
-                    />
-                </div>
-
                 <WidgetTable
-                    data={data}
+                    data={this.state.widgets}
                     isLoading={this.state.loading}
                     onDelete={this.deleteWidget}
-                    pageSize={this.state.pageSize}
+                    defaultPageSize={this.state.defaultPageSize}
                 />
 
                 <div className={styles.buttonBar}>
@@ -129,7 +104,7 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
     }
 
     private getWidgets = async () => {
-        const currentUser: UserDTO = this.state.user;
+        const currentUser: UserDTO = this.props.user;
 
         const criteria: WidgetQueryCriteria = {
             user_id: currentUser.id
@@ -149,7 +124,7 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
     private handleAddWidgetResponse = async (widgets: Array<WidgetDTO>) => {
         const responses = [];
         for (const widget of widgets) {
-            const response = await widgetApi.addWidgetUsers(widget.id, this.state.user.id);
+            const response = await widgetApi.addWidgetUsers(widget.id, this.props.user.id);
             if (response.status !== 200) return;
 
             responses.push(response.data.data);
@@ -172,7 +147,7 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
     };
 
     private deleteWidget = async (widget: WidgetDTO) => {
-        const currentUser: UserDTO = this.state.user;
+        const currentUser: UserDTO = this.props.user;
 
         this.setState({
             showDelete: true,
@@ -194,7 +169,7 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
         });
 
         const widget: WidgetDTO = payload;
-        const response = await widgetApi.removeWidgetUsers(widget.id, this.state.user.id);
+        const response = await widgetApi.removeWidgetUsers(widget.id, this.props.user.id);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;

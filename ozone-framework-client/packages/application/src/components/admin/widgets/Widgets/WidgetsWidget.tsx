@@ -10,17 +10,14 @@ import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 
 import { GenericTable } from "../../table/GenericTable";
-import { inPlaceConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { WidgetSetup } from "./WidgetSetup";
 
 import { isNil } from "../../../../utility";
 
 interface WidgetsWidgetState {
     widgets: WidgetDTO[];
-    filtered: WidgetDTO[];
-    filter: string;
     loading: boolean;
-    pageSize: number;
     showTable: boolean;
     showWidgetSetup: boolean;
     updatingWidget: any | undefined;
@@ -39,16 +36,14 @@ enum WidgetWidgetSubSection {
 }
 
 export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
+    defaultPageSize: number = 15;
     constructor(props: any) {
         super(props);
 
         this.state = {
             widgets: [],
             widgetTypes: [],
-            filtered: [],
-            filter: "",
             loading: true,
-            pageSize: 15,
             showTable: true,
             showWidgetSetup: false,
             updatingWidget: undefined
@@ -72,12 +67,11 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                 {showTable && (
                     <div>
                         <GenericTable
-                            title={""}
                             items={this.state.widgets}
                             getColumns={this.columns}
-                            getReactTableProps={() => ({
-                                pageSize: this.state.pageSize
-                            })}
+                            reactTableProps={{
+                                defaultPageSize: this.defaultPageSize
+                            }}
                         />
                         <div className={styles.buttonBar}>
                             <Button
@@ -197,7 +191,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
 
     private confirmAndDeleteWidget = (widgetToRemove: WidgetDTO): void => {
         console.log(widgetToRemove);
-        inPlaceConfirmationDialog({
+        showConfirmationDialog({
             title: "Warning",
             message: `This action will permanently <strong>${widgetToRemove.value.namespace}</strong>`,
             onConfirm: () => this.deleteWidget(widgetToRemove)
