@@ -4,7 +4,7 @@ import { object, string } from "yup";
 
 import { CancelButton, FormError, SubmitButton, TextField } from "../../../form";
 
-import * as styles from "./UserCreateForm.scss";
+import * as styles from "./UserPropertiesForm.scss";
 import { PreferenceCreateRequest, PreferenceUpdateRequest } from "../../../../api/models/PreferenceDTO";
 
 interface PreferenceFormProps {
