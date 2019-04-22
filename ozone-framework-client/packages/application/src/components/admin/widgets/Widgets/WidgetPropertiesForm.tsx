@@ -53,7 +53,7 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
     >
         {(formik: FormikProps<WidgetCreateRequest | WidgetUpdateRequest>) => (
             <div data-element-id="widget-admin-widget-properties-form">
-                <Form className={styles.form}>
+                <Form className={styles.form} onLoad={() => formik.validateForm()}>
                     <div>
                         <TextField
                             inline={true}
@@ -138,19 +138,28 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
                             className={styles.inline_form_label}
                             name="singleton"
                             label="Singleton"
+                            defaultChecked={currentWidget.singleton}
                         />
                         <CheckBox
                             inline={true}
                             className={styles.inline_form_label}
                             name="mobileReady"
                             label="Mobile Ready"
+                            defaultChecked={currentWidget.mobileReady}
                         />
-                        <CheckBox inline={true} className={styles.inline_form_label} name="visible" label="Visible" />
+                        <CheckBox
+                            inline={true}
+                            className={styles.inline_form_label}
+                            name="visible"
+                            label="Visible"
+                            defaultChecked={currentWidget.visible}
+                        />
                         <CheckBox
                             inline={true}
                             className={styles.inline_form_label}
                             name="background"
                             label="Background"
+                            defaultChecked={currentWidget.background}
                         />
 
                         {formik.status && formik.status.error && <FormError message={formik.status.error} />}

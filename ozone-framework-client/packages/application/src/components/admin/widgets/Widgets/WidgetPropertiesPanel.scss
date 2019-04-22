@@ -1,0 +1,11 @@
+:local .flexBox {
+    display: flex !important;
+}
+
+:local .fillSpace {
+    flex: 1 1 auto;
+}
+
+:local .error {
+    color: #F00;
+}

@@ -12,6 +12,7 @@ import {
     WidgetCreateRequest,
     WidgetCreateResponse,
     WidgetDeleteResponse,
+    WidgetGetDescriptorResponse,
     WidgetGetResponse,
     WidgetUpdateGroupsResponse,
     WidgetUpdateRequest,
@@ -42,6 +43,10 @@ export class WidgetAPI {
         return this.gateway.get(`widget/${id}/`, {
             validate: validateWidgetGetResponse
         });
+    }
+
+    async getWidgetDescriptorJson(url: string): Promise<Response<WidgetGetDescriptorResponse>> {
+        return this.gateway.get<WidgetGetDescriptorResponse>(url);
     }
 
     async createWidget(data: WidgetCreateRequest): Promise<Response<WidgetCreateResponse>> {
