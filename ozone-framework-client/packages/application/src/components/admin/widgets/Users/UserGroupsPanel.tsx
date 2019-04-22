@@ -3,6 +3,7 @@ import * as styles from "../Widgets.scss";
 import * as React from "react";
 import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
 
+import { DeleteButton } from "../../table/TableButtons";
 import { AdminTable } from "../../table/AdminTable";
 import { UserGroupsEditDialog } from "./UserGroupsEditDialog";
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
@@ -12,7 +13,7 @@ import { groupApi, GroupQueryCriteria } from "../../../../api/clients/GroupAPI";
 
 interface UserEditGroupsProps {
     onUpdate: (update?: any) => void;
-    user: any;
+    user: UserDTO;
 }
 
 export interface UserEditGroupsState {
@@ -21,7 +22,6 @@ export interface UserEditGroupsState {
     filter: string;
     loading: boolean;
     pageSize: number;
-    user: any;
     showAdd: boolean;
     showDelete: boolean;
     confirmationMessage: string;
@@ -55,14 +55,7 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
             Cell: (row: any) => (
                 <div>
                     <ButtonGroup>
-                        <Button
-                            data-element-id="user-admin-widget-delete-group-button"
-                            text="Delete"
-                            intent={Intent.DANGER}
-                            icon="trash"
-                            small={true}
-                            onClick={() => this.deleteGroup(row.original)}
-                        />
+                        <DeleteButton onClick={() => this.deleteGroup(row.original)} />
                     </ButtonGroup>
                 </div>
             )
@@ -77,7 +70,6 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
             filter: "",
             loading: true,
             pageSize: 5,
-            user: this.props.user,
             showAdd: false,
             showDelete: false,
             confirmationMessage: "",
@@ -157,7 +149,7 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
     }
 
     private getGroups = async () => {
-        const currentUser: UserDTO = this.state.user;
+        const currentUser: UserDTO = this.props.user;
 
         const criteria: GroupQueryCriteria = {
             user_id: currentUser.id
@@ -182,7 +174,7 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
                 id: group.id,
                 name: group.name,
                 update_action: "add",
-                user_ids: [this.state.user.id]
+                user_ids: [this.props.user.id]
             };
 
             const response = await groupApi.updateGroup(request);
@@ -209,7 +201,7 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
     };
 
     private deleteGroup = async (group: GroupDTO) => {
-        const currentUser: UserDTO = this.state.user;
+        const currentUser: UserDTO = this.props.user;
 
         this.setState({
             showDelete: true,
@@ -236,7 +228,7 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
             id: group.id,
             name: group.name,
             update_action: "remove",
-            user_ids: [this.state.user.id]
+            user_ids: [this.props.user.id]
         };
 
         const response = await groupApi.updateGroup(request);

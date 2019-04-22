@@ -7,7 +7,7 @@ import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { array, boolean, number, object, string } from "yup";
 
 import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../../form";
-import { inPlaceConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { showConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
 import * as styles from "../../Widgets.scss";
 
 import { userApi } from "../../../../../api/clients/UserAPI";
@@ -17,6 +17,7 @@ import { UserDTO } from "../../../../../api/models/UserDTO";
 import { WidgetDTO } from "../../../../../api/models/WidgetDTO";
 import { userFromJson } from "../../../../../codecs/User.codec";
 import { GenericTable } from "../../../table/GenericTable";
+import { DeleteButton } from "../../../table/TableButtons";
 import { UsersDialog } from "./UsersDialog";
 
 interface State {
@@ -135,22 +136,14 @@ export class UsersPanel extends React.Component<Props, State> {
         return (
             <div>
                 <ButtonGroup>
-                    <Button
-                        data-element-id="widget-admin-user-remove-button"
-                        data-widget-title={row.original.username}
-                        text={"Remove"}
-                        intent={Intent.DANGER}
-                        icon="trash"
-                        small={true}
-                        onClick={() => this.confirmAndDeleteUser(row.original)}
-                    />
+                    <DeleteButton onClick={() => this.confirmAndDeleteUser(row.original)} />
                 </ButtonGroup>
             </div>
         );
     };
 
     confirmAndDeleteUser(userToRemove: User): void {
-        inPlaceConfirmationDialog({
+        showConfirmationDialog({
             title: "Warning",
             message:
                 "This action will permanently delete " +

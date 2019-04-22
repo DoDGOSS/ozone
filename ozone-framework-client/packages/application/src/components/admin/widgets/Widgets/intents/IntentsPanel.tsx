@@ -4,7 +4,8 @@ import { Button, ButtonGroup, Divider, Intent as bpIntent } from "@blueprintjs/c
 import ReactTable from "react-table";
 
 import { GenericTable } from "../../../table/GenericTable";
-import { inPlaceConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { DeleteButton, EditButton } from "../../../table/TableButtons";
+import { showConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
 
 import { Intent } from "../../../../../models/compat";
 import { IntentDTO, IntentsDTO } from "../../../../../api/models/IntentDTO";
@@ -71,7 +72,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
                 items={this.state.allIntentGroups}
                 getColumns={() => this.getMainTableColumns()}
                 customFilter={this.filterIntentGroups}
-                getReactTableProps={() => ({
+                reactTableProps={{
                     expanderDefaults: {
                         sortable: true,
                         resizable: true,
@@ -84,7 +85,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
                         return this.handleRowExpanded(newExpanded, indices, event);
                     },
                     expanded: this.state.expandedRows
-                })}
+                }}
             />
         );
     }
@@ -95,10 +96,10 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
                 items={intents}
                 getColumns={() => this.getIntentSubTableColumns()}
                 filterable={false}
-                getReactTableProps={() => ({
+                reactTableProps={{
                     showPagination: false,
                     minRows: 0
-                })}
+                }}
             />
         );
     }
@@ -409,34 +410,20 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
         return (
             <div>
                 <ButtonGroup>
-                    <Button
-                        data-element-id="widget-admin-intent-edit-button"
-                        data-widget-title={row.original.action + " " + row.original.dataType}
-                        text="Edit"
-                        intent={bpIntent.PRIMARY}
-                        icon="edit"
-                        small={true}
+                    <EditButton
                         onClick={() => {
                             this.editIntent(row.original);
                         }}
                     />
                     <Divider />
-                    <Button
-                        data-element-id="widget-admin-intent-remove-button"
-                        data-widget-title={row.original.action + " " + row.original.dataType}
-                        text={"Remove"}
-                        intent={bpIntent.DANGER}
-                        icon="trash"
-                        small={true}
-                        onClick={() => this.confirmAndDeleteIntent(row.original)}
-                    />
+                    <DeleteButton onClick={() => this.confirmAndDeleteIntent(row.original)} />
                 </ButtonGroup>
             </div>
         );
     };
 
     confirmAndDeleteIntent(intentToDelete: Intent): void {
-        inPlaceConfirmationDialog({
+        showConfirmationDialog({
             title: "Warning",
             message:
                 "This action will permanently delete intent {action: " +
