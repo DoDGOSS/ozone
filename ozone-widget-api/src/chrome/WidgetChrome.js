@@ -96,8 +96,8 @@ Ozone.chrome.WidgetChrome = function(config) {
         var data = {
           action: 'isModified'
         };
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
       },
 
       /**
@@ -172,8 +172,8 @@ Ozone.chrome.WidgetChrome = function(config) {
           scope.items[items[i].itemId != null ? items[i].itemId : items[i].id] = items[i];
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
 
       },
 
@@ -256,8 +256,8 @@ Ozone.chrome.WidgetChrome = function(config) {
           }
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
 
       },
 
@@ -338,8 +338,8 @@ Ozone.chrome.WidgetChrome = function(config) {
           scope.items[items[i].itemId != null ? items[i].itemId : items[i].id] = items[i];
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
       },
 
       /**
@@ -380,8 +380,8 @@ Ozone.chrome.WidgetChrome = function(config) {
           }
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
       },
      
     
@@ -409,8 +409,8 @@ Ozone.chrome.WidgetChrome = function(config) {
         action: 'listHeaderMenus',
         type: 'button'
       };
-      var jsonString = gadgets.json.stringify(data);
-      gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+      var jsonString = JSON.stringify(data);
+      Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
     },
     
       /**
@@ -526,8 +526,8 @@ Ozone.chrome.WidgetChrome = function(config) {
         	scope.registerChromeMenu(item);
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
 
       },
       
@@ -711,8 +711,8 @@ Ozone.chrome.WidgetChrome = function(config) {
         	data.items[i] = scope.items[data.items[i].itemId];
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
 
       },
 
@@ -808,8 +808,8 @@ Ozone.chrome.WidgetChrome = function(config) {
         	}
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
       },
 
       /**
@@ -840,8 +840,8 @@ Ozone.chrome.WidgetChrome = function(config) {
           }
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
       },
       
       /**
@@ -868,8 +868,8 @@ Ozone.chrome.WidgetChrome = function(config) {
           action: 'listHeaderMenus',
           type: 'menu'
         };
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
       },
 
        /**
@@ -895,8 +895,8 @@ Ozone.chrome.WidgetChrome = function(config) {
          var data = {
             action: 'getTitle'
           };
-         var jsonString = gadgets.json.stringify(data);
-         gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+         var jsonString = JSON.stringify(data);
+         Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
        },
 
         /**
@@ -925,8 +925,8 @@ Ozone.chrome.WidgetChrome = function(config) {
              action: 'setTitle',
              title: cfg.title
            };
-          var jsonString = gadgets.json.stringify(data);
-          gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+          var jsonString = JSON.stringify(data);
+          Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
         }
 
     };

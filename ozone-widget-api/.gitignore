@@ -6,4 +6,7 @@
 
 
 # Temporary ignore for generated JS
+/src/types.js
+/src/kernel/pubsub.js
+/src/kernel/rpc.js
 /src/util/internal.js

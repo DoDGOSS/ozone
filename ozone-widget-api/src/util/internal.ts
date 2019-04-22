@@ -1,5 +1,3 @@
-/* tslint:disable:forin */
-
 // @ts-ignore
 window.Ozone = window.Ozone || {};
 
@@ -23,7 +21,6 @@ namespace Ozone.util.internal {
         RIGHT_ARROW: 39,
         DOWN_ARROW: 40
     };
-
 
     export function isArray(value: unknown): boolean | null | undefined {
         if (value === null) return null;
@@ -52,6 +49,37 @@ namespace Ozone.util.internal {
         return !isArray(value) ? [value] : value;
     }
 
+    export function isNil(value: unknown): value is undefined | null {
+        return value === undefined || value === null;
+    }
+
+    export function forEach<T>(dictionary: Dictionary<T>, iteratee: (value: T) => void): void {
+        if (isNil(dictionary) || isNil(iteratee)) return;
+
+        for (const key in dictionary) {
+            if (dictionary.hasOwnProperty(key)) {
+                iteratee(dictionary[key]);
+            }
+        }
+    }
+
+    export function forFirst<T>(dictionary: Dictionary<T>, predicate: (value: T) => boolean, iteratee: (value: T) => void): boolean {
+        if (isNil(dictionary) || isNil(iteratee)) return false;
+
+        for (const key in dictionary) {
+            if (dictionary.hasOwnProperty(key)) {
+                const value = dictionary[key];
+                if (predicate(value)) {
+                    iteratee(dictionary[key]);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+
     export function onDocumentReady(callback: Function): void {
         document.addEventListener("DOMContentLoaded", (event) => { callback(); });
     }
@@ -79,6 +107,7 @@ namespace Ozone.util.internal {
         return object;
     }
 
+    /* tslint:disable:forin */
     function _mixin(target: any, source: any): any {
         const extraNames = ["hasOwnProperty", "valueOf", "isPrototypeOf", "propertyIsEnumerable", "toLocaleString", "toString", "constructor"];
         const extraLen = extraNames.length;
