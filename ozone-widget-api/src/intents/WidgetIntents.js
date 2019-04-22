@@ -51,7 +51,7 @@ var OWF = window.OWF;
                     }
                 }
 
-                gadgets.rpc.call('..', INTENTS_SERVICE_NAME,
+                Ozone.internal.rpc.send(INTENTS_SERVICE_NAME,
                     //callback for when an intent has reached the destination widget(s)
                     function (ids) {
                         //exec handler
@@ -122,7 +122,7 @@ var OWF = window.OWF;
                 intentReceiverMap[intentKey] = handler;
 
                 //register with shindig for when the intent message is sent
-                gadgets.rpc.register(INTENTS_SERVICE_NAME, function(sender, intent, data) {
+                Ozone.internal.rpc.register(INTENTS_SERVICE_NAME, function(sender, intent, data) {
                      var intentKey = JSON.stringify(intent);
 
                     //execute the handler that matches the intent
@@ -132,7 +132,7 @@ var OWF = window.OWF;
                     }
 
                 });
-                gadgets.rpc.call('..', INTENTS_SERVICE_RECEIVE_NAME, null, intent, OWF.getIframeId());
+                Ozone.internal.rpc.send(INTENTS_SERVICE_RECEIVE_NAME, null, intent, OWF.getIframeId());
             }
         };
 
