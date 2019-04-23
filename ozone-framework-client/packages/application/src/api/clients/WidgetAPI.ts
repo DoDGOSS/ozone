@@ -22,6 +22,7 @@ export interface WidgetQueryCriteria {
     limit?: number;
     offset?: number;
     user_id?: number;
+    group_id?: number;
 }
 
 export class WidgetAPI {
@@ -168,5 +169,6 @@ function getOptionParams(options?: WidgetQueryCriteria): any | undefined {
     if (options.limit) params.max = options.limit;
     if (options.offset) params.offset = options.offset;
     if (options.user_id) params.user_id = options.user_id;
+    if (options.group_id) params.group_id = options.group_id;
     return params;
 }
