@@ -1,13 +1,13 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
-import { classNames } from "../../../../utility";
-import { Intent } from "../../../../models/compat";
+import { classNames } from "../../../../../utility";
+import { Intent } from "../../../../../models/compat";
 
 import { IntentForm } from "./IntentForm";
+
+import * as styles from "../../Widgets.scss";
 
 export interface IntentDialogProps {
     isOpen: boolean;
