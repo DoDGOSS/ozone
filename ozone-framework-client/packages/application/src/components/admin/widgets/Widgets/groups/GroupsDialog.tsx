@@ -6,33 +6,33 @@ import * as uuidv4 from "uuid/v4";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { array, boolean, number, object, string } from "yup";
 
-import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../form";
-import { classNames } from "../../../../utility";
+import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../../form";
+import { classNames } from "../../../../../utility";
 
-import { User } from "../../../../models/User";
-import { mainStore } from "../../../../stores/MainStore";
-import { GenericTable } from "../../table/GenericTable";
-import * as styles from "./UsersDialog.scss";
+import { Group } from "../../../../../models/Group";
+import { mainStore } from "../../../../../stores/MainStore";
+import { GenericTable } from "../../../table/GenericTable";
+import * as styles from "./GroupsDialog.scss";
 
 interface State {
     loading: boolean;
-    selectedUsers: User[];
+    selectedGroups: Group[];
     dialogOpen: boolean;
 }
 
 interface Props {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (userSelections: User[]) => void;
-    allUsers: User[];
+    onSubmit: (newGroups: Group[]) => void;
+    allGroups: Group[];
 }
 
-export class UsersDialog extends React.Component<Props, State> {
+export class GroupsDialog extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
             loading: false,
-            selectedUsers: [],
+            selectedGroups: [],
             dialogOpen: false
         };
     }
@@ -40,7 +40,7 @@ export class UsersDialog extends React.Component<Props, State> {
     render() {
         return (
             <Dialog
-                title={"Add User"}
+                title={"Add Group"}
                 className={classNames(styles.dialog, mainStore.getTheme())}
                 isOpen={this.props.isOpen}
                 onClose={this.props.onClose}
@@ -48,27 +48,35 @@ export class UsersDialog extends React.Component<Props, State> {
                 <div className={classNames(Classes.DIALOG_BODY, styles.dialogBody)}>
                     <div style={{ flex: 1, flexDirection: "column" }}>
                         <GenericTable
-                            title="Users"
-                            items={this.props.allUsers}
+                            title="Groups"
+                            items={this.props.allGroups}
                             getColumns={() => [
                                 {
-                                    Header: "Full Name",
-                                    id: "displayName",
-                                    accessor: (user: User) => user.displayName
+                                    Header: "Name",
+                                    id: "name",
+                                    accessor: (group: Group) => group.name
                                 },
-                                { Header: "Last Sign In", id: "lastLogin", accessor: (user: User) => user.lastLogin }
+                                {
+                                    Header: "Description",
+                                    id: "description",
+                                    accessor: (group: Group) => group.description
+                                }
                             ]}
                             multiSelection={true}
-                            onSelectionChange={(selections: User[]) => {
+                            onSelectionChange={(selections: Group[]) => {
                                 this.setState({
-                                    selectedUsers: selections
+                                    selectedGroups: selections
                                 });
                             }}
                             {...this.props}
                         />
                         <br />
                         <div>
-                            <Button text="Add" disabled={this.state.selectedUsers.length === 0} onClick={this.submit} />
+                            <Button
+                                text="Add"
+                                disabled={this.state.selectedGroups.length === 0}
+                                onClick={this.submit}
+                            />
                             <Button text="Cancel" onClick={this.props.onClose} />
                         </div>
                     </div>
@@ -78,7 +86,7 @@ export class UsersDialog extends React.Component<Props, State> {
     }
 
     submit = () => {
-        this.props.onSubmit(this.state.selectedUsers);
+        this.props.onSubmit(this.state.selectedGroups);
         this.props.onClose();
     };
 }

@@ -1,5 +1,3 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
 
 import { MenuItem } from "@blueprintjs/core";
@@ -8,10 +6,12 @@ import { ItemRenderer } from "@blueprintjs/select";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { array, boolean, number, object, string } from "yup";
 
-import { WidgetCreateRequest, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
-import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+import { WidgetCreateRequest, WidgetUpdateRequest } from "../../../../../api/models/WidgetDTO";
+import { WidgetTypeReference } from "../../../../../api/models/WidgetTypeDTO";
 
-import { CheckBox, FormError, HiddenField, SelectField, SubmitButton, TextField } from "../../../form";
+import { CheckBox, FormError, HiddenField, SelectField, SubmitButton, TextField } from "../../../../form";
+
+import * as styles from "../../Widgets.scss";
 
 interface WidgetFormProps {
     currentWidget: WidgetCreateRequest | WidgetUpdateRequest;

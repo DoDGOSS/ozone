@@ -6,12 +6,12 @@ import * as uuidv4 from "uuid/v4";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { array, boolean, number, object, string } from "yup";
 
-import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../form";
-import { classNames } from "../../../../utility";
+import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../../form";
+import { classNames } from "../../../../../utility";
 
-import { User } from "../../../../models/User";
-import { mainStore } from "../../../../stores/MainStore";
-import { GenericTable } from "../../table/GenericTable";
+import { User } from "../../../../../models/User";
+import { mainStore } from "../../../../../stores/MainStore";
+import { GenericTable } from "../../../table/GenericTable";
 import * as styles from "./UsersDialog.scss";
 
 interface State {
