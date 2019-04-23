@@ -46,17 +46,19 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
 
     render() {
         return (
-            <div className={styles.table}>
+            <div>
                 {this.filterable && this.getSearchBox()}
-                <ReactTable
-                    data={this.getItems()}
-                    getTheadThProps={this.removeHideableHeaders}
-                    getTrProps={this.rowsAreClickable() ? this.clickableRowProps : () => ""}
-                    className={classNames("striped", this.props.classNames)}
-                    columns={this.getTableLayout()}
-                    pageSizeOptions={this.getReasonablePageSizeOptions()}
-                    {...this.buildReactTableProps()}
-                />
+                <div className={styles.table}>
+                    <ReactTable
+                        data={this.getItems()}
+                        getTheadThProps={this.removeHideableHeaders}
+                        getTrProps={this.rowsAreClickable() ? this.clickableRowProps : () => ""}
+                        className={classNames("striped", this.props.classNames)}
+                        columns={this.getTableLayout()}
+                        pageSizeOptions={this.getReasonablePageSizeOptions()}
+                        {...this.buildReactTableProps()}
+                    />
+                </div>
             </div>
         );
     }

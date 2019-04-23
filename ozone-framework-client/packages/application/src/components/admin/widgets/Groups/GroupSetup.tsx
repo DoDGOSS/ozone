@@ -11,24 +11,22 @@ import { groupApi } from "../../../../api/clients/GroupAPI";
 
 import * as styles from "../Widgets.scss";
 
-export interface GroupEditTabsProps {
+export interface GroupSetupProps {
     onUpdate: (update?: any) => void;
     onBack: () => void;
     group: any;
 }
 
-export interface GroupEditTabsState {
-    group: any;
-    updated: boolean;
+export interface GroupSetupState {
+    updatingGroup: any;
 }
 
-export class GroupEditTabs extends React.Component<GroupEditTabsProps, GroupEditTabsState> {
-    constructor(props: GroupEditTabsProps) {
+export class GroupSetup extends React.Component<GroupSetupProps, GroupSetupState> {
+    constructor() {
         super(props);
 
         this.state = {
-            group: props.group,
-            updated: false
+            updatingGroup: props.group
         };
     }
 
@@ -39,7 +37,13 @@ export class GroupEditTabs extends React.Component<GroupEditTabsProps, GroupEdit
                     <Tab
                         id="group_properties"
                         title="Properties"
-                        panel={<GroupPropertiesPanel onUpdate={this.updateGroup} group={this.state.group} />}
+                        panel={
+                            <GroupPropertiesPanel
+                                onUpdate={this.updateGroup}
+                                onSave={this.saveGroup}
+                                group={this.state.group}
+                            />
+                        }
                     />
                     <Tab
                         id="group_users"
@@ -60,20 +64,34 @@ export class GroupEditTabs extends React.Component<GroupEditTabsProps, GroupEdit
         );
     }
 
-    private updateGroup = async (data: GroupUpdateRequest) => {
-        console.log("Submitting updated group");
+    private createOrUpdateGroup = async (group: GroupCreateRequest | GroupUpdateRequest) => {
+        console.log("Submitting group");
 
-        if (data.active === undefined) {
-            data.status = data.status || "inactive";
+        if (group.active === undefined) {
+            group.status = group.status || "inactive";
         } else {
-            data.status = data.active ? "active" : "inactive";
+            group.status = group.active ? "active" : "inactive";
+        }
+        let response: any;
+        if ("id" in group) {
+            response = await groupApi.updateGroup(data);
+        } else {
+            response = await groupApi.createGroup(data);
         }
 
-        const response = await groupApi.updateGroup(data);
-        const result = response.status === 200;
-
-        this.props.onUpdate(response.data.data);
-
-        return result;
+        if (
+            response.status === 200 &&
+            response.data &&
+            response.data.data &&
+            response.data.data.length !== undefined &&
+            response.data.data.length > 0
+        ) {
+            this.setState({
+                group: response.data.data[0]
+            });
+            this.props.onUpdate();
+            return true;
+        }
+        return false;
     };
 }
