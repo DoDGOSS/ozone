@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Column } from "react-table";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { object, string } from "yup";
 import { Button } from "@blueprintjs/core";
@@ -23,6 +24,8 @@ export const UserPropertiesPanel: React.FC<UserPropertiesProps> = ({ saveUser, u
             const isSuccess = await saveUser(newUser);
             actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
             actions.setSubmitting(false);
+
+            actions.resetForm(newUser);
         }}
     >
         {(formik: FormikProps<UserCreateRequest | UserUpdateRequest>) => (

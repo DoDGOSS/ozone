@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
+import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
 
 import * as styles from "../Widgets.scss";
 
@@ -80,6 +80,7 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
                     <div>
                         <ButtonGroup>
                             <EditButton onClick={() => this.showSettingsDialog(row.original)} />
+                            <Divider />
                             <DeleteButton onClick={() => this.confirmDeletePreference(row.original)} />
                         </ButtonGroup>
                     </div>

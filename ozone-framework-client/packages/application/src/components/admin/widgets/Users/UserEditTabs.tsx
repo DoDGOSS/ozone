@@ -91,7 +91,7 @@ export class UserEditTabs extends React.Component<UserEditTabsProps, UserEditTab
             response.data.data.length > 0
         ) {
             this.setState({
-                user: response.data.data
+                user: response.data.data[0]
             });
             return true;
         }
