@@ -164,12 +164,7 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
     private confirmDeleteGroup = async (group: GroupDTO) => {
         showConfirmationDialog({
             title: "Warning",
-            message:
-                "This action will permanently remove " +
-                this.props.user.userRealName +
-                " from group " +
-                group.name +
-                ".",
+            message: "This action will remove " + this.props.user.userRealName + " from group " + group.name + ".",
             onConfirm: () => this.removeGroup(group)
         });
         return true;

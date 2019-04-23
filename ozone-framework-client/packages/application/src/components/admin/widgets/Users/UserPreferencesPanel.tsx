@@ -143,7 +143,7 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
     private confirmDeletePreference = async (preference: PreferenceDeleteRequest) => {
         showConfirmationDialog({
             title: "Warning",
-            message: "This action will permanently delete " + preference.path + ":" + preference.namespace + ".",
+            message: "This action will permanently delete " + preference.namespace + " : " + preference.path + ".",
             onConfirm: () => this.deletePreference(preference)
         });
 
