@@ -1,114 +1,53 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
 
 import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
-import { AdminTable } from "../../table/AdminTable";
+import { Column } from "react-table";
 
-import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
-import { DashboardEditTabs } from "./DashboardEditTabs";
-
+// import { lazyInject } from "../../../../inject";
 import { stackApi } from "../../../../api/clients/StackAPI";
-import { StackDTO } from "../../../../api/models/StackDTO";
+import { StackDTO, /*StackCreateRequest,*/ StackUpdateRequest } from "../../../../api/models/StackDTO";
+import { UserDTO } from "../../../../api/models/UserDTO";
 
-export interface State {
+import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { GenericTable } from "../../table/GenericTable";
+import { DeleteButton, EditButton } from "../../table/TableButtons";
+
+import { StackSetup } from "./StackSetup";
+
+import * as styles from "../Widgets.scss";
+
+interface StacksWidgetState {
     stacks: StackDTO[];
-    filtered: StackDTO[];
-    filter: string;
     loading: boolean;
-    pageSize: number;
-    columns: any;
     showTable: boolean;
-    showEditStack: boolean;
+    showStackSetup: boolean;
     showAssignToMe: boolean;
-    showDelete: boolean;
-    confirmationMessage: string;
-    manageStack: StackDTO | undefined;
-    updatingStack?: any;
+    updatingStack: StackDTO | undefined;
 }
-
 // TODO
 // Modify widget to take in widget values from administration menu and launch from menu
 // Pagination handling with client API
 // Style
-// Error handling for form (if username exists etc)
 
-enum DashboardWidgetSubSection {
+enum StackWidgetSubSection {
     TABLE,
-    EDIT
+    SETUP
 }
 
-export class DashboardsWidget extends React.Component<{}, State> {
+// everything else has been cahnged to `Stacks*` because that's what they are, but this and src/stores/system-widgets
+// have been kept as DashboardsWidget out of fear of changing the name.
+export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
+    defaultPageSize: number = 5;
+
     constructor(props: any) {
         super(props);
         this.state = {
             stacks: [],
-            filtered: [],
-            filter: "",
             loading: true,
-            pageSize: 5,
             showTable: true,
-            showEditStack: false,
             showAssignToMe: false,
-            showDelete: false,
-            confirmationMessage: "",
-            manageStack: undefined,
-
-            columns: [
-                {
-                    Header: "Stacks",
-                    columns: [
-                        { Header: "Title", accessor: "name" },
-                        { Header: "Pages (Dashboards)", accessor: "totalDashboards" },
-                        { Header: "Widgets", accessor: "totalWidgets" },
-                        { Header: "Groups", accessor: "totalGroups" },
-                        { Header: "Users", accessor: "totalUsers" }
-                    ]
-                },
-                // TODO - Abstract this to only have to provide onclick function name with styled buttons
-                {
-                    Header: "Actions",
-                    Cell: (row: any) => (
-                        <div>
-                            <ButtonGroup
-                                data-role="dashboard-admin-widget-actions"
-                                data-dashboardname={row.original.name}
-                            >
-                                <Button
-                                    data-element-id="dashboard-admin-widget-edit-button"
-                                    text="Edit"
-                                    intent={Intent.PRIMARY}
-                                    icon="edit"
-                                    small={true}
-                                    onClick={() => (
-                                        this.showSubSection(DashboardWidgetSubSection.EDIT),
-                                        this.setState({ updatingStack: row.original })
-                                    )}
-                                />
-                                <Divider />
-                                <Button
-                                    data-element-id={"dashboard-admin-widget-assign-to-me"}
-                                    text="Assign To Me"
-                                    intent={Intent.SUCCESS}
-                                    icon="following"
-                                    small={true}
-                                    onClick={() => this.deleteStack(row.original)}
-                                />
-                                <Divider />
-                                <Button
-                                    data-element-id="dashboard-admin-widget-delete-button"
-                                    text="Delete"
-                                    intent={Intent.DANGER}
-                                    icon="trash"
-                                    small={true}
-                                    disabled={row.original.totalStacks > 0}
-                                    onClick={() => this.deleteStack(row.original)}
-                                />
-                            </ButtonGroup>
-                        </div>
-                    )
-                }
-            ]
+            showStackSetup: false,
+            updatingStack: undefined
         };
 
         this.handleUpdate = this.handleUpdate.bind(this);
@@ -120,68 +59,51 @@ export class DashboardsWidget extends React.Component<{}, State> {
 
     render() {
         const showTable = this.state.showTable;
-        const showEditStack = this.state.showEditStack;
-
-        let data = this.state.stacks;
-        const filter = this.state.filter.toLowerCase();
-
-        if (filter) {
-            data = data.filter((row) => {
-                return row.name.toLowerCase().includes(filter);
-            });
-        }
+        const showStackSetup = this.state.showStackSetup;
 
         return (
             <div data-element-id="dashboard-admin-widget-dialog">
                 {showTable && (
-                    <div className={styles.actionBar}>
-                        <InputGroup
-                            placeholder="Search..."
-                            leftIcon="search"
-                            value={this.state.filter}
-                            onChange={(e: any) => this.setState({ filter: e.target.value })}
-                            data-element-id="search-field"
+                    <div>
+                        <GenericTable
+                            title={"Stacks"}
+                            items={this.state.stacks}
+                            getColumns={() => this.getTableColumns()}
+                            reactTableProps={{
+                                loading: this.state.loading,
+                                defaultPageSize: this.defaultPageSize
+                            }}
                         />
+                        <div className={styles.buttonBar}>
+                            <Button
+                                text="Create"
+                                onClick={() => {
+                                    this.setState({ updatingStack: undefined });
+                                    this.showSubSection(StackWidgetSubSection.SETUP);
+                                }}
+                                data-element-id="create-dashboard-button"
+                            />
+                        </div>
                     </div>
                 )}
 
-                {showTable && (
-                    <div className={styles.table}>
-                        <AdminTable
-                            data={data}
-                            columns={this.state.columns}
-                            loading={this.state.loading}
-                            pageSize={this.state.pageSize}
-                        />
-                    </div>
-                )}
-
-                {showEditStack && (
-                    <DashboardEditTabs
+                {showStackSetup && (
+                    <StackSetup
                         stack={this.state.updatingStack}
                         onUpdate={this.handleUpdate}
                         onBack={() => {
-                            this.showSubSection(DashboardWidgetSubSection.TABLE);
+                            this.showSubSection(StackWidgetSubSection.TABLE);
                         }}
                     />
                 )}
-
-                <ConfirmationDialog
-                    show={this.state.showDelete}
-                    title="Warning"
-                    content={this.state.confirmationMessage}
-                    confirmHandler={this.handleConfirmationConfirmDelete}
-                    cancelHandler={this.handleConfirmationCancel}
-                    payload={this.state.manageStack}
-                />
             </div>
         );
     }
 
-    private showSubSection(subSection: DashboardWidgetSubSection) {
+    private showSubSection(subSection: StackWidgetSubSection) {
         this.setState({
-            showTable: subSection === DashboardWidgetSubSection.TABLE,
-            showEditStack: subSection === DashboardWidgetSubSection.EDIT
+            showTable: subSection === StackWidgetSubSection.TABLE,
+            showStackSetup: subSection === StackWidgetSubSection.SETUP
         });
     }
 
@@ -201,40 +123,55 @@ export class DashboardsWidget extends React.Component<{}, State> {
         this.getStacks();
     }
 
-    private deleteStack = async (stack: StackDTO) => {
-        this.setState({
-            showDelete: true,
-            confirmationMessage: `This action will permanently delete <strong>${stack.name}</strong>`,
-            manageStack: stack
+    getTableColumns(): Column[] {
+        return [
+            { Header: "Title", accessor: "name" },
+            { Header: "Pages (Dashboards)", accessor: "totalDashboards" },
+            { Header: "Widgets", accessor: "totalWidgets" },
+            { Header: "Groups", accessor: "totalGroups" },
+            { Header: "Users", accessor: "totalUsers" },
+            {
+                Header: "Actions",
+                Cell: (row: { original: StackDTO }) => (
+                    <ButtonGroup data-role="dashboard-admin-widget-actions" data-dashboardname={row.original.name}>
+                        <EditButton
+                            onClick={() => {
+                                this.setState({ updatingStack: row.original });
+                                this.showSubSection(StackWidgetSubSection.SETUP);
+                            }}
+                        />
+                        <Divider />
+                        <Button
+                            data-element-id={"dashboard-admin-widget-assign-to-me"}
+                            text="Assign To Me"
+                            intent={Intent.SUCCESS}
+                            icon="following"
+                            small={true}
+                            onClick={() => {
+                                console.log("Unimplemented: should assign ", row.original, "to current user (you).");
+                            }}
+                        />
+                        <Divider />
+                        <DeleteButton onClick={() => this.confirmDeleteStack(row.original)} />
+                    </ButtonGroup>
+                )
+            }
+        ];
+    }
+
+    private confirmDeleteStack = async (stack: StackDTO) => {
+        showConfirmationDialog({
+            title: "Warning",
+            message: "This action will remove " + stack.name + ".",
+            onConfirm: () => this.removeStack(stack)
         });
-
-        this.getStacks();
-
         return true;
     };
 
-    private handleConfirmationConfirmDelete = async (payload: any) => {
-        this.setState({
-            showDelete: false,
-            manageStack: undefined
-        });
-
-        const stack: StackDTO = payload;
-
-        const response = await stackApi.deleteStackAsAdmin(stack.id);
-
-        // TODO: Handle failed request
-        if (response.status !== 200) return false;
-
+    private removeStack = async (stack: StackDTO) => {
+        console.log("Stubbed");
         this.getStacks();
 
         return true;
-    };
-
-    private handleConfirmationCancel = (payload: any) => {
-        this.setState({
-            showDelete: false,
-            manageStack: undefined
-        });
     };
 }

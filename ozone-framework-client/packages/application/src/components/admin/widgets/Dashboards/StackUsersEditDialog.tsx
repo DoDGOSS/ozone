@@ -2,7 +2,7 @@ import { TableSelectionDialog, TableSelectionDialogProps } from "../../../table-
 import { userApi } from "../../../../api/clients/UserAPI";
 import { UserDTO } from "../../../../api/models/UserDTO";
 
-export class DashboardUsersEditDialog extends TableSelectionDialog<UserDTO> {
+export class StackUsersEditDialog extends TableSelectionDialog<UserDTO> {
     constructor(props: TableSelectionDialogProps<UserDTO>) {
         super(props);
     }

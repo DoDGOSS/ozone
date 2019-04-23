@@ -4,19 +4,19 @@ import * as React from "react";
 import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
 
 import { AdminTable } from "../../table/AdminTable";
-import { DashboardGroupsEditDialog } from "./DashboardGroupsEditDialog";
+import { StackGroupsEditDialog } from "./StackGroupsEditDialog";
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
 import { GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
 import { stackApi } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";
 import { DashboardDTO } from "../../../../api/models/DashboardDTO";
 
-interface DashboardEditGroupsProps {
+interface StackEditGroupsProps {
     onUpdate: (update?: any) => void;
     stack: any;
 }
 
-export interface DashboardEditGroupsState {
+export interface StackEditGroupsState {
     groups: GroupDTO[];
     filtered: GroupDTO[];
     filter: string;
@@ -29,7 +29,8 @@ export interface DashboardEditGroupsState {
     manageGroup: GroupDTO | undefined;
 }
 
-export class DashboardGroupsPanel extends React.Component<DashboardEditGroupsProps, DashboardEditGroupsState> {
+// TODO It should close regardless. Apply fix to stackapi that was applied to 
+export class StackGroupsPanel extends React.Component<StackEditGroupsProps, StackEditGroupsState> {
     private static readonly SELECT_GROUPS_COLUMN_DEFINITION = [
         {
             Header: "Groups",
@@ -70,7 +71,7 @@ export class DashboardGroupsPanel extends React.Component<DashboardEditGroupsPro
         }
     ];
 
-    constructor(props: DashboardEditGroupsProps) {
+    constructor(props: StackEditGroupsProps) {
         super(props);
         this.state = {
             groups: this.props.stack.groups,
@@ -126,21 +127,19 @@ export class DashboardGroupsPanel extends React.Component<DashboardEditGroupsPro
                         text="Add"
                         disabled={!this.state.stack.approved}
                         title={
-                            this.state.stack.approved
-                                ? undefined
-                                : "Groups can only be added to Dashboards shared by Owner"
+                            this.state.stack.approved ? undefined : "Groups can only be added to Stacks shared by Owner"
                         }
                         onClick={() => this.toggleShowAdd()}
                         data-element-id="group-edit-add-group-dialog-add-button"
                     />
                 </div>
 
-                <DashboardGroupsEditDialog
+                <StackGroupsEditDialog
                     show={this.state.showAdd}
                     title="Add Group(s) to Stack"
                     confirmHandler={this.handleAddGroupResponse}
                     cancelHandler={this.handleAddGroupCancel}
-                    columns={DashboardGroupsPanel.SELECT_GROUPS_COLUMN_DEFINITION}
+                    columns={StackGroupsPanel.SELECT_GROUPS_COLUMN_DEFINITION}
                 />
 
                 <ConfirmationDialog

@@ -3,10 +3,6 @@ import * as React from "react";
 import { Button, InputGroup } from "@blueprintjs/core";
 import { Column } from "react-table";
 
-import * as styles from "../Widgets.scss";
-
-import * as styles from "../Widgets.scss";
-
 import { widgetApi, WidgetQueryCriteria } from "../../../../api/clients/WidgetAPI";
 import { UserDTO } from "../../../../api/models/UserDTO";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
@@ -14,6 +10,8 @@ import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { UserWidgetsEditDialog } from "./UserWidgetsEditDialog";
 import { WidgetTable } from "../Widgets/WidgetTable";
+
+import * as styles from "../Widgets.scss";
 
 interface UserEditWidgetsProps {
     onUpdate: (update?: any) => void;
@@ -23,10 +21,6 @@ interface UserEditWidgetsProps {
 export interface UserEditWidgetsState {
     widgets: WidgetDTO[];
     loading: boolean;
-<<<<<<< HEAD
-=======
-    defaultPageSize: number;
->>>>>>> cf74dde... Fix table bugs, enable user-preference editing, make user-create work like widget-create, make create-user-preference be inside a dialog like the other create-subsections.
     showAdd: boolean;
 }
 
@@ -38,15 +32,7 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
         this.state = {
             widgets: [],
             loading: true,
-<<<<<<< HEAD
             showAdd: false
-=======
-            defaultPageSize: 5,
-            showAdd: false,
-            showDelete: false,
-            confirmationMessage: "",
-            manageWidget: undefined
->>>>>>> cf74dde... Fix table bugs, enable user-preference editing, make user-create work like widget-create, make create-user-preference be inside a dialog like the other create-subsections.
         };
 
         this.confirmDeleteWidget = this.confirmDeleteWidget.bind(this);
@@ -62,13 +48,8 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
                 <WidgetTable
                     data={this.state.widgets}
                     isLoading={this.state.loading}
-<<<<<<< HEAD
                     onDelete={this.confirmDeleteWidget}
                     defaultPageSize={this.defaultPageSize}
-=======
-                    onDelete={this.deleteWidget}
-                    defaultPageSize={this.state.defaultPageSize}
->>>>>>> cf74dde... Fix table bugs, enable user-preference editing, make user-create work like widget-create, make create-user-preference be inside a dialog like the other create-subsections.
                 />
 
                 <div className={styles.buttonBar}>
@@ -146,7 +127,7 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
         showConfirmationDialog({
             title: "Warning",
             message:
-                "This action will permanently remove widget " +
+                "This action will remove widget " +
                 widget.value.namespace +
                 " from user " +
                 this.props.user.userRealName +

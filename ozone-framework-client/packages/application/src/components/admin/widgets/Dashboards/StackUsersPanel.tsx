@@ -4,7 +4,7 @@ import * as React from "react";
 import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
 
 import { AdminTable } from "../../table/AdminTable";
-import { DashboardUsersEditDialog } from "./DashboardUsersEditDialog";
+import { StackUsersEditDialog } from "./StackUsersEditDialog";
 
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
 
@@ -14,12 +14,12 @@ import { StackDTO, StackUpdateRequest } from "../../../../api/models/StackDTO";
 import { userApi, UserQueryCriteria } from "../../../../api/clients/UserAPI";
 import { UserDTO } from "../../../../api/models/UserDTO";
 
-interface DashboardEditUsersProps {
+interface StackEditUsersProps {
     onUpdate: (update?: any) => void;
     stack: any;
 }
 
-export interface DashboardEditUsersState {
+export interface StackEditUsersState {
     users: UserDTO[];
     filtered: UserDTO[];
     filter: string;
@@ -32,7 +32,7 @@ export interface DashboardEditUsersState {
     manageUser: UserDTO | undefined;
 }
 
-export class DashboardUsersPanel extends React.Component<DashboardEditUsersProps, DashboardEditUsersState> {
+export class StackUsersPanel extends React.Component<StackEditUsersProps, StackEditUsersState> {
     private static readonly SELECT_USERS_COLUMN_DEFINITION = [
         {
             Header: "Users",
@@ -80,7 +80,7 @@ export class DashboardUsersPanel extends React.Component<DashboardEditUsersProps
         }
     ];
 
-    constructor(props: DashboardEditUsersProps) {
+    constructor(props: StackEditUsersProps) {
         super(props);
         this.state = {
             users: [],
@@ -145,12 +145,12 @@ export class DashboardUsersPanel extends React.Component<DashboardEditUsersProps
                     />
                 </div>
 
-                <DashboardUsersEditDialog
+                <StackUsersEditDialog
                     show={this.state.showAdd}
                     title="Add User(s) to Stack"
                     confirmHandler={this.handleAddUserResponse}
                     cancelHandler={this.handleAddUserCancel}
-                    columns={DashboardUsersPanel.SELECT_USERS_COLUMN_DEFINITION}
+                    columns={StackUsersPanel.SELECT_USERS_COLUMN_DEFINITION}
                 />
 
                 <ConfirmationDialog
