@@ -2,7 +2,7 @@ import { TableSelectionDialog, TableSelectionDialogProps } from "../../../table-
 import { GroupDTO } from "../../../../api/models/GroupDTO";
 import { groupApi } from "../../../../api/clients/GroupAPI";
 
-export class DashboardGroupsEditDialog extends TableSelectionDialog<GroupDTO> {
+export class StackGroupsEditDialog extends TableSelectionDialog<GroupDTO> {
     constructor(props: TableSelectionDialogProps<GroupDTO>) {
         super(props);
     }
