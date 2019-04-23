@@ -14,7 +14,7 @@ import * as styles from "../Widgets.scss";
 export interface GroupSetupProps {
     onUpdate: (update?: any) => void;
     onBack: () => void;
-    group: any;
+    group: GroupDTO | undefined;
 }
 
 export interface GroupSetupState {
