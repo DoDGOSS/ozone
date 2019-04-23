@@ -5,7 +5,7 @@ import { GenericTable } from "../../table/GenericTable";
 import { DeleteButton, EditButton } from "../../table/TableButtons";
 
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
-import { UserEditTabs } from "./UserEditTabs";
+import { UserSetup } from "./UserSetup";
 
 import { UserCreateRequest, UserDTO, UserUpdateRequest } from "../../../../api/models/UserDTO";
 import { userApi } from "../../../../api/clients/UserAPI";
@@ -78,17 +78,8 @@ export class UsersWidget extends React.Component<{}, State> {
                     </>
                 )}
 
-                {/* {showCreate && (
-                    <UserCreateForm
-                        onSubmit={this.createUser}
-                        onCancel={() => {
-                            this.showSubSection(UserWidgetSubSection.TABLE);
-                        }}
-                    />
-                )} */}
-
                 {showSetup && (
-                    <UserEditTabs
+                    <UserSetup
                         user={this.state.updatingUser}
                         onUpdate={this.handleUpdate}
                         onBack={() => {

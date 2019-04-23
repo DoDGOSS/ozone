@@ -123,7 +123,7 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
         this.getStacks();
     }
 
-    getTableColumns(): Column[] {
+    private getTableColumns(): Column[] {
         return [
             { Header: "Title", accessor: "name" },
             { Header: "Pages (Dashboards)", accessor: "totalDashboards" },
@@ -162,8 +162,8 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
     private confirmDeleteStack = async (stack: StackDTO) => {
         showConfirmationDialog({
             title: "Warning",
-            message: "This action will remove " + stack.name + ".",
-            onConfirm: () => this.removeStack(stack)
+            message: "This action will permanently delete " + dashboard.name + ".",
+            onConfirm: () => this.removeDashboard(dashboard)
         });
         return true;
     };

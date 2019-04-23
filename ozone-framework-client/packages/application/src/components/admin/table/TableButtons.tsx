@@ -10,6 +10,7 @@ export const EditButton: React.FC<{ onClick: () => void }> = (props) => {
             small={true}
             onClick={props.onClick}
             data-element-id={"user-admin-widget-edit-button"}
+            disabled={props.disabled ? props.disabled : false}
         />
     );
 };
@@ -23,6 +24,7 @@ export const DeleteButton: React.FC<{ onClick: () => void }> = (props) => {
             icon="trash"
             small={true}
             onClick={props.onClick}
+            disabled={props.disabled ? props.disabled : false}
         />
     );
 };
