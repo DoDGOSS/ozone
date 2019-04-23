@@ -165,7 +165,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         return false;
     }
 
-    private queryMatches(text: string, query: string): boolean {
+    private queryMatches = (text: string, query: string): boolean => {
         if (this.searchCaseSensitive) {
             return text.includes(query);
         } else {
