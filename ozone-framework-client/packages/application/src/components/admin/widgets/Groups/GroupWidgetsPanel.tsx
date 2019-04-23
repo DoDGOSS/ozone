@@ -1,18 +1,15 @@
 import * as styles from "../Widgets.scss";
 
 import * as React from "react";
-import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
+import { Button, InputGroup } from "@blueprintjs/core";
 
 import { GroupWidgetsEditDialog } from './GroupWidgetEditDialog'
 
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
 
-import { groupApi } from "../../../../api/clients/GroupAPI";
-import { GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
+import { GroupDTO } from "../../../../api/models/GroupDTO";
 
-import { UserQueryCriteria } from "../../../../api/clients/UserAPI";
-
-import { widgetApi } from "../../../../api/clients/WidgetAPI";
+import { widgetApi, WidgetQueryCriteria } from "../../../../api/clients/WidgetAPI";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { WidgetTable } from "../Widgets/WidgetTable";
 
@@ -39,10 +36,10 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         {
             Header: "Widgets",
             columns: [
-                { Header: "Name", accessor: "value.namespace" },
-                { Header: "Version", accessor: "value.version" },
-                { Header: "Groups", accessor: "value.totalGroups"},
-                { Header: "Users", accessor: "value.totalUsers"}
+                { Header: "Title", accessor: "value.namespace" },
+                { Header: "URL", accessor: "value.url" },
+                { Header: "Users", accessor: "value.totalUsers"},
+                { Header: "Groups", accessor: "value.totalGroups"}
             ]
         }
     ];
@@ -61,6 +58,8 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
             confirmationMessage: "",
             manageWidget: undefined
         };
+
+        this.deleteWidget = this.deleteWidget.bind(this);
     }
 
     componentDidMount() {
@@ -73,9 +72,7 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
 
         if (filter) {
             data = data.filter((row) => {
-                return (
-                    row.namespace.toLowerCase().includes(filter) 
-                );
+                return row.value.namespace.toLowerCase().includes(filter) 
             });
         }
 
@@ -94,9 +91,8 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
                 <div className={styles.table}>
                     <WidgetTable
                         data={data}
-                        // columns={this.WIDGET_COLUMN_DEFINITION}
-                        onDelete={this.deleteWidget}
                         isLoading={this.state.loading}
+                        onDelete={this.deleteWidget}
                         pageSize={this.state.pageSize}
                     />
                 </div>
@@ -138,7 +134,8 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
     private getWidgets = async () => {
         const currentGroup: GroupDTO = this.state.group;
 
-        const criteria: UserQueryCriteria = {
+        // console.log("current group:" + currentGroup.id)
+        const criteria: WidgetQueryCriteria = {
             group_id: currentGroup.id
         };
         const response = await widgetApi.getWidgets(criteria);
@@ -153,14 +150,6 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
     };
 
     private handleAddWidgetResponse = async (widgets: Array<WidgetDTO>) => {
-
-        // const request: GroupUpdateRequest = {
-        //     id: this.state.group.id,
-        //     tab: "widget",
-        //     name: this.state.group.name,
-        //     update_action: "add",
-        //     data: widgets.map((widget: WidgetDTO) => widget.id)
-        // };
 
         const responses = [];
         for (const widget of widgets){
@@ -211,17 +200,6 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         });
 
         const widget: WidgetDTO = payload;
-
-        // const request: GroupUpdateRequest = {
-        //     id: this.state.group.id,
-        //     tab: "widget",
-        //     name: this.state.group.name,
-        //     update_action: "add",
-        //     data: widget.id
-        // };
-
-        // const response = await groupApi.updateGroup(request);
-
         const response = await widgetApi.removeWidgetGroups(widget.id, this.state.group.id)
 
         // TODO: Handle failed request

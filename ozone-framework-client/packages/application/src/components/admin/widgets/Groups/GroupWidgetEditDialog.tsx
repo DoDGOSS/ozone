@@ -1,6 +1,9 @@
-import { TableSelectionDialog, TableSelectionDialogProps } from "../../../table-selection-dialog/TableSelectionDialog";
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
+
+import { TableSelectionDialog, TableSelectionDialogProps } from "../../../table-selection-dialog/TableSelectionDialog";
+
+import { isNil } from "../../../../utility";
 
 export class GroupWidgetsEditDialog extends TableSelectionDialog<WidgetDTO> {
     constructor(props: TableSelectionDialogProps<WidgetDTO>) {
@@ -11,14 +14,17 @@ export class GroupWidgetsEditDialog extends TableSelectionDialog<WidgetDTO> {
         const response = await widgetApi.getWidgets();
 
         if (response.status !== 200) return [];
+
         return response.data.data;
     }
 
-    protected filterMatch(filter: string, value: WidgetDTO): boolean {
+    protected filterMatch(filter: string, widget: WidgetDTO): boolean {
+        const { namespace, description, universalName } = widget.value;
+
         return (
-            value.namespace.toLowerCase().includes(filter) ||
-            value.description.toLowerCase().includes(filter) ||
-            value.widgetUrl.toLowerCase().includes(filter)
+            namespace.toLowerCase().includes(filter) ||
+            (!isNil(description) && description.toLowerCase().includes(filter)) ||
+            (!isNil(universalName) && universalName.toLowerCase().includes(filter))
         );
     }
 
