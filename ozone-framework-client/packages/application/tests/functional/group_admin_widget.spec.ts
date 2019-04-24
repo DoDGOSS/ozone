@@ -310,20 +310,20 @@ module.exports = {
         browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
 
         browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_MODIFIED_NAME);
-    
+
         openEditSectionForGroup(
             browser,
             GROUP_ADD_WIDGET,
             `${GroupAdminWidget.EditGroup.TAB_WIDGETS}`
         ).waitForElementVisible(GroupAdminWidget.WidgetsGroup.ADD_BUTTON, 2000, "[Group Widgets Interface] is visible");
-    
+
         browser
-        .click(GroupAdminWidget.WidgetsGroup.ADD_BUTTON)
-        .waitForElementPresent(
-            GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
-            1000,
-            "[Widget Selection Dialog] is present"
-        );
+            .click(GroupAdminWidget.WidgetsGroup.ADD_BUTTON)
+            .waitForElementPresent(
+                GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
+                1000,
+                "[Widget Selection Dialog] is present"
+            );
 
         browser
             .setValue(GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD, SEARCH_WIDGET)
@@ -336,7 +336,7 @@ module.exports = {
                 1000,
                 "[Widget Selection Dialog] is closed"
             );
-                
+
         ADDED_WIDGETS.forEach((widget: string) => {
             browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(widget);
         });
@@ -346,9 +346,67 @@ module.exports = {
             .waitForElementNotPresent(GroupAdminWidget.WidgetsGroup.ADD_BUTTON, 1000, "[Edit group Form] is closed");
 
         browser.closeWindow().end();
-
     },
 
+    "As an Administrator, I can remove a widget from a group": (browser: NightwatchAPI) => {
+        // loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+        // openAdminWidget(browser, AdminWidgetType.WIDGETS);
+
+        // browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
+
+        // openEditSectionForGroup(
+        //     browser,
+        //     GROUP_ADD_WIDGET,
+        //     `${GroupAdminWidget.EditGroup.TAB_WIDGETS}`
+        // ).waitForElementVisible(GroupAdminWidget.WidgetsGroup.ADD_BUTTON, 2000, "[User Widgets Interface] is visible");
+
+        loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.GROUPS);
+
+        browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
+
+        browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_MODIFIED_NAME);
+
+        openEditSectionForGroup(
+            browser,
+            GROUP_ADD_WIDGET,
+            `${GroupAdminWidget.EditGroup.TAB_WIDGETS}`
+        ).waitForElementVisible(GroupAdminWidget.WidgetsGroup.ADD_BUTTON, 2000, "[Group Widgets Interface] is visible");
+
+        browser
+            .click(`button[data-element-id="delete-widget-button"][data-widget-title="Color Client"]`)
+            .waitForElementPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                10000,
+                "[Confirmation Dialog] is present"
+            )
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .waitForElementNotPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                10000,
+                "[Confirmation Dialog] is not present"
+            );
+
+        browser
+            .click(`button[data-element-id="delete-widget-button"][data-widget-title="Color Server"]`)
+            .waitForElementPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                10000,
+                "[Confirmation Dialog] is present"
+            )
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .waitForElementNotPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                10000,
+                "[Confirmation Dialog] is not present"
+            );
+
+        browser
+            .click(GroupAdminWidget.Main.BACK_BUTTON)
+            .waitForElementNotPresent(GroupAdminWidget.WidgetsGroup.ADD_BUTTON, 1000, "[Edit Widget Form] is closed");
+
+        browser.closeWindow().end();
+    },
 
     "As an Administrator, I can delete a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
