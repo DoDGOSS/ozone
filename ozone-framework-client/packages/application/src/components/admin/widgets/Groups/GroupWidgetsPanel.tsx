@@ -3,7 +3,7 @@ import * as styles from "../Widgets.scss";
 import * as React from "react";
 import { Button, InputGroup } from "@blueprintjs/core";
 
-import { GroupWidgetsEditDialog } from './GroupWidgetEditDialog'
+import { GroupWidgetsEditDialog } from "./GroupWidgetEditDialog";
 
 import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
 
@@ -38,8 +38,8 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
             columns: [
                 { Header: "Title", accessor: "value.namespace" },
                 { Header: "URL", accessor: "value.url" },
-                { Header: "Users", accessor: "value.totalUsers"},
-                { Header: "Groups", accessor: "value.totalGroups"}
+                { Header: "Users", accessor: "value.totalUsers" },
+                { Header: "Groups", accessor: "value.totalGroups" }
             ]
         }
     ];
@@ -72,7 +72,7 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
 
         if (filter) {
             data = data.filter((row) => {
-                return row.value.namespace.toLowerCase().includes(filter) 
+                return row.value.namespace.toLowerCase().includes(filter);
             });
         }
 
@@ -150,11 +150,10 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
     };
 
     private handleAddWidgetResponse = async (widgets: Array<WidgetDTO>) => {
-
         const responses = [];
-        for (const widget of widgets){
+        for (const widget of widgets) {
             const response = await widgetApi.addWidgetGroups(widget.id, this.state.group.id);
-            if(response.status !== 200) return;
+            if (response.status !== 200) return;
 
             responses.push(response.data.data);
         }
@@ -181,11 +180,9 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         this.setState({
             showDelete: true,
             confirmationMessage: `This action will permanently delete <strong>
-            ${
-                widget.value.namespace
-            }
+            ${widget.value.namespace}
             </strong> from the group <strong>${currentGroup.name}</strong>`,
-            manageWidget:widget
+            manageWidget: widget
         });
 
         this.getWidgets();
@@ -200,7 +197,7 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         });
 
         const widget: WidgetDTO = payload;
-        const response = await widgetApi.removeWidgetGroups(widget.id, this.state.group.id)
+        const response = await widgetApi.removeWidgetGroups(widget.id, this.state.group.id);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;
@@ -217,5 +214,4 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
             manageWidget: undefined
         });
     };
-
 }

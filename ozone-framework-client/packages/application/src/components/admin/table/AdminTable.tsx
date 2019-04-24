@@ -20,7 +20,6 @@ export type AdminTableProps = {
 // try new wrapped tabulator if necessary https://github.com/ngduc/react-tabulator#readme
 
 export class AdminTable extends React.Component<AdminTableProps, {}> {
-
     render() {
         return (
             <ReactTable
