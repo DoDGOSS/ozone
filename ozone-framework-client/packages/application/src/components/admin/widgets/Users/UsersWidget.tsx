@@ -92,6 +92,7 @@ export class UsersWidget extends React.Component<{}, State> {
                         user={this.state.updatingUser}
                         onUpdate={this.handleUpdate}
                         onBack={() => {
+                            this.handleUpdate();
                             this.showSubSection(UserWidgetSubSection.TABLE);
                         }}
                         data-element-id="user-admin-widget-edit-view"

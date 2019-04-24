@@ -130,6 +130,10 @@ module.exports = {
         browser.click(AdminWidget.SUBMIT_BUTTON);
 
         browser
+            .click(AdminWidget.USER_ADMIN_BACK_BUTTON)
+            .waitForElementNotPresent(AdminWidget.SUBMIT_BUTTON, 1000, "[Edit User Form] is closed");
+
+        browser
             .pause(2000)
             .waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
 
@@ -154,9 +158,12 @@ module.exports = {
             "[User Admin Widget] Displays user information we wish to edit"
         );
 
+        browser.waitForElementVisible(AdminWidget.SEARCH_FIELD, 1000, "[User Widget Search field] is visible");
+
         // browser.click(AdminWidget.EDIT_USER_ID);
+
         browser
-            .setValue(AdminWidget.SEARCH_FIELD, NEW_USER_EMAIL)
+            .setValue(AdminWidget.SEARCH_FIELD, NEW_USER_USERNAME)
             .click(
                 `${
                     UserAdminWidget.Main.DIALOG
@@ -168,7 +175,7 @@ module.exports = {
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
             "Username",
-            "[User Admin Create Form] is visible"
+            "[User Admin Edit Form] is visible"
         );
 
         browser.clearValue(AdminWidget.FULL_NAME_FIELD).clearValue(AdminWidget.EMAIL_FIELD);
@@ -229,7 +236,7 @@ module.exports = {
             .click(GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON)
             .waitForElementNotPresent(
                 GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
-                1000,
+                2000,
                 "[Widget Selection Dialog] is closed"
             );
 
@@ -401,7 +408,9 @@ module.exports = {
             .setValue(AdminWidget.PATH_FIELD, NEW_USER_PREFERENCE_PATH)
             .setValue(AdminWidget.VALUE_FIELD, NEW_USER_PREFERENCE_VALUE);
 
-        browser.click(`div[data-element-id="preference-admin-widget-dialog"] ${AdminWidget.SUBMIT_BUTTON}`);
+        browser.waitForElementVisible(UserAdminWidget.UserPreferences.PREFERENCE_DIALOG, 2000);
+        browser.waitForElementVisible(`${UserAdminWidget.UserPreferences.PREFERENCE_DIALOG} ${AdminWidget.SUBMIT_BUTTON}`, 2000);
+        browser.click(`${UserAdminWidget.UserPreferences.PREFERENCE_DIALOG} ${AdminWidget.SUBMIT_BUTTON}`);
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
