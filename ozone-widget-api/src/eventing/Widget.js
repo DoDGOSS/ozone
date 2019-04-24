@@ -49,7 +49,7 @@ Ozone.eventing.Widget = function (widgetRelay, afterInit) {
                 this.afterInitCallBack = afterInit.bind(this);
             } else {
                 //already initialized just execute the supplied callback
-                setTimeout(() => {
+                setTimeout(function () {
                     afterInit.call(Ozone.eventing.Widget.instance, Ozone.eventing.Widget.instance);
                 }, 50);
             }
@@ -186,8 +186,9 @@ Ozone.eventing.Widget.prototype = {
         var onClickHandler;
         var onKeyDownHandler;
 
-        function activateWidget() {
+        var _this = this;
 
+        function activateWidget() {
              var config = {
                  fn: "activateWidget",
                  params: {
@@ -197,16 +198,16 @@ Ozone.eventing.Widget.prototype = {
              };
 
              var stateChannel = '_WIDGET_STATE_CHANNEL_' + configParams.id;
-             if (!this.disableActivateWidget) {
-               Ozone.internal.rpc.send(stateChannel, null, this.widgetId, config);
+             if (!_this.disableActivateWidget) {
+               Ozone.internal.rpc.send(stateChannel, null, _this.widgetId, config);
              }
              else {
-               this.disableActivateWidget = false;
+               _this.disableActivateWidget = false;
              }
         }
 
         //register for after_container_init
-        Ozone.internal.rpc.register("after_container_init", () => {
+        Ozone.internal.rpc.register("after_container_init", function () {
             Ozone.internal.rpc.unregister("after_container_init");
 
             //attach mouse click and keydown listener to send activate calls for the widget
@@ -221,10 +222,10 @@ Ozone.eventing.Widget.prototype = {
             }
 
             //execute callback
-            this.afterContainerInit();
+            _this.afterContainerInit();
         });
 
-        Ozone.internal.rpc.register("_widget_activated", () => {
+        Ozone.internal.rpc.register("_widget_activated", function () {
             if (onClickHandler) {
                 document.removeEventListener("click", onClickHandler);
                 onClickHandler = null;
@@ -236,7 +237,7 @@ Ozone.eventing.Widget.prototype = {
             }
         });
 
-        Ozone.internal.rpc.register("_widget_deactivated", () => {
+        Ozone.internal.rpc.register("_widget_deactivated", function () {
             if (!onClickHandler) {
                 onClickHandler = activateWidget.bind(this);
                 document.addEventListener("click", onClickHandler);
@@ -308,8 +309,9 @@ Ozone.eventing.Widget.prototype = {
      * @ignore
      * Wraps Ozone.internal.rpc.send.
      */
-    send: function (targetId, serviceName, callback, ...varargs) {
-        Ozone.internal.rpc.send(serviceName, callback, ...varargs);
+    send: function (targetId, serviceName, callback) {
+        var varargs = Array.prototype.slice.call(arguments, 3);
+        Ozone.internal.rpc.send(serviceName, callback, varargs);
     },
 
     /**
@@ -394,13 +396,13 @@ Ozone.eventing.Widget.getInstance = function (afterInit, widgetRelay) {
     if (Ozone.eventing.Widget.instance == null) {
         Ozone.eventing.Widget.instance = new Ozone.eventing.Widget(widgetRelay, afterInit);
     } else {
-        let instance = Ozone.eventing.Widget.instance;
+        var instance = Ozone.eventing.Widget.instance;
         if (afterInit != null) {
             if (!instance.isAfterInit) {
                 instance.afterInitCallBack = afterInit.bind(instance);
             } else {
                 // already initialized, execute the supplied callback
-                setTimeout(() => {
+                setTimeout(function () {
                     afterInit.call(instance, instance);
                 }, 50);
             }
