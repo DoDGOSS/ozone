@@ -26,7 +26,9 @@ export class UserPreferenceDialog extends React.Component<PreferenceDialogProps,
                 isOpen={this.props.isOpen}
                 onClose={this.props.onClose}
             >
-                <div className={classNames(Classes.DIALOG_BODY, styles.dialogBody)}>
+                <div
+                    data-element-id={'user-admin-preference-dialog'} 
+                    className={classNames(Classes.DIALOG_BODY, styles.dialogBody)}>
                     <UserPreferenceForm
                         preferenceToEdit={this.props.preferenceToEdit}
                         onSubmit={(newP: any) => {

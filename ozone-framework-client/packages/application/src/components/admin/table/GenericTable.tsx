@@ -147,18 +147,22 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
 
     private columnAccessorMatchesQuery(item: T, query: string, column: Column) {
         if (column.accessor) {
-            let valueInColumnForItem: string = "";
+            let valueInColumnForItem: any;
             if (typeof column.accessor === "function") {
-                valueInColumnForItem = column.accessor(item).toString();
+                valueInColumnForItem = column.accessor(item);
                 // some tables still use string accessors
-            } else if (typeof column.accessor === "string" && item.hasOwnProperty(column.accessor)) {
+            } else if (item.hasOwnProperty(column.accessor) && typeof column.accessor === "string") {
                 // hack to make ts compiler stop complaining.
                 // I'd be nice to not use string accessors anyway, but if people do, this should work.
                 const itemField: any = (item as { [key: string]: any })[column.accessor.toString()];
-                valueInColumnForItem = itemField.toString();
+                valueInColumnForItem = itemField;
+            }
+            let safeValueInColumn = "";
+            if (valueInColumnForItem !== undefined && valueInColumnForItem !== null) {
+                safeValueInColumn = valueInColumnForItem.toString();
             }
             // if neither function nor string, then the queryMatch will simply be given an empty string, and fail smoothly.
-            if (this.queryMatches(valueInColumnForItem, query)) {
+            if (this.queryMatches(safeValueInColumn, query)) {
                 return true;
             }
         }
@@ -171,7 +175,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         } else {
             return text.toLowerCase().includes(query.toLowerCase());
         }
-    }
+    };
 
     private getTableMainHeader(title: string): any {
         return <div>{title && <AlignedDiv message={title} alignment="left" />}</div>;
