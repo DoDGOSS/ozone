@@ -88,7 +88,6 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
                 </div>
             );
         } else {
-            console.log("reloading form");
             toDisplay = (
                 <WidgetPropertiesForm
                     widget={this.state.widget}

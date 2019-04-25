@@ -62,7 +62,7 @@ export class GroupsPanel extends React.Component<Props, State> {
         const response = await groupApi.getGroupsForWidget(this.props.widget.id);
         // TODO: Handle failed request
         if (response.status !== 200) return;
-        console.log(response.data)
+        console.log(response.data);
         this.setState({
             widgetGroups: this.parseGroupDTOs(response.data.data),
             loading: false
