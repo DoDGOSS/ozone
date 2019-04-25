@@ -102,9 +102,7 @@ Ozone.util.parseWindowNameData = function() {
 
     //parse out the config
     try {
-      configParams = Ozone.util.parseJson(
-              window.name
-      );
+      configParams = Ozone.util.parseJson(window.name);
       return configParams;
     }
     catch (e) {

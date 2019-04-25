@@ -1,31 +1,23 @@
 import * as React from "react";
 import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
 
-import { AdminTable } from "../../table/AdminTable";
+import { GenericTable } from "../../table/GenericTable";
+import { DeleteButton, EditButton } from "../../table/TableButtons";
 
-import { UserCreateForm } from "./UserCreateForm";
-import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
+import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { UserEditTabs } from "./UserEditTabs";
 
-import { UserCreateRequest, UserDTO } from "../../../../api/models/UserDTO";
+import { UserCreateRequest, UserDTO, UserUpdateRequest } from "../../../../api/models/UserDTO";
 import { userApi } from "../../../../api/clients/UserAPI";
 
 import * as styles from "../Widgets.scss";
 
 export interface State {
     users: UserDTO[];
-    filtered: UserDTO[];
-    filter: string;
     loading: boolean;
-    pageSize: number;
-    columns: any;
     showTable: boolean;
-    showCreate: boolean;
-    showEditUser: boolean;
-    showDelete: boolean;
-    confirmationMessage: string;
-    manageUser: UserDTO | undefined;
-    updatingUser?: any;
+    showSetup: boolean;
+    updatingUser: UserDTO | undefined;
 }
 
 // TODO
@@ -36,71 +28,20 @@ export interface State {
 
 enum UserWidgetSubSection {
     TABLE,
-    CREATE,
-    EDIT
+    SETUP
 }
 
 export class UsersWidget extends React.Component<{}, State> {
+    defaultPageSize: number = 5;
+
     constructor(props: any) {
         super(props);
         this.state = {
             users: [],
-            filtered: [],
-            filter: "",
             loading: true,
-            pageSize: 5,
             showTable: true,
-            showCreate: false,
-            showEditUser: false,
-            showDelete: false,
-            confirmationMessage: "",
-            manageUser: undefined,
-
-            columns: [
-                {
-                    Header: "Users",
-                    columns: [
-                        { Header: "Name", accessor: "userRealName" },
-                        { Header: "Username", accessor: "username" },
-                        { Header: "Email", accessor: "email" },
-                        { Header: "Groups", accessor: "totalGroups" },
-                        { Header: "Widgets", accessor: "totalWidgets" },
-                        { Header: "Dashboards", accessor: "totalDashboards" },
-                        { Header: "Last Login", accessor: "lastLogin" }
-                    ]
-                },
-                // TODO - Abstract this to only have to provide onclick function name with styled buttons
-                {
-                    Header: "Actions",
-                    Cell: (row: any) => {
-                        const user: UserDTO = row.original;
-                        return (
-                            <ButtonGroup data-role={"user-admin-widget-actions"} data-username={user.username}>
-                                <Button
-                                    text="Edit"
-                                    intent={Intent.PRIMARY}
-                                    icon="edit"
-                                    small={true}
-                                    onClick={() => {
-                                        this.showSubSection(UserWidgetSubSection.EDIT);
-                                        this.setState({ updatingUser: user });
-                                    }}
-                                    data-element-id={"user-admin-widget-edit-button"}
-                                />
-                                <Divider />
-                                <Button
-                                    data-element-id={"user-admin-widget-delete-button"}
-                                    text="Delete"
-                                    intent={Intent.DANGER}
-                                    icon="trash"
-                                    small={true}
-                                    onClick={() => this.deleteUser(user)}
-                                />
-                            </ButtonGroup>
-                        );
-                    }
-                }
-            ]
+            showSetup: false,
+            updatingUser: undefined
         };
 
         this.handleUpdate = this.handleUpdate.bind(this);
@@ -112,92 +53,96 @@ export class UsersWidget extends React.Component<{}, State> {
 
     render() {
         const showTable = this.state.showTable;
-        const showCreate = this.state.showCreate;
-        const showEditUser = this.state.showEditUser;
-
-        let data = this.state.users;
-        const filter = this.state.filter.toLowerCase();
-
-        // TODO - Improve this - this will be slow if there are many users. Add pagination
-        if (filter) {
-            data = data.filter((row) => {
-                return (
-                    row.userRealName.toLowerCase().includes(filter) ||
-                    row.email.toLowerCase().includes(filter) ||
-                    row.username.toLowerCase().includes(filter)
-                );
-            });
-        }
+        const showSetup = this.state.showSetup;
 
         return (
             <div data-element-id="user-admin-widget-dialog">
                 {showTable && (
                     <>
-                        <div className={styles.actionBar}>
-                            <InputGroup
-                                placeholder="Search..."
-                                leftIcon="search"
-                                value={this.state.filter}
-                                onChange={(e: any) => this.setState({ filter: e.target.value })}
-                                data-element-id="search-field"
-                            />
-                        </div>
-                        <div className={styles.table}>
-                            <AdminTable
-                                data={data}
-                                columns={this.state.columns}
-                                loading={this.state.loading}
-                                pageSize={this.state.pageSize}
-                            />
-                        </div>
+                        <GenericTable
+                            title={"Users"}
+                            items={this.state.users}
+                            getColumns={() => this.getTableColumns()}
+                            reactTableProps={{
+                                loading: this.state.loading,
+                                defaultPageSize: this.defaultPageSize
+                            }}
+                        />
                         <div className={styles.buttonBar}>
                             <Button
                                 text="Create"
-                                onClick={() => this.showSubSection(UserWidgetSubSection.CREATE)}
+                                onClick={() => this.createNewUser()}
                                 data-element-id="user-admin-widget-create-button"
                             />
                         </div>
                     </>
                 )}
 
-                {showCreate && (
+                {/* {showCreate && (
                     <UserCreateForm
                         onSubmit={this.createUser}
                         onCancel={() => {
                             this.showSubSection(UserWidgetSubSection.TABLE);
                         }}
                     />
-                )}
+                )} */}
 
-                {showEditUser && (
+                {showSetup && (
                     <UserEditTabs
                         user={this.state.updatingUser}
                         onUpdate={this.handleUpdate}
                         onBack={() => {
+                            this.handleUpdate();
                             this.showSubSection(UserWidgetSubSection.TABLE);
                         }}
                         data-element-id="user-admin-widget-edit-view"
                     />
                 )}
-
-                <ConfirmationDialog
-                    show={this.state.showDelete}
-                    title="Warning"
-                    content={this.state.confirmationMessage}
-                    confirmHandler={this.handleConfirmationConfirmDelete}
-                    cancelHandler={this.handleConfirmationCancel}
-                    payload={this.state.manageUser}
-                />
             </div>
         );
+    }
+
+    private getTableColumns(): any[] {
+        return [
+            { Header: "Name", id: "userRealName", accessor: (u: UserDTO) => u.userRealName },
+            { Header: "Username", id: "username", accessor: (u: UserDTO) => u.username },
+            { Header: "Email", id: "email", accessor: (u: UserDTO) => u.email },
+            { Header: "Groups", id: "totalGroups", accessor: (u: UserDTO) => u.totalGroups },
+            { Header: "Widgets", id: "totalWidgets", accessor: (u: UserDTO) => u.totalWidgets },
+            { Header: "Dashboards", id: "totalDashboards", accessor: (u: UserDTO) => u.totalDashboards },
+            { Header: "Last Login", id: "lastLogin", accessor: (u: UserDTO) => u.lastLogin },
+            {
+                Header: "Actions",
+                sortable: false,
+                Cell: (row: any) => {
+                    const user: UserDTO = row.original;
+                    return (
+                        // TODO - Abstract this to only have to provide onclick function name with styled buttons
+                        <ButtonGroup data-role={"user-admin-widget-actions"} data-username={user.username}>
+                            <EditButton
+                                onClick={() => {
+                                    this.setState({ updatingUser: user });
+                                    this.showSubSection(UserWidgetSubSection.SETUP);
+                                }}
+                            />
+                            <Divider />
+                            <DeleteButton onClick={() => this.confirmDeleteUser(user)} />
+                        </ButtonGroup>
+                    );
+                }
+            }
+        ];
     }
 
     private showSubSection(subSection: UserWidgetSubSection) {
         this.setState({
             showTable: subSection === UserWidgetSubSection.TABLE,
-            showCreate: subSection === UserWidgetSubSection.CREATE,
-            showEditUser: subSection === UserWidgetSubSection.EDIT
+            showSetup: subSection === UserWidgetSubSection.SETUP
         });
+    }
+
+    private handleUpdate(update?: any) {
+        this.getUsers();
     }
 
     private getUsers = async () => {
@@ -212,70 +157,27 @@ export class UsersWidget extends React.Component<{}, State> {
         });
     };
 
-    private handleUpdate(update?: any) {
-        this.getUsers();
+    private createNewUser(): void {
+        this.setState({ updatingUser: undefined });
+        this.showSubSection(UserWidgetSubSection.SETUP);
     }
 
-    private createUser = async (data: UserCreateRequest) => {
-        const response = await userApi.createUser(data);
-
-        // TODO: Handle failed request
-        if (response.status !== 200) return false;
-
-        this.showSubSection(UserWidgetSubSection.TABLE);
-        this.setState({ loading: true });
-        this.getUsers();
+    private confirmDeleteUser = async (user: UserDTO) => {
+        showConfirmationDialog({
+            title: "Warning",
+            message: "This action will permanently delete " + user.username + ".",
+            onConfirm: () => this.deleteUser(user)
+        });
 
         return true;
     };
-
-    // private updateUser = async (data: UserUpdateRequest) => {
-    //     console.log('Submitting updated user');
-    //     const response = await this.userAPI.updateUser(data);
-
-    //     if (response.status !== 200) return false;
-
-    //     this.toggleUpdate();
-    //     this.setState({ loading: true });
-    //     this.getUsers();
-
-    //     return true;
-    // }
 
     private deleteUser = async (user: UserDTO) => {
-        this.setState({
-            showDelete: true,
-            confirmationMessage: `This action will permanently delete <strong>${user.username}</strong>`,
-            manageUser: user
-        });
-
-        this.getUsers();
-
-        return true;
-    };
-
-    private handleConfirmationConfirmDelete = async (payload: any) => {
-        this.setState({
-            showDelete: false,
-            manageUser: undefined
-        });
-
-        const user: UserDTO = payload;
-
         const response = await userApi.deleteUser(user.id);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;
-
         this.getUsers();
-
         return true;
-    };
-
-    private handleConfirmationCancel = (payload: any) => {
-        this.setState({
-            showDelete: false,
-            manageUser: undefined
-        });
     };
 }

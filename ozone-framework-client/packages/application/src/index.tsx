@@ -16,8 +16,10 @@ import registerServiceWorker from "./registerServiceWorker";
 import { App } from "./App";
 
 import { eventingService } from "./services/EventingService";
+import { WidgetLauncherService } from "./services/WidgetLauncherService";
 
 eventingService.init();
+new WidgetLauncherService().init();
 
 ReactDOM.render(<App />, document.getElementById("root") as HTMLElement);
 

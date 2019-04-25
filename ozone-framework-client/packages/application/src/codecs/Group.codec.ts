@@ -1,5 +1,6 @@
-import { Group } from "../models/Group";
 import { GroupDTO } from "../api/models/GroupDTO";
+
+import { Group } from "../models/Group";
 
 import { optional } from "../utility";
 

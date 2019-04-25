@@ -88,6 +88,26 @@ export interface WidgetCreateRequest {
     intents: IntentsDTO;
 }
 
+export interface WidgetGetDescriptorResponse {
+    displayName: string;
+    widgetVersion: string;
+    description: string;
+    widgetUrl: string;
+    imageUrlSmall: string;
+    imageUrlMedium: string;
+    width: number;
+    height: number;
+    widgetGuid: string;
+    universalName: string;
+    visible: boolean;
+    background: boolean;
+    singleton: boolean;
+    mobileReady: boolean;
+    widgetTypes: string[];
+    descriptorUrl?: string;
+    intents: IntentsDTO;
+}
+
 export interface WidgetCreateResponse {
     success: boolean;
     data: WidgetDTO[];

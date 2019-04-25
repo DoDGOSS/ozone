@@ -1,93 +1,41 @@
+import * as React from "react";
+import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
+
 import * as styles from "../Widgets.scss";
 
-import * as React from "react";
-import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
-
-import { AdminTable } from "../../table/AdminTable";
+import { GenericTable } from "../../table/GenericTable";
+import { DeleteButton, EditButton } from "../../table/TableButtons";
 import { UserDTO } from "../../../../api/models/UserDTO";
-import { PreferenceCreateRequest, PreferenceDTO } from "../../../../api/models/PreferenceDTO";
+import {
+    PreferenceCreateRequest,
+    PreferenceDeleteRequest,
+    PreferenceDTO,
+    PreferenceUpdateRequest
+} from "../../../../api/models/PreferenceDTO";
 import { preferenceApi } from "../../../../api/clients/PreferenceAPI";
-import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
-import { PreferenceCreateForm } from "./UserCreatePreferenceForm";
+import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { UserPreferenceDialog } from "./UserPreferenceDialog";
 
 interface UserEditPreferencesProps {
     onUpdate: (update?: any) => void;
-    user: any;
+    user: UserDTO;
 }
 
 export interface UserEditPreferencesState {
     preferences: PreferenceDTO[];
-    filtered: PreferenceDTO[];
-    filter: string;
     loading: boolean;
-    pageSize: number;
-    user: any;
-    showDelete: boolean;
-    showCreate: boolean;
-    showTable: boolean;
-    confirmationMessage: string;
-    managePreference: PreferenceDTO | undefined;
-}
-
-enum UserPreferenceWidgetSubSection {
-    TABLE,
-    CREATE,
-    EDIT
+    preferenceSettingsDialog: React.ReactNode | undefined;
 }
 
 export class UserPreferencesPanel extends React.Component<UserEditPreferencesProps, UserEditPreferencesState> {
-    private static readonly SELECT_PREFERENCES_COLUMN_DEFINITION = [
-        {
-            Header: "Preferences",
-            columns: [
-                { Header: "Namespace", accessor: "namespace" },
-                { Header: "Path", accessor: "path" },
-                { Header: "value", accessor: "value" }
-            ]
-        }
-    ];
-    private readonly PREFERENCES_COLUMN_DEFINITION = [
-        {
-            Header: "Preferences",
-            columns: [
-                { Header: "Namespace", accessor: "namespace" },
-                { Header: "Path", accessor: "path" },
-                { Header: "value", accessor: "value" }
-            ]
-        },
-        {
-            Header: "Actions",
-            Cell: (row: any) => (
-                <div>
-                    <ButtonGroup>
-                        <Button
-                            data-element-id="user-admin-widget-delete-preference-button"
-                            text="Delete"
-                            intent={Intent.DANGER}
-                            icon="trash"
-                            small={true}
-                            // onClick={() => this.deletePreference(row.original)}
-                        />
-                    </ButtonGroup>
-                </div>
-            )
-        }
-    ];
+    defaultPageSize: number = 5;
 
     constructor(props: UserEditPreferencesProps) {
         super(props);
         this.state = {
             preferences: [],
-            filtered: [],
-            filter: "",
             loading: true,
-            pageSize: 5,
-            user: this.props.user,
-            showCreate: false,
-            showDelete: false,
-            showTable: true,
-            confirmationMessage: "",
-            managePreference: undefined
+            preferenceSettingsDialog: undefined
         };
     }
 
@@ -96,92 +44,75 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
     }
 
     render() {
-        let data = this.state.preferences;
-        const filter = this.state.filter.toLowerCase();
-        const showCreate = this.state.showCreate;
-        const showTable = this.state.showTable;
-
-        // TODO - Improve this - this will be slow if there are many users.
-        // Minimally could wait to hit enter before filtering. Pagination handling
-        if (filter) {
-            data = data.filter((row) => {
-                return row.namespace.toLowerCase().includes(filter);
-            });
-        }
-
         return (
-            <div data-element-id="preference-admin-widget-dialog">
-                {showTable && (
-                    <>
-                        <div className={styles.actionBar}>
-                            <InputGroup
-                                placeholder="Search..."
-                                leftIcon="search"
-                                value={this.state.filter}
-                                onChange={(e: any) => this.setState({ filter: e.target.value })}
-                                data-element-id="search-field"
-                            />
-                        </div>
+            <div data-element-id="preference-admin-widget-panel">
+                {this.state.preferenceSettingsDialog}
 
-                        <div className={styles.table}>
-                            <AdminTable
-                                data={data}
-                                columns={this.PREFERENCES_COLUMN_DEFINITION}
-                                loading={this.state.loading}
-                                pageSize={this.state.pageSize}
-                            />
-                        </div>
+                <GenericTable
+                    title={"Preferences"}
+                    items={this.state.preferences}
+                    getColumns={() => this.getTableColumns()}
+                    reactTableProps={{
+                        loading: this.state.loading,
+                        defaultPageSize: this.defaultPageSize
+                    }}
+                />
 
-                        <div className={styles.buttonBar}>
-                            <Button
-                                text="Create"
-                                onClick={() => this.showSubSection(UserPreferenceWidgetSubSection.CREATE)}
-                                data-element-id="user-admin-widget-create-button"
-                            />
-                        </div>
-                    </>
-                )}
-
-                {showCreate && (
-                    <PreferenceCreateForm
-                        onSubmit={this.createPreference}
-                        onCancel={() => {
-                            this.showSubSection(UserPreferenceWidgetSubSection.TABLE);
-                        }}
+                <div className={styles.buttonBar}>
+                    <Button
+                        text="Create"
+                        onClick={() => this.showSettingsDialog()}
+                        data-element-id="user-admin-widget-create-button"
                     />
-                )}
-
-                {/* <UserEditPreferenceDialog
-                    show={this.state.showAdd}
-                    title="Add Preference(s) to User"
-                    confirmHandler={this.handleAddPreferenceResponse}
-                    cancelHandler={this.handleAddPreferenceCancel}
-                    columns={UserEditPreferences.SELECT_PREFERENCES_COLUMN_DEFINITION}
-                /> */}
-
-                {/* <ConfirmationDialog
-                    show={this.state.showDelete}
-                    title="Warning"
-                    content={this.state.confirmationMessage}
-                    confirmHandler={this.handleConfirmationConfirmDelete}
-                    cancelHandler={this.handleConfirmationCancel}
-                    payload={this.state.managePreference}
-                />  */}
+                </div>
             </div>
         );
     }
 
-    private showSubSection(subSection: UserPreferenceWidgetSubSection) {
+    private getTableColumns(): any[] {
+        return [
+            { Header: "Namespace", accessor: "namespace" },
+            { Header: "Path", accessor: "path" },
+            { Header: "value", accessor: "value" },
+            {
+                Header: "Actions",
+                Cell: (row: any) => (
+                    <div>
+                        <ButtonGroup>
+                            <EditButton onClick={() => this.showSettingsDialog(row.original)} />
+                            <Divider />
+                            <DeleteButton onClick={() => this.confirmDeletePreference(row.original)} />
+                        </ButtonGroup>
+                    </div>
+                )
+            }
+        ];
+    }
+
+    private showSettingsDialog(preferenceToEdit?: PreferenceUpdateRequest): void {
         this.setState({
-            showTable: subSection === UserPreferenceWidgetSubSection.TABLE,
-            showCreate: subSection === UserPreferenceWidgetSubSection.CREATE
-            // showEditUser: subSection === UserPreferenceWidgetSubSection.EDIT
+            preferenceSettingsDialog: this.getPreferenceSettingsDialog(preferenceToEdit)
         });
     }
 
-    private getPreferences = async () => {
-        const currentUser: UserDTO = this.state.user;
+    private closeSettingsDialog(): void {
+        this.setState({
+            preferenceSettingsDialog: undefined
+        });
+    }
 
+    private getPreferenceSettingsDialog(preferenceToEdit?: PreferenceUpdateRequest): React.ReactNode {
+        return (
+            <UserPreferenceDialog
+                isOpen={true}
+                onSubmit={this.createOrUpdate}
+                onClose={() => this.closeSettingsDialog()}
+                preferenceToEdit={preferenceToEdit}
+            />
+        );
+    }
+
+    private getPreferences = async () => {
         const response = await preferenceApi.getPreferences();
 
         // TODO: Handle failed request
@@ -193,23 +124,38 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
         });
     };
 
-    private createPreference = async (data: PreferenceCreateRequest) => {
-        const response = await preferenceApi.createPreference(data);
+    private createOrUpdate = async (pref: PreferenceCreateRequest | PreferenceUpdateRequest) => {
+        console.log(pref);
+        let response;
+        if ("id" in pref) {
+            response = await preferenceApi.updatePreference(pref);
+        } else {
+            response = await preferenceApi.createPreference(pref);
+        }
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;
 
-        this.showSubSection(UserPreferenceWidgetSubSection.TABLE);
         this.setState({ loading: true });
         this.getPreferences();
+    };
+
+    private confirmDeletePreference = async (preference: PreferenceDeleteRequest) => {
+        showConfirmationDialog({
+            title: "Warning",
+            message: "This action will permanently delete " + preference.path + ":" + preference.namespace + ".",
+            onConfirm: () => this.deletePreference(preference)
+        });
 
         return true;
     };
 
-    private handleConfirmationCancel = (payload: any) => {
-        this.setState({
-            showDelete: false,
-            managePreference: undefined
-        });
+    private deletePreference = async (preference: PreferenceDeleteRequest) => {
+        const response = await preferenceApi.deletePreference(preference);
+
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+        this.getPreferences();
+        return true;
     };
 }

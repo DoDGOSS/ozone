@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Mosaic, MosaicBranch, MosaicNode, MosaicParent, MosaicWindow } from "react-mosaic-component";
-import { Panel } from "../../models/dashboard/types";
 
 export const DashboardLayout = Mosaic.ofType<string>();
 
@@ -12,5 +11,3 @@ export type DashboardParent = MosaicParent<string>;
 export type DashboardNode = MosaicNode<string>;
 
 export type DashboardPath = MosaicBranch[];
-
-export type PanelMap = { [id: string]: Panel<any> };

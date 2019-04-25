@@ -6,55 +6,108 @@ import * as uuidv4 from "uuid/v4";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { array, boolean, number, object, string } from "yup";
 
+import { mainStore } from "../../../stores/MainStore";
 import * as styles from "../widgets/Widgets.scss";
 
-import { mainStore } from "../../../stores/MainStore";
 import { classNames, isFunction } from "../../../utility";
 
 interface Props<T> {
-    title?: string;
-    getColumns: () => any[];
+    getColumns: () => Column[];
     items: T[];
-    customFilter?: (items: T[], query: string) => T[];
-    pageSize?: number;
-    showPagination?: boolean;
-    minRows?: number;
+    title?: string;
     onSelect?: (newItem: T) => void;
     onSelectionChange?: (newItems: T[]) => void;
     multiSelection?: boolean;
+    customFilter?: (items: T[], query: string, queryMatches: (msg: string, query: string) => boolean) => T[];
+    filterable?: boolean;
+    reactTableProps?: any;
+    classNames?: any;
+    searchCaseSensitive?: boolean;
 }
 
 interface State<T> {
-    pageSize: number;
     selections: T[];
     query: string;
 }
 
 export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
+    filterable: boolean;
+    searchCaseSensitive: boolean;
+
     constructor(props: Props<T>) {
         super(props);
         this.state = {
-            pageSize: this.props.pageSize ? this.props.pageSize : 10,
             selections: [],
             query: ""
         };
+        this.filterable = !(props.filterable === false);
+        this.searchCaseSensitive = props.searchCaseSensitive ? props.searchCaseSensitive : false;
     }
 
     render() {
         return (
             <div className={styles.table}>
-                {this.getSearchBox()}
+                {this.filterable && this.getSearchBox()}
                 <ReactTable
                     data={this.getItems()}
-                    showPagination={this.props.showPagination !== undefined ? this.props.showPagination : true}
-                    pageSize={this.state.pageSize}
+                    getTheadThProps={this.removeHideableHeaders}
                     getTrProps={this.rowsAreClickable() ? this.clickableRowProps : () => ""}
-                    minRows={this.props.minRows !== undefined ? this.props.minRows : 5}
-                    className={classNames("striped", mainStore.getTheme())}
+                    className={classNames("striped", this.props.classNames)}
                     columns={this.getTableLayout()}
+                    pageSizeOptions={this.getReasonablePageSizeOptions()}
+                    {...this.buildReactTableProps()}
                 />
             </div>
         );
+    }
+
+    private buildReactTableProps() {
+        const props: { [key: string]: any } = {};
+
+        props["minRows"] = 5;
+        props["defaultPageSize"] = 5;
+        props["showPagination"] = true;
+
+        if (this.props.reactTableProps) {
+            for (const p in this.props.reactTableProps) {
+                if (this.props.reactTableProps.hasOwnProperty(p)) {
+                    props[p] = this.props.reactTableProps[p];
+                }
+            }
+        }
+        return props;
+    }
+
+    private getReasonablePageSizeOptions(): number[] {
+        const sizeOptions = [5, 10, 20, 25, 50, 100];
+        const numItems = this.getItems().length;
+
+        let i = 0;
+        for (; i < sizeOptions.length; i++) {
+            if (sizeOptions[i] > numItems) {
+                break;
+            }
+        }
+        return sizeOptions.slice(0, Math.floor(i + 1));
+    }
+
+    private rowsAreClickable(): boolean {
+        return isFunction(this.props.onSelect) || isFunction(this.props.onSelectionChange);
+    }
+
+    private getItems(): any[] {
+        if (this.props.customFilter && isFunction(this.props.customFilter)) {
+            return this.props.customFilter(this.props.items, this.state.query, this.queryMatches);
+        } else {
+            return this.filter(this.props.items, this.state.query);
+        }
+    }
+
+    private filter(items: T[], query: string): T[] {
+        if (query === "") {
+            return items;
+        }
+        return items.filter((item) => this.someColumnOfItemContainsQuery(item, query));
     }
 
     private getTableLayout() {
@@ -70,46 +123,70 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         }
     }
 
-    private rowsAreClickable(): boolean {
-        return isFunction(this.props.onSelect) || isFunction(this.props.onSelectionChange);
-    }
-
-    private getItems(): any[] {
-        // have to re-check here (in addition to check in isFunction) because of typescript
-        if (this.props.customFilter && isFunction(this.props.customFilter)) {
-            return this.props.customFilter(this.props.items, this.state.query);
-        } else {
-            return this.filter(this.props.items, this.state.query);
-        }
-    }
-
-    private filter(items: T[], query: string): T[] {
-        if (query === "") {
-            return items;
-        }
-        return items.filter((item) => this.someColumnOfItemContainsQuery(item, query));
-    }
-
     private someColumnOfItemContainsQuery(item: T, query: string): boolean {
-        for (const col of this.columnsWithAccessor()) {
-            const valueInColumnForItem = col.accessor(item);
-            if (valueInColumnForItem && this.queryMatches(valueInColumnForItem.toString(), query)) {
+        return this.checkColumnsRecursively(item, query, this.props.getColumns());
+    }
+
+    // see https://stackoverflow.com/a/40350534/3015812 for !
+    // TS compiler says `col` and `containerColumn` may be undefined, when they really can't be.
+    // If there are no results for a filter, the corresponding loop won't happen.
+    // The only danger below is if someone creates a `columns` field and fills it not to spec, but that would
+    // break anything.
+    private checkColumnsRecursively(item: T, query: string, columns: Column[]): boolean {
+        for (const col of columns) {
+            if (this.columnAccessorMatchesQuery(item, query, col)) {
+                return true;
+            } else if (col.columns && col.columns instanceof Array) {
+                if (this.checkColumnsRecursively(item, query, col.columns)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private columnAccessorMatchesQuery(item: T, query: string, column: Column) {
+        if (column.accessor) {
+            let valueInColumnForItem: any;
+            if (typeof column.accessor === "function") {
+                valueInColumnForItem = column.accessor(item);
+                // some tables still use string accessors
+            } else if (typeof column.accessor === "string" && item.hasOwnProperty(column.accessor)) {
+                // hack to make ts compiler stop complaining.
+                // I'd be nice to not use string accessors anyway, but if people do, this should work.
+                const itemField: any = (item as { [key: string]: any })[column.accessor.toString()];
+                valueInColumnForItem = itemField;
+            }
+            let safeValueInColumn = "";
+            if (valueInColumnForItem !== undefined && valueInColumnForItem !== null) {
+                safeValueInColumn = valueInColumnForItem.toString();
+            }
+            // if neither function nor string, then the queryMatch will simply be given an empty string, and fail smoothly.
+            if (this.queryMatches(safeValueInColumn, query)) {
                 return true;
             }
         }
         return false;
     }
 
-    private columnsWithAccessor(): any[] {
-        return this.props.getColumns().filter((c: any) => isFunction(c.accessor));
-    }
-
-    private queryMatches(text: string, query: string): boolean {
-        return text.toLowerCase().includes(query.toLowerCase());
-    }
+    private queryMatches = (text: string, query: string): boolean => {
+        if (this.searchCaseSensitive) {
+            return text.includes(query);
+        } else {
+            return text.toLowerCase().includes(query.toLowerCase());
+        }
+    };
 
     private getTableMainHeader(title: string): any {
-        return <div>{this.alignedDiv(title, "left")}</div>;
+        return <div>{title && <AlignedDiv message={title} alignment="left" />}</div>;
+    }
+
+    // derived from https://github.com/tannerlinsley/react-table/issues/508#issuecomment-380392755
+    private removeHideableHeaders(state: any, rowInfo: any, column: Column | undefined) {
+        if (column && column.Header === "hideMe") {
+            return { style: { display: "none" } }; // override style
+        }
+        return {};
     }
 
     // derived from https://stackoverflow.com/questions/44845372
@@ -128,7 +205,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                         this.selectItem(rowInfo.original);
                     },
                     style: {
-                        background: "#00afec",
+                        background: "#0b0", // "#00afec",
                         color: "white"
                     }
                 };
@@ -182,8 +259,9 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
             });
         }
     }
-
-    private alignedDiv(message: any, alignment: "left" | "right" | "center"): any {
-        return <div style={{ textAlign: alignment }}>{message}</div>;
-    }
 }
+
+const AlignedDiv: React.FC<{ message: React.ReactNode; alignment: "left" | "right" | "center" }> = (props) => {
+    const { alignment, message } = props;
+    return <div style={{ textAlign: alignment }}>{message}</div>;
+};
