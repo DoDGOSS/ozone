@@ -7,10 +7,6 @@ import { mainStore } from "../../../../../stores/MainStore";
 import { Intent } from "../../../../../models/compat";
 
 import { IntentForm } from "./IntentForm";
-import { mainStore } from "../../../../stores/MainStore";
-import { classNames } from "../../../../utility";
-
-import * as styles from "../../Widgets.scss";
 
 import * as styles from "../../Widgets.scss";
 

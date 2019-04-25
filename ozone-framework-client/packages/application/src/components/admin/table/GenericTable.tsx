@@ -151,7 +151,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
             if (typeof column.accessor === "function") {
                 valueInColumnForItem = column.accessor(item);
                 // some tables still use string accessors
-            } else if (item.hasOwnProperty(column.accessor) && typeof column.accessor === "string") {
+            } else if (typeof column.accessor === "string" && item.hasOwnProperty(column.accessor)) {
                 // hack to make ts compiler stop complaining.
                 // I'd be nice to not use string accessors anyway, but if people do, this should work.
                 const itemField: any = (item as { [key: string]: any })[column.accessor.toString()];

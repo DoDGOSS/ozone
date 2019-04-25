@@ -4,12 +4,10 @@ import { Column } from "react-table";
 import { Button, Classes, Dialog, InputGroup } from "@blueprintjs/core";
 
 import { AdminTable } from "../admin/table/AdminTable";
-import { classNames } from "../../utility";
 import { mainStore } from "../../stores/MainStore";
+import { classNames } from "../../utility";
 
 import * as styles from "./index.scss";
-import { mainStore } from "../../stores/MainStore";
-import { classNames } from "../../utility";
 
 /**
  * properties for TableSelectionDialog extended classes
