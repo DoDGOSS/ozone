@@ -11678,7 +11678,7 @@ var Ozone;
             function forEach(dictionary, iteratee) {
                 if (isNil(dictionary) || isNil(iteratee))
                     return;
-                for (const key in dictionary) {
+                for (var key in dictionary) {
                     if (dictionary.hasOwnProperty(key)) {
                         iteratee(dictionary[key]);
                     }
@@ -11688,9 +11688,9 @@ var Ozone;
             function forFirst(dictionary, predicate, iteratee) {
                 if (isNil(dictionary) || isNil(iteratee))
                     return false;
-                for (const key in dictionary) {
+                for (var key in dictionary) {
                     if (dictionary.hasOwnProperty(key)) {
-                        const value = dictionary[key];
+                        var value = dictionary[key];
                         if (predicate(value)) {
                             iteratee(dictionary[key]);
                             return true;
@@ -11701,27 +11701,31 @@ var Ozone;
             }
             internal.forFirst = forFirst;
             function onDocumentReady(callback) {
-                document.addEventListener("DOMContentLoaded", (event) => { callback(); });
+                document.addEventListener("DOMContentLoaded", function (event) { callback(); });
             }
             internal.onDocumentReady = onDocumentReady;
             function encodeQueryObject(obj) {
-                return Object.keys(obj).map((key) => {
-                    const param = obj[key];
+                return Object.keys(obj).map(function (key) {
+                    var param = obj[key];
                     return isArrayStrict(param) ? encodeQueryArray(key, param) : encodeQueryParameter(key, param);
                 }).join('&');
             }
             internal.encodeQueryObject = encodeQueryObject;
             function encodeQueryArray(key, values) {
-                return values.map((value) => encodeQueryParameter(key, value)).join("&");
+                return values.map(function (value) { return encodeQueryParameter(key, value); }).join("&");
             }
             function encodeQueryParameter(key, value) {
                 return encodeURIComponent(key) + '=' + encodeURIComponent(value);
             }
-            function mixin(object, ...props) {
+            function mixin(object) {
+                var props = [];
+                for (var _i = 1; _i < arguments.length; _i++) {
+                    props[_i - 1] = arguments[_i];
+                }
                 if (!object) {
                     object = {};
                 }
-                for (let i = 1, l = arguments.length; i < l; i++) {
+                for (var i = 1, l = arguments.length; i < l; i++) {
                     _mixin(object, arguments[i]);
                 }
                 return object;
@@ -11729,27 +11733,27 @@ var Ozone;
             internal.mixin = mixin;
             /* tslint:disable:forin */
             function _mixin(target, source) {
-                const extraNames = ["hasOwnProperty", "valueOf", "isPrototypeOf", "propertyIsEnumerable", "toLocaleString", "toString", "constructor"];
-                const extraLen = extraNames.length;
-                const empty = {};
-                let i;
-                for (const name in source) {
+                var extraNames = ["hasOwnProperty", "valueOf", "isPrototypeOf", "propertyIsEnumerable", "toLocaleString", "toString", "constructor"];
+                var extraLen = extraNames.length;
+                var empty = {};
+                var i;
+                for (var name_1 in source) {
                     // the "tobj" condition avoid copying properties in "source"
                     // inherited from Object.prototype.  For example, if target has a custom
                     // toString() method, don't overwrite it with the toString() method
                     // that source inherited from Object.prototype
-                    const s = source[name];
-                    if (!(name in target) || (target[name] !== s && (!(name in empty) || empty[name] !== s))) {
-                        target[name] = s;
+                    var s = source[name_1];
+                    if (!(name_1 in target) || (target[name_1] !== s && (!(name_1 in empty) || empty[name_1] !== s))) {
+                        target[name_1] = s;
                     }
                 }
                 // IE doesn't recognize some custom functions in for..in
                 if (extraLen && source) {
                     for (i = 0; i < extraLen; ++i) {
-                        const name = extraNames[i];
-                        const s = source[name];
-                        if (!(name in target) || (target[name] !== s && (!(name in empty) || empty[name] !== s))) {
-                            target[name] = s;
+                        var name_2 = extraNames[i];
+                        var s = source[name_2];
+                        if (!(name_2 in target) || (target[name_2] !== s && (!(name_2 in empty) || empty[name_2] !== s))) {
+                            target[name_2] = s;
                         }
                     }
                 }
@@ -12859,7 +12863,7 @@ Ozone.components.keys = Ozone.components.keys || {};
 
 Ozone.components.keys.createKeyEventSender = function(widgetEventingController) {
 
-    const _ = Ozone.util.internal;
+    var _ = Ozone.util.internal;
 
     Ozone.internal.rpc.register("_focus_widget_window", function() {
         try {
@@ -12871,7 +12875,7 @@ Ozone.components.keys.createKeyEventSender = function(widgetEventingController) 
     Ozone.internal.rpc.send("_widget_iframe_ready", null, widgetEventingController.getWidgetId());
 
     function keyMatches(event, includeCtrl) {
-        return (key) => {
+        return function (key) {
             return (
                 key.key === event.keyCode &&
                 (includeCtrl ? key.ctrl === event.ctrlKey : true) &&
@@ -12881,8 +12885,8 @@ Ozone.components.keys.createKeyEventSender = function(widgetEventingController) 
         };
     }
 
-    document.addEventListener("keyup", (event) => {
-        const found = _.forFirst(Ozone.components.keys.HotKeys, keyMatches(event), (key) => {
+    document.addEventListener("keyup", function (event) {
+        var found = _.forFirst(Ozone.components.keys.HotKeys, keyMatches(event), function (key) {
             if (key.focusParent === true) {
                 parent.focus();
             }
@@ -12896,7 +12900,7 @@ Ozone.components.keys.createKeyEventSender = function(widgetEventingController) 
         });
         if (found) return;
 
-        _.forFirst(Ozone.components.keys.MoveHotKeys, keyMatches(event, true), (key) => {
+        _.forFirst(Ozone.components.keys.MoveHotKeys, keyMatches(event, true), function (key) {
             Ozone.internal.rpc.send("_key_eventing", null, widgetEventingController.getWidgetId(), {
                 keyCode: event.keyCode,
                 ctrlKey: event.ctrlKey,
@@ -12907,8 +12911,8 @@ Ozone.components.keys.createKeyEventSender = function(widgetEventingController) 
         });
     });
 
-    document.addEventListener("keydown", (event) => {
-        _.forFirst(Ozone.components.keys.MoveHotKeys, keyMatches(event, true), (key) => {
+    document.addEventListener("keydown", function (event) {
+        _.forFirst(Ozone.components.keys.MoveHotKeys, keyMatches(event, true), function (key) {
             Ozone.internal.rpc.send("_key_eventing", null, widgetEventingController.getWidgetId(), {
                 keyCode: event.keyCode,
                 ctrlKey: event.ctrlKey,
@@ -14353,16 +14357,17 @@ var Ozone;
     (function (internal) {
         var rpc;
         (function (rpc) {
-            const DEFAULT_NAME = "";
-            const CALLBACK_NAME = "__cb";
-            const VOID_CALLBACK = () => undefined;
-            const callbacks = {};
-            const services = {
-                [DEFAULT_NAME]: VOID_CALLBACK,
-                [CALLBACK_NAME]: dispatchCallback
-            };
-            let parentTargetOrigin = "";
-            let callId = 0;
+            var _a;
+            var DEFAULT_NAME = "";
+            var CALLBACK_NAME = "__cb";
+            var VOID_CALLBACK = function () { return undefined; };
+            var callbacks = {};
+            var services = (_a = {},
+                _a[DEFAULT_NAME] = VOID_CALLBACK,
+                _a[CALLBACK_NAME] = dispatchCallback,
+                _a);
+            var parentTargetOrigin = "";
+            var callId = 0;
             /**
              * Setup the RPC module and connect the postMessage message listener.
              */
@@ -14415,8 +14420,12 @@ var Ozone;
              * @param callback --  Callback function (if any) to process the return value of the RPC request.
              * @param varargs -- Parameters for the RPC request.
              */
-            function send(serviceName, callback, ...varargs) {
-                const targetWin = window.parent;
+            function send(serviceName, callback) {
+                var varargs = [];
+                for (var _i = 2; _i < arguments.length; _i++) {
+                    varargs[_i - 2] = arguments[_i];
+                }
+                var targetWin = window.parent;
                 if (!targetWin) {
                     throw new Error("failed to send RPC message; window.parent is not defined");
                 }
@@ -14424,7 +14433,7 @@ var Ozone;
                     callId++;
                     callbacks[callId] = callback;
                 }
-                const rpcMessage = JSON.stringify({
+                var rpcMessage = JSON.stringify({
                     s: serviceName,
                     f: getId(window.name),
                     c: callback ? callId : 0,
@@ -14435,27 +14444,27 @@ var Ozone;
             }
             rpc.send = send;
             function receive(message) {
-                const rpcMessage = parseMessage(message.data);
+                var rpcMessage = parseMessage(message.data);
                 if (rpcMessage === undefined)
                     return;
                 process(rpcMessage);
             }
             function process(message) {
-                const service = services[message.s] || services[DEFAULT_NAME];
+                var service = services[message.s] || services[DEFAULT_NAME];
                 if (!service) {
-                    throw new Error(`failed to process RPC message; no '${message.f}' or default service handler`);
+                    throw new Error("failed to process RPC message; no '" + message.f + "' or default service handler");
                 }
-                const result = service.apply(message, message.a);
+                var result = service.apply(message, message.a);
                 if (message.c !== 0 && result !== undefined) {
                     message.callback(result);
                 }
             }
             function parseMessage(message) {
-                const _message = parseJson(message);
+                var _message = parseJson(message);
                 if (!isValidRpcMessage(_message))
                     return;
-                const callback = _message.c !== 0
-                    ? (result) => send(CALLBACK_NAME, null, _message.c, result)
+                var callback = _message.c !== 0
+                    ? function (result) { return send(CALLBACK_NAME, null, _message.c, result); }
                     : VOID_CALLBACK;
                 return {
                     s: _message.s,
@@ -14467,7 +14476,7 @@ var Ozone;
                 };
             }
             function dispatchCallback(callbackId, result) {
-                const callback = callbacks[callbackId];
+                var callback = callbacks[callbackId];
                 if (!callback)
                     return;
                 delete callbacks[callbackId];
@@ -14502,7 +14511,7 @@ var Ozone;
             function getId(windowName) {
                 if (windowName.charAt(0) !== "{")
                     return windowName;
-                const obj = JSON.parse(windowName);
+                var obj = JSON.parse(windowName);
                 return JSON.stringify({ id: obj.id });
             }
         })(rpc = internal.rpc || (internal.rpc = {}));
@@ -14520,8 +14529,8 @@ var Ozone;
     (function (internal) {
         var pubsub;
         (function (pubsub) {
-            const PUBSUB_NAME = "pubsub";
-            const listeners = {};
+            var PUBSUB_NAME = "pubsub";
+            var listeners = {};
             function publish(channel, message) {
                 Ozone.internal.rpc.send(PUBSUB_NAME, null, "publish", channel, message);
             }
@@ -14538,7 +14547,7 @@ var Ozone;
             }
             pubsub.unsubscribe = unsubscribe;
             function dispatch(channel, sender, message) {
-                const listener = listeners[channel];
+                var listener = listeners[channel];
                 if (typeof listener !== "function")
                     return;
                 listener(sender, message, channel);
@@ -16749,7 +16758,7 @@ Ozone.eventing.Widget = function (widgetRelay, afterInit) {
                 this.afterInitCallBack = afterInit.bind(this);
             } else {
                 //already initialized just execute the supplied callback
-                setTimeout(() => {
+                setTimeout(function () {
                     afterInit.call(Ozone.eventing.Widget.instance, Ozone.eventing.Widget.instance);
                 }, 50);
             }
@@ -16886,8 +16895,9 @@ Ozone.eventing.Widget.prototype = {
         var onClickHandler;
         var onKeyDownHandler;
 
-        function activateWidget() {
+        var _this = this;
 
+        function activateWidget() {
              var config = {
                  fn: "activateWidget",
                  params: {
@@ -16897,16 +16907,16 @@ Ozone.eventing.Widget.prototype = {
              };
 
              var stateChannel = '_WIDGET_STATE_CHANNEL_' + configParams.id;
-             if (!this.disableActivateWidget) {
-               Ozone.internal.rpc.send(stateChannel, null, this.widgetId, config);
+             if (!_this.disableActivateWidget) {
+               Ozone.internal.rpc.send(stateChannel, null, _this.widgetId, config);
              }
              else {
-               this.disableActivateWidget = false;
+               _this.disableActivateWidget = false;
              }
         }
 
         //register for after_container_init
-        Ozone.internal.rpc.register("after_container_init", () => {
+        Ozone.internal.rpc.register("after_container_init", function () {
             Ozone.internal.rpc.unregister("after_container_init");
 
             //attach mouse click and keydown listener to send activate calls for the widget
@@ -16921,10 +16931,10 @@ Ozone.eventing.Widget.prototype = {
             }
 
             //execute callback
-            this.afterContainerInit();
+            _this.afterContainerInit();
         });
 
-        Ozone.internal.rpc.register("_widget_activated", () => {
+        Ozone.internal.rpc.register("_widget_activated", function () {
             if (onClickHandler) {
                 document.removeEventListener("click", onClickHandler);
                 onClickHandler = null;
@@ -16936,7 +16946,7 @@ Ozone.eventing.Widget.prototype = {
             }
         });
 
-        Ozone.internal.rpc.register("_widget_deactivated", () => {
+        Ozone.internal.rpc.register("_widget_deactivated", function () {
             if (!onClickHandler) {
                 onClickHandler = activateWidget.bind(this);
                 document.addEventListener("click", onClickHandler);
@@ -17008,8 +17018,9 @@ Ozone.eventing.Widget.prototype = {
      * @ignore
      * Wraps Ozone.internal.rpc.send.
      */
-    send: function (targetId, serviceName, callback, ...varargs) {
-        Ozone.internal.rpc.send(serviceName, callback, ...varargs);
+    send: function (targetId, serviceName, callback) {
+        var varargs = Array.prototype.slice.call(arguments, 3);
+        Ozone.internal.rpc.send(serviceName, callback, varargs);
     },
 
     /**
@@ -17094,13 +17105,13 @@ Ozone.eventing.Widget.getInstance = function (afterInit, widgetRelay) {
     if (Ozone.eventing.Widget.instance == null) {
         Ozone.eventing.Widget.instance = new Ozone.eventing.Widget(widgetRelay, afterInit);
     } else {
-        let instance = Ozone.eventing.Widget.instance;
+        var instance = Ozone.eventing.Widget.instance;
         if (afterInit != null) {
             if (!instance.isAfterInit) {
                 instance.afterInitCallBack = afterInit.bind(instance);
             } else {
                 // already initialized, execute the supplied callback
-                setTimeout(() => {
+                setTimeout(function () {
                     afterInit.call(instance, instance);
                 }, 50);
             }
@@ -18285,14 +18296,16 @@ Ozone.dragAndDrop.WidgetDragAndDrop = function(cfg) {
     }
   }
 
-  Ozone.internal.rpc.register('_fire_mouse_move', (msg) => {
+  var _this = this;
+
+  Ozone.internal.rpc.register('_fire_mouse_move', function (msg) {
     var el = document.elementFromPoint(msg.pageX, msg.pageY);
 
-    if (this.getFlashWidgetId()) {
-      if (msg.sender !== this.widgetEventingController.getWidgetId()) {
+    if (_this.getFlashWidgetId()) {
+      if (msg.sender !== _this.widgetEventingController.getWidgetId()) {
         Ozone.util.getFlashApp().dispatchExternalMouseEvent(msg.pageX, msg.pageY);
       }
-      this.mouseMove(msg, true);
+      _this.mouseMove(msg, true);
     } else {
       if (!arguments.callee.lastEl) {
         arguments.callee.lastEl = el;
@@ -18309,10 +18322,10 @@ Ozone.dragAndDrop.WidgetDragAndDrop = function(cfg) {
     }
   });
 
-  Ozone.internal.rpc.register('_fire_mouse_up', (msg) => {
+  Ozone.internal.rpc.register('_fire_mouse_up', function (msg) {
     var el = document.elementFromPoint(msg.pageX, msg.pageY);
     if (el && el.nodeName === 'OBJECT') {
-      this.mouseUp(msg, true);
+      _this.mouseUp(msg, true);
     } else {
       fireMouseEvent(el, 'mouseup', msg);
     }
@@ -18952,15 +18965,17 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
       var data = this.getDragStartData();
 
       var senderId = Ozone.util.parseJson(data.dragSourceId);
+
+      var _this = this;
       Ozone.util.hasAccess({
         widgetId: OWF.getWidgetGuid(),
         accessLevel: data.accessLevel,
         senderId: senderId.id,
-        callback: (response) => {
-          this.dropEnabledFlag = response.hasAccess;
-          if (this.dropEnabledFlag) {
-            this.dragIndicator.classList.remove("ddBoxCannotDrop");
-            this.dragIndicator.classList.add("ddBoxCanDrop");
+        callback: function (response) {
+          _this.dropEnabledFlag = response.hasAccess;
+          if (_this.dropEnabledFlag) {
+            _this.dragIndicator.classList.remove("ddBoxCannotDrop");
+            _this.dragIndicator.classList.add("ddBoxCanDrop");
           }
         }
       });
