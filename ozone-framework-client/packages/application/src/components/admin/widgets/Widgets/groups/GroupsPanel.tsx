@@ -1,10 +1,6 @@
 import * as React from "react";
 import ReactTable, { Column } from "react-table";
-<<<<<<< HEAD
 import { Button, ButtonGroup, Intent, MenuItem, Tab, Tabs } from "@blueprintjs/core";
-=======
-import { Button, MenuItem, Tab, Tabs } from "@blueprintjs/core";
->>>>>>> 5bab739... re-organize admin/widget/widgets folder, base (not yet working) implementation of groups tab
 import { ItemRenderer } from "@blueprintjs/select";
 import * as uuidv4 from "uuid/v4";
 import { Form, Formik, FormikActions, FormikProps } from "formik";

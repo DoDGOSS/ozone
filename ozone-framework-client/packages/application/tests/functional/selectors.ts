@@ -172,8 +172,7 @@ export namespace UserAdminWidget {
     export namespace PropertiesGroup {
         export const FORM = "div[data-element-id='user-admin-widget-edit-form']";
 
-        export const SUBMIT_BUTTON =
-            "button[data-element-id='form-submit-button']";
+        export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
     }
 
     export namespace EditUser {

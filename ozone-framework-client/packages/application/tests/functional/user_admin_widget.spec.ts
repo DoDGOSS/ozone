@@ -409,7 +409,10 @@ module.exports = {
             .setValue(AdminWidget.VALUE_FIELD, NEW_USER_PREFERENCE_VALUE);
 
         browser.waitForElementVisible(UserAdminWidget.UserPreferences.PREFERENCE_DIALOG, 2000);
-        browser.waitForElementVisible(`${UserAdminWidget.UserPreferences.PREFERENCE_DIALOG} ${AdminWidget.SUBMIT_BUTTON}`, 2000);
+        browser.waitForElementVisible(
+            `${UserAdminWidget.UserPreferences.PREFERENCE_DIALOG} ${AdminWidget.SUBMIT_BUTTON}`,
+            2000
+        );
         browser.click(`${UserAdminWidget.UserPreferences.PREFERENCE_DIALOG} ${AdminWidget.SUBMIT_BUTTON}`);
 
         browser.assert.containsText(
