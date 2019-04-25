@@ -51,7 +51,7 @@ Ozone.state.WidgetStateHandler.prototype = {
 
 		//send state request to a widget
 		var stateChannel = this.stateChannelName + this.widgetIdJSON.id;
-	    gadgets.rpc.call('..', stateChannel, callback, this.widgetIdJSON, config);	
+	    Ozone.internal.rpc.send(stateChannel, callback, this.widgetIdJSON, config);	
 	}
 };
 

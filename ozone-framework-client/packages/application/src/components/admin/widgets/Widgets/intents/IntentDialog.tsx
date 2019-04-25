@@ -1,13 +1,14 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
-import { classNames } from "../../../../utility";
-import { Intent } from "../../../../models/compat";
+import { classNames } from "../../../../../utility";
+import { mainStore } from "../../../../../stores/MainStore";
+import { Intent } from "../../../../../models/compat";
 
 import { IntentForm } from "./IntentForm";
+
+import * as styles from "../../Widgets.scss";
 
 export interface IntentDialogProps {
     isOpen: boolean;
@@ -21,7 +22,7 @@ export class IntentDialog extends React.Component<IntentDialogProps, {}> {
         return (
             <Dialog
                 title={this.getTitle()}
-                className={classNames("bp3-dark", styles.dialog)}
+                className={classNames(styles.dialog, mainStore.getTheme())}
                 isOpen={this.props.isOpen}
                 onClose={this.props.onClose}
             >

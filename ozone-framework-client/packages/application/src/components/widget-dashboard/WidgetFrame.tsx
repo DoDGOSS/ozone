@@ -33,13 +33,14 @@ const _WidgetFrame: React.FC<WidgetFrameProps> = ({ widget }) => {
         layout: "tabbed",
         webContextPath: "/",
         preferenceLocation: "http://localhost:8080/prefs",
-        relayUrl: "http://localhost:3000/rpc_relay.uncompressed.html",
+        relayUrl: "http://localhost:3000",
         lang: "en_US",
         currentTheme: {
             themeName: "a_default",
             themeContrast: "standard",
             themeFontSize: 12
-        }
+        },
+        data: widget.launchData
     });
 
     return <iframe className={styles.widgetFrame} src={def.url} id={`widget-${def.id}`} name={nameJson} />;

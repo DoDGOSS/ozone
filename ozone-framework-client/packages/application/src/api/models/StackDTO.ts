@@ -9,6 +9,8 @@ import {
     STACK_SCHEMA,
     STACK_UPDATE_RESPONSE_SCHEMA
 } from "./schemas/stack.schema";
+import { DashboardDTO } from "./DashboardDTO";
+import { WidgetDTO } from "./WidgetDTO";
 
 export interface StackDTO {
     approved: boolean;
@@ -66,6 +68,15 @@ export interface StackUpdateRequest extends StackCreateRequest {
 export type StackUpdateResponse = StackCreateResponse;
 
 export const validateStackUpdateResponse = createValidator<StackUpdateResponse>(STACK_UPDATE_RESPONSE_SCHEMA);
+
+export interface StackShareResponse {
+    name: string;
+    stackContext: string;
+    description: string | null;
+    imageUrl: string | null;
+    dashboards?: DashboardDTO[];
+    widgets?: WidgetDTO[];
+}
 
 export interface StackDeleteAdminView {
     id: number;

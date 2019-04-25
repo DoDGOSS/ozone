@@ -1,5 +1,3 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
 
 import { MenuItem } from "@blueprintjs/core";
@@ -8,10 +6,12 @@ import { ItemRenderer } from "@blueprintjs/select";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { array, boolean, number, object, string } from "yup";
 
-import { WidgetCreateRequest, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
-import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+import { WidgetCreateRequest, WidgetUpdateRequest } from "../../../../../api/models/WidgetDTO";
+import { WidgetTypeReference } from "../../../../../api/models/WidgetTypeDTO";
 
-import { CheckBox, FormError, HiddenField, SelectField, SubmitButton, TextField } from "../../../form";
+import { CheckBox, FormError, HiddenField, SelectField, SubmitButton, TextField } from "../../../../form";
+
+import * as styles from "../../Widgets.scss";
 
 interface WidgetFormProps {
     currentWidget: WidgetCreateRequest | WidgetUpdateRequest;
@@ -53,7 +53,7 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
     >
         {(formik: FormikProps<WidgetCreateRequest | WidgetUpdateRequest>) => (
             <div data-element-id="widget-admin-widget-properties-form">
-                <Form className={styles.form}>
+                <Form className={styles.form} onLoad={() => formik.validateForm()}>
                     <div>
                         <TextField
                             inline={true}
@@ -138,19 +138,28 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
                             className={styles.inline_form_label}
                             name="singleton"
                             label="Singleton"
+                            defaultChecked={currentWidget.singleton}
                         />
                         <CheckBox
                             inline={true}
                             className={styles.inline_form_label}
                             name="mobileReady"
                             label="Mobile Ready"
+                            defaultChecked={currentWidget.mobileReady}
                         />
-                        <CheckBox inline={true} className={styles.inline_form_label} name="visible" label="Visible" />
+                        <CheckBox
+                            inline={true}
+                            className={styles.inline_form_label}
+                            name="visible"
+                            label="Visible"
+                            defaultChecked={currentWidget.visible}
+                        />
                         <CheckBox
                             inline={true}
                             className={styles.inline_form_label}
                             name="background"
                             label="Background"
+                            defaultChecked={currentWidget.background}
                         />
 
                         {formik.status && formik.status.error && <FormError message={formik.status.error} />}

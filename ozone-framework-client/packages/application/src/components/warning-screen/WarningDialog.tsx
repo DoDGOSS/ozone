@@ -23,10 +23,11 @@ export const WarningDialog: React.FC<WarningDialogProps> = (props) => {
     const { title, content, link, buttonText, buttonIcon } = defaults({}, props, DEFAULT_PROPS);
 
     const isOpen = useBehavior(mainStore.isWarningDialogVisible);
+    const themeClass = useBehavior(mainStore.themeClass);
 
     return (
         <div>
-            <Dialog className="bp3-dark" isOpen={isOpen} isCloseButtonShown={false} title={title}>
+            <Dialog className={themeClass} isOpen={isOpen} isCloseButtonShown={false} title={title}>
                 <div className={Classes.DIALOG_BODY}>
                     <div data-element-id="warning-dialog" dangerouslySetInnerHTML={{ __html: content }} />
                     <a

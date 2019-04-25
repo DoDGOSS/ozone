@@ -69,6 +69,8 @@ export namespace DashboardDialog {
 
     export const DELETE_DASHBOARD_ID = "button[data-element-id='dashboard-delete-button-test2']";
 
+    export const SHARE_DASHBOARD_ID = "button[data-element-id='dashboard-share-button-test2']";
+
     export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
 
     export namespace CreateDashboard {
@@ -172,8 +174,7 @@ export namespace UserAdminWidget {
     export namespace PropertiesGroup {
         export const FORM = "div[data-element-id='user-admin-widget-edit-form']";
 
-        export const SUBMIT_BUTTON =
-            "div[data-element-id='user-admin-widget-edit-submit-button'] > button[data-element-id='form-submit-button']";
+        export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
     }
 
     export namespace EditUser {
@@ -186,6 +187,10 @@ export namespace UserAdminWidget {
         export const TAB = "div[data-element-id='user-admin-add-widget']";
 
         export const ADD_BUTTON = "button[data-element-id='user-edit-add-widget-dialog-add-button']";
+    }
+
+    export namespace UserPreferences {
+        export const PREFERENCE_DIALOG = "div[data-element-id='user-admin-preference-dialog']";
     }
 }
 

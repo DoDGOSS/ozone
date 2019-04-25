@@ -8,6 +8,7 @@ const OZONE_PROPERTIES = {
     config: {},
     dragAndDrop: {},
     eventing: {},
+    internal: {},
     lang: {},
     launcher: {},
     layout: {},

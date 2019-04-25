@@ -49,7 +49,7 @@ Ozone.eventing.Widget = function (widgetRelay, afterInit) {
                 this.afterInitCallBack = afterInit.bind(this);
             } else {
                 //already initialized just execute the supplied callback
-                setTimeout(() => {
+                setTimeout(function () {
                     afterInit.call(Ozone.eventing.Widget.instance, Ozone.eventing.Widget.instance);
                 }, 50);
             }
@@ -180,14 +180,15 @@ Ozone.eventing.Widget.prototype = {
           };
         }
 
-        gadgets.rpc.setRelayUrl("..", this.containerRelay, false, true);
+        Ozone.internal.rpc.setParentTargetOrigin(this.containerRelay);
+        Ozone.internal.rpc.setup();
 
-        
-        var onClickHandler,
-            onKeyDownHandler;
+        var onClickHandler;
+        var onKeyDownHandler;
+
+        var _this = this;
 
         function activateWidget() {
-
              var config = {
                  fn: "activateWidget",
                  params: {
@@ -197,17 +198,17 @@ Ozone.eventing.Widget.prototype = {
              };
 
              var stateChannel = '_WIDGET_STATE_CHANNEL_' + configParams.id;
-             if (!this.disableActivateWidget) {
-               gadgets.rpc.call('..', stateChannel, null, this.widgetId, config);
+             if (!_this.disableActivateWidget) {
+               Ozone.internal.rpc.send(stateChannel, null, _this.widgetId, config);
              }
              else {
-               this.disableActivateWidget = false;
+               _this.disableActivateWidget = false;
              }
         }
 
         //register for after_container_init
-        gadgets.rpc.register("after_container_init", () => {
-            gadgets.rpc.unregister("after_container_init");
+        Ozone.internal.rpc.register("after_container_init", function () {
+            Ozone.internal.rpc.unregister("after_container_init");
 
             //attach mouse click and keydown listener to send activate calls for the widget
             if (!onClickHandler) {
@@ -221,10 +222,10 @@ Ozone.eventing.Widget.prototype = {
             }
 
             //execute callback
-            this.afterContainerInit();
+            _this.afterContainerInit();
         });
 
-        gadgets.rpc.register("_widget_activated", () => {
+        Ozone.internal.rpc.register("_widget_activated", function () {
             if (onClickHandler) {
                 document.removeEventListener("click", onClickHandler);
                 onClickHandler = null;
@@ -236,7 +237,7 @@ Ozone.eventing.Widget.prototype = {
             }
         });
 
-        gadgets.rpc.register("_widget_deactivated", () => {
+        Ozone.internal.rpc.register("_widget_deactivated", function () {
             if (!onClickHandler) {
                 onClickHandler = activateWidget.bind(this);
                 document.addEventListener("click", onClickHandler);
@@ -262,9 +263,8 @@ Ozone.eventing.Widget.prototype = {
               data.loadTime = Ozone.util.pageLoad.loadTime;
             }
 
-            //jsonString = gadgets.json.stringify(data);
             jsonString = Ozone.util.toString(data);
-            gadgets.rpc.call('..', 'container_init', null, idString, jsonString);
+            Ozone.internal.rpc.send('container_init', null, idString, jsonString);
 
         } catch (error) {
             throw {
@@ -302,15 +302,16 @@ Ozone.eventing.Widget.prototype = {
      */
     registerHandler : function(handlerName, handlerObject) {
       //Simple wrapper for manager objects to register handler functions
-      gadgets.rpc.register(handlerName, handlerObject);
+      Ozone.internal.rpc.register(handlerName, handlerObject);
     },
 
     /**
      * @ignore
-     * Wraps gadgets.rpc.call.
+     * Wraps Ozone.internal.rpc.send.
      */
-    send:function () {
-        gadgets.rpc.call.apply(gadgets.rpc, arguments);
+    send: function (targetId, serviceName, callback) {
+        var varargs = Array.prototype.slice.call(arguments, 3);
+        Ozone.internal.rpc.send(serviceName, callback, varargs);
     },
 
     /**
@@ -334,7 +335,7 @@ Ozone.eventing.Widget.prototype = {
      *
      */
     subscribe : function(channelName, handler) {
-        gadgets.pubsub.subscribe(channelName, handler);
+        Ozone.internal.pubsub.subscribe(channelName, handler);
         return this;
     },
     /**
@@ -344,7 +345,7 @@ Ozone.eventing.Widget.prototype = {
      * this.widgetEventingController.unsubscribe("ClockChannel");
      */
     unsubscribe : function(channelName) {
-        gadgets.pubsub.unsubscribe(channelName);
+        Ozone.internal.pubsub.unsubscribe(channelName);
         return this;
     },
     /**
@@ -360,7 +361,7 @@ Ozone.eventing.Widget.prototype = {
      * this.widgetEventingController.publish("ClockChannel", currentTimeString);
      */
     publish : function(channelName, message, dest, accessLevel) {
-        gadgets.pubsub.publish(channelName, message, dest, accessLevel);
+        Ozone.internal.pubsub.publish(channelName, message, dest, accessLevel);
         return this;
     }
 };
@@ -395,13 +396,13 @@ Ozone.eventing.Widget.getInstance = function (afterInit, widgetRelay) {
     if (Ozone.eventing.Widget.instance == null) {
         Ozone.eventing.Widget.instance = new Ozone.eventing.Widget(widgetRelay, afterInit);
     } else {
-        let instance = Ozone.eventing.Widget.instance;
+        var instance = Ozone.eventing.Widget.instance;
         if (afterInit != null) {
             if (!instance.isAfterInit) {
                 instance.afterInitCallBack = afterInit.bind(instance);
             } else {
                 // already initialized, execute the supplied callback
-                setTimeout(() => {
+                setTimeout(function () {
                     afterInit.call(instance, instance);
                 }, 50);
             }

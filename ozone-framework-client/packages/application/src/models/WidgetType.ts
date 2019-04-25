@@ -1,5 +1,3 @@
-import { PropertiesOf } from "../types";
-
 export class WidgetTypeProps {
     id: number;
     name: string;

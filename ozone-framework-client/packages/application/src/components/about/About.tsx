@@ -5,6 +5,8 @@ import { Classes, Dialog } from "@blueprintjs/core";
 import { ABOUT } from "../../messages";
 
 import { defaults } from "lodash";
+import { mainStore } from "../../stores/MainStore";
+import { useBehavior } from "../../hooks";
 
 const DEFAULT_PROPS = {
     title: ABOUT.title,
@@ -19,10 +21,11 @@ export type AboutProps = Partial<typeof DEFAULT_PROPS> & {
 
 export const AboutDialog: React.FC<AboutProps> = (props) => {
     const { content, isVisible, onClose, title, version } = defaults({}, props, DEFAULT_PROPS);
+    const themeClass = useBehavior(mainStore.themeClass);
 
     return (
         <div>
-            <Dialog className="bp3-dark" isOpen={isVisible} onClose={onClose} isCloseButtonShown={true} title={title}>
+            <Dialog className={themeClass} isOpen={isVisible} onClose={onClose} isCloseButtonShown={true} title={title}>
                 <div
                     data-element-id="about-dialog"
                     className={Classes.DIALOG_BODY}

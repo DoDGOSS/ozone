@@ -20,6 +20,7 @@ export interface GroupQueryCriteria {
     limit?: number;
     offset?: number;
     user_id?: number;
+    widget_id?: number;
 }
 
 export class GroupAPI {
@@ -38,6 +39,20 @@ export class GroupAPI {
 
     getGroupById(id: number): Promise<Response<GroupGetResponse>> {
         return this.gateway.get(`group/${id}/`, {
+            validate: validateGroupGetResponse
+        });
+    }
+
+    getGroupsForWidget(widgetId: string): Promise<Response<GroupGetResponse>> {
+        const requestData = qs.stringify({
+            _method: "GET",
+            widget_id: widgetId
+        });
+
+        return this.gateway.post("group/", requestData, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
             validate: validateGroupGetResponse
         });
     }
@@ -92,5 +107,6 @@ function getOptionParams(options?: GroupQueryCriteria): any | undefined {
     if (options.limit) params.max = options.limit;
     if (options.offset) params.offset = options.offset;
     if (options.user_id) params.user_id = options.user_id;
+    if (options.widget_id) params.widget_id = options.widget_id;
     return params;
 }

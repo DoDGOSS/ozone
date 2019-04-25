@@ -137,7 +137,7 @@ OWF = window.OWF ? window.OWF : {};
        */
         notifyWidgetReady: function() {
           //send a message to container that this widget is ready
-          gadgets.rpc.call('..', WIDGET_READY_SERVICE_NAME, null, OWF.getInstanceId());
+          Ozone.internal.rpc.send(WIDGET_READY_SERVICE_NAME, null, OWF.getInstanceId());
         },
 
 		/**
@@ -316,7 +316,7 @@ OWF = window.OWF ? window.OWF : {};
 				return;
 			}
 
-            gadgets.rpc.call('..', DASHBOARD_GET_PANES_SERVICE_NAME, fn, OWF.getIframeId());
+            Ozone.internal.rpc.send(DASHBOARD_GET_PANES_SERVICE_NAME, fn, OWF.getIframeId());
 		}
 
 	});

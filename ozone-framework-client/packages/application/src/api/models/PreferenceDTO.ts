@@ -36,21 +36,17 @@ export const validatePreferenceGetSingleResponse = createValidator<PreferenceGet
 export interface PreferenceCreateRequest {
     namespace: string;
     path: string;
-    value?: string;
-    userId?: number;
+    value: string;
+    userId?: string;
+}
+
+export interface PreferenceUpdateRequest extends PreferenceCreateRequest {
+    id?: number;
 }
 
 export interface PreferenceDeleteRequest {
     id: number;
     namespace: string;
     path: string;
-    userId?: string;
-}
-
-export interface PreferenceUpdateRequest {
-    id?: number;
-    namespace: string;
-    path: string;
-    value: string;
     userId?: string;
 }
