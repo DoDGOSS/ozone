@@ -6,7 +6,7 @@ Ozone.components.keys = Ozone.components.keys || {};
 
 Ozone.components.keys.createKeyEventSender = function(widgetEventingController) {
 
-    const _ = Ozone.util.internal;
+    var _ = Ozone.util.internal;
 
     Ozone.internal.rpc.register("_focus_widget_window", function() {
         try {
@@ -18,7 +18,7 @@ Ozone.components.keys.createKeyEventSender = function(widgetEventingController) 
     Ozone.internal.rpc.send("_widget_iframe_ready", null, widgetEventingController.getWidgetId());
 
     function keyMatches(event, includeCtrl) {
-        return (key) => {
+        return function (key) {
             return (
                 key.key === event.keyCode &&
                 (includeCtrl ? key.ctrl === event.ctrlKey : true) &&
@@ -28,8 +28,8 @@ Ozone.components.keys.createKeyEventSender = function(widgetEventingController) 
         };
     }
 
-    document.addEventListener("keyup", (event) => {
-        const found = _.forFirst(Ozone.components.keys.HotKeys, keyMatches(event), (key) => {
+    document.addEventListener("keyup", function (event) {
+        var found = _.forFirst(Ozone.components.keys.HotKeys, keyMatches(event), function (key) {
             if (key.focusParent === true) {
                 parent.focus();
             }
@@ -43,7 +43,7 @@ Ozone.components.keys.createKeyEventSender = function(widgetEventingController) 
         });
         if (found) return;
 
-        _.forFirst(Ozone.components.keys.MoveHotKeys, keyMatches(event, true), (key) => {
+        _.forFirst(Ozone.components.keys.MoveHotKeys, keyMatches(event, true), function (key) {
             Ozone.internal.rpc.send("_key_eventing", null, widgetEventingController.getWidgetId(), {
                 keyCode: event.keyCode,
                 ctrlKey: event.ctrlKey,
@@ -54,8 +54,8 @@ Ozone.components.keys.createKeyEventSender = function(widgetEventingController) 
         });
     });
 
-    document.addEventListener("keydown", (event) => {
-        _.forFirst(Ozone.components.keys.MoveHotKeys, keyMatches(event, true), (key) => {
+    document.addEventListener("keydown", function (event) {
+        _.forFirst(Ozone.components.keys.MoveHotKeys, keyMatches(event, true), function (key) {
             Ozone.internal.rpc.send("_key_eventing", null, widgetEventingController.getWidgetId(), {
                 keyCode: event.keyCode,
                 ctrlKey: event.ctrlKey,
