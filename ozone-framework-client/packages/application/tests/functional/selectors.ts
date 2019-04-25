@@ -69,6 +69,8 @@ export namespace DashboardDialog {
 
     export const DELETE_DASHBOARD_ID = "button[data-element-id='dashboard-delete-button-test2']";
 
+    export const SHARE_DASHBOARD_ID = "button[data-element-id='dashboard-share-button-test2']";
+
     export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
 
     export namespace CreateDashboard {
