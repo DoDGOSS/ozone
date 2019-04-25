@@ -1,12 +1,13 @@
 import * as React from "react";
 
-import { Button, Classes, Dialog, InputGroup } from "@blueprintjs/core";
-import { AdminTable } from "../admin/table/AdminTable";
 import { Column } from "react-table";
+import { Button, Classes, Dialog, InputGroup } from "@blueprintjs/core";
 
-import * as styles from "./index.scss";
+import { AdminTable } from "../admin/table/AdminTable";
 import { mainStore } from "../../stores/MainStore";
 import { classNames } from "../../utility";
+
+import * as styles from "./index.scss";
 
 /**
  * properties for TableSelectionDialog extended classes
@@ -69,7 +70,7 @@ export abstract class TableSelectionDialog<T> extends React.Component<
                     isCloseButtonShown={false}
                     title={this.props.title}
                     data-element-id="table-selector"
-                    className={mainStore.getTheme()}
+                    className={classNames(styles.dialog, mainStore.getTheme())}
                 >
                     <div className={Classes.DIALOG_BODY}>
                         <div data-element-id="table-selector-dialog">

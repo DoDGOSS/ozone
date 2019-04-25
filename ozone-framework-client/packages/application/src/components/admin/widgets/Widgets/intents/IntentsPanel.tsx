@@ -1,14 +1,19 @@
 import * as React from "react";
 
-import { Button } from "@blueprintjs/core";
+import { Button, ButtonGroup, Divider, Intent as bpIntent } from "@blueprintjs/core";
 import ReactTable from "react-table";
+
+import { GenericTable } from "../../../table/GenericTable";
+import { DeleteButton, EditButton } from "../../../table/TableButtons";
+import { showConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
 
 import { Intent } from "../../../../../models/compat";
 import { IntentDTO, IntentsDTO } from "../../../../../api/models/IntentDTO";
+import { WidgetUpdateRequest } from "../../../../../api/models/WidgetDTO";
 
 import { IntentDialog } from "./IntentDialog";
-import { mainStore } from "../../../../stores/MainStore";
-import { classNames } from "../../../../utility";
+import { mainStore } from "../../../../../stores/MainStore";
+import { classNames } from "../../../../../utility";
 
 import * as styles from "../../Widgets.scss";
 
@@ -18,7 +23,7 @@ interface IntentGroup {
 }
 
 export interface IntentsPanelProps {
-    updatingWidget: any;
+    updatingWidget: WidgetUpdateRequest;
     onChange: (intentGroups: IntentsDTO) => any;
 }
 
@@ -27,15 +32,12 @@ interface IntentsPanelState {
     pageSize: number;
     allIntentGroups: IntentGroup[];
     expandedRows: { [Key: number]: boolean };
-    selectedIntent: Intent | undefined;
-    query: string;
-    dialogOpen: boolean;
     dialog: React.ReactNode;
 }
 
 export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPanelState> {
     smallBoolBoxWidth = 100; // hard-coded pixel width for send/receive. Not good, but haven't found any way to use percentages
-    searchInput: any;
+    buttonAreaWidth = 2 * this.smallBoolBoxWidth;
 
     constructor(props: IntentsPanelProps) {
         super(props);
@@ -44,134 +46,139 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
             pageSize: 10,
             allIntentGroups: this.getIntentGroupsFromWidget(this.props.updatingWidget),
             expandedRows: this.getAllGroupsAsExpanded(),
-            selectedIntent: undefined,
-            query: "",
-            dialogOpen: false,
-            dialog: null
+            dialog: undefined
         };
     }
 
-    componentDidUpdate() {
-        this.searchInput.focus();
-    }
-
     render() {
-        let dialog = null;
-        if (this.state.dialogOpen) {
-            dialog = this.state.dialog;
-        }
         return (
             <div className={styles.table}>
-                {dialog}
+                {this.state.dialog}
                 {this.mainTable()}
-                {this.actionButtons()}
+                <Button text="Create" onClick={() => this.createIntent()} />
             </div>
         );
     }
 
     mainTable(): any {
         return (
-            <ReactTable
-                key="mainTable"
-                data={this.getIntentGroups()}
-                columns={this.getMainTableColumns()}
-                expanderDefaults={{
-                    sortable: true,
-                    resizable: true,
-                    filterable: false
+            <GenericTable
+                items={this.state.allIntentGroups}
+                getColumns={() => this.getMainTableColumns()}
+                customFilter={this.filterIntentGroups}
+                reactTableProps={{
+                    expanderDefaults: {
+                        sortable: true,
+                        resizable: true,
+                        filterable: false
+                    },
+                    SubComponent: (rowObject: any) => this.getIntentGroupSubTable(rowObject.original.intents),
+                    defaultPageSize: 20,
+                    minRows: 5,
+                    onExpandedChange: (newExpanded: any, indices: number[], event: any) => {
+                        return this.handleRowExpanded(newExpanded, indices, event);
+                    },
+                    expanded: this.state.expandedRows
                 }}
-                SubComponent={(rowObject) => this.getIntentActionGroup(rowObject.original.intents)}
-                defaultPageSize={20}
-                minRows={5}
-                onExpandedChange={(newExpanded, index, event) => this.handleRowExpanded(newExpanded, index, event)}
-                expanded={this.state.expandedRows}
-                getTheadThProps={this.removeHideableHeaders}
-                className={classNames("-striped -highlight",mainStore.getTheme())}
             />
         );
     }
 
-    actionButtons(): any {
+    getIntentGroupSubTable(intents: Intent[]) {
         return (
-            <div>
-                <Button text="Create" onClick={this.createIntent} />
-                <Button text="Edit" onClick={this.editIntent} />
-                <Button text="Delete" onClick={this.deleteIntentAndSave} />
-            </div>
+            <GenericTable
+                items={intents}
+                getColumns={() => this.getIntentSubTableColumns()}
+                filterable={false}
+                reactTableProps={{
+                    showPagination: false,
+                    minRows: 0
+                }}
+            />
         );
     }
 
-    createIntentDialog = () => {
-        return <IntentDialog isOpen={this.state.dialogOpen} onClose={this.closeDialog} onSubmit={this.onFormSubmit} />;
-    };
+    /*
+     * Must be done manually, otherwise sub-areas collapse on filter, sort, and tab-change.
+     */
+    handleRowExpanded(newExpanded: any, indices: number[], event: any): void {
+        // clean newExpanded first. Don't know why it comes with {} instead of true, but it breaks if you keep it like that.
+        for (const row in newExpanded) {
+            if (newExpanded.hasOwnProperty(row)) {
+                if (newExpanded[row] !== false) {
+                    newExpanded[row] = true;
+                }
+            }
+        }
+        this.setState({
+            expandedRows: newExpanded
+        });
+    }
 
-    editIntentDialog = () => {
+    getAllGroupsAsExpanded() {
+        const groupsToInitializeAsExpanded: any = {};
+        for (let i: number = 0; i < this.getIntentGroupsFromWidget(this.props.updatingWidget).length; i++) {
+            groupsToInitializeAsExpanded[i] = true;
+        }
+        return groupsToInitializeAsExpanded;
+    }
+
+    createIntent(): void {
+        this.setState({
+            dialog: this.createIntentDialog()
+        });
+    }
+
+    editIntent(intent: Intent): void {
+        this.setState({
+            dialog: this.editIntentDialog(intent)
+        });
+    }
+
+    createIntentDialog() {
         return (
             <IntentDialog
-                isOpen={this.state.dialogOpen}
-                onClose={this.closeDialog}
-                intentToEdit={this.state.selectedIntent}
-                onSubmit={this.onFormSubmit}
+                isOpen={true}
+                onClose={() => this.closeDialog()}
+                onSubmit={(newIntent: Intent) => this.onIntentFormSubmit(newIntent)}
             />
         );
-    };
+    }
 
-    createIntent = (): void => {
-        this.dismissSelection();
-        this.openDialog(this.createIntentDialog);
-    };
+    editIntentDialog(originalIntent: Intent) {
+        return (
+            <IntentDialog
+                isOpen={true}
+                onClose={() => this.closeDialog()}
+                intentToEdit={originalIntent}
+                onSubmit={(newIntent: Intent) => this.onIntentFormSubmit(newIntent, originalIntent)}
+            />
+        );
+    }
 
-    editIntent = (): void => {
-        if (this.state.selectedIntent) {
-            this.openDialog(this.editIntentDialog);
-        }
-    };
-
-    deleteIntentAndSave = (): void => {
-        if (this.state.selectedIntent) {
-            // and then clear its data, so a subsequent Edit click doesn't open up with the deleted intent's values
-            this.removeIntent(this.state.selectedIntent);
-            this.dismissSelection();
-            this.saveIntents();
-        }
-    };
-
-    openDialog = (createDialog: () => React.ReactNode): void => {
+    closeDialog(): void {
         this.setState({
-            dialogOpen: true,
-            dialog: createDialog()
+            dialog: undefined
         });
-    };
-    closeDialog = (): void => {
-        this.setState({
-            dialogOpen: false,
-            dialog: null
-        });
-    };
-    dismissSelection = (): void => {
-        this.setState({
-            selectedIntent: undefined
-        });
-    };
+    }
 
-    onFormSubmit = (newIntent: any): void => {
-        if (this.state.selectedIntent) {
-            this.updateSelectedIntent(newIntent);
+    onIntentFormSubmit(newIntent: Intent, originalIntent?: Intent): void {
+        if (originalIntent) {
+            this.updateIntent(originalIntent, newIntent);
         } else {
             this.addIntent(newIntent);
         }
         this.saveIntents();
-    };
+    }
 
-    updateSelectedIntent(intent: Intent): void {
-        this.removeSelected();
+    updateIntent(originalIntent: Intent, intent: Intent): void {
+        this.removeIntent(originalIntent);
         this.addIntent(intent);
     }
 
-    removeSelected(): void {
-        if (this.state.selectedIntent) {
-            this.removeIntent(this.state.selectedIntent);
-        }
+    deleteIntentAndSave(intent: Intent): void {
+        this.removeIntent(intent);
+        this.saveIntents();
     }
 
     removeIntent(intent: Intent): void {
@@ -217,11 +224,11 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
     }
 
     saveIntents(): void {
-        const formattedIntents = this.getIntentsInPartitionedFormat();
+        const formattedIntents = this.intentGroupsToIntentsDTO();
         this.props.onChange(formattedIntents);
     }
 
-    getIntentsInPartitionedFormat(): IntentsDTO {
+    intentGroupsToIntentsDTO(): IntentsDTO {
         return {
             send: this.getIntentsWithPermission(this.state.allIntentGroups, "send"),
             receive: this.getIntentsWithPermission(this.state.allIntentGroups, "receive")
@@ -243,107 +250,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
         return permitted;
     }
 
-    // derived from https://stackoverflow.com/questions/44845372
-    makeRowsClickableProps = (state: IntentsPanelState, rowInfo: any) => {
-        if (rowInfo && rowInfo.row) {
-            return {
-                onClick: () => {
-                    this.setState({
-                        selectedIntent: rowInfo.original
-                    });
-                },
-                style: {
-                    // background: rowInfo.original === this.state.selectedIntent ? "#00afec" : "white",
-                    // color: rowInfo.original === this.state.selectedIntent ? "white" : "black"
-                    border: rowInfo.original === this.state.selectedIntent ? "2px solid #48aff0":"none"
-                }
-            };
-        } else {
-            return {};
-        }
-    };
-
-    /*
-     * Must be done manually, otherwise sub-areas collapse on filter, sort, and tab-change.
-     */
-    handleRowExpanded(newExpanded: any, index: number[], event: any): void {
-        // clean newExpanded first. Don't know why it comes with {} instead of true, but it breaks if you keep it like that.
-        for (let i = 0; i < newExpanded.length; i++) {
-            if (newExpanded[i] === {}) {
-                newExpanded[i] = true;
-            }
-        }
-        this.setState({
-            expandedRows: newExpanded
-        });
-    }
-
-    getTableMainHeader(title: string): React.ReactNode {
-        return (
-            <div>
-                <AlignedDiv message={title} alignment="left" />
-                <AlignedDiv message={this.getSearchBox()} alignment="right" />
-            </div>
-        );
-    }
-
-    getSearchBox(): React.ReactNode {
-        // opted for the 'allow re-render but re-set focus and value on every render' approach,
-        // because I couldn't figure out how to easily tell it to re-use this input field without
-        // re-rendering it when its parent re-renders.
-        return (
-            <input
-                key="search"
-                ref={(input) => {
-                    this.searchInput = input;
-                }}
-                value={this.state.query}
-                placeholder="Search..."
-                onChange={(e) => this.handleFilterChange(e)}
-            />
-        );
-    }
-
-    handleFilterChange(event: any) {
-        if (event && event.target) {
-            this.setState({
-                query: event.target.value
-            });
-        }
-    }
-
-    getAllGroupsAsExpanded() {
-        const groupsToInitializeAsExpanded: any = {};
-        for (let i: number = 0; i < this.getIntentGroupsFromWidget(this.props.updatingWidget).length; i++) {
-            groupsToInitializeAsExpanded[i] = true;
-        }
-        return groupsToInitializeAsExpanded;
-    }
-
-    getIntentActionGroup(intents: Intent[]) {
-        return (
-            <ReactTable
-                key="intentActionGroup"
-                data={intents}
-                columns={this.getIntentSubTableColumns()}
-                getTheadThProps={this.removeHideableHeaders}
-                showPagination={false}
-                getTrProps={this.makeRowsClickableProps}
-                minRows={0}
-                className="-striped -highlight"
-            />
-        );
-    }
-
-    // derived from https://github.com/tannerlinsley/react-table/issues/508#issuecomment-380392755
-    removeHideableHeaders(state: any, rowInfo: any, column: any) {
-        if (column.Header === "hideMe") {
-            return { style: { display: "none" } }; // override style
-        }
-        return {};
-    }
-
-    getIntentGroupsFromWidget(widget: any): IntentGroup[] {
+    getIntentGroupsFromWidget(widget: WidgetUpdateRequest): IntentGroup[] {
         const widgetIntents: IntentsDTO = widget.intents;
 
         const permittedSendingGroups = this.getGroupsFromFormattedIntents(widgetIntents.send, "send");
@@ -393,26 +300,24 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
         return intentGroups;
     }
 
-    getIntentGroups(): any {
-        return this.filterIntentGroups(this.state.allIntentGroups);
-    }
-
-    filterIntentGroups(intentGroups: IntentGroup[]): IntentGroup[] {
-        if (this.state === undefined || this.state.query === "") {
+    filterIntentGroups(
+        intentGroups: IntentGroup[],
+        query: string,
+        queryMatches: (text: string, query: string) => boolean
+    ): IntentGroup[] {
+        if (query === "") {
             return intentGroups;
         }
 
         // leave in all actionGroups containing `term`, as well as all intents whose dataType includes `term`.
         // Remember it's {action:string, dataTypes:string[] }[],
-        const filteredGroups: IntentGroup[] = intentGroups.filter((group) =>
-            queryMatches(group.action, this.state.query)
-        );
+        const filteredGroups: IntentGroup[] = intentGroups.filter((group) => queryMatches(group.action, query));
 
         for (const group of intentGroups) {
             if (listContainsObject(filteredGroups, group)) {
                 continue;
             }
-            const matchingIntents = group.intents.filter((intent) => queryMatches(intent.dataType, this.state.query));
+            const matchingIntents = group.intents.filter((intent) => queryMatches(intent.dataType, query));
             if (matchingIntents.length > 0) {
                 filteredGroups.push({ action: group.action, intents: matchingIntents });
             }
@@ -421,34 +326,41 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
     }
 
     getMainTableColumns(): any {
-        const title1 = this.props.updatingWidget ? this.props.updatingWidget.displayName : "Intents";
-
         return [
             {
-                Header: () => this.getTableMainHeader(title1),
-                columns: [
-                    {
-                        Header: "hideMe",
-                        expander: true,
-                        width: 35
-                    },
-                    {
-                        expander: true,
-                        Header: () => <AlignedDiv message="Intent" alignment="left" />,
-                        Expander: ({ isExpanded, ...rest }: any) => <div>{rest.original.action}</div>,
-                        style: {
-                            textAlign: "left"
-                        }
-                    },
-                    {
-                        Header: "Send",
-                        width: this.smallBoolBoxWidth
-                    },
-                    {
-                        Header: "Receive",
-                        width: this.smallBoolBoxWidth
-                    }
-                ]
+                Header: "hideMe",
+                expander: true,
+                width: 35
+            },
+            {
+                Header: () => <AlignedDiv message="Intent" alignment="left" />,
+                // perhaps add a onClick function that calls the expander, so you can click the row instead of jsut the arrow.
+                style: {
+                    textAlign: "left"
+                },
+                id: "action",
+                accessor: (intentGroup: IntentGroup) => intentGroup.action
+            },
+            {
+                Header: "Send",
+                id: "send",
+                sortable: false,
+                resizable: false,
+                width: this.smallBoolBoxWidth
+            },
+            {
+                Header: "Receive",
+                id: "receive",
+                sortable: false,
+                resizable: false,
+                width: this.smallBoolBoxWidth
+            },
+            {
+                Header: "Actions",
+                sortable: false,
+                resizable: false,
+                Cell: () => <div />,
+                width: this.buttonAreaWidth
             }
         ];
     }
@@ -481,8 +393,43 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
                 style: {
                     textAlign: "center"
                 }
-            }
+            },
+            { Header: "hideMe", Cell: this.intentButtons, width: this.buttonAreaWidth }
         ];
+    }
+
+    intentButtons = (row: { original: Intent }) => {
+        return (
+            <div>
+                <ButtonGroup>
+                    <EditButton
+                        onClick={() => {
+                            this.editIntent(row.original);
+                        }}
+                    />
+                    <Divider />
+                    <DeleteButton onClick={() => this.confirmAndDeleteIntent(row.original)} />
+                </ButtonGroup>
+            </div>
+        );
+    };
+
+    confirmAndDeleteIntent(intentToDelete: Intent): void {
+        showConfirmationDialog({
+            title: "Warning",
+            message:
+                "This action will permanently delete intent {action: " +
+                intentToDelete.action +
+                ", dataType: " +
+                intentToDelete.action +
+                ", send: " +
+                intentToDelete.send +
+                ", receive: " +
+                intentToDelete.receive +
+                " from the widget " +
+                this.props.updatingWidget.displayName,
+            onConfirm: () => this.deleteIntentAndSave(intentToDelete)
+        });
     }
 }
 
@@ -501,8 +448,4 @@ function listContainsObject(list: any[], obj: any): boolean {
         if (o === obj) return true;
     }
     return false;
-}
-
-function queryMatches(text: string, query: string): boolean {
-    return text.includes(query);
 }
