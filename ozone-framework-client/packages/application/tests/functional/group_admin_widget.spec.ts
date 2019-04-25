@@ -349,16 +349,6 @@ module.exports = {
     },
 
     "As an Administrator, I can remove a widget from a group": (browser: NightwatchAPI) => {
-        // loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        // openAdminWidget(browser, AdminWidgetType.WIDGETS);
-
-        // browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
-
-        // openEditSectionForGroup(
-        //     browser,
-        //     GROUP_ADD_WIDGET,
-        //     `${GroupAdminWidget.EditGroup.TAB_WIDGETS}`
-        // ).waitForElementVisible(GroupAdminWidget.WidgetsGroup.ADD_BUTTON, 2000, "[User Widgets Interface] is visible");
 
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
         openAdminWidget(browser, AdminWidgetType.GROUPS);
