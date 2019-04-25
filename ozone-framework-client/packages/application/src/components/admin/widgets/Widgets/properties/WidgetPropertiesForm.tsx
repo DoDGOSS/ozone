@@ -14,7 +14,7 @@ import { CheckBox, FormError, HiddenField, SelectField, SubmitButton, TextField 
 import * as styles from "../../Widgets.scss";
 
 interface WidgetFormProps {
-    currentWidget: WidgetCreateRequest | WidgetUpdateRequest;
+    widget: WidgetCreateRequest | WidgetUpdateRequest;
     onSubmit: (data: WidgetCreateRequest) => Promise<boolean>;
     widgetTypes: WidgetTypeReference[];
 }
@@ -28,13 +28,9 @@ const renderWidgetType: ItemRenderer<WidgetTypeReference> = (
     return <MenuItem key={widgetType.name} onClick={handleClick} text={widgetType.name} />;
 };
 
-export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
-    currentWidget,
-    onSubmit,
-    widgetTypes
-}) => (
+export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({ widget, onSubmit, widgetTypes }) => (
     <Formik
-        initialValues={currentWidget}
+        initialValues={widget}
         validationSchema={WidgetPropertiesSchema}
         onSubmit={async (
             values: WidgetCreateRequest | WidgetUpdateRequest,
@@ -122,7 +118,7 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
                             className={styles.inline_form_label}
                             name="widgetType"
                             label="Widget Type"
-                            initialValue={currentWidget.widgetTypes[0]} // NOT `widgetTypes[0]`
+                            initialValue={widget.widgetTypes[0]} // NOT `widgetTypes[0]`
                             items={widgetTypes}
                             itemRenderer={renderWidgetType}
                             extractLabel={(item: WidgetTypeReference) => item.name}
@@ -138,28 +134,28 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
                             className={styles.inline_form_label}
                             name="singleton"
                             label="Singleton"
-                            defaultChecked={currentWidget.singleton}
+                            defaultChecked={widget.singleton}
                         />
                         <CheckBox
                             inline={true}
                             className={styles.inline_form_label}
                             name="mobileReady"
                             label="Mobile Ready"
-                            defaultChecked={currentWidget.mobileReady}
+                            defaultChecked={widget.mobileReady}
                         />
                         <CheckBox
                             inline={true}
                             className={styles.inline_form_label}
                             name="visible"
                             label="Visible"
-                            defaultChecked={currentWidget.visible}
+                            defaultChecked={widget.visible}
                         />
                         <CheckBox
                             inline={true}
                             className={styles.inline_form_label}
                             name="background"
                             label="Background"
-                            defaultChecked={currentWidget.background}
+                            defaultChecked={widget.background}
                         />
 
                         {formik.status && formik.status.error && <FormError message={formik.status.error} />}

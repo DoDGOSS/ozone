@@ -126,12 +126,13 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
     private confirmDeleteWidget = async (widget: WidgetDTO) => {
         showConfirmationDialog({
             title: "Warning",
-            message:
-                "This action will remove widget " +
-                widget.value.namespace +
-                " from user " +
-                this.props.user.userRealName +
-                ".",
+            message: [
+                "This action will remove widget ",
+                { text: widget.value.namespace, style: "bold" },
+                " from user ",
+                { text: this.props.user.userRealName, style: "bold" },
+                "."
+            ],
             onConfirm: () => this.removeWidget(widget)
         });
         return true;

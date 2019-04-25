@@ -6,7 +6,7 @@ import { GroupPropertiesPanel } from "./GroupPropertiesPanel";
 import { GroupUsersPanel } from "./GroupUsersPanel";
 import { GroupWidgetsPanel } from "./GroupWidgetsPanel";
 import { CancelButton } from "../../../form/index";
-import { GroupUpdateRequest } from "../../../../api/models/GroupDTO";
+import { GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
 import { groupApi } from "../../../../api/clients/GroupAPI";
 
 import * as styles from "../Widgets.scss";
@@ -14,19 +14,19 @@ import * as styles from "../Widgets.scss";
 export interface GroupSetupProps {
     onUpdate: (update?: any) => void;
     onBack: () => void;
-    group: GroupDTO | undefined;
+    updatingGroup: GroupDTO | undefined;
 }
 
 export interface GroupSetupState {
-    updatingGroup: any;
+    group: GroupDTO | undefined;
 }
 
 export class GroupSetup extends React.Component<GroupSetupProps, GroupSetupState> {
-    constructor() {
+    constructor(props: GroupSetupProps) {
         super(props);
 
         this.state = {
-            updatingGroup: props.group
+            group: props.updatingGroup
         };
     }
 
@@ -37,18 +37,14 @@ export class GroupSetup extends React.Component<GroupSetupProps, GroupSetupState
                     <Tab
                         id="group_properties"
                         title="Properties"
-                        panel={
-                            <GroupPropertiesPanel
-                                onUpdate={this.updateGroup}
-                                onSave={this.saveGroup}
-                                group={this.state.group}
-                            />
-                        }
+                        panel={<GroupPropertiesPanel onSave={this.createOrUpdateGroup} group={this.state.group} />}
                     />
                     <Tab
                         id="group_users"
                         title="Users"
-                        panel={<GroupUsersPanel onUpdate={this.props.onUpdate} group={this.state.group} />}
+                        panel={this.emptyIfGroupNull(
+                            <GroupUsersPanel onUpdate={this.props.onUpdate} group={this.state.group!} />
+                        )}
                     />
                     <Tab
                         id="group_widgets"
@@ -74,9 +70,9 @@ export class GroupSetup extends React.Component<GroupSetupProps, GroupSetupState
         }
         let response: any;
         if ("id" in group) {
-            response = await groupApi.updateGroup(data);
+            response = await groupApi.updateGroup(group);
         } else {
-            response = await groupApi.createGroup(data);
+            response = await groupApi.createGroup(group);
         }
 
         if (
@@ -86,12 +82,21 @@ export class GroupSetup extends React.Component<GroupSetupProps, GroupSetupState
             response.data.data.length !== undefined &&
             response.data.data.length > 0
         ) {
-            this.setState({
-                group: response.data.data[0]
-            });
+            console.log(response.data);
+            // this.setState({
+            //     group: response.data.data[0]
+            // });
             this.props.onUpdate();
             return true;
         }
         return false;
     };
+
+    private emptyIfGroupNull(component: any): any {
+        if (this.state.group !== undefined) {
+            return component;
+        } else {
+            return <div />;
+        }
+    }
 }

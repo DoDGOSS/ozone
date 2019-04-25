@@ -168,7 +168,6 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                 return true;
             }
         }
-        return false;
     }
 
     private queryMatches = (text: string, query: string): boolean => {
@@ -207,7 +206,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                         this.selectItem(rowInfo.original);
                     },
                     style: {
-                        background: "#0b0", // "#00afec",
+                        background: "#00afec",
                         color: "white"
                     }
                 };
