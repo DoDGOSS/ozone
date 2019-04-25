@@ -12,10 +12,8 @@ import { IntentDTO, IntentsDTO } from "../../../../../api/models/IntentDTO";
 import { WidgetUpdateRequest } from "../../../../../api/models/WidgetDTO";
 
 import { IntentDialog } from "./IntentDialog";
-import { mainStore } from "../../../../stores/MainStore";
-import { classNames } from "../../../../utility";
-
-import * as styles from "../../Widgets.scss";
+import { mainStore } from "../../../../../stores/MainStore";
+import { classNames } from "../../../../../utility";
 
 import * as styles from "../../Widgets.scss";
 
@@ -50,10 +48,6 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
             expandedRows: this.getAllGroupsAsExpanded(),
             dialog: undefined
         };
-    }
-
-    componentDidUpdate() {
-        this.searchInput.focus();
     }
 
     render() {
@@ -306,26 +300,24 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
         return intentGroups;
     }
 
-    getIntentGroups(): any {
-        return this.filterIntentGroups(this.state.allIntentGroups);
-    }
-
-    filterIntentGroups(intentGroups: IntentGroup[]): IntentGroup[] {
-        if (this.state === undefined || this.state.query === "") {
+    filterIntentGroups(
+        intentGroups: IntentGroup[],
+        query: string,
+        queryMatches: (text: string, query: string) => boolean
+    ): IntentGroup[] {
+        if (query === "") {
             return intentGroups;
         }
 
         // leave in all actionGroups containing `term`, as well as all intents whose dataType includes `term`.
         // Remember it's {action:string, dataTypes:string[] }[],
-        const filteredGroups: IntentGroup[] = intentGroups.filter((group) =>
-            queryMatches(group.action, this.state.query)
-        );
+        const filteredGroups: IntentGroup[] = intentGroups.filter((group) => queryMatches(group.action, query));
 
         for (const group of intentGroups) {
             if (listContainsObject(filteredGroups, group)) {
                 continue;
             }
-            const matchingIntents = group.intents.filter((intent) => queryMatches(intent.dataType, this.state.query));
+            const matchingIntents = group.intents.filter((intent) => queryMatches(intent.dataType, query));
             if (matchingIntents.length > 0) {
                 filteredGroups.push({ action: group.action, intents: matchingIntents });
             }
@@ -456,8 +448,4 @@ function listContainsObject(list: any[], obj: any): boolean {
         if (o === obj) return true;
     }
     return false;
-}
-
-function queryMatches(text: string, query: string): boolean {
-    return text.includes(query);
 }
