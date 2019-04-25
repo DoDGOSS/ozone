@@ -117,6 +117,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                     <div>
                         <ButtonGroup>
                             <EditButton
+                                correspondingItemName={row.original.value.namespace}
                                 onClick={() => {
                                     this.setState({ updatingWidget: row.original });
                                     this.showSubSection(WidgetWidgetSubSection.SETUP);
@@ -128,6 +129,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                                 content={"Can't delete widget with assigned users or groups"}
                             >
                                 <DeleteButton
+                                    correspondingItemName={row.original.value.namespace}
                                     disabled={this.widgetPotentiallyInUse(row.original)}
                                     onClick={() => this.confirmAndDeleteWidget(row.original)}
                                 />

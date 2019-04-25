@@ -7,7 +7,7 @@ import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { array, boolean, number, object, string } from "yup";
 
 import { mainStore } from "../../../stores/MainStore";
-import * as styles from "../widgets/Widgets.scss";
+import * as styles from "./GenericTable.scss";
 
 import { classNames, isFunction } from "../../../utility";
 
@@ -46,19 +46,17 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
 
     render() {
         return (
-            <div>
+            <div className={styles.table}>
                 {this.filterable && this.getSearchBox()}
-                <div className={styles.table}>
-                    <ReactTable
-                        data={this.getItems()}
-                        getTheadThProps={this.removeHideableHeaders}
-                        getTrProps={this.rowsAreClickable() ? this.clickableRowProps : () => ""}
-                        className={classNames("striped", this.props.classNames)}
-                        columns={this.getTableLayout()}
-                        pageSizeOptions={this.getReasonablePageSizeOptions()}
-                        {...this.buildReactTableProps()}
-                    />
-                </div>
+                <ReactTable
+                    data={this.getItems()}
+                    getTheadThProps={this.removeHideableHeaders}
+                    getTrProps={this.rowsAreClickable() ? this.clickableRowProps : () => ""}
+                    className={classNames("striped", this.props.classNames)}
+                    columns={this.getTableLayout()}
+                    pageSizeOptions={this.getReasonablePageSizeOptions()}
+                    {...this.buildReactTableProps()}
+                />
             </div>
         );
     }
@@ -69,12 +67,16 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         props["minRows"] = 5;
         props["defaultPageSize"] = 5;
         props["showPagination"] = true;
+        props["className"] = classNames("-striped -highlight");
 
         if (this.props.reactTableProps) {
             for (const p in this.props.reactTableProps) {
                 if (this.props.reactTableProps.hasOwnProperty(p)) {
                     props[p] = this.props.reactTableProps[p];
                 }
+            }
+            if (this.props.reactTableProps.className) {
+                props["className"] = classNames("-striped -highlight", this.props.reactTableProps.className);
             }
         }
         return props;
@@ -168,6 +170,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                 return true;
             }
         }
+        return false;
     }
 
     private queryMatches = (text: string, query: string): boolean => {
