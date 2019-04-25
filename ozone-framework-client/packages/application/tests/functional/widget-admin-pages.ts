@@ -9,11 +9,10 @@ export class WidgetAdmin extends PageObject {
 
     static CreateButton = `${WidgetAdmin.Selector} button[data-element-id="widget-admin-widget-create-button"]`;
 
-    static editWidgetButton = (title: string) =>
-        `button[data-element-id="widget-admin-widget-edit-button"][data-widget-title="${title}"]`;
+    static editWidgetButton = (title: string) => `button[data-element-id="edit-button"][data-widget-title="${title}"]`;
 
     static deleteWidgetButton = (title: string) =>
-        `button[data-element-id="widget-admin-widget-delete-button"][data-widget-title="${title}"]`;
+        `button[data-element-id="delete-button"][data-widget-title="${title}"]`;
 
     constructor(browser: NightwatchAPI) {
         super(browser, WidgetAdmin.Selector, "Widget Admin Widget");

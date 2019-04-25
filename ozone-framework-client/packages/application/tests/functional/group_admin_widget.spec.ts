@@ -253,7 +253,7 @@ module.exports = {
             .click(
                 `${
                     GroupAdminWidget.UsersGroup.TAB
-                } div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child button[data-element-id='group-admin-widget-delete-user-button']`
+                } div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child button[data-element-id='delete-button']`
             )
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
@@ -275,7 +275,7 @@ module.exports = {
             .click(
                 `${
                     GroupAdminWidget.UsersGroup.TAB
-                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='group-admin-widget-delete-user-button']`
+                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='delete-button']`
             )
             .pause(250)
             .waitForElementPresent(
