@@ -7,6 +7,8 @@ import { Intent } from "../../../../../models/compat";
 import { IntentDTO, IntentsDTO } from "../../../../../api/models/IntentDTO";
 
 import { IntentDialog } from "./IntentDialog";
+import { mainStore } from "../../../../stores/MainStore";
+import { classNames } from "../../../../utility";
 
 import * as styles from "../../Widgets.scss";
 
@@ -84,7 +86,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
                 onExpandedChange={(newExpanded, index, event) => this.handleRowExpanded(newExpanded, index, event)}
                 expanded={this.state.expandedRows}
                 getTheadThProps={this.removeHideableHeaders}
-                className="-striped -highlight"
+                className={classNames("-striped -highlight",mainStore.getTheme())}
             />
         );
     }
@@ -251,8 +253,9 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
                     });
                 },
                 style: {
-                    background: rowInfo.original === this.state.selectedIntent ? "#00afec" : "white",
-                    color: rowInfo.original === this.state.selectedIntent ? "white" : "black"
+                    // background: rowInfo.original === this.state.selectedIntent ? "#00afec" : "white",
+                    // color: rowInfo.original === this.state.selectedIntent ? "white" : "black"
+                    border: rowInfo.original === this.state.selectedIntent ? "2px solid #48aff0":"none"
                 }
             };
         } else {
