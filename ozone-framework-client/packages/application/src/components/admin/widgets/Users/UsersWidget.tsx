@@ -156,7 +156,7 @@ export class UsersWidget extends React.Component<{}, State> {
     private confirmDeleteUser = async (user: UserDTO) => {
         showConfirmationDialog({
             title: "Warning",
-            message: "This action will permanently delete " + user.username + ".",
+            message: ["This action will permanently delete ", { text: user.username, style: "bold" }, "."],
             onConfirm: () => this.deleteUser(user)
         });
 

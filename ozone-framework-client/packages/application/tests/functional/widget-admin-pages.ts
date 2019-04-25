@@ -133,14 +133,14 @@ export class PropertiesPanel extends PageObject {
 
     assertSubmitButtonIsDisabled(): this {
         this.browser.getAttribute(PropertiesPanel.SubmitButton, "disabled", (result) => {
-            this.browser.assert.equal(result.value, "true", this.msg("Submit button is disabled"));
+            this.browser.assert.equal(result.value, "true", this.msg("Submit button should be disabled"));
         });
         return this;
     }
 
     assertSubmitButtonIsEnabled(): this {
         this.browser.getAttribute(PropertiesPanel.SubmitButton, "disabled", (result) => {
-            this.browser.assert.equal(result.value, null, this.msg("Submit button is disabled"));
+            this.browser.assert.equal(result.value, null, this.msg("Submit button should be enabled"));
         });
         return this;
     }

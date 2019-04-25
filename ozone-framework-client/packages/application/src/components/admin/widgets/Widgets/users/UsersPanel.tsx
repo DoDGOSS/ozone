@@ -11,6 +11,7 @@ import { showConfirmationDialog } from "../../../../confirmation-dialog/InPlaceC
 import * as styles from "../../Widgets.scss";
 
 import { userApi } from "../../../../../api/clients/UserAPI";
+import { widgetApi } from "../../../../../api/clients/WidgetAPI";
 
 import { User } from "../../../../../models/User";
 import { UserDTO } from "../../../../../api/models/UserDTO";
@@ -20,17 +21,16 @@ import { GenericTable } from "../../../table/GenericTable";
 import { DeleteButton } from "../../../table/TableButtons";
 import { UsersDialog } from "./UsersDialog";
 
+interface Props {
+    widget: WidgetDTO;
+    onUpdate: () => void;
+}
+
 interface State {
     loading: boolean;
     widgetUsers: User[];
     allUsers: User[];
     dialogOpen: boolean;
-}
-
-interface Props {
-    widget: any;
-    addUsers: (users: User[]) => Promise<boolean>;
-    removeUser: (user: User) => Promise<boolean>;
 }
 
 export class UsersPanel extends React.Component<Props, State> {
@@ -145,17 +145,29 @@ export class UsersPanel extends React.Component<Props, State> {
     confirmAndDeleteUser(userToRemove: User): void {
         showConfirmationDialog({
             title: "Warning",
-            message:
-                "This action will permanently delete " +
-                userToRemove.displayName +
-                " from the widget " +
-                this.props.widget.displayName,
-            onConfirm: () => this.removeUserAndSave(userToRemove)
+            message: [
+                "This action will remove ",
+                { text: userToRemove.displayName, style: "bold" },
+                " from widget ",
+                { text: this.props.widget.value.namespace, style: "bold" }
+            ],
+            onConfirm: () => this.removeUserAndRefresh(userToRemove)
         });
     }
 
-    removeUserAndSave(userToRemove: User): void {
-        this.props.removeUser(userToRemove).then(() => this.getWidgetUsers());
+    removeUserAndRefresh(userToRemove: User): void {
+        this.removeUser(userToRemove).then(() => this.getWidgetUsers());
+        this.props.onUpdate();
+    }
+
+    async removeUser(user: User): Promise<boolean> {
+        if (this.props.widget === undefined) {
+            return false;
+        }
+        const response = await widgetApi.removeWidgetUsers(this.props.widget.id, user.id);
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+        return true;
     }
 
     addSelectedUsers(newSelections: User[]): void {
@@ -168,7 +180,22 @@ export class UsersPanel extends React.Component<Props, State> {
         }
 
         if (userList.length > 0) {
-            this.props.addUsers(userList).then(() => this.getWidgetUsers());
+            this.addUsers(userList).then(() => this.getWidgetUsers());
+            this.props.onUpdate();
         }
+    }
+
+    async addUsers(users: User[]): Promise<boolean> {
+        if (this.props.widget === undefined) {
+            return false;
+        }
+        const userIds: number[] = [];
+        for (const u of users) {
+            userIds.push(u.id);
+        }
+        const response = await widgetApi.addWidgetUsers(this.props.widget.id, userIds);
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+        return true;
     }
 }

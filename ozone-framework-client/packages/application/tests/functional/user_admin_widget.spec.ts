@@ -34,7 +34,7 @@ function openEditSectionForUser(browser: NightwatchAPI, userDisplayName: string,
                         relevant_row = i;
                         browser.getAttribute(
                             `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                1}) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-edit-button']`,
+                                1}) div[role='row'] > div:last-child button[data-element-id='edit-button']`,
                             "disabled",
                             function(isDisabled) {
                                 this.assert.equal(
@@ -51,7 +51,7 @@ function openEditSectionForUser(browser: NightwatchAPI, userDisplayName: string,
     );
     browser.click(
         `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
-            1}) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-edit-button']`
+            1}) div[role='row'] > div:last-child button[data-element-id='edit-button']`
     );
 
     if (section) {
@@ -133,9 +133,7 @@ module.exports = {
             .click(AdminWidget.USER_ADMIN_BACK_BUTTON)
             .waitForElementNotPresent(AdminWidget.SUBMIT_BUTTON, 1000, "[Edit User Form] is closed");
 
-        browser
-            .pause(2000)
-            .waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
+        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 3000, "[User Admin Widget] is visible");
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
@@ -167,7 +165,7 @@ module.exports = {
             .click(
                 `${
                     UserAdminWidget.Main.DIALOG
-                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-edit-button']`
+                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='edit-button']`
             );
 
         browser.pause(5000);
@@ -349,7 +347,7 @@ module.exports = {
             .click(
                 `${
                     UserAdminWidget.Main.DIALOG
-                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='user-admin-widget-delete-button']`
+                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='delete-button']`
             )
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,

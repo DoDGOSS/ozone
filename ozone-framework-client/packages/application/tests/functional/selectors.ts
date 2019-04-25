@@ -152,7 +152,7 @@ export namespace AdminWidget {
     }
 
     export function userTableEditButton(username: string): string {
-        return `${userTableActions(username)} button[data-element-id="user-admin-widget-edit-button"]`;
+        return `${userTableActions(username)} button[data-element-id="edit-button"]`;
     }
 
     export const CONFIRM_DELETE_ALERT = "div.delete-user-alert";
@@ -245,17 +245,17 @@ export namespace GroupAdminWidget {
         export const BACK_BUTTON = `${Main.DIALOG} span[data-element-id='group-admin-widget-edit-back-button'] button`;
     }
 
-    export namespace CreateGroup {
-        export const FORM = "div[data-element-id='group-admin-widget-create-form']";
+    export namespace GroupProperties {
+        export const FORM = "div[data-element-id='group-admin-widget-edit-form']";
 
-        export const NAME_INPUT = `${CreateGroup.FORM} input[name='name']`;
+        export const NAME_INPUT = `${GroupProperties.FORM} input[name='name']`;
 
-        export const DISPLAY_NAME_INPUT = `${CreateGroup.FORM} input[name='displayName']`;
+        export const DISPLAY_NAME_INPUT = `${GroupProperties.FORM} input[name='displayName']`;
 
-        export const DESCRIPTION_INPUT = `${CreateGroup.FORM} input[name='description']`;
+        export const DESCRIPTION_INPUT = `${GroupProperties.FORM} input[name='description']`;
 
         export const SUBMIT_BUTTON =
-            "div[data-element-id='group-admin-widget-create-submit-button'] > button[data-element-id='form-submit-button']";
+            "div[data-element-id='group-admin-widget-edit-submit-button'] > button[data-element-id='form-submit-button']";
     }
 
     export namespace EditGroup {

@@ -31,7 +31,7 @@ function openEditSectionForGroup(browser: NightwatchAPI, userDisplayName: string
                         relevant_row = i;
                         browser.getAttribute(
                             `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                1}) div[role='row'] > div:last-child button[data-element-id='group-admin-widget-edit-button']`,
+                                1}) div[role='row'] > div:last-child button[data-element-id='edit-button']`,
                             "disabled",
                             function(isDisabled) {
                                 this.assert.equal(
@@ -48,7 +48,7 @@ function openEditSectionForGroup(browser: NightwatchAPI, userDisplayName: string
     );
     browser.click(
         `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
-            1}) div[role='row'] > div:last-child button[data-element-id='group-admin-widget-edit-button']`
+            1}) div[role='row'] > div:last-child button[data-element-id='edit-button']`
     );
 
     if (section) {
@@ -114,30 +114,31 @@ module.exports = {
         browser
             .click(GroupAdminWidget.Main.CREATE_BUTTON)
             .waitForElementPresent(
-                GroupAdminWidget.CreateGroup.FORM,
+                GroupAdminWidget.GroupProperties.FORM,
                 1000,
                 undefined,
                 undefined,
                 "[Create Group Form] is present"
             );
 
-        browser.getAttribute(GroupAdminWidget.CreateGroup.SUBMIT_BUTTON, "disabled", function(result) {
+        browser.getAttribute(GroupAdminWidget.GroupProperties.SUBMIT_BUTTON, "disabled", function(result) {
             this.assert.equal(result.value, "true", "[Create Group Submit Button] is disabled");
         });
 
         browser
-            .setValue(GroupAdminWidget.CreateGroup.NAME_INPUT, NEW_GROUP_NAME)
-            .setValue(GroupAdminWidget.CreateGroup.DISPLAY_NAME_INPUT, NEW_GROUP_DISPLAY_NAME)
-            .setValue(GroupAdminWidget.CreateGroup.DESCRIPTION_INPUT, NEW_GROUP_DESCRIPTION)
+            .setValue(GroupAdminWidget.GroupProperties.NAME_INPUT, NEW_GROUP_NAME)
+            .setValue(GroupAdminWidget.GroupProperties.DISPLAY_NAME_INPUT, NEW_GROUP_DISPLAY_NAME)
+            .setValue(GroupAdminWidget.GroupProperties.DESCRIPTION_INPUT, NEW_GROUP_DESCRIPTION)
             .pause(1000);
 
-        browser.getAttribute(GroupAdminWidget.CreateGroup.SUBMIT_BUTTON, "disabled", function(result) {
+        browser.getAttribute(GroupAdminWidget.GroupProperties.SUBMIT_BUTTON, "disabled", function(result) {
             this.assert.equal(result.value, null, "[Create Group Submit Button] is enabled");
         });
 
         browser
-            .click(GroupAdminWidget.CreateGroup.SUBMIT_BUTTON)
-            .waitForElementNotPresent(GroupAdminWidget.CreateGroup.FORM, 1000, "[Create Group Form] is closed");
+            .click(GroupAdminWidget.GroupProperties.SUBMIT_BUTTON)
+            .click(GroupAdminWidget.Main.BACK_BUTTON)
+            .waitForElementNotPresent(GroupAdminWidget.GroupProperties.FORM, 1000, "[Create Group Form] is closed");
 
         browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_NAME);
 
@@ -417,7 +418,7 @@ module.exports = {
                             relevant_row = i;
                             browser.getAttribute(
                                 `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                    1}) div[role='row'] > div:last-child button[data-element-id='group-admin-widget-delete-button']`,
+                                    1}) div[role='row'] > div:last-child button[data-element-id='delete-button']`,
                                 "disabled",
                                 function(modifiedResult) {
                                     this.assert.equal(
@@ -430,7 +431,7 @@ module.exports = {
                         } else if ((result.value as string).trim().length > 0) {
                             browser.getAttribute(
                                 `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                    1}) div[role='row'] > div:last-child button[data-element-id='group-admin-widget-delete-button']`,
+                                    1}) div[role='row'] > div:last-child button[data-element-id='delete-button']`,
                                 "disabled",
                                 function(modifiedResult) {
                                     this.assert.equal(
@@ -447,7 +448,7 @@ module.exports = {
                 browser
                     .click(
                         `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
-                            1}) div[role='row'] > div:last-child button[data-element-id='group-admin-widget-delete-button']`
+                            1}) div[role='row'] > div:last-child button[data-element-id='delete-button']`
                     )
                     .pause(250)
                     .waitForElementPresent(
