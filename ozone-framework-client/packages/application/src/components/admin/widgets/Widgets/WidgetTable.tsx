@@ -8,7 +8,7 @@ import { Button, ButtonGroup, Intent } from "@blueprintjs/core";
 import { Column, TableCellRenderer } from "react-table";
 
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
-import { AdminTable } from "../../table/AdminTable";
+import { GenericTable } from "../../table/GenericTable";
 
 export interface WidgetCellActions {
     onDelete: (widget: WidgetDTO) => void;
@@ -17,11 +17,11 @@ export interface WidgetCellActions {
 export interface WidgetTableProps extends WidgetCellActions {
     data: WidgetDTO[];
     isLoading: boolean;
-    pageSize: number;
+    defaultPageSize: number;
 }
 
 export const WidgetTable: React.FC<WidgetTableProps> = (props) => {
-    const { data, isLoading, onDelete, pageSize } = props;
+    const { data, isLoading, onDelete, defaultPageSize } = props;
 
     const columns = useMemo(
         () =>
@@ -41,9 +41,14 @@ export const WidgetTable: React.FC<WidgetTableProps> = (props) => {
     );
 
     return (
-        <div className={styles.table}>
-            <AdminTable data={data} columns={columns} loading={isLoading} pageSize={pageSize} />
-        </div>
+        <GenericTable
+            items={data}
+            getColumns={() => columns}
+            reactTableProps={{
+                loading: isLoading,
+                defaultPageSize
+            }}
+        />
     );
 };
 

@@ -1,36 +1,37 @@
 import * as React from "react";
+import { Column } from "react-table";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { object, string } from "yup";
-
-import { FormError, TextField } from "../../../form";
 import { Button } from "@blueprintjs/core";
 
-interface UserEditProps {
-    onUpdate: (data: UserUpdateRequest) => Promise<boolean>;
-    user?: any;
+import { FormError, TextField } from "../../../form";
+import { UserCreateRequest, UserDTO, UserUpdateRequest } from "../../../../api/models/UserDTO";
+import * as styles from "./UserPropertiesForm.scss";
+
+interface UserPropertiesProps {
+    saveUser: (data: UserCreateRequest | UserUpdateRequest) => Promise<boolean>;
+    user: UserDTO | undefined;
 }
 
-import * as styles from "../Widgets.scss";
-import { UserUpdateRequest } from "../../../../api/models/UserDTO";
-
-export const UserPropertiesPanel: React.FC<UserEditProps> = ({ onUpdate, user }) => (
+export const UserPropertiesPanel: React.FC<UserPropertiesProps> = ({ saveUser, user }) => (
     <Formik
-        initialValues={user}
-        validationSchema={EditUserSchema}
-        onSubmit={async (values: UserUpdateRequest, actions: FormikActions<UserUpdateRequest>) => {
-            const isSuccess = await onUpdate(values);
+        initialValues={getInitialValues(user)}
+        validationSchema={UserSchema}
+        onSubmit={async (
+            newUser: UserCreateRequest | UserUpdateRequest,
+            actions: FormikActions<UserCreateRequest | UserUpdateRequest>
+        ) => {
+            const isSuccess = await saveUser(newUser);
             actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
             actions.setSubmitting(false);
 
-            if (isSuccess) {
-                actions.resetForm(values);
-            }
+            actions.resetForm(newUser);
         }}
     >
-        {(formik: FormikProps<UserUpdateRequest>) => (
+        {(formik: FormikProps<UserCreateRequest | UserUpdateRequest>) => (
             <Form className={styles.form}>
                 <div className={styles.formBody}>
-                    <TextField name="username" label="Username" disabled={true} />
+                    <TextField name="username" label="Username" disabled={user && user.id !== undefined} />
                     <TextField name="userRealName" label="Full Name" labelInfo="(required)" />
                     <TextField name="email" label="E-mail" labelInfo="(required)" />
 
@@ -50,10 +51,35 @@ export const UserPropertiesPanel: React.FC<UserEditProps> = ({ onUpdate, user })
     </Formik>
 );
 
-const EditUserSchema = object().shape({
+const UserSchema = object().shape({
+    username: string()
+        .matches(/^[a-zA-Z0-9_]+$/, { message: "Username must contain only alphanumeric or underscore characters." })
+        .required("Required"),
+
     userRealName: string().required("Required"),
 
     email: string()
         .required("Required")
         .email("Invalid e-mail address")
 });
+
+function getInitialValues(user: UserDTO | undefined): UserCreateRequest | UserUpdateRequest {
+    if (user) {
+        return convertDTOtoUpdateRequest(user);
+    } else {
+        return {
+            username: "",
+            userRealName: "",
+            email: ""
+        };
+    }
+}
+
+function convertDTOtoUpdateRequest(user: UserDTO): UserUpdateRequest {
+    return {
+        id: user.id,
+        username: user.username,
+        userRealName: user.userRealName,
+        email: user.email
+    };
+}
