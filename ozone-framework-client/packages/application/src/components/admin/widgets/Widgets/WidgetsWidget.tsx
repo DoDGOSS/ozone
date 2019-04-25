@@ -10,22 +10,16 @@ import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 
 import { GenericTable } from "../../table/GenericTable";
-import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
+import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { WidgetSetup } from "./WidgetSetup";
 
 import { isNil } from "../../../../utility";
 
 interface WidgetsWidgetState {
     widgets: WidgetDTO[];
-    filtered: WidgetDTO[];
-    filter: string;
     loading: boolean;
-    pageSize: number;
     showTable: boolean;
     showWidgetSetup: boolean;
-    showDelete: boolean;
-    confirmationMessage: string;
-    widgetToDelete: WidgetDTO | undefined;
     updatingWidget: any | undefined;
     widgetTypes: WidgetTypeReference[];
 }
@@ -34,7 +28,6 @@ interface WidgetsWidgetState {
 // Modify widget to take in widget values from administration menu and launch from menu
 // Pagination handling with client API
 // Style
-// Popup warning dialogue for deleting
 // Error handling for form
 
 enum WidgetWidgetSubSection {
@@ -43,21 +36,16 @@ enum WidgetWidgetSubSection {
 }
 
 export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
+    defaultPageSize: number = 15;
     constructor(props: any) {
         super(props);
 
         this.state = {
             widgets: [],
             widgetTypes: [],
-            filtered: [],
-            filter: "",
             loading: true,
-            pageSize: 15,
             showTable: true,
             showWidgetSetup: false,
-            showDelete: false,
-            confirmationMessage: "",
-            widgetToDelete: undefined,
             updatingWidget: undefined
         };
 
@@ -81,7 +69,9 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                         <GenericTable
                             items={this.state.widgets}
                             getColumns={this.columns}
-                            pageSize={this.state.pageSize}
+                            reactTableProps={{
+                                defaultPageSize: this.defaultPageSize
+                            }}
                         />
                         <div className={styles.buttonBar}>
                             <Button
@@ -108,15 +98,6 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                         />
                     </div>
                 )}
-
-                <ConfirmationDialog
-                    show={this.state.showDelete}
-                    title="Warning"
-                    content={this.state.confirmationMessage}
-                    confirmHandler={this.handleConfirmationConfirmDelete}
-                    cancelHandler={this.handleConfirmationCancel}
-                    payload={this.state.widgetToDelete}
-                />
             </div>
         );
     }
@@ -161,7 +142,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                                     icon="trash"
                                     small={true}
                                     disabled={this.widgetPotentiallyInUse(row.original)}
-                                    onClick={() => this.deleteWidget(row.original)}
+                                    onClick={() => this.confirmAndDeleteWidget(row.original)}
                                 />
                             </Tooltip>
                         </ButtonGroup>
@@ -208,40 +189,23 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
         this.getWidgets();
     }
 
-    private deleteWidget = async (widget: WidgetDTO) => {
-        this.setState({
-            showDelete: true,
-            confirmationMessage: `This action will permanently delete <strong>${widget.value.namespace}</strong>`,
-            widgetToDelete: widget
+    private confirmAndDeleteWidget = (widgetToRemove: WidgetDTO): void => {
+        console.log(widgetToRemove);
+        showConfirmationDialog({
+            title: "Warning",
+            message: `This action will permanently <strong>${widgetToRemove.value.namespace}</strong>`,
+            onConfirm: () => this.deleteWidget(widgetToRemove)
         });
-
-        this.getWidgets();
-
-        return true;
     };
 
-    private handleConfirmationConfirmDelete = async (payload: any) => {
-        this.setState({
-            showDelete: false,
-            widgetToDelete: undefined
-        });
-
-        const widget: WidgetDTO = payload;
-
+    private deleteWidget = async (widget: WidgetDTO) => {
         const response = await widgetApi.deleteWidget(widget.id);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;
 
-        this.getWidgets();
+        this.handleUpdate();
 
         return true;
-    };
-
-    private handleConfirmationCancel = (payload: any) => {
-        this.setState({
-            showDelete: false,
-            widgetToDelete: undefined
-        });
     };
 }

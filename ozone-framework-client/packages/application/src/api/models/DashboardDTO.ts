@@ -50,6 +50,7 @@ export interface DashboardUpdateRequest {
     isdefault?: boolean;
     layoutConfig?: string;
     locked?: boolean;
+    stack?: StackDTO;
     name: string;
 }
 

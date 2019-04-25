@@ -6,17 +6,18 @@ import * as uuidv4 from "uuid/v4";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { array, boolean, number, object, string } from "yup";
 
-import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../form";
-import { inPlaceConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
-import * as styles from "../Widgets.scss";
+import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../../form";
+import { showConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
+import * as styles from "../../Widgets.scss";
 
-import { userApi } from "../../../../api/clients/UserAPI";
+import { userApi } from "../../../../../api/clients/UserAPI";
 
-import { User } from "../../../../models/User";
-import { UserDTO } from "../../../../api/models/UserDTO";
-import { WidgetDTO } from "../../../../api/models/WidgetDTO";
-import { userFromJson } from "../../../../codecs/User.codec";
-import { GenericTable } from "../../table/GenericTable";
+import { User } from "../../../../../models/User";
+import { UserDTO } from "../../../../../api/models/UserDTO";
+import { WidgetDTO } from "../../../../../api/models/WidgetDTO";
+import { userFromJson } from "../../../../../codecs/User.codec";
+import { GenericTable } from "../../../table/GenericTable";
+import { DeleteButton } from "../../../table/TableButtons";
 import { UsersDialog } from "./UsersDialog";
 
 interface State {
@@ -88,7 +89,7 @@ export class UsersPanel extends React.Component<Props, State> {
             <div>
                 {dialog}
                 {this.getUserTable()}
-                <Button text="Add" onClick={this.openDialog} />
+                <Button text="Add" onClick={() => this.openDialog()} />
             </div>
         );
     }
@@ -97,11 +98,25 @@ export class UsersPanel extends React.Component<Props, State> {
         return (
             <UsersDialog
                 isOpen={this.state.dialogOpen}
-                onClose={this.closeDialog}
-                onSubmit={this.addSelectedUsers}
+                onClose={() => this.closeDialog()}
+                onSubmit={(selections: User[]) => this.addSelectedUsers(selections)}
                 allUsers={this.state.allUsers}
             />
         );
+    }
+
+    openDialog(): void {
+        this.getAllUsers().then(() =>
+            this.setState({
+                dialogOpen: true
+            })
+        );
+    }
+
+    closeDialog(): void {
+        this.setState({
+            dialogOpen: false
+        });
     }
 
     getUserTable() {
@@ -109,7 +124,7 @@ export class UsersPanel extends React.Component<Props, State> {
             <GenericTable
                 items={this.state.widgetUsers}
                 getColumns={() => [
-                    { Header: "Full Name", id: "username", accessor: (user: User) => user.username },
+                    { Header: "Full Name", id: "displayName", accessor: (user: User) => user.displayName },
                     { Header: "Last Sign In", id: "lastLogin", accessor: (user: User) => user.lastLogin },
                     { Header: "Actions", Cell: this.rowActionButtons }
                 ]}
@@ -121,49 +136,29 @@ export class UsersPanel extends React.Component<Props, State> {
         return (
             <div>
                 <ButtonGroup>
-                    <Button
-                        data-element-id="widget-admin-user-remove-button"
-                        data-widget-title={row.original.username}
-                        text={"Remove"}
-                        intent={Intent.DANGER}
-                        icon="trash"
-                        small={true}
-                        onClick={() => this.confirmAndDeleteUser(row.original)}
-                    />
+                    <DeleteButton onClick={() => this.confirmAndDeleteUser(row.original)} />
                 </ButtonGroup>
             </div>
         );
     };
 
-    confirmAndDeleteUser = (userToRemove: User): void => {
-        inPlaceConfirmationDialog({
+    confirmAndDeleteUser(userToRemove: User): void {
+        showConfirmationDialog({
             title: "Warning",
             message:
-                "This action will permenantly delete " +
+                "This action will permanently delete " +
                 userToRemove.displayName +
                 " from the widget " +
                 this.props.widget.displayName,
             onConfirm: () => this.removeUserAndSave(userToRemove)
         });
-    };
+    }
 
-    removeUserAndSave = (userToRemove: User): void => {
-        this.removeUser(userToRemove);
-        this.props.removeUser(userToRemove);
-    };
+    removeUserAndSave(userToRemove: User): void {
+        this.props.removeUser(userToRemove).then(() => this.getWidgetUsers());
+    }
 
-    openDialog = (): void => {
-        this.setState({
-            dialogOpen: true
-        });
-    };
-    closeDialog = (): void => {
-        this.setState({
-            dialogOpen: false
-        });
-    };
-
-    addSelectedUsers = (newSelections: User[]): void => {
+    addSelectedUsers(newSelections: User[]): void {
         const userList: User[] = [];
         for (const newUser of newSelections) {
             if (this.state.widgetUsers.findIndex((u) => newUser.id === u.id) !== -1) {
@@ -173,24 +168,7 @@ export class UsersPanel extends React.Component<Props, State> {
         }
 
         if (userList.length > 0) {
-            this.setState({
-                widgetUsers: [...this.state.widgetUsers, ...userList]
-            });
-            this.props.addUsers(userList);
+            this.props.addUsers(userList).then(() => this.getWidgetUsers());
         }
-    };
-
-    removeUser(user: User): void {
-        const userIndex = this.state.widgetUsers.findIndex((u) => user.id === u.id);
-        if (userIndex >= 0) {
-            this.state.widgetUsers.splice(userIndex, 1);
-        }
-        const userList = [];
-        for (const u of this.state.widgetUsers) {
-            userList.push(u);
-        }
-        this.setState({
-            widgetUsers: userList
-        });
     }
 }

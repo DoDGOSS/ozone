@@ -5,25 +5,17 @@ var Ozone = window.Ozone;
 Ozone.eventing = Ozone.eventing || {};
 Ozone.eventing.priv = Ozone.eventing.priv || {};
 
-// if (typeof JSON === 'undefined') {
-//     JSON = gadgets.json;
-// }
-
 (function (ozoneEventing) {
-
-    if (typeof JSON === 'undefined') {
-        var JSON = gadgets.json;
-    }
 
     //////////////////////////////////////////////////////////////////////////
     // private objects and functions
     //////////////////////////////////////////////////////////////////////////
 
-    var WIDGET_READY_SERVICE_NAME = '_widgetReady',
-        GET_WIDGET_READY_SERVICE_NAME = '_getWidgetReady',
-        config = null,
-        fnMap = {},
-        widgetProxyMap = {};
+    var WIDGET_READY_SERVICE_NAME = '_widgetReady';
+    var GET_WIDGET_READY_SERVICE_NAME = '_getWidgetReady';
+    var config = null;
+    var fnMap = {};
+    var widgetProxyMap = {};
 
     function getConfig() {
         if (config == null) {
@@ -73,7 +65,7 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
 
         var result = fnObj.fn.apply(fnObj.scope, fn_args[0]);
 
-        gadgets.rpc.call("..", 'FUNCTION_CALL_RESULT', null, widgetId, widgetIdCaller, fnName, result);
+        Ozone.internal.rpc.send('FUNCTION_CALL_RESULT', null, widgetId, widgetIdCaller, fnName, result);
     }
 
     function handleFunctionCallResult(widgetId, functionName, result) {
@@ -94,8 +86,7 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
 
     ozoneEventing.priv.clientEventNameToHandler = {};
 
-    ozoneEventing.after_container_init = function () {
-    };
+    ozoneEventing.after_container_init = function () {};
 
     //Record all public functions from a widget
     function getFunctionNames(functions) {
@@ -152,8 +143,7 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
      *        function center(lat, lon) { //do some centering }
      */
     function clientInitialize(publicFunctions, relayUrl) {
-        gadgets.rpc.setRelayUrl("..", getConfig().relayUrl, false, true);
-        gadgets.rpc.register("after_container_init", ozoneEventing.after_container_init);
+        Ozone.internal.rpc.register("after_container_init", ozoneEventing.after_container_init);
 
         publicFunctions = [].concat(publicFunctions);
         cacheFunctions(publicFunctions);
@@ -165,8 +155,6 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
             relayUrl = getRelayUrl(document.location.href);
         }
 
-//        gadgets.rpc.call("..", "TELL_FUNCTIONS", null, id, fnNames, relayUrl);
-
         //this rpc call must be consistent with OWF container_init
         var idString = '{\"id\":\"' + id + '\"}';
         var data = {
@@ -176,14 +164,14 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
             relayUrl:relayUrl
         };
         var dataString = JSON.stringify(data);
-        gadgets.rpc.call("..", "container_init", null, idString, dataString, fnNames);
+        Ozone.internal.rpc.send("container_init", null, idString, dataString, fnNames);
     }
 
     function registerFunctions(functions) {
         functions = [].concat(functions);
 
         cacheFunctions(functions);
-        gadgets.rpc.call("..", "register_functions", null, window.name, getFunctionNames(functions));
+        Ozone.internal.rpc.send("register_functions", null, window.name, getFunctionNames(functions));
     }
 
     /**
@@ -210,7 +198,7 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
 
         function processFunctionsFromContainer(functions) {
             proxy = createClientSideFunctionShims(widgetId, functions, proxy);
-            gadgets.rpc.call("..", GET_WIDGET_READY_SERVICE_NAME, function(isReady) {
+            Ozone.internal.rpc.send(GET_WIDGET_READY_SERVICE_NAME, function(isReady) {
                 if (isReady) {
                   proxy.fireReady();
                 }
@@ -221,7 +209,7 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
         var id = getIdFromWindowName();
         var srcWidgetIframeId = '{\"id\":\"' + id + '\"}';
 
-        gadgets.rpc.call("..", 'GET_FUNCTIONS', processFunctionsFromContainer, widgetId, srcWidgetIframeId);
+        Ozone.internal.rpc.send('GET_FUNCTIONS', processFunctionsFromContainer, widgetId, srcWidgetIframeId);
 
         return proxy;
     }
@@ -232,14 +220,14 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
     function addEventHandler(eventName, handler) {
         ozoneEventing.priv.clientEventNameToHandler[eventName] = handler;
         var widgetId = getIdFromWindowName();
-        gadgets.rpc.call("..", 'ADD_EVENT', null, widgetId, eventName);
+        Ozone.internal.rpc.send('ADD_EVENT', null, widgetId, eventName);
     }
 
     /**
      * Raise and event with a json payload
      */
     function raiseEvent(eventName, payload) {
-        gadgets.rpc.call("..", 'CALL_EVENT', null, eventName, payload);
+        Ozone.internal.rpc.send('CALL_EVENT', null, eventName, payload);
     }
 
     /**
@@ -247,7 +235,7 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
      */
     function closeDialog(payload) {
         document.body.display = "none";
-        gadgets.rpc.call("..", 'CLOSE_EVENT', null, getIdFromWindowName(), payload);
+        Ozone.internal.rpc.send('CLOSE_EVENT', null, getIdFromWindowName(), payload);
     }
 
     /**
@@ -261,21 +249,19 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
             handlerFn(widgetList);
         }
 
-        gadgets.rpc.call("..", 'LIST_WIDGETS', listResultHandler);
+        Ozone.internal.rpc.send('LIST_WIDGETS', listResultHandler);
     }
 
-    gadgets.rpc.register('DIRECT_MESSAGEL_CLIENT', handleDirectMessageWrapper);
-    gadgets.rpc.register("FUNCTION_CALL_CLIENT", handleFunctionCall);
-    gadgets.rpc.register("FUNCTION_CALL_RESULT_CLIENT", handleFunctionCallResult);
-    gadgets.rpc.register("EVENT_CLIENT", handleEventCall);
-    gadgets.rpc.register(WIDGET_READY_SERVICE_NAME, function (widgetId) {
+    Ozone.internal.rpc.register('DIRECT_MESSAGEL_CLIENT', handleDirectMessageWrapper);
+    Ozone.internal.rpc.register("FUNCTION_CALL_CLIENT", handleFunctionCall);
+    Ozone.internal.rpc.register("FUNCTION_CALL_RESULT_CLIENT", handleFunctionCallResult);
+    Ozone.internal.rpc.register("EVENT_CLIENT", handleEventCall);
+    Ozone.internal.rpc.register(WIDGET_READY_SERVICE_NAME, function (widgetId) {
         var wproxy = widgetProxyMap[widgetId];
         if (wproxy != null) {
             wproxy.fireReady();
         }
     });
-
-
 
     ozoneEventing.clientInitialize = clientInitialize;
     ozoneEventing.registerFunctions = registerFunctions;

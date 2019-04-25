@@ -573,14 +573,14 @@ dojo.global = {
 		_moduleHasPrefix: function(/*String*/module){
 			// summary: checks to see if module has been established
 			var mp = d._modulePrefixes;
-			return !!(mp[module] && mp[module].message); // Boolean
+			return !!(mp[module] && mp[module].value); // Boolean
 		},
 
 		_getModulePrefix: function(/*String*/module){
 			// summary: gets the prefix associated with module
 			var mp = d._modulePrefixes;
 			if(d._moduleHasPrefix(module)){
-				return mp[module].message; // String
+				return mp[module].value; // String
 			}
 			return module; // String
 		},
@@ -5315,7 +5315,7 @@ if(dojo.isIE || dojo.isOpera){
 		var _d = doc || dojo.doc, te = _d.getElementById(id);
 		// attributes.id.value is better than just id in case the 
 		// user has a name=id inside a form
-		if(te && (te.attributes.id.message == id || te.id == id)){
+		if(te && (te.attributes.id.value == id || te.id == id)){
 			return te;
 		}else{
 			var eles = _d.all[id];
@@ -5325,7 +5325,7 @@ if(dojo.isIE || dojo.isOpera){
 			// if more than 1, choose first with the correct id
 			var i=0;
 			while((te=eles[i++])){
-				if((te.attributes && te.attributes.id && te.attributes.id.message == id)
+				if((te.attributes && te.attributes.id && te.attributes.id.value == id)
 					|| te.id == id){
 					return te;
 				}
@@ -8822,7 +8822,7 @@ if(typeof dojo != "undefined"){
 			each(query.pseudos, function(pseudo){
 				var pn = pseudo.name;
 				if(pseudos[pn]){
-					ff = agree(ff, pseudos[pn](pn, pseudo.message));
+					ff = agree(ff, pseudos[pn](pn, pseudo.value));
 				}
 			});
 		}
@@ -9663,16 +9663,16 @@ dojo.provide("dojo._base.xhr");
 			var type = (item.type||"").toLowerCase();
 			if(_in && type && !item.disabled){
 				if(type == "radio" || type == "checkbox"){
-					if(item.checked){ ret = item.message }
+					if(item.checked){ ret = item.value }
 				}else if(item.multiple){
 					ret = [];
 					_d.query("option", item).forEach(function(opt){
 						if(opt.selected){
-							ret.push(opt.message);
+							ret.push(opt.value);
 						}
 					});
 				}else{
-					ret = item.message;
+					ret = item.value;
 				}
 			}
 		}
@@ -11620,16 +11620,169 @@ dojox.secure.capability = {
 })();
 
 
+// @ts-ignore
+window.Ozone = window.Ozone || {};
+// @ts-ignore
+var Ozone = window.Ozone;
+// @ts-ignore
+var Ozone;
+(function (Ozone) {
+    var util;
+    (function (util) {
+        var internal;
+        (function (internal) {
+            internal.isIE = owfdojo.isIE;
+            internal.isFF = owfdojo.isFF;
+            internal.keys = {
+                ESCAPE: 27,
+                PAGE_UP: 33,
+                PAGE_DOWN: 34,
+                HOME: 36,
+                LEFT_ARROW: 37,
+                UP_ARROW: 38,
+                RIGHT_ARROW: 39,
+                DOWN_ARROW: 40
+            };
+            function isArray(value) {
+                if (value === null)
+                    return null;
+                if (value === undefined)
+                    return undefined;
+                return Array.isArray(value);
+            }
+            internal.isArray = isArray;
+            function isArrayStrict(value) {
+                return Array.isArray(value);
+            }
+            internal.isArrayStrict = isArrayStrict;
+            function isFunction(value) {
+                return Object.prototype.toString.call(value) === "[object Function]";
+            }
+            internal.isFunction = isFunction;
+            function isObject(value) {
+                return value !== undefined && (value === null || typeof value === "object" || isArray(value) || isFunction(value));
+            }
+            internal.isObject = isObject;
+            function isString(value) {
+                return typeof (value) === "string" || value instanceof String;
+            }
+            internal.isString = isString;
+            function asArray(value) {
+                return !isArray(value) ? [value] : value;
+            }
+            internal.asArray = asArray;
+            function isNil(value) {
+                return value === undefined || value === null;
+            }
+            internal.isNil = isNil;
+            function forEach(dictionary, iteratee) {
+                if (isNil(dictionary) || isNil(iteratee))
+                    return;
+                for (var key in dictionary) {
+                    if (dictionary.hasOwnProperty(key)) {
+                        iteratee(dictionary[key]);
+                    }
+                }
+            }
+            internal.forEach = forEach;
+            function forFirst(dictionary, predicate, iteratee) {
+                if (isNil(dictionary) || isNil(iteratee))
+                    return false;
+                for (var key in dictionary) {
+                    if (dictionary.hasOwnProperty(key)) {
+                        var value = dictionary[key];
+                        if (predicate(value)) {
+                            iteratee(dictionary[key]);
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            internal.forFirst = forFirst;
+            function onDocumentReady(callback) {
+                document.addEventListener("DOMContentLoaded", function (event) { callback(); });
+            }
+            internal.onDocumentReady = onDocumentReady;
+            function encodeQueryObject(obj) {
+                return Object.keys(obj).map(function (key) {
+                    var param = obj[key];
+                    return isArrayStrict(param) ? encodeQueryArray(key, param) : encodeQueryParameter(key, param);
+                }).join('&');
+            }
+            internal.encodeQueryObject = encodeQueryObject;
+            function encodeQueryArray(key, values) {
+                return values.map(function (value) { return encodeQueryParameter(key, value); }).join("&");
+            }
+            function encodeQueryParameter(key, value) {
+                return encodeURIComponent(key) + '=' + encodeURIComponent(value);
+            }
+            function mixin(object) {
+                var props = [];
+                for (var _i = 1; _i < arguments.length; _i++) {
+                    props[_i - 1] = arguments[_i];
+                }
+                if (!object) {
+                    object = {};
+                }
+                for (var i = 1, l = arguments.length; i < l; i++) {
+                    _mixin(object, arguments[i]);
+                }
+                return object;
+            }
+            internal.mixin = mixin;
+            /* tslint:disable:forin */
+            function _mixin(target, source) {
+                var extraNames = ["hasOwnProperty", "valueOf", "isPrototypeOf", "propertyIsEnumerable", "toLocaleString", "toString", "constructor"];
+                var extraLen = extraNames.length;
+                var empty = {};
+                var i;
+                for (var name_1 in source) {
+                    // the "tobj" condition avoid copying properties in "source"
+                    // inherited from Object.prototype.  For example, if target has a custom
+                    // toString() method, don't overwrite it with the toString() method
+                    // that source inherited from Object.prototype
+                    var s = source[name_1];
+                    if (!(name_1 in target) || (target[name_1] !== s && (!(name_1 in empty) || empty[name_1] !== s))) {
+                        target[name_1] = s;
+                    }
+                }
+                // IE doesn't recognize some custom functions in for..in
+                if (extraLen && source) {
+                    for (i = 0; i < extraLen; ++i) {
+                        var name_2 = extraNames[i];
+                        var s = source[name_2];
+                        if (!(name_2 in target) || (target[name_2] !== s && (!(name_2 in empty) || empty[name_2] !== s))) {
+                            target[name_2] = s;
+                        }
+                    }
+                }
+                return target; // Object
+            }
+            function sendByWindowName(method, args) {
+                return owfdojox.io.windowName.send(method, args);
+            }
+            internal.sendByWindowName = sendByWindowName;
+            function xhr(method, args, hasBody) {
+                return owfdojo.xhr(method, args, hasBody);
+            }
+            internal.xhr = xhr;
+            function createDeferred(canceller) {
+                return new owfdojo.Deferred(canceller);
+            }
+            internal.createDeferred = createDeferred;
+        })(internal = util.internal || (util.internal = {}));
+    })(util = Ozone.util || (Ozone.util = {}));
+})(Ozone || (Ozone = {}));
+
 /**
  * @fileoverview Basic auditing capability.  Audit info is sent to the server, which then 
  *      routes the info to the lof4j handler (which can then route it to any other 
  *      needed handler).
  */
 
-/**
- * @namespace
- */
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @namespace
@@ -11655,10 +11808,9 @@ Ozone.audit.log = function(data) {
     });
 };
 
-/**
- * @ignore
- */
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 /**
  * @ignore
  */
@@ -11697,7 +11849,9 @@ Ozone.util.pageLoad.calcLoadTime = function(time) {
   return Ozone.util.pageLoad.loadTime;
 };
 
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 Ozone.version = Ozone.version || {};
 
 Ozone.version = {
@@ -11724,10 +11878,9 @@ Ozone.version = {
 
 };
 
-/**
- * @ignore
- */
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 Ozone.util = Ozone.util || {};
 Ozone.util.formField = Ozone.util.formField || {};
 Ozone.config = Ozone.config || {};
@@ -11782,25 +11935,18 @@ Ozone.util.isUrlLocal = function(url) {
 /**
  * @private
  *
- * @description This method will convert a string into a json object.  There is a check
- * done to ensure no unsafe json is included.
+ * @description This method will convert a string into a json object.
  *
  * @param {String} str String that represents a json object
  *
  * @returns {Object} json object
  *
  * @throws Error if parameter is not a string
- * @throws Error if secure check finds unsafe JSON
  * @throws Error if there is an issue converting to JSON
- *
- * @requires dojox.secure.capability
- * @requires dojo base
  */
 Ozone.util.parseJson = function(str) {
-    if (typeof(str) === 'string') {
-        owfdojox.secure.capability.validate(str,[],{}); // will error if there is unsafe JSON
-        var x = owfdojo.fromJson(str);
-        return x;
+    if (Ozone.util.internal.isString(str)) {
+        return JSON.parse(str);
     } else {
         throw "Ozone.util.parseJson expected a string, but didn't get one";
     }
@@ -11836,9 +11982,7 @@ Ozone.util.parseWindowNameData = function() {
 
     //parse out the config
     try {
-      configParams = Ozone.util.parseJson(
-              window.name
-      );
+      configParams = Ozone.util.parseJson(window.name);
       return configParams;
     }
     catch (e) {
@@ -11855,12 +11999,8 @@ Ozone.util.parseWindowNameData = function() {
  * calling a controller at the server (will not
  * make the call if it has already been done).
  *
- * @param {Object} o unused
- *
  * @returns context path with leading slash
  *          (ex. "/owf")
- *
- * @requires Ext base, dojo
  */
 Ozone.util.contextPath = (function() {
     var configParams = Ozone.util.parseWindowNameData(),
@@ -11928,12 +12068,10 @@ Ozone.util.getContainerRelay = function() {
  * @param {Object} obj object to convert
  *
  * @returns string
- *
- * @requires dojo base
  */
 Ozone.util.toString = function(obj) {
-    if (typeof(obj) === 'object') {
-        return owfdojo.toJson(obj);
+    if (Ozone.util.internal.isObject(obj)) {
+        return JSON.stringify(obj);
     } else {
         return obj+'';
     }
@@ -11943,8 +12081,6 @@ Ozone.util.toString = function(obj) {
  * @private
  */
 Ozone.util.formatWindowNameData = function(data) {
-    // this value needs to be not uri encoded
-    // return decodeURIComponent(owfdojo.objectToQuery(data));
     return Ozone.util.toString(data);
 };
 
@@ -12493,35 +12629,43 @@ Ozone.util._findByReceiveIntent = function (array, intent) {
  * @param url The URL to match on
  */
 Ozone.util.findWidgetDefinitionByLongestUrlMatch = function(url) {
-    var store = Ext.StoreManager.lookup('widgetStore'),
-        match = null;
+    throw new Error("Deprecated");
 
-    if (!url) return null;
-
-    store.each(function(widget) {
-        var widgetUrl = widget.get('url');
-
-        //if this url is the beginning of the url in question
-        if (url.indexOf(widgetUrl) === 0) {
-            //if this is a better match than the previous best
-            if (!match || match.get('url').length < widgetUrl.length) {
-                match = widget;
-            }
-        }
-    });
-
-    return match;
+    // var store = Ext.StoreManager.lookup('widgetStore'),
+    //     match = null;
+    //
+    // if (!url) return null;
+    //
+    // store.each(function(widget) {
+    //     var widgetUrl = widget.get('url');
+    //
+    //     //if this url is the beginning of the url in question
+    //     if (url.indexOf(widgetUrl) === 0) {
+    //         //if this is a better match than the previous best
+    //         if (!match || match.get('url').length < widgetUrl.length) {
+    //             match = widget;
+    //         }
+    //     }
+    // });
+    //
+    // return match;
 };
 
 /**
  * Given and Ext model, creates a Backbone model holding the same data.
  */
 Ozone.util.convertExtModelToBackboneModel = function(extModel) {
-    return new Backbone.Model(extModel.data);
+    throw new Error("Deprecated");
+
+    // return new Backbone.Model(extModel.data);
 };
 
-var guid = guid || {};
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
+window.guid = window.guid || {};
+var guid = window.guid || {};
+
 Ozone.util = Ozone.util || {};
 
 guid.util = function() {
@@ -12543,11 +12687,14 @@ guid.util = function() {
 Ozone.util.guid = function() {
     return guid.util.guid();
 }
+
 /*
  * This file contains constant definitions that define global OWF hotkeys
  */
 
-Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 Ozone.components = Ozone.components || {};
 Ozone.components.keys = Ozone.components.keys || {};
 Ozone.components.keys.EVENT_NAME = 'keyup'; //keyup only fires once, which is what we want. keydown may fire repeatedly
@@ -12596,9 +12743,9 @@ Ozone.components.keys.MoveHotKeys = Ozone.components.keys.MoveHotKeys || {};
 
     k.LOGOUT = { key: 'O'.charCodeAt(0) }; //O for 'out'
 
-    k.PREVIOUS_DASHBOARD = { key: owfdojo.keys.PAGE_UP }; 
+    k.PREVIOUS_DASHBOARD = { key: Ozone.util.internal.keys.PAGE_UP };
     
-    k.NEXT_DASHBOARD = { key: owfdojo.keys.PAGE_DOWN };
+    k.NEXT_DASHBOARD = { key: Ozone.util.internal.keys.PAGE_DOWN };
 
     k.DASHBOARD_SWITCHER = {
         key: 'C'.charCodeAt(0),
@@ -12610,22 +12757,22 @@ Ozone.components.keys.MoveHotKeys = Ozone.components.keys.MoveHotKeys || {};
         exclusive: true
     }; 
     
-    k.DEFAULT_DASHBOARD = { key: owfdojo.keys.HOME };
+    k.DEFAULT_DASHBOARD = { key: Ozone.util.internal.keys.HOME };
     
     k.CLOSE_WIDGET = { key: 'W'.charCodeAt(0) }; 
     
     k.MAXIMIZE_COLLAPSE_WIDGET = { 
-        key: owfdojo.keys.UP_ARROW,
+        key: Ozone.util.internal.keys.UP_ARROW,
         focusParent: false
     };
     
     k.MINIMIZE_EXPAND_WIDGET = { 
-        key: owfdojo.keys.DOWN_ARROW,
+        key: Ozone.util.internal.keys.DOWN_ARROW,
         focusParent: false
     };
     
     k.ESCAPE_FOCUS = { 
-        key: owfdojo.keys.ESCAPE,
+        key: Ozone.util.internal.keys.ESCAPE,
         //the escape key should not use alt+shift
         alt: false,
         shift: false
@@ -12677,16 +12824,16 @@ Ozone.components.keys.MoveHotKeys = Ozone.components.keys.MoveHotKeys || {};
 
     var moveKeys = Ozone.components.keys.MoveHotKeys;
     moveKeys.MOVE_UP = {
-        key: owfdojo.keys.UP_ARROW
+        key: Ozone.util.internal.keys.UP_ARROW
     };
     moveKeys.MOVE_RIGHT = {
-        key: owfdojo.keys.RIGHT_ARROW
+        key: Ozone.util.internal.keys.RIGHT_ARROW
     };
     moveKeys.MOVE_DOWN = {
-        key: owfdojo.keys.DOWN_ARROW
+        key: Ozone.util.internal.keys.DOWN_ARROW
     };
     moveKeys.MOVE_LEFT = {
-        key: owfdojo.keys.LEFT_ARROW
+        key: Ozone.util.internal.keys.LEFT_ARROW
     };
 
     for (key_i in moveKeys) {
@@ -12708,109 +12855,80 @@ Ozone.components.keys.MoveHotKeys = Ozone.components.keys.MoveHotKeys || {};
 })();
 
 
-Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 Ozone.components = Ozone.components || {};
 Ozone.components.keys = Ozone.components.keys || {};
 
 Ozone.components.keys.createKeyEventSender = function(widgetEventingController) {
-    var keyChannelName = '_keyEvent',
-        rpc = gadgets.rpc,
-        callrpc = rpc.call;
 
-    
-    rpc.register('_focus_widget_window', function() {
+    var _ = Ozone.util.internal;
+
+    Ozone.internal.rpc.register("_focus_widget_window", function() {
         try {
             window.focus();
-        }
-        catch(e) {}
-    });
-
-    callrpc('..', '_widget_iframe_ready', null, widgetEventingController.getWidgetId());
-
-    owfdojo.connect(document, 'on' + Ozone.components.keys.EVENT_NAME, this, function(keyevent) {
-        var keys = Ozone.components.keys.HotKeys,
-            key, found = false;
-
-        for (var key_i in keys) {
-            key = keys[key_i];
-
-            if (key.key === keyevent.keyCode 
-                && key.alt === keyevent.altKey
-                && key.shift === keyevent.shiftKey) {
-
-                if(key.focusParent === true) {
-                    parent.focus();
-                    //window.blur();
-                }
-
-                callrpc('..', '_key_eventing', null, widgetEventingController.getWidgetId(), {
-                    keyCode: keyevent.keyCode,
-                    altKey: keyevent.altKey,
-                    shiftKey: keyevent.shiftKey,
-                    focusParent: key.focusParent
-                });
-
-                found = true;
-                break;  //in case the same key is in keys twice, we still only want
-                        //to send one event
-            }
-        }
-
-        if(found === true) {
-            return;
-        }
-
-        keys = Ozone.components.keys.MoveHotKeys;
-
-        for (var key_i in keys) {
-            key = keys[key_i];
-
-            if (key.key === keyevent.keyCode 
-                && key.ctrl === keyevent.ctrlKey
-                && key.alt === keyevent.altKey
-                && key.shift === keyevent.shiftKey) {
-                
-                callrpc('..', '_key_eventing', null, widgetEventingController.getWidgetId(), {
-                    keyCode: keyevent.keyCode,
-                    ctrlKey: keyevent.ctrlKey,
-                    altKey: keyevent.altKey,
-                    shiftKey: keyevent.shiftKey,
-                    focusParent: key.focusParent
-                });
-
-                break;
-            }
+        } catch (e) {
         }
     });
 
-    owfdojo.connect(document, 'onkeydown', this, function(keyevent) {
-        var keys = Ozone.components.keys.MoveHotKeys,
-            key;
+    Ozone.internal.rpc.send("_widget_iframe_ready", null, widgetEventingController.getWidgetId());
 
-        for (var key_i in keys) {
-            key = keys[key_i];
+    function keyMatches(event, includeCtrl) {
+        return function (key) {
+            return (
+                key.key === event.keyCode &&
+                (includeCtrl ? key.ctrl === event.ctrlKey : true) &&
+                key.alt === event.altKey &&
+                key.shift === event.shiftKey
+            );
+        };
+    }
 
-            if (key.key === keyevent.keyCode 
-                && key.ctrl === keyevent.ctrlKey
-                && key.alt === keyevent.altKey
-                && key.shift === keyevent.shiftKey) {
-
-                callrpc('..', '_key_eventing', null, widgetEventingController.getWidgetId(), {
-                    keyCode: keyevent.keyCode,
-                    ctrlKey: keyevent.ctrlKey,
-                    altKey: keyevent.altKey,
-                    shiftKey: keyevent.shiftKey,
-                    keydown: true,
-                    focusParent: key.focusParent
-                });
-
-                break;
+    document.addEventListener("keyup", function (event) {
+        var found = _.forFirst(Ozone.components.keys.HotKeys, keyMatches(event), function (key) {
+            if (key.focusParent === true) {
+                parent.focus();
             }
-        }
+
+            Ozone.internal.rpc.send("_key_eventing", null, widgetEventingController.getWidgetId(), {
+                keyCode: event.keyCode,
+                altKey: event.altKey,
+                shiftKey: event.shiftKey,
+                focusParent: key.focusParent
+            });
+        });
+        if (found) return;
+
+        _.forFirst(Ozone.components.keys.MoveHotKeys, keyMatches(event, true), function (key) {
+            Ozone.internal.rpc.send("_key_eventing", null, widgetEventingController.getWidgetId(), {
+                keyCode: event.keyCode,
+                ctrlKey: event.ctrlKey,
+                altKey: event.altKey,
+                shiftKey: event.shiftKey,
+                focusParent: key.focusParent
+            });
+        });
     });
+
+    document.addEventListener("keydown", function (event) {
+        _.forFirst(Ozone.components.keys.MoveHotKeys, keyMatches(event, true), function (key) {
+            Ozone.internal.rpc.send("_key_eventing", null, widgetEventingController.getWidgetId(), {
+                keyCode: event.keyCode,
+                ctrlKey: event.ctrlKey,
+                altKey: event.altKey,
+                shiftKey: event.shiftKey,
+                keydown: true,
+                focusParent: key.focusParent
+            });
+        });
+    });
+
 };
 
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 Ozone.layout = Ozone.layout || {};
 Ozone.ux = Ozone.ux || {};
 Ozone.util = Ozone.util || {};
@@ -13453,7 +13571,9 @@ Date.CultureInfo = {
  * per                 per
  */
 
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 Ozone.util = Ozone.util || {};
 
 
@@ -13573,7 +13693,7 @@ Ozone.util.Transport.send = function(cfg) {
 
     // Use AJAX if we can
     if (Ozone.util.isUrlLocal(cfg.url) && !cfg.forceXdomain) {
-        return owfdojo.xhr(methodToUse.toUpperCase(), {
+        return Ozone.util.internal.xhr(methodToUse.toUpperCase(), {
             url: cfg.url,
             content: cfg.content,
             preventCache: true,
@@ -13600,8 +13720,8 @@ Ozone.util.Transport.send = function(cfg) {
             },
             error: function(response, ioArgs) {
                 if (response.dojoType=='cancel') { return; }
-                if (cfg.ignoredErrorCodes != null && cfg.ignoredErrorCodes.length > 0 && 
-                        owfdojo.indexOf(cfg.ignoredErrorCodes,response.status) > -1){
+                if (cfg.ignoredErrorCodes != null && cfg.ignoredErrorCodes.length > 0 &&
+                        cfg.ignoredErrorCodes.indexOf(response.status) > -1){
                     cfg.onSuccess({});
                 }
                 else {
@@ -13658,7 +13778,7 @@ Ozone.util.Transport.send = function(cfg) {
             if (methodToUse == "PUT" || methodToUse == "DELETE") {
                 methodToUse = "POST";
             }
-            var deferred = owfdojox.io.windowName.send(methodToUse.toUpperCase(), {
+            var deferred = Ozone.util.internal.sendByWindowName(methodToUse.toUpperCase(), {
                 url: cfg.url,
                 content: content,
                 preventCache: true,
@@ -13693,7 +13813,7 @@ Ozone.util.Transport.send = function(cfg) {
                             cfg.onFailure(json.data);
                         }
                         //if it is an error code we ignore than call onSuccess with empty data
-                        else if (cfg.ignoredErrorCodes != null && cfg.ignoredErrorCodes.length > 0 && owfdojo.indexOf(cfg.ignoredErrorCodes,json.status) > -1){
+                        else if (cfg.ignoredErrorCodes != null && cfg.ignoredErrorCodes.length > 0 && cfg.ignoredErrorCodes.indexOf(json.status) > -1){
                             cfg.onSuccess({});
                         }
                         else {
@@ -13776,7 +13896,7 @@ Ozone.util.Transport.sendAndForget = function(cfg) {
 
     var content = null;
     if (methodToUse == "GET") {
-        content = owfdojo.objectToQuery(cfg.content);
+        content = Ozone.util.internal.encodeQueryObject(cfg.content);
     }
     else {
         content = cfg.content;
@@ -13788,7 +13908,7 @@ Ozone.util.Transport.sendAndForget = function(cfg) {
 
     // Use AJAX if we can
     if (Ozone.util.isUrlLocal(cfg.url)) {
-        owfdojo.xhr(methodToUse.toUpperCase(), {
+        Ozone.util.internal.xhr(methodToUse.toUpperCase(), {
             url: cfg.url,
             content: cfg.content,
             preventCache: true,
@@ -13819,7 +13939,7 @@ Ozone.util.Transport.sendAndForget = function(cfg) {
             {
                 methodToUse = "POST";
             }
-            var deferred = owfdojox.io.windowName.send(methodToUse.toUpperCase(), {
+            var deferred = Ozone.util.internal.sendByWindowName(methodToUse.toUpperCase(), {
                 url: cfg.url,
                 content: content,
                 preventCache: true
@@ -13897,7 +14017,7 @@ Ozone.util.Transport.sendWithCors = function(cfg) {
     }
 
     var xhr = new XMLHttpRequest();
-    var deferred = new owfdojo.Deferred(function() { /* canceler */ xhr.abort();} );
+    var deferred = Ozone.util.internal.createDeferred(function() { /* canceler */ xhr.abort();} );
 
     var onFailure = function(e) {
         if (cfg.onFailure) {
@@ -14135,10 +14255,12 @@ Ozone.util.Transport.isWindowNameBroken = (function() {
         trident = Number(trident[1]);
     }
 
-    return (owfdojo.isIE && owfdojo.isIE >= 10) || trident >= 7;
+    return (Ozone.util.internal.isIE && Ozone.util.internal.isIE >= 10) || trident >= 7;
 })();
 
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 /**
  * @namespace
  * @description Provides OWF utility methods for the widget developer
@@ -14223,1784 +14345,216 @@ Ozone.util.getFlashApp = function(id) {
         return document[id];
     }
 };
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 
-var gadgets = gadgets || {};
-
-/**
- * @fileoverview General purpose utilities that gadgets can use.
- */
-
-/**
- * @static
- * @class Provides general-purpose utility functions.
- * @name gadgets.util
- */
-
-gadgets.util = function() {
-  /**
-   * Parses URL parameters into an object.
-   * @return {Array.&lt;String&gt;} The parameters
-   */
-  function parseUrlParams() {
-    // Get settings from url, 'hash' takes precedence over 'search' component
-    // don't use document.location.hash due to browser differences.
-    var query;
-    var l = document.location.href;
-    var queryIdx = l.indexOf("?");
-    var hashIdx = l.indexOf("#");
-    if (hashIdx === -1) {
-      query = l.substr(queryIdx + 1);
-    } else {
-      // essentially replaces "#" with "&"
-      query = [l.substr(queryIdx + 1, hashIdx - queryIdx - 1), "&",
-               l.substr(hashIdx + 1)].join("");
-    }
-    return query.split("&");
-  }
-
-  var parameters = null;
-  var features = {};
-  var onLoadHandlers = [];
-
-  // Maps code points to the value to replace them with.
-  // If the value is "false", the character is removed entirely, otherwise
-  // it will be replaced with an html entity.
-  var escapeCodePoints = {
-   // nul; most browsers truncate because they use c strings under the covers.
-   0 : false,
-   // new line
-   10 : true,
-   // carriage return
-   13 : true,
-   // double quote
-   34 : true,
-   // single quote
-   39 : true,
-   // less than
-   60 : true,
-   // greater than
-   62 : true,
-   // Backslash
-   92 : true,
-   // line separator
-   8232 : true,
-   // paragraph separator
-   8233 : true
-  };
-
-  /**
-   * Regular expression callback that returns strings from unicode code points.
-   *
-   * @param {Array} match Ignored
-   * @param {String} value The codepoint value to convert
-   * @return {String} The character corresponding to value.
-   */
-  function unescapeEntity(match, value) {
-    return String.fromCharCode(value);
-  }
-
-  /**
-   * Initializes feature parameters.
-   */
-  function init(config) {
-    features = config["core.util"] || {};
-  }
-  if (gadgets.config) {
-    gadgets.config.register("core.util", null, init);
-  }
-
-  return /** @scope gadgets.util */ {
-
-    /**
-     * Gets the URL parameters.
-     *
-     * @return {Object} Parameters passed into the query string
-     * @member gadgets.util
-     * @private Implementation detail.
-     */
-    getUrlParameters : function () {
-      if (parameters !== null) {
-        return parameters;
-      }
-      parameters = {};
-      var pairs = parseUrlParams();
-      var unesc = window.decodeURIComponent ? decodeURIComponent : unescape;
-      for (var i = 0, j = pairs.length; i < j; ++i) {
-        var pos = pairs[i].indexOf('=');
-        if (pos === -1) {
-          continue;
-        }
-        var argName = pairs[i].substring(0, pos);
-        var value = pairs[i].substring(pos + 1);
-        // difference to IG_Prefs, is that args doesn't replace spaces in
-        // argname. Unclear on if it should do:
-        // argname = argname.replace(/\+/g, " ");
-        value = value.replace(/\+/g, " ");
-        parameters[argName] = unesc(value);
-      }
-      return parameters;
-    },
-
-    /**
-     * Creates a closure that is suitable for passing as a callback.
-     * Any number of arguments
-     * may be passed to the callback;
-     * they will be received in the order they are passed in.
-     *
-     * @param {Object} scope The execution scope; may be null if there is no
-     *     need to associate a specific instance of an object with this
-     *     callback
-     * @param {Function} callback The callback to invoke when this is run;
-     *     any arguments passed in will be passed after your initial arguments
-     * @param {Object} var_args Initial arguments to be passed to the callback
-     *
-     * @member gadgets.util
-     * @private Implementation detail.
-     */
-    makeClosure : function (scope, callback, var_args) {
-      // arguments isn't a real array, so we copy it into one.
-      var baseArgs = [];
-      for (var i = 2, j = arguments.length; i < j; ++i) {
-       baseArgs.push(arguments[i]);
-      }
-      return function() {
-        // append new arguments.
-        var tmpArgs = baseArgs.slice();
-        for (var i = 0, j = arguments.length; i < j; ++i) {
-          tmpArgs.push(arguments[i]);
-        }
-        return callback.apply(scope, tmpArgs);
-      };
-    },
-
-    /**
-     * Utility function for generating an "enum" from an array.
-     *
-     * @param {Array.<String>} values The values to generate.
-     * @return {Map&lt;String,String&gt;} An object with member fields to handle
-     *   the enum.
-     *
-     * @private Implementation detail.
-     */
-    makeEnum : function (values) {
-      var obj = {};
-      for (var i = 0, v; v = values[i]; ++i) {
-        obj[v] = v;
-      }
-      return obj;
-    },
-
-    /**
-     * Gets the feature parameters.
-     *
-     * @param {String} feature The feature to get parameters for
-     * @return {Object} The parameters for the given feature, or null
-     *
-     * @member gadgets.util
-     */
-    getFeatureParameters : function (feature) {
-      return typeof features[feature] === "undefined"
-          ? null : features[feature];
-    },
-
-    /**
-     * Returns whether the current feature is supported.
-     *
-     * @param {String} feature The feature to test for
-     * @return {Boolean} True if the feature is supported
-     *
-     * @member gadgets.util
-     */
-    hasFeature : function (feature) {
-      return typeof features[feature] !== "undefined";
-    },
-
-    /**
-     * Registers an onload handler.
-     * @param {Function} callback The handler to run
-     *
-     * @member gadgets.util
-     */
-    registerOnLoadHandler : function (callback) {
-      onLoadHandlers.push(callback);
-    },
-
-    /**
-     * Runs all functions registered via registerOnLoadHandler.
-     * @private Only to be used by the container, not gadgets.
-     */
-    runOnLoadHandlers : function () {
-      for (var i = 0, j = onLoadHandlers.length; i < j; ++i) {
-        onLoadHandlers[i]();
-      }
-    },
-
-    /**
-     * Escapes the input using html entities to make it safer.
-     *
-     * If the input is a string, uses gadgets.util.escapeString.
-     * If it is an array, calls escape on each of the array elements
-     * if it is an object, will only escape all the mapped keys and values if
-     * the opt_escapeObjects flag is set. This operation involves creating an
-     * entirely new object so only set the flag when the input is a simple
-     * string to string map.
-     * Otherwise, does not attempt to modify the input.
-     *
-     * @param {Object} input The object to escape
-     * @param {Boolean} opt_escapeObjects Whether to escape objects.
-     * @return {Object} The escaped object
-     * @private Only to be used by the container, not gadgets.
-     */
-    escape : function(input, opt_escapeObjects) {
-      if (!input) {
-        return input;
-      } else if (typeof input === "string") {
-        return gadgets.util.escapeString(input);
-      } else if (typeof input === "array") {
-        for (var i = 0, j = input.length; i < j; ++i) {
-          input[i] = gadgets.util.escape(input[i]);
-        }
-      } else if (typeof input === "object" && opt_escapeObjects) {
-        var newObject = {};
-        for (var field in input) if (input.hasOwnProperty(field)) {
-          newObject[gadgets.util.escapeString(field)]
-              = gadgets.util.escape(input[field], true);
-        }
-        return newObject;
-      }
-      return input;
-    },
-
-    /**
-     * Escapes the input using html entities to make it safer.
-     *
-     * Currently not in the spec -- future proposals may change
-     * how this is handled.
-     *
-     * TODO: Parsing the string would probably be more accurate and faster than
-     * a bunch of regular expressions.
-     *
-     * @param {String} str The string to escape
-     * @return {String} The escaped string
-     */
-    escapeString : function(str) {
-      var out = [], ch, shouldEscape;
-      for (var i = 0, j = str.length; i < j; ++i) {
-        ch = str.charCodeAt(i);
-        shouldEscape = escapeCodePoints[ch];
-        if (shouldEscape === true) {
-          out.push("&#", ch, ";");
-        } else if (shouldEscape !== false) {
-          // undefined or null are OK.
-          out.push(str.charAt(i));
-        }
-      }
-      return out.join("");
-    },
-
-    /**
-     * Reverses escapeString
-     *
-     * @param {String} str The string to unescape.
-     */
-    unescapeString : function(str) {
-      return str.replace(/&#([0-9]+);/g, unescapeEntity);
-    }
-  };
-}();
-// Initialize url parameters so that hash data is pulled in before it can be
-// altered by a click.
-gadgets.util.getUrlParameters();
-
-
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
-/**
- * @fileoverview
- * The global object gadgets.json contains two methods.
- *
- * gadgets.json.stringify(value) takes a JavaScript value and produces a JSON
- * text. The value must not be cyclical.
- *
- * gadgets.json.parse(text) takes a JSON text and produces a JavaScript value.
- * It will return false if there is an error.
-*/
-
-var gadgets = gadgets || {};
-
-/**
- * @static
- * @class Provides operations for translating objects to and from JSON.
- * @name gadgets.json
- */
-
-/**
- * Port of the public domain JSON library by Douglas Crockford.
- * See: http://www.json.org/json2.js
- */
-gadgets.json = function () {
-
-  /**
-   * Formats integers to 2 digits.
-   * @param {Number} n
-   */
-  function f(n) {
-    return n < 10 ? '0' + n : n;
-  }
-
-  Date.prototype.toJSON = function () {
-    return [this.getUTCFullYear(), '-',
-           f(this.getUTCMonth() + 1), '-',
-           f(this.getUTCDate()), 'T',
-           f(this.getUTCHours()), ':',
-           f(this.getUTCMinutes()), ':',
-           f(this.getUTCSeconds()), 'Z'].join("");
-  };
-
-  // table of character substitutions
-  var m = {
-    '\b': '\\b',
-    '\t': '\\t',
-    '\n': '\\n',
-    '\f': '\\f',
-    '\r': '\\r',
-    '"' : '\\"',
-    '\\': '\\\\'
-  };
-
-  /**
-   * Converts a json object into a string.
-   */
-  function stringify(value) {
-    var a,          // The array holding the partial texts.
-        i,          // The loop counter.
-        k,          // The member key.
-        l,          // Length.
-        r = /["\\\x00-\x1f\x7f-\x9f]/g,
-        v;          // The member value.
-
-    switch (typeof value) {
-    case 'string':
-    // If the string contains no control characters, no quote characters, and no
-    // backslash characters, then we can safely slap some quotes around it.
-    // Otherwise we must also replace the offending characters with safe ones.
-      return r.test(value) ?
-          '"' + value.replace(r, function (a) {
-            var c = m[a];
-            if (c) {
-              return c;
+// @ts-ignore
+window.Ozone = window.Ozone || {};
+// @ts-ignore
+var Ozone = window.Ozone;
+// @ts-ignore
+var Ozone;
+(function (Ozone) {
+    var internal;
+    (function (internal) {
+        var rpc;
+        (function (rpc) {
+            var _a;
+            var DEFAULT_NAME = "";
+            var CALLBACK_NAME = "__cb";
+            var VOID_CALLBACK = function () { return undefined; };
+            var callbacks = {};
+            var services = (_a = {},
+                _a[DEFAULT_NAME] = VOID_CALLBACK,
+                _a[CALLBACK_NAME] = dispatchCallback,
+                _a);
+            var parentTargetOrigin = "";
+            var callId = 0;
+            /**
+             * Setup the RPC module and connect the postMessage message listener.
+             */
+            function setup() {
+                window.addEventListener("message", receive);
             }
-            c = a.charCodeAt();
-            return '\\u00' + Math.floor(c / 16).toString(16) +
-                (c % 16).toString(16);
-            }) + '"'
-          : '"' + value + '"';
-    case 'number':
-    // JSON numbers must be finite. Encode non-finite numbers as null.
-      return isFinite(value) ? String(value) : 'null';
-    case 'boolean':
-    case 'null':
-      return String(value);
-    case 'object':
-    // Due to a specification blunder in ECMAScript,
-    // typeof null is 'object', so watch out for that case.
-      if (!value) {
-        return 'null';
-      }
-      // toJSON check removed; re-implement when it doesn't break other libs.
-      a = [];
-      if (typeof value.length === 'number' &&
-          !(value.propertyIsEnumerable('length'))) {
-        // The object is an array. Stringify every element. Use null as a
-        // placeholder for non-JSON values.
-        l = value.length;
-        for (i = 0; i < l; i += 1) {
-          a.push(stringify(value[i]) || 'null');
-        }
-        // Join all of the elements together and wrap them in brackets.
-        return '[' + a.join(',') + ']';
-      }
-      // Otherwise, iterate through all of the keys in the object.
-      for (k in value) if (value.hasOwnProperty(k)) {
-        if (typeof k === 'string') {
-          v = stringify(value[k]);
-          if (v) {
-            a.push(stringify(k) + ':' + v);
-          }
-        }
-      }
-      // Join all of the member texts together and wrap them in braces.
-      return '{' + a.join(',') + '}';
-    }
-  }
-
-  return {
-    stringify: stringify,
-    parse: function (text) {
-// Parsing happens in three stages. In the first stage, we run the text against
-// regular expressions that look for non-JSON patterns. We are especially
-// concerned with '()' and 'new' because they can cause invocation, and '='
-// because it can cause mutation. But just to be safe, we want to reject all
-// unexpected forms.
-
-// We split the first stage into 4 regexp operations in order to work around
-// crippling inefficiencies in IE's and Safari's regexp engines. First we
-// replace all backslash pairs with '@' (a non-JSON character). Second, we
-// replace all simple value tokens with ']' characters. Third, we delete all
-// open brackets that follow a colon or comma or that begin the text. Finally,
-// we look to see that the remaining characters are only whitespace or ']' or
-// ',' or ':' or '{' or '}'. If that is so, then the text is safe for eval.
-
-      if (/^[\],:{}\s]*$/.test(text.replace(/\\["\\\/b-u]/g, '@').
-          replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-          replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-        return eval('(' + text + ')');
-      }
-      // If the text is not JSON parseable, then return false.
-
-      return false;
-    }
-  };
-}();
-
-
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
- */
-
-/**
- * @fileoverview Remote procedure call library for gadget-to-container,
- * container-to-gadget, and gadget-to-gadget (thru container) communication.
- */
-
-var gadgets = gadgets || {};
-
-/**
- * @static
- * @class Provides operations for making rpc calls.
- * @name gadgets.rpc
- */
-gadgets.rpc = function() {
-  //alert("Initing gadgets.rpc");
-  // General constants.
-  var CALLBACK_NAME = '__cb';
-  var DEFAULT_NAME = '';
-
-  // Consts for FrameElement.
-  var FE_G2C_CHANNEL = '__g2c_rpc';
-  var FE_C2G_CHANNEL = '__c2g_rpc';
-
-  // Consts for NIX. VBScript doesn't
-  // allow items to start with _ for some reason,
-  // so we need to make these names quite unique, as
-  // they will go into the global namespace.
-  var NIX_WRAPPER = 'GRPC____NIXVBS_wrapper';
-  var NIX_GET_WRAPPER = 'GRPC____NIXVBS_get_wrapper';
-  var NIX_HANDLE_MESSAGE = 'GRPC____NIXVBS_handle_message';
-  var NIX_CREATE_CHANNEL = 'GRPC____NIXVBS_create_channel';
-
-  // JavaScript reference to the NIX VBScript wrappers.
-  // Gadgets will have but a single channel under
-  // nix_channels['..'] while containers will have a channel
-  // per gadget stored under the gadget's ID.
-  var nix_channels = {};
-
-  var services = {};
-  var iframePool = [];
-  var relayUrl = {};
-  var useLegacyProtocol = {};
-  var authToken = {};
-  var callId = 0;
-  var callbacks = {};
-  var setup = {};
-  var sameDomain = {};
-  var params = {};
-
-  // Load the authentication token for speaking to the container
-  // from the gadget's parameters, or default to '0' if not found.
-  if (gadgets.util) {
-    params = gadgets.util.getUrlParameters();
-	//alert("gadget params: " + params);
-  }
-
-  authToken['..'] = params.rpctoken || params.ifpctok || 0;
-
-  //ifpc mods
-  var URL_LIMIT = 2000;
-  var messagesIn = {};
-  var useMultiPartMessages = {};
-  //ifpc mods
-
-
-  /*
-   * Return a short code representing the best available cross-domain
-   * message transport available to the browser.
-   *
-   * + For those browsers that support native messaging (various implementations
-   *   of the HTML5 postMessage method), use that. Officially defined at
-   *   http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html.
-   *
-   *   postMessage is a native implementation of XDC. A page registers that
-   *   it would like to receive messages by listening the the "message" event
-   *   on the window (document in DPM) object. In turn, another page can
-   *   raise that event by calling window.postMessage (document.postMessage
-   *   in DPM) with a string representing the message and a string
-   *   indicating on which domain the receiving page must be to receive
-   *   the message. The target page will then have its "message" event raised
-   *   if the domain matches and can, in turn, check the origin of the message
-   *   and process the data contained within.
-   *
-   *     wpm: postMessage on the window object.
-   *        - Internet Explorer 8+
-   *        - Safari (latest nightlies as of 26/6/2008)
-   *        - Firefox 3+
-   *        - Opera 9+
-   *
-   *     dpm: postMessage on the document object.
-   *        - Opera 8+
-   *
-   * + For Internet Explorer before version 8, the security model allows anyone
-   *   parent to set the value of the "opener" property on another window,
-   *   with only the receiving window able to read it.
-   *   This method is dubbed "Native IE XDC" (NIX).
-   *
-   *   This method works by placing a handler object in the "opener" property
-   *   of a gadget when the container sets up the authentication information
-   *   for that gadget (by calling setAuthToken(...)). At that point, a NIX
-   *   wrapper is created and placed into the gadget by calling
-   *   theframe.contentWindow.opener = wrapper. Note that as a result, NIX can
-   *   only be used by a container to call a particular gadget *after* that
-   *   gadget has called the container at least once via NIX.
-   *
-   *   The NIX wrappers in this RPC implementation are instances of a VBScript
-   *   class that is created when this implementation loads. The reason for
-   *   using a VBScript class stems from the fact that any object can be passed
-   *   into the opener property.
-   *   While this is a good thing, as it lets us pass functions and setup a true
-   *   bidirectional channel via callbacks, it opens a potential security hole
-   *   by which the other page can get ahold of the "window" or "document"
-   *   objects in the parent page and in turn wreak havok. This is due to the
-   *   fact that any JS object useful for establishing such a bidirectional
-   *   channel (such as a function) can be used to access a function
-   *   (eg. obj.toString, or a function itself) created in a specific context,
-   *   in particular the global context of the sender. Suppose container
-   *   domain C passes object obj to gadget on domain G. Then the gadget can
-   *   access C's global context using:
-   *   var parentWindow = (new obj.toString.constructor("return window;"))();
-   *   Nulling out all of obj's properties doesn't fix this, since IE helpfully
-   *   restores them to their original values if you do something like:
-   *   delete obj.toString; delete obj.toString;
-   *   Thus, we wrap the necessary functions and information inside a VBScript
-   *   object. VBScript objects in IE, like DOM objects, are in fact COM
-   *   wrappers when used in JavaScript, so we can safely pass them around
-   *   without worrying about a breach of context while at the same time
-   *   allowing them to act as a pass-through mechanism for information
-   *   and function calls. The implementation details of this VBScript wrapper
-   *   can be found in the setupChannel() method below.
-   *
-   *     nix: Internet Explorer-specific window.opener trick.
-   *       - Internet Explorer 6
-   *       - Internet Explorer 7
-   *
-   * + For Gecko-based browsers, the security model allows a child to call a
-   *   function on the frameElement of the iframe, even if the child is in
-   *   a different domain. This method is dubbed "frameElement" (fe).
-   *
-   *   The ability to add and call such functions on the frameElement allows
-   *   a bidirectional channel to be setup via the adding of simple function
-   *   references on the frameElement object itself. In this implementation,
-   *   when the container sets up the authentication information for that gadget
-   *   (by calling setAuth(...)) it as well adds a special function on the
-   *   gadget's iframe. This function can then be used by the gadget to send
-   *   messages to the container. In turn, when the gadget tries to send a
-   *   message, it checks to see if this function has its own function stored
-   *   that can be used by the container to call the gadget. If not, the
-   *   function is created and subsequently used by the container.
-   *   Note that as a result, FE can only be used by a container to call a
-   *   particular gadget *after* that gadget has called the container at
-   *   least once via FE.
-   *
-   *     fe: Gecko-specific frameElement trick.
-   *        - Firefox 1+
-   *
-   * + For all others, we have a fallback mechanism known as "ifpc". IFPC
-   *   exploits the fact that while same-origin policy prohibits a frame from
-   *   accessing members on a window not in the same domain, that frame can,
-   *   however, navigate the window heirarchy (via parent). This is exploited by
-   *   having a page on domain A that wants to talk to domain B create an iframe
-   *   on domain B pointing to a special relay file and with a message encoded
-   *   after the hash (#). This relay, in turn, finds the page on domain B, and
-   *   can call a receipt function with the message given to it. The relay URL
-   *   used by each caller is set via the gadgets.rpc.setRelayUrl(..) and
-   *   *must* be called before the call method is used.
-   *
-   *     ifpc: Iframe-based method, utilizing a relay page, to send a message.
-   */
-  function getRelayChannel() {
-//    return 'ifpc';
-    return typeof window.postMessage === 'function' ? 'wpm' :
-           typeof window.postMessage === 'object' ? 'wpm':
-           typeof document.postMessage === 'function' ? 'dpm' :
-           window.ActiveXObject ? 'nix' :
-           navigator.product === 'Gecko' ? 'fe' :
-           'ifpc';
-  }
-
-  /**
-   * Conducts any initial global work necessary to setup the
-   * channel type chosen.
-   */
-  function setupChannel() {
-    // If the channel type is one of the native
-    // postMessage based ones, setup the handler to receive
-    // messages.
-    if (relayChannel === 'dpm' || relayChannel === 'wpm') {
-      var onmessage = function (packet) {
-        // TODO validate packet.domain for security reasons
-        if (typeof packet.data === "string") {
-          try {
-            var data = JSON.parse(packet.data);
-            process(data);
-          } catch (ex) {}  // Ignore data that is not in JSON format
-        }
-      };
-
-      if (typeof window.addEventListener != 'undefined') {
-        window.addEventListener('message', onmessage, false);
-      } else if (typeof window.attachEvent != 'undefined') {
-        window.attachEvent('onmessage', onmessage);
-      }
-
-    }
-
-    // If the channel type is NIX, we need to ensure the
-    // VBScript wrapper code is in the page and that the
-    // global Javascript handlers have been set.
-    if (relayChannel === 'nix') {
-
-       //alert('nix setup!');
-
-      // VBScript methods return a type of 'unknown' when
-      // checked via the typeof operator in IE. Fortunately
-      // for us, this only applies to COM objects, so we
-      // won't see this for a real Javascript object.
-      if (typeof window[NIX_GET_WRAPPER] !== 'unknown') {
-        window[NIX_HANDLE_MESSAGE] = function(data) {
-          process(gadgets.json.parse(data));
-        };
-
-        window[NIX_CREATE_CHANNEL] = function(name, channel, token) {
-          // Verify the authentication token of the gadget trying
-          // to create a channel for us.
-          if (authToken[name] == token) {
-            nix_channels[name] = channel;
-          }
-        };
-
-        // Inject the VBScript code needed.
-        var vbscript =
-          // We create a class to act as a wrapper for
-          // a Javascript call, to prevent a break in of
-          // the context.
-          'Class ' + NIX_WRAPPER + '\n '
-
-          // An internal member for keeping track of the
-          // name of the document (container or gadget)
-          // for which this wrapper is intended. For
-          // those wrappers created by gadgets, this is not
-          // used (although it is set to "..")
-          + 'Private m_Intended\n'
-
-          // Stores the auth token used to communicate with
-          // the gadget. The GetChannelCreator method returns
-          // an object that returns this auth token. Upon matching
-          // that with its own, the gadget uses the object
-          // to actually establish the communication channel.
-          + 'Private m_Auth\n'
-
-          // Method for internally setting the value
-          // of the m_Intended property.
-          + 'Public Sub SetIntendedName(name)\n '
-          + 'If isEmpty(m_Intended) Then\n'
-          + 'm_Intended = name\n'
-          + 'End If\n'
-          + 'End Sub\n'
-
-          // Method for internally setting the value of the m_Auth property.
-          + 'Public Sub SetAuth(auth)\n '
-          + 'If isEmpty(m_Auth) Then\n'
-          + 'm_Auth = auth\n'
-          + 'End If\n'
-          + 'End Sub\n'
-
-          // A wrapper method which actually causes a
-          // message to be sent to the other context.
-          + 'Public Sub SendMessage(data)\n '
-          + NIX_HANDLE_MESSAGE + '(data)\n'
-          + 'End Sub\n'
-
-          // Returns the auth token to the gadget, so it can
-          // confirm a match before initiating the connection
-          + 'Public Function GetAuthToken()\n '
-          + 'GetAuthToken = m_Auth\n'
-          + 'End Function\n'
-
-          // Method for setting up the container->gadget
-          // channel. Not strictly needed in the gadget's
-          // wrapper, but no reason to get rid of it. Note here
-          // that we pass the intended name to the NIX_CREATE_CHANNEL
-          // method so that it can save the channel in the proper place
-          // *and* verify the channel via the authentication token passed
-          // here.
-          + 'Public Sub CreateChannel(channel, auth)\n '
-          + 'Call ' + NIX_CREATE_CHANNEL + '(m_Intended, channel, auth)\n'
-          + 'End Sub\n'
-          + 'End Class\n'
-
-          // Function to get a reference to the wrapper.
-          + 'Function ' + NIX_GET_WRAPPER + '(name, auth)\n'
-          + 'Dim wrap\n'
-          + 'Set wrap = New ' + NIX_WRAPPER + '\n'
-          + 'wrap.SetIntendedName name\n'
-          + 'wrap.SetAuth auth\n'
-          + 'Set ' + NIX_GET_WRAPPER + ' = wrap\n'
-          + 'End Function';
-
-        try {
-          //alert('execScript! '+vbscript);
-          window.execScript(vbscript, 'vbscript');
-        } catch (e) {
-
-          //alert('exception! back to ifpc');
-          // Fall through to IFPC.
-          relayChannel = 'ifpc';
-        }
-      }
-    }
-  }
-
-  //Store the parsed window.name configuration, if necessary
-  var config = null;
-
-  //Parse the window.name configuration and cache it.  Handle the case
-  //where containers use a JSON string in the window name and a plain string,
-//  function getConfig() {
-//    if (config == null) {
-//        config = {};
-//        if (window.name.charAt(0) != '{') {
-//            config.rpcId = window.name;
-//            config.kernel = true;
-//        } else {
-//            config = gadgets.json.parse(window.name);
-//            config.rpcId = config.id;
-//            return config;
-//        }
-//    } else {
-//        return config;
-//    }
-//  }
-
-  //Get the IFrame ID from the window.name property.  Handle three cases
-  //1. OWF Webtop, which assumes IFrame IDs are identical to window names
-  //2. OWF Kernel, which assumes that IFrame IDs are contianed in the window name as JSON as the id field
-  //3. Others, which use a plain string in the window name and assume the IFrame id is also this plain string
-//  function getId(windowName) {
-//    var conf = getConfig();
-//    if (conf.kernel)
-//        return conf.rpcId;
-//    else
-//        return windowName;
-//  }
-
-  function getId(windowName) {
-    if (windowName.charAt(0) != '{') {
-      return windowName
-    }
-    else {
-      var obj = gadgets.json.parse(windowName);
-      var id = obj.id;
-      return gadgets.json.stringify({id:obj.id});
-    }
-  }
-
-  // Pick the most efficient RPC relay mechanism
-  var relayChannel = getRelayChannel();
-  //alert('relaychannel is '+relayChannel);
-
-  // Conduct any setup necessary for the chosen channel.
-  setupChannel();
-
-  // Create the Default RPC handler.
-  services[DEFAULT_NAME] = function() {
-    //suppress this error - no one should ever try to use a service that wasn't registered using our api
-    //throw new Error('Unknown RPC service: ' + this.s);
-  };
-
-  // Create a Special RPC handler for callbacks.
-  services[CALLBACK_NAME] = function(callbackId, result) {
-    var callback = callbacks[callbackId];
-    if (callback) {
-      delete callbacks[callbackId];
-      callback(result);
-    }
-  };
-
-  /**
-   * Conducts any frame-specific work necessary to setup
-   * the channel type chosen. This method is called when
-   * the container page first registers the gadget in the
-   * RPC mechanism. Gadgets, in turn, will complete the setup
-   * of the channel once they send their first messages.
-   */
-  function setupFrame(frameId, token) {
-    if (setup[frameId]) {
-      return;
-    }
-
-    if (relayChannel === 'fe') {
-      try {
-        var frame = document.getElementById(frameId);
-        frame[FE_G2C_CHANNEL] = function(args) {
-          process(gadgets.json.parse(args));
-        };
-      } catch (e) {
-        // Something went wrong. System will fallback to
-        // IFPC.
-      }
-    }
-
-    if (relayChannel === 'nix') {
-      try {
-        var frame = document.getElementById(frameId);
-        var wrapper = window[NIX_GET_WRAPPER](frameId, token);
-        frame.contentWindow.opener = wrapper;
-      } catch (e) {
-        // Something went wrong. System will fallback to
-        // IFPC.
-        //alert('setupFrame Error!:'+e.message);
-
-      }
-    }
-
-    setup[frameId] = true;
-  }
-
-  /**
-   * Encodes arguments for the legacy IFPC wire format.
-   *
-   * @param {Object} args
-   * @return {String} the encoded args
-   */
-  function encodeLegacyData(args) {
-    var stringify = gadgets.json.stringify;
-    var argsEscaped = [];
-    for(var i = 0, j = args.length; i < j; ++i) {
-      argsEscaped.push(encodeURIComponent(stringify(args[i])));
-    }
-    return argsEscaped.join('&');
-  }
-
-  /**
-   * Helper function to process an RPC request
-   * @param {Object} rpc RPC request object
-   * @private
-   */
-    function process(rpc) {
-    //
-    // RPC object contents:
-    //   s: Service Name
-    //   f: From
-    //   c: The callback ID or 0 if none.
-    //   a: The arguments for this RPC call.
-    //   t: The authentication token.
-    //
-    if (rpc && typeof rpc.s === 'string' && typeof rpc.f === 'string' &&
-        rpc.a instanceof Array) {
-
-      //ensure id is compatible
-      rpc.f = getId(rpc.f);
-
-      // Validate auth token.
-      if (authToken[rpc.f]) {
-        // We allow type coercion here because all the url params are strings.
-        if (authToken[rpc.f] != rpc.t) {
-          throw new Error("Invalid auth token.");
-        }
-      }
-
-      // If there is a callback for this service, attach a callback function
-      // to the rpc context object for asynchronous rpc services.
-      //
-      // Synchronous rpc request handlers should simply ignore it and return a
-      // value as usual.
-      // Asynchronous rpc request handlers, on the other hand, should pass its
-      // result to this callback function and not return a value on exit.
-      //
-      // For example, the following rpc handler passes the first parameter back
-      // to its rpc client with a one-second delay.
-      //
-      // function asyncRpcHandler(param) {
-      //   var me = this;
-      //   setTimeout(function() {
-      //     me.callback(param);
-      //   }, 1000);
-      // }
-      if (rpc.c) {
-        rpc.callback = function(result) {
-          gadgets.rpc.call(rpc.f, CALLBACK_NAME, null, rpc.c, result);
-        };
-      }
-
-      // Call the requested RPC service.
-      var result = (services[rpc.s] ||
-                    services[DEFAULT_NAME]).apply(rpc, rpc.a);
-
-      // If the rpc request handler returns a value, immediately pass it back
-      // to the callback. Otherwise, do nothing, assuming that the rpc handler
-      // will make an asynchronous call later.
-      if (rpc.c && typeof result != 'undefined') {
-        gadgets.rpc.call(rpc.f, CALLBACK_NAME, null, rpc.c, result);
-      }
-    }
-  }
-
-  /**
-   * Attempts to conduct an RPC call to the specified
-   * target with the specified data via the NIX
-   * method. If this method fails, the system attempts again
-   * using the known default of IFPC.
-   *
-   * @param {String} targetId Module Id of the RPC service provider.
-   * @param {String} serviceName Name of the service to call.
-   * @param {String} from Module Id of the calling provider.
-   * @param {Object} rpcData The RPC data for this call.
-   */
-  function callNix(targetId, serviceName, from, rpcData) {
-    try {
-//       alert('try nix targetId='+targetId);
-//       alert('try nix from='+from);
-      if (from != '..') {
-//        alert('try nix1');
-        // Call from gadget to the container.
-        var handler = nix_channels['..'];
-
-//        alert('Nix handler='+handler);
-        //alert('GetAuthToken'+("GetAuthToken" in window.opener));
-//        alert('window.opener='+window.opener);
-
-        // If the gadget has yet to retrieve a reference to
-        // the NIX handler, try to do so now. We don't do a
-        // typeof(window.opener.GetAuthToken) check here
-        // because it means accessing that field on the COM object, which,
-        // being an internal function reference, is not allowed.
-        // "in" works because it merely checks for the prescence of
-        // the key, rather than actually accessing the object's property.
-        // This is just a sanity check, not a validity check.
-        if (!handler && window.opener && "GetAuthToken" in window.opener) {
-//          alert('try nix - handler');
-          handler = window.opener;
-
-          // Create the channel to the parent/container.
-          // First verify that it knows our auth token to ensure it's not
-          // an impostor.
-          if (handler.GetAuthToken() == authToken['..']) {
-            // Auth match - pass it back along with our wrapper to finish.
-            // own wrapper and our authentication token for co-verification.
-            var token = authToken['..'];
-            handler.CreateChannel(window[NIX_GET_WRAPPER]('..', token),
-                                  token);
-            // Set channel handler
-            nix_channels['..'] = handler;
-            window.opener = null;
-          }
-        }
-
-        // If we have a handler, call it.
-        if (handler) {
-          //alert('sent nix');
-          handler.SendMessage(rpcData);
-          return;
-        }
-
-//        alert('Nix did not send3');
-      } else {
-        // Call from container to a gadget[targetId].
-//        alert('try nix2 - nix_channels[targetId]='+nix_channels[targetId]);
-
-        // If we have a handler, call it.
-        if (nix_channels[targetId]) {
-//          alert('sent nix');
-          nix_channels[targetId].SendMessage(rpcData);
-          return;
-        }
-
-//        alert('Nix did not send1');
-      }
-
-//      alert('Nix did not send2');
-
-    } catch (e) {
-//      alert('Nix Failed!:'+e);
-    }
-
-//    alert('fallback ifpc');
-
-    // If we have reached this point, something has failed
-    // with the NIX method, so we default to using
-    // IFPC for this call.
-    callIfpc(targetId, serviceName, from, rpcData);
-  }
-
-  /**
-   * Attempts to conduct an RPC call to the specified
-   * target with the specified data via the FrameElement
-   * method. If this method fails, the system attempts again
-   * using the known default of IFPC.
-   *
-   * @param {String} targetId Module Id of the RPC service provider.
-   * @param {String} serviceName Service name to call.
-   * @param {String} from Module Id of the calling provider.
-   * @param {Object} rpcData The RPC data for this call.
-   * @param {Array.<Object>} callArgs Original arguments to call()
-   */
-  function callFrameElement(targetId, serviceName, from, rpcData, callArgs) {
-    //alert('callFrameElement!');
-    try {
-      if (from != '..') {
-        // Call from gadget to the container.
-        var fe = window.frameElement;
-
-        if (typeof fe[FE_G2C_CHANNEL] === 'function') {
-          // Complete the setup of the FE channel if need be.
-          if (typeof fe[FE_G2C_CHANNEL][FE_C2G_CHANNEL] !== 'function') {
-            fe[FE_G2C_CHANNEL][FE_C2G_CHANNEL] = function(args) {
-              process(gadgets.json.parse(args));
-            };
-          }
-
-          // Conduct the RPC call.
-          fe[FE_G2C_CHANNEL](rpcData);
-          return;
-        }
-      } else {
-        // Call from container to gadget[targetId].
-        var frame = document.getElementById(targetId);
-
-        if (typeof frame[FE_G2C_CHANNEL] === 'function' &&
-            typeof frame[FE_G2C_CHANNEL][FE_C2G_CHANNEL] === 'function') {
-
-          // Conduct the RPC call.
-          frame[FE_G2C_CHANNEL][FE_C2G_CHANNEL](rpcData);
-          return;
-        }
-      }
-    } catch (e) {
-    }
-
-    // If we have reached this point, something has failed
-    // with the FrameElement method, so we default to using
-    // IFPC for this call.
-    callIfpc(targetId, serviceName, from, rpcData, callArgs);
-  }
-
-  /**
-   * Conducts an RPC call to the specified
-   * target with the specified data via the IFPC
-   * method.
-   *
-   * @param {String} targetId Module Id of the RPC service provider.
-   * @param {String} serviceName Service name to call.
-   * @param {String} from Module Id of the calling provider.
-   * @param {Object} rpcData The RPC data for this call.
-   * @param {Array.<Object>} callArgs Original arguments to call()
-   */
-  function callIfpc(targetId, serviceName, from, rpcData, callArgs) {
-    //alert("CONTAINER IFPC params: " + targetId + " " + serviceName + " " + from + " " + rpcData + " " + callArgs);
-    // Retrieve the relay file used by IFPC. Note that
-    // this must be set before the call, and so we conduct
-    // an extra check to ensure it is not blank.
-    var relay = gadgets.rpc.getRelayUrl(targetId);
-
-    if (!relay) {
-      throw new Error('No relay file assigned for IFPC');
-    }
-
-    // The RPC mechanism supports two formats for IFPC (legacy and current).
-    var src = null,
-        queueOut = [];
-    if (useLegacyProtocol[targetId]) {
-      // Format: #iframe_id&callId&num_packets&packet_num&block_of_data
-      src = [relay, '#', encodeLegacyData([from, callId, 1, 0,
-             encodeLegacyData([from, serviceName, '', '', from].concat(
-               callArgs))])].join('');
-      queueOut.push(src);
-    } else {
-
-      // Format: #targetId & sourceId@callId & packetNum & packetId & packetData
-      src = [relay, '#', encodeURIComponent(targetId), '&', from, '@', callId, '&'].join('');
-      if (!useMultiPartMessages[targetId]) {
-        // Format: #targetId & sourceId@callId & packetNum & packetId & packetData
-        queueOut.push([src, 1, '&', 0, '&', , encodeURIComponent(rpcData)].join(''));
-
-      }
-      else {
-        var message = encodeURIComponent(rpcData),
-            payloadLength = URL_LIMIT - src.length,
-            numPackets = Math.ceil(message.length / payloadLength),
-            packetIdx = 0,
-            part;
-        while (message.length > 0) {
-          part = message.substring(0, payloadLength);
-          message = message.substring(payloadLength);
-          queueOut.push([src, numPackets, '&', packetIdx, '&', part].join(''));
-          packetIdx += 1;
-        }
-
-      }
-
-    }
-
-    // Conduct the IFPC call by creating the Iframe with
-    // the relay URL and appended message.
-    do {
-      emitInvisibleIframe(queueOut.shift(),targetId);
-    } while (queueOut.length > 0);
-    return true;
-
-
-  }
-
-  //IE only: return true if a target iframe id is in a child popup window
-  function isInPopup(targetId) {
-    if (!targetId) {
-      return false;
-    }
-    if (targetId == "..") {
-      return false;
-    }
-    var frame = document.getElementById(targetId);
-    if (frame) {
-      return false;
-    }
-    if (typeof _childWindows === 'undefined') {
-      return false;
-    }
-    return true;
-  }
-
-  //IE only: Queue of messages for child windows
-  window._childWindowMessageQueue = [];
-  //IE only: Unique increasing ID for all messages put on the child window queue
-  window._childWindowMessageId = 0;
-  //IE only: Allow a child window to retrieve a message from the queue
-  window._getChildWindowMessage = function(msgId) {
-    var q = _childWindowMessageQueue;
-    for(var ii=0; ii < q.length; ii++) {
-      var m = q[ii];
-      if (m.id == msgId) {
-        return m;
-      }
-    }
-  }
-
-  function isMessageComplete(arr, total) {
-    for (var i = total - 1; i >= 0; --i) {
-      if (typeof arr[i] === 'undefined') {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Helper function to emit an invisible IFrame.
-   * @param {String} src SRC attribute of the IFrame to emit.
-   * @private
-   */
-  function emitInvisibleIframe(src, targetId) {
-    if (isInPopup(targetId)) {
-        //IE only:
-        //Queue the message for our child iframes, which will poll for them.
-        //We do this because in IE a parent window does not have access to the
-        //document of child popup windows, and hence cannot emit an iframe
-        //within them
-        var id = window._childWindowMessageId;
-        id++;
-        window._childWindowMessageQueue.push({id:id, target:targetId, src:src});
-        window._childWindowMessageId++;
-        if(window._childWindowMessageQueue.length > 20) {
-          window._childWindowMessageQueue.shift();
-        }
-        return;
-    }
-    var iframe;
-    // Recycle IFrames
-    for (var i = iframePool.length - 1; i >=0; --i) {
-      var ifr = iframePool[i];
-      try {
-        if (ifr && (ifr.recyclable || ifr.readyState === 'complete')) {
-          ifr.parentNode.removeChild(ifr);
-          if (window.ActiveXObject) {
-            // For MSIE, delete any iframes that are no longer being used. MSIE
-            // cannot reuse the IFRAME because a navigational click sound will
-            // be triggered when we set the SRC attribute.
-            // Other browsers scan the pool for a free iframe to reuse.
-            iframePool[i] = ifr = null;
-            iframePool.splice(i, 1);
-          } else {
-            ifr.recyclable = false;
-            iframe = ifr;
-            break;
-          }
-        }
-      } catch (e) {
-        // Ignore; IE7 throws an exception when trying to read readyState and
-        // readyState isn't set.
-      }
-    }
-    // Create IFrame if necessary
-    if (!iframe) {
-      iframe = document.createElement('iframe');
-      iframe.style.border = iframe.style.width = iframe.style.height = '0px';
-      iframe.style.visibility = 'hidden';
-      iframe.style.position = 'absolute';
-      iframe.onload = function() { this.recyclable = true; };
-      iframePool.push(iframe);
-    }
-    iframe.src = src;
-    setTimeout(function() { document.body.appendChild(iframe); }, 0);
-  }
-
-    //Find a target IFrame or window based off an RPC ID, allowing for
-    //the fact that child popup windows with IFrames might exist.
-    function getTargetWin(id) {
-      if (typeof id === "undefined" || id === "..") {
-          // Chrome 30 throws SecurityError when accessing opener property on window.parent
-          try {
-            //Check to see if we are an iframe in a child window, and if so use the opener
-            if(sameDomain[id] !== false && window.parent.opener) {
-                return window.parent.opener.parent;
+            rpc.setup = setup;
+            /**
+             * Set the targetOrigin used for sending postMessage messages to the container.
+             */
+            function setParentTargetOrigin(origin) {
+                parentTargetOrigin = origin;
             }
-          }
-          catch(e) {}
-          //Normal case, we are an IFrame in a page
-          return window.parent;
-      }
-
-      //At this point we are a container looking for a child iframe
-
-      // Cast to a String to avoid an index lookup.
-      id = String(id);
-
-      var target = null;
-
-      // Try window.frames first
-      //apparently in FF using window.frames will return a bogus window object if the
-      //iframe was removed and re-added to the document so it's always better to just do
-      //a dom lookup
-//      target = window.frames[id];
-//      if (target) {
-//          return target;
-//      }
-
-      // Fall back to getElementById()
-      target = document.getElementById(id);
-      if (target && target.contentWindow) {
-        return target.contentWindow;
-      }
-
-      // At this point we have missed on searching for child iframes
-      // in the main browser window, so search popup windows
-      // This assumes the container is keeping a list of child
-      // windows in the global _childWindows array
-      if (typeof _childWindows !== 'undefined') {
-          for(var ii=0; ii<_childWindows.length;ii++) {
-              var childWindow = _childWindows[ii];
-              try {
-                  //In IE 8, this will throw an exception.
-                  if (childWindow.document) {
-                      target = childWindow.document.getElementById(id);
-                  }
-              } catch(e) {
-                  //BUG. Don't know how to support
-                  //direct WMP calls from parent to child popups
-                  //in IE 8.
-              }
-              if (target && target.contentWindow) {
-                return target.contentWindow;
-              }
-          }
-      }
-      return null;
-    }
-
-
-  /**
-   * Attempts to make an rpc by calling the target's receive method directly.
-   * This works when gadgets are rendered on the same domain as their container,
-   * a potentially useful optimization for trusted content which keeps
-   * RPC behind a consistent interface.
-   * @param {String} target Module id of the rpc service provider
-   * @param {String} from Module id of the caller (this)
-   * @param {String} callbackId Id of the call
-   * @param {String} rpcData JSON-encoded RPC payload
-   * @return
-   */
-  function callSameDomain(target, rpc) {
-    var fn;
-
-    if (sameDomain[target] !== false) {
-      // Seed with a negative, typed value to avoid
-      // hitting this code path repeatedly
-      var targetEl = getTargetWin(target);
-
-      try {
-        // If this succeeds, then same-domain policy applied
-//        sameDomain[target] = targetEl.gadgets.rpc.receiveSameDomain;
-        fn = targetEl.gadgets.rpc.receiveSameDomain;
-      } catch (e) {
-        // Usual case: different domains
-      }
-    }
-
-    if (typeof fn === 'function') {
-      // Call target's receive method
-      fn(rpc);
-      sameDomain[target] = true;
-      return true;
-    }
-    else
-        sameDomain[target] = false;
-
-    return false;
-  }
-
-  // gadgets.config might not be available, such as when serving container js.
-  if (gadgets.config) {
-    /**
-     * Initializes RPC from the provided configuration.
-     */
-    function init(config) {
-	  //alert("CONTAINER Config: " + config);
-      // Allow for wild card parent relay files as long as it's from a
-      // white listed domain. This is enforced by the rendering servlet.
-      if (config.rpc.parentRelayUrl.substring(0, 7) === 'http://') {
-        relayUrl['..'] = config.rpc.parentRelayUrl;
-      } else {
-        // It's a relative path, and we must append to the parent.
-        // We're relying on the server validating the parent parameter in this
-        // case. Because of this, parent may only be passed in the query, not
-        // the fragment.
-        var params = document.location.search.substring(0).split("&");
-		//alert("Init Config method - Setting Params: " + params);
-        var parentParam = "";
-        for (var i = 0, param; param = params[i]; ++i) {
-          // Only the first parent can be validated.
-          if (param.indexOf("parent=") === 0) {
-            parentParam = decodeURIComponent(param.substring(7));
-            break;
-          }
-        }
-        relayUrl['..'] = parentParam + config.rpc.parentRelayUrl;
-      }
-      useLegacyProtocol['..'] = !!config.rpc.useLegacyProtocol;
-    }
-
-    var requiredConfig = {
-      parentRelayUrl : gadgets.config.NonEmptyStringValidator
-    };
-    gadgets.config.register("rpc", requiredConfig, init);
-  }
-
-  return /** @scope gadgets.rpc */ {
-    /**
-     * Registers an RPC service.
-     * @param {String} serviceName Service name to register.
-     * @param {Function} handler Service handler.
-     *
-     * @member gadgets.rpc
-     */
-    register: function(serviceName, handler) {
-	//alert("CONTAINER REGISTER VARIABLES: " + serviceName + " -|- " + handler);
-      if (serviceName == CALLBACK_NAME) {
-        throw new Error("Cannot overwrite callback service");
-      }
-
-      if (serviceName == DEFAULT_NAME) {
-        throw new Error("Cannot overwrite default service:"
-                        + " use registerDefault");
-      }
-	  services[serviceName] = handler;
-    },
-
-    /**
-     * Unregisters an RPC service.
-     * @param {String} serviceName Service name to unregister.
-     *
-     * @member gadgets.rpc
-     */
-    unregister: function(serviceName) {
-      if (serviceName == CALLBACK_NAME) {
-        throw new Error("Cannot delete callback service");
-      }
-
-      if (serviceName == DEFAULT_NAME) {
-        throw new Error("Cannot delete default service:"
-                        + " use unregisterDefault");
-      }
-
-      delete services[serviceName];
-    },
-
-    /**
-     * Registers a default service handler to processes all unknown
-     * RPC calls which raise an exception by default.
-     * @param {Function} handler Service handler.
-     *
-     * @member gadgets.rpc
-     */
-    registerDefault: function(handler) {
-      services[''] = handler;
-    },
-
-    /**
-     * Unregisters the default service handler. Future unknown RPC
-     * calls will fail silently.
-     *
-     * @member gadgets.rpc
-     */
-    unregisterDefault: function() {
-      delete services[''];
-    },
-
-    /**
-     * Calls an RPC service.
-     * @param {String} targetId Module Id of the RPC service provider.
-     *                          Empty if calling the parent container.
-     * @param {String} serviceName Service name to call.
-     * @param {Function|null} callback Callback function (if any) to process
-     *                                 the return value of the RPC request.
-     * @param {*} var_args Parameters for the RPC request.
-     *
-     * @member gadgets.rpc
-     */
-    call: function(targetId, serviceName, callback, var_args) {
-      ++callId;
-	  targetId = getId(targetId) || '..';
-      if (callback) {
-        callbacks[callId] = callback;
-      }
-
-      // Default to the container calling.
-      var from = '..';
-
-      if (targetId === '..') {
-//        from = window.name;
-        from = getId(window.name);
-      }
-
-      // Not used by legacy, create it anyway...
-      var rpc = {
-        s: serviceName,
-        f: from,
-        c: callback ? callId : 0,
-        a: Array.prototype.slice.call(arguments, 3),
-        t: authToken[targetId]
-      };
-
-      // If target is on the same domain, call method directly
-      if (callSameDomain(targetId, rpc)) {
-        return;
-      }
-
-      var rpcData = gadgets.json.stringify(rpc);
-
-      var channelType = relayChannel;
-
-      // If we are told to use the legacy format, then we must
-      // default to IFPC.
-      if (useLegacyProtocol[targetId]) {
-        channelType = 'ifpc';
-      }
-
-      //alert('channelType:'+channelType);
-      switch (channelType) {
-        case 'dpm': // use document.postMessage.
-          // Get the window from the document. Fixes a bug with postMessage
-          // calls on a target that had been removed then appended to the document object
-            var targetWin = getTargetWin(targetId);
-            var targetDoc = targetWin.document;
-
-          if (targetDoc != null)
-            try {
-              targetDoc.postMessage(rpcData);
-            } catch (e) {
-              callIfpc(targetId, serviceName, from, rpcData, rpc.a);
+            rpc.setParentTargetOrigin = setParentTargetOrigin;
+            /**
+             * Registers an RPC service.
+             *
+             * @param serviceName -- Service name to register.
+             * @param handler -- Service handler.
+             */
+            function register(serviceName, handler) {
+                if (serviceName === CALLBACK_NAME) {
+                    throw new Error("Cannot overwrite callback service");
+                }
+                if (serviceName === DEFAULT_NAME) {
+                    throw new Error("Cannot overwrite default service: use registerDefault");
+                }
+                services[serviceName] = handler;
             }
-          break;
-
-        case 'wpm': // use window.postMessage.
-          // Get the window from the document. Fixes a bug with postMessage
-          // calls on a target that had been removed then appended to the document object
-            var targetWin = getTargetWin(targetId);
-
-          if (targetWin != null) {
-            try {
-              targetWin.postMessage(rpcData, relayUrl[targetId]);
-            } catch (e) {
-              callIfpc(targetId, serviceName, from, rpcData, rpc.a);
+            rpc.register = register;
+            /**
+             * Unregisters an RPC service.
+             *
+             * @param serviceName -- Service name to unregister.
+             */
+            function unregister(serviceName) {
+                if (serviceName === CALLBACK_NAME) {
+                    throw new Error("Cannot delete callback service");
+                }
+                if (serviceName === DEFAULT_NAME) {
+                    throw new Error("Cannot delete default service: use unregisterDefault");
+                }
+                delete services[serviceName];
             }
-          }
-          break;
+            rpc.unregister = unregister;
+            /**
+             * Send an RPC message to the container.
+             *
+             * @param serviceName -- Service name to call.
+             * @param callback --  Callback function (if any) to process the return value of the RPC request.
+             * @param varargs -- Parameters for the RPC request.
+             */
+            function send(serviceName, callback) {
+                var varargs = [];
+                for (var _i = 2; _i < arguments.length; _i++) {
+                    varargs[_i - 2] = arguments[_i];
+                }
+                var targetWin = window.parent;
+                if (!targetWin) {
+                    throw new Error("failed to send RPC message; window.parent is not defined");
+                }
+                if (callback) {
+                    callId++;
+                    callbacks[callId] = callback;
+                }
+                var rpcMessage = JSON.stringify({
+                    s: serviceName,
+                    f: getId(window.name),
+                    c: callback ? callId : 0,
+                    a: varargs,
+                    t: 0
+                });
+                targetWin.postMessage(rpcMessage, parentTargetOrigin);
+            }
+            rpc.send = send;
+            function receive(message) {
+                var rpcMessage = parseMessage(message.data);
+                if (rpcMessage === undefined)
+                    return;
+                process(rpcMessage);
+            }
+            function process(message) {
+                var service = services[message.s] || services[DEFAULT_NAME];
+                if (!service) {
+                    throw new Error("failed to process RPC message; no '" + message.f + "' or default service handler");
+                }
+                var result = service.apply(message, message.a);
+                if (message.c !== 0 && result !== undefined) {
+                    message.callback(result);
+                }
+            }
+            function parseMessage(message) {
+                var _message = parseJson(message);
+                if (!isValidRpcMessage(_message))
+                    return;
+                var callback = _message.c !== 0
+                    ? function (result) { return send(CALLBACK_NAME, null, _message.c, result); }
+                    : VOID_CALLBACK;
+                return {
+                    s: _message.s,
+                    f: _message.f,
+                    c: _message.c,
+                    callback: callback,
+                    a: _message.a,
+                    t: _message.t
+                };
+            }
+            function dispatchCallback(callbackId, result) {
+                var callback = callbacks[callbackId];
+                if (!callback)
+                    return;
+                delete callbacks[callbackId];
+                callback(result);
+            }
+            rpc.dispatchCallback = dispatchCallback;
+            function parseJson(value) {
+                try {
+                    return JSON.parse(value);
+                }
+                catch (ignored) {
+                }
+            }
+            function isValidRpcMessage(message) {
+                if (!isObject(message))
+                    return false;
+                if (typeof message.s !== "string")
+                    return false;
+                if (typeof message.f !== "string")
+                    return false;
+                if (typeof message.c !== "number")
+                    return false;
+                if (!Array.isArray(message.a))
+                    return false;
+                if (!message.hasOwnProperty("t"))
+                    return false;
+                return true;
+            }
+            function isObject(value) {
+                return typeof value === "object" && value !== null;
+            }
+            function getId(windowName) {
+                if (windowName.charAt(0) !== "{")
+                    return windowName;
+                var obj = JSON.parse(windowName);
+                return JSON.stringify({ id: obj.id });
+            }
+        })(rpc = internal.rpc || (internal.rpc = {}));
+    })(internal = Ozone.internal || (Ozone.internal = {}));
+})(Ozone || (Ozone = {}));
 
-        case 'nix': // use NIX.
-          //alert('callNix!');
-          callNix(targetId, serviceName, from, rpcData);
-          break;
-
-        case 'fe': // use FrameElement.
-          callFrameElement(targetId, serviceName, from, rpcData, rpc.a);
-          break;
-
-        default: // use 'ifpc' as a fallback mechanism.
-          callIfpc(targetId, serviceName, from, rpcData, rpc.a);
-          break;
-      }
-    },
-
-    /**
-     * Gets the relay URL of a target frame.
-     * @param {String} targetId Name of the target frame.
-     * @return {String|undefined} Relay URL of the target frame.
-     *
-     * @member gadgets.rpc
-     */
-    getRelayUrl: function(targetId) {
-      return relayUrl[targetId];
-    },
-
-    /**
-     * Sets the relay URL of a target frame.
-     * @param {String} targetId Name of the target frame.
-     * @param {String} url Full relay URL of the target frame.
-     * @param {Boolean} opt_useLegacy True if this relay needs the legacy IFPC
-     *     wire format.
-     *
-     * @member gadgets.rpc
-     */
-    setRelayUrl: function(targetId, url, opt_useLegacy, useMultiPartMessagesForIFPC) {
-      relayUrl[targetId] = url;
-      useLegacyProtocol[targetId] = !!opt_useLegacy;
-      useMultiPartMessages[targetId] = !!useMultiPartMessagesForIFPC;
-    },
-
-    /**
-     * Sets the auth token of a target frame.
-     * @param {String} targetId Name of the target frame.
-     * @param {String} token The authentication token to use for all
-     *     calls to or from this target id.
-     *
-     * @member gadgets.rpc
-     */
-    setAuthToken: function(targetId, token) {
-      authToken[targetId] = token;
-      setupFrame(targetId, token);
-    },
-
-    /**
-     * Gets the RPC relay mechanism.
-     * @return {String} RPC relay mechanism. See above for
-     *   a list of supported types.
-     *
-     * @member gadgets.rpc
-     */
-    getRelayChannel: function() {
-      return relayChannel;
-    },
-
-    /**
-     * Receives and processes an RPC request. (Not to be used directly.)
-     * @param {Array.<String>} fragment An RPC request fragment encoded as
-     *        an array. The first 4 elements are target id, source id & call id,
-     *        total packet number, packet id. The last element stores the actual
-     *        JSON-encoded and URI escaped packet data.
-     *
-     * @member gadgets.rpc
-     */
-    receive: function(fragment) {
-      if (fragment.length > 4) {
-//        // TODO parse fragment[1..3] to merge multi-fragment messages
-//        process(gadgets.json.parse(
-//            decodeURIComponent(fragment[fragment.length - 1])));
-
-        var from = fragment[1],   // in the form of "<from>@<callid>"
-            numPackets = parseInt(fragment[2], 10),
-            packetIdx = parseInt(fragment[3], 10),
-            payload = fragment[fragment.length - 1],
-            completed = numPackets === 1;
-
-        // if message is multi-part, store parts in the proper order
-        if (numPackets > 1) {
-          if (!messagesIn[from]) {
-            messagesIn[from] = [];
-          }
-          messagesIn[from][packetIdx] = payload;
-          // check if all parts have been sent
-          if (isMessageComplete(messagesIn[from], numPackets)) {
-            payload = messagesIn[from].join('');
-            delete messagesIn[from];
-            completed = true;
-          }
-        }
-
-        // complete message sent
-        if (completed) {
-          process(gadgets.json.parse(decodeURIComponent(payload)));
-        }
-      }
-    },
-
-    /**
-     * Receives and processes an RPC request sent via the same domain.
-     * (Not to be used directly). Converts the inbound rpc object's
-     * Array into a local Array to pass the process() Array test.
-     * @param {Object} rpc RPC object containing all request params
-     */
-    receiveSameDomain: function(rpc) {
-      // Pass through to local process method but converting to a local Array
-      rpc.a = Array.prototype.slice.call(rpc.a);
-	  window.setTimeout(function() { process(rpc) }, 0);
-    }
-  };
-}();
-
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
- */
-
-/**
- * @fileoverview Gadget-side PubSub library for gadget-to-gadget communication.
- */
-
-var gadgets = gadgets || {};
-
-/**
- * @static
- * @class Provides operations for making rpc calls.
- * @name gadgets.pubsub
- */
-gadgets.pubsub = (function() {
-  var listeners = {};
-
-  function router(channel, sender, message) {
-    var listener = listeners[channel];
-    if (typeof listener === 'function') {
-      listener(sender, message,channel);
-    }
-  }
-
-  return /** @scope gadgets.pubsub */ {
-    /**
-     * Publishes a message to a channel.
-     * @param {string} channel Channel name.
-     * @param {string} message Message to publish.
-     */
-    publish: function(channel, message, dest, accessLevel) {
-      gadgets.rpc.call('..', 'pubsub', null, 'publish', channel, message, dest, accessLevel);
-    },
-
-    /**
-     * Subscribes to a channel.
-     * @param {string} channel Channel name.
-     * @param {function} callback Callback function that receives messages.
-     *                   For example:
-     *                   function(sender, message) {
-     *                     if (isTrustedGadgetSpecUrl(sender)) {
-     *                       processMessage(message);
-     *                     }
-     *                   }
-     */
-    subscribe: function(channel, callback) {
-      listeners[channel] = callback;
-      gadgets.rpc.register('pubsub', router);
-      gadgets.rpc.call('..', 'pubsub', null, 'subscribe', channel);
-    },
-
-    /**
-     * Unsubscribes from a channel.
-     * @param {string} channel Channel name.
-     */
-    unsubscribe: function(channel) {
-      delete listeners[channel];
-      gadgets.rpc.call('..', 'pubsub', null, 'unsubscribe', channel);
-      }
-
-  };
-})();
-
+// @ts-ignore
+window.Ozone = window.Ozone || {};
+// @ts-ignore
+var Ozone = window.Ozone;
+// @ts-ignore
+var Ozone;
+(function (Ozone) {
+    var internal;
+    (function (internal) {
+        var pubsub;
+        (function (pubsub) {
+            var PUBSUB_NAME = "pubsub";
+            var listeners = {};
+            function publish(channel, message) {
+                Ozone.internal.rpc.send(PUBSUB_NAME, null, "publish", channel, message);
+            }
+            pubsub.publish = publish;
+            function subscribe(channel, callback) {
+                listeners[channel] = callback;
+                Ozone.internal.rpc.register(PUBSUB_NAME, dispatch);
+                Ozone.internal.rpc.send(PUBSUB_NAME, null, "subscribe", channel);
+            }
+            pubsub.subscribe = subscribe;
+            function unsubscribe(channel) {
+                delete listeners[channel];
+                Ozone.internal.rpc.send(PUBSUB_NAME, null, "unsubscribe", channel);
+            }
+            pubsub.unsubscribe = unsubscribe;
+            function dispatch(channel, sender, message) {
+                var listener = listeners[channel];
+                if (typeof listener !== "function")
+                    return;
+                listener(sender, message, channel);
+            }
+        })(pubsub = internal.pubsub || (internal.pubsub = {}));
+    })(internal = Ozone.internal || (Ozone.internal = {}));
+})(Ozone || (Ozone = {}));
 
 /**
  * Copyright 2015 Tim Down.
@@ -16078,7 +14632,7 @@ return loggers[loggerName];};var defaultLogger=null;log4javascript.getDefaultLog
 return defaultLogger;};var nullLogger=null;log4javascript.getNullLogger=function(){if(!nullLogger){nullLogger=new Logger(nullLoggerName);nullLogger.setLevel(Level.OFF);}
 return nullLogger;};log4javascript.resetConfiguration=function(){rootLogger.setLevel(ROOT_LOGGER_DEFAULT_LEVEL);loggers={};};var LoggingEvent=function(logger,timeStamp,level,messages,exception){this.logger=logger;this.timeStamp=timeStamp;this.timeStampInMilliseconds=timeStamp.getTime();this.timeStampInSeconds=Math.floor(this.timeStampInMilliseconds/1000);this.milliseconds=this.timeStamp.getMilliseconds();this.level=level;this.messages=messages;this.exception=exception;};LoggingEvent.prototype={getThrowableStrRep:function(){return this.exception?getExceptionStringRep(this.exception):"";},getCombinedMessages:function(){return(this.messages.length==1)?this.messages[0]:this.messages.join(newLine);},toString:function(){return"LoggingEvent["+this.level+"]";}};log4javascript.LoggingEvent=LoggingEvent;var Layout=function(){};Layout.prototype={defaults:{loggerKey:"logger",timeStampKey:"timestamp",millisecondsKey:"milliseconds",levelKey:"level",messageKey:"message",exceptionKey:"exception",urlKey:"url"},loggerKey:"logger",timeStampKey:"timestamp",millisecondsKey:"milliseconds",levelKey:"level",messageKey:"message",exceptionKey:"exception",urlKey:"url",batchHeader:"",batchFooter:"",batchSeparator:"",returnsPostData:false,overrideTimeStampsSetting:false,useTimeStampsInMilliseconds:null,format:function(){handleError("Layout.format: layout supplied has no format() method");},ignoresThrowable:function(){handleError("Layout.ignoresThrowable: layout supplied has no ignoresThrowable() method");},getContentType:function(){return"text/plain";},allowBatching:function(){return true;},setTimeStampsInMilliseconds:function(timeStampsInMilliseconds){this.overrideTimeStampsSetting=true;this.useTimeStampsInMilliseconds=bool(timeStampsInMilliseconds);},isTimeStampsInMilliseconds:function(){return this.overrideTimeStampsSetting?this.useTimeStampsInMilliseconds:useTimeStampsInMilliseconds;},getTimeStampValue:function(loggingEvent){return this.isTimeStampsInMilliseconds()?loggingEvent.timeStampInMilliseconds:loggingEvent.timeStampInSeconds;},getDataValues:function(loggingEvent,combineMessages){var dataValues=[[this.loggerKey,loggingEvent.logger.name],[this.timeStampKey,this.getTimeStampValue(loggingEvent)],[this.levelKey,loggingEvent.level.name],[this.urlKey,window.location.href],[this.messageKey,combineMessages?loggingEvent.getCombinedMessages():loggingEvent.messages]];if(!this.isTimeStampsInMilliseconds()){dataValues.push([this.millisecondsKey,loggingEvent.milliseconds]);}
 if(loggingEvent.exception){dataValues.push([this.exceptionKey,getExceptionStringRep(loggingEvent.exception)]);}
-if(this.hasCustomFields()){for(var i=0,len=this.customFields.length;i<len;i++){var val=this.customFields[i].message;if(typeof val==="function"){val=val(this,loggingEvent);}
+if(this.hasCustomFields()){for(var i=0,len=this.customFields.length;i<len;i++){var val=this.customFields[i].value;if(typeof val==="function"){val=val(this,loggingEvent);}
 dataValues.push([this.customFields[i].name,val]);}}
 return dataValues;},setKeys:function(loggerKey,timeStampKey,levelKey,messageKey,exceptionKey,urlKey,millisecondsKey){this.loggerKey=extractStringFromParam(loggerKey,this.defaults.loggerKey);this.timeStampKey=extractStringFromParam(timeStampKey,this.defaults.timeStampKey);this.levelKey=extractStringFromParam(levelKey,this.defaults.levelKey);this.messageKey=extractStringFromParam(messageKey,this.defaults.messageKey);this.exceptionKey=extractStringFromParam(exceptionKey,this.defaults.exceptionKey);this.urlKey=extractStringFromParam(urlKey,this.defaults.urlKey);this.millisecondsKey=extractStringFromParam(millisecondsKey,this.defaults.millisecondsKey);},setCustomField:function(name,value){var fieldUpdated=false;for(var i=0,len=this.customFields.length;i<len;i++){if(this.customFields[i].name===name){this.customFields[i].value=value;fieldUpdated=true;}}
 if(!fieldUpdated){this.customFields.push({"name":name,"value":value});}},hasCustomFields:function(){return(this.customFields.length>0);},formatWithException:function(loggingEvent){var formatted=this.format(loggingEvent);if(loggingEvent.exception&&this.ignoresThrowable()){formatted+=loggingEvent.getThrowableStrRep();}
@@ -16094,7 +14648,7 @@ str+=" level=\""+loggingEvent.level.name+"\">"+newLine;if(this.combineMessages){
 str+="</log4javascript:messages>"+newLine;}
 if(this.hasCustomFields()){for(i=0,len=this.customFields.length;i<len;i++){str+="<log4javascript:customfield name=\""+
 this.customFields[i].name+"\"><![CDATA["+
-this.customFields[i].message.toString()+"]]></log4javascript:customfield>"+newLine;}}
+this.customFields[i].value.toString()+"]]></log4javascript:customfield>"+newLine;}}
 if(loggingEvent.exception){str+="<log4javascript:exception><![CDATA["+
 getExceptionStringRep(loggingEvent.exception)+"]]></log4javascript:exception>"+newLine;}
 str+="</log4javascript:event>"+newLine+newLine;return str;};XmlLayout.prototype.ignoresThrowable=function(){return false;};XmlLayout.prototype.toString=function(){return"XmlLayout";};log4javascript.XmlLayout=XmlLayout;function escapeNewLines(str){return str.replace(/\r\n|\r|\n/g,"\\r\\n");}
@@ -16139,7 +14693,7 @@ replacement=(new SimpleDateFormat(dateFormat)).format(loggingEvent.timeStamp);br
 specifier+"' for conversion character 'f' - should be a number");}else if(fieldIndex===0){handleError("PatternLayout.format: invalid specifier '"+
 specifier+"' for conversion character 'f' - must be greater than zero");}else if(fieldIndex>this.customFields.length){handleError("PatternLayout.format: invalid specifier '"+
 specifier+"' for conversion character 'f' - there aren't that many custom fields");}else{fieldIndex=fieldIndex-1;}}
-var val=this.customFields[fieldIndex].message;if(typeof val=="function"){val=val(this,loggingEvent);}
+var val=this.customFields[fieldIndex].value;if(typeof val=="function"){val=val(this,loggingEvent);}
 replacement=val;}
 break;case"n":replacement=newLine;break;case"p":replacement=loggingEvent.level.name;break;case"r":replacement=""+loggingEvent.timeStamp.getDifference(applicationStartDate);break;case"%":replacement="%";break;default:replacement=matchedString;break;}
 var l;if(truncation){l=parseInt(truncation.substr(1),10);var strLen=replacement.length;if(l<strLen){replacement=replacement.substring(strLen-l,strLen);}}
@@ -16174,7 +14728,7 @@ function sendRequest(postData,successCallback){try{var xmlHttp=getXmlHttp(xmlHtt
 if(successCallback){successCallback(xmlHttp);}}else{var msg="AjaxAppender.append: XMLHttpRequest request to URL "+
 url+" returned status code "+xmlHttp.status;handleError(msg);if(failCallback){failCallback(msg);}}
 xmlHttp.onreadystatechange=emptyFunction;xmlHttp=null;}};xmlHttp.open("POST",url,true);if(withCredentials&&withCredentialsSupported){xmlHttp.withCredentials=true;}
-try{for(var i=0,header;header=headers[i++];){xmlHttp.setRequestHeader(header.name,header.message);}
+try{for(var i=0,header;header=headers[i++];){xmlHttp.setRequestHeader(header.name,header.value);}
 xmlHttp.setRequestHeader("Content-Type",contentType);}catch(headerEx){var msg="AjaxAppender.append: your browser's XMLHttpRequest implementation"+" does not support setRequestHeader, therefore cannot post data. AjaxAppender disabled";handleError(msg);isSupported=false;if(failCallback){failCallback(msg);}
 return;}
 xmlHttp.send(postData);}}catch(ex){var errMsg="AjaxAppender.append: error sending log message to "+url;handleError(errMsg,ex);isSupported=false;if(failCallback){failCallback(errMsg+". Details: "+getExceptionStringRep(ex));}}}
@@ -16191,7 +14745,7 @@ return null;}
 function getBaseUrl(){var scripts=document.getElementsByTagName("script");for(var i=0,len=scripts.length;i<len;++i){if(scripts[i].src.indexOf("log4javascript")!=-1){var lastSlash=scripts[i].src.lastIndexOf("/");return(lastSlash==-1)?"":scripts[i].src.substr(0,lastSlash+1);}}
 return null;}
 function isLoaded(win){try{return bool(win.loaded);}catch(ex){return false;}}
-var ConsoleAppender;(function(){var getConsoleHtmlLines=function(){return['<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">','<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">','<head>','<title>log4javascript</title>','<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />','<!-- Make IE8 behave like IE7, having gone to all the trouble of making IE work -->','<meta http-equiv="X-UA-Compatible" content="IE=7" />','<script type="text/javascript">var isIe = false, isIePre7 = false;</script>','<!--[if IE]><script type="text/javascript">isIe = true</script><![endif]-->','<!--[if lt IE 7]><script type="text/javascript">isIePre7 = true</script><![endif]-->','<script type="text/javascript">','//<![CDATA[','var loggingEnabled=true;var logQueuedEventsTimer=null;var logEntries=[];var logEntriesAndSeparators=[];var logItems=[];var renderDelay=100;var unrenderedLogItemsExist=false;var rootGroup,currentGroup=null;var loaded=false;var currentLogItem=null;var logMainContainer;function copyProperties(obj,props){for(var i in props){obj[i]=props[i];}}','function LogItem(){}','LogItem.prototype={mainContainer:null,wrappedContainer:null,unwrappedContainer:null,group:null,appendToLog:function(){for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].appendToLog();}','this.group.update();},doRemove:function(doUpdate,removeFromGroup){if(this.rendered){for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].remove();}','this.unwrappedElementContainer=null;this.wrappedElementContainer=null;this.mainElementContainer=null;}','if(this.group&&removeFromGroup){this.group.removeChild(this,doUpdate);}','if(this===currentLogItem){currentLogItem=null;}},remove:function(doUpdate,removeFromGroup){this.doRemove(doUpdate,removeFromGroup);},render:function(){},accept:function(visitor){visitor.visit(this);},getUnwrappedDomContainer:function(){return this.group.unwrappedElementContainer.contentDiv;},getWrappedDomContainer:function(){return this.group.wrappedElementContainer.contentDiv;},getMainDomContainer:function(){return this.group.mainElementContainer.contentDiv;}};LogItem.serializedItemKeys={LOG_ENTRY:0,GROUP_START:1,GROUP_END:2};function LogItemContainerElement(){}','LogItemContainerElement.prototype={appendToLog:function(){var insertBeforeFirst=(newestAtTop&&this.containerDomNode.hasChildNodes());if(insertBeforeFirst){this.containerDomNode.insertBefore(this.mainDiv,this.containerDomNode.firstChild);}else{this.containerDomNode.appendChild(this.mainDiv);}}};function SeparatorElementContainer(containerDomNode){this.containerDomNode=containerDomNode;this.mainDiv=document.createElement("div");this.mainDiv.className="separator";this.mainDiv.innerHTML="&nbsp;";}','SeparatorElementContainer.prototype=new LogItemContainerElement();SeparatorElementContainer.prototype.remove=function(){this.mainDiv.parentNode.removeChild(this.mainDiv);this.mainDiv=null;};function Separator(){this.rendered=false;}','Separator.prototype=new LogItem();copyProperties(Separator.prototype,{render:function(){var containerDomNode=this.group.contentDiv;if(isIe){this.unwrappedElementContainer=new SeparatorElementContainer(this.getUnwrappedDomContainer());this.wrappedElementContainer=new SeparatorElementContainer(this.getWrappedDomContainer());this.elementContainers=[this.unwrappedElementContainer,this.wrappedElementContainer];}else{this.mainElementContainer=new SeparatorElementContainer(this.getMainDomContainer());this.elementContainers=[this.mainElementContainer];}','this.content=this.formattedMessage;this.rendered=true;}});function GroupElementContainer(group,containerDomNode,isRoot,isWrapped){this.group=group;this.containerDomNode=containerDomNode;this.isRoot=isRoot;this.isWrapped=isWrapped;this.expandable=false;if(this.isRoot){if(isIe){this.contentDiv=logMainContainer.appendChild(document.createElement("div"));this.contentDiv.id=this.isWrapped?"log_wrapped":"log_unwrapped";}else{this.contentDiv=logMainContainer;}}else{var groupElementContainer=this;this.mainDiv=document.createElement("div");this.mainDiv.className="group";this.headingDiv=this.mainDiv.appendChild(document.createElement("div"));this.headingDiv.className="groupheading";this.expander=this.headingDiv.appendChild(document.createElement("span"));this.expander.className="expander unselectable greyedout";this.expander.unselectable=true;var expanderText=this.group.expanded?"-":"+";this.expanderTextNode=this.expander.appendChild(document.createTextNode(expanderText));this.headingDiv.appendChild(document.createTextNode(" "+this.group.name));this.contentDiv=this.mainDiv.appendChild(document.createElement("div"));var contentCssClass=this.group.expanded?"expanded":"collapsed";this.contentDiv.className="groupcontent "+contentCssClass;this.expander.onclick=function(){if(groupElementContainer.group.expandable){groupElementContainer.group.toggleExpanded();}};}}','GroupElementContainer.prototype=new LogItemContainerElement();copyProperties(GroupElementContainer.prototype,{toggleExpanded:function(){if(!this.isRoot){var oldCssClass,newCssClass,expanderText;if(this.group.expanded){newCssClass="expanded";oldCssClass="collapsed";expanderText="-";}else{newCssClass="collapsed";oldCssClass="expanded";expanderText="+";}','replaceClass(this.contentDiv,newCssClass,oldCssClass);this.expanderTextNode.nodeValue=expanderText;}},remove:function(){if(!this.isRoot){this.headingDiv=null;this.expander.onclick=null;this.expander=null;this.expanderTextNode=null;this.contentDiv=null;this.containerDomNode=null;this.mainDiv.parentNode.removeChild(this.mainDiv);this.mainDiv=null;}},reverseChildren:function(){var node=null;var childDomNodes=[];while((node=this.contentDiv.firstChild)){this.contentDiv.removeChild(node);childDomNodes.push(node);}','while((node=childDomNodes.pop())){this.contentDiv.appendChild(node);}},update:function(){if(!this.isRoot){if(this.group.expandable){removeClass(this.expander,"greyedout");}else{addClass(this.expander,"greyedout");}}},clear:function(){if(this.isRoot){this.contentDiv.innerHTML="";}}});function Group(name,isRoot,initiallyExpanded){this.name=name;this.group=null;this.isRoot=isRoot;this.initiallyExpanded=initiallyExpanded;this.elementContainers=[];this.children=[];this.expanded=initiallyExpanded;this.rendered=false;this.expandable=false;}','Group.prototype=new LogItem();copyProperties(Group.prototype,{addChild:function(logItem){this.children.push(logItem);logItem.group=this;},render:function(){if(isIe){var unwrappedDomContainer,wrappedDomContainer;if(this.isRoot){unwrappedDomContainer=logMainContainer;wrappedDomContainer=logMainContainer;}else{unwrappedDomContainer=this.getUnwrappedDomContainer();wrappedDomContainer=this.getWrappedDomContainer();}','this.unwrappedElementContainer=new GroupElementContainer(this,unwrappedDomContainer,this.isRoot,false);this.wrappedElementContainer=new GroupElementContainer(this,wrappedDomContainer,this.isRoot,true);this.elementContainers=[this.unwrappedElementContainer,this.wrappedElementContainer];}else{var mainDomContainer=this.isRoot?logMainContainer:this.getMainDomContainer();this.mainElementContainer=new GroupElementContainer(this,mainDomContainer,this.isRoot,false);this.elementContainers=[this.mainElementContainer];}','this.rendered=true;},toggleExpanded:function(){this.expanded=!this.expanded;for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].toggleExpanded();}},expand:function(){if(!this.expanded){this.toggleExpanded();}},accept:function(visitor){visitor.visitGroup(this);},reverseChildren:function(){if(this.rendered){for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].reverseChildren();}}},update:function(){var previouslyExpandable=this.expandable;this.expandable=(this.children.length!==0);if(this.expandable!==previouslyExpandable){for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].update();}}},flatten:function(){var visitor=new GroupFlattener();this.accept(visitor);return visitor.logEntriesAndSeparators;},removeChild:function(child,doUpdate){array_remove(this.children,child);child.group=null;if(doUpdate){this.update();}},remove:function(doUpdate,removeFromGroup){for(var i=0,len=this.children.length;i<len;i++){this.children[i].remove(false,false);}','this.children=[];this.update();if(this===currentGroup){currentGroup=this.group;}','this.doRemove(doUpdate,removeFromGroup);},serialize:function(items){items.push([LogItem.serializedItemKeys.GROUP_START,this.name]);for(var i=0,len=this.children.length;i<len;i++){this.children[i].serialize(items);}','if(this!==currentGroup){items.push([LogItem.serializedItemKeys.GROUP_END]);}},clear:function(){for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].clear();}}});function LogEntryElementContainer(){}','LogEntryElementContainer.prototype=new LogItemContainerElement();copyProperties(LogEntryElementContainer.prototype,{remove:function(){this.doRemove();},doRemove:function(){this.mainDiv.parentNode.removeChild(this.mainDiv);this.mainDiv=null;this.contentElement=null;this.containerDomNode=null;},setContent:function(content,wrappedContent){if(content===this.formattedMessage){this.contentElement.innerHTML="";this.contentElement.appendChild(document.createTextNode(this.formattedMessage));}else{this.contentElement.innerHTML=content;}},setSearchMatch:function(isMatch){var oldCssClass=isMatch?"searchnonmatch":"searchmatch";var newCssClass=isMatch?"searchmatch":"searchnonmatch";replaceClass(this.mainDiv,newCssClass,oldCssClass);},clearSearch:function(){removeClass(this.mainDiv,"searchmatch");removeClass(this.mainDiv,"searchnonmatch");}});function LogEntryWrappedElementContainer(logEntry,containerDomNode){this.logEntry=logEntry;this.containerDomNode=containerDomNode;this.mainDiv=document.createElement("div");this.mainDiv.appendChild(document.createTextNode(this.logEntry.formattedMessage));this.mainDiv.className="logentry wrapped "+this.logEntry.level;this.contentElement=this.mainDiv;}','LogEntryWrappedElementContainer.prototype=new LogEntryElementContainer();LogEntryWrappedElementContainer.prototype.setContent=function(content,wrappedContent){if(content===this.formattedMessage){this.contentElement.innerHTML="";this.contentElement.appendChild(document.createTextNode(this.formattedMessage));}else{this.contentElement.innerHTML=wrappedContent;}};function LogEntryUnwrappedElementContainer(logEntry,containerDomNode){this.logEntry=logEntry;this.containerDomNode=containerDomNode;this.mainDiv=document.createElement("div");this.mainDiv.className="logentry unwrapped "+this.logEntry.level;this.pre=this.mainDiv.appendChild(document.createElement("pre"));this.pre.appendChild(document.createTextNode(this.logEntry.formattedMessage));this.pre.className="unwrapped";this.contentElement=this.pre;}','LogEntryUnwrappedElementContainer.prototype=new LogEntryElementContainer();LogEntryUnwrappedElementContainer.prototype.remove=function(){this.doRemove();this.pre=null;};function LogEntryMainElementContainer(logEntry,containerDomNode){this.logEntry=logEntry;this.containerDomNode=containerDomNode;this.mainDiv=document.createElement("div");this.mainDiv.className="logentry nonielogentry "+this.logEntry.level;this.contentElement=this.mainDiv.appendChild(document.createElement("span"));this.contentElement.appendChild(document.createTextNode(this.logEntry.formattedMessage));}','LogEntryMainElementContainer.prototype=new LogEntryElementContainer();function LogEntry(level,formattedMessage){this.level=level;this.formattedMessage=formattedMessage;this.rendered=false;}','LogEntry.prototype=new LogItem();copyProperties(LogEntry.prototype,{render:function(){var logEntry=this;var containerDomNode=this.group.contentDiv;if(isIe){this.formattedMessage=this.formattedMessage.replace(/\\r\\n/g,"\\r");this.unwrappedElementContainer=new LogEntryUnwrappedElementContainer(this,this.getUnwrappedDomContainer());this.wrappedElementContainer=new LogEntryWrappedElementContainer(this,this.getWrappedDomContainer());this.elementContainers=[this.unwrappedElementContainer,this.wrappedElementContainer];}else{this.mainElementContainer=new LogEntryMainElementContainer(this,this.getMainDomContainer());this.elementContainers=[this.mainElementContainer];}','this.content=this.formattedMessage;this.rendered=true;},setContent:function(content,wrappedContent){if(content!=this.content){if(isIe&&(content!==this.formattedMessage)){content=content.replace(/\\r\\n/g,"\\r");}','for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].setContent(content,wrappedContent);}','this.content=content;}},getSearchMatches:function(){var matches=[];var i,len;if(isIe){var unwrappedEls=getElementsByClass(this.unwrappedElementContainer.mainDiv,"searchterm","span");var wrappedEls=getElementsByClass(this.wrappedElementContainer.mainDiv,"searchterm","span");for(i=0,len=unwrappedEls.length;i<len;i++){matches[i]=new Match(this.level,null,unwrappedEls[i],wrappedEls[i]);}}else{var els=getElementsByClass(this.mainElementContainer.mainDiv,"searchterm","span");for(i=0,len=els.length;i<len;i++){matches[i]=new Match(this.level,els[i]);}}','return matches;},setSearchMatch:function(isMatch){for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].setSearchMatch(isMatch);}},clearSearch:function(){for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].clearSearch();}},accept:function(visitor){visitor.visitLogEntry(this);},serialize:function(items){items.push([LogItem.serializedItemKeys.LOG_ENTRY,this.level,this.formattedMessage]);}});function LogItemVisitor(){}','LogItemVisitor.prototype={visit:function(logItem){},visitParent:function(logItem){if(logItem.group){logItem.group.accept(this);}},visitChildren:function(logItem){for(var i=0,len=logItem.children.length;i<len;i++){logItem.children[i].accept(this);}},visitLogEntry:function(logEntry){this.visit(logEntry);},visitSeparator:function(separator){this.visit(separator);},visitGroup:function(group){this.visit(group);}};function GroupFlattener(){this.logEntriesAndSeparators=[];}','GroupFlattener.prototype=new LogItemVisitor();GroupFlattener.prototype.visitGroup=function(group){this.visitChildren(group);};GroupFlattener.prototype.visitLogEntry=function(logEntry){this.logEntriesAndSeparators.push(logEntry);};GroupFlattener.prototype.visitSeparator=function(separator){this.logEntriesAndSeparators.push(separator);};window.onload=function(){if(location.search){var queryBits=unescape(location.search).substr(1).split("&"),nameValueBits;for(var i=0,len=queryBits.length;i<len;i++){nameValueBits=queryBits[i].split("=");if(nameValueBits[0]=="log4javascript_domain"){document.domain=nameValueBits[1];break;}}}','logMainContainer=$("log");if(isIePre7){addClass(logMainContainer,"oldIe");}','rootGroup=new Group("root",true);rootGroup.render();currentGroup=rootGroup;setCommandInputWidth();setLogContainerHeight();toggleLoggingEnabled();toggleSearchEnabled();toggleSearchFilter();toggleSearchHighlight();applyFilters();checkAllLevels();toggleWrap();toggleNewestAtTop();toggleScrollToLatest();renderQueuedLogItems();loaded=true;$("command").value="";$("command").autocomplete="off";$("command").onkeydown=function(evt){evt=getEvent(evt);if(evt.keyCode==10||evt.keyCode==13){evalCommandLine();stopPropagation(evt);}else if(evt.keyCode==27){this.value="";this.focus();}else if(evt.keyCode==38&&commandHistory.length>0){currentCommandIndex=Math.max(0,currentCommandIndex-1);this.value=commandHistory[currentCommandIndex];moveCaretToEnd(this);}else if(evt.keyCode==40&&commandHistory.length>0){currentCommandIndex=Math.min(commandHistory.length-1,currentCommandIndex+1);this.value=commandHistory[currentCommandIndex];moveCaretToEnd(this);}};$("command").onkeypress=function(evt){evt=getEvent(evt);if(evt.keyCode==38&&commandHistory.length>0&&evt.preventDefault){evt.preventDefault();}};$("command").onkeyup=function(evt){evt=getEvent(evt);if(evt.keyCode==27&&evt.preventDefault){evt.preventDefault();this.focus();}};document.onkeydown=function keyEventHandler(evt){evt=getEvent(evt);switch(evt.keyCode){case 69:if(evt.shiftKey&&(evt.ctrlKey||evt.metaKey)){evalLastCommand();cancelKeyEvent(evt);return false;}','break;case 75:if(evt.shiftKey&&(evt.ctrlKey||evt.metaKey)){focusSearch();cancelKeyEvent(evt);return false;}','break;case 40:case 76:if(evt.shiftKey&&(evt.ctrlKey||evt.metaKey)){focusCommandLine();cancelKeyEvent(evt);return false;}','break;}};setTimeout(setLogContainerHeight,20);setShowCommandLine(showCommandLine);doSearch();};window.onunload=function(){if(mainWindowExists()){appender.unload();}','appender=null;};function toggleLoggingEnabled(){setLoggingEnabled($("enableLogging").checked);}','function setLoggingEnabled(enable){loggingEnabled=enable;}','var appender=null;function setAppender(appenderParam){appender=appenderParam;}','function setShowCloseButton(showCloseButton){$("closeButton").style.display=showCloseButton?"inline":"none";}','function setShowHideButton(showHideButton){$("hideButton").style.display=showHideButton?"inline":"none";}','var newestAtTop=false;function LogItemContentReverser(){}','LogItemContentReverser.prototype=new LogItemVisitor();LogItemContentReverser.prototype.visitGroup=function(group){group.reverseChildren();this.visitChildren(group);};function setNewestAtTop(isNewestAtTop){var oldNewestAtTop=newestAtTop;var i,iLen,j,jLen;newestAtTop=Boolean(isNewestAtTop);if(oldNewestAtTop!=newestAtTop){var visitor=new LogItemContentReverser();rootGroup.accept(visitor);if(currentSearch){var currentMatch=currentSearch.matches[currentMatchIndex];var matchIndex=0;var matches=[];var actOnLogEntry=function(logEntry){var logEntryMatches=logEntry.getSearchMatches();for(j=0,jLen=logEntryMatches.length;j<jLen;j++){matches[matchIndex]=logEntryMatches[j];if(currentMatch&&logEntryMatches[j].equals(currentMatch)){currentMatchIndex=matchIndex;}','matchIndex++;}};if(newestAtTop){for(i=logEntries.length-1;i>=0;i--){actOnLogEntry(logEntries[i]);}}else{for(i=0,iLen=logEntries.length;i<iLen;i++){actOnLogEntry(logEntries[i]);}}','currentSearch.matches=matches;if(currentMatch){currentMatch.setCurrent();}}else if(scrollToLatest){doScrollToLatest();}}','$("newestAtTop").checked=isNewestAtTop;}','function toggleNewestAtTop(){var isNewestAtTop=$("newestAtTop").checked;setNewestAtTop(isNewestAtTop);}','var scrollToLatest=true;function setScrollToLatest(isScrollToLatest){scrollToLatest=isScrollToLatest;if(scrollToLatest){doScrollToLatest();}','$("scrollToLatest").checked=isScrollToLatest;}','function toggleScrollToLatest(){var isScrollToLatest=$("scrollToLatest").checked;setScrollToLatest(isScrollToLatest);}','function doScrollToLatest(){var l=logMainContainer;if(typeof l.scrollTop!="undefined"){if(newestAtTop){l.scrollTop=0;}else{var latestLogEntry=l.lastChild;if(latestLogEntry){l.scrollTop=l.scrollHeight;}}}}','var closeIfOpenerCloses=true;function setCloseIfOpenerCloses(isCloseIfOpenerCloses){closeIfOpenerCloses=isCloseIfOpenerCloses;}','var maxMessages=null;function setMaxMessages(max){maxMessages=max;pruneLogEntries();}','var showCommandLine=false;function setShowCommandLine(isShowCommandLine){showCommandLine=isShowCommandLine;if(loaded){$("commandLine").style.display=showCommandLine?"block":"none";setCommandInputWidth();setLogContainerHeight();}}','function focusCommandLine(){if(loaded){$("command").focus();}}','function focusSearch(){if(loaded){$("searchBox").focus();}}','function getLogItems(){var items=[];for(var i=0,len=logItems.length;i<len;i++){logItems[i].serialize(items);}','return items;}','function setLogItems(items){var loggingReallyEnabled=loggingEnabled;loggingEnabled=true;for(var i=0,len=items.length;i<len;i++){switch(items[i][0]){case LogItem.serializedItemKeys.LOG_ENTRY:log(items[i][1],items[i][2]);break;case LogItem.serializedItemKeys.GROUP_START:group(items[i][1]);break;case LogItem.serializedItemKeys.GROUP_END:groupEnd();break;}}','loggingEnabled=loggingReallyEnabled;}','function log(logLevel,formattedMessage){if(loggingEnabled){var logEntry=new LogEntry(logLevel,formattedMessage);logEntries.push(logEntry);logEntriesAndSeparators.push(logEntry);logItems.push(logEntry);currentGroup.addChild(logEntry);if(loaded){if(logQueuedEventsTimer!==null){clearTimeout(logQueuedEventsTimer);}','logQueuedEventsTimer=setTimeout(renderQueuedLogItems,renderDelay);unrenderedLogItemsExist=true;}}}','function renderQueuedLogItems(){logQueuedEventsTimer=null;var pruned=pruneLogEntries();var initiallyHasMatches=currentSearch?currentSearch.hasMatches():false;for(var i=0,len=logItems.length;i<len;i++){if(!logItems[i].rendered){logItems[i].render();logItems[i].appendToLog();if(currentSearch&&(logItems[i]instanceof LogEntry)){currentSearch.applyTo(logItems[i]);}}}','if(currentSearch){if(pruned){if(currentSearch.hasVisibleMatches()){if(currentMatchIndex===null){setCurrentMatchIndex(0);}','displayMatches();}else{displayNoMatches();}}else if(!initiallyHasMatches&&currentSearch.hasVisibleMatches()){setCurrentMatchIndex(0);displayMatches();}}','if(scrollToLatest){doScrollToLatest();}','unrenderedLogItemsExist=false;}','function pruneLogEntries(){if((maxMessages!==null)&&(logEntriesAndSeparators.length>maxMessages)){var numberToDelete=logEntriesAndSeparators.length-maxMessages;var prunedLogEntries=logEntriesAndSeparators.slice(0,numberToDelete);if(currentSearch){currentSearch.removeMatches(prunedLogEntries);}','var group;for(var i=0;i<numberToDelete;i++){group=logEntriesAndSeparators[i].group;array_remove(logItems,logEntriesAndSeparators[i]);array_remove(logEntries,logEntriesAndSeparators[i]);logEntriesAndSeparators[i].remove(true,true);if(group.children.length===0&&group!==currentGroup&&group!==rootGroup){array_remove(logItems,group);group.remove(true,true);}}','logEntriesAndSeparators=array_removeFromStart(logEntriesAndSeparators,numberToDelete);return true;}','return false;}','function group(name,startExpanded){if(loggingEnabled){initiallyExpanded=(typeof startExpanded==="undefined")?true:Boolean(startExpanded);var newGroup=new Group(name,false,initiallyExpanded);currentGroup.addChild(newGroup);currentGroup=newGroup;logItems.push(newGroup);if(loaded){if(logQueuedEventsTimer!==null){clearTimeout(logQueuedEventsTimer);}','logQueuedEventsTimer=setTimeout(renderQueuedLogItems,renderDelay);unrenderedLogItemsExist=true;}}}','function groupEnd(){currentGroup=(currentGroup===rootGroup)?rootGroup:currentGroup.group;}','function mainPageReloaded(){currentGroup=rootGroup;var separator=new Separator();logEntriesAndSeparators.push(separator);logItems.push(separator);currentGroup.addChild(separator);}','function closeWindow(){if(appender&&mainWindowExists()){appender.close(true);}else{window.close();}}','function hide(){if(appender&&mainWindowExists()){appender.hide();}}','var mainWindow=window;var windowId="log4javascriptConsoleWindow_"+new Date().getTime()+"_"+(""+Math.random()).substr(2);function setMainWindow(win){mainWindow=win;mainWindow[windowId]=window;if(opener&&closeIfOpenerCloses){pollOpener();}}','function pollOpener(){if(closeIfOpenerCloses){if(mainWindowExists()){setTimeout(pollOpener,500);}else{closeWindow();}}}','function mainWindowExists(){try{return(mainWindow&&!mainWindow.closed&&mainWindow[windowId]==window);}catch(ex){}','return false;}','var logLevels=["TRACE","DEBUG","INFO","WARN","ERROR","FATAL"];function getCheckBox(logLevel){return $("switch_"+logLevel);}','function getIeWrappedLogContainer(){return $("log_wrapped");}','function getIeUnwrappedLogContainer(){return $("log_unwrapped");}','function applyFilters(){for(var i=0;i<logLevels.length;i++){if(getCheckBox(logLevels[i]).checked){addClass(logMainContainer,logLevels[i]);}else{removeClass(logMainContainer,logLevels[i]);}}','updateSearchFromFilters();}','function toggleAllLevels(){var turnOn=$("switch_ALL").checked;for(var i=0;i<logLevels.length;i++){getCheckBox(logLevels[i]).checked=turnOn;if(turnOn){addClass(logMainContainer,logLevels[i]);}else{removeClass(logMainContainer,logLevels[i]);}}}','function checkAllLevels(){for(var i=0;i<logLevels.length;i++){if(!getCheckBox(logLevels[i]).checked){getCheckBox("ALL").checked=false;return;}}','getCheckBox("ALL").checked=true;}','function clearLog(){rootGroup.clear();currentGroup=rootGroup;logEntries=[];logItems=[];logEntriesAndSeparators=[];doSearch();}','function toggleWrap(){var enable=$("wrap").checked;if(enable){addClass(logMainContainer,"wrap");}else{removeClass(logMainContainer,"wrap");}','refreshCurrentMatch();}','var searchTimer=null;function scheduleSearch(){try{clearTimeout(searchTimer);}catch(ex){}','searchTimer=setTimeout(doSearch,500);}','function Search(searchTerm,isRegex,searchRegex,isCaseSensitive){this.searchTerm=searchTerm;this.isRegex=isRegex;this.searchRegex=searchRegex;this.isCaseSensitive=isCaseSensitive;this.matches=[];}','Search.prototype={hasMatches:function(){return this.matches.length>0;},hasVisibleMatches:function(){if(this.hasMatches()){for(var i=0;i<this.matches.length;i++){if(this.matches[i].isVisible()){return true;}}}','return false;},match:function(logEntry){var entryText=String(logEntry.formattedMessage);var matchesSearch=false;if(this.isRegex){matchesSearch=this.searchRegex.test(entryText);}else if(this.isCaseSensitive){matchesSearch=(entryText.indexOf(this.searchTerm)>-1);}else{matchesSearch=(entryText.toLowerCase().indexOf(this.searchTerm.toLowerCase())>-1);}','return matchesSearch;},getNextVisibleMatchIndex:function(){for(var i=currentMatchIndex+1;i<this.matches.length;i++){if(this.matches[i].isVisible()){return i;}}','for(i=0;i<=currentMatchIndex;i++){if(this.matches[i].isVisible()){return i;}}','return-1;},getPreviousVisibleMatchIndex:function(){for(var i=currentMatchIndex-1;i>=0;i--){if(this.matches[i].isVisible()){return i;}}','for(var i=this.matches.length-1;i>=currentMatchIndex;i--){if(this.matches[i].isVisible()){return i;}}','return-1;},applyTo:function(logEntry){var doesMatch=this.match(logEntry);if(doesMatch){logEntry.group.expand();logEntry.setSearchMatch(true);var logEntryContent;var wrappedLogEntryContent;var searchTermReplacementStartTag="<span class=\\\"searchterm\\\">";var searchTermReplacementEndTag="<"+"/span>";var preTagName=isIe?"pre":"span";var preStartTag="<"+preTagName+" class=\\\"pre\\\">";var preEndTag="<"+"/"+preTagName+">";var startIndex=0;var searchIndex,matchedText,textBeforeMatch;if(this.isRegex){var flags=this.isCaseSensitive?"g":"gi";var capturingRegex=new RegExp("("+this.searchRegex.source+")",flags);var rnd=(""+Math.random()).substr(2);var startToken="%%s"+rnd+"%%";var endToken="%%e"+rnd+"%%";logEntryContent=logEntry.formattedMessage.replace(capturingRegex,startToken+"$1"+endToken);logEntryContent=escapeHtml(logEntryContent);var result;var searchString=logEntryContent;logEntryContent="";wrappedLogEntryContent="";while((searchIndex=searchString.indexOf(startToken,startIndex))>-1){var endTokenIndex=searchString.indexOf(endToken,searchIndex);matchedText=searchString.substring(searchIndex+startToken.length,endTokenIndex);textBeforeMatch=searchString.substring(startIndex,searchIndex);logEntryContent+=preStartTag+textBeforeMatch+preEndTag;logEntryContent+=searchTermReplacementStartTag+preStartTag+matchedText+','preEndTag+searchTermReplacementEndTag;if(isIe){wrappedLogEntryContent+=textBeforeMatch+searchTermReplacementStartTag+','matchedText+searchTermReplacementEndTag;}','startIndex=endTokenIndex+endToken.length;}','logEntryContent+=preStartTag+searchString.substr(startIndex)+preEndTag;if(isIe){wrappedLogEntryContent+=searchString.substr(startIndex);}}else{logEntryContent="";wrappedLogEntryContent="";var searchTermReplacementLength=searchTermReplacementStartTag.length+','this.searchTerm.length+searchTermReplacementEndTag.length;var searchTermLength=this.searchTerm.length;var searchTermLowerCase=this.searchTerm.toLowerCase();var logTextLowerCase=logEntry.formattedMessage.toLowerCase();while((searchIndex=logTextLowerCase.indexOf(searchTermLowerCase,startIndex))>-1){matchedText=escapeHtml(logEntry.formattedMessage.substr(searchIndex,this.searchTerm.length));textBeforeMatch=escapeHtml(logEntry.formattedMessage.substring(startIndex,searchIndex));var searchTermReplacement=searchTermReplacementStartTag+','preStartTag+matchedText+preEndTag+searchTermReplacementEndTag;logEntryContent+=preStartTag+textBeforeMatch+preEndTag+searchTermReplacement;if(isIe){wrappedLogEntryContent+=textBeforeMatch+searchTermReplacementStartTag+','matchedText+searchTermReplacementEndTag;}','startIndex=searchIndex+searchTermLength;}','var textAfterLastMatch=escapeHtml(logEntry.formattedMessage.substr(startIndex));logEntryContent+=preStartTag+textAfterLastMatch+preEndTag;if(isIe){wrappedLogEntryContent+=textAfterLastMatch;}}','logEntry.setContent(logEntryContent,wrappedLogEntryContent);var logEntryMatches=logEntry.getSearchMatches();this.matches=this.matches.concat(logEntryMatches);}else{logEntry.setSearchMatch(false);logEntry.setContent(logEntry.formattedMessage,logEntry.formattedMessage);}','return doesMatch;},removeMatches:function(logEntries){var matchesToRemoveCount=0;var currentMatchRemoved=false;var matchesToRemove=[];var i,iLen,j,jLen;for(i=0,iLen=this.matches.length;i<iLen;i++){for(j=0,jLen=logEntries.length;j<jLen;j++){if(this.matches[i].belongsTo(logEntries[j])){matchesToRemove.push(this.matches[i]);if(i===currentMatchIndex){currentMatchRemoved=true;}}}}','var newMatch=currentMatchRemoved?null:this.matches[currentMatchIndex];if(currentMatchRemoved){for(i=currentMatchIndex,iLen=this.matches.length;i<iLen;i++){if(this.matches[i].isVisible()&&!array_contains(matchesToRemove,this.matches[i])){newMatch=this.matches[i];break;}}}','for(i=0,iLen=matchesToRemove.length;i<iLen;i++){array_remove(this.matches,matchesToRemove[i]);matchesToRemove[i].remove();}','if(this.hasVisibleMatches()){if(newMatch===null){setCurrentMatchIndex(0);}else{var newMatchIndex=0;for(i=0,iLen=this.matches.length;i<iLen;i++){if(newMatch===this.matches[i]){newMatchIndex=i;break;}}','setCurrentMatchIndex(newMatchIndex);}}else{currentMatchIndex=null;displayNoMatches();}}};function getPageOffsetTop(el,container){var currentEl=el;var y=0;while(currentEl&&currentEl!=container){y+=currentEl.offsetTop;currentEl=currentEl.offsetParent;}','return y;}','function scrollIntoView(el){var logContainer=logMainContainer;if(!$("wrap").checked){var logContainerLeft=logContainer.scrollLeft;var logContainerRight=logContainerLeft+logContainer.offsetWidth;var elLeft=el.offsetLeft;var elRight=elLeft+el.offsetWidth;if(elLeft<logContainerLeft||elRight>logContainerRight){logContainer.scrollLeft=elLeft-(logContainer.offsetWidth-el.offsetWidth)/2;}}','var logContainerTop=logContainer.scrollTop;var logContainerBottom=logContainerTop+logContainer.offsetHeight;var elTop=getPageOffsetTop(el)-getToolBarsHeight();var elBottom=elTop+el.offsetHeight;if(elTop<logContainerTop||elBottom>logContainerBottom){logContainer.scrollTop=elTop-(logContainer.offsetHeight-el.offsetHeight)/2;}}','function Match(logEntryLevel,spanInMainDiv,spanInUnwrappedPre,spanInWrappedDiv){this.logEntryLevel=logEntryLevel;this.spanInMainDiv=spanInMainDiv;if(isIe){this.spanInUnwrappedPre=spanInUnwrappedPre;this.spanInWrappedDiv=spanInWrappedDiv;}','this.mainSpan=isIe?spanInUnwrappedPre:spanInMainDiv;}','Match.prototype={equals:function(match){return this.mainSpan===match.mainSpan;},setCurrent:function(){if(isIe){addClass(this.spanInUnwrappedPre,"currentmatch");addClass(this.spanInWrappedDiv,"currentmatch");var elementToScroll=$("wrap").checked?this.spanInWrappedDiv:this.spanInUnwrappedPre;scrollIntoView(elementToScroll);}else{addClass(this.spanInMainDiv,"currentmatch");scrollIntoView(this.spanInMainDiv);}},belongsTo:function(logEntry){if(isIe){return isDescendant(this.spanInUnwrappedPre,logEntry.unwrappedPre);}else{return isDescendant(this.spanInMainDiv,logEntry.mainDiv);}},setNotCurrent:function(){if(isIe){removeClass(this.spanInUnwrappedPre,"currentmatch");removeClass(this.spanInWrappedDiv,"currentmatch");}else{removeClass(this.spanInMainDiv,"currentmatch");}},isOrphan:function(){return isOrphan(this.mainSpan);},isVisible:function(){return getCheckBox(this.logEntryLevel).checked;},remove:function(){if(isIe){this.spanInUnwrappedPre=null;this.spanInWrappedDiv=null;}else{this.spanInMainDiv=null;}}};var currentSearch=null;var currentMatchIndex=null;function doSearch(){var searchBox=$("searchBox");var searchTerm=searchBox.value;var isRegex=$("searchRegex").checked;var isCaseSensitive=$("searchCaseSensitive").checked;var i;if(searchTerm===""){$("searchReset").disabled=true;$("searchNav").style.display="none";removeClass(document.body,"searching");removeClass(searchBox,"hasmatches");removeClass(searchBox,"nomatches");for(i=0;i<logEntries.length;i++){logEntries[i].clearSearch();logEntries[i].setContent(logEntries[i].formattedMessage,logEntries[i].formattedMessage);}','currentSearch=null;setLogContainerHeight();}else{$("searchReset").disabled=false;$("searchNav").style.display="block";var searchRegex;var regexValid;if(isRegex){try{searchRegex=isCaseSensitive?new RegExp(searchTerm,"g"):new RegExp(searchTerm,"gi");regexValid=true;replaceClass(searchBox,"validregex","invalidregex");searchBox.title="Valid regex";}catch(ex){regexValid=false;replaceClass(searchBox,"invalidregex","validregex");searchBox.title="Invalid regex: "+(ex.message?ex.message:(ex.description?ex.description:"unknown error"));return;}}else{searchBox.title="";removeClass(searchBox,"validregex");removeClass(searchBox,"invalidregex");}','addClass(document.body,"searching");currentSearch=new Search(searchTerm,isRegex,searchRegex,isCaseSensitive);for(i=0;i<logEntries.length;i++){currentSearch.applyTo(logEntries[i]);}','setLogContainerHeight();if(currentSearch.hasVisibleMatches()){setCurrentMatchIndex(0);displayMatches();}else{displayNoMatches();}}}','function updateSearchFromFilters(){if(currentSearch){if(currentSearch.hasMatches()){if(currentMatchIndex===null){currentMatchIndex=0;}','var currentMatch=currentSearch.matches[currentMatchIndex];if(currentMatch.isVisible()){displayMatches();setCurrentMatchIndex(currentMatchIndex);}else{currentMatch.setNotCurrent();var nextVisibleMatchIndex=currentSearch.getNextVisibleMatchIndex();if(nextVisibleMatchIndex>-1){setCurrentMatchIndex(nextVisibleMatchIndex);displayMatches();}else{displayNoMatches();}}}else{displayNoMatches();}}}','function refreshCurrentMatch(){if(currentSearch&&currentSearch.hasVisibleMatches()){setCurrentMatchIndex(currentMatchIndex);}}','function displayMatches(){replaceClass($("searchBox"),"hasmatches","nomatches");$("searchBox").title=""+currentSearch.matches.length+" matches found";$("searchNav").style.display="block";setLogContainerHeight();}','function displayNoMatches(){replaceClass($("searchBox"),"nomatches","hasmatches");$("searchBox").title="No matches found";$("searchNav").style.display="none";setLogContainerHeight();}','function toggleSearchEnabled(enable){enable=(typeof enable=="undefined")?!$("searchDisable").checked:enable;$("searchBox").disabled=!enable;$("searchReset").disabled=!enable;$("searchRegex").disabled=!enable;$("searchNext").disabled=!enable;$("searchPrevious").disabled=!enable;$("searchCaseSensitive").disabled=!enable;$("searchNav").style.display=(enable&&($("searchBox").value!=="")&&currentSearch&&currentSearch.hasVisibleMatches())?"block":"none";if(enable){removeClass($("search"),"greyedout");addClass(document.body,"searching");if($("searchHighlight").checked){addClass(logMainContainer,"searchhighlight");}else{removeClass(logMainContainer,"searchhighlight");}','if($("searchFilter").checked){addClass(logMainContainer,"searchfilter");}else{removeClass(logMainContainer,"searchfilter");}','$("searchDisable").checked=!enable;}else{addClass($("search"),"greyedout");removeClass(document.body,"searching");removeClass(logMainContainer,"searchhighlight");removeClass(logMainContainer,"searchfilter");}','setLogContainerHeight();}','function toggleSearchFilter(){var enable=$("searchFilter").checked;if(enable){addClass(logMainContainer,"searchfilter");}else{removeClass(logMainContainer,"searchfilter");}','refreshCurrentMatch();}','function toggleSearchHighlight(){var enable=$("searchHighlight").checked;if(enable){addClass(logMainContainer,"searchhighlight");}else{removeClass(logMainContainer,"searchhighlight");}}','function clearSearch(){$("searchBox").value="";doSearch();}','function searchNext(){if(currentSearch!==null&&currentMatchIndex!==null){currentSearch.matches[currentMatchIndex].setNotCurrent();var nextMatchIndex=currentSearch.getNextVisibleMatchIndex();if(nextMatchIndex>currentMatchIndex||confirm("Reached the end of the page. Start from the top?")){setCurrentMatchIndex(nextMatchIndex);}}}','function searchPrevious(){if(currentSearch!==null&&currentMatchIndex!==null){currentSearch.matches[currentMatchIndex].setNotCurrent();var previousMatchIndex=currentSearch.getPreviousVisibleMatchIndex();if(previousMatchIndex<currentMatchIndex||confirm("Reached the start of the page. Continue from the bottom?")){setCurrentMatchIndex(previousMatchIndex);}}}','function setCurrentMatchIndex(index){currentMatchIndex=index;currentSearch.matches[currentMatchIndex].setCurrent();}','function addClass(el,cssClass){if(!hasClass(el,cssClass)){if(el.className){el.className+=" "+cssClass;}else{el.className=cssClass;}}}','function hasClass(el,cssClass){if(el.className){var classNames=el.className.split(" ");return array_contains(classNames,cssClass);}','return false;}','function removeClass(el,cssClass){if(hasClass(el,cssClass)){var existingClasses=el.className.split(" ");var newClasses=[];for(var i=0,len=existingClasses.length;i<len;i++){if(existingClasses[i]!=cssClass){newClasses[newClasses.length]=existingClasses[i];}}','el.className=newClasses.join(" ");}}','function replaceClass(el,newCssClass,oldCssClass){removeClass(el,oldCssClass);addClass(el,newCssClass);}','function getElementsByClass(el,cssClass,tagName){var elements=el.getElementsByTagName(tagName);var matches=[];for(var i=0,len=elements.length;i<len;i++){if(hasClass(elements[i],cssClass)){matches.push(elements[i]);}}','return matches;}','function $(id){return document.getElementById(id);}','function isDescendant(node,ancestorNode){while(node!=null){if(node===ancestorNode){return true;}','node=node.parentNode;}','return false;}','function isOrphan(node){var currentNode=node;while(currentNode){if(currentNode==document.body){return false;}','currentNode=currentNode.parentNode;}','return true;}','function escapeHtml(str){return str.replace(/&/g,"&amp;").replace(/[<]/g,"&lt;").replace(/>/g,"&gt;");}','function getWindowWidth(){if(window.innerWidth){return window.innerWidth;}else if(document.documentElement&&document.documentElement.clientWidth){return document.documentElement.clientWidth;}else if(document.body){return document.body.clientWidth;}','return 0;}','function getWindowHeight(){if(window.innerHeight){return window.innerHeight;}else if(document.documentElement&&document.documentElement.clientHeight){return document.documentElement.clientHeight;}else if(document.body){return document.body.clientHeight;}','return 0;}','function getToolBarsHeight(){return $("switches").offsetHeight;}','function getChromeHeight(){var height=getToolBarsHeight();if(showCommandLine){height+=$("commandLine").offsetHeight;}','return height;}','function setLogContainerHeight(){if(logMainContainer){var windowHeight=getWindowHeight();$("body").style.height=getWindowHeight()+"px";logMainContainer.style.height=""+','Math.max(0,windowHeight-getChromeHeight())+"px";}}','function setCommandInputWidth(){if(showCommandLine){$("command").style.width=""+Math.max(0,$("commandLineContainer").offsetWidth-','($("evaluateButton").offsetWidth+13))+"px";}}','window.onresize=function(){setCommandInputWidth();setLogContainerHeight();};if(!Array.prototype.push){Array.prototype.push=function(){for(var i=0,len=arguments.length;i<len;i++){this[this.length]=arguments[i];}','return this.length;};}','if(!Array.prototype.pop){Array.prototype.pop=function(){if(this.length>0){var val=this[this.length-1];this.length=this.length-1;return val;}};}','if(!Array.prototype.shift){Array.prototype.shift=function(){if(this.length>0){var firstItem=this[0];for(var i=0,len=this.length-1;i<len;i++){this[i]=this[i+1];}','this.length=this.length-1;return firstItem;}};}','if(!Array.prototype.splice){Array.prototype.splice=function(startIndex,deleteCount){var itemsAfterDeleted=this.slice(startIndex+deleteCount);var itemsDeleted=this.slice(startIndex,startIndex+deleteCount);this.length=startIndex;var argumentsArray=[];for(var i=0,len=arguments.length;i<len;i++){argumentsArray[i]=arguments[i];}','var itemsToAppend=(argumentsArray.length>2)?itemsAfterDeleted=argumentsArray.slice(2).concat(itemsAfterDeleted):itemsAfterDeleted;for(i=0,len=itemsToAppend.length;i<len;i++){this.push(itemsToAppend[i]);}','return itemsDeleted;};}','function array_remove(arr,val){var index=-1;for(var i=0,len=arr.length;i<len;i++){if(arr[i]===val){index=i;break;}}','if(index>=0){arr.splice(index,1);return index;}else{return false;}}','function array_removeFromStart(array,numberToRemove){if(Array.prototype.splice){array.splice(0,numberToRemove);}else{for(var i=numberToRemove,len=array.length;i<len;i++){array[i-numberToRemove]=array[i];}','array.length=array.length-numberToRemove;}','return array;}','function array_contains(arr,val){for(var i=0,len=arr.length;i<len;i++){if(arr[i]==val){return true;}}','return false;}','function getErrorMessage(ex){if(ex.message){return ex.message;}else if(ex.description){return ex.description;}','return""+ex;}','function moveCaretToEnd(input){if(input.setSelectionRange){input.focus();var length=input.message.length;input.setSelectionRange(length,length);}else if(input.createTextRange){var range=input.createTextRange();range.collapse(false);range.select();}','input.focus();}','function stopPropagation(evt){if(evt.stopPropagation){evt.stopPropagation();}else if(typeof evt.cancelBubble!="undefined"){evt.cancelBubble=true;}}','function getEvent(evt){return evt?evt:event;}','function getTarget(evt){return evt.target?evt.target:evt.srcElement;}','function getRelatedTarget(evt){if(evt.relatedTarget){return evt.relatedTarget;}else if(evt.srcElement){switch(evt.type){case"mouseover":return evt.fromElement;case"mouseout":return evt.toElement;default:return evt.srcElement;}}}','function cancelKeyEvent(evt){evt.returnValue=false;stopPropagation(evt);}','function evalCommandLine(){var expr=$("command").value;evalCommand(expr);$("command").value="";}','function evalLastCommand(){if(lastCommand!=null){evalCommand(lastCommand);}}','var lastCommand=null;var commandHistory=[];var currentCommandIndex=0;function evalCommand(expr){if(appender){appender.evalCommandAndAppend(expr);}else{var prefix=">>> "+expr+"\\r\\n";try{log("INFO",prefix+eval(expr));}catch(ex){log("ERROR",prefix+"Error: "+getErrorMessage(ex));}}','if(expr!=commandHistory[commandHistory.length-1]){commandHistory.push(expr);if(appender){appender.storeCommandHistory(commandHistory);}}','currentCommandIndex=(expr==commandHistory[currentCommandIndex])?currentCommandIndex+1:commandHistory.length;lastCommand=expr;}','//]]>','</script>','<style type="text/css">','body{background-color:white;color:black;padding:0;margin:0;font-family:tahoma,verdana,arial,helvetica,sans-serif;overflow:hidden}div#switchesContainer input{margin-bottom:0}div.toolbar{border-top:solid #ffffff 1px;border-bottom:solid #aca899 1px;background-color:#f1efe7;padding:3px 5px;font-size:68.75%}div.toolbar,div#search input{font-family:tahoma,verdana,arial,helvetica,sans-serif}div.toolbar input.button{padding:0 5px;font-size:100%}div.toolbar input.hidden{display:none}div#switches input#clearButton{margin-left:20px}div#levels label{font-weight:bold}div#levels label,div#options label{margin-right:5px}div#levels label#wrapLabel{font-weight:normal}div#search label{margin-right:10px}div#search label.searchboxlabel{margin-right:0}div#search input{font-size:100%}div#search input.validregex{color:green}div#search input.invalidregex{color:red}div#search input.nomatches{color:white;background-color:#ff6666}div#search input.nomatches{color:white;background-color:#ff6666}div#searchNav{display:none}div#commandLine{display:none}div#commandLine input#command{font-size:100%;font-family:Courier New,Courier}div#commandLine input#evaluateButton{}*.greyedout{color:gray !important;border-color:gray !important}*.greyedout *.alwaysenabled{color:black}*.unselectable{-khtml-user-select:none;-moz-user-select:none;user-select:none}div#log{font-family:Courier New,Courier;font-size:75%;width:100%;overflow:auto;clear:both;position:relative}div.group{border-color:#cccccc;border-style:solid;border-width:1px 0 1px 1px;overflow:visible}div.oldIe div.group,div.oldIe div.group *,div.oldIe *.logentry{height:1%}div.group div.groupheading span.expander{border:solid black 1px;font-family:Courier New,Courier;font-size:0.833em;background-color:#eeeeee;position:relative;top:-1px;color:black;padding:0 2px;cursor:pointer;cursor:hand;height:1%}div.group div.groupcontent{margin-left:10px;padding-bottom:2px;overflow:visible}div.group div.expanded{display:block}div.group div.collapsed{display:none}*.logentry{overflow:visible;display:none;white-space:pre}span.pre{white-space:pre}pre.unwrapped{display:inline !important}pre.unwrapped pre.pre,div.wrapped pre.pre{display:inline}div.wrapped pre.pre{white-space:normal}div.wrapped{display:none}body.searching *.logentry span.currentmatch{color:white !important;background-color:green !important}body.searching div.searchhighlight *.logentry span.searchterm{color:black;background-color:yellow}div.wrap *.logentry{white-space:normal !important;border-width:0 0 1px 0;border-color:#dddddd;border-style:dotted}div.wrap #log_wrapped,#log_unwrapped{display:block}div.wrap #log_unwrapped,#log_wrapped{display:none}div.wrap *.logentry span.pre{overflow:visible;white-space:normal}div.wrap *.logentry pre.unwrapped{display:none}div.wrap *.logentry span.wrapped{display:inline}div.searchfilter *.searchnonmatch{display:none !important}div#log *.TRACE,label#label_TRACE{color:#666666}div#log *.DEBUG,label#label_DEBUG{color:green}div#log *.INFO,label#label_INFO{color:#000099}div#log *.WARN,label#label_WARN{color:#999900}div#log *.ERROR,label#label_ERROR{color:red}div#log *.FATAL,label#label_FATAL{color:#660066}div.TRACE#log *.TRACE,div.DEBUG#log *.DEBUG,div.INFO#log *.INFO,div.WARN#log *.WARN,div.ERROR#log *.ERROR,div.FATAL#log *.FATAL{display:block}div#log div.separator{background-color:#cccccc;margin:5px 0;line-height:1px}','</style>','</head>','<body id="body">','<div id="switchesContainer">','<div id="switches">','<div id="levels" class="toolbar">','Filters:','<input type="checkbox" id="switch_TRACE" onclick="applyFilters(); checkAllLevels()" checked="checked" title="Show/hide trace messages" /><label for="switch_TRACE" id="label_TRACE">trace</label>','<input type="checkbox" id="switch_DEBUG" onclick="applyFilters(); checkAllLevels()" checked="checked" title="Show/hide debug messages" /><label for="switch_DEBUG" id="label_DEBUG">debug</label>','<input type="checkbox" id="switch_INFO" onclick="applyFilters(); checkAllLevels()" checked="checked" title="Show/hide info messages" /><label for="switch_INFO" id="label_INFO">info</label>','<input type="checkbox" id="switch_WARN" onclick="applyFilters(); checkAllLevels()" checked="checked" title="Show/hide warn messages" /><label for="switch_WARN" id="label_WARN">warn</label>','<input type="checkbox" id="switch_ERROR" onclick="applyFilters(); checkAllLevels()" checked="checked" title="Show/hide error messages" /><label for="switch_ERROR" id="label_ERROR">error</label>','<input type="checkbox" id="switch_FATAL" onclick="applyFilters(); checkAllLevels()" checked="checked" title="Show/hide fatal messages" /><label for="switch_FATAL" id="label_FATAL">fatal</label>','<input type="checkbox" id="switch_ALL" onclick="toggleAllLevels(); applyFilters()" checked="checked" title="Show/hide all messages" /><label for="switch_ALL" id="label_ALL">all</label>','</div>','<div id="search" class="toolbar">','<label for="searchBox" class="searchboxlabel">Search:</label> <input type="text" id="searchBox" onclick="toggleSearchEnabled(true)" onkeyup="scheduleSearch()" size="20" />','<input type="button" id="searchReset" disabled="disabled" value="Reset" onclick="clearSearch()" class="button" title="Reset the search" />','<input type="checkbox" id="searchRegex" onclick="doSearch()" title="If checked, search is treated as a regular expression" /><label for="searchRegex">Regex</label>','<input type="checkbox" id="searchCaseSensitive" onclick="doSearch()" title="If checked, search is case sensitive" /><label for="searchCaseSensitive">Match case</label>','<input type="checkbox" id="searchDisable" onclick="toggleSearchEnabled()" title="Enable/disable search" /><label for="searchDisable" class="alwaysenabled">Disable</label>','<div id="searchNav">','<input type="button" id="searchNext" disabled="disabled" value="Next" onclick="searchNext()" class="button" title="Go to the next matching log entry" />','<input type="button" id="searchPrevious" disabled="disabled" value="Previous" onclick="searchPrevious()" class="button" title="Go to the previous matching log entry" />','<input type="checkbox" id="searchFilter" onclick="toggleSearchFilter()" title="If checked, non-matching log entries are filtered out" /><label for="searchFilter">Filter</label>','<input type="checkbox" id="searchHighlight" onclick="toggleSearchHighlight()" title="Highlight matched search terms" /><label for="searchHighlight" class="alwaysenabled">Highlight all</label>','</div>','</div>','<div id="options" class="toolbar">','Options:','<input type="checkbox" id="enableLogging" onclick="toggleLoggingEnabled()" checked="checked" title="Enable/disable logging" /><label for="enableLogging" id="enableLoggingLabel">Log</label>','<input type="checkbox" id="wrap" onclick="toggleWrap()" title="Enable / disable word wrap" /><label for="wrap" id="wrapLabel">Wrap</label>','<input type="checkbox" id="newestAtTop" onclick="toggleNewestAtTop()" title="If checked, causes newest messages to appear at the top" /><label for="newestAtTop" id="newestAtTopLabel">Newest at the top</label>','<input type="checkbox" id="scrollToLatest" onclick="toggleScrollToLatest()" checked="checked" title="If checked, window automatically scrolls to a new message when it is added" /><label for="scrollToLatest" id="scrollToLatestLabel">Scroll to latest</label>','<input type="button" id="clearButton" value="Clear" onclick="clearLog()" class="button" title="Clear all log messages"  />','<input type="button" id="hideButton" value="Hide" onclick="hide()" class="hidden button" title="Hide the console" />','<input type="button" id="closeButton" value="Close" onclick="closeWindow()" class="hidden button" title="Close the window" />','</div>','</div>','</div>','<div id="log" class="TRACE DEBUG INFO WARN ERROR FATAL"></div>','<div id="commandLine" class="toolbar">','<div id="commandLineContainer">','<input type="text" id="command" title="Enter a JavaScript command here and hit return or press \'Evaluate\'" />','<input type="button" id="evaluateButton" value="Evaluate" class="button" title="Evaluate the command" onclick="evalCommandLine()" />','</div>','</div>','</body>','</html>',''];};var defaultCommandLineFunctions=[];ConsoleAppender=function(){};var consoleAppenderIdCounter=1;ConsoleAppender.prototype=new Appender();ConsoleAppender.prototype.create=function(inPage,container,lazyInit,initiallyMinimized,useDocumentWrite,width,height,focusConsoleWindow){var appender=this;var initialized=false;var consoleWindowCreated=false;var consoleWindowLoaded=false;var consoleClosed=false;var queuedLoggingEvents=[];var isSupported=true;var consoleAppenderId=consoleAppenderIdCounter++;initiallyMinimized=extractBooleanFromParam(initiallyMinimized,this.defaults.initiallyMinimized);lazyInit=extractBooleanFromParam(lazyInit,this.defaults.lazyInit);useDocumentWrite=extractBooleanFromParam(useDocumentWrite,this.defaults.useDocumentWrite);var newestMessageAtTop=this.defaults.newestMessageAtTop;var scrollToLatestMessage=this.defaults.scrollToLatestMessage;width=width?width:this.defaults.width;height=height?height:this.defaults.height;var maxMessages=this.defaults.maxMessages;var showCommandLine=this.defaults.showCommandLine;var commandLineObjectExpansionDepth=this.defaults.commandLineObjectExpansionDepth;var showHideButton=this.defaults.showHideButton;var showCloseButton=this.defaults.showCloseButton;this.setLayout(this.defaults.layout);var init,createWindow,safeToAppend,getConsoleWindow,open;var appenderName=inPage?"InPageAppender":"PopUpAppender";var checkCanConfigure=function(configOptionName){if(consoleWindowCreated){handleError(appenderName+": configuration option '"+configOptionName+"' may not be set after the appender has been initialized");return false;}
+var ConsoleAppender;(function(){var getConsoleHtmlLines=function(){return['<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">','<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">','<head>','<title>log4javascript</title>','<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />','<!-- Make IE8 behave like IE7, having gone to all the trouble of making IE work -->','<meta http-equiv="X-UA-Compatible" content="IE=7" />','<script type="text/javascript">var isIe = false, isIePre7 = false;</script>','<!--[if IE]><script type="text/javascript">isIe = true</script><![endif]-->','<!--[if lt IE 7]><script type="text/javascript">isIePre7 = true</script><![endif]-->','<script type="text/javascript">','//<![CDATA[','var loggingEnabled=true;var logQueuedEventsTimer=null;var logEntries=[];var logEntriesAndSeparators=[];var logItems=[];var renderDelay=100;var unrenderedLogItemsExist=false;var rootGroup,currentGroup=null;var loaded=false;var currentLogItem=null;var logMainContainer;function copyProperties(obj,props){for(var i in props){obj[i]=props[i];}}','function LogItem(){}','LogItem.prototype={mainContainer:null,wrappedContainer:null,unwrappedContainer:null,group:null,appendToLog:function(){for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].appendToLog();}','this.group.update();},doRemove:function(doUpdate,removeFromGroup){if(this.rendered){for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].remove();}','this.unwrappedElementContainer=null;this.wrappedElementContainer=null;this.mainElementContainer=null;}','if(this.group&&removeFromGroup){this.group.removeChild(this,doUpdate);}','if(this===currentLogItem){currentLogItem=null;}},remove:function(doUpdate,removeFromGroup){this.doRemove(doUpdate,removeFromGroup);},render:function(){},accept:function(visitor){visitor.visit(this);},getUnwrappedDomContainer:function(){return this.group.unwrappedElementContainer.contentDiv;},getWrappedDomContainer:function(){return this.group.wrappedElementContainer.contentDiv;},getMainDomContainer:function(){return this.group.mainElementContainer.contentDiv;}};LogItem.serializedItemKeys={LOG_ENTRY:0,GROUP_START:1,GROUP_END:2};function LogItemContainerElement(){}','LogItemContainerElement.prototype={appendToLog:function(){var insertBeforeFirst=(newestAtTop&&this.containerDomNode.hasChildNodes());if(insertBeforeFirst){this.containerDomNode.insertBefore(this.mainDiv,this.containerDomNode.firstChild);}else{this.containerDomNode.appendChild(this.mainDiv);}}};function SeparatorElementContainer(containerDomNode){this.containerDomNode=containerDomNode;this.mainDiv=document.createElement("div");this.mainDiv.className="separator";this.mainDiv.innerHTML="&nbsp;";}','SeparatorElementContainer.prototype=new LogItemContainerElement();SeparatorElementContainer.prototype.remove=function(){this.mainDiv.parentNode.removeChild(this.mainDiv);this.mainDiv=null;};function Separator(){this.rendered=false;}','Separator.prototype=new LogItem();copyProperties(Separator.prototype,{render:function(){var containerDomNode=this.group.contentDiv;if(isIe){this.unwrappedElementContainer=new SeparatorElementContainer(this.getUnwrappedDomContainer());this.wrappedElementContainer=new SeparatorElementContainer(this.getWrappedDomContainer());this.elementContainers=[this.unwrappedElementContainer,this.wrappedElementContainer];}else{this.mainElementContainer=new SeparatorElementContainer(this.getMainDomContainer());this.elementContainers=[this.mainElementContainer];}','this.content=this.formattedMessage;this.rendered=true;}});function GroupElementContainer(group,containerDomNode,isRoot,isWrapped){this.group=group;this.containerDomNode=containerDomNode;this.isRoot=isRoot;this.isWrapped=isWrapped;this.expandable=false;if(this.isRoot){if(isIe){this.contentDiv=logMainContainer.appendChild(document.createElement("div"));this.contentDiv.id=this.isWrapped?"log_wrapped":"log_unwrapped";}else{this.contentDiv=logMainContainer;}}else{var groupElementContainer=this;this.mainDiv=document.createElement("div");this.mainDiv.className="group";this.headingDiv=this.mainDiv.appendChild(document.createElement("div"));this.headingDiv.className="groupheading";this.expander=this.headingDiv.appendChild(document.createElement("span"));this.expander.className="expander unselectable greyedout";this.expander.unselectable=true;var expanderText=this.group.expanded?"-":"+";this.expanderTextNode=this.expander.appendChild(document.createTextNode(expanderText));this.headingDiv.appendChild(document.createTextNode(" "+this.group.name));this.contentDiv=this.mainDiv.appendChild(document.createElement("div"));var contentCssClass=this.group.expanded?"expanded":"collapsed";this.contentDiv.className="groupcontent "+contentCssClass;this.expander.onclick=function(){if(groupElementContainer.group.expandable){groupElementContainer.group.toggleExpanded();}};}}','GroupElementContainer.prototype=new LogItemContainerElement();copyProperties(GroupElementContainer.prototype,{toggleExpanded:function(){if(!this.isRoot){var oldCssClass,newCssClass,expanderText;if(this.group.expanded){newCssClass="expanded";oldCssClass="collapsed";expanderText="-";}else{newCssClass="collapsed";oldCssClass="expanded";expanderText="+";}','replaceClass(this.contentDiv,newCssClass,oldCssClass);this.expanderTextNode.nodeValue=expanderText;}},remove:function(){if(!this.isRoot){this.headingDiv=null;this.expander.onclick=null;this.expander=null;this.expanderTextNode=null;this.contentDiv=null;this.containerDomNode=null;this.mainDiv.parentNode.removeChild(this.mainDiv);this.mainDiv=null;}},reverseChildren:function(){var node=null;var childDomNodes=[];while((node=this.contentDiv.firstChild)){this.contentDiv.removeChild(node);childDomNodes.push(node);}','while((node=childDomNodes.pop())){this.contentDiv.appendChild(node);}},update:function(){if(!this.isRoot){if(this.group.expandable){removeClass(this.expander,"greyedout");}else{addClass(this.expander,"greyedout");}}},clear:function(){if(this.isRoot){this.contentDiv.innerHTML="";}}});function Group(name,isRoot,initiallyExpanded){this.name=name;this.group=null;this.isRoot=isRoot;this.initiallyExpanded=initiallyExpanded;this.elementContainers=[];this.children=[];this.expanded=initiallyExpanded;this.rendered=false;this.expandable=false;}','Group.prototype=new LogItem();copyProperties(Group.prototype,{addChild:function(logItem){this.children.push(logItem);logItem.group=this;},render:function(){if(isIe){var unwrappedDomContainer,wrappedDomContainer;if(this.isRoot){unwrappedDomContainer=logMainContainer;wrappedDomContainer=logMainContainer;}else{unwrappedDomContainer=this.getUnwrappedDomContainer();wrappedDomContainer=this.getWrappedDomContainer();}','this.unwrappedElementContainer=new GroupElementContainer(this,unwrappedDomContainer,this.isRoot,false);this.wrappedElementContainer=new GroupElementContainer(this,wrappedDomContainer,this.isRoot,true);this.elementContainers=[this.unwrappedElementContainer,this.wrappedElementContainer];}else{var mainDomContainer=this.isRoot?logMainContainer:this.getMainDomContainer();this.mainElementContainer=new GroupElementContainer(this,mainDomContainer,this.isRoot,false);this.elementContainers=[this.mainElementContainer];}','this.rendered=true;},toggleExpanded:function(){this.expanded=!this.expanded;for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].toggleExpanded();}},expand:function(){if(!this.expanded){this.toggleExpanded();}},accept:function(visitor){visitor.visitGroup(this);},reverseChildren:function(){if(this.rendered){for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].reverseChildren();}}},update:function(){var previouslyExpandable=this.expandable;this.expandable=(this.children.length!==0);if(this.expandable!==previouslyExpandable){for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].update();}}},flatten:function(){var visitor=new GroupFlattener();this.accept(visitor);return visitor.logEntriesAndSeparators;},removeChild:function(child,doUpdate){array_remove(this.children,child);child.group=null;if(doUpdate){this.update();}},remove:function(doUpdate,removeFromGroup){for(var i=0,len=this.children.length;i<len;i++){this.children[i].remove(false,false);}','this.children=[];this.update();if(this===currentGroup){currentGroup=this.group;}','this.doRemove(doUpdate,removeFromGroup);},serialize:function(items){items.push([LogItem.serializedItemKeys.GROUP_START,this.name]);for(var i=0,len=this.children.length;i<len;i++){this.children[i].serialize(items);}','if(this!==currentGroup){items.push([LogItem.serializedItemKeys.GROUP_END]);}},clear:function(){for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].clear();}}});function LogEntryElementContainer(){}','LogEntryElementContainer.prototype=new LogItemContainerElement();copyProperties(LogEntryElementContainer.prototype,{remove:function(){this.doRemove();},doRemove:function(){this.mainDiv.parentNode.removeChild(this.mainDiv);this.mainDiv=null;this.contentElement=null;this.containerDomNode=null;},setContent:function(content,wrappedContent){if(content===this.formattedMessage){this.contentElement.innerHTML="";this.contentElement.appendChild(document.createTextNode(this.formattedMessage));}else{this.contentElement.innerHTML=content;}},setSearchMatch:function(isMatch){var oldCssClass=isMatch?"searchnonmatch":"searchmatch";var newCssClass=isMatch?"searchmatch":"searchnonmatch";replaceClass(this.mainDiv,newCssClass,oldCssClass);},clearSearch:function(){removeClass(this.mainDiv,"searchmatch");removeClass(this.mainDiv,"searchnonmatch");}});function LogEntryWrappedElementContainer(logEntry,containerDomNode){this.logEntry=logEntry;this.containerDomNode=containerDomNode;this.mainDiv=document.createElement("div");this.mainDiv.appendChild(document.createTextNode(this.logEntry.formattedMessage));this.mainDiv.className="logentry wrapped "+this.logEntry.level;this.contentElement=this.mainDiv;}','LogEntryWrappedElementContainer.prototype=new LogEntryElementContainer();LogEntryWrappedElementContainer.prototype.setContent=function(content,wrappedContent){if(content===this.formattedMessage){this.contentElement.innerHTML="";this.contentElement.appendChild(document.createTextNode(this.formattedMessage));}else{this.contentElement.innerHTML=wrappedContent;}};function LogEntryUnwrappedElementContainer(logEntry,containerDomNode){this.logEntry=logEntry;this.containerDomNode=containerDomNode;this.mainDiv=document.createElement("div");this.mainDiv.className="logentry unwrapped "+this.logEntry.level;this.pre=this.mainDiv.appendChild(document.createElement("pre"));this.pre.appendChild(document.createTextNode(this.logEntry.formattedMessage));this.pre.className="unwrapped";this.contentElement=this.pre;}','LogEntryUnwrappedElementContainer.prototype=new LogEntryElementContainer();LogEntryUnwrappedElementContainer.prototype.remove=function(){this.doRemove();this.pre=null;};function LogEntryMainElementContainer(logEntry,containerDomNode){this.logEntry=logEntry;this.containerDomNode=containerDomNode;this.mainDiv=document.createElement("div");this.mainDiv.className="logentry nonielogentry "+this.logEntry.level;this.contentElement=this.mainDiv.appendChild(document.createElement("span"));this.contentElement.appendChild(document.createTextNode(this.logEntry.formattedMessage));}','LogEntryMainElementContainer.prototype=new LogEntryElementContainer();function LogEntry(level,formattedMessage){this.level=level;this.formattedMessage=formattedMessage;this.rendered=false;}','LogEntry.prototype=new LogItem();copyProperties(LogEntry.prototype,{render:function(){var logEntry=this;var containerDomNode=this.group.contentDiv;if(isIe){this.formattedMessage=this.formattedMessage.replace(/\\r\\n/g,"\\r");this.unwrappedElementContainer=new LogEntryUnwrappedElementContainer(this,this.getUnwrappedDomContainer());this.wrappedElementContainer=new LogEntryWrappedElementContainer(this,this.getWrappedDomContainer());this.elementContainers=[this.unwrappedElementContainer,this.wrappedElementContainer];}else{this.mainElementContainer=new LogEntryMainElementContainer(this,this.getMainDomContainer());this.elementContainers=[this.mainElementContainer];}','this.content=this.formattedMessage;this.rendered=true;},setContent:function(content,wrappedContent){if(content!=this.content){if(isIe&&(content!==this.formattedMessage)){content=content.replace(/\\r\\n/g,"\\r");}','for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].setContent(content,wrappedContent);}','this.content=content;}},getSearchMatches:function(){var matches=[];var i,len;if(isIe){var unwrappedEls=getElementsByClass(this.unwrappedElementContainer.mainDiv,"searchterm","span");var wrappedEls=getElementsByClass(this.wrappedElementContainer.mainDiv,"searchterm","span");for(i=0,len=unwrappedEls.length;i<len;i++){matches[i]=new Match(this.level,null,unwrappedEls[i],wrappedEls[i]);}}else{var els=getElementsByClass(this.mainElementContainer.mainDiv,"searchterm","span");for(i=0,len=els.length;i<len;i++){matches[i]=new Match(this.level,els[i]);}}','return matches;},setSearchMatch:function(isMatch){for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].setSearchMatch(isMatch);}},clearSearch:function(){for(var i=0,len=this.elementContainers.length;i<len;i++){this.elementContainers[i].clearSearch();}},accept:function(visitor){visitor.visitLogEntry(this);},serialize:function(items){items.push([LogItem.serializedItemKeys.LOG_ENTRY,this.level,this.formattedMessage]);}});function LogItemVisitor(){}','LogItemVisitor.prototype={visit:function(logItem){},visitParent:function(logItem){if(logItem.group){logItem.group.accept(this);}},visitChildren:function(logItem){for(var i=0,len=logItem.children.length;i<len;i++){logItem.children[i].accept(this);}},visitLogEntry:function(logEntry){this.visit(logEntry);},visitSeparator:function(separator){this.visit(separator);},visitGroup:function(group){this.visit(group);}};function GroupFlattener(){this.logEntriesAndSeparators=[];}','GroupFlattener.prototype=new LogItemVisitor();GroupFlattener.prototype.visitGroup=function(group){this.visitChildren(group);};GroupFlattener.prototype.visitLogEntry=function(logEntry){this.logEntriesAndSeparators.push(logEntry);};GroupFlattener.prototype.visitSeparator=function(separator){this.logEntriesAndSeparators.push(separator);};window.onload=function(){if(location.search){var queryBits=unescape(location.search).substr(1).split("&"),nameValueBits;for(var i=0,len=queryBits.length;i<len;i++){nameValueBits=queryBits[i].split("=");if(nameValueBits[0]=="log4javascript_domain"){document.domain=nameValueBits[1];break;}}}','logMainContainer=$("log");if(isIePre7){addClass(logMainContainer,"oldIe");}','rootGroup=new Group("root",true);rootGroup.render();currentGroup=rootGroup;setCommandInputWidth();setLogContainerHeight();toggleLoggingEnabled();toggleSearchEnabled();toggleSearchFilter();toggleSearchHighlight();applyFilters();checkAllLevels();toggleWrap();toggleNewestAtTop();toggleScrollToLatest();renderQueuedLogItems();loaded=true;$("command").value="";$("command").autocomplete="off";$("command").onkeydown=function(evt){evt=getEvent(evt);if(evt.keyCode==10||evt.keyCode==13){evalCommandLine();stopPropagation(evt);}else if(evt.keyCode==27){this.value="";this.focus();}else if(evt.keyCode==38&&commandHistory.length>0){currentCommandIndex=Math.max(0,currentCommandIndex-1);this.value=commandHistory[currentCommandIndex];moveCaretToEnd(this);}else if(evt.keyCode==40&&commandHistory.length>0){currentCommandIndex=Math.min(commandHistory.length-1,currentCommandIndex+1);this.value=commandHistory[currentCommandIndex];moveCaretToEnd(this);}};$("command").onkeypress=function(evt){evt=getEvent(evt);if(evt.keyCode==38&&commandHistory.length>0&&evt.preventDefault){evt.preventDefault();}};$("command").onkeyup=function(evt){evt=getEvent(evt);if(evt.keyCode==27&&evt.preventDefault){evt.preventDefault();this.focus();}};document.onkeydown=function keyEventHandler(evt){evt=getEvent(evt);switch(evt.keyCode){case 69:if(evt.shiftKey&&(evt.ctrlKey||evt.metaKey)){evalLastCommand();cancelKeyEvent(evt);return false;}','break;case 75:if(evt.shiftKey&&(evt.ctrlKey||evt.metaKey)){focusSearch();cancelKeyEvent(evt);return false;}','break;case 40:case 76:if(evt.shiftKey&&(evt.ctrlKey||evt.metaKey)){focusCommandLine();cancelKeyEvent(evt);return false;}','break;}};setTimeout(setLogContainerHeight,20);setShowCommandLine(showCommandLine);doSearch();};window.onunload=function(){if(mainWindowExists()){appender.unload();}','appender=null;};function toggleLoggingEnabled(){setLoggingEnabled($("enableLogging").checked);}','function setLoggingEnabled(enable){loggingEnabled=enable;}','var appender=null;function setAppender(appenderParam){appender=appenderParam;}','function setShowCloseButton(showCloseButton){$("closeButton").style.display=showCloseButton?"inline":"none";}','function setShowHideButton(showHideButton){$("hideButton").style.display=showHideButton?"inline":"none";}','var newestAtTop=false;function LogItemContentReverser(){}','LogItemContentReverser.prototype=new LogItemVisitor();LogItemContentReverser.prototype.visitGroup=function(group){group.reverseChildren();this.visitChildren(group);};function setNewestAtTop(isNewestAtTop){var oldNewestAtTop=newestAtTop;var i,iLen,j,jLen;newestAtTop=Boolean(isNewestAtTop);if(oldNewestAtTop!=newestAtTop){var visitor=new LogItemContentReverser();rootGroup.accept(visitor);if(currentSearch){var currentMatch=currentSearch.matches[currentMatchIndex];var matchIndex=0;var matches=[];var actOnLogEntry=function(logEntry){var logEntryMatches=logEntry.getSearchMatches();for(j=0,jLen=logEntryMatches.length;j<jLen;j++){matches[matchIndex]=logEntryMatches[j];if(currentMatch&&logEntryMatches[j].equals(currentMatch)){currentMatchIndex=matchIndex;}','matchIndex++;}};if(newestAtTop){for(i=logEntries.length-1;i>=0;i--){actOnLogEntry(logEntries[i]);}}else{for(i=0,iLen=logEntries.length;i<iLen;i++){actOnLogEntry(logEntries[i]);}}','currentSearch.matches=matches;if(currentMatch){currentMatch.setCurrent();}}else if(scrollToLatest){doScrollToLatest();}}','$("newestAtTop").checked=isNewestAtTop;}','function toggleNewestAtTop(){var isNewestAtTop=$("newestAtTop").checked;setNewestAtTop(isNewestAtTop);}','var scrollToLatest=true;function setScrollToLatest(isScrollToLatest){scrollToLatest=isScrollToLatest;if(scrollToLatest){doScrollToLatest();}','$("scrollToLatest").checked=isScrollToLatest;}','function toggleScrollToLatest(){var isScrollToLatest=$("scrollToLatest").checked;setScrollToLatest(isScrollToLatest);}','function doScrollToLatest(){var l=logMainContainer;if(typeof l.scrollTop!="undefined"){if(newestAtTop){l.scrollTop=0;}else{var latestLogEntry=l.lastChild;if(latestLogEntry){l.scrollTop=l.scrollHeight;}}}}','var closeIfOpenerCloses=true;function setCloseIfOpenerCloses(isCloseIfOpenerCloses){closeIfOpenerCloses=isCloseIfOpenerCloses;}','var maxMessages=null;function setMaxMessages(max){maxMessages=max;pruneLogEntries();}','var showCommandLine=false;function setShowCommandLine(isShowCommandLine){showCommandLine=isShowCommandLine;if(loaded){$("commandLine").style.display=showCommandLine?"block":"none";setCommandInputWidth();setLogContainerHeight();}}','function focusCommandLine(){if(loaded){$("command").focus();}}','function focusSearch(){if(loaded){$("searchBox").focus();}}','function getLogItems(){var items=[];for(var i=0,len=logItems.length;i<len;i++){logItems[i].serialize(items);}','return items;}','function setLogItems(items){var loggingReallyEnabled=loggingEnabled;loggingEnabled=true;for(var i=0,len=items.length;i<len;i++){switch(items[i][0]){case LogItem.serializedItemKeys.LOG_ENTRY:log(items[i][1],items[i][2]);break;case LogItem.serializedItemKeys.GROUP_START:group(items[i][1]);break;case LogItem.serializedItemKeys.GROUP_END:groupEnd();break;}}','loggingEnabled=loggingReallyEnabled;}','function log(logLevel,formattedMessage){if(loggingEnabled){var logEntry=new LogEntry(logLevel,formattedMessage);logEntries.push(logEntry);logEntriesAndSeparators.push(logEntry);logItems.push(logEntry);currentGroup.addChild(logEntry);if(loaded){if(logQueuedEventsTimer!==null){clearTimeout(logQueuedEventsTimer);}','logQueuedEventsTimer=setTimeout(renderQueuedLogItems,renderDelay);unrenderedLogItemsExist=true;}}}','function renderQueuedLogItems(){logQueuedEventsTimer=null;var pruned=pruneLogEntries();var initiallyHasMatches=currentSearch?currentSearch.hasMatches():false;for(var i=0,len=logItems.length;i<len;i++){if(!logItems[i].rendered){logItems[i].render();logItems[i].appendToLog();if(currentSearch&&(logItems[i]instanceof LogEntry)){currentSearch.applyTo(logItems[i]);}}}','if(currentSearch){if(pruned){if(currentSearch.hasVisibleMatches()){if(currentMatchIndex===null){setCurrentMatchIndex(0);}','displayMatches();}else{displayNoMatches();}}else if(!initiallyHasMatches&&currentSearch.hasVisibleMatches()){setCurrentMatchIndex(0);displayMatches();}}','if(scrollToLatest){doScrollToLatest();}','unrenderedLogItemsExist=false;}','function pruneLogEntries(){if((maxMessages!==null)&&(logEntriesAndSeparators.length>maxMessages)){var numberToDelete=logEntriesAndSeparators.length-maxMessages;var prunedLogEntries=logEntriesAndSeparators.slice(0,numberToDelete);if(currentSearch){currentSearch.removeMatches(prunedLogEntries);}','var group;for(var i=0;i<numberToDelete;i++){group=logEntriesAndSeparators[i].group;array_remove(logItems,logEntriesAndSeparators[i]);array_remove(logEntries,logEntriesAndSeparators[i]);logEntriesAndSeparators[i].remove(true,true);if(group.children.length===0&&group!==currentGroup&&group!==rootGroup){array_remove(logItems,group);group.remove(true,true);}}','logEntriesAndSeparators=array_removeFromStart(logEntriesAndSeparators,numberToDelete);return true;}','return false;}','function group(name,startExpanded){if(loggingEnabled){initiallyExpanded=(typeof startExpanded==="undefined")?true:Boolean(startExpanded);var newGroup=new Group(name,false,initiallyExpanded);currentGroup.addChild(newGroup);currentGroup=newGroup;logItems.push(newGroup);if(loaded){if(logQueuedEventsTimer!==null){clearTimeout(logQueuedEventsTimer);}','logQueuedEventsTimer=setTimeout(renderQueuedLogItems,renderDelay);unrenderedLogItemsExist=true;}}}','function groupEnd(){currentGroup=(currentGroup===rootGroup)?rootGroup:currentGroup.group;}','function mainPageReloaded(){currentGroup=rootGroup;var separator=new Separator();logEntriesAndSeparators.push(separator);logItems.push(separator);currentGroup.addChild(separator);}','function closeWindow(){if(appender&&mainWindowExists()){appender.close(true);}else{window.close();}}','function hide(){if(appender&&mainWindowExists()){appender.hide();}}','var mainWindow=window;var windowId="log4javascriptConsoleWindow_"+new Date().getTime()+"_"+(""+Math.random()).substr(2);function setMainWindow(win){mainWindow=win;mainWindow[windowId]=window;if(opener&&closeIfOpenerCloses){pollOpener();}}','function pollOpener(){if(closeIfOpenerCloses){if(mainWindowExists()){setTimeout(pollOpener,500);}else{closeWindow();}}}','function mainWindowExists(){try{return(mainWindow&&!mainWindow.closed&&mainWindow[windowId]==window);}catch(ex){}','return false;}','var logLevels=["TRACE","DEBUG","INFO","WARN","ERROR","FATAL"];function getCheckBox(logLevel){return $("switch_"+logLevel);}','function getIeWrappedLogContainer(){return $("log_wrapped");}','function getIeUnwrappedLogContainer(){return $("log_unwrapped");}','function applyFilters(){for(var i=0;i<logLevels.length;i++){if(getCheckBox(logLevels[i]).checked){addClass(logMainContainer,logLevels[i]);}else{removeClass(logMainContainer,logLevels[i]);}}','updateSearchFromFilters();}','function toggleAllLevels(){var turnOn=$("switch_ALL").checked;for(var i=0;i<logLevels.length;i++){getCheckBox(logLevels[i]).checked=turnOn;if(turnOn){addClass(logMainContainer,logLevels[i]);}else{removeClass(logMainContainer,logLevels[i]);}}}','function checkAllLevels(){for(var i=0;i<logLevels.length;i++){if(!getCheckBox(logLevels[i]).checked){getCheckBox("ALL").checked=false;return;}}','getCheckBox("ALL").checked=true;}','function clearLog(){rootGroup.clear();currentGroup=rootGroup;logEntries=[];logItems=[];logEntriesAndSeparators=[];doSearch();}','function toggleWrap(){var enable=$("wrap").checked;if(enable){addClass(logMainContainer,"wrap");}else{removeClass(logMainContainer,"wrap");}','refreshCurrentMatch();}','var searchTimer=null;function scheduleSearch(){try{clearTimeout(searchTimer);}catch(ex){}','searchTimer=setTimeout(doSearch,500);}','function Search(searchTerm,isRegex,searchRegex,isCaseSensitive){this.searchTerm=searchTerm;this.isRegex=isRegex;this.searchRegex=searchRegex;this.isCaseSensitive=isCaseSensitive;this.matches=[];}','Search.prototype={hasMatches:function(){return this.matches.length>0;},hasVisibleMatches:function(){if(this.hasMatches()){for(var i=0;i<this.matches.length;i++){if(this.matches[i].isVisible()){return true;}}}','return false;},match:function(logEntry){var entryText=String(logEntry.formattedMessage);var matchesSearch=false;if(this.isRegex){matchesSearch=this.searchRegex.test(entryText);}else if(this.isCaseSensitive){matchesSearch=(entryText.indexOf(this.searchTerm)>-1);}else{matchesSearch=(entryText.toLowerCase().indexOf(this.searchTerm.toLowerCase())>-1);}','return matchesSearch;},getNextVisibleMatchIndex:function(){for(var i=currentMatchIndex+1;i<this.matches.length;i++){if(this.matches[i].isVisible()){return i;}}','for(i=0;i<=currentMatchIndex;i++){if(this.matches[i].isVisible()){return i;}}','return-1;},getPreviousVisibleMatchIndex:function(){for(var i=currentMatchIndex-1;i>=0;i--){if(this.matches[i].isVisible()){return i;}}','for(var i=this.matches.length-1;i>=currentMatchIndex;i--){if(this.matches[i].isVisible()){return i;}}','return-1;},applyTo:function(logEntry){var doesMatch=this.match(logEntry);if(doesMatch){logEntry.group.expand();logEntry.setSearchMatch(true);var logEntryContent;var wrappedLogEntryContent;var searchTermReplacementStartTag="<span class=\\\"searchterm\\\">";var searchTermReplacementEndTag="<"+"/span>";var preTagName=isIe?"pre":"span";var preStartTag="<"+preTagName+" class=\\\"pre\\\">";var preEndTag="<"+"/"+preTagName+">";var startIndex=0;var searchIndex,matchedText,textBeforeMatch;if(this.isRegex){var flags=this.isCaseSensitive?"g":"gi";var capturingRegex=new RegExp("("+this.searchRegex.source+")",flags);var rnd=(""+Math.random()).substr(2);var startToken="%%s"+rnd+"%%";var endToken="%%e"+rnd+"%%";logEntryContent=logEntry.formattedMessage.replace(capturingRegex,startToken+"$1"+endToken);logEntryContent=escapeHtml(logEntryContent);var result;var searchString=logEntryContent;logEntryContent="";wrappedLogEntryContent="";while((searchIndex=searchString.indexOf(startToken,startIndex))>-1){var endTokenIndex=searchString.indexOf(endToken,searchIndex);matchedText=searchString.substring(searchIndex+startToken.length,endTokenIndex);textBeforeMatch=searchString.substring(startIndex,searchIndex);logEntryContent+=preStartTag+textBeforeMatch+preEndTag;logEntryContent+=searchTermReplacementStartTag+preStartTag+matchedText+','preEndTag+searchTermReplacementEndTag;if(isIe){wrappedLogEntryContent+=textBeforeMatch+searchTermReplacementStartTag+','matchedText+searchTermReplacementEndTag;}','startIndex=endTokenIndex+endToken.length;}','logEntryContent+=preStartTag+searchString.substr(startIndex)+preEndTag;if(isIe){wrappedLogEntryContent+=searchString.substr(startIndex);}}else{logEntryContent="";wrappedLogEntryContent="";var searchTermReplacementLength=searchTermReplacementStartTag.length+','this.searchTerm.length+searchTermReplacementEndTag.length;var searchTermLength=this.searchTerm.length;var searchTermLowerCase=this.searchTerm.toLowerCase();var logTextLowerCase=logEntry.formattedMessage.toLowerCase();while((searchIndex=logTextLowerCase.indexOf(searchTermLowerCase,startIndex))>-1){matchedText=escapeHtml(logEntry.formattedMessage.substr(searchIndex,this.searchTerm.length));textBeforeMatch=escapeHtml(logEntry.formattedMessage.substring(startIndex,searchIndex));var searchTermReplacement=searchTermReplacementStartTag+','preStartTag+matchedText+preEndTag+searchTermReplacementEndTag;logEntryContent+=preStartTag+textBeforeMatch+preEndTag+searchTermReplacement;if(isIe){wrappedLogEntryContent+=textBeforeMatch+searchTermReplacementStartTag+','matchedText+searchTermReplacementEndTag;}','startIndex=searchIndex+searchTermLength;}','var textAfterLastMatch=escapeHtml(logEntry.formattedMessage.substr(startIndex));logEntryContent+=preStartTag+textAfterLastMatch+preEndTag;if(isIe){wrappedLogEntryContent+=textAfterLastMatch;}}','logEntry.setContent(logEntryContent,wrappedLogEntryContent);var logEntryMatches=logEntry.getSearchMatches();this.matches=this.matches.concat(logEntryMatches);}else{logEntry.setSearchMatch(false);logEntry.setContent(logEntry.formattedMessage,logEntry.formattedMessage);}','return doesMatch;},removeMatches:function(logEntries){var matchesToRemoveCount=0;var currentMatchRemoved=false;var matchesToRemove=[];var i,iLen,j,jLen;for(i=0,iLen=this.matches.length;i<iLen;i++){for(j=0,jLen=logEntries.length;j<jLen;j++){if(this.matches[i].belongsTo(logEntries[j])){matchesToRemove.push(this.matches[i]);if(i===currentMatchIndex){currentMatchRemoved=true;}}}}','var newMatch=currentMatchRemoved?null:this.matches[currentMatchIndex];if(currentMatchRemoved){for(i=currentMatchIndex,iLen=this.matches.length;i<iLen;i++){if(this.matches[i].isVisible()&&!array_contains(matchesToRemove,this.matches[i])){newMatch=this.matches[i];break;}}}','for(i=0,iLen=matchesToRemove.length;i<iLen;i++){array_remove(this.matches,matchesToRemove[i]);matchesToRemove[i].remove();}','if(this.hasVisibleMatches()){if(newMatch===null){setCurrentMatchIndex(0);}else{var newMatchIndex=0;for(i=0,iLen=this.matches.length;i<iLen;i++){if(newMatch===this.matches[i]){newMatchIndex=i;break;}}','setCurrentMatchIndex(newMatchIndex);}}else{currentMatchIndex=null;displayNoMatches();}}};function getPageOffsetTop(el,container){var currentEl=el;var y=0;while(currentEl&&currentEl!=container){y+=currentEl.offsetTop;currentEl=currentEl.offsetParent;}','return y;}','function scrollIntoView(el){var logContainer=logMainContainer;if(!$("wrap").checked){var logContainerLeft=logContainer.scrollLeft;var logContainerRight=logContainerLeft+logContainer.offsetWidth;var elLeft=el.offsetLeft;var elRight=elLeft+el.offsetWidth;if(elLeft<logContainerLeft||elRight>logContainerRight){logContainer.scrollLeft=elLeft-(logContainer.offsetWidth-el.offsetWidth)/2;}}','var logContainerTop=logContainer.scrollTop;var logContainerBottom=logContainerTop+logContainer.offsetHeight;var elTop=getPageOffsetTop(el)-getToolBarsHeight();var elBottom=elTop+el.offsetHeight;if(elTop<logContainerTop||elBottom>logContainerBottom){logContainer.scrollTop=elTop-(logContainer.offsetHeight-el.offsetHeight)/2;}}','function Match(logEntryLevel,spanInMainDiv,spanInUnwrappedPre,spanInWrappedDiv){this.logEntryLevel=logEntryLevel;this.spanInMainDiv=spanInMainDiv;if(isIe){this.spanInUnwrappedPre=spanInUnwrappedPre;this.spanInWrappedDiv=spanInWrappedDiv;}','this.mainSpan=isIe?spanInUnwrappedPre:spanInMainDiv;}','Match.prototype={equals:function(match){return this.mainSpan===match.mainSpan;},setCurrent:function(){if(isIe){addClass(this.spanInUnwrappedPre,"currentmatch");addClass(this.spanInWrappedDiv,"currentmatch");var elementToScroll=$("wrap").checked?this.spanInWrappedDiv:this.spanInUnwrappedPre;scrollIntoView(elementToScroll);}else{addClass(this.spanInMainDiv,"currentmatch");scrollIntoView(this.spanInMainDiv);}},belongsTo:function(logEntry){if(isIe){return isDescendant(this.spanInUnwrappedPre,logEntry.unwrappedPre);}else{return isDescendant(this.spanInMainDiv,logEntry.mainDiv);}},setNotCurrent:function(){if(isIe){removeClass(this.spanInUnwrappedPre,"currentmatch");removeClass(this.spanInWrappedDiv,"currentmatch");}else{removeClass(this.spanInMainDiv,"currentmatch");}},isOrphan:function(){return isOrphan(this.mainSpan);},isVisible:function(){return getCheckBox(this.logEntryLevel).checked;},remove:function(){if(isIe){this.spanInUnwrappedPre=null;this.spanInWrappedDiv=null;}else{this.spanInMainDiv=null;}}};var currentSearch=null;var currentMatchIndex=null;function doSearch(){var searchBox=$("searchBox");var searchTerm=searchBox.value;var isRegex=$("searchRegex").checked;var isCaseSensitive=$("searchCaseSensitive").checked;var i;if(searchTerm===""){$("searchReset").disabled=true;$("searchNav").style.display="none";removeClass(document.body,"searching");removeClass(searchBox,"hasmatches");removeClass(searchBox,"nomatches");for(i=0;i<logEntries.length;i++){logEntries[i].clearSearch();logEntries[i].setContent(logEntries[i].formattedMessage,logEntries[i].formattedMessage);}','currentSearch=null;setLogContainerHeight();}else{$("searchReset").disabled=false;$("searchNav").style.display="block";var searchRegex;var regexValid;if(isRegex){try{searchRegex=isCaseSensitive?new RegExp(searchTerm,"g"):new RegExp(searchTerm,"gi");regexValid=true;replaceClass(searchBox,"validregex","invalidregex");searchBox.title="Valid regex";}catch(ex){regexValid=false;replaceClass(searchBox,"invalidregex","validregex");searchBox.title="Invalid regex: "+(ex.message?ex.message:(ex.description?ex.description:"unknown error"));return;}}else{searchBox.title="";removeClass(searchBox,"validregex");removeClass(searchBox,"invalidregex");}','addClass(document.body,"searching");currentSearch=new Search(searchTerm,isRegex,searchRegex,isCaseSensitive);for(i=0;i<logEntries.length;i++){currentSearch.applyTo(logEntries[i]);}','setLogContainerHeight();if(currentSearch.hasVisibleMatches()){setCurrentMatchIndex(0);displayMatches();}else{displayNoMatches();}}}','function updateSearchFromFilters(){if(currentSearch){if(currentSearch.hasMatches()){if(currentMatchIndex===null){currentMatchIndex=0;}','var currentMatch=currentSearch.matches[currentMatchIndex];if(currentMatch.isVisible()){displayMatches();setCurrentMatchIndex(currentMatchIndex);}else{currentMatch.setNotCurrent();var nextVisibleMatchIndex=currentSearch.getNextVisibleMatchIndex();if(nextVisibleMatchIndex>-1){setCurrentMatchIndex(nextVisibleMatchIndex);displayMatches();}else{displayNoMatches();}}}else{displayNoMatches();}}}','function refreshCurrentMatch(){if(currentSearch&&currentSearch.hasVisibleMatches()){setCurrentMatchIndex(currentMatchIndex);}}','function displayMatches(){replaceClass($("searchBox"),"hasmatches","nomatches");$("searchBox").title=""+currentSearch.matches.length+" matches found";$("searchNav").style.display="block";setLogContainerHeight();}','function displayNoMatches(){replaceClass($("searchBox"),"nomatches","hasmatches");$("searchBox").title="No matches found";$("searchNav").style.display="none";setLogContainerHeight();}','function toggleSearchEnabled(enable){enable=(typeof enable=="undefined")?!$("searchDisable").checked:enable;$("searchBox").disabled=!enable;$("searchReset").disabled=!enable;$("searchRegex").disabled=!enable;$("searchNext").disabled=!enable;$("searchPrevious").disabled=!enable;$("searchCaseSensitive").disabled=!enable;$("searchNav").style.display=(enable&&($("searchBox").value!=="")&&currentSearch&&currentSearch.hasVisibleMatches())?"block":"none";if(enable){removeClass($("search"),"greyedout");addClass(document.body,"searching");if($("searchHighlight").checked){addClass(logMainContainer,"searchhighlight");}else{removeClass(logMainContainer,"searchhighlight");}','if($("searchFilter").checked){addClass(logMainContainer,"searchfilter");}else{removeClass(logMainContainer,"searchfilter");}','$("searchDisable").checked=!enable;}else{addClass($("search"),"greyedout");removeClass(document.body,"searching");removeClass(logMainContainer,"searchhighlight");removeClass(logMainContainer,"searchfilter");}','setLogContainerHeight();}','function toggleSearchFilter(){var enable=$("searchFilter").checked;if(enable){addClass(logMainContainer,"searchfilter");}else{removeClass(logMainContainer,"searchfilter");}','refreshCurrentMatch();}','function toggleSearchHighlight(){var enable=$("searchHighlight").checked;if(enable){addClass(logMainContainer,"searchhighlight");}else{removeClass(logMainContainer,"searchhighlight");}}','function clearSearch(){$("searchBox").value="";doSearch();}','function searchNext(){if(currentSearch!==null&&currentMatchIndex!==null){currentSearch.matches[currentMatchIndex].setNotCurrent();var nextMatchIndex=currentSearch.getNextVisibleMatchIndex();if(nextMatchIndex>currentMatchIndex||confirm("Reached the end of the page. Start from the top?")){setCurrentMatchIndex(nextMatchIndex);}}}','function searchPrevious(){if(currentSearch!==null&&currentMatchIndex!==null){currentSearch.matches[currentMatchIndex].setNotCurrent();var previousMatchIndex=currentSearch.getPreviousVisibleMatchIndex();if(previousMatchIndex<currentMatchIndex||confirm("Reached the start of the page. Continue from the bottom?")){setCurrentMatchIndex(previousMatchIndex);}}}','function setCurrentMatchIndex(index){currentMatchIndex=index;currentSearch.matches[currentMatchIndex].setCurrent();}','function addClass(el,cssClass){if(!hasClass(el,cssClass)){if(el.className){el.className+=" "+cssClass;}else{el.className=cssClass;}}}','function hasClass(el,cssClass){if(el.className){var classNames=el.className.split(" ");return array_contains(classNames,cssClass);}','return false;}','function removeClass(el,cssClass){if(hasClass(el,cssClass)){var existingClasses=el.className.split(" ");var newClasses=[];for(var i=0,len=existingClasses.length;i<len;i++){if(existingClasses[i]!=cssClass){newClasses[newClasses.length]=existingClasses[i];}}','el.className=newClasses.join(" ");}}','function replaceClass(el,newCssClass,oldCssClass){removeClass(el,oldCssClass);addClass(el,newCssClass);}','function getElementsByClass(el,cssClass,tagName){var elements=el.getElementsByTagName(tagName);var matches=[];for(var i=0,len=elements.length;i<len;i++){if(hasClass(elements[i],cssClass)){matches.push(elements[i]);}}','return matches;}','function $(id){return document.getElementById(id);}','function isDescendant(node,ancestorNode){while(node!=null){if(node===ancestorNode){return true;}','node=node.parentNode;}','return false;}','function isOrphan(node){var currentNode=node;while(currentNode){if(currentNode==document.body){return false;}','currentNode=currentNode.parentNode;}','return true;}','function escapeHtml(str){return str.replace(/&/g,"&amp;").replace(/[<]/g,"&lt;").replace(/>/g,"&gt;");}','function getWindowWidth(){if(window.innerWidth){return window.innerWidth;}else if(document.documentElement&&document.documentElement.clientWidth){return document.documentElement.clientWidth;}else if(document.body){return document.body.clientWidth;}','return 0;}','function getWindowHeight(){if(window.innerHeight){return window.innerHeight;}else if(document.documentElement&&document.documentElement.clientHeight){return document.documentElement.clientHeight;}else if(document.body){return document.body.clientHeight;}','return 0;}','function getToolBarsHeight(){return $("switches").offsetHeight;}','function getChromeHeight(){var height=getToolBarsHeight();if(showCommandLine){height+=$("commandLine").offsetHeight;}','return height;}','function setLogContainerHeight(){if(logMainContainer){var windowHeight=getWindowHeight();$("body").style.height=getWindowHeight()+"px";logMainContainer.style.height=""+','Math.max(0,windowHeight-getChromeHeight())+"px";}}','function setCommandInputWidth(){if(showCommandLine){$("command").style.width=""+Math.max(0,$("commandLineContainer").offsetWidth-','($("evaluateButton").offsetWidth+13))+"px";}}','window.onresize=function(){setCommandInputWidth();setLogContainerHeight();};if(!Array.prototype.push){Array.prototype.push=function(){for(var i=0,len=arguments.length;i<len;i++){this[this.length]=arguments[i];}','return this.length;};}','if(!Array.prototype.pop){Array.prototype.pop=function(){if(this.length>0){var val=this[this.length-1];this.length=this.length-1;return val;}};}','if(!Array.prototype.shift){Array.prototype.shift=function(){if(this.length>0){var firstItem=this[0];for(var i=0,len=this.length-1;i<len;i++){this[i]=this[i+1];}','this.length=this.length-1;return firstItem;}};}','if(!Array.prototype.splice){Array.prototype.splice=function(startIndex,deleteCount){var itemsAfterDeleted=this.slice(startIndex+deleteCount);var itemsDeleted=this.slice(startIndex,startIndex+deleteCount);this.length=startIndex;var argumentsArray=[];for(var i=0,len=arguments.length;i<len;i++){argumentsArray[i]=arguments[i];}','var itemsToAppend=(argumentsArray.length>2)?itemsAfterDeleted=argumentsArray.slice(2).concat(itemsAfterDeleted):itemsAfterDeleted;for(i=0,len=itemsToAppend.length;i<len;i++){this.push(itemsToAppend[i]);}','return itemsDeleted;};}','function array_remove(arr,val){var index=-1;for(var i=0,len=arr.length;i<len;i++){if(arr[i]===val){index=i;break;}}','if(index>=0){arr.splice(index,1);return index;}else{return false;}}','function array_removeFromStart(array,numberToRemove){if(Array.prototype.splice){array.splice(0,numberToRemove);}else{for(var i=numberToRemove,len=array.length;i<len;i++){array[i-numberToRemove]=array[i];}','array.length=array.length-numberToRemove;}','return array;}','function array_contains(arr,val){for(var i=0,len=arr.length;i<len;i++){if(arr[i]==val){return true;}}','return false;}','function getErrorMessage(ex){if(ex.message){return ex.message;}else if(ex.description){return ex.description;}','return""+ex;}','function moveCaretToEnd(input){if(input.setSelectionRange){input.focus();var length=input.value.length;input.setSelectionRange(length,length);}else if(input.createTextRange){var range=input.createTextRange();range.collapse(false);range.select();}','input.focus();}','function stopPropagation(evt){if(evt.stopPropagation){evt.stopPropagation();}else if(typeof evt.cancelBubble!="undefined"){evt.cancelBubble=true;}}','function getEvent(evt){return evt?evt:event;}','function getTarget(evt){return evt.target?evt.target:evt.srcElement;}','function getRelatedTarget(evt){if(evt.relatedTarget){return evt.relatedTarget;}else if(evt.srcElement){switch(evt.type){case"mouseover":return evt.fromElement;case"mouseout":return evt.toElement;default:return evt.srcElement;}}}','function cancelKeyEvent(evt){evt.returnValue=false;stopPropagation(evt);}','function evalCommandLine(){var expr=$("command").value;evalCommand(expr);$("command").value="";}','function evalLastCommand(){if(lastCommand!=null){evalCommand(lastCommand);}}','var lastCommand=null;var commandHistory=[];var currentCommandIndex=0;function evalCommand(expr){if(appender){appender.evalCommandAndAppend(expr);}else{var prefix=">>> "+expr+"\\r\\n";try{log("INFO",prefix+eval(expr));}catch(ex){log("ERROR",prefix+"Error: "+getErrorMessage(ex));}}','if(expr!=commandHistory[commandHistory.length-1]){commandHistory.push(expr);if(appender){appender.storeCommandHistory(commandHistory);}}','currentCommandIndex=(expr==commandHistory[currentCommandIndex])?currentCommandIndex+1:commandHistory.length;lastCommand=expr;}','//]]>','</script>','<style type="text/css">','body{background-color:white;color:black;padding:0;margin:0;font-family:tahoma,verdana,arial,helvetica,sans-serif;overflow:hidden}div#switchesContainer input{margin-bottom:0}div.toolbar{border-top:solid #ffffff 1px;border-bottom:solid #aca899 1px;background-color:#f1efe7;padding:3px 5px;font-size:68.75%}div.toolbar,div#search input{font-family:tahoma,verdana,arial,helvetica,sans-serif}div.toolbar input.button{padding:0 5px;font-size:100%}div.toolbar input.hidden{display:none}div#switches input#clearButton{margin-left:20px}div#levels label{font-weight:bold}div#levels label,div#options label{margin-right:5px}div#levels label#wrapLabel{font-weight:normal}div#search label{margin-right:10px}div#search label.searchboxlabel{margin-right:0}div#search input{font-size:100%}div#search input.validregex{color:green}div#search input.invalidregex{color:red}div#search input.nomatches{color:white;background-color:#ff6666}div#search input.nomatches{color:white;background-color:#ff6666}div#searchNav{display:none}div#commandLine{display:none}div#commandLine input#command{font-size:100%;font-family:Courier New,Courier}div#commandLine input#evaluateButton{}*.greyedout{color:gray !important;border-color:gray !important}*.greyedout *.alwaysenabled{color:black}*.unselectable{-khtml-user-select:none;-moz-user-select:none;user-select:none}div#log{font-family:Courier New,Courier;font-size:75%;width:100%;overflow:auto;clear:both;position:relative}div.group{border-color:#cccccc;border-style:solid;border-width:1px 0 1px 1px;overflow:visible}div.oldIe div.group,div.oldIe div.group *,div.oldIe *.logentry{height:1%}div.group div.groupheading span.expander{border:solid black 1px;font-family:Courier New,Courier;font-size:0.833em;background-color:#eeeeee;position:relative;top:-1px;color:black;padding:0 2px;cursor:pointer;cursor:hand;height:1%}div.group div.groupcontent{margin-left:10px;padding-bottom:2px;overflow:visible}div.group div.expanded{display:block}div.group div.collapsed{display:none}*.logentry{overflow:visible;display:none;white-space:pre}span.pre{white-space:pre}pre.unwrapped{display:inline !important}pre.unwrapped pre.pre,div.wrapped pre.pre{display:inline}div.wrapped pre.pre{white-space:normal}div.wrapped{display:none}body.searching *.logentry span.currentmatch{color:white !important;background-color:green !important}body.searching div.searchhighlight *.logentry span.searchterm{color:black;background-color:yellow}div.wrap *.logentry{white-space:normal !important;border-width:0 0 1px 0;border-color:#dddddd;border-style:dotted}div.wrap #log_wrapped,#log_unwrapped{display:block}div.wrap #log_unwrapped,#log_wrapped{display:none}div.wrap *.logentry span.pre{overflow:visible;white-space:normal}div.wrap *.logentry pre.unwrapped{display:none}div.wrap *.logentry span.wrapped{display:inline}div.searchfilter *.searchnonmatch{display:none !important}div#log *.TRACE,label#label_TRACE{color:#666666}div#log *.DEBUG,label#label_DEBUG{color:green}div#log *.INFO,label#label_INFO{color:#000099}div#log *.WARN,label#label_WARN{color:#999900}div#log *.ERROR,label#label_ERROR{color:red}div#log *.FATAL,label#label_FATAL{color:#660066}div.TRACE#log *.TRACE,div.DEBUG#log *.DEBUG,div.INFO#log *.INFO,div.WARN#log *.WARN,div.ERROR#log *.ERROR,div.FATAL#log *.FATAL{display:block}div#log div.separator{background-color:#cccccc;margin:5px 0;line-height:1px}','</style>','</head>','<body id="body">','<div id="switchesContainer">','<div id="switches">','<div id="levels" class="toolbar">','Filters:','<input type="checkbox" id="switch_TRACE" onclick="applyFilters(); checkAllLevels()" checked="checked" title="Show/hide trace messages" /><label for="switch_TRACE" id="label_TRACE">trace</label>','<input type="checkbox" id="switch_DEBUG" onclick="applyFilters(); checkAllLevels()" checked="checked" title="Show/hide debug messages" /><label for="switch_DEBUG" id="label_DEBUG">debug</label>','<input type="checkbox" id="switch_INFO" onclick="applyFilters(); checkAllLevels()" checked="checked" title="Show/hide info messages" /><label for="switch_INFO" id="label_INFO">info</label>','<input type="checkbox" id="switch_WARN" onclick="applyFilters(); checkAllLevels()" checked="checked" title="Show/hide warn messages" /><label for="switch_WARN" id="label_WARN">warn</label>','<input type="checkbox" id="switch_ERROR" onclick="applyFilters(); checkAllLevels()" checked="checked" title="Show/hide error messages" /><label for="switch_ERROR" id="label_ERROR">error</label>','<input type="checkbox" id="switch_FATAL" onclick="applyFilters(); checkAllLevels()" checked="checked" title="Show/hide fatal messages" /><label for="switch_FATAL" id="label_FATAL">fatal</label>','<input type="checkbox" id="switch_ALL" onclick="toggleAllLevels(); applyFilters()" checked="checked" title="Show/hide all messages" /><label for="switch_ALL" id="label_ALL">all</label>','</div>','<div id="search" class="toolbar">','<label for="searchBox" class="searchboxlabel">Search:</label> <input type="text" id="searchBox" onclick="toggleSearchEnabled(true)" onkeyup="scheduleSearch()" size="20" />','<input type="button" id="searchReset" disabled="disabled" value="Reset" onclick="clearSearch()" class="button" title="Reset the search" />','<input type="checkbox" id="searchRegex" onclick="doSearch()" title="If checked, search is treated as a regular expression" /><label for="searchRegex">Regex</label>','<input type="checkbox" id="searchCaseSensitive" onclick="doSearch()" title="If checked, search is case sensitive" /><label for="searchCaseSensitive">Match case</label>','<input type="checkbox" id="searchDisable" onclick="toggleSearchEnabled()" title="Enable/disable search" /><label for="searchDisable" class="alwaysenabled">Disable</label>','<div id="searchNav">','<input type="button" id="searchNext" disabled="disabled" value="Next" onclick="searchNext()" class="button" title="Go to the next matching log entry" />','<input type="button" id="searchPrevious" disabled="disabled" value="Previous" onclick="searchPrevious()" class="button" title="Go to the previous matching log entry" />','<input type="checkbox" id="searchFilter" onclick="toggleSearchFilter()" title="If checked, non-matching log entries are filtered out" /><label for="searchFilter">Filter</label>','<input type="checkbox" id="searchHighlight" onclick="toggleSearchHighlight()" title="Highlight matched search terms" /><label for="searchHighlight" class="alwaysenabled">Highlight all</label>','</div>','</div>','<div id="options" class="toolbar">','Options:','<input type="checkbox" id="enableLogging" onclick="toggleLoggingEnabled()" checked="checked" title="Enable/disable logging" /><label for="enableLogging" id="enableLoggingLabel">Log</label>','<input type="checkbox" id="wrap" onclick="toggleWrap()" title="Enable / disable word wrap" /><label for="wrap" id="wrapLabel">Wrap</label>','<input type="checkbox" id="newestAtTop" onclick="toggleNewestAtTop()" title="If checked, causes newest messages to appear at the top" /><label for="newestAtTop" id="newestAtTopLabel">Newest at the top</label>','<input type="checkbox" id="scrollToLatest" onclick="toggleScrollToLatest()" checked="checked" title="If checked, window automatically scrolls to a new message when it is added" /><label for="scrollToLatest" id="scrollToLatestLabel">Scroll to latest</label>','<input type="button" id="clearButton" value="Clear" onclick="clearLog()" class="button" title="Clear all log messages"  />','<input type="button" id="hideButton" value="Hide" onclick="hide()" class="hidden button" title="Hide the console" />','<input type="button" id="closeButton" value="Close" onclick="closeWindow()" class="hidden button" title="Close the window" />','</div>','</div>','</div>','<div id="log" class="TRACE DEBUG INFO WARN ERROR FATAL"></div>','<div id="commandLine" class="toolbar">','<div id="commandLineContainer">','<input type="text" id="command" title="Enter a JavaScript command here and hit return or press \'Evaluate\'" />','<input type="button" id="evaluateButton" value="Evaluate" class="button" title="Evaluate the command" onclick="evalCommandLine()" />','</div>','</div>','</body>','</html>',''];};var defaultCommandLineFunctions=[];ConsoleAppender=function(){};var consoleAppenderIdCounter=1;ConsoleAppender.prototype=new Appender();ConsoleAppender.prototype.create=function(inPage,container,lazyInit,initiallyMinimized,useDocumentWrite,width,height,focusConsoleWindow){var appender=this;var initialized=false;var consoleWindowCreated=false;var consoleWindowLoaded=false;var consoleClosed=false;var queuedLoggingEvents=[];var isSupported=true;var consoleAppenderId=consoleAppenderIdCounter++;initiallyMinimized=extractBooleanFromParam(initiallyMinimized,this.defaults.initiallyMinimized);lazyInit=extractBooleanFromParam(lazyInit,this.defaults.lazyInit);useDocumentWrite=extractBooleanFromParam(useDocumentWrite,this.defaults.useDocumentWrite);var newestMessageAtTop=this.defaults.newestMessageAtTop;var scrollToLatestMessage=this.defaults.scrollToLatestMessage;width=width?width:this.defaults.width;height=height?height:this.defaults.height;var maxMessages=this.defaults.maxMessages;var showCommandLine=this.defaults.showCommandLine;var commandLineObjectExpansionDepth=this.defaults.commandLineObjectExpansionDepth;var showHideButton=this.defaults.showHideButton;var showCloseButton=this.defaults.showCloseButton;this.setLayout(this.defaults.layout);var init,createWindow,safeToAppend,getConsoleWindow,open;var appenderName=inPage?"InPageAppender":"PopUpAppender";var checkCanConfigure=function(configOptionName){if(consoleWindowCreated){handleError(appenderName+": configuration option '"+configOptionName+"' may not be set after the appender has been initialized");return false;}
 return true;};var consoleWindowExists=function(){return(consoleWindowLoaded&&isSupported&&!consoleClosed);};this.isNewestMessageAtTop=function(){return newestMessageAtTop;};this.setNewestMessageAtTop=function(newestMessageAtTopParam){newestMessageAtTop=bool(newestMessageAtTopParam);if(consoleWindowExists()){getConsoleWindow().setNewestAtTop(newestMessageAtTop);}};this.isScrollToLatestMessage=function(){return scrollToLatestMessage;};this.setScrollToLatestMessage=function(scrollToLatestMessageParam){scrollToLatestMessage=bool(scrollToLatestMessageParam);if(consoleWindowExists()){getConsoleWindow().setScrollToLatest(scrollToLatestMessage);}};this.getWidth=function(){return width;};this.setWidth=function(widthParam){if(checkCanConfigure("width")){width=extractStringFromParam(widthParam,width);}};this.getHeight=function(){return height;};this.setHeight=function(heightParam){if(checkCanConfigure("height")){height=extractStringFromParam(heightParam,height);}};this.getMaxMessages=function(){return maxMessages;};this.setMaxMessages=function(maxMessagesParam){maxMessages=extractIntFromParam(maxMessagesParam,maxMessages);if(consoleWindowExists()){getConsoleWindow().setMaxMessages(maxMessages);}};this.isShowCommandLine=function(){return showCommandLine;};this.setShowCommandLine=function(showCommandLineParam){showCommandLine=bool(showCommandLineParam);if(consoleWindowExists()){getConsoleWindow().setShowCommandLine(showCommandLine);}};this.isShowHideButton=function(){return showHideButton;};this.setShowHideButton=function(showHideButtonParam){showHideButton=bool(showHideButtonParam);if(consoleWindowExists()){getConsoleWindow().setShowHideButton(showHideButton);}};this.isShowCloseButton=function(){return showCloseButton;};this.setShowCloseButton=function(showCloseButtonParam){showCloseButton=bool(showCloseButtonParam);if(consoleWindowExists()){getConsoleWindow().setShowCloseButton(showCloseButton);}};this.getCommandLineObjectExpansionDepth=function(){return commandLineObjectExpansionDepth;};this.setCommandLineObjectExpansionDepth=function(commandLineObjectExpansionDepthParam){commandLineObjectExpansionDepth=extractIntFromParam(commandLineObjectExpansionDepthParam,commandLineObjectExpansionDepth);};var minimized=initiallyMinimized;this.isInitiallyMinimized=function(){return initiallyMinimized;};this.setInitiallyMinimized=function(initiallyMinimizedParam){if(checkCanConfigure("initiallyMinimized")){initiallyMinimized=bool(initiallyMinimizedParam);minimized=initiallyMinimized;}};this.isUseDocumentWrite=function(){return useDocumentWrite;};this.setUseDocumentWrite=function(useDocumentWriteParam){if(checkCanConfigure("useDocumentWrite")){useDocumentWrite=bool(useDocumentWriteParam);}};function QueuedLoggingEvent(loggingEvent,formattedMessage){this.loggingEvent=loggingEvent;this.levelName=loggingEvent.level.name;this.formattedMessage=formattedMessage;}
 QueuedLoggingEvent.prototype.append=function(){getConsoleWindow().log(this.levelName,this.formattedMessage);};function QueuedGroup(name,initiallyExpanded){this.name=name;this.initiallyExpanded=initiallyExpanded;}
 QueuedGroup.prototype.append=function(){getConsoleWindow().group(this.name,this.initiallyExpanded);};function QueuedGroupEnd(){}
@@ -16269,7 +14823,8 @@ log4javascript.setDocumentReady=function(){pageLoaded=true;log4javascript.dispat
 log4javascript.setDocumentReady();};}}
 return log4javascript;},this);
 
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @class
@@ -16280,9 +14835,7 @@ var Ozone = Ozone || {};
 /*
  * The only function that can be called from gadgets is Ozone.log.gadgetLog
  */
-Ozone.log = {
-	
-};
+Ozone.log = {};
 
 Ozone.log.logEnabled = false; 
 
@@ -16353,29 +14906,23 @@ Ozone.log.launchPopupAppender = function() {
  * @param {Object} message
  */
 Ozone.log.widgetLog = function() { 
-    gadgets.rpc.call('..', 'Ozone.log',null, arguments);
+    Ozone.internal.rpc.send('Ozone.log', null, arguments);
 };
 
 
-if (typeof(Ext) != "undefined") {
-	Ext.onReady(function(){
-		gadgets.rpc.register('Ozone.log', function(args){
-			var logger = Ozone.log.getDefaultLogger(); 
-			logger.debug.apply(logger, args);
-		});
+Ozone.util.internal.onDocumentReady(function(){
+	Ozone.internal.rpc.register('Ozone.log', function(args){
+		var logger = Ozone.log.getDefaultLogger();
+		logger.debug.apply(logger, args);
 	});
-}
+});
 
 /**
  * @fileoverview The preference server script controls all the preference server communication.
  */
 
-
-
-/**
- * @ignore
- */
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @ignore
@@ -18160,10 +16707,8 @@ Ozone.pref = Ozone.pref || {};
   }
 }(window, document));
 
-/**
- * @ignore
- */
-var Ozone = Ozone ? Ozone : {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @ignore
@@ -18192,40 +16737,34 @@ Ozone.eventing = Ozone.eventing ? Ozone.eventing : {};
  * });
  * @throws {Error} throws an error with a message if widget initialization fails
  */
-Ozone.eventing.Widget = function(widgetRelay, afterInit) {
-  if (Ozone.eventing.Widget.instance == null) {
-    Ozone.eventing.Widget.instance = this;
-    this.isAfterInit = false;
-    //connect passed in function to the internal callback function
-    if (afterInit != null) {
-      owfdojo.connect(
-              this,'afterInitCallBack',
-              this,afterInit);
-    }
-    this.setWidgetRelay(widgetRelay);
-    try {
-        this.widgetInit();
-    } catch (error) {
-        throw 'Widget relay init failed. Relaying will not work. Inner Exception: ' + error.name + ": " + error.message;
-    }
-  }
-  else {
-    if (afterInit != null) {
-      if (this.isAfterInit === false) {
+Ozone.eventing.Widget = function (widgetRelay, afterInit) {
+    if (Ozone.eventing.Widget.instance == null) {
+        Ozone.eventing.Widget.instance = this;
+        this.isAfterInit = false;
         //connect passed in function to the internal callback function
-        owfdojo.connect(
-                this,'afterInitCallBack',
-                this,afterInit);
+        if (afterInit != null) {
+            this.afterInitCallBack = afterInit.bind(this);
+        }
+        this.setWidgetRelay(widgetRelay);
+        try {
+            this.widgetInit();
+        } catch (error) {
+            throw 'Widget relay init failed. Relaying will not work. Inner Exception: ' + error.name + ": " + error.message;
+        }
+    } else {
+        if (afterInit != null) {
+            if (this.isAfterInit === false) {
+                //connect passed in function to the internal callback function
+                this.afterInitCallBack = afterInit.bind(this);
+            } else {
+                //already initialized just execute the supplied callback
+                setTimeout(function () {
+                    afterInit.call(Ozone.eventing.Widget.instance, Ozone.eventing.Widget.instance);
+                }, 50);
+            }
+        }
     }
-      else {
-        //already initialized just execute the supplied callback
-        setTimeout(function() { 
-            afterInit.call(Ozone.eventing.Widget.instance, Ozone.eventing.Widget.instance);
-        },50);
-  }
-    }
-  }
-  return Ozone.eventing.Widget.instance;
+    return Ozone.eventing.Widget.instance;
 };
 
 /**
@@ -18350,14 +16889,15 @@ Ozone.eventing.Widget.prototype = {
           };
         }
 
-        gadgets.rpc.setRelayUrl("..", this.containerRelay, false, true);
+        Ozone.internal.rpc.setParentTargetOrigin(this.containerRelay);
+        Ozone.internal.rpc.setup();
 
-        
-        var onClickHandler,
-            onKeyDownHandler;
+        var onClickHandler;
+        var onKeyDownHandler;
+
+        var _this = this;
 
         function activateWidget() {
-
              var config = {
                  fn: "activateWidget",
                  params: {
@@ -18367,58 +16907,56 @@ Ozone.eventing.Widget.prototype = {
              };
 
              var stateChannel = '_WIDGET_STATE_CHANNEL_' + configParams.id;
-             if (!this.disableActivateWidget) {
-               gadgets.rpc.call('..', stateChannel, null, this.widgetId, config);
+             if (!_this.disableActivateWidget) {
+               Ozone.internal.rpc.send(stateChannel, null, _this.widgetId, config);
              }
              else {
-               this.disableActivateWidget = false;
+               _this.disableActivateWidget = false;
              }
         }
 
         //register for after_container_init
-        gadgets.rpc.register("after_container_init", owfdojo.hitch(this,function() {
+        Ozone.internal.rpc.register("after_container_init", function () {
+            Ozone.internal.rpc.unregister("after_container_init");
 
-            gadgets.rpc.unregister("after_container_init");
-            
             //attach mouse click and keydown listener to send activate calls for the widget
-            if(!onClickHandler) {
-                onClickHandler = owfdojo.connect(document, 'click', owfdojo.hitch(this, activateWidget));
+            if (!onClickHandler) {
+                onClickHandler = activateWidget.bind(this);
+                document.addEventListener("click", onClickHandler);
             }
-            
-            if(!onKeyDownHandler) {
-                onKeyDownHandler = owfdojo.connect(document, 'onkeyup', owfdojo.hitch(this, activateWidget));
+
+            if (!onKeyDownHandler) {
+                onKeyDownHandler = activateWidget.bind(this);
+                document.addEventListener("keyup", onKeyDownHandler);
             }
 
             //execute callback
-            this.afterContainerInit();
+            _this.afterContainerInit();
+        });
 
-        }));
-
-        gadgets.rpc.register("_widget_activated", owfdojo.hitch(this,function() {
-            //console.log("_widget_activated => " + configParams.id);
-            
-            if(onClickHandler) {
-                owfdojo.disconnect(onClickHandler);
+        Ozone.internal.rpc.register("_widget_activated", function () {
+            if (onClickHandler) {
+                document.removeEventListener("click", onClickHandler);
+                onClickHandler = null;
             }
-            if(onClickHandler) {
-                owfdojo.disconnect(onKeyDownHandler);
-            }
-                        
-            onClickHandler = null;
-            onKeyDownHandler = null;
 
-        }));
-
-        gadgets.rpc.register("_widget_deactivated", owfdojo.hitch(this,function() {
-            //console.log("_widget_deactivated => " + configParams.id);
-
-            if(!onClickHandler) {
-                onClickHandler = owfdojo.connect(document, 'click', owfdojo.hitch(this, activateWidget));
+            if (onClickHandler) {
+                document.removeEventListener("keyup", onKeyDownHandler);
+                onKeyDownHandler = null;
             }
-            if(!onKeyDownHandler) {
-                onKeyDownHandler = owfdojo.connect(document, 'onkeyup', owfdojo.hitch(this, activateWidget));
+        });
+
+        Ozone.internal.rpc.register("_widget_deactivated", function () {
+            if (!onClickHandler) {
+                onClickHandler = activateWidget.bind(this);
+                document.addEventListener("click", onClickHandler);
             }
-        }));
+
+            if (!onKeyDownHandler) {
+                onKeyDownHandler = activateWidget.bind(this);
+                document.addEventListener("keyup", onKeyDownHandler);
+            }
+        });
 
         //register with container
         try {
@@ -18434,9 +16972,8 @@ Ozone.eventing.Widget.prototype = {
               data.loadTime = Ozone.util.pageLoad.loadTime;
             }
 
-            //jsonString = gadgets.json.stringify(data);
             jsonString = Ozone.util.toString(data);
-            gadgets.rpc.call('..', 'container_init', null, idString, jsonString);
+            Ozone.internal.rpc.send('container_init', null, idString, jsonString);
 
         } catch (error) {
             throw {
@@ -18474,15 +17011,16 @@ Ozone.eventing.Widget.prototype = {
      */
     registerHandler : function(handlerName, handlerObject) {
       //Simple wrapper for manager objects to register handler functions
-      gadgets.rpc.register(handlerName, handlerObject);
+      Ozone.internal.rpc.register(handlerName, handlerObject);
     },
 
     /**
      * @ignore
-     * Wraps gadgets.rpc.call.
+     * Wraps Ozone.internal.rpc.send.
      */
-    send:function () {
-        gadgets.rpc.call.apply(gadgets.rpc, arguments);
+    send: function (targetId, serviceName, callback) {
+        var varargs = Array.prototype.slice.call(arguments, 3);
+        Ozone.internal.rpc.send(serviceName, callback, varargs);
     },
 
     /**
@@ -18506,7 +17044,7 @@ Ozone.eventing.Widget.prototype = {
      *
      */
     subscribe : function(channelName, handler) {
-        gadgets.pubsub.subscribe(channelName, handler);
+        Ozone.internal.pubsub.subscribe(channelName, handler);
         return this;
     },
     /**
@@ -18516,7 +17054,7 @@ Ozone.eventing.Widget.prototype = {
      * this.widgetEventingController.unsubscribe("ClockChannel");
      */
     unsubscribe : function(channelName) {
-        gadgets.pubsub.unsubscribe(channelName);
+        Ozone.internal.pubsub.unsubscribe(channelName);
         return this;
     },
     /**
@@ -18532,7 +17070,7 @@ Ozone.eventing.Widget.prototype = {
      * this.widgetEventingController.publish("ClockChannel", currentTimeString);
      */
     publish : function(channelName, message, dest, accessLevel) {
-        gadgets.pubsub.publish(channelName, message, dest, accessLevel);
+        Ozone.internal.pubsub.publish(channelName, message, dest, accessLevel);
         return this;
     }
 };
@@ -18563,35 +17101,27 @@ Ozone.eventing.Widget.prototype = {
  *       });
  * &lt;/script&gt;
  */
-Ozone.eventing.Widget.getInstance = function(afterInit, widgetRelay) {
-  if (Ozone.eventing.Widget.instance == null) {
-    Ozone.eventing.Widget.instance = new Ozone.eventing.Widget(widgetRelay, afterInit);
-  }
-  else {
-    if (afterInit != null) {
-      if (!Ozone.eventing.Widget.instance.isAfterInit) {
-        //connect passed in function to the internal callback function
-        owfdojo.connect(
-                Ozone.eventing.Widget.instance,'afterInitCallBack',
-                Ozone.eventing.Widget.instance,afterInit);
-      }
-      else {
-        //already initialized just execute the supplied callback
-      setTimeout(function() {
-        afterInit.call(Ozone.eventing.Widget.instance, Ozone.eventing.Widget.instance);
-      },50);
+Ozone.eventing.Widget.getInstance = function (afterInit, widgetRelay) {
+    if (Ozone.eventing.Widget.instance == null) {
+        Ozone.eventing.Widget.instance = new Ozone.eventing.Widget(widgetRelay, afterInit);
+    } else {
+        var instance = Ozone.eventing.Widget.instance;
+        if (afterInit != null) {
+            if (!instance.isAfterInit) {
+                instance.afterInitCallBack = afterInit.bind(instance);
+            } else {
+                // already initialized, execute the supplied callback
+                setTimeout(function () {
+                    afterInit.call(instance, instance);
+                }, 50);
+            }
+        }
     }
-  }
-  }
-  return Ozone.eventing.Widget.instance;
+    return Ozone.eventing.Widget.instance;
 };
 
-/**
- * @ignore
- * @namespace
- * @since OWF 5.0
- */
-OWF = window.OWF ? window.OWF : {};
+window.OWF = window.OWF || {};
+var OWF = window.OWF;
 
 (function (window, document, undefined) {
 
@@ -18643,7 +17173,7 @@ OWF = window.OWF ? window.OWF : {};
                     }
                 }
 
-                gadgets.rpc.call('..', INTENTS_SERVICE_NAME,
+                Ozone.internal.rpc.send(INTENTS_SERVICE_NAME,
                     //callback for when an intent has reached the destination widget(s)
                     function (ids) {
                         //exec handler
@@ -18708,14 +17238,14 @@ OWF = window.OWF ? window.OWF : {};
              * );
              */
             receive:function (intent, handler) {
-                var intentKey = owfdojo.toJson(intent);
+                var intentKey = JSON.stringify(intent);
 
                 //save a list of handlers per intent
                 intentReceiverMap[intentKey] = handler;
 
                 //register with shindig for when the intent message is sent
-                gadgets.rpc.register(INTENTS_SERVICE_NAME, function(sender, intent, data) {
-                     var intentKey = owfdojo.toJson(intent);
+                Ozone.internal.rpc.register(INTENTS_SERVICE_NAME, function(sender, intent, data) {
+                     var intentKey = JSON.stringify(intent);
 
                     //execute the handler that matches the intent
                     var receiverHandler = intentReceiverMap[intentKey];
@@ -18724,7 +17254,7 @@ OWF = window.OWF ? window.OWF : {};
                     }
 
                 });
-                gadgets.rpc.call('..', INTENTS_SERVICE_RECEIVE_NAME, null, intent, OWF.getIframeId());
+                Ozone.internal.rpc.send(INTENTS_SERVICE_RECEIVE_NAME, null, intent, OWF.getIframeId());
             }
         };
 
@@ -18732,10 +17262,9 @@ OWF = window.OWF ? window.OWF : {};
 
 
 }(window, document));
-/**
- * @ignore
- */
-var Ozone = Ozone ? Ozone : {};
+
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @ignore
@@ -18791,7 +17320,7 @@ Ozone.chrome.WidgetChrome = function(config) {
 
             var id = data.itemId != null ? data.itemId : data.id;
             var handler = scope.items[id].handler;
-            if (handler != null && owfdojo.isFunction(handler)) {
+            if (handler != null && Ozone.util.internal.isFunction(handler)) {
               returnValue = handler.apply(data.scope != null ? data.scope : window, data.args != null ? data.args : []);
             }
 
@@ -18832,8 +17361,8 @@ Ozone.chrome.WidgetChrome = function(config) {
         var data = {
           action: 'isModified'
         };
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
       },
 
       /**
@@ -18899,14 +17428,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       addHeaderButtons : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'addHeaderButtons';
         data.type = 'button';
@@ -18915,8 +17437,8 @@ Ozone.chrome.WidgetChrome = function(config) {
           scope.items[items[i].itemId != null ? items[i].itemId : items[i].id] = items[i];
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
 
       },
 
@@ -18983,14 +17505,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       updateHeaderButtons : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'updateHeaderButtons';
         data.type = 'button';
@@ -18999,15 +17514,15 @@ Ozone.chrome.WidgetChrome = function(config) {
           //save data
           var id = items[i].itemId != null ? items[i].itemId : items[i].id;
           if (scope.items[id] != null) {
-            owfdojo.mixin(scope.items[id], items[i]);
+            Ozone.util.internal.mixin(scope.items[id], items[i]);
           }
           else {
             scope.items[id] = items[i];
           }
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
 
       },
 
@@ -19076,14 +17591,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       insertHeaderButtons : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'insertHeaderButtons';
         data.type = 'button';
@@ -19095,8 +17603,8 @@ Ozone.chrome.WidgetChrome = function(config) {
           scope.items[items[i].itemId != null ? items[i].itemId : items[i].id] = items[i];
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
       },
 
       /**
@@ -19124,14 +17632,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       removeHeaderButtons : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'removeHeaderButtons';
         data.type = 'button';
@@ -19144,8 +17645,8 @@ Ozone.chrome.WidgetChrome = function(config) {
           }
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
       },
      
     
@@ -19173,8 +17674,8 @@ Ozone.chrome.WidgetChrome = function(config) {
         action: 'listHeaderMenus',
         type: 'button'
       };
-      var jsonString = gadgets.json.stringify(data);
-      gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+      var jsonString = JSON.stringify(data);
+      Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
     },
     
       /**
@@ -19280,14 +17781,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       addHeaderMenus : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'addHeaderMenus';
         data.type = 'menu';
@@ -19297,8 +17791,8 @@ Ozone.chrome.WidgetChrome = function(config) {
         	scope.registerChromeMenu(item);
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
 
       },
       
@@ -19404,14 +17898,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       updateHeaderMenus : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'updateHeaderMenus';
         data.type = 'menu';
@@ -19424,7 +17911,7 @@ Ozone.chrome.WidgetChrome = function(config) {
                         merge(source[key], value);
                     }
                     else {
-                        source[key] = Ext.clone(value);
+                        source[key] = _.clone(value);
                     }
                 }
                 else {
@@ -19489,8 +17976,8 @@ Ozone.chrome.WidgetChrome = function(config) {
         	data.items[i] = scope.items[data.items[i].itemId];
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
 
       },
 
@@ -19556,14 +18043,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       insertHeaderMenus : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'insertHeaderMenus';
         data.type = 'menu';
@@ -19593,8 +18073,8 @@ Ozone.chrome.WidgetChrome = function(config) {
         	}
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
       },
 
       /**
@@ -19612,14 +18092,7 @@ Ozone.chrome.WidgetChrome = function(config) {
        */
       removeHeaderMenus : function(cfg) {
         var data = {};
-        var items = null;
-
-        if (!owfdojo.isArray(cfg.items)) {
-          items = [cfg.items];
-        }
-        else {
-          items = cfg.items;
-        }
+        var items = Ozone.util.internal.asArray(cfg.items);
 
         data.action = 'removeHeaderMenus';
         data.type = 'menu';
@@ -19632,8 +18105,8 @@ Ozone.chrome.WidgetChrome = function(config) {
           }
         }
 
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
       },
       
       /**
@@ -19660,8 +18133,8 @@ Ozone.chrome.WidgetChrome = function(config) {
           action: 'listHeaderMenus',
           type: 'menu'
         };
-        var jsonString = gadgets.json.stringify(data);
-        gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+        var jsonString = JSON.stringify(data);
+        Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
       },
 
        /**
@@ -19687,8 +18160,8 @@ Ozone.chrome.WidgetChrome = function(config) {
          var data = {
             action: 'getTitle'
           };
-         var jsonString = gadgets.json.stringify(data);
-         gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+         var jsonString = JSON.stringify(data);
+         Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
        },
 
         /**
@@ -19717,8 +18190,8 @@ Ozone.chrome.WidgetChrome = function(config) {
              action: 'setTitle',
              title: cfg.title
            };
-          var jsonString = gadgets.json.stringify(data);
-          gadgets.rpc.call('..', scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
+          var jsonString = JSON.stringify(data);
+          Ozone.internal.rpc.send(scope.channelName, cfg.callback, scope.widgetEventingController.getWidgetId(), jsonString);
         }
 
     };
@@ -19749,10 +18222,8 @@ Ozone.chrome.WidgetChrome.getInstance = function(cfg) {
 
 
 
-/**
- * @ignore
- */
-var Ozone = Ozone ? Ozone : {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @ignore
@@ -19792,17 +18263,18 @@ Ozone.dragAndDrop.WidgetDragAndDrop = function(cfg) {
   //set initial drag text
   this.dragIndicatorText = cfg.dragIndicatorText ? cfg.dragIndicatorText : 'Dragging Data';
 
-  if (cfg.callbacks != null && owfdojo.isObject(cfg.callbacks)) {
-    owfdojo.mixin(this.callbacks, cfg.callbacks)
+  if (cfg.callbacks != null && Ozone.util.internal.isObject(cfg.callbacks)) {
+    Ozone.util.internal.mixin(this.callbacks, cfg.callbacks)
   }
 
   //create drag indicator
-  this.dragIndicator = this.createDragIndicator();
-  this.dragIndicatorTextNode = owfdojo.query('span.ddText', this.dragIndicator)[0];
+  var indicators = this.createDragIndicator();
+  this.dragIndicator = indicators[0];
+  this.dragIndicatorTextNode = indicators[1];
 
   this.widgetEventingController = cfg.widgetEventingController || Ozone.eventing.Widget.instance;
 
-  if (cfg.keepMouseListenersAttached === undefined && owfdojo.isIE) {
+  if (cfg.keepMouseListenersAttached === undefined && Ozone.util.internal.isIE) {
     cfg.keepMouseListenersAttached = true;
   }
 
@@ -19824,15 +18296,16 @@ Ozone.dragAndDrop.WidgetDragAndDrop = function(cfg) {
     }
   }
 
-  gadgets.rpc.register('_fire_mouse_move', owfdojo.hitch(this, function(msg) {
+  var _this = this;
 
+  Ozone.internal.rpc.register('_fire_mouse_move', function (msg) {
     var el = document.elementFromPoint(msg.pageX, msg.pageY);
 
-    if (this.getFlashWidgetId()) {
-      if (msg.sender !== this.widgetEventingController.getWidgetId()) {
+    if (_this.getFlashWidgetId()) {
+      if (msg.sender !== _this.widgetEventingController.getWidgetId()) {
         Ozone.util.getFlashApp().dispatchExternalMouseEvent(msg.pageX, msg.pageY);
       }
-      this.mouseMove(msg, true);
+      _this.mouseMove(msg, true);
     } else {
       if (!arguments.callee.lastEl) {
         arguments.callee.lastEl = el;
@@ -19847,17 +18320,16 @@ Ozone.dragAndDrop.WidgetDragAndDrop = function(cfg) {
 
       fireMouseEvent(el, 'mousemove', msg);
     }
+  });
 
-  }));
-
-  gadgets.rpc.register('_fire_mouse_up', owfdojo.hitch(this, function(msg) {
+  Ozone.internal.rpc.register('_fire_mouse_up', function (msg) {
     var el = document.elementFromPoint(msg.pageX, msg.pageY);
     if (el && el.nodeName === 'OBJECT') {
-      this.mouseUp(msg, true);
+      _this.mouseUp(msg, true);
     } else {
       fireMouseEvent(el, 'mouseup', msg);
     }
-  }));
+  });
 
   Ozone.dragAndDrop.WidgetDragAndDrop.instance = this;
   return this;
@@ -19943,36 +18415,45 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
     cfg = cfg || {};
 
     //subscribe to channels
-    this.widgetEventingController.subscribe(this.dragStartName, owfdojo.hitch(this, this.onStartDrag));
-    this.widgetEventingController.subscribe(this.dragOutName, owfdojo.hitch(this, this.onDragOut));
-    this.widgetEventingController.subscribe(this.dragStopInContainerName, owfdojo.hitch(this, this.onDragStopInContainer));
-    this.widgetEventingController.subscribe(this.dropReceiveDataName, owfdojo.hitch(this, this.dropReceiveData));
+    this.widgetEventingController.subscribe(this.dragStartName, this.onStartDrag.bind(this));
+    this.widgetEventingController.subscribe(this.dragOutName, this.onDragOut.bind(this));
+    this.widgetEventingController.subscribe(this.dragStopInContainerName, this.onDragStopInContainer.bind(this));
+    this.widgetEventingController.subscribe(this.dropReceiveDataName, this.dropReceiveData.bind(this));
 
     if (cfg.keepMouseListenersAttached === true) {
       this.keepMouseListenersAttached = true;
 
       //hook mouse move and mouse up
       if (this.listeners.onmousemove == null) {
-        this.listeners.onmousemove = owfdojo.connect(document, 'onmousemove', this, this.mouseMove);
+        this.listeners.onmousemove = this.mouseMove.bind(this);
+        document.addEventListener("mousemove", this.listeners.onmousemove);
       }
       if (this.listeners.onmouseup == null) {
-        this.listeners.onmouseup = owfdojo.connect(document, 'onmouseup', this, this.mouseUp);
+        this.listeners.onmouseup = this.mouseUp.bind(this);
+        document.addEventListener("mouseup", this.listeners.onmouseup);
       }
     }
   },
 
   /**
    * @private
+   *
+   * @returns HTMLElement[]
    */
   createDragIndicator: function() {
-    return owfdojo.create('span', {
-      className: 'ddBox ddBoxCannotDrop',
-      style: {
-        display: 'none'
-      },
-      innerHTML: '<span class="ddText">' + this.dragIndicatorText + '</span>'
-    },
-    owfdojo.body());
+    var indicator = document.createElement("span");
+    indicator.classList.add("ddBox", "ddBoxCannotDrop");
+    indicator.style.display = "none";
+
+    var indicatorText = document.createElement("span");
+    indicatorText.classList.add("ddText");
+    indicatorText.innerText = this.dragIndicatorText;
+
+    indicator.appendChild(indicatorText);
+
+    document.body.appendChild(indicator);
+
+    return [indicator, indicatorText];
   },
 
   /**
@@ -20011,7 +18492,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
 
     //allow caller to pass extra properties to dragStart
     //be sure to not send the dragDropData
-    owfdojo.mixin(dragStartCfg, cfg);
+    Ozone.util.internal.mixin(dragStartCfg, cfg);
     delete dragStartCfg.dragDropData;
     delete dragStartCfg.dragZone;
 
@@ -20021,10 +18502,10 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
     //send message to start dragging for other widgets - unsubscribe so we don't repeat onstartdrag
     this.widgetEventingController.unsubscribe(this.dragStartName);
     this.widgetEventingController.publish(this.dragStartName, dragStartCfg, null, dragStartCfg.accessLevel);
-    this.widgetEventingController.subscribe(this.dragStartName, owfdojo.hitch(this, this.onStartDrag));
+    this.widgetEventingController.subscribe(this.dragStartName, this.onStartDrag.bind(this));
 
     //send data to container
-    this.widgetEventingController.publish(this.dragSendDataName, owfdojo.mixin({
+    this.widgetEventingController.publish(this.dragSendDataName, Ozone.util.internal.mixin({
       dragSourceId: this.widgetEventingController.getWidgetId()
     }, cfg), '..');
 
@@ -20038,7 +18519,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
     this.dragging = true;
     this.dragStartData = msg;
 
-    if (owfdojo.isFunction(this.callbacks[this.dragStart])) {
+    if (Ozone.util.internal.isFunction(this.callbacks[this.dragStart])) {
       var scope = this;
       var senderId = Ozone.util.parseJson(sender);
       Ozone.util.hasAccess({
@@ -20057,7 +18538,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
     }
 
     //prevent IE bug where text is dragged instead of the node
-    if (owfdojo.isIE) {
+    if (Ozone.util.internal.isIE) {
       document.onselectstart = function() {
         return false;
       };
@@ -20071,10 +18552,12 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
 
     //hook mouse move and mouse up
     if (this.listeners.onmousemove == null) {
-      this.listeners.onmousemove = owfdojo.connect(document, 'onmousemove', this, this.mouseMove);
+      this.listeners.onmousemove = this.mouseMove.bind(this);
+      document.addEventListener("mousemove", this.listeners.onmousemove);
     }
     if (this.listeners.onmouseup == null) {
-      this.listeners.onmouseup = owfdojo.connect(document, 'onmouseup', this, this.mouseUp);
+      this.listeners.onmouseup = this.mouseUp.bind(this);
+      document.addEventListener("mouseup", this.listeners.onmouseup);
     }
   },
 
@@ -20082,9 +18565,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
    * @private
    */
   onDragOut: function(sender, msg) {
-    owfdojo.style(this.dragIndicator, {
-      display: 'none'
-    });
+    this.dragIndicator.style.display = "none";
   },
 
   /**
@@ -20116,7 +18597,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
       // if this is a flex widget, event is not faked and current dashboard layout is tabbed, fake 
       // mouse events as soon as the drag starts
       if (this.getFlashWidgetId() && fake !== true && Ozone.Widget.getDashboardLayout() === 'tabbed') {
-        gadgets.rpc.call('..', '_fake_mouse_move', null, {
+        Ozone.internal.rpc.send('_fake_mouse_move', null, {
           sender: this.widgetEventingController.getWidgetId(),
           pageX: e.pageX,
           pageY: e.pageY,
@@ -20133,15 +18614,13 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
       var topHeight = mousePosition.y;
 
       // Hide the drag indicator box while we move it
-      owfdojo.style(this.dragIndicator, {
-        display: 'none'
-      });
+      this.dragIndicator.style.display = "none";
 
       if (e === undefined) {
         e = window.event;
       }
 
-      if (owfdojo.isIE) {
+      if (Ozone.util.internal.isIE) {
         clientWidth = document.body.clientWidth;
         clientHeight = document.body.clientHeight;
       } else {
@@ -20149,7 +18628,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
         clientHeight = window.innerHeight;
       }
 
-      if ((owfdojo.isFF && owfdojo.isFF >= 4) || this.getFlashWidgetId()) {
+      if ((Ozone.util.internal.isFF && Ozone.util.internal.isFF >= 4) || this.getFlashWidgetId()) {
 
         if (e.clientX < 0 || e.clientX > clientWidth || e.clientY < 0 || e.clientY > clientHeight) {
 
@@ -20158,7 +18637,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
           if (!arguments.callee._fakeEventCounter) arguments.callee._fakeEventCounter = 1;
           else arguments.callee._fakeEventCounter += 1;
 
-          gadgets.rpc.call('..', '_fake_mouse_move', null, {
+          Ozone.internal.rpc.send('_fake_mouse_move', null, {
             sender: this.widgetEventingController.getWidgetId(),
             pageX: e.pageX,
             pageY: e.pageY,
@@ -20170,7 +18649,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
           // we had faked a mousemove event before
           // now fake mouseout event on the container
           arguments.callee._fakeEventCounter = null;
-          gadgets.rpc.call('..', '_fake_mouse_out');
+          Ozone.internal.rpc.send('_fake_mouse_out');
         }
       }
 
@@ -20190,10 +18669,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
 
       // set text on indicator
       this.dragIndicatorTextNode.innerHTML = this.dragIndicatorText;
-      owfdojo.style(this.dragIndicator, {
-        display: 'block'
-      });
-
+      this.dragIndicator.style.display = "block";
     }
   },
 
@@ -20201,15 +18677,15 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
    * @private
    */
   onDragStopInContainer: function(sender, msg) {
-    owfdojo.style(this.dragIndicator, {
-      display: 'none'
-    });
+    this.dragIndicator.style.display = "none";
+
     //disconnect listeners
     if (!this.keepMouseListenersAttached) {
-      for (l in this.listeners) {
-        owfdojo.disconnect(this.listeners[l]);
-        this.listeners[l] = null;
-      }
+      document.removeEventListener("mousemove", this.listeners.onmousemove);
+      this.listeners.onmousemove = null;
+
+      document.removeEventListener("mouseup", this.listeners.onmouseup);
+      this.listeners.onmouseup = null;
     }
 
     this.dragging = false;
@@ -20217,8 +18693,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
     this.dragZone = null;
     this.setDropEnabled(false);
 
-    if (owfdojo.isFunction(this.callbacks[this.dragStop])) {
-      var scope = this;
+    if (Ozone.util.internal.isFunction(this.callbacks[this.dragStop])) {
       this.callbacks[this.dragStop](this.dropTarget);
     }
   },
@@ -20231,7 +18706,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
       this.dragging = false;
 
       //prevent IE bug where text is dragged instead of the node
-      if (owfdojo.isIE) {
+      if (Ozone.util.internal.isIE) {
         document.onselectstart = function() {
           return true;
         };
@@ -20240,15 +18715,12 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
         };
       }
 
-      owfdojo.style(this.dragIndicator, {
-        display: 'none'
-      });
+      this.dragIndicator.style.display = "none";
 
       if (this.getFlashWidgetId()) {
-
         var clientWidth = null;
         var clientHeight = null;
-        if (owfdojo.isIE) {
+        if (Ozone.util.internal.isIE) {
           clientWidth = document.body.clientWidth;
           clientHeight = document.body.clientHeight;
         } else {
@@ -20258,7 +18730,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
 
         if ((e.clientX < 0 || e.clientX > clientWidth || e.clientY < 0 || e.clientY > clientHeight || Ozone.Widget.getDashboardLayout() === 'tabbed') && fake !== true) {
 
-          gadgets.rpc.call('..', '_fake_mouse_up', null, {
+          Ozone.internal.rpc.send('_fake_mouse_up', null, {
             sender: this.widgetEventingController.getWidgetId(),
             pageX: e.pageX,
             pageY: e.pageY,
@@ -20270,10 +18742,11 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
       }
 
       //disconnect listeners
-      for (l in this.listeners) {
-        owfdojo.disconnect(this.listeners[l]);
-        this.listeners[l] = null;
-      }
+      document.removeEventListener("mousemove", this.listeners.onmousemove);
+      this.listeners.onmousemove = null;
+
+      document.removeEventListener("mouseup", this.listeners.onmouseup);
+      this.listeners.onmouseup = null;
 
       //save dropzone info
       this.dropTarget = e.target;
@@ -20281,7 +18754,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
       //send message
       this.widgetEventingController.publish(this.dragStopInWidgetName, this.widgetEventingController.getWidgetId(), null, this.dragStartData.accessLevel);
 
-      if (owfdojo.isFunction(this.callbacks[this.dragStop])) {
+      if (Ozone.util.internal.isFunction(this.callbacks[this.dragStop])) {
         this.callbacks[this.dragStop](this.dropTarget);
       }
     }
@@ -20291,30 +18764,37 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
    * @private
    */
   dropReceiveData: function(sender, msg, channel) {
+    if (!this.dropEnabledFlag) { return; }
 
-    // only if the mouse is over a drop zone and this widget has the 
+    // only if the mouse is over a drop zone and this widget has the
     // access level to receive the data being sent
-    if (this.dropEnabledFlag) {
-      if (this.dropTarget) {
-        msg.dropTarget = this.dropTarget;
+    if (this.dropTarget) {
+      var dropTarget = this.dropTarget;
+      msg.dropTarget = dropTarget;
 
-        //find if we have any dropzone handlers for the dropzone used and execute
-        for (var i = 0; i < this.dropZoneHandlers.length; i++) {
-          //match either on id or class or is target node a child of the dropZone
-          //also make sure the dropZone is not the same as the dragZone
-          if (((this.dropTarget.id == this.dropZoneHandlers[i].id && this.dropTarget.id != null) || (owfdojo.hasClass(this.dropTarget, this.dropZoneHandlers[i].className)) || (owfdojo.isDescendant(this.dropTarget, this.dropZoneHandlers[i].dropZone))) && this.dragZone != this.dropZoneHandlers[i].dropZone) {
-            this.dropZoneHandlers[i].handler(msg);
-          }
+      // find if we have any dropzone handlers for the dropzone used and execute
+      for (var i = 0; i < this.dropZoneHandlers.length; i++) {
+        var dropZoneHandler = this.dropZoneHandlers[i];
+
+        // match either on id or class or is target node a child of the dropZone
+        var hasTargetId = dropTarget.id !== null && dropTarget.id === dropZoneHandler.id;
+        var hasClass = dropTarget.classList.contains(dropZoneHandler.className);
+        var isDescendant = dropZoneHandler.dropZone.contains(dropTarget);
+
+        // also make sure the dropZone is not the same as the dragZone
+        var isNotDragZone = this.dragZone !== dropZoneHandler.dropZone;
+
+        if (isNotDragZone && (hasTargetId || hasClass || isDescendant)) {
+          dropZoneHandler.handler(msg);
         }
-
-        //clear dropTarget because the drop is over
-        this.dropTarget = null;
       }
 
-      //notify that a drop has happened and send the data
-      if (owfdojo.isFunction(this.callbacks[this.dropReceive])) {
-        this.callbacks[this.dropReceive](msg);
-      }
+      // clear dropTarget because the drop is over
+      this.dropTarget = null;
+    }
+
+    if (Ozone.util.internal.isFunction(this.callbacks[this.dropReceive])) {
+      this.callbacks[this.dropReceive](msg);
     }
   },
 
@@ -20359,7 +18839,9 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
       this.callbacks[eventName] = cb;
     } else {
       //callback already exists chain the subsequent callbacks to the first
-      owfdojo.connect(this.callbacks, eventName, cb);
+
+      // TODO: Figure out what this is doing
+      // Ozone.util.internal.connect(this.callbacks, eventName, cb);
     }
   },
   /**
@@ -20454,7 +18936,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
    * @description returns data sent when a drag was started
    */
   getDragStartData: function() {
-    return owfdojo.mixin(this.dragStartData, {
+    return Ozone.util.internal.mixin(this.dragStartData, {
       dragZone: this.dragZone
     });
   },
@@ -20480,26 +18962,27 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
    */
   setDropEnabled: function(dropEnabled) {
     if (dropEnabled) {
-      var scope = this;
       var data = this.getDragStartData();
 
       var senderId = Ozone.util.parseJson(data.dragSourceId);
+
+      var _this = this;
       Ozone.util.hasAccess({
         widgetId: OWF.getWidgetGuid(),
         accessLevel: data.accessLevel,
         senderId: senderId.id,
-        callback: function(response) {
-          scope.dropEnabledFlag = response.hasAccess;
-          if (scope.dropEnabledFlag) {
-            owfdojo.removeClass(scope.dragIndicator, 'ddBoxCannotDrop');
-            owfdojo.addClass(scope.dragIndicator, 'ddBoxCanDrop');
+        callback: function (response) {
+          _this.dropEnabledFlag = response.hasAccess;
+          if (_this.dropEnabledFlag) {
+            _this.dragIndicator.classList.remove("ddBoxCannotDrop");
+            _this.dragIndicator.classList.add("ddBoxCanDrop");
           }
         }
       });
     } else {
       this.dropEnabledFlag = false;
-      owfdojo.removeClass(this.dragIndicator, 'ddBoxCanDrop');
-      owfdojo.addClass(this.dragIndicator, 'ddBoxCannotDrop');
+      this.dragIndicator.classList.remove("ddBoxCanDrop");
+      this.dragIndicator.classList.add("ddBoxCannotDrop");
     }
   },
 
@@ -20519,7 +19002,6 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
  * @param {Boolean} [cfg.autoInit]  True to automatically call init(), False otherwise.  The default is True if left undefined
  * @param {Object} [cfg.callbacks]  Object with callbacks who's names match drag and drop events.  Alternatively one could
  * use the <a href="#addCallback">addCallback</a> function
- * @requires owfdojo which is a custom version of dojo for OWF
  * @requires <a href="Ozone.eventing.Widget.html">Ozone.eventing.Widget</a> for eventing
  * @see <a href="#addCallback">addCallback</a>
  * @example
@@ -20533,12 +19015,11 @@ Ozone.dragAndDrop.WidgetDragAndDrop.getInstance = function(cfg) {
   if (Ozone.dragAndDrop.WidgetDragAndDrop.instance == null) {
     Ozone.dragAndDrop.WidgetDragAndDrop.instance = new Ozone.dragAndDrop.WidgetDragAndDrop(cfg);
   }
-  return owfdojo.mixin(Ozone.dragAndDrop.WidgetDragAndDrop.instance, cfg);
+  return Ozone.util.internal.mixin(Ozone.dragAndDrop.WidgetDragAndDrop.instance, cfg);
 };
-/**
- * @namespace
- */
-var Ozone = Ozone ? Ozone : {};
+
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @ignore
@@ -20623,8 +19104,8 @@ Ozone.launcher = Ozone.launcher ? Ozone.launcher : {};
                 config.titleRegex = config.titleRegex.toString();
             }
 
-            var jsonString = gadgets.json.stringify(config);
-            gadgets.rpc.call('..', launchChannelName, callback, OWF.getIframeId(), jsonString);
+            var jsonString = JSON.stringify(config);
+            Ozone.internal.rpc.send(launchChannelName, callback, OWF.getIframeId(), jsonString);
         }
     };
 
@@ -20679,10 +19160,8 @@ Ozone.launcher = Ozone.launcher ? Ozone.launcher : {};
 
 }());
 
-/**
- * @ignore
- */
-var Ozone = Ozone ? Ozone : {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @ignore
@@ -20734,7 +19213,7 @@ Ozone.state.WidgetStateHandler.prototype = {
 
 		//send state request to a widget
 		var stateChannel = this.stateChannelName + this.widgetIdJSON.id;
-	    gadgets.rpc.call('..', stateChannel, callback, this.widgetIdJSON, config);	
+	    Ozone.internal.rpc.send(stateChannel, callback, this.widgetIdJSON, config);	
 	}
 };
 
@@ -20752,10 +19231,8 @@ Ozone.state.WidgetStateHandler.getInstance = function(widgetEventingController) 
   return Ozone.state.WidgetStateHandler.instance;
 };
 
-/**
- * @ignore
- */
-var Ozone = Ozone ? Ozone : {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @ignore
@@ -21123,10 +19600,8 @@ Ozone.state.WidgetState.getInstance = function(cfg) {
   return Ozone.state.WidgetState.instance;
 };
 
-/**
- * @ignore
- */
-var Ozone = Ozone ? Ozone : {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @ignore
@@ -21137,7 +19612,7 @@ Ozone.eventing = Ozone.eventing ? Ozone.eventing : {};
 (function (window, document, undefined) {
 
     function rpcCall(widgetId, widgetIdCaller, functionName, var_args) {
-        gadgets.rpc.call("..", "FUNCTION_CALL", null, widgetId, widgetIdCaller, functionName, var_args);
+        Ozone.internal.rpc.send("FUNCTION_CALL", null, widgetId, widgetIdCaller, functionName, var_args);
     }
 
     /**
@@ -21186,7 +19661,7 @@ Ozone.eventing = Ozone.eventing ? Ozone.eventing : {};
                  * widgetProxy.sendMessage({data:'foo'});
                  */
                 sendMessage:function (dataToSend) {
-                    gadgets.rpc.call("..", 'DIRECT_MESSAGE', null, widgetId, dataToSend);
+                    Ozone.internal.rpc.send('DIRECT_MESSAGE', null, widgetId, dataToSend);
                 },
 
                 /**
@@ -21240,30 +19715,25 @@ Ozone.eventing = Ozone.eventing ? Ozone.eventing : {};
     };
 
 }(window, document));
+
 //Top level namespace defs
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 Ozone.eventing = Ozone.eventing || {};
 Ozone.eventing.priv = Ozone.eventing.priv || {};
 
-// if (typeof JSON === 'undefined') {
-//     JSON = gadgets.json;
-// }
-
 (function (ozoneEventing) {
-
-    if (typeof JSON === 'undefined') {
-        var JSON = gadgets.json;
-    }
 
     //////////////////////////////////////////////////////////////////////////
     // private objects and functions
     //////////////////////////////////////////////////////////////////////////
 
-    var WIDGET_READY_SERVICE_NAME = '_widgetReady',
-        GET_WIDGET_READY_SERVICE_NAME = '_getWidgetReady',
-        config = null,
-        fnMap = {},
-        widgetProxyMap = {};
+    var WIDGET_READY_SERVICE_NAME = '_widgetReady';
+    var GET_WIDGET_READY_SERVICE_NAME = '_getWidgetReady';
+    var config = null;
+    var fnMap = {};
+    var widgetProxyMap = {};
 
     function getConfig() {
         if (config == null) {
@@ -21313,7 +19783,7 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
 
         var result = fnObj.fn.apply(fnObj.scope, fn_args[0]);
 
-        gadgets.rpc.call("..", 'FUNCTION_CALL_RESULT', null, widgetId, widgetIdCaller, fnName, result);
+        Ozone.internal.rpc.send('FUNCTION_CALL_RESULT', null, widgetId, widgetIdCaller, fnName, result);
     }
 
     function handleFunctionCallResult(widgetId, functionName, result) {
@@ -21334,8 +19804,7 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
 
     ozoneEventing.priv.clientEventNameToHandler = {};
 
-    ozoneEventing.after_container_init = function () {
-    };
+    ozoneEventing.after_container_init = function () {};
 
     //Record all public functions from a widget
     function getFunctionNames(functions) {
@@ -21392,8 +19861,7 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
      *        function center(lat, lon) { //do some centering }
      */
     function clientInitialize(publicFunctions, relayUrl) {
-        gadgets.rpc.setRelayUrl("..", getConfig().relayUrl, false, true);
-        gadgets.rpc.register("after_container_init", ozoneEventing.after_container_init);
+        Ozone.internal.rpc.register("after_container_init", ozoneEventing.after_container_init);
 
         publicFunctions = [].concat(publicFunctions);
         cacheFunctions(publicFunctions);
@@ -21405,8 +19873,6 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
             relayUrl = getRelayUrl(document.location.href);
         }
 
-//        gadgets.rpc.call("..", "TELL_FUNCTIONS", null, id, fnNames, relayUrl);
-
         //this rpc call must be consistent with OWF container_init
         var idString = '{\"id\":\"' + id + '\"}';
         var data = {
@@ -21416,14 +19882,14 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
             relayUrl:relayUrl
         };
         var dataString = JSON.stringify(data);
-        gadgets.rpc.call("..", "container_init", null, idString, dataString, fnNames);
+        Ozone.internal.rpc.send("container_init", null, idString, dataString, fnNames);
     }
 
     function registerFunctions(functions) {
         functions = [].concat(functions);
 
         cacheFunctions(functions);
-        gadgets.rpc.call("..", "register_functions", null, window.name, getFunctionNames(functions));
+        Ozone.internal.rpc.send("register_functions", null, window.name, getFunctionNames(functions));
     }
 
     /**
@@ -21450,7 +19916,7 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
 
         function processFunctionsFromContainer(functions) {
             proxy = createClientSideFunctionShims(widgetId, functions, proxy);
-            gadgets.rpc.call("..", GET_WIDGET_READY_SERVICE_NAME, function(isReady) {
+            Ozone.internal.rpc.send(GET_WIDGET_READY_SERVICE_NAME, function(isReady) {
                 if (isReady) {
                   proxy.fireReady();
                 }
@@ -21461,7 +19927,7 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
         var id = getIdFromWindowName();
         var srcWidgetIframeId = '{\"id\":\"' + id + '\"}';
 
-        gadgets.rpc.call("..", 'GET_FUNCTIONS', processFunctionsFromContainer, widgetId, srcWidgetIframeId);
+        Ozone.internal.rpc.send('GET_FUNCTIONS', processFunctionsFromContainer, widgetId, srcWidgetIframeId);
 
         return proxy;
     }
@@ -21472,14 +19938,14 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
     function addEventHandler(eventName, handler) {
         ozoneEventing.priv.clientEventNameToHandler[eventName] = handler;
         var widgetId = getIdFromWindowName();
-        gadgets.rpc.call("..", 'ADD_EVENT', null, widgetId, eventName);
+        Ozone.internal.rpc.send('ADD_EVENT', null, widgetId, eventName);
     }
 
     /**
      * Raise and event with a json payload
      */
     function raiseEvent(eventName, payload) {
-        gadgets.rpc.call("..", 'CALL_EVENT', null, eventName, payload);
+        Ozone.internal.rpc.send('CALL_EVENT', null, eventName, payload);
     }
 
     /**
@@ -21487,7 +19953,7 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
      */
     function closeDialog(payload) {
         document.body.display = "none";
-        gadgets.rpc.call("..", 'CLOSE_EVENT', null, getIdFromWindowName(), payload);
+        Ozone.internal.rpc.send('CLOSE_EVENT', null, getIdFromWindowName(), payload);
     }
 
     /**
@@ -21501,21 +19967,19 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
             handlerFn(widgetList);
         }
 
-        gadgets.rpc.call("..", 'LIST_WIDGETS', listResultHandler);
+        Ozone.internal.rpc.send('LIST_WIDGETS', listResultHandler);
     }
 
-    gadgets.rpc.register('DIRECT_MESSAGEL_CLIENT', handleDirectMessageWrapper);
-    gadgets.rpc.register("FUNCTION_CALL_CLIENT", handleFunctionCall);
-    gadgets.rpc.register("FUNCTION_CALL_RESULT_CLIENT", handleFunctionCallResult);
-    gadgets.rpc.register("EVENT_CLIENT", handleEventCall);
-    gadgets.rpc.register(WIDGET_READY_SERVICE_NAME, function (widgetId) {
+    Ozone.internal.rpc.register('DIRECT_MESSAGEL_CLIENT', handleDirectMessageWrapper);
+    Ozone.internal.rpc.register("FUNCTION_CALL_CLIENT", handleFunctionCall);
+    Ozone.internal.rpc.register("FUNCTION_CALL_RESULT_CLIENT", handleFunctionCallResult);
+    Ozone.internal.rpc.register("EVENT_CLIENT", handleEventCall);
+    Ozone.internal.rpc.register(WIDGET_READY_SERVICE_NAME, function (widgetId) {
         var wproxy = widgetProxyMap[widgetId];
         if (wproxy != null) {
             wproxy.fireReady();
         }
     });
-
-
 
     ozoneEventing.clientInitialize = clientInitialize;
     ozoneEventing.registerFunctions = registerFunctions;
@@ -21533,10 +19997,8 @@ Ozone.eventing.priv = Ozone.eventing.priv || {};
  *  likely be set up as separate files / separate sets.    
  */
 
-/**
- * @namespace
- */
-var Ozone = Ozone || {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @namespace
@@ -21632,10 +20094,8 @@ Ozone.metrics.logWidgetRender = function(userId, userName, metricSite, widget) {
       }
 };
 
-/**
- * @ignore
- */
-var Ozone = Ozone ? Ozone : {};
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
 
 /**
  * @namespace
@@ -21656,7 +20116,7 @@ OWF = window.OWF ? window.OWF : {};
 		launchingController,
 		chromeController;
 
-	owfdojo.mixin(OWF, /** @lends OWF */ {
+	Ozone.util.internal.mixin(OWF, /** @lends OWF */ {
 
 		/**
 		 * The OWF.Eventing object manages the eventing for an individual widget
@@ -21773,7 +20233,7 @@ OWF = window.OWF ? window.OWF : {};
        */
         notifyWidgetReady: function() {
           //send a message to container that this widget is ready
-          gadgets.rpc.call('..', WIDGET_READY_SERVICE_NAME, null, OWF.getInstanceId());
+          Ozone.internal.rpc.send(WIDGET_READY_SERVICE_NAME, null, OWF.getInstanceId());
         },
 
 		/**
@@ -21952,7 +20412,7 @@ OWF = window.OWF ? window.OWF : {};
 				return;
 			}
 
-            gadgets.rpc.call('..', DASHBOARD_GET_PANES_SERVICE_NAME, fn, OWF.getIframeId());
+            Ozone.internal.rpc.send(DASHBOARD_GET_PANES_SERVICE_NAME, fn, OWF.getIframeId());
 		}
 
 	});
@@ -22017,17 +20477,17 @@ OWF = window.OWF ? window.OWF : {};
 		function initDragAndDrop() {
 			OWF.DragAndDrop = {
 				onDragStart: function(callback, scope) {
-					dragAndDropController.addCallback('dragStart', owfdojo.hitch(scope, callback));
+					dragAndDropController.addCallback('dragStart', callback.bind(scope));
 					return this;
 				},
 
 				onDragStop: function(callback, scope) {
-					dragAndDropController.addCallback('dragStop', owfdojo.hitch(scope, callback));
+					dragAndDropController.addCallback('dragStop', callback.bind(scope));
 					return this;
 				},
 
 				onDrop: function(callback, scope) {
-					dragAndDropController.addCallback('dropReceive', owfdojo.hitch(scope, callback));
+					dragAndDropController.addCallback('dropReceive', callback.bind(scope));
 					return this;
 				},
 
@@ -24576,11 +23036,11 @@ OWF.Preferences.deleteUserPreference({
 	@returns {String} Returns the ISO 639-1 language code for the language that is currently being used by OWF.
  */
 
+window.Ozone = window.Ozone || {};
+var Ozone = window.Ozone;
+
 if (!Ozone.disableWidgetInit) {
-
-
-    owfdojo.addOnLoad(function() {
-
+    Ozone.util.internal.onDocumentReady(function() {
         //calc pageload time
         Ozone.util.pageLoad.afterLoad = (new Date()).getTime();
         Ozone.util.pageLoad.calcLoadTime();
@@ -24588,6 +23048,5 @@ if (!Ozone.disableWidgetInit) {
         if(Ozone.util.isInContainer()) {
             OWF._init(window, document);
         }
-
     });
 }

@@ -1,4 +1,4 @@
-import { DashboardLayout } from "../codecs/Dashboard.codec";
+import { DashboardLayout } from "../models/dashboard/Dashboard";
 import { FitPanel } from "../models/dashboard/FitPanel";
 import { TabbedPanel } from "../models/dashboard/TabbedPanel";
 import { ExpandoPanel } from "../models/dashboard/ExpandoPanel";

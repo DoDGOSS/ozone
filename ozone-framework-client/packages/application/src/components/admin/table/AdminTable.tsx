@@ -2,6 +2,8 @@ import * as React from "react";
 
 import ReactTable, { Column } from "react-table";
 import "react-table/react-table.css";
+import { mainStore } from "../../../stores/MainStore";
+import { classNames } from "../../../utility";
 
 export type AdminTableProps = {
     data: any[];
@@ -25,7 +27,7 @@ export class AdminTable extends React.Component<AdminTableProps, {}> {
             <ReactTable
                 data={this.props.data}
                 columns={this.props.columns}
-                className="-striped -highlight"
+                className={classNames("-striped -highlight", mainStore.getTheme())}
                 loading={this.props.loading}
                 pageSize={this.props.pageSize}
                 getTrProps={this.props.getTrProps}

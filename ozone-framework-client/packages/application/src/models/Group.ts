@@ -1,5 +1,3 @@
-import { PropertiesOf } from "../types";
-
 export class GroupProps {
     description?: string;
     displayName?: string;

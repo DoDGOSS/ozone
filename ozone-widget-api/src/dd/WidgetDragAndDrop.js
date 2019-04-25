@@ -72,14 +72,16 @@ Ozone.dragAndDrop.WidgetDragAndDrop = function(cfg) {
     }
   }
 
-  gadgets.rpc.register('_fire_mouse_move', (msg) => {
+  var _this = this;
+
+  Ozone.internal.rpc.register('_fire_mouse_move', function (msg) {
     var el = document.elementFromPoint(msg.pageX, msg.pageY);
 
-    if (this.getFlashWidgetId()) {
-      if (msg.sender !== this.widgetEventingController.getWidgetId()) {
+    if (_this.getFlashWidgetId()) {
+      if (msg.sender !== _this.widgetEventingController.getWidgetId()) {
         Ozone.util.getFlashApp().dispatchExternalMouseEvent(msg.pageX, msg.pageY);
       }
-      this.mouseMove(msg, true);
+      _this.mouseMove(msg, true);
     } else {
       if (!arguments.callee.lastEl) {
         arguments.callee.lastEl = el;
@@ -96,10 +98,10 @@ Ozone.dragAndDrop.WidgetDragAndDrop = function(cfg) {
     }
   });
 
-  gadgets.rpc.register('_fire_mouse_up', (msg) => {
+  Ozone.internal.rpc.register('_fire_mouse_up', function (msg) {
     var el = document.elementFromPoint(msg.pageX, msg.pageY);
     if (el && el.nodeName === 'OBJECT') {
-      this.mouseUp(msg, true);
+      _this.mouseUp(msg, true);
     } else {
       fireMouseEvent(el, 'mouseup', msg);
     }
@@ -371,7 +373,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
       // if this is a flex widget, event is not faked and current dashboard layout is tabbed, fake 
       // mouse events as soon as the drag starts
       if (this.getFlashWidgetId() && fake !== true && Ozone.Widget.getDashboardLayout() === 'tabbed') {
-        gadgets.rpc.call('..', '_fake_mouse_move', null, {
+        Ozone.internal.rpc.send('_fake_mouse_move', null, {
           sender: this.widgetEventingController.getWidgetId(),
           pageX: e.pageX,
           pageY: e.pageY,
@@ -411,7 +413,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
           if (!arguments.callee._fakeEventCounter) arguments.callee._fakeEventCounter = 1;
           else arguments.callee._fakeEventCounter += 1;
 
-          gadgets.rpc.call('..', '_fake_mouse_move', null, {
+          Ozone.internal.rpc.send('_fake_mouse_move', null, {
             sender: this.widgetEventingController.getWidgetId(),
             pageX: e.pageX,
             pageY: e.pageY,
@@ -423,7 +425,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
           // we had faked a mousemove event before
           // now fake mouseout event on the container
           arguments.callee._fakeEventCounter = null;
-          gadgets.rpc.call('..', '_fake_mouse_out');
+          Ozone.internal.rpc.send('_fake_mouse_out');
         }
       }
 
@@ -504,7 +506,7 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
 
         if ((e.clientX < 0 || e.clientX > clientWidth || e.clientY < 0 || e.clientY > clientHeight || Ozone.Widget.getDashboardLayout() === 'tabbed') && fake !== true) {
 
-          gadgets.rpc.call('..', '_fake_mouse_up', null, {
+          Ozone.internal.rpc.send('_fake_mouse_up', null, {
             sender: this.widgetEventingController.getWidgetId(),
             pageX: e.pageX,
             pageY: e.pageY,
@@ -739,15 +741,17 @@ Ozone.dragAndDrop.WidgetDragAndDrop.prototype = {
       var data = this.getDragStartData();
 
       var senderId = Ozone.util.parseJson(data.dragSourceId);
+
+      var _this = this;
       Ozone.util.hasAccess({
         widgetId: OWF.getWidgetGuid(),
         accessLevel: data.accessLevel,
         senderId: senderId.id,
-        callback: (response) => {
-          this.dropEnabledFlag = response.hasAccess;
-          if (this.dropEnabledFlag) {
-            this.dragIndicator.classList.remove("ddBoxCannotDrop");
-            this.dragIndicator.classList.add("ddBoxCanDrop");
+        callback: function (response) {
+          _this.dropEnabledFlag = response.hasAccess;
+          if (_this.dropEnabledFlag) {
+            _this.dragIndicator.classList.remove("ddBoxCannotDrop");
+            _this.dragIndicator.classList.add("ddBoxCanDrop");
           }
         }
       });

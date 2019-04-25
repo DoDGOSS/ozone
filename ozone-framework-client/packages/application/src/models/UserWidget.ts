@@ -1,5 +1,3 @@
-import { PropertiesOf } from "../types";
-
 import { Widget } from "./Widget";
 
 export class UserWidgetProps {
@@ -8,6 +6,10 @@ export class UserWidgetProps {
     isEditable: boolean;
     isFavorite: boolean;
     isGroupWidget: boolean;
+
+    /** Transient value used to pass launch data to a Widget using the Widget Launcher API */
+    launchData?: string;
+
     originalTitle: string;
     position: number;
     user: {

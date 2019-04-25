@@ -1,5 +1,6 @@
-import { User } from "../models/User";
 import { UserDTO } from "../api/models/UserDTO";
+
+import { User } from "../models/User";
 
 import { optional } from "../utility";
 

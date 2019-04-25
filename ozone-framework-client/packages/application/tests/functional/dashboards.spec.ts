@@ -76,6 +76,35 @@ module.exports = {
         browser.closeWindow().end();
     },
 
+    //    Share with confirmation
+    "As an administrator, I can share a dashboard": (browser: NightwatchAPI) => {
+        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+
+        browser.waitForElementVisible(MainPage.DASHBOARD_BUTTON, 2000, "[Dashboard Button] is visible");
+
+        browser
+            .click(MainPage.DASHBOARD_BUTTON)
+            .waitForElementVisible(DashboardDialog.DASHBOARD_DIALOG, 2000, "[Dashboard Dialog] is visible");
+
+        browser
+            .click(DashboardDialog.SHARE_DASHBOARD_ID)
+            .waitForElementPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                1000,
+                undefined,
+                undefined,
+                "[Confirmation Dialog] is present"
+            )
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .waitForElementNotPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                1000,
+                "[Confirmation Dialog] is not present"
+            );
+
+        browser.closeWindow().end();
+    },
+
     //    Delete with confirmation
     "As an administrator, I can delete a dashboard": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");

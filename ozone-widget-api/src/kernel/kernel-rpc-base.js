@@ -8,10 +8,6 @@ Ozone.eventing = Ozone.eventing || {};
 Ozone.eventing.rpc = Ozone.eventing.rpc || {};
 Ozone.eventing.rpc.priv = Ozone.eventing.rpc.priv || {};
 
-if (typeof JSON === 'undefined') {
-    JSON = gadgets.json;
-}
-
 (function (o) {
     var WIDGET_READY_SERVICE_NAME = '_widgetReady',
         GET_WIDGET_READY_SERVICE_NAME = '_getWidgetReady',
@@ -139,7 +135,7 @@ if (typeof JSON === 'undefined') {
             //mark this widget as ready
             widgetReadyMap[widgetId] = true;
 
-            //loop through any widgets that have reference to widgetId and send messages that 
+            //loop through any widgets that have reference to widgetId and send messages that
             //widgetId widget is ready
             if (proxyHolders) {
                 for (i = 0, len = proxyHolders.length; i < len; i++) {

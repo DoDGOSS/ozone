@@ -1,118 +1,71 @@
 import "./WidgetSearchWidget.scss";
 
-import React, { Component } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Button, FormGroup, InputGroup, Intent, Position, Toaster } from "@blueprintjs/core";
 
-import ReactDataGrid from "react-data-grid";
-
 import { SectionHeader } from "../../../common/SectionHeader";
 
-interface WidgetRow {
-    id: string;
-    name: string;
-}
+import { WidgetRow, WidgetTable } from "./WidgetTable";
+import { handleStringChange } from "../../../util";
 
-const COLUMNS = [
-    {
-        key: "name",
-        name: "Name",
-        resizable: true
-    },
-    {
-        key: "id",
-        name: "ID",
-        resizable: true,
-        width: 250
-    }
-];
 
-interface WidgetState {
-    query: string;
-    results: WidgetRow[];
-}
+export const WidgetSearchWidget: React.FC<{}> = () => {
+    const [ query, setQuery ] = useState("");
+    const [ widgets, setWidgets ] = useState<WidgetRow[]>([]);
 
-export class WidgetSearchWidget extends Component<{}, WidgetState> {
-    constructor(props: any) {
-        super(props);
-
-        this.state = {
-            query: "",
-            results: []
-        };
-
-        this.onQueryChanged = this.onQueryChanged.bind(this);
-        this.search = this.search.bind(this);
-    }
-
-    componentDidMount() {
-        OWF.notifyWidgetReady();
-
-        this.search();
-    }
-
-    render() {
-        return (
-            <div className="app flex-column">
-                <div>
-                    <SectionHeader text="Search" />
-
-                    <form
-                        onSubmit={(event) => {
-                            event.preventDefault();
-                            this.search();
-                        }}
-                    >
-                        <FormGroup inline={true} label="Widget Name">
-                            <InputGroup
-                                value={this.state.query}
-                                onChange={this.onQueryChanged}
-                                spellCheck={false}
-                                rightElement={<Button icon="search" minimal={true} onClick={this.search} />}
-                            />
-                        </FormGroup>
-                    </form>
-                </div>
-
-                <div className="search-results">
-                    <SectionHeader text="Results" />
-
-                    <ReactDataGrid
-                        columns={COLUMNS}
-                        rowGetter={(i) => this.state.results[i]}
-                        rowsCount={this.state.results.length}
-                        minHeight={300}
-                    />
-                </div>
-            </div>
-        );
-    }
-
-    onQueryChanged(event: React.ChangeEvent<HTMLInputElement>) {
-        this.setState({
-            query: event.currentTarget.value
-        });
-    }
-
-    search() {
+    const search = useCallback(() => {
         Ozone.pref.PrefServer.findWidgets({
             searchParams: {
-                widgetName: this.state.query
+                widgetName: query
             },
             onSuccess: (dtos: Ozone.WidgetDTO[]) => {
                 const results = dtos.map((dto) => ({
                     id: dto.id,
                     name: dto.value.namespace
-                }));
-
-                this.setState({ results });
+                })).sort((a, b) => a.name.localeCompare(b.name));
+                setWidgets(results);
             },
             onFailure: (error: any) => {
                 reportError(error);
             }
         });
-    }
-}
+    }, [ query ]);
+
+    useEffect(() => {
+        OWF.notifyWidgetReady();
+        search();
+    }, []);
+
+    return (
+        <div className="app flex-column">
+            <div>
+                <SectionHeader text="Search"/>
+
+                <form
+                    onSubmit={(event) => {
+                        event.preventDefault();
+                        search();
+                    }}
+                >
+                    <FormGroup inline={true} label="Widget Name">
+                        <InputGroup
+                            value={query}
+                            onChange={handleStringChange(setQuery)}
+                            spellCheck={false}
+                            rightElement={<Button icon="search" minimal={true} onClick={search}/>}
+                        />
+                    </FormGroup>
+                </form>
+            </div>
+
+            <div className="search-results">
+                <SectionHeader text="Results"/>
+                <WidgetTable widgets={widgets}/>
+            </div>
+        </div>
+    );
+};
 
 const AppToaster = Toaster.create({
     position: Position.BOTTOM

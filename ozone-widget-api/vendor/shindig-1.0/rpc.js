@@ -204,8 +204,12 @@ gadgets.rpc = function() {
     // messages.
     if (relayChannel === 'dpm' || relayChannel === 'wpm') {
       var onmessage = function (packet) {
-        // TODO validate packet.domain for security reasons
-        process(gadgets.json.parse(packet.data));
+        if (typeof packet.data === "string") {
+          try {
+            var data = JSON.parse(packet.data);
+            process(data);
+          } catch (ex) {}  // Ignore data that is not in JSON format
+        }
       }
 
       if (typeof window.addEventListener != 'undefined') {
