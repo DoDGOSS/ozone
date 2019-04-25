@@ -4,6 +4,7 @@ import axios from "axios";
 
 import {
     WidgetCreateRequest,
+    WidgetDTO,
     WidgetGetDescriptorResponse,
     WidgetUpdateRequest
 } from "../../../../../api/models/WidgetDTO";
@@ -11,22 +12,22 @@ import { WidgetTypeReference } from "../../../../../api/models/WidgetTypeDTO";
 
 import { WidgetPropertiesForm } from "./WidgetPropertiesForm";
 
-import { uuid } from "../../../../../utility";
+import { cleanNullableProp, uuid } from "../../../../../utility";
 import { Button, InputGroup } from "@blueprintjs/core";
 
 import * as styles from "./WidgetPropertiesPanel.scss";
 import { Gateway, getGateway } from "../../../../../api/interfaces";
 
 export interface WidgetPropertiesPanelProps {
-    widget: undefined | WidgetUpdateRequest;
+    widget: WidgetDTO | undefined;
     onSubmit: (data: WidgetCreateRequest | WidgetUpdateRequest) => Promise<boolean>;
     widgetTypes: WidgetTypeReference[];
 }
 
 interface WidgetPropertiesPanelState {
+    widget: WidgetCreateRequest | WidgetUpdateRequest;
     showImportWidgetFromURL: boolean;
     descriptorURL: string;
-    widget: undefined | WidgetCreateRequest;
     showError: boolean;
     errorMessage: string;
 }
@@ -40,7 +41,7 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
         this.state = {
             showImportWidgetFromURL: this.props.widget === undefined,
             descriptorURL: "",
-            widget: undefined,
+            widget: this.getInitialValues(this.props.widget),
             showError: false,
             errorMessage: ""
         };
@@ -87,10 +88,10 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
                 </div>
             );
         } else {
-            // console.log(this.getWidget())
+            console.log("reloading form");
             toDisplay = (
                 <WidgetPropertiesForm
-                    currentWidget={this.getWidget()}
+                    widget={this.state.widget}
                     onSubmit={this.props.onSubmit}
                     widgetTypes={this.props.widgetTypes}
                 />
@@ -151,16 +152,35 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
         }
     }
 
-    private getWidget(): WidgetCreateRequest | WidgetUpdateRequest {
-        // I used to have this in state, but the object wasn't re-created when I told it to re-render with new props.
-        // So the state didn't change, causing the form to try to create the widget on submit, rather than update it.
-        if (this.props.widget !== undefined) {
-            return this.props.widget;
-        } else if (this.state.widget !== undefined) {
-            return this.state.widget;
+    private getInitialValues(widget: WidgetDTO | undefined): WidgetCreateRequest | WidgetUpdateRequest {
+        if (widget) {
+            return this.convertDTOtoUpdateRequest(widget);
         } else {
             return this.getBlankWidget();
         }
+    }
+
+    private convertDTOtoUpdateRequest(dto: WidgetDTO): WidgetUpdateRequest {
+        return {
+            // apparently any string value of `""`, gets turned on the backend into `null`. Which breaks the form.
+            id: dto.id,
+            displayName: cleanNullableProp(dto.value.namespace),
+            widgetVersion: cleanNullableProp(dto.value.widgetVersion),
+            description: cleanNullableProp(dto.value.description),
+            widgetUrl: cleanNullableProp(dto.value.url),
+            imageUrlSmall: cleanNullableProp(dto.value.smallIconUrl),
+            imageUrlMedium: cleanNullableProp(dto.value.mediumIconUrl),
+            width: dto.value.width,
+            height: dto.value.height,
+            widgetGuid: dto.id,
+            universalName: cleanNullableProp(dto.value.universalName),
+            visible: dto.value.visible,
+            background: dto.value.background,
+            singleton: dto.value.singleton,
+            mobileReady: dto.value.mobileReady,
+            widgetTypes: dto.value.widgetTypes,
+            intents: dto.value.intents
+        };
     }
 
     private getBlankWidget(): WidgetCreateRequest {

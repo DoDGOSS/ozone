@@ -16,7 +16,7 @@ import { UserDTO } from "../../../../api/models/UserDTO";
 
 interface GroupEditUsersProps {
     onUpdate: (update?: any) => void;
-    group: any;
+    group: GroupDTO;
 }
 
 export interface GroupEditUsersState {

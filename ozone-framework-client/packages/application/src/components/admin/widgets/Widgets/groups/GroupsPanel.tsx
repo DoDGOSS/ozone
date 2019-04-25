@@ -11,10 +11,12 @@ import * as styles from "../../Widgets.scss";
 import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../../form";
 import { showConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { groupApi } from "../../../../../api/clients/GroupAPI";
+import { widgetApi } from "../../../../../api/clients/WidgetAPI";
 
 import { Group } from "../../../../../models/Group";
 import { GroupDTO } from "../../../../../api/models/GroupDTO";
 import { groupFromJson } from "../../../../../codecs/Group.codec";
+import { WidgetDTO } from "../../../../../api/models/WidgetDTO";
 import { GenericTable } from "../../../table/GenericTable";
 import { GroupsDialog } from "./GroupsDialog";
 
@@ -26,9 +28,8 @@ interface State {
 }
 
 interface Props {
-    widget: any;
-    addGroups: (groups: Group[]) => Promise<boolean>;
-    removeGroup: (group: Group) => Promise<boolean>;
+    widget: WidgetDTO;
+    onUpdate: () => void;
 }
 
 export class GroupsPanel extends React.Component<Props, State> {
@@ -61,7 +62,7 @@ export class GroupsPanel extends React.Component<Props, State> {
         const response = await groupApi.getGroupsForWidget(this.props.widget.id);
         // TODO: Handle failed request
         if (response.status !== 200) return;
-
+        console.log(response.data)
         this.setState({
             widgetGroups: this.parseGroupDTOs(response.data.data),
             loading: false
@@ -92,6 +93,35 @@ export class GroupsPanel extends React.Component<Props, State> {
         );
     }
 
+    addSelectedGroups(newSelections: Group[]): void {
+        const groupList: Group[] = [];
+        for (const newGroup of newSelections) {
+            if (this.state.widgetGroups.findIndex((u) => newGroup.id === u.id) !== -1) {
+                continue;
+            }
+            groupList.push(newGroup);
+        }
+
+        if (groupList.length > 0) {
+            this.addGroups(groupList).then(() => this.getWidgetGroups());
+            this.props.onUpdate();
+        }
+    }
+
+    async addGroups(groups: Group[]): Promise<boolean> {
+        if (this.props.widget === undefined) {
+            return false;
+        }
+        const groupIds: number[] = [];
+        for (const g of groups) {
+            groupIds.push(g.id);
+        }
+        const response = await widgetApi.addWidgetGroups(this.props.widget.id, groupIds);
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+        return true;
+    }
+
     getGroupDialog() {
         return (
             <GroupsDialog
@@ -110,44 +140,54 @@ export class GroupsPanel extends React.Component<Props, State> {
                 getColumns={() => [
                     { Header: "Name", id: "name", accessor: (group: Group) => group.name },
                     { Header: "Description", id: "description", accessor: (group: Group) => group.description },
-                    { Header: "Remove", Cell: this.rowActionButtons }
+                    {
+                        Header: "Remove",
+                        Cell: (row: { original: Group }) => (
+                            <ButtonGroup>
+                                <Button
+                                    data-element-id="widget-admin-group-remove-button"
+                                    data-widget-title={row.original.name}
+                                    text={"Remove"}
+                                    intent={Intent.DANGER}
+                                    icon="trash"
+                                    small={true}
+                                    onClick={() => this.confirmAndDeleteGroup(row.original)}
+                                />
+                            </ButtonGroup>
+                        )
+                    }
                 ]}
             />
         );
     }
 
-    rowActionButtons = (row: { original: Group }) => {
-        return (
-            <div>
-                <ButtonGroup>
-                    <Button
-                        data-element-id="widget-admin-group-remove-button"
-                        data-widget-title={row.original.name}
-                        text={"Remove"}
-                        intent={Intent.DANGER}
-                        icon="trash"
-                        small={true}
-                        onClick={() => this.confirmAndDeleteGroup(row.original)}
-                    />
-                </ButtonGroup>
-            </div>
-        );
-    };
-
     confirmAndDeleteGroup(groupToRemove: Group): void {
         showConfirmationDialog({
             title: "Warning",
-            message:
-                "This action will permenantly remove " +
-                groupToRemove.name +
-                " from the widget " +
-                this.props.widget.displayName,
-            onConfirm: () => this.removeGroupAndSave(groupToRemove)
+            message: [
+                "This action will remove ",
+                { text: groupToRemove.name, style: "bold" },
+                " from widget ",
+                { text: this.props.widget.value.namespace, style: "bold" },
+                "."
+            ],
+            onConfirm: () => this.removeGroupAndRefresh(groupToRemove)
         });
     }
 
-    removeGroupAndSave(groupToRemove: Group): void {
-        this.props.removeGroup(groupToRemove).then(() => this.getWidgetGroups());
+    removeGroupAndRefresh(groupToRemove: Group): void {
+        this.removeGroup(groupToRemove).then(() => this.getWidgetGroups());
+        this.props.onUpdate();
+    }
+
+    async removeGroup(group: Group): Promise<boolean> {
+        if (this.props.widget === undefined) {
+            return false;
+        }
+        const response = await widgetApi.removeWidgetGroups(this.props.widget.id, group.id);
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+        return true;
     }
 
     openDialog(): void {
@@ -157,23 +197,10 @@ export class GroupsPanel extends React.Component<Props, State> {
             })
         );
     }
+
     closeDialog(): void {
         this.setState({
             dialogOpen: false
         });
-    }
-
-    addSelectedGroups(newSelections: Group[]): void {
-        const groupList: Group[] = [];
-        for (const newGroup of newSelections) {
-            if (this.state.widgetGroups.findIndex((u) => newGroup.id === u.id) !== -1) {
-                continue;
-            }
-            groupList.push(newGroup);
-        }
-
-        if (groupList.length > 0) {
-            this.props.addGroups(groupList).then(() => this.getWidgetGroups());
-        }
     }
 }

@@ -1,6 +1,5 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
+import { Column } from "react-table";
 
 import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
 import { GenericTable } from "../../table/GenericTable";
@@ -10,6 +9,8 @@ import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConf
 import { GroupSetup } from "./GroupSetup";
 import { groupApi } from "../../../../api/clients/GroupAPI";
 import { GroupCreateRequest, GroupDTO } from "../../../../api/models/GroupDTO";
+
+import * as styles from "../Widgets.scss";
 
 interface State {
     groups: GroupDTO[];
@@ -23,7 +24,6 @@ interface State {
 // Modify widget to take in widget values from administration menu and launch from menu
 // Pagination handling with client API
 // Style
-// Popup warning dialogue for deleting
 // Error handling for form
 
 enum GroupWidgetSubSection {
@@ -39,7 +39,8 @@ export class GroupsWidget extends React.Component<{}, State> {
             groups: [],
             loading: true,
             showTable: true,
-            showGroupSetup: false
+            showGroupSetup: false,
+            updatingGroup: undefined
         };
 
         this.handleUpdate = this.handleUpdate.bind(this);
@@ -67,8 +68,11 @@ export class GroupsWidget extends React.Component<{}, State> {
                         />
                         <div className={styles.buttonBar}>
                             <Button
-                                text="Create"
-                                onClick={() => this.showSubSection(GroupWidgetSubSection.CREATE)}
+                                text={"Create"}
+                                onClick={() => {
+                                    this.setState({ updatingGroup: undefined });
+                                    this.showSubSection(GroupWidgetSubSection.SETUP);
+                                }}
                                 data-element-id="group-admin-widget-create-button"
                             />
                         </div>
@@ -77,9 +81,10 @@ export class GroupsWidget extends React.Component<{}, State> {
 
                 {showGroupSetup && (
                     <GroupSetup
-                        group={this.state.updatingGroup}
-                        onSave={this.handleUpdate}
+                        updatingGroup={this.state.updatingGroup}
+                        onUpdate={() => this.handleUpdate()}
                         onBack={() => {
+                            this.handleUpdate();
                             this.showSubSection(GroupWidgetSubSection.TABLE);
                         }}
                     />
@@ -90,10 +95,10 @@ export class GroupsWidget extends React.Component<{}, State> {
 
     private getColumns(): Column[] {
         return [
-            { Header: "Group Name", id: "name", accessor: (group: Group) => group.name },
-            { Header: "Users", id: "totalUsers", accessor: (group: Group) => group.totalUsers },
-            { Header: "Widgets", id: "totalWidgets", accessor: (group: Group) => group.totalWidgets },
-            { Header: "Dashboards", id: "totalDashboards", accessor: (group: Group) => group.totalDashboards },
+            { Header: "Group Name", id: "name", accessor: (group: GroupDTO) => group.name },
+            { Header: "Users", id: "totalUsers", accessor: (group: GroupDTO) => group.totalUsers },
+            { Header: "Widgets", id: "totalWidgets", accessor: (group: GroupDTO) => group.totalWidgets },
+            { Header: "Stacks", id: "totalStacks", accessor: (group: GroupDTO) => group.totalStacks },
             {
                 Header: "Actions",
                 Cell: (row: any) => (
@@ -101,14 +106,14 @@ export class GroupsWidget extends React.Component<{}, State> {
                         <ButtonGroup>
                             <EditButton
                                 onClick={() => (
-                                    this.showSubSection(GroupWidgetSubSection.EDIT),
+                                    this.showSubSection(GroupWidgetSubSection.SETUP),
                                     this.setState({ updatingGroup: row.original })
                                 )}
                             />
                             <Divider />
                             <DeleteButton
                                 disabled={row.original.totalStacks > 0}
-                                onClick={() => this.deleteGroup(row.original)}
+                                onClick={() => this.confirmDeleteGroup(row.original)}
                             />
                         </ButtonGroup>
                     </div>
@@ -117,14 +122,14 @@ export class GroupsWidget extends React.Component<{}, State> {
         ];
     }
 
-    private showSubSection(subSection: GroupWidgetSubSection) {
+    private showSubSection(subSection: GroupWidgetSubSection): void {
         this.setState({
             showTable: subSection === GroupWidgetSubSection.TABLE,
             showGroupSetup: subSection === GroupWidgetSubSection.SETUP
         });
     }
 
-    private getGroups = async () => {
+    private async getGroups(): Promise<void> {
         const response = await groupApi.getGroups();
 
         // TODO: Handle failed request
@@ -134,20 +139,21 @@ export class GroupsWidget extends React.Component<{}, State> {
             groups: response.data.data,
             loading: false
         });
-    };
+    }
 
-    private handleUpdate(update?: any) {
+    private handleUpdate(update?: any): void {
         this.getGroups();
     }
 
-    private deleteGroup = async (payload: any) => {
-        this.setState({
-            showDelete: false,
-            manageGroup: undefined
+    private confirmDeleteGroup(group: GroupDTO): void {
+        showConfirmationDialog({
+            title: "Warning",
+            message: ["This action will premanently delete ", { text: group.name, style: "bold" }, "."],
+            onConfirm: () => this.deleteGroup(group)
         });
+    }
 
-        const group: GroupDTO = payload;
-
+    private async deleteGroup(group: GroupDTO): Promise<boolean> {
         const response = await groupApi.deleteGroup(group.id);
 
         // TODO: Handle failed request
@@ -156,5 +162,5 @@ export class GroupsWidget extends React.Component<{}, State> {
         this.getGroups();
 
         return true;
-    };
+    }
 }

@@ -162,7 +162,7 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
     private confirmDeleteStack = async (stack: StackDTO) => {
         showConfirmationDialog({
             title: "Warning",
-            message: "This action will permanently delete " + dashboard.name + ".",
+            message: ["This action will permanently delete ", { text: dashboard.name, style: "bold" }, "."],
             onConfirm: () => this.removeDashboard(dashboard)
         });
         return true;

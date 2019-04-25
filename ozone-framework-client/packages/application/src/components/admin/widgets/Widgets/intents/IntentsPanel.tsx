@@ -4,12 +4,11 @@ import { Button, ButtonGroup, Divider, Intent as bpIntent } from "@blueprintjs/c
 import ReactTable from "react-table";
 
 import { GenericTable } from "../../../table/GenericTable";
-import { DeleteButton, EditButton } from "../../../table/TableButtons";
 import { showConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
 
 import { Intent } from "../../../../../models/compat";
 import { IntentDTO, IntentsDTO } from "../../../../../api/models/IntentDTO";
-import { WidgetUpdateRequest } from "../../../../../api/models/WidgetDTO";
+import { WidgetDTO } from "../../../../../api/models/WidgetDTO";
 
 import { IntentDialog } from "./IntentDialog";
 import { mainStore } from "../../../../../stores/MainStore";
@@ -23,8 +22,8 @@ interface IntentGroup {
 }
 
 export interface IntentsPanelProps {
-    updatingWidget: WidgetUpdateRequest;
-    onChange: (intentGroups: IntentsDTO) => any;
+    updatingWidget: WidgetDTO;
+    onIntentsChange: (intentGroups: IntentsDTO) => any;
 }
 
 interface IntentsPanelState {
@@ -225,7 +224,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
 
     saveIntents(): void {
         const formattedIntents = this.intentGroupsToIntentsDTO();
-        this.props.onChange(formattedIntents);
+        this.props.onIntentsChange(formattedIntents);
     }
 
     intentGroupsToIntentsDTO(): IntentsDTO {
@@ -250,8 +249,8 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
         return permitted;
     }
 
-    getIntentGroupsFromWidget(widget: WidgetUpdateRequest): IntentGroup[] {
-        const widgetIntents: IntentsDTO = widget.intents;
+    getIntentGroupsFromWidget(widget: WidgetDTO): IntentGroup[] {
+        const widgetIntents: IntentsDTO = widget.value.intents;
 
         const permittedSendingGroups = this.getGroupsFromFormattedIntents(widgetIntents.send, "send");
         const allIntentGroups = this.getGroupsFromFormattedIntents(
@@ -300,11 +299,11 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
         return intentGroups;
     }
 
-    filterIntentGroups(
+    filterIntentGroups = (
         intentGroups: IntentGroup[],
         query: string,
         queryMatches: (text: string, query: string) => boolean
-    ): IntentGroup[] {
+    ): IntentGroup[] => {
         if (query === "") {
             return intentGroups;
         }
@@ -314,7 +313,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
         const filteredGroups: IntentGroup[] = intentGroups.filter((group) => queryMatches(group.action, query));
 
         for (const group of intentGroups) {
-            if (listContainsObject(filteredGroups, group)) {
+            if (filteredGroups.findIndex((grp: IntentGroup) => grp === group) > -1) {
                 continue;
             }
             const matchingIntents = group.intents.filter((intent) => queryMatches(intent.dataType, query));
@@ -323,7 +322,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
             }
         }
         return filteredGroups;
-    }
+    };
 
     getMainTableColumns(): any {
         return [
@@ -402,13 +401,27 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
         return (
             <div>
                 <ButtonGroup>
-                    <EditButton
+                    <Button
+                        data-element-id="widget-admin-intent-edit-button"
+                        data-widget-title={row.original.action + " " + row.original.dataType}
+                        text="Edit"
+                        intent={bpIntent.PRIMARY}
+                        icon="edit"
+                        small={true}
                         onClick={() => {
                             this.editIntent(row.original);
                         }}
                     />
                     <Divider />
-                    <DeleteButton onClick={() => this.confirmAndDeleteIntent(row.original)} />
+                    <Button
+                        data-element-id="widget-admin-intent-remove-button"
+                        data-widget-title={row.original.action + " " + row.original.dataType}
+                        text={"Remove"}
+                        intent={bpIntent.DANGER}
+                        icon="trash"
+                        small={true}
+                        onClick={() => this.confirmAndDeleteIntent(row.original)}
+                    />
                 </ButtonGroup>
             </div>
         );
@@ -417,17 +430,14 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
     confirmAndDeleteIntent(intentToDelete: Intent): void {
         showConfirmationDialog({
             title: "Warning",
-            message:
-                "This action will permanently delete intent {action: " +
-                intentToDelete.action +
-                ", dataType: " +
-                intentToDelete.action +
-                ", send: " +
-                intentToDelete.send +
-                ", receive: " +
-                intentToDelete.receive +
-                " from the widget " +
-                this.props.updatingWidget.displayName,
+            message: [
+                "This action will permanently delete intent {",
+                { text: intentToDelete.action, style: "bold" },
+                ": ",
+                { text: intentToDelete.action, style: "bold" },
+                "} from widget ",
+                { text: this.props.updatingWidget.value.namespace, style: "bold" }
+            ],
             onConfirm: () => this.deleteIntentAndSave(intentToDelete)
         });
     }
@@ -441,11 +451,4 @@ const AlignedDiv: React.FC<{ message: React.ReactNode; alignment: "left" | "righ
 
 function dotCharacter(returnDot: boolean): React.ReactNode {
     return returnDot ? <span>&#11044;</span> : <span />;
-}
-
-function listContainsObject(list: any[], obj: any): boolean {
-    for (const o of list) {
-        if (o === obj) return true;
-    }
-    return false;
 }
