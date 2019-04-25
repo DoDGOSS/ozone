@@ -41,7 +41,7 @@ export class AdminTable extends React.Component<AdminTableProps, {}> {
             <ReactTable
                 data={this.props.data}
                 columns={this.props.columns}
-                className={classNames("-striped -highlight",mainStore.getTheme())}
+                className={classNames("-striped -highlight", mainStore.getTheme())}
                 loading={this.props.loading}
                 pageSize={this.props.pageSize}
                 getTrProps={this.props.getTrProps}
