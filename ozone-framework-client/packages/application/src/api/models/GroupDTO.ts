@@ -50,10 +50,8 @@ export const validateGroupCreateResponse = createValidator<GroupCreateResponse>(
 
 export interface GroupUpdateRequest extends GroupCreateRequest {
     id: number;
-    tab?: string;
     update_action?: "add" | "remove";
     user_ids?: number[];
-    group_ids?: number[];
 }
 
 export interface GroupUpdateResponse {
