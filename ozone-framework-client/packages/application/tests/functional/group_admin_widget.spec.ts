@@ -349,7 +349,6 @@ module.exports = {
     },
 
     "As an Administrator, I can remove a widget from a group": (browser: NightwatchAPI) => {
-
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
         openAdminWidget(browser, AdminWidgetType.GROUPS);
 
