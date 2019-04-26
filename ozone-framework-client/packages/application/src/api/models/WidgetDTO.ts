@@ -14,18 +14,9 @@ import {
 
 export interface WidgetDTO {
     id: string;
-    displayName: string;
-    widgetVersion: string;
-    description: string;
-    widgetUrl: string;
-    widgetTypes: WidgetTypeReference[];
     namespace: string;
     path: string;
     value: WidgetPropertiesDTO;
-    totalDashboards: number;
-    totalGroups: number;
-    totalStacks: number;
-    totalWidgets: number;
 }
 
 export const validateWidget = createValidator<WidgetDTO>(WIDGET_SCHEMA);
@@ -116,7 +107,7 @@ export interface WidgetCreateResponse {
 export const validateWidgetCreateResponse = createValidator<WidgetCreateResponse>(WIDGET_CREATE_RESPONSE_SCHEMA);
 
 export interface WidgetUpdateRequest extends WidgetCreateRequest {
-    id: number;
+    id: string;
     update_action?: "add" | "remove";
     widget_ids?: number[];
 }
@@ -135,7 +126,7 @@ export const validateWidgetDeleteResponse = createValidator<WidgetDeleteResponse
 
 export interface WidgetUpdateUsersResponse {
     success: boolean;
-    data: WidgetDTO[];
+    data: UserDTO[];
 }
 
 export const validateWidgetUpdateUsersResponse = createValidator<WidgetUpdateUsersResponse>(
