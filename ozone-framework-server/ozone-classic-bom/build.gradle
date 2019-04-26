@@ -162,12 +162,6 @@ dependencyManagement {
         // http://mvnrepository.com/artifact/org.jboss/jandex
         dependency group: 'org.jboss', name: 'jandex', version: '2.0.3.Final'
 
-        // http://mvnrepository.com/artifact/org.igniterealtime.smack/smack?repo=atlassian-3rdparty
-        dependencySet(group: 'org.igniterealtime.smack', version: '3.3.1') {
-            entry 'smack'
-            entry 'smackx'
-        }
-
         // https://mvnrepository.com/artifact/org.postgresql/postgresql
         dependency group: 'org.postgresql', name: 'postgresql', version: '42.1.4.jre7'
     }

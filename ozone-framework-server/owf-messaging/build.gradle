@@ -42,12 +42,13 @@ check.dependsOn -= integrationTest
 
 
 repositories {
+    maven { url "${rootProject.projectDir}/../ozone-classic-bom/repository" }
+
     mavenLocal()
     mavenCentral()
     maven { url 'https://repo.grails.org/grails/core' }
     maven { url 'http://repository.springsource.com/maven/bundles/release' }
     maven { url 'http://repository.springsource.com/maven/bundles/external' }
-    maven { url 'https://packages.atlassian.com/3rdparty/' }
 }
 
 dependencyManagement {
@@ -78,8 +79,8 @@ dependencies {
     testCompile group: 'org.grails', name: 'grails-gorm-testing-support'
 
     // Other
-    compile group: 'org.igniterealtime.smack', name: 'smack'
-    compile group: 'org.igniterealtime.smack', name: 'smackx'
+    compile group: 'org.igniterealtime.smack', name: 'smack', version: '3.3.1'
+    compile group: 'org.igniterealtime.smack', name: 'smackx', version: '3.3.1'
 }
 
 
