@@ -78,7 +78,6 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
 
         return (
             <div data-element-id="group-admin-add-widget">
-                
                 <div className={styles.table}>
                     <WidgetTable
                         data={data}
