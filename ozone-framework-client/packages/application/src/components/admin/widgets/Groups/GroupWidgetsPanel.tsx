@@ -83,7 +83,7 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
                         data={data}
                         isLoading={this.state.loading}
                         onDelete={this.deleteWidget}
-                        pageSize={this.state.pageSize}
+                        defaultPageSize={this.state.pageSize}
                     />
                 </div>
 
