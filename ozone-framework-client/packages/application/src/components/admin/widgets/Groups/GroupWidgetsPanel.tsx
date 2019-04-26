@@ -78,16 +78,7 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
 
         return (
             <div data-element-id="group-admin-add-widget">
-                <div className={styles.actionBar}>
-                    <InputGroup
-                        placeholder="Search..."
-                        leftIcon="search"
-                        value={this.state.filter}
-                        onChange={(e: any) => this.setState({ filter: e.target.value })}
-                        data-element-id="search-field"
-                    />
-                </div>
-
+                
                 <div className={styles.table}>
                     <WidgetTable
                         data={data}
