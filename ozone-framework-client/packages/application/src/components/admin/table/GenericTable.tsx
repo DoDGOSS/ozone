@@ -46,17 +46,18 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
 
     render() {
         return (
-            <div className={styles.table}>
+            <div>
                 {this.filterable && this.getSearchBox()}
-                <ReactTable
-                    data={this.getItems()}
-                    getTheadThProps={this.removeHideableHeaders}
-                    getTrProps={this.rowsAreClickable() ? this.clickableRowProps : () => ""}
-                    className={classNames("striped", this.props.classNames)}
-                    columns={this.getTableLayout()}
-                    pageSizeOptions={this.getReasonablePageSizeOptions()}
-                    {...this.buildReactTableProps()}
-                />
+                <div className={styles.table}>
+                    <ReactTable
+                        data={this.getItems()}
+                        getTheadThProps={this.removeHideableHeaders}
+                        getTrProps={this.rowsAreClickable() ? this.rowProps : () => ""}
+                        columns={this.getTableLayout()}
+                        pageSizeOptions={this.getReasonablePageSizeOptions()}
+                        {...this.buildReactTableProps()}
+                    />
+                </div>
             </div>
         );
     }
@@ -155,11 +156,8 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
             if (typeof column.accessor === "function") {
                 valueInColumnForItem = column.accessor(item);
                 // some tables still use string accessors
-            } else if (typeof column.accessor === "string" && item.hasOwnProperty(column.accessor)) {
-                // hack to make ts compiler stop complaining.
-                // I'd be nice to not use string accessors anyway, but if people do, this should work.
-                const itemField: any = (item as { [key: string]: any })[column.accessor.toString()];
-                valueInColumnForItem = itemField;
+            } else if (typeof column.accessor === "string") {
+                valueInColumnForItem = this.getAttributeUsingStringAccessor(item, column.accessor.toString());
             }
             let safeValueInColumn = "";
             if (valueInColumnForItem !== undefined && valueInColumnForItem !== null) {
@@ -181,6 +179,29 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         }
     };
 
+    private getAttributeUsingStringAccessor(item: T, accessor: string): any {
+        // please use normal function accessors, instead of string accessors, especially if you're getting some sub-sub-attribute of the row.
+        //
+        // This has been tested to work with one level (i.e., accessor='.name'). It should work with arbitrary levels of nesting, but hasn't been tested to.
+        // Just don't use it. The react-table parser knows how to display columns using something like accessor='children[0].length', but this doesn't, and shouldn't.
+        // You could execute the strings as javascript instead of parsing as below, but that's just asking for code-injection trouble.
+        const accessorPieces = accessor.split(".");
+        if (accessorPieces.length === 1) {
+            // hack to make ts compiler stop complaining.
+            return (item as { [key: string]: any })[accessor.toString()];
+        } else {
+            let piece: { [key: string]: any } = item as { [key: string]: any };
+            for (const attr of accessorPieces) {
+                if (piece.hasOwnProperty(attr)) {
+                    piece = piece[attr];
+                } else {
+                    return undefined;
+                }
+            }
+            return piece;
+        }
+    }
+
     private getTableMainHeader(title: string): any {
         return <div>{title && <AlignedDiv message={title} alignment="left" />}</div>;
     }
@@ -194,7 +215,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
     }
 
     // derived from https://stackoverflow.com/questions/44845372
-    private clickableRowProps = (state: State<T>, rowInfo: any) => {
+    private rowProps = (state: State<T>, rowInfo: any) => {
         let propsForRow = {};
         if (rowInfo && rowInfo.row) {
             propsForRow = {
@@ -203,6 +224,10 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                 }
             };
 
+            // Should be able to do a simple compare, since the selected objects were just taken directly from the items list.
+            // So they should be the exact same items.
+            // If we change things to have some items start pre-selected, then we will have to add a comparator function.
+            // Though that'd only need to be used when this component initializes.
             if (this.state.selections.find((select) => select === rowInfo.original) !== undefined) {
                 propsForRow = {
                     onClick: (e: any) => {
