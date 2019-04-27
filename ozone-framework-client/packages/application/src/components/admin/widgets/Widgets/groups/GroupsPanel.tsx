@@ -17,7 +17,7 @@ import { Group } from "../../../../../models/Group";
 import { GroupDTO } from "../../../../../api/models/GroupDTO";
 import { groupFromJson } from "../../../../../codecs/Group.codec";
 import { WidgetDTO } from "../../../../../api/models/WidgetDTO";
-import { GenericTable } from "../../../table/GenericTable";
+import { GenericTable } from "../../../../generic-table/GenericTable";
 import { GroupsDialog } from "./GroupsDialog";
 
 interface State {

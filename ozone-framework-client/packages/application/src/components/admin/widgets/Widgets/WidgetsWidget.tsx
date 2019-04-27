@@ -9,8 +9,8 @@ import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 
-import { GenericTable } from "../../table/GenericTable";
-import { DeleteButton, EditButton } from "../../table/TableButtons";
+import { GenericTable } from "../../../generic-table/GenericTable";
+import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { WidgetSetup } from "./WidgetSetup";
 
@@ -117,7 +117,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                     <div>
                         <ButtonGroup>
                             <EditButton
-                                correspondingItemName={row.original.value.namespace}
+                                itemName={row.original.value.namespace}
                                 onClick={() => {
                                     this.setState({ updatingWidget: row.original });
                                     this.showSubSection(WidgetWidgetSubSection.SETUP);
@@ -129,7 +129,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                                 content={"Can't delete widget with assigned users or groups"}
                             >
                                 <DeleteButton
-                                    correspondingItemName={row.original.value.namespace}
+                                    itemName={row.original.value.namespace}
                                     disabled={this.widgetPotentiallyInUse(row.original)}
                                     onClick={() => this.confirmAndDeleteWidget(row.original)}
                                 />

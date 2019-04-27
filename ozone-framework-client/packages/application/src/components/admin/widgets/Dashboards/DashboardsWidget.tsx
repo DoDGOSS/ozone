@@ -150,9 +150,13 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
                             onClick={() => {
                                 console.log("Unimplemented: should assign ", row.original, "to current user (you).");
                             }}
+                            itemName={row.original.name}
                         />
                         <Divider />
-                        <DeleteButton onClick={() => this.confirmDeleteStack(row.original)} />
+                        <DeleteButton
+                            onClick={() => this.confirmDeleteDashboard(row.original)}
+                            itemName={row.original.name}
+                        />
                     </ButtonGroup>
                 )
             }

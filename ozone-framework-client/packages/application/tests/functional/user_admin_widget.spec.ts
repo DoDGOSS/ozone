@@ -229,12 +229,11 @@ module.exports = {
             );
         browser.pause(1000);
 
-        browser
-            .waitForElementPresent(
-                GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD,
-                1000,
-                "[Widget Search Field] is present"
-            );
+        browser.waitForElementPresent(
+            GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD,
+            1000,
+            "[Widget Search Field] is present"
+        );
         browser.pause(1000);
         browser
             .setValue(GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD, SEARCH_WIDGET)
@@ -276,7 +275,7 @@ module.exports = {
         });
 
         browser
-            .click(`button[data-element-id="delete-widget-button"][data-widget-title="Color Client"]`)
+            .click(`${AdminWidget.STD_DELETE_BUTTON}[data-widget-title="Color Client"]`)
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,
@@ -290,7 +289,7 @@ module.exports = {
             );
 
         browser
-            .click(`button[data-element-id="delete-widget-button"][data-widget-title="Color Server"]`)
+            .click(`${AdminWidget.STD_DELETE_BUTTON}[data-widget-title="Color Server"]`)
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,
@@ -355,9 +354,9 @@ module.exports = {
         browser
             .setValue(AdminWidget.SEARCH_FIELD, NEW_USER_EMAIL)
             .click(
-                `${
-                    UserAdminWidget.Main.DIALOG
-                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${AdminWidget.STD_DELETE_BUTTON}`
+                `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${
+                    AdminWidget.STD_DELETE_BUTTON
+                }`
             )
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,

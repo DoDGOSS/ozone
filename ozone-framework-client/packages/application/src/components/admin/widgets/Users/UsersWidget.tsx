@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
 
-import { GenericTable } from "../../table/GenericTable";
-import { DeleteButton, EditButton } from "../../table/TableButtons";
+import { GenericTable } from "../../../generic-table/GenericTable";
+import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { UserSetup } from "./UserSetup";
@@ -105,7 +105,7 @@ export class UsersWidget extends React.Component<{}, State> {
             {
                 Header: "Actions",
                 sortable: false,
-                Cell: (row: any) => {
+                Cell: (row: { original: UserDTO }) => {
                     const user: UserDTO = row.original;
                     return (
                         // TODO - Abstract this to only have to provide onclick function name with styled buttons
