@@ -1,6 +1,7 @@
 import { NightwatchAPI } from "./nightwatch";
 
 import { PageObject } from "./PageObject";
+import { AdminWidget } from "./selectors";
 
 export class WidgetAdmin extends PageObject {
     static Selector = `div[data-element-id="widget-admin-widget-dialog"]`;
@@ -9,10 +10,9 @@ export class WidgetAdmin extends PageObject {
 
     static CreateButton = `${WidgetAdmin.Selector} button[data-element-id="widget-admin-widget-create-button"]`;
 
-    static editWidgetButton = (title: string) => `button[data-element-id="edit-button"][data-widget-title="${title}"]`;
+    static editWidgetButton = (title: string) => `${AdminWidget.STD_EDIT_BUTTON}[data-widget-title="${title}"]`;
 
-    static deleteWidgetButton = (title: string) =>
-        `button[data-element-id="delete-button"][data-widget-title="${title}"]`;
+    static deleteWidgetButton = (title: string) => `${AdminWidget.STD_DELETE_BUTTON}[data-widget-title="${title}"]`;
 
     constructor(browser: NightwatchAPI) {
         super(browser, WidgetAdmin.Selector, "Widget Admin Widget");

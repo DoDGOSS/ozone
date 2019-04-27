@@ -34,7 +34,7 @@ function openEditSectionForUser(browser: NightwatchAPI, userDisplayName: string,
                         relevant_row = i;
                         browser.getAttribute(
                             `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                1}) div[role='row'] > div:last-child button[data-element-id='edit-button']`,
+                                1}) div[role='row'] > div:last-child ${AdminWidget.STD_EDIT_BUTTON}`,
                             "disabled",
                             function(isDisabled) {
                                 this.assert.equal(
@@ -51,7 +51,7 @@ function openEditSectionForUser(browser: NightwatchAPI, userDisplayName: string,
     );
     browser.click(
         `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
-            1}) div[role='row'] > div:last-child button[data-element-id='edit-button']`
+            1}) div[role='row'] > div:last-child ${AdminWidget.STD_EDIT_BUTTON}`
     );
 
     if (section) {
@@ -163,9 +163,9 @@ module.exports = {
         browser
             .setValue(AdminWidget.SEARCH_FIELD, NEW_USER_USERNAME)
             .click(
-                `${
-                    UserAdminWidget.Main.DIALOG
-                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='edit-button']`
+                `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${
+                    AdminWidget.STD_EDIT_BUTTON
+                }`
             );
 
         browser.pause(5000);
@@ -217,15 +217,25 @@ module.exports = {
             `${UserAdminWidget.EditUser.TAB_WIDGETS}`
         ).waitForElementVisible(UserAdminWidget.WidgetsUser.ADD_BUTTON, 2000, "[User Widgets Interface] is visible");
 
+        browser.pause(1000);
         // Could check here to see if there are no widgets
         browser
             .click(UserAdminWidget.WidgetsUser.ADD_BUTTON)
+            .pause(1000)
             .waitForElementPresent(
                 GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
                 1000,
                 "[Widget Selection Dialog] is present"
             );
+        browser.pause(1000);
 
+        browser
+            .waitForElementPresent(
+                GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD,
+                1000,
+                "[Widget Search Field] is present"
+            );
+        browser.pause(1000);
         browser
             .setValue(GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD, SEARCH_WIDGET)
             .pause(1000)
@@ -347,7 +357,7 @@ module.exports = {
             .click(
                 `${
                     UserAdminWidget.Main.DIALOG
-                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='delete-button']`
+                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${AdminWidget.STD_DELETE_BUTTON}`
             )
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,

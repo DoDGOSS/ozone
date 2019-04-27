@@ -152,14 +152,18 @@ export namespace AdminWidget {
     }
 
     export function userTableEditButton(username: string): string {
-        return `${userTableActions(username)} button[data-element-id="edit-button"]`;
+        return `${userTableActions(username)} ${STD_EDIT_BUTTON}`;
     }
+
+    export const SEARCH_FIELD = "input[data-element-id='search-field']";
 
     export const CONFIRM_DELETE_ALERT = "div.delete-user-alert";
 
     export const CONFIRM_DELETE_BUTTON = "div.delete-user-alert > div.bp3-alert-footer > button.bp3-intent-danger";
 
-    export const SEARCH_FIELD = "input[data-element-id='search-field']";
+    export const STD_EDIT_BUTTON = "a[data-element-id='edit-button']";
+
+    export const STD_DELETE_BUTTON = "a[data-element-id='delete-button']";
 
     export const PREFERENCES_TAB = "div[data-tab-id='user_preferences']";
 }
@@ -347,5 +351,5 @@ export namespace GlobalElements {
 
     export const GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON = "button[data-element-id='table-selector-confirm']";
 
-    export const GENERIC_TABLE_ADD_SEARCH_FIELD = "input[data-element-id='table-selector-search-field']";
+    export const GENERIC_TABLE_ADD_SEARCH_FIELD = `${GENERIC_TABLE_SELECTOR_DIALOG} input[data-element-id='search-field']`;
 }
