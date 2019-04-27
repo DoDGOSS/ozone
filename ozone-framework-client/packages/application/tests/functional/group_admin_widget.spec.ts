@@ -1,6 +1,6 @@
 import { NightwatchAPI, NightwatchCallbackResult } from "nightwatch";
 
-import { GlobalElements, GroupAdminWidget } from "./selectors";
+import { AdminWidget, GlobalElements, GroupAdminWidget } from "./selectors";
 
 import { AdminWidgetType, loggedInAs, openAdminWidget } from "./helpers";
 
@@ -31,7 +31,7 @@ function openEditSectionForGroup(browser: NightwatchAPI, userDisplayName: string
                         relevant_row = i;
                         browser.getAttribute(
                             `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                1}) div[role='row'] > div:last-child button[data-element-id='edit-button']`,
+                                1}) div[role='row'] > div:last-child ${AdminWidget.STD_EDIT_BUTTON}`,
                             "disabled",
                             function(isDisabled) {
                                 this.assert.equal(
@@ -48,7 +48,7 @@ function openEditSectionForGroup(browser: NightwatchAPI, userDisplayName: string
     );
     browser.click(
         `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
-            1}) div[role='row'] > div:last-child button[data-element-id='edit-button']`
+            1}) div[role='row'] > div:last-child ${AdminWidget.STD_EDIT_BUTTON}`
     );
 
     if (section) {
@@ -253,7 +253,7 @@ module.exports = {
             .click(
                 `${
                     GroupAdminWidget.UsersGroup.TAB
-                } div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child button[data-element-id='delete-button']`
+                } div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child ${AdminWidget.STD_DELETE_BUTTON}`
             )
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
@@ -275,7 +275,7 @@ module.exports = {
             .click(
                 `${
                     GroupAdminWidget.UsersGroup.TAB
-                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child button[data-element-id='delete-button']`
+                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${AdminWidget.STD_DELETE_BUTTON}`
             )
             .pause(250)
             .waitForElementPresent(
@@ -418,7 +418,7 @@ module.exports = {
                             relevant_row = i;
                             browser.getAttribute(
                                 `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                    1}) div[role='row'] > div:last-child button[data-element-id='delete-button']`,
+                                    1}) div[role='row'] > div:last-child ${AdminWidget.STD_DELETE_BUTTON}`,
                                 "disabled",
                                 function(modifiedResult) {
                                     this.assert.equal(
@@ -431,7 +431,7 @@ module.exports = {
                         } else if ((result.value as string).trim().length > 0) {
                             browser.getAttribute(
                                 `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                    1}) div[role='row'] > div:last-child button[data-element-id='delete-button']`,
+                                    1}) div[role='row'] > div:last-child ${AdminWidget.STD_DELETE_BUTTON}`,
                                 "disabled",
                                 function(modifiedResult) {
                                     this.assert.equal(
@@ -448,7 +448,7 @@ module.exports = {
                 browser
                     .click(
                         `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
-                            1}) div[role='row'] > div:last-child button[data-element-id='delete-button']`
+                            1}) div[role='row'] > div:last-child ${AdminWidget.STD_DELETE_BUTTON}`
                     )
                     .pause(250)
                     .waitForElementPresent(
