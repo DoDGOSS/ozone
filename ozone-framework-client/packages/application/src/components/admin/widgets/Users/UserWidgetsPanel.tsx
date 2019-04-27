@@ -62,10 +62,8 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
 
                 <UserWidgetsEditDialog
                     show={this.state.showAdd}
-                    title="Add Widget(s) to User"
-                    confirmHandler={this.handleAddWidgetResponse}
-                    cancelHandler={this.handleAddWidgetCancel}
-                    columns={this.getDialogColumns()}
+                    onSubmit={this.addWidgets}
+                    onClose={this.closeWidgetDialog}
                 />
             </div>
         );
@@ -95,7 +93,8 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
         });
     };
 
-    private handleAddWidgetResponse = async (widgets: Array<WidgetDTO>) => {
+    private addWidgets = async (widgets: Array<WidgetDTO>) => {
+        console.log(widgets);
         const responses = [];
         for (const widget of widgets) {
             if (this.state.widgets.findIndex((w) => w.id === widget.id) >= 0) {
@@ -117,7 +116,7 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
         return responses;
     };
 
-    private handleAddWidgetCancel = () => {
+    private closeWidgetDialog = () => {
         this.setState({
             showAdd: false
         });
@@ -149,18 +148,4 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
 
         return true;
     };
-
-    private getDialogColumns(): Column[] {
-        return [
-            {
-                Header: "Widgets",
-                columns: [
-                    { Header: "Title", accessor: "value.namespace" },
-                    { Header: "URL", accessor: "value.url" },
-                    { Header: "Users", accessor: "value.totalUsers" },
-                    { Header: "Groups", accessor: "value.totalGroups" }
-                ]
-            }
-        ];
-    }
 }

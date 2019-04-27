@@ -66,10 +66,8 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
 
                 <GroupUsersEditDialog
                     show={this.state.showAdd}
-                    title="Add User(s) to Group"
-                    confirmHandler={this.handleAddUser}
-                    cancelHandler={this.handleAddUserCancel}
-                    columns={this.getDialogColumns()}
+                    onSubmit={this.addUsers}
+                    onClose={this.closeUsersDialog}
                 />
             </div>
         );
@@ -119,7 +117,7 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
         });
     };
 
-    private handleAddUser = async (users: Array<UserDTO>) => {
+    private addUsers = async (users: Array<UserDTO>) => {
         const request: GroupUpdateRequest = {
             id: this.props.group.id,
             name: this.props.group.name,
@@ -139,7 +137,7 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
         this.props.onUpdate(response.data.data);
     };
 
-    private handleAddUserCancel = () => {
+    private closeUsersDialog = () => {
         this.setState({
             showAdd: false
         });
@@ -176,22 +174,5 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
         this.props.onUpdate();
 
         return true;
-    }
-
-    private getDialogColumns(): Column[] {
-        return [
-            {
-                Header: "Users",
-                columns: [
-                    { Header: "Name", accessor: "userRealName" },
-                    { Header: "Username", accessor: "username" },
-                    { Header: "Email", accessor: "email" },
-                    { Header: "Groups", accessor: "totalGroups" },
-                    { Header: "Widgets", accessor: "totalWidgets" },
-                    { Header: "Dashboards", accessor: "totalDashboards" },
-                    { Header: "Last Login", accessor: "lastLogin" }
-                ]
-            }
-        ];
     }
 }

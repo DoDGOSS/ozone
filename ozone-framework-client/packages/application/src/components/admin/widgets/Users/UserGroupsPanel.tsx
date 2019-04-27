@@ -63,20 +63,8 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
 
                 <UserGroupsEditDialog
                     show={this.state.showAdd}
-                    title="Add Group(s) to User"
-                    confirmHandler={this.handleAddGroupResponse}
-                    cancelHandler={this.handleAddGroupCancel}
-                    columns={[
-                        {
-                            Header: "Groups",
-                            columns: [
-                                { Header: "Group Name", accessor: "name" },
-                                { Header: "Users", accessor: "totalUsers" },
-                                { Header: "Widgets", accessor: "totalWidgets" },
-                                { Header: "Dashboards", accessor: "totalDashboards" }
-                            ]
-                        }
-                    ]}
+                    onSubmit={this.addGroups}
+                    onClose={this.closeGroupsDialog}
                 />
             </div>
         );
@@ -124,7 +112,7 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
         });
     };
 
-    private handleAddGroupResponse = async (groups: Array<GroupDTO>) => {
+    private addGroups = async (groups: Array<GroupDTO>) => {
         // const responses = await Promise.all(groups.map( async (group: GroupDTO) => {
         const responses = [];
         for (const group of groups) {
@@ -155,7 +143,7 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
         return responses;
     };
 
-    private handleAddGroupCancel = () => {
+    private closeGroupsDialog = () => {
         this.setState({
             showAdd: false
         });
