@@ -6,10 +6,9 @@ import * as uuidv4 from "uuid/v4";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { array, boolean, number, object, string } from "yup";
 
-import { mainStore } from "../../../stores/MainStore";
 import * as styles from "./GenericTable.scss";
 
-import { classNames, isFunction } from "../../../utility";
+import { classNames, isFunction } from "../../utility";
 
 interface Props<T> {
     getColumns: () => Column[];

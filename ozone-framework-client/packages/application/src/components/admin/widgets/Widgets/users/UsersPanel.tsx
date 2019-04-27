@@ -17,8 +17,8 @@ import { User } from "../../../../../models/User";
 import { UserDTO } from "../../../../../api/models/UserDTO";
 import { WidgetDTO } from "../../../../../api/models/WidgetDTO";
 import { userFromJson } from "../../../../../codecs/User.codec";
-import { GenericTable } from "../../../table/GenericTable";
-import { DeleteButton } from "../../../table/TableButtons";
+import { GenericTable } from "../../../../generic-table/GenericTable";
+import { DeleteButton } from "../../../../generic-table/TableButtons";
 import { UsersDialog } from "./UsersDialog";
 
 interface Props {
@@ -136,7 +136,10 @@ export class UsersPanel extends React.Component<Props, State> {
         return (
             <div>
                 <ButtonGroup>
-                    <DeleteButton onClick={() => this.confirmAndDeleteUser(row.original)} />
+                    <DeleteButton
+                        onClick={() => this.confirmAndDeleteUser(row.original)}
+                        itemName={row.original.displayName}
+                    />
                 </ButtonGroup>
             </div>
         );

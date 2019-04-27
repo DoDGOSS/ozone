@@ -11,7 +11,7 @@ import { classNames } from "../../../../../utility";
 
 import { User } from "../../../../../models/User";
 import { mainStore } from "../../../../../stores/MainStore";
-import { GenericTable } from "../../../table/GenericTable";
+import { GenericTable } from "../../../../generic-table/GenericTable";
 import * as styles from "./UsersDialog.scss";
 
 interface State {

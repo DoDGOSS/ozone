@@ -94,7 +94,6 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
     };
 
     private addWidgets = async (widgets: Array<WidgetDTO>) => {
-        console.log(widgets);
         const responses = [];
         for (const widget of widgets) {
             if (this.state.widgets.findIndex((w) => w.id === widget.id) >= 0) {

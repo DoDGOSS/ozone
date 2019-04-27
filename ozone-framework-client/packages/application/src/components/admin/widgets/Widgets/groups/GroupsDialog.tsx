@@ -11,7 +11,7 @@ import { classNames } from "../../../../../utility";
 
 import { Group } from "../../../../../models/Group";
 import { mainStore } from "../../../../../stores/MainStore";
-import { GenericTable } from "../../../table/GenericTable";
+import { GenericTable } from "../../../../generic-table/GenericTable";
 import * as styles from "./GroupsDialog.scss";
 
 interface State {

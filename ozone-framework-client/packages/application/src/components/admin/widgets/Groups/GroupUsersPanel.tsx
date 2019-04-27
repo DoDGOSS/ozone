@@ -4,8 +4,8 @@ import * as React from "react";
 import { Column } from "react-table";
 import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
 
-import { GenericTable } from "../../table/GenericTable";
-import { DeleteButton } from "../../table/TableButtons";
+import { GenericTable } from "../../../generic-table/GenericTable";
+import { DeleteButton } from "../../../generic-table/TableButtons";
 import { GroupUsersEditDialog } from "./GroupUsersEditDialog";
 
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
@@ -84,9 +84,12 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
             { Header: "Last Login", accessor: "lastLogin" },
             {
                 Header: "Actions",
-                Cell: (row: any) => (
+                Cell: (row: { original: UserDTO }) => (
                     <ButtonGroup>
-                        <DeleteButton onClick={() => this.confirmRemoveUser(row.original)} />
+                        <DeleteButton
+                            onClick={() => this.confirmRemoveUser(row.original)}
+                            itemName={row.original.userRealName}
+                        />
                     </ButtonGroup>
                 )
             }
