@@ -24,6 +24,7 @@ export interface StackQueryCriteria {
     limit?: number;
     offset?: number;
     userId?: number;
+    groupId?: number;
 }
 
 export class StackAPI {
@@ -151,5 +152,6 @@ function getOptionParams(options?: StackQueryCriteria): any | undefined {
     if (options.limit) params.max = options.limit;
     if (options.offset) params.offset = options.offset;
     if (options.userId) params.user_id = options.userId;
+    if (options.groupId) params.user_id = options.groupId;
     return params;
 }

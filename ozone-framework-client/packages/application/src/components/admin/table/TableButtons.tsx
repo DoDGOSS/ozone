@@ -1,11 +1,11 @@
 import * as React from "react";
-import { Button, Intent } from "@blueprintjs/core";
+import { AnchorButton, Button, Intent } from "@blueprintjs/core";
 
 export const EditButton: React.FC<{ onClick: () => void; disabled?: boolean; correspondingItemName?: string }> = (
     props
 ) => {
     return (
-        <Button
+        <AnchorButton // regular buttons don't play well with tooltips on chrome.
             data-element-id={"edit-button"}
             data-widget-title={props.correspondingItemName ? props.correspondingItemName : ""}
             text="Edit"
@@ -22,7 +22,7 @@ export const DeleteButton: React.FC<{ onClick: () => void; disabled?: boolean; c
     props
 ) => {
     return (
-        <Button
+        <AnchorButton
             data-element-id={"delete-button"}
             data-widget-title={props.correspondingItemName ? props.correspondingItemName : ""}
             text="Delete"
