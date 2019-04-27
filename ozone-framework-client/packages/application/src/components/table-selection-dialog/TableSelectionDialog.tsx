@@ -3,7 +3,7 @@ import * as React from "react";
 import { Column } from "react-table";
 import { Button, Classes, Dialog, InputGroup } from "@blueprintjs/core";
 
-import { GenericTable } from "../admin/table/GenericTable";
+import { GenericTable } from "../generic-table/GenericTable";
 import { mainStore } from "../../stores/MainStore";
 import { classNames } from "../../utility";
 
@@ -85,7 +85,6 @@ export abstract class TableSelectionDialog<T> extends React.Component<
                             />
                         </div>
                     </div>
-
                     <div className={Classes.DIALOG_FOOTER}>
                         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
                             <Button onClick={this.submit} data-element-id="table-selector-confirm">

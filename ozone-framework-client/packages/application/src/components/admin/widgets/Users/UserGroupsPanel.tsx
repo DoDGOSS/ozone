@@ -4,8 +4,8 @@ import * as React from "react";
 import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
 import { Column } from "react-table";
 
-import { DeleteButton } from "../../table/TableButtons";
-import { GenericTable } from "../../table/GenericTable";
+import { GenericTable } from "../../../generic-table/GenericTable";
+import { DeleteButton } from "../../../generic-table/TableButtons";
 import { UserGroupsEditDialog } from "./UserGroupsEditDialog";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
@@ -78,7 +78,7 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
             { Header: "Dashboards", accessor: "totalDashboards" },
             {
                 Header: "Actions",
-                Cell: (row: any) => (
+                Cell: (row: { original: GroupDTO }) => (
                     <div>
                         <ButtonGroup>
                             <DeleteButton onClick={() => this.confirmDeleteGroup(row.original)} />

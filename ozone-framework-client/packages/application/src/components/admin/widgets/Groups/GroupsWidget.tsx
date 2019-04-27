@@ -2,10 +2,11 @@ import * as React from "react";
 import { Column } from "react-table";
 
 import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
-import { GenericTable } from "../../table/GenericTable";
-import { DeleteButton, EditButton } from "../../table/TableButtons";
 
+import { GenericTable } from "../../../generic-table/GenericTable";
+import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
+
 import { GroupSetup } from "./GroupSetup";
 import { groupApi } from "../../../../api/clients/GroupAPI";
 import { GroupCreateRequest, GroupDTO } from "../../../../api/models/GroupDTO";
@@ -101,7 +102,7 @@ export class GroupsWidget extends React.Component<{}, State> {
             { Header: "Stacks", id: "totalStacks", accessor: (group: GroupDTO) => group.totalStacks },
             {
                 Header: "Actions",
-                Cell: (row: any) => (
+                Cell: (row: { original: GroupDTO }) => (
                     <div>
                         <ButtonGroup>
                             <EditButton

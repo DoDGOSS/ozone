@@ -3,8 +3,8 @@ import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/c
 
 import * as styles from "../Widgets.scss";
 
-import { GenericTable } from "../../table/GenericTable";
-import { DeleteButton, EditButton } from "../../table/TableButtons";
+import { GenericTable } from "../../../generic-table/GenericTable";
+import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 import { UserDTO } from "../../../../api/models/UserDTO";
 import {
     PreferenceCreateRequest,
@@ -76,7 +76,7 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
             { Header: "value", accessor: "value" },
             {
                 Header: "Actions",
-                Cell: (row: any) => (
+                Cell: (row: { original: PreferenceDTO }) => (
                     <div>
                         <ButtonGroup>
                             <EditButton onClick={() => this.showSettingsDialog(row.original)} />
