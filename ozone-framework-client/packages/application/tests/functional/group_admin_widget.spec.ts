@@ -329,10 +329,10 @@ module.exports = {
             .setValue(GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD, SEARCH_WIDGET)
             .pause(1000)
             .click(
-                `${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup'][data-widget-title="Color Client"]`
+                `${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup']:nth-child(1)`
             )
             .click(
-                `${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup'][data-widget-title="Color Server"]`
+                `${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup']:nth-child(2)`
             )
             .click(GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON)
             .waitForElementNotPresent(
