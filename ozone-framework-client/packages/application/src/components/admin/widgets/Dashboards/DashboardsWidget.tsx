@@ -1,28 +1,30 @@
 import * as styles from "../Widgets.scss";
 
 import * as React from "react";
+
 import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
-
-// import { lazyInject } from "../../../../inject";
-import { dashboardApi } from "../../../../api/clients/DashboardAPI";
-import { DashboardDTO } from "../../../../api/models/DashboardDTO";
-
 import { AdminTable } from "../../table/AdminTable";
 
+import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
+import { DashboardEditTabs } from "./DashboardEditTabs";
+
+import { stackApi } from "../../../../api/clients/StackAPI";
+import { StackDTO } from "../../../../api/models/StackDTO";
+
 export interface State {
-    dashboards: DashboardDTO[];
-    filtered: DashboardDTO[];
+    stacks: StackDTO[];
+    filtered: StackDTO[];
     filter: string;
     loading: boolean;
     pageSize: number;
     columns: any;
     showTable: boolean;
-    showCreate: boolean;
-    showEditDashboard: boolean;
+    showEditStack: boolean;
+    showAssignToMe: boolean;
     showDelete: boolean;
     confirmationMessage: string;
-    manageDashboard: DashboardDTO | undefined;
-    updatingDashboard?: any;
+    manageStack: StackDTO | undefined;
+    updatingStack?: any;
 }
 
 // TODO
@@ -33,7 +35,6 @@ export interface State {
 
 enum DashboardWidgetSubSection {
     TABLE,
-    CREATE,
     EDIT
 }
 
@@ -41,27 +42,27 @@ export class DashboardsWidget extends React.Component<{}, State> {
     constructor(props: any) {
         super(props);
         this.state = {
-            dashboards: [],
+            stacks: [],
             filtered: [],
             filter: "",
             loading: true,
             pageSize: 5,
             showTable: true,
-            showCreate: false,
-            showEditDashboard: false,
+            showEditStack: false,
+            showAssignToMe: false,
             showDelete: false,
             confirmationMessage: "",
-            manageDashboard: undefined,
+            manageStack: undefined,
 
             columns: [
                 {
-                    Header: "Dashboards",
+                    Header: "Stacks",
                     columns: [
-                        { Header: "Name", accessor: "name" }
-                        // { Header: "Pages", accessor: "" }
-                        // { Header: "Widgets", accessor: "" },
-                        // { Header: "Groups", accessor: "" },
-                        // { Header: "Users", accessor: "" }
+                        { Header: "Title", accessor: "name" },
+                        { Header: "Pages (Dashboards)", accessor: "totalDashboards" },
+                        { Header: "Widgets", accessor: "totalWidgets" },
+                        { Header: "Groups", accessor: "totalGroups" },
+                        { Header: "Users", accessor: "totalUsers" }
                     ]
                 },
                 // TODO - Abstract this to only have to provide onclick function name with styled buttons
@@ -69,26 +70,39 @@ export class DashboardsWidget extends React.Component<{}, State> {
                     Header: "Actions",
                     Cell: (row: any) => (
                         <div>
-                            <ButtonGroup>
+                            <ButtonGroup
+                                data-role="dashboard-admin-widget-actions"
+                                data-dashboardname={row.original.name}
+                            >
                                 <Button
+                                    data-element-id="dashboard-admin-widget-edit-button"
                                     text="Edit"
                                     intent={Intent.PRIMARY}
                                     icon="edit"
                                     small={true}
-                                    onClick={() => {
-                                        this.showSubSection(DashboardWidgetSubSection.EDIT);
-                                        this.setState({ updatingDashboard: row.original });
-                                    }}
-                                    data-element-id={"dashboard-admin-widget-edit-" + row.original}
+                                    onClick={() => (
+                                        this.showSubSection(DashboardWidgetSubSection.EDIT),
+                                        this.setState({ updatingStack: row.original })
+                                    )}
                                 />
                                 <Divider />
                                 <Button
-                                    data-element-id={"dashboard-admin-widget-delete-" + row.original}
+                                    data-element-id={"dashboard-admin-widget-assign-to-me"}
+                                    text="Assign To Me"
+                                    intent={Intent.SUCCESS}
+                                    icon="following"
+                                    small={true}
+                                    onClick={() => this.deleteStack(row.original)}
+                                />
+                                <Divider />
+                                <Button
+                                    data-element-id="dashboard-admin-widget-delete-button"
                                     text="Delete"
                                     intent={Intent.DANGER}
                                     icon="trash"
                                     small={true}
-                                    // onClick={() => this.deleteDashboard(row.original)}
+                                    disabled={row.original.totalStacks > 0}
+                                    onClick={() => this.deleteStack(row.original)}
                                 />
                             </ButtonGroup>
                         </div>
@@ -101,15 +115,14 @@ export class DashboardsWidget extends React.Component<{}, State> {
     }
 
     componentDidMount() {
-        this.getDashboards();
+        this.getStacks();
     }
 
     render() {
         const showTable = this.state.showTable;
-        // const showCreate = this.state.showCreate;
-        const showEditUser = this.state.showEditDashboard;
+        const showEditStack = this.state.showEditStack;
 
-        let data = this.state.dashboards;
+        let data = this.state.stacks;
         const filter = this.state.filter.toLowerCase();
 
         if (filter) {
@@ -143,37 +156,24 @@ export class DashboardsWidget extends React.Component<{}, State> {
                     </div>
                 )}
 
-                {/*showEditDashboard && (
-                    <DashboardEditTabGroup
-                        dashboard={this.state.updatingDashboard}
+                {showEditStack && (
+                    <DashboardEditTabs
+                        stack={this.state.updatingStack}
                         onUpdate={this.handleUpdate}
                         onBack={() => {
                             this.showSubSection(DashboardWidgetSubSection.TABLE);
                         }}
                     />
-                )*/}
+                )}
 
-                {/* <ConfirmationDialog
+                <ConfirmationDialog
                     show={this.state.showDelete}
                     title="Warning"
                     content={this.state.confirmationMessage}
                     confirmHandler={this.handleConfirmationConfirmDelete}
                     cancelHandler={this.handleConfirmationCancel}
-                    payload={this.state.manageUser}
-                />  */}
-
-                {/* this.state.alertIsOpen && (
-                    <Alert cancelButtonText="Cancel"
-                           confirmButtonText="Delete User"
-                           icon="trash"
-                           intent={Intent.DANGER}
-                           isOpen={this.state.alertIsOpen}
-                           className="delete-user-alert"
-                           onCancel={this.handleAlertCancel}
-                           onConfirm={() => this.handleAlertConfirm(this.state.deleteUser.id)}>
-                        <p>Are you sure you want to delete <br/><b>User: {this.state.deleteUser.userRealName}</b>?</p>
-                    </Alert>
-                )} */}
+                    payload={this.state.manageStack}
+                />
             </div>
         );
     }
@@ -181,61 +181,34 @@ export class DashboardsWidget extends React.Component<{}, State> {
     private showSubSection(subSection: DashboardWidgetSubSection) {
         this.setState({
             showTable: subSection === DashboardWidgetSubSection.TABLE,
-            showCreate: subSection === DashboardWidgetSubSection.CREATE
-            // showEditDashboard: subSection === DashboardWidgetSubSection.EDIT
+            showEditStack: subSection === DashboardWidgetSubSection.EDIT
         });
     }
 
-    private getDashboards = async () => {
-        const response = await dashboardApi.getDashboards();
+    private getStacks = async () => {
+        const response = await stackApi.getStacks();
 
         // TODO: Handle failed request
         if (response.status !== 200) return;
 
         this.setState({
-            dashboards: response.data.data,
+            stacks: response.data.data,
             loading: false
         });
     };
 
     private handleUpdate(update?: any) {
-        this.getDashboards();
+        this.getStacks();
     }
 
-    /* private createDashboard = async (data: DashboardCreateRequest) => {
-        const response = await this.userAPI.createDashboard(data);
-
-        // TODO: Handle failed request
-        if (response.status !== 200) return false;
-
-        this.showSubSection(UserWidgetSubSection.TABLE);
-        this.setState({ loading: true });
-        this.getUsers();
-
-        return true;
-    };  */
-
-    /* private updateDashboard = async (data: DashboardUpdateRequest) => {
-         console.log('Submitting updated dashboard');
-         const response = await this.dashboardAPI.updateDashboard(data);
-
-         if (response.status !== 200) return false;
-
-         this.toggleUpdate();
-         this.setState({ loading: true });
-         this.getDashboards();
-
-         return true;
-     } */
-
-    /*  private deleteUser = async (user: UserDTO) => {
+    private deleteStack = async (stack: StackDTO) => {
         this.setState({
             showDelete: true,
-            confirmationMessage: `This action will permenantly delete <strong>${user.username}</strong>`,
-            manageUser: user
+            confirmationMessage: `This action will permanently delete <strong>${stack.name}</strong>`,
+            manageStack: stack
         });
 
-        this.getUsers();
+        this.getStacks();
 
         return true;
     };
@@ -243,17 +216,17 @@ export class DashboardsWidget extends React.Component<{}, State> {
     private handleConfirmationConfirmDelete = async (payload: any) => {
         this.setState({
             showDelete: false,
-            manageUser: undefined
+            manageStack: undefined
         });
 
-        const user: UserDTO = payload;
+        const stack: StackDTO = payload;
 
-        const response = await this.userAPI.deleteUser(user.id);
+        const response = await stackApi.deleteStackAsAdmin(stack.id);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;
 
-        this.getUsers();
+        this.getStacks();
 
         return true;
     };
@@ -261,7 +234,7 @@ export class DashboardsWidget extends React.Component<{}, State> {
     private handleConfirmationCancel = (payload: any) => {
         this.setState({
             showDelete: false,
-            manageUser: undefined
+            manageStack: undefined
         });
-    }; */
+    };
 }
