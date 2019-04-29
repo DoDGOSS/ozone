@@ -29,7 +29,6 @@ repositories {
     mavenCentral()
     maven { url 'http://repository.springsource.com/maven/bundles/release' }
     maven { url 'http://repository.springsource.com/maven/bundles/external' }
-    maven { url 'https://packages.atlassian.com/3rdparty/' }
 }
 
 dependencyManagement {
