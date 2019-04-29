@@ -133,7 +133,8 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
         if (response.status !== 200) return;
 
         this.setState({
-            showAdd: false
+            showAdd: false,
+            loading: true
         });
 
         this.getUsers();
