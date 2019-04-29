@@ -108,6 +108,8 @@ export const validateWidgetCreateResponse = createValidator<WidgetCreateResponse
 
 export interface WidgetUpdateRequest extends WidgetCreateRequest {
     id: string;
+    update_action?: "add" | "remove";
+    widget_ids?: number[];
 }
 
 export interface WidgetDeleteIdDTO {
