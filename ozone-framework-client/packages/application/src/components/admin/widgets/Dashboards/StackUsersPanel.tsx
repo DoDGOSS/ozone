@@ -1,7 +1,9 @@
 import * as React from "react";
 import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
+import { Column } from "react-table";
 
 import { GenericTable } from "../../../generic-table/GenericTable";
+import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 import { StackUsersEditDialog } from "./StackUsersEditDialog";
 
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
@@ -95,7 +97,7 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
     }
 
     private getUsers = async () => {
-        const currentStack: StackDTO = this.state.stack;
+        const currentStack: StackDTO = this.props.stack;
 
         const response = await userApi.getUsers();
 
@@ -110,9 +112,9 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
 
     private addUsers = async (users: Array<UserDTO>) => {
         const request: StackUpdateRequest = {
-            name: this.state.stack.name,
-            id: this.state.stack.id,
-            stackContext: this.state.stack.stackContext
+            name: this.props.stack.name,
+            id: this.props.stack.id,
+            stackContext: this.props.stack.stackContext
         };
 
         const response = await stackApi.updateStack(request);
@@ -148,11 +150,11 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
         return true;
     };
 
-    private handleConfirmationConfirmDelete = async (user: UserDTO) => {
+    private removeUser = async (user: UserDTO) => {
         const request: StackUpdateRequest = {
-            name: this.state.stack.name,
-            id: this.state.stack.id,
-            stackContext: this.state.stack.stackContext
+            name: this.props.stack.name,
+            id: this.props.stack.id,
+            stackContext: this.props.stack.stackContext
         };
 
         const response = await stackApi.updateStack(request);

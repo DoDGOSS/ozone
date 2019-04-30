@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { SelectionDialogProps, TableSelectionDialog } from "../../../table-selection-dialog/TableSelectionDialog";
+import { StackDTO } from "../../../../api/models/StackDTO";
 import { GroupDTO } from "../../../../api/models/GroupDTO";
 import { groupApi } from "../../../../api/clients/GroupAPI";
 
