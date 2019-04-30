@@ -9,8 +9,8 @@ import { StackDTO, /*StackCreateRequest,*/ StackUpdateRequest } from "../../../.
 import { UserDTO } from "../../../../api/models/UserDTO";
 
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
-import { GenericTable } from "../../table/GenericTable";
-import { DeleteButton, EditButton } from "../../table/TableButtons";
+import { GenericTable } from "../../../generic-table/GenericTable";
+import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 
 import { StackSetup } from "./StackSetup";
 
@@ -150,11 +150,11 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
                             onClick={() => {
                                 console.log("Unimplemented: should assign ", row.original, "to current user (you).");
                             }}
-                            itemName={row.original.name}
+                            data-widget-name={row.original.name}
                         />
                         <Divider />
                         <DeleteButton
-                            onClick={() => this.confirmDeleteDashboard(row.original)}
+                            onClick={() => this.confirmDeleteStack(row.original)}
                             itemName={row.original.name}
                         />
                     </ButtonGroup>
@@ -166,8 +166,8 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
     private confirmDeleteStack = async (stack: StackDTO) => {
         showConfirmationDialog({
             title: "Warning",
-            message: ["This action will permanently delete ", { text: dashboard.name, style: "bold" }, "."],
-            onConfirm: () => this.removeDashboard(dashboard)
+            message: ["This action will permanently delete ", { text: stack.name, style: "bold" }, "."],
+            onConfirm: () => this.removeStack(stack)
         });
         return true;
     };

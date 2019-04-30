@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect, useRef } from 'react'
 import ReactTable, { Column } from "react-table";
 import { Button, InputGroup, MenuItem, Tab, Tabs } from "@blueprintjs/core";
 import { ItemRenderer } from "@blueprintjs/select";
@@ -32,6 +32,7 @@ interface State<T> {
 export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
     filterable: boolean;
     searchCaseSensitive: boolean;
+    tableWidth: number = 0;
 
     constructor(props: Props<T>) {
         super(props);
@@ -45,7 +46,9 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
 
     render() {
         return (
-            <div>
+            <div
+                ref={ (tableDiv) => this.setTableWidth(tableDiv)}
+            >
                 {this.filterable && this.getSearchBox()}
                 <div className={styles.table}>
                     <ReactTable
@@ -59,6 +62,14 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                 </div>
             </div>
         );
+    }
+
+    // Unfinished attempt to allow you to specify column width by percentage, rather than pixel width.
+    // No idea why they didn't build in percentage widths in the first place.
+    private setTableWidth(tableDiv: any): void {
+        if (tableDiv && (tableDiv.clientWidth !== this.tableWidth)) {
+            this.tableWidth = tableDiv.clientWidth;
+        }
     }
 
     private buildReactTableProps() {
@@ -99,6 +110,38 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         return isFunction(this.props.onSelect) || isFunction(this.props.onSelectionChange);
     }
 
+
+    private getTableLayout() {
+        if (this.props.title) {
+            return [
+                {
+                    Header: this.getTableMainHeader(this.props.title),
+                    columns: this.convertColumnsWithPercentageWidths(this.props.getColumns());
+                }
+            ];
+        } else {
+            return this.props.getColumns();
+        }
+    }
+
+    private convertColumnsWithPercentageWidths(columns: Column[]): Column[] {
+        if (this.tableWidth === 0) {
+            return columns;
+        }
+
+        for (const col of columns) {
+            if (col.width && (typeof col.width === 'string') && (col.width.includes('%'))) {
+                const percentageWidth: number = Number(mystring.replace('%','');)
+                if (percentageWidth) {
+                    // table width is the full div, so account for borders....
+                    const convertedWidth: number = Math.floor(percentageWidth/100 * (this.tableWidth*0.9));
+                }
+            }
+        }
+    }
+
+
+
     private getItems(): any[] {
         if (this.props.customFilter && isFunction(this.props.customFilter)) {
             return this.props.customFilter(this.props.items, this.state.query, this.queryMatches);
@@ -114,19 +157,11 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         return items.filter((item) => this.someColumnOfItemContainsQuery(item, query));
     }
 
-    private getTableLayout() {
-        if (this.props.title) {
-            return [
-                {
-                    Header: this.getTableMainHeader(this.props.title),
-                    columns: this.props.getColumns()
-                }
-            ];
-        } else {
-            return this.props.getColumns();
-        }
-    }
-
+    /** TODO - could improve this - this may be slow if there are many items.
+     * Minimally make it wait for user to hit enter before filtering.
+     * Pagination handling? Always return to the front seems like the simplest (fro the user's perspective) option.
+     * Could like, record the current page's objects, and if any of them survive the filter, navigate to the page with the first of those objects.
+     */
     private someColumnOfItemContainsQuery(item: T, query: string): boolean {
         return this.checkColumnsRecursively(item, query, this.props.getColumns());
     }
