@@ -42,19 +42,6 @@ export const UserProfileDialog: React.FC = () => {
                       </DataItem>
                     </div>
                 </DataSection>
-
-                <DataSection title="User Preferences">
-                    <div>
-                    <DataItem label="Enable Animations:">
-                        <input id="animations" type="checkbox" />
-                    </DataItem>
-                    </div>
-                    <div>
-                    <DataItem label="Enable Hints:">
-                        <input id="hints" type="checkbox" />
-                    </DataItem>
-                    </div>
-                </DataSection>
             </div>
         </Dialog>
     );
