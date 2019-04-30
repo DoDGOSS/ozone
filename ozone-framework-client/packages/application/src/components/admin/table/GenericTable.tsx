@@ -65,8 +65,8 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         const props: { [key: string]: any } = {};
 
         props["minRows"] = 5;
-        props["defaultPageSize"] = 5;
-        props["showPagination"] = true;
+        props["defaultPageSize"] = 1;
+        props["showPagination"] = false;
 
         if (this.props.reactTableProps) {
             for (const p in this.props.reactTableProps) {
