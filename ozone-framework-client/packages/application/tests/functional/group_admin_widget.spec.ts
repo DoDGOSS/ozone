@@ -368,7 +368,7 @@ module.exports = {
         ).waitForElementVisible(GroupAdminWidget.WidgetsGroup.ADD_BUTTON, 2000, "[Group Widgets Interface] is visible");
 
         browser
-            .click(`button[data-element-id="delete-widget-button"][data-widget-title="Color Client"]`)
+            .click(`${GlobalElements.STD_DELETE_BUTTON}[data-widget-title="Color Client"]`)
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 10000,
@@ -382,7 +382,7 @@ module.exports = {
             );
 
         browser
-            .click(`button[data-element-id="delete-widget-button"][data-widget-title="Color Server"]`)
+            .click(`${GlobalElements.STD_DELETE_BUTTON}[data-widget-title="Color Server"]`)
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 10000,

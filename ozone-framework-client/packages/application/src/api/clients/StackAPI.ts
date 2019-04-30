@@ -110,7 +110,7 @@ export class StackAPI {
         });
     }
 
-    async addStackGroups(id: number, groups: GroupDTO[]): Promise<Response<GroupUpdateResponse>> {
+    async addStackGroups(id: number, groups: GroupDTO[]): Promise<Response<StackUpdateResponse>> {
         const requestData = qs.stringify({
             stack_id: id,
             tab: "groups",
@@ -122,11 +122,11 @@ export class StackAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateGroupUpdateResponse
+            validate: validateStackUpdateResponse
         });
     }
 
-    async removeStackGroups(id: number, groups: GroupDTO[]): Promise<Response<GroupUpdateResponse>> {
+    async removeStackGroups(id: number, groups: GroupDTO[]): Promise<Response<StackUpdateResponse>> {
         const requestData = qs.stringify({
             stack_id: id,
             tab: "groups",
@@ -138,7 +138,7 @@ export class StackAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateGroupUpdateResponse
+            validate: validateStackUpdateResponse
         });
     }
 }
