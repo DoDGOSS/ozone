@@ -6,7 +6,7 @@ import { classNames } from "../../../../utility";
 import { mainStore } from "../../../../stores/MainStore";
 
 import { UserPreferenceForm } from "./UserPreferenceForm";
-import { PreferenceCreateRequest, PreferenceUpdateRequest } from "../../../../api/models/PreferenceDTO";
+import { PreferenceUpdateRequest } from "../../../../api/models/PreferenceDTO";
 
 import * as styles from "../Widgets.scss";
 

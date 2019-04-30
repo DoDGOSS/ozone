@@ -140,10 +140,6 @@ export function isFunction(f: any) {
     return f !== null && f !== undefined && typeof f === "function";
 }
 
-export async function wait(ms: number) {
-    return new Promise((res) => setTimeout(res, 500));
-}
-
 export function cleanNullableProp<T>(value: T | null): T | string {
     if (value === null) {
         return "";

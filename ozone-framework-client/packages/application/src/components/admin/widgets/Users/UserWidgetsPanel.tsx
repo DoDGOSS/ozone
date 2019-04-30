@@ -1,7 +1,6 @@
 import * as React from "react";
 
-import { Button, InputGroup } from "@blueprintjs/core";
-import { Column } from "react-table";
+import { Button } from "@blueprintjs/core";
 
 import { widgetApi, WidgetQueryCriteria } from "../../../../api/clients/WidgetAPI";
 import { UserDTO } from "../../../../api/models/UserDTO";

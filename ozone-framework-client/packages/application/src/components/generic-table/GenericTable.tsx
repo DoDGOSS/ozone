@@ -1,10 +1,6 @@
 import React from "react";
 import ReactTable, { Column } from "react-table";
-import { Button, InputGroup, MenuItem, Tab, Tabs } from "@blueprintjs/core";
-import { ItemRenderer } from "@blueprintjs/select";
-import * as uuidv4 from "uuid/v4";
-import { Form, Formik, FormikActions, FormikProps } from "formik";
-import { array, boolean, number, object, string } from "yup";
+import { InputGroup } from "@blueprintjs/core";
 
 import * as styles from "./GenericTable.scss";
 

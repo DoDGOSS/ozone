@@ -1,12 +1,10 @@
 import * as React from "react";
 
-import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
+import { Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
 import { Column } from "react-table";
 
-// import { lazyInject } from "../../../../inject";
 import { stackApi } from "../../../../api/clients/StackAPI";
-import { StackDTO, /*StackCreateRequest,*/ StackUpdateRequest } from "../../../../api/models/StackDTO";
-import { UserDTO } from "../../../../api/models/UserDTO";
+import { StackDTO } from "../../../../api/models/StackDTO";
 
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { GenericTable } from "../../../generic-table/GenericTable";
@@ -34,7 +32,7 @@ enum StackWidgetSubSection {
     SETUP
 }
 
-// everything else has been cahnged to `Stacks*` because that's what they are, but this and src/stores/system-widgets
+// everything else has been changed to `Stacks*` because that's what they are, but this and src/stores/system-widgets
 // have been kept as DashboardsWidget out of fear of changing the name.
 export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
     defaultPageSize: number = 5;

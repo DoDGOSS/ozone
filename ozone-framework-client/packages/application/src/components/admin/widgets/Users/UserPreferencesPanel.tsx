@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
+import { Button, ButtonGroup, Divider } from "@blueprintjs/core";
 
 import * as styles from "../Widgets.scss";
 

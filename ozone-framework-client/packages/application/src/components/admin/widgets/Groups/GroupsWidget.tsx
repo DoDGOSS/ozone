@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Column } from "react-table";
 
-import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
+import { Button, ButtonGroup, Divider } from "@blueprintjs/core";
 
 import { GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
@@ -9,7 +9,7 @@ import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConf
 
 import { GroupSetup } from "./GroupSetup";
 import { groupApi } from "../../../../api/clients/GroupAPI";
-import { GroupCreateRequest, GroupDTO } from "../../../../api/models/GroupDTO";
+import { GroupDTO } from "../../../../api/models/GroupDTO";
 
 import * as styles from "../Widgets.scss";
 
@@ -106,10 +106,10 @@ export class GroupsWidget extends React.Component<{}, State> {
                     <div>
                         <ButtonGroup>
                             <EditButton
-                                onClick={() => (
-                                    this.showSubSection(GroupWidgetSubSection.SETUP),
-                                    this.setState({ updatingGroup: row.original })
-                                )}
+                                onClick={() => {
+                                    this.showSubSection(GroupWidgetSubSection.SETUP);
+                                    this.setState({ updatingGroup: row.original });
+                                }}
                             />
                             <Divider />
                             <DeleteButton
@@ -149,7 +149,7 @@ export class GroupsWidget extends React.Component<{}, State> {
     private confirmDeleteGroup(group: GroupDTO): void {
         showConfirmationDialog({
             title: "Warning",
-            message: ["This action will premanently delete ", { text: group.name, style: "bold" }, "."],
+            message: ["This action will permanently delete ", { text: group.name, style: "bold" }, "."],
             onConfirm: () => this.deleteGroup(group)
         });
     }

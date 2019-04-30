@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AnchorButton, Button, Intent } from "@blueprintjs/core";
+import { AnchorButton, Intent } from "@blueprintjs/core";
 
 interface TableButtonProps {
     onClick: () => void;

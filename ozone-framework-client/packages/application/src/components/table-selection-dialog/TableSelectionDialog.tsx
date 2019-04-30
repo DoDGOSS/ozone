@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { Column } from "react-table";
-import { Button, Classes, Dialog, InputGroup } from "@blueprintjs/core";
+import { Button, Classes, Dialog } from "@blueprintjs/core";
 
 import { GenericTable } from "../generic-table/GenericTable";
 import { mainStore } from "../../stores/MainStore";

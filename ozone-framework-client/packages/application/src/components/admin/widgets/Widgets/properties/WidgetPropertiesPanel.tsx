@@ -16,7 +16,6 @@ import { cleanNullableProp, uuid } from "../../../../../utility";
 import { Button, InputGroup } from "@blueprintjs/core";
 
 import * as styles from "./WidgetPropertiesPanel.scss";
-import { Gateway, getGateway } from "../../../../../api/interfaces";
 
 export interface WidgetPropertiesPanelProps {
     widget: WidgetDTO | undefined;
@@ -33,8 +32,6 @@ interface WidgetPropertiesPanelState {
 }
 
 export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanelProps, WidgetPropertiesPanelState> {
-    private readonly gateway: Gateway;
-
     constructor(props: WidgetPropertiesPanelProps) {
         super(props);
 
