@@ -1,9 +1,7 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
 import { useMemo } from "react";
 
-import { Button, ButtonGroup, Intent } from "@blueprintjs/core";
+import { ButtonGroup } from "@blueprintjs/core";
 
 import { Column, TableCellRenderer } from "react-table";
 

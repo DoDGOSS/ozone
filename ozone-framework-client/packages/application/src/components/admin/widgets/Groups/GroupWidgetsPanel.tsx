@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, InputGroup } from "@blueprintjs/core";
+import { Button } from "@blueprintjs/core";
 
 import { GroupWidgetsEditDialog } from "./GroupWidgetEditDialog";
 

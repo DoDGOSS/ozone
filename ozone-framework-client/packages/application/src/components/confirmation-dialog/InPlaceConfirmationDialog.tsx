@@ -3,7 +3,7 @@ import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 
 import "./custom-style.scss";
-import { Button, Classes, Dialog, Intent } from "@blueprintjs/core";
+import { Button, Classes, Intent } from "@blueprintjs/core";
 
 interface StyledString {
     text: string;

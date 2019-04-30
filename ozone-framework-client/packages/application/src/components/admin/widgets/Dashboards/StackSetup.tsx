@@ -7,7 +7,7 @@ import { StackPropertiesPanel } from "./StackPropertiesPanel";
 import { StackUsersPanel } from "./StackUsersPanel";
 import { StackGroupsPanel } from "./StackGroupsPanel";
 import { StackDTO, StackUpdateRequest } from "../../../../api/models/StackDTO";
-import { CancelButton } from "../../../form/index";
+import { CancelButton } from "../../../form";
 
 import * as styles from "../Widgets.scss";
 
