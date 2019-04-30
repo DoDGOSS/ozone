@@ -36,17 +36,23 @@ export class StackSetup extends React.Component<StackSetupProps, StackSetupState
                     <Tab
                         id="dashboard_properties"
                         title="Properties"
-                        panel={<StackPropertiesPanel saveStack={this.createOrUpdateStack} stack={this.state.stack} />}
+                        panel={this.emptyIfStackNull(
+                            <StackPropertiesPanel saveStack={this.createOrUpdateStack} stack={this.state.stack!} />
+                        )}
                     />
                     <Tab
                         id="dashboard_groups"
                         title="Groups"
-                        panel={<StackGroupsPanel onUpdate={this.props.onUpdate} stack={this.state.stack} />}
+                        panel={this.emptyIfStackNull(
+                            <StackGroupsPanel onUpdate={this.props.onUpdate} stack={this.state.stack!} />
+                        )}
                     />
                     <Tab
                         id="dashboard_users"
                         title="Users"
-                        panel={<StackUsersPanel onUpdate={this.props.onUpdate} stack={this.state.stack} />}
+                        panel={this.emptyIfStackNull(
+                            <StackUsersPanel onUpdate={this.props.onUpdate} stack={this.state.stack!} />
+                        )}
                     />
                     <Tabs.Expander />
                     <span data-element-id="dashboard-admin-widget-edit-back-button">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from "react";
 import ReactTable, { Column } from "react-table";
 import { Button, InputGroup, MenuItem, Tab, Tabs } from "@blueprintjs/core";
 import { ItemRenderer } from "@blueprintjs/select";
@@ -46,9 +46,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
 
     render() {
         return (
-            <div
-                ref={ (tableDiv) => this.setTableWidth(tableDiv)}
-            >
+            <div ref={(tableDiv) => this.setTableWidth(tableDiv)}>
                 {this.filterable && this.getSearchBox()}
                 <div className={styles.table}>
                     <ReactTable
@@ -67,7 +65,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
     // Unfinished attempt to allow you to specify column width by percentage, rather than pixel width.
     // No idea why they didn't build in percentage widths in the first place.
     private setTableWidth(tableDiv: any): void {
-        if (tableDiv && (tableDiv.clientWidth !== this.tableWidth)) {
+        if (tableDiv && tableDiv.clientWidth !== this.tableWidth) {
             this.tableWidth = tableDiv.clientWidth;
         }
     }
@@ -110,13 +108,12 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         return isFunction(this.props.onSelect) || isFunction(this.props.onSelectionChange);
     }
 
-
     private getTableLayout() {
         if (this.props.title) {
             return [
                 {
                     Header: this.getTableMainHeader(this.props.title),
-                    columns: this.convertColumnsWithPercentageWidths(this.props.getColumns());
+                    columns: this.convertColumnsWithPercentageWidths(this.props.getColumns())
                 }
             ];
         } else {
@@ -125,22 +122,21 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
     }
 
     private convertColumnsWithPercentageWidths(columns: Column[]): Column[] {
-        if (this.tableWidth === 0) {
-            return columns;
-        }
-
-        for (const col of columns) {
-            if (col.width && (typeof col.width === 'string') && (col.width.includes('%'))) {
-                const percentageWidth: number = Number(mystring.replace('%','');)
-                if (percentageWidth) {
-                    // table width is the full div, so account for borders....
-                    const convertedWidth: number = Math.floor(percentageWidth/100 * (this.tableWidth*0.9));
-                }
-            }
-        }
+        return columns;
+        // if (this.tableWidth === 0) {
+        //     return columns;
+        // }
+        //
+        // for (const col of columns) {
+        //     if (col.width && (typeof col.width === 'string') && (col.width.includes('%'))) {
+        //         const percentageWidth: number = Number(mystring.replace('%','');)
+        //         if (percentageWidth) {
+        //             // table width is the full div, so account for borders....
+        //             const convertedWidth: number = Math.floor(percentageWidth/100 * (this.tableWidth*0.9));
+        //         }
+        //     }
+        // }
     }
-
-
 
     private getItems(): any[] {
         if (this.props.customFilter && isFunction(this.props.customFilter)) {

@@ -18,9 +18,6 @@ const ADDED_WIDGETS = ["Color Client", "Color Server"];
 
 const DEFAULT_USER_EMAILS = ["testAdmin1@ozone.test", "testUser1@ozone.test"];
 
-Ok. So go through the tests, but replace all the share buttons with a single one next to edit and delete.
-Once dashboard-selection works, make sure the dashboards widget tests still work.
-
 function openEditSectionForGroup(browser: NightwatchAPI, userDisplayName: string, section?: string) {
     let relevant_row: number = 0;
 
@@ -256,7 +253,9 @@ module.exports = {
             .click(
                 `${
                     GroupAdminWidget.UsersGroup.TAB
-                } div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`
+                } div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child ${
+                    GlobalElements.STD_DELETE_BUTTON
+                }`
             )
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
@@ -278,7 +277,9 @@ module.exports = {
             .click(
                 `${
                     GroupAdminWidget.UsersGroup.TAB
-                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`
+                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${
+                    GlobalElements.STD_DELETE_BUTTON
+                }`
             )
             .pause(250)
             .waitForElementPresent(
