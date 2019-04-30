@@ -65,17 +65,23 @@ export namespace DashboardDialog {
 
     export const CREATE_DASHBOARD_DIALOG = "a[data-element-id='CreateDashboardDialog']";
 
-    export const EDIT_DASHBOARD_ID = "button[data-element-id='dashboard-edit-button-test1']";
+    function getActionButtonsForDashboard(dashboardname: string): string {
+        return `div[data-role="dashboard-actions"][data-name=${dashboardname}]`;
+    };
 
-    export const DELETE_DASHBOARD_ID = "button[data-element-id='dashboard-delete-button-test2']";
+    export function getEditButtonForDashboard(dashboardname: string): string {
+        return `${getActionButtonsForDashboard(dashboardname)} ${GlobalElements.STD_EDIT_BUTTON}`;
+    };
 
-    export const SHARE_DASHBOARD_ID = "button[data-element-id='dashboard-share-button-test2']";
+    export function getShareButtonForDashboard(dashboardname: string): string {
+        return `${getActionButtonsForDashboard(dashboardname)} a[data-element-id="dashboard-share-button]`;
+    };
+
+    export function getDeleteButtonForDashboard(dashboardname: string): string {
+        return `${getActionButtonsForDashboard(dashboardname)} ${GlobalElements.STD_DELETE_BUTTON}`;
+    };
 
     export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
-
-    export function shareDashboardByName(dashboardname: string): string {
-        return `button[data-element-id="dashboard-share-button-${dashboardname}"]`;
-    }
 
     export namespace CreateDashboard {
         export const NAME_FIELD = "input[data-role='field'][name='name']";
@@ -152,18 +158,10 @@ export namespace AdminWidget {
     }
 
     export function userTableEditButton(username: string): string {
-        return `${userTableActions(username)} ${STD_EDIT_BUTTON}`;
+        return `${userTableActions(username)} ${GlobalElements.STD_EDIT_BUTTON}`;
     }
 
     export const SEARCH_FIELD = "input[data-element-id='search-field']";
-
-    export const CONFIRM_DELETE_ALERT = "div.delete-user-alert";
-
-    export const CONFIRM_DELETE_BUTTON = "div.delete-user-alert > div.bp3-alert-footer > button.bp3-intent-danger";
-
-    export const STD_EDIT_BUTTON = "a[data-element-id='edit-button']";
-
-    export const STD_DELETE_BUTTON = "a[data-element-id='delete-button']";
 
     export const PREFERENCES_TAB = "div[data-tab-id='user_preferences']";
 }
@@ -181,11 +179,11 @@ export namespace DashboardAdminWidget {
     }
 
     export function dashboardTableEditButton(dashboardname: string): string {
-        return `${dashboardTableActions(dashboardname)} button[data-element-id="dashboard-admin-widget-edit-button"]`;
+        return `${dashboardTableActions(dashboardname)} ${GlobalElements.STD_EDIT_BUTTON}`;
     }
 
     export function dashboardTableDeleteButton(dashboardname: string): string {
-        return `${dashboardTableActions(dashboardname)} button[data-element-id="dashboard-admin-widget-delete-button"]`;
+        return `${dashboardTableActions(dashboardname)} ${GlobalElements.STD_DELETE_BUTTON}`;
     }
 
     // GROUPS TAB
@@ -202,9 +200,7 @@ export namespace DashboardAdminWidget {
     }
 
     export function dashboardGroupTableDeleteButton(groupname: string): string {
-        return `${dashboardGroupTableActions(
-            groupname
-        )} button[data-element-id="dashboard-admin-widget-delete-group-button"]`;
+        return `${dashboardGroupTableActions(groupname)} ${GlobalElements.STD_DELETE_BUTTON}`;
     }
 }
 
@@ -352,4 +348,8 @@ export namespace GlobalElements {
     export const GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON = "button[data-element-id='table-selector-confirm']";
 
     export const GENERIC_TABLE_ADD_SEARCH_FIELD = `${GENERIC_TABLE_SELECTOR_DIALOG} input[data-element-id='search-field']`;
+
+    export const STD_EDIT_BUTTON = "a[data-element-id='edit-button']";
+
+    export const STD_DELETE_BUTTON = "a[data-element-id='delete-button']";
 }

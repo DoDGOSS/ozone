@@ -34,7 +34,7 @@ function openEditSectionForUser(browser: NightwatchAPI, userDisplayName: string,
                         relevant_row = i;
                         browser.getAttribute(
                             `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                1}) div[role='row'] > div:last-child ${AdminWidget.STD_EDIT_BUTTON}`,
+                                1}) div[role='row'] > div:last-child ${GlobalElements.STD_EDIT_BUTTON}`,
                             "disabled",
                             function(isDisabled) {
                                 this.assert.equal(
@@ -51,7 +51,7 @@ function openEditSectionForUser(browser: NightwatchAPI, userDisplayName: string,
     );
     browser.click(
         `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
-            1}) div[role='row'] > div:last-child ${AdminWidget.STD_EDIT_BUTTON}`
+            1}) div[role='row'] > div:last-child ${GlobalElements.STD_EDIT_BUTTON}`
     );
 
     if (section) {
@@ -164,7 +164,7 @@ module.exports = {
             .setValue(AdminWidget.SEARCH_FIELD, NEW_USER_USERNAME)
             .click(
                 `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${
-                    AdminWidget.STD_EDIT_BUTTON
+                    GlobalElements.STD_EDIT_BUTTON
                 }`
             );
 
@@ -275,7 +275,7 @@ module.exports = {
         });
 
         browser
-            .click(`${AdminWidget.STD_DELETE_BUTTON}[data-widget-title="Color Client"]`)
+            .click(`${GlobalElements.STD_DELETE_BUTTON}[data-widget-title="Color Client"]`)
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,
@@ -289,7 +289,7 @@ module.exports = {
             );
 
         browser
-            .click(`${AdminWidget.STD_DELETE_BUTTON}[data-widget-title="Color Server"]`)
+            .click(`${GlobalElements.STD_DELETE_BUTTON}[data-widget-title="Color Server"]`)
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,
@@ -355,7 +355,7 @@ module.exports = {
             .setValue(AdminWidget.SEARCH_FIELD, NEW_USER_EMAIL)
             .click(
                 `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${
-                    AdminWidget.STD_DELETE_BUTTON
+                    GlobalElements.STD_DELETE_BUTTON
                 }`
             )
             .waitForElementPresent(
