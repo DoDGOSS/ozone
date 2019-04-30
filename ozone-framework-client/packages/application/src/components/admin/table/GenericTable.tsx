@@ -55,6 +55,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                     className={classNames("striped", this.props.classNames)}
                     columns={this.getTableLayout()}
                     pageSizeOptions={this.getReasonablePageSizeOptions()}
+                    defaultPageSize={20}
                     {...this.buildReactTableProps()}
                 />
             </div>
@@ -66,7 +67,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
 
         props["minRows"] = 5;
         props["defaultPageSize"] = 1;
-        props["showPagination"] = false;
+        props["showPagination"] = true;
 
         if (this.props.reactTableProps) {
             for (const p in this.props.reactTableProps) {
