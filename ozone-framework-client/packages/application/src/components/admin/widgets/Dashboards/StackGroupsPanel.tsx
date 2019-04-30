@@ -1,10 +1,12 @@
 import * as React from "react";
 import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
+import { Column } from "react-table";
 
 import { GenericTable } from "../../../generic-table/GenericTable";
+import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 
 import { StackGroupsEditDialog } from "./StackGroupsEditDialog";
-import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
+import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
 import { stackApi } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";
@@ -29,15 +31,8 @@ export class StackGroupsPanel extends React.Component<StackEditGroupsProps, Stac
         super(props);
         this.state = {
             groups: this.props.stack.groups,
-            filtered: [],
-            filter: "",
             loading: true,
-            pageSize: 5,
-            stack: this.props.stack,
-            showGroupsDialog: false,
-            showDelete: false,
-            confirmationMessage: "",
-            manageGroup: undefined
+            showGroupsDialog: false
         };
     }
 
@@ -46,15 +41,6 @@ export class StackGroupsPanel extends React.Component<StackEditGroupsProps, Stac
     }
 
     render() {
-        let data = this.state.groups;
-        const filter = this.state.filter.toLowerCase();
-
-        if (filter) {
-            data = data.filter((row) => {
-                return row.name.toLowerCase().includes(filter);
-            });
-        }
-
         return (
             <div data-element-id="group-admin-widget-dialog">
                 <GenericTable
@@ -67,9 +53,9 @@ export class StackGroupsPanel extends React.Component<StackEditGroupsProps, Stac
                 <div className={styles.buttonBar}>
                     <Button
                         text="Add"
-                        disabled={!this.state.stack.approved}
+                        disabled={!this.props.stack.approved}
                         title={
-                            this.state.stack.approved ? undefined : "Groups can only be added to Stacks shared by Owner"
+                            this.props.stack.approved ? undefined : "Groups can only be added to Stacks shared by Owner"
                         }
                         onClick={() => this.showAddGroupsDialog()}
                         data-element-id="group-edit-add-group-dialog-add-button"
@@ -99,7 +85,7 @@ export class StackGroupsPanel extends React.Component<StackEditGroupsProps, Stac
                             data-role="dashboard-admin-widget-group-actions"
                             data-groupname={row.original.name}
                         >
-                            <DeleteButton onClick={() => this.deleteGroup(row.original)} />
+                            <DeleteButton onClick={() => this.removeGroup(row.original)} />
                         </ButtonGroup>
                     </div>
                 )
@@ -117,7 +103,7 @@ export class StackGroupsPanel extends React.Component<StackEditGroupsProps, Stac
         this.setState({
             loading: true
         });
-        stackApi.getStackById(this.state.stack.id).then((response) => {
+        stackApi.getStackById(this.props.stack.id).then((response) => {
             this.setState({
                 loading: false,
                 groups: response.data.data[0].groups
@@ -126,7 +112,7 @@ export class StackGroupsPanel extends React.Component<StackEditGroupsProps, Stac
     }
 
     private addGroups = async (groups: Array<GroupDTO>) => {
-        const response = await stackApi.addStackGroups(this.state.stack.id, groups);
+        const response = await stackApi.addStackGroups(this.props.stack.id, groups);
         if (response.status !== 200) {
             return;
         }
@@ -154,24 +140,11 @@ export class StackGroupsPanel extends React.Component<StackEditGroupsProps, Stac
                 { text: this.props.stack.name, style: "bold" },
                 "."
             ],
-            onConfirm: () => this.removeGroup(user)
+            onConfirm: () => this.removeGroup(group)
         });
-        return true;
     };
 
-    private handleConfirmationConfirmDelete = async (group: GroupDTO) => {
-        this.setState({
-            showDelete: false,
-            manageGroup: undefined
-        });
-
-        stackApi.removeStackGroups(this.state.stack.id, [group]).then(() => this.getStackGroups());
-    };
-
-    private handleConfirmationCancel = () => {
-        this.setState({
-            showDelete: false,
-            manageGroup: undefined
-        });
+    private removeGroup = async (group: GroupDTO) => {
+        stackApi.removeStackGroups(this.props.stack.id, [group]).then(() => this.getStackGroups());
     };
 }

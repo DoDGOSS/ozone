@@ -67,19 +67,19 @@ export namespace DashboardDialog {
 
     function getActionButtonsForDashboard(dashboardname: string): string {
         return `div[data-role="dashboard-actions"][data-name=${dashboardname}]`;
-    };
+    }
 
     export function getEditButtonForDashboard(dashboardname: string): string {
         return `${getActionButtonsForDashboard(dashboardname)} ${GlobalElements.STD_EDIT_BUTTON}`;
-    };
+    }
 
     export function getShareButtonForDashboard(dashboardname: string): string {
         return `${getActionButtonsForDashboard(dashboardname)} a[data-element-id="dashboard-share-button]`;
-    };
+    }
 
     export function getDeleteButtonForDashboard(dashboardname: string): string {
         return `${getActionButtonsForDashboard(dashboardname)} ${GlobalElements.STD_DELETE_BUTTON}`;
-    };
+    }
 
     export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
 
