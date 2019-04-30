@@ -74,7 +74,7 @@ export namespace DashboardDialog {
     }
 
     export function getShareButtonForDashboard(dashboardname: string): string {
-        return `${getActionButtonsForDashboard(dashboardname)} a[data-element-id="dashboard-share-button]`;
+        return `${getActionButtonsForDashboard(dashboardname)} ${GlobalElements.STD_SHARE_BUTTON}`;
     }
 
     export function getDeleteButtonForDashboard(dashboardname: string): string {
@@ -352,4 +352,6 @@ export namespace GlobalElements {
     export const STD_EDIT_BUTTON = "a[data-element-id='edit-button']";
 
     export const STD_DELETE_BUTTON = "a[data-element-id='delete-button']";
+
+    export const STD_SHARE_BUTTON = "a[data-element-id='share-button']";
 }

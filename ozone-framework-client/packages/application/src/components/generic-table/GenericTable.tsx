@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import ReactTable, { Column } from "react-table";
 import { Button, InputGroup, MenuItem, Tab, Tabs } from "@blueprintjs/core";
 import { ItemRenderer } from "@blueprintjs/select";
