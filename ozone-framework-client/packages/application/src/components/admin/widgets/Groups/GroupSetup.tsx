@@ -3,7 +3,6 @@ import * as React from "react";
 import { Tab, Tabs } from "@blueprintjs/core";
 
 import { GroupPropertiesPanel } from "./GroupPropertiesPanel";
-GroupStacksPanel;
 import { GroupUsersPanel } from "./GroupUsersPanel";
 import { GroupWidgetsPanel } from "./GroupWidgetsPanel";
 import { GroupStacksPanel } from "./GroupStacksPanel";
