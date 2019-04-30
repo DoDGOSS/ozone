@@ -49,7 +49,9 @@ export class GroupSetup extends React.Component<GroupSetupProps, GroupSetupState
                     <Tab
                         id="group_widgets"
                         title="Widgets"
-                        panel={<GroupWidgetsPanel onUpdate={this.props.onUpdate} group={this.state.group} />}
+                        panel={this.emptyIfGroupNull(
+                            <GroupWidgetsPanel onUpdate={this.props.onUpdate} group={this.state.group} />
+                        )}
                     />
                     <Tabs.Expander />
                     <span data-element-id="group-admin-widget-edit-back-button">

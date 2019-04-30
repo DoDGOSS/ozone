@@ -27,34 +27,7 @@ export const showConfirmationDialog = (props: InPlaceConfirmationDialogProps) =>
 
     let message: any = props.message;
     if (typeof props.message !== "string") {
-        message = (
-            <div>
-                {(() => {
-                    const textPieces = [];
-                    let i: number = 0;
-                    for (const chunk of props.message) {
-                        const style: { [key: string]: string } = {};
-                        if (typeof chunk === "string") {
-                            textPieces.push(<span key={i}>{chunk}</span>);
-                        } else {
-                            if (chunk.style === "bold") {
-                                style["fontWeight"] = "bold";
-                            }
-                            if (chunk.style === "italics") {
-                                style["fontStyle"] = "italic";
-                            }
-                            textPieces.push(
-                                <span key={i} style={style}>
-                                    {chunk.text}
-                                </span>
-                            );
-                        }
-                        i++;
-                    }
-                    return textPieces;
-                })()}
-            </div>
-        );
+        message = buildStyledMessage(props.message);
     }
 
     confirmAlert({
@@ -96,3 +69,34 @@ export const showConfirmationDialog = (props: InPlaceConfirmationDialogProps) =>
         }
     });
 };
+
+function buildStyledMessage(messageWithStyle: (StyledString | string)[]): any {
+    return (
+        <div>
+            {(() => {
+                const textPieces = [];
+                let i: number = 0;
+                for (const chunk of messageWithStyle) {
+                    const style: { [key: string]: string } = {};
+                    if (typeof chunk === "string") {
+                        textPieces.push(<span key={i}>{chunk}</span>);
+                    } else {
+                        if (chunk.style === "bold") {
+                            style["fontWeight"] = "bold";
+                        }
+                        if (chunk.style === "italics") {
+                            style["fontStyle"] = "italic";
+                        }
+                        textPieces.push(
+                            <span key={i} style={style}>
+                                {chunk.text}
+                            </span>
+                        );
+                    }
+                    i++;
+                }
+                return textPieces;
+            })()}
+        </div>
+    );
+}

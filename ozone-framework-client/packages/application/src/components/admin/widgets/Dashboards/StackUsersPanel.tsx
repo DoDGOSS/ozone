@@ -1,12 +1,10 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
 import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
 
-import { AdminTable } from "../../table/AdminTable";
+import { GenericTable } from "../../../generic-table/GenericTable";
 import { StackUsersEditDialog } from "./StackUsersEditDialog";
 
-import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
+import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 
 import { stackApi } from "../../../../api/clients/StackAPI";
 import { StackDTO, StackUpdateRequest } from "../../../../api/models/StackDTO";
@@ -14,85 +12,26 @@ import { StackDTO, StackUpdateRequest } from "../../../../api/models/StackDTO";
 import { userApi, UserQueryCriteria } from "../../../../api/clients/UserAPI";
 import { UserDTO } from "../../../../api/models/UserDTO";
 
+import * as styles from "../Widgets.scss";
+
 interface StackEditUsersProps {
     onUpdate: (update?: any) => void;
-    stack: any;
+    stack: StackDTO;
 }
 
 export interface StackEditUsersState {
     users: UserDTO[];
-    filtered: UserDTO[];
-    filter: string;
     loading: boolean;
-    pageSize: number;
-    stack: any;
-    showAdd: boolean;
-    showDelete: boolean;
-    confirmationMessage: string;
-    manageUser: UserDTO | undefined;
+    showUsersDialog: boolean;
 }
 
 export class StackUsersPanel extends React.Component<StackEditUsersProps, StackEditUsersState> {
-    private static readonly SELECT_USERS_COLUMN_DEFINITION = [
-        {
-            Header: "Users",
-            columns: [
-                { Header: "Name", accessor: "userRealName" },
-                { Header: "Username", accessor: "username" },
-                { Header: "Email", accessor: "email" },
-                { Header: "Stacks", accessor: "totalStacks" },
-                { Header: "Widgets", accessor: "totalWidgets" },
-                { Header: "Dashboards", accessor: "totalDashboards" },
-                { Header: "Last Login", accessor: "lastLogin" }
-            ]
-        }
-    ];
-
-    private readonly USERS_COLUMN_DEFINITION = [
-        {
-            Header: "Users",
-            columns: [
-                { Header: "Name", accessor: "userRealName" },
-                { Header: "Username", accessor: "username" },
-                { Header: "Email", accessor: "email" },
-                { Header: "Stacks", accessor: "totalStacks" },
-                { Header: "Widgets", accessor: "totalWidgets" },
-                { Header: "Dashboards", accessor: "totalDashboards" },
-                { Header: "Last Login", accessor: "lastLogin" }
-            ]
-        },
-        {
-            Header: "Actions",
-            Cell: (row: any) => (
-                <div>
-                    <ButtonGroup>
-                        <Button
-                            data-element-id="dashboard-admin-widget-delete-user-button"
-                            text="Delete"
-                            intent={Intent.DANGER}
-                            icon="trash"
-                            small={true}
-                            onClick={() => this.deleteUser(row.original)}
-                        />
-                    </ButtonGroup>
-                </div>
-            )
-        }
-    ];
-
     constructor(props: StackEditUsersProps) {
         super(props);
         this.state = {
             users: [],
-            filtered: [],
-            filter: "",
             loading: true,
-            pageSize: 5,
-            stack: this.props.stack,
-            showAdd: false,
-            showDelete: false,
-            confirmationMessage: "",
-            manageUser: undefined
+            showUsersDialog: false
         };
     }
 
@@ -101,73 +40,57 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
     }
 
     render() {
-        let data = this.state.users;
-        const filter = this.state.filter.toLowerCase();
-
-        // TODO - Improve this - this will be slow if there are many users.
-        // Minimally could wait to hit enter before filtering. Pagination handling
-        if (filter) {
-            data = data.filter((row) => {
-                return (
-                    row.userRealName.toLowerCase().includes(filter) ||
-                    row.email.toLowerCase().includes(filter) ||
-                    row.username.toLowerCase().includes(filter)
-                );
-            });
-        }
-
         return (
             <div data-element-id="dashboard-admin-add-user">
-                <div className={styles.actionBar}>
-                    <InputGroup
-                        placeholder="Search..."
-                        leftIcon="search"
-                        value={this.state.filter}
-                        onChange={(e: any) => this.setState({ filter: e.target.value })}
-                        data-element-id="search-field"
-                    />
-                </div>
-
-                <div className={styles.table}>
-                    <AdminTable
-                        data={data}
-                        columns={this.USERS_COLUMN_DEFINITION}
-                        loading={this.state.loading}
-                        pageSize={this.state.pageSize}
-                    />
-                </div>
-
+                <GenericTable
+                    items={this.state.users}
+                    getColumns={() => this.getTableColumns()}
+                    reactTableProps={{
+                        loading: this.state.loading
+                    }}
+                />
                 <div className={styles.buttonBar}>
                     <Button
                         text="Add"
-                        onClick={() => this.toggleShowAdd()}
+                        onClick={() => this.showAddUsersDialog()}
                         data-element-id="dashboard-edit-add-user-dialog-add-button"
                     />
                 </div>
 
                 <StackUsersEditDialog
-                    show={this.state.showAdd}
-                    title="Add User(s) to Stack"
-                    confirmHandler={this.handleAddUserResponse}
-                    cancelHandler={this.handleAddUserCancel}
-                    columns={StackUsersPanel.SELECT_USERS_COLUMN_DEFINITION}
-                />
-
-                <ConfirmationDialog
-                    show={this.state.showDelete}
-                    title="Warning"
-                    content={this.state.confirmationMessage}
-                    confirmHandler={this.handleConfirmationConfirmDelete}
-                    cancelHandler={this.handleConfirmationCancel}
-                    payload={this.state.manageUser}
+                    show={this.state.showUsersDialog}
+                    onSubmit={this.addUsers}
+                    onClose={this.closeAddUsersDialog}
                 />
             </div>
         );
     }
 
-    private toggleShowAdd() {
+    private getTableColumns() {
+        return [
+            { Header: "Name", id: "name", accessor: (user: UserDTO) => user.userRealName },
+            { Header: "Username", id: "username", accessor: (user: UserDTO) => user.username },
+            { Header: "Email", id: "email", accessor: (user: UserDTO) => user.email },
+            { Header: "Stacks", id: "totalStacks", accessor: (user: UserDTO) => user.totalStacks },
+            { Header: "Widgets", id: "totalWidgets", accessor: (user: UserDTO) => user.totalWidgets },
+            { Header: "Dashboards", id: "totalDashboards", accessor: (user: UserDTO) => user.totalDashboards },
+            { Header: "Last Login", id: "lastLogin", accessor: (user: UserDTO) => user.lastLogin },
+            {
+                Header: "Actions",
+                Cell: (row: { original: UserDTO }) => (
+                    <div>
+                        <ButtonGroup>
+                            <DeleteButton onClick={() => this.confirmRemoveUser(row.original)} />
+                        </ButtonGroup>
+                    </div>
+                )
+            }
+        ];
+    }
+
+    private showAddUsersDialog() {
         this.setState({
-            showAdd: true
+            showUsersDialog: true
         });
     }
 
@@ -185,7 +108,7 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
         });
     };
 
-    private handleAddUserResponse = async (users: Array<UserDTO>) => {
+    private addUsers = async (users: Array<UserDTO>) => {
         const request: StackUpdateRequest = {
             name: this.state.stack.name,
             id: this.state.stack.id,
@@ -197,43 +120,35 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
         if (response.status !== 200) return;
 
         this.setState({
-            showAdd: false
+            showUsersDialog: false
         });
 
         this.getUsers();
-        this.props.onUpdate(response.data.data);
+        this.props.onUpdate();
     };
 
-    private handleAddUserCancel = () => {
+    private closeAddUsersDialog = () => {
         this.setState({
-            showAdd: false
+            showUsersDialog: false
         });
     };
 
-    private deleteUser = async (user: UserDTO) => {
-        const currentStack: StackDTO = this.state.stack;
-
-        this.setState({
-            showDelete: true,
-            confirmationMessage: `This action will permanently delete <strong>${
-                user.userRealName
-            }</strong> from the stack <strong>${currentStack.name}</strong>`,
-            manageUser: user
+    private confirmRemoveUser = async (user: UserDTO) => {
+        showConfirmationDialog({
+            title: "Warning",
+            message: [
+                "This action will remove ",
+                { text: user.userRealName, style: "bold" },
+                " from ",
+                { text: this.props.stack.name, style: "bold" },
+                "."
+            ],
+            onConfirm: () => this.removeUser(user)
         });
-
-        this.getUsers();
-
         return true;
     };
 
-    private handleConfirmationConfirmDelete = async (payload: any) => {
-        this.setState({
-            showDelete: false,
-            manageUser: undefined
-        });
-
-        const user: UserDTO = payload;
-
+    private handleConfirmationConfirmDelete = async (user: UserDTO) => {
         const request: StackUpdateRequest = {
             name: this.state.stack.name,
             id: this.state.stack.id,
@@ -249,12 +164,5 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
         this.props.onUpdate();
 
         return true;
-    };
-
-    private handleConfirmationCancel = (payload: any) => {
-        this.setState({
-            showDelete: false,
-            manageUser: undefined
-        });
     };
 }

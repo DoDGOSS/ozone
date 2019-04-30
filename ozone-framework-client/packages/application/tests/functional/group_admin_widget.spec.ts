@@ -1,6 +1,6 @@
 import { NightwatchAPI, NightwatchCallbackResult } from "nightwatch";
 
-import { AdminWidget, GlobalElements, GroupAdminWidget } from "./selectors";
+import { GlobalElements, GroupAdminWidget } from "./selectors";
 
 import { AdminWidgetType, loggedInAs, openAdminWidget } from "./helpers";
 
@@ -18,6 +18,9 @@ const ADDED_WIDGETS = ["Color Client", "Color Server"];
 
 const DEFAULT_USER_EMAILS = ["testAdmin1@ozone.test", "testUser1@ozone.test"];
 
+Ok. So go through the tests, but replace all the share buttons with a single one next to edit and delete.
+Once dashboard-selection works, make sure the dashboards widget tests still work.
+
 function openEditSectionForGroup(browser: NightwatchAPI, userDisplayName: string, section?: string) {
     let relevant_row: number = 0;
 
@@ -31,7 +34,7 @@ function openEditSectionForGroup(browser: NightwatchAPI, userDisplayName: string
                         relevant_row = i;
                         browser.getAttribute(
                             `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                1}) div[role='row'] > div:last-child ${AdminWidget.STD_EDIT_BUTTON}`,
+                                1}) div[role='row'] > div:last-child ${GlobalElements.STD_EDIT_BUTTON}`,
                             "disabled",
                             function(isDisabled) {
                                 this.assert.equal(
@@ -48,7 +51,7 @@ function openEditSectionForGroup(browser: NightwatchAPI, userDisplayName: string
     );
     browser.click(
         `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
-            1}) div[role='row'] > div:last-child ${AdminWidget.STD_EDIT_BUTTON}`
+            1}) div[role='row'] > div:last-child ${GlobalElements.STD_EDIT_BUTTON}`
     );
 
     if (section) {
@@ -253,7 +256,7 @@ module.exports = {
             .click(
                 `${
                     GroupAdminWidget.UsersGroup.TAB
-                } div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child ${AdminWidget.STD_DELETE_BUTTON}`
+                } div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`
             )
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
@@ -275,7 +278,7 @@ module.exports = {
             .click(
                 `${
                     GroupAdminWidget.UsersGroup.TAB
-                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${AdminWidget.STD_DELETE_BUTTON}`
+                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`
             )
             .pause(250)
             .waitForElementPresent(
@@ -418,7 +421,7 @@ module.exports = {
                             relevant_row = i;
                             browser.getAttribute(
                                 `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                    1}) div[role='row'] > div:last-child ${AdminWidget.STD_DELETE_BUTTON}`,
+                                    1}) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`,
                                 "disabled",
                                 function(modifiedResult) {
                                     this.assert.equal(
@@ -431,7 +434,7 @@ module.exports = {
                         } else if ((result.value as string).trim().length > 0) {
                             browser.getAttribute(
                                 `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                    1}) div[role='row'] > div:last-child ${AdminWidget.STD_DELETE_BUTTON}`,
+                                    1}) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`,
                                 "disabled",
                                 function(modifiedResult) {
                                     this.assert.equal(
@@ -448,7 +451,7 @@ module.exports = {
                 browser
                     .click(
                         `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
-                            1}) div[role='row'] > div:last-child ${AdminWidget.STD_DELETE_BUTTON}`
+                            1}) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`
                     )
                     .pause(250)
                     .waitForElementPresent(

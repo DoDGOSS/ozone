@@ -10,7 +10,7 @@ import { errorStore } from "../../services/ErrorStore";
 import { dashboardApi } from "../../api/clients/DashboardAPI";
 import { stackApi } from "../../api/clients/StackAPI";
 import { DashboardDTO } from "../../api/models/DashboardDTO";
-import { ConfirmationDialog } from "../confirmation-dialog/ConfirmationDialog";
+import { showConfirmationDialog } from "../confirmation-dialog/InPlaceConfirmationDialog";
 import { EditDashboardForm } from "../create-dashboard-screen/EditDashboardForm";
 
 // TODO - convert to edit stacks
@@ -34,7 +34,6 @@ export const DashboardDialog: React.FC<{}> = () => {
     const [showShare, setShare] = useState(false);
     const [showEdit, setEdit] = useState(false);
     const [currentDashboard, setCurrentDashboard] = useState<DashboardDTO | null>(null);
-    const [confirmationMessage, setConfirmationMessage] = useState("");
     const [dashboards, setDashboards] = useState<DashboardDTO[]>([]);
 
     // Fetch the Dashboards when isVisible changes to `true`
@@ -53,91 +52,45 @@ export const DashboardDialog: React.FC<{}> = () => {
         return true;
     };
 
-    const showDeleteConfirmation = async (dashboard: DashboardDTO) => {
-        setDelete(true);
-        setConfirmationMessage(`This action will permanently delete <strong>${dashboard.name}</strong>`);
-        setCurrentDashboard(dashboard);
+    const confirmDelete = async (dashboard: DashboardDTO) => {
+        showConfirmationDialog({
+            title: "Warning",
+            message: ["This action will permanently delete ", { text: dashboard.name, style: "bold" }, "."],
+            onConfirm: () => onDeleteConfirmed(dashboard)
+        });
     };
 
-    const showShareConfirmation = async (dashboard: DashboardDTO) => {
-        setShare(true);
-        setConfirmationMessage(
-            `You are allowing <strong>${dashboard.name}</strong> to be shared with other users. Press OK to confirm.`
-        );
-        setCurrentDashboard(dashboard);
+    const confirmShare = async (dashboard: DashboardDTO) => {
+        showConfirmationDialog({
+            title: "Warning",
+            message: [
+                "You are allowing ",
+                { text: dashboard.name, style: "bold" },
+                "to be shared with other users. Press OK to confirm."
+            ],
+            onConfirm: () => onShareConfirmed(dashboard)
+        });
     };
 
-    const onDeleteConfirmed = async () => {
-        if (currentDashboard === null) {
-            errorStore.warning("Assertion Error", "DashboardDialog: expected currentDashboard to not be null");
-            return false;
-        }
-
-        const response = await stackApi.deleteStackAsUser(currentDashboard.stack!.id);
+    const onDeleteConfirmed = async (dashboard: DashboardDTO) => {
+        const response = await stackApi.deleteStackAsUser(dashboard.stack!.id);
         if (response.status !== 200) return false;
 
-        setDelete(false);
-        setCurrentDashboard(null);
-        setConfirmationMessage("");
-
         fetchDashboards(setDashboards);
-
         return true;
     };
 
-    const onShareConfirmed = async () => {
-        if (currentDashboard === null) {
-            errorStore.warning("Assertion Error", "DashboardDialog: expected currentDashboard to not be null");
-            return false;
-        }
-
-        const response = await stackApi.shareStack(currentDashboard.stack!.id);
+    const onShareConfirmed = async (dashboard: DashboardDTO) => {
+        const response = await stackApi.shareStack(dashboard.stack!.id);
         if (response.status !== 200) return false;
 
-        setShare(false);
-        setCurrentDashboard(null);
-        setConfirmationMessage("");
-
         fetchDashboards(setDashboards);
-
         return true;
-    };
-
-    const onDeleteCancelled = () => {
-        setDelete(false);
-        setCurrentDashboard(null);
-    };
-
-    const onShareCancelled = () => {
-        setShare(false);
-        setCurrentDashboard(null);
     };
 
     return (
         <div>
-            {showDelete && (
-                <ConfirmationDialog
-                    show={showDelete}
-                    title={"Warning"}
-                    content={confirmationMessage}
-                    confirmHandler={onDeleteConfirmed}
-                    cancelHandler={onDeleteCancelled}
-                    payload={currentDashboard}
-                />
-            )}
-
-            {showShare && (
-                <ConfirmationDialog
-                    show={showShare}
-                    title={"Warning"}
-                    content={confirmationMessage}
-                    confirmHandler={onShareConfirmed}
-                    cancelHandler={onShareCancelled}
-                    payload={currentDashboard}
-                />
-            )}
-
-            {!showEdit ? (
+            {!showEdit && (
                 <Dialog
                     className={themeClass}
                     isOpen={isVisible}
@@ -150,7 +103,7 @@ export const DashboardDialog: React.FC<{}> = () => {
                                 <h4>{dashboard.name}</h4>
                                 <p>{dashboard.description}</p>
                                 <img src={dashboard.iconImageUrl} />
-                                <ButtonGroup>
+                                <ButtonGroup data-element-id={"dashboard-edit"}>
                                     <Button
                                         key={dashboard.guid}
                                         value={dashboard.name}
@@ -167,7 +120,7 @@ export const DashboardDialog: React.FC<{}> = () => {
                                         intent={Intent.SUCCESS}
                                         disabled={dashboard.publishedToStore}
                                         data-element-id={"dashboard-share-button-" + dashboard.name}
-                                        onClick={() => showShareConfirmation(dashboard)}
+                                        onClick={() => confirmShare(dashboard)}
                                     />
                                     <Divider />
                                     <Button
@@ -175,7 +128,7 @@ export const DashboardDialog: React.FC<{}> = () => {
                                         text="Delete"
                                         intent={Intent.DANGER}
                                         icon="trash"
-                                        onClick={() => showDeleteConfirmation(dashboard)}
+                                        onClick={() => confirmDelete(dashboard)}
                                     />
                                 </ButtonGroup>
                             </Card>
@@ -197,7 +150,8 @@ export const DashboardDialog: React.FC<{}> = () => {
                         </div>
                     </div>
                 </Dialog>
-            ) : (
+            )}
+            {showEdit && (
                 <Dialog className={themeClass} isOpen={showEdit} onClose={() => setEdit(false)} title="Edit Dashboard">
                     <div data-element-id="EditDashboardDialog" className={Classes.DIALOG_BODY}>
                         <EditDashboardForm dashboard={currentDashboard} onSubmit={onEditSubmitted} />

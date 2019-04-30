@@ -18,7 +18,7 @@ import {
     validateStackGetResponse,
     validateStackUpdateResponse
 } from "../models/StackDTO";
-import { GroupDTO } from "../models/GroupDTO";
+import { GroupDTO, GroupUpdateResponse, validateGroupUpdateResponse } from "../models/GroupDTO";
 
 export interface StackQueryCriteria {
     limit?: number;
@@ -81,7 +81,7 @@ export class StackAPI {
         });
     }
 
-    deleteStackAsAdmin(id: number): Promise<Response<StackDeleteAdminResponse>> {
+    async deleteStackAsAdmin(id: number): Promise<Response<StackDeleteAdminResponse>> {
         const requestData = qs.stringify({
             _method: "DELETE",
             adminEnabled: true,
@@ -96,7 +96,7 @@ export class StackAPI {
         });
     }
 
-    deleteStackAsUser(id: number): Promise<Response<StackDeleteUserResponse>> {
+    async deleteStackAsUser(id: number): Promise<Response<StackDeleteUserResponse>> {
         const requestData: any = qs.stringify({
             _method: "DELETE",
             data: JSON.stringify(mapIds(id))
@@ -110,7 +110,7 @@ export class StackAPI {
         });
     }
 
-    async addStackGroups(id: number, groups: GroupDTO[]): Promise<Response<StackUpdateResponse>> {
+    async addStackGroups(id: number, groups: GroupDTO[]): Promise<Response<GroupUpdateResponse>> {
         const requestData = qs.stringify({
             stack_id: id,
             tab: "groups",
@@ -122,11 +122,11 @@ export class StackAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateStackUpdateResponse
+            validate: validateGroupUpdateResponse
         });
     }
 
-    async removeStackGroups(id: number, groups: GroupDTO[]): Promise<Response<StackUpdateResponse>> {
+    async removeStackGroups(id: number, groups: GroupDTO[]): Promise<Response<GroupUpdateResponse>> {
         const requestData = qs.stringify({
             stack_id: id,
             tab: "groups",
@@ -138,7 +138,7 @@ export class StackAPI {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateStackUpdateResponse
+            validate: validateGroupUpdateResponse
         });
     }
 }
