@@ -76,7 +76,10 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
                 Header: "Actions",
                 Cell: (row: { original: StackDTO }) => (
                     <ButtonGroup>
-                        <DeleteButton onClick={() => this.confirmRemoveStack(row.original)} itemName />
+                        <DeleteButton
+                            onClick={() => this.confirmRemoveStack(row.original)}
+                            itemName={row.original.name}
+                        />
                     </ButtonGroup>
                 )
             }
