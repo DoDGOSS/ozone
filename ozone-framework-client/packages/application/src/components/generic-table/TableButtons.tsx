@@ -12,7 +12,6 @@ export const EditButton: React.FC<TableButtonProps> = (props) => {
         <AnchorButton // regular buttons don't play well with tooltips on chrome. But the html for these is an <a></a>, not a <button>.
             data-element-id={"edit-button"}
             data-widget-title={props.itemName ? props.itemName : ""}
-            value={props.itemName ? props.itemName : undefined}
             text="Edit"
             intent={Intent.PRIMARY}
             icon="edit"
@@ -29,7 +28,6 @@ export const DeleteButton: React.FC<TableButtonProps> = (props) => {
         <AnchorButton
             data-element-id={"delete-button"}
             data-widget-title={props.itemName ? props.itemName : ""}
-            value={props.itemName ? props.itemName : undefined}
             text="Delete"
             intent={Intent.DANGER}
             icon="trash"
@@ -46,7 +44,6 @@ export const ShareButton: React.FC<TableButtonProps> = (props) => {
         <AnchorButton
             data-element-id={"share-button"}
             data-widget-title={props.itemName ? props.itemName : ""}
-            value={props.itemName ? props.itemName : undefined}
             icon="share"
             text="Share"
             intent={Intent.SUCCESS}
