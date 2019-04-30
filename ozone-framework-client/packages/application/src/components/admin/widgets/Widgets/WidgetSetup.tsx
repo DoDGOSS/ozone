@@ -7,9 +7,7 @@ import { CancelButton } from "../../../form";
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { WidgetCreateRequest, WidgetDTO, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
-import { IntentDTO, IntentsDTO } from "../../../../api/models/IntentDTO";
-import { User } from "../../../../models/User";
-import { Group } from "../../../../models/Group";
+import { IntentsDTO } from "../../../../api/models/IntentDTO";
 import { cleanNullableProp } from "../../../../utility";
 
 import { WidgetPropertiesPanel } from "./properties/WidgetPropertiesPanel";

@@ -5,8 +5,6 @@ import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 
 import { SelectionDialogProps, TableSelectionDialog } from "../../../table-selection-dialog/TableSelectionDialog";
 
-import { isNil } from "../../../../utility";
-
 export class GroupWidgetsEditDialog extends React.Component<SelectionDialogProps<WidgetDTO>> {
     constructor(props: SelectionDialogProps<WidgetDTO>) {
         super(props);

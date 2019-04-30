@@ -18,7 +18,7 @@ import {
     validateStackGetResponse,
     validateStackUpdateResponse
 } from "../models/StackDTO";
-import { GroupDTO, GroupUpdateResponse, validateGroupUpdateResponse } from "../models/GroupDTO";
+import { GroupDTO } from "../models/GroupDTO";
 
 export interface StackQueryCriteria {
     limit?: number;

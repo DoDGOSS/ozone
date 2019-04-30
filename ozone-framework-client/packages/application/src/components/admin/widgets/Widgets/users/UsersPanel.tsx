@@ -1,14 +1,7 @@
 import * as React from "react";
-import ReactTable, { Column } from "react-table";
-import { Button, ButtonGroup, Intent, MenuItem, Tab, Tabs } from "@blueprintjs/core";
-import { ItemRenderer } from "@blueprintjs/select";
-import * as uuidv4 from "uuid/v4";
-import { Form, Formik, FormikActions, FormikProps } from "formik";
-import { array, boolean, number, object, string } from "yup";
+import { Button, ButtonGroup } from "@blueprintjs/core";
 
-import { CancelButton, CheckBox, FormError, HiddenField, SubmitButton, TextField } from "../../../../form";
 import { showConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
-import * as styles from "../../Widgets.scss";
 
 import { userApi } from "../../../../../api/clients/UserAPI";
 import { widgetApi } from "../../../../../api/clients/WidgetAPI";

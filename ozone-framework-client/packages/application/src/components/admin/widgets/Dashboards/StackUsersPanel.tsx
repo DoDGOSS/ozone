@@ -1,9 +1,8 @@
 import * as React from "react";
-import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
-import { Column } from "react-table";
+import { Button, ButtonGroup } from "@blueprintjs/core";
 
 import { GenericTable } from "../../../generic-table/GenericTable";
-import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
+import { DeleteButton } from "../../../generic-table/TableButtons";
 import { StackUsersEditDialog } from "./StackUsersEditDialog";
 
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
@@ -11,7 +10,7 @@ import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConf
 import { stackApi } from "../../../../api/clients/StackAPI";
 import { StackDTO, StackUpdateRequest } from "../../../../api/models/StackDTO";
 
-import { userApi, UserQueryCriteria } from "../../../../api/clients/UserAPI";
+import { userApi } from "../../../../api/clients/UserAPI";
 import { UserDTO } from "../../../../api/models/UserDTO";
 
 import * as styles from "../Widgets.scss";

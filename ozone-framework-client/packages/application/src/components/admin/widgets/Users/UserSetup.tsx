@@ -9,7 +9,7 @@ import { UserPreferencesPanel } from "./UserPreferencesPanel";
 
 import { userApi } from "../../../../api/clients/UserAPI";
 import { UserCreateRequest, UserDTO, UserUpdateRequest } from "../../../../api/models/UserDTO";
-import { CancelButton } from "../../../form/index";
+import { CancelButton } from "../../../form";
 
 import * as styles from "../Widgets.scss";
 

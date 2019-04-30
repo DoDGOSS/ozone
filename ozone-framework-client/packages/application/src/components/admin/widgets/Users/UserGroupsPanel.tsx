@@ -1,7 +1,7 @@
 import * as styles from "../Widgets.scss";
 
 import * as React from "react";
-import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
+import { Button, ButtonGroup } from "@blueprintjs/core";
 import { Column } from "react-table";
 
 import { GenericTable } from "../../../generic-table/GenericTable";

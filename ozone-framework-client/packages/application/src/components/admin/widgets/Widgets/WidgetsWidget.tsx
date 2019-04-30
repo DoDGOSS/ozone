@@ -2,7 +2,7 @@ import * as styles from "../Widgets.scss";
 
 import * as React from "react";
 
-import { Button, ButtonGroup, Divider, InputGroup, Intent, Tooltip } from "@blueprintjs/core";
+import { Button, ButtonGroup, Divider, Tooltip } from "@blueprintjs/core";
 
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
@@ -13,8 +13,6 @@ import { GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { WidgetSetup } from "./WidgetSetup";
-
-import { isNil } from "../../../../utility";
 
 interface WidgetsWidgetState {
     widgets: WidgetDTO[];

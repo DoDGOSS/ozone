@@ -5,7 +5,7 @@ import { Tab, Tabs } from "@blueprintjs/core";
 import { GroupPropertiesPanel } from "./GroupPropertiesPanel";
 import { GroupUsersPanel } from "./GroupUsersPanel";
 import { GroupWidgetsPanel } from "./GroupWidgetsPanel";
-import { CancelButton } from "../../../form/index";
+import { CancelButton } from "../../../form";
 import { GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
 import { groupApi } from "../../../../api/clients/GroupAPI";
 

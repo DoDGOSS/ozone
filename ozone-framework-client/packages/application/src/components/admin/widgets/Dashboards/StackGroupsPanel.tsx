@@ -1,16 +1,15 @@
 import * as React from "react";
-import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
+import { Button, ButtonGroup } from "@blueprintjs/core";
 import { Column } from "react-table";
 
 import { GenericTable } from "../../../generic-table/GenericTable";
-import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
+import { DeleteButton } from "../../../generic-table/TableButtons";
 
 import { StackGroupsEditDialog } from "./StackGroupsEditDialog";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
-import { GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
+import { GroupDTO } from "../../../../api/models/GroupDTO";
 import { stackApi } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";
-import { DashboardDTO } from "../../../../api/models/DashboardDTO";
 
 import * as styles from "../Widgets.scss";
 

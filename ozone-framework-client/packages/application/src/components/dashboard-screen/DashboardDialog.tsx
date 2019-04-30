@@ -2,12 +2,11 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { useBehavior } from "../../hooks";
 
-import { Button, ButtonGroup, Card, Classes, Dialog, Divider, Intent } from "@blueprintjs/core";
+import { Button, ButtonGroup, Card, Classes, Dialog, Divider } from "@blueprintjs/core";
 
 import { DeleteButton, EditButton, ShareButton } from "../generic-table/TableButtons";
 
 import { mainStore } from "../../stores/MainStore";
-import { errorStore } from "../../services/ErrorStore";
 
 import { dashboardApi } from "../../api/clients/DashboardAPI";
 import { stackApi } from "../../api/clients/StackAPI";
@@ -108,7 +107,8 @@ export const DashboardDialog: React.FC<{}> = () => {
                                 <ButtonGroup
                                     data-element-id={"dashboard-actions"}
                                     data-role={"dashboard-actions"}
-                                    data-name={dashboard.name}>
+                                    data-name={dashboard.name}
+                                >
                                     <EditButton itemName={dashboard.guid} onClick={() => showEditDialog(dashboard)} />
                                     <Divider />
                                     <ShareButton

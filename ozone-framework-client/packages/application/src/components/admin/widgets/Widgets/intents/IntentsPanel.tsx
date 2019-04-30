@@ -10,8 +10,6 @@ import { IntentDTO, IntentsDTO } from "../../../../../api/models/IntentDTO";
 import { WidgetDTO } from "../../../../../api/models/WidgetDTO";
 
 import { IntentDialog } from "./IntentDialog";
-import { mainStore } from "../../../../../stores/MainStore";
-import { classNames } from "../../../../../utility";
 
 import * as styles from "../../Widgets.scss";
 
@@ -332,7 +330,7 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
             },
             {
                 Header: () => <AlignedDiv message="Intent" alignment="left" />,
-                // perhaps add a onClick function that calls the expander, so you can click the row instead of jsut the arrow.
+                // perhaps add a onClick function that calls the expander, so you can click the row instead of just the arrow.
                 style: {
                     textAlign: "left"
                 },
