@@ -264,6 +264,8 @@ export namespace GroupAdminWidget {
         export const TAB_USERS = `div[data-tab-id='group_users']`;
 
         export const TAB_WIDGETS = `div[data-tab-id='group_widgets']`;
+
+        export const TAB_STACKS = `div[data-tab-id='group_stacks']`;
     }
 
     export namespace PropertiesGroup {
@@ -285,6 +287,12 @@ export namespace GroupAdminWidget {
         export const TAB = "div[data-element-id='group-admin-add-widget']";
 
         export const ADD_BUTTON = "button[data-element-id='group-edit-add-widget-dialog-add-button']";
+    }
+
+    export namespace StacksGroup {
+        export const TAB = "div[data-element-id='group-admin-add-stack']";
+
+        export const ADD_BUTTON = "button[data-element-id='group-edit-add-stack-dialog-add-button']";
     }
 }
 
