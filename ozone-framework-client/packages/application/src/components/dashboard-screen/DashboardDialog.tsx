@@ -4,6 +4,8 @@ import { useBehavior } from "../../hooks";
 
 import { Button, ButtonGroup, Card, Classes, Dialog, Divider, Intent } from "@blueprintjs/core";
 
+import { DeleteButton, EditButton, ShareButton } from "../generic-table/TableButtons";
+
 import { mainStore } from "../../stores/MainStore";
 import { errorStore } from "../../services/ErrorStore";
 
@@ -103,33 +105,19 @@ export const DashboardDialog: React.FC<{}> = () => {
                                 <h4>{dashboard.name}</h4>
                                 <p>{dashboard.description}</p>
                                 <img src={dashboard.iconImageUrl} />
-                                <ButtonGroup data-element-id={"dashboard-edit"}>
-                                    <Button
-                                        key={dashboard.guid}
-                                        value={dashboard.name}
-                                        icon="edit"
-                                        text="Edit"
-                                        data-element-id={"dashboard-edit-button-" + dashboard.name}
-                                        onClick={() => showEditDialog(dashboard)}
-                                    />
+                                <ButtonGroup
+                                    data-element-id={"dashboard-actions"}
+                                    data-role={"dashboard-actions"}
+                                    data-name={dashboard.name}>
+                                    <EditButton itemName={dashboard.guid} onClick={() => showEditDialog(dashboard)} />
                                     <Divider />
-                                    <Button
-                                        value={dashboard.name}
-                                        icon="share"
-                                        text="Share"
-                                        intent={Intent.SUCCESS}
+                                    <ShareButton
+                                        itemName={dashboard.guid}
                                         disabled={dashboard.publishedToStore}
-                                        data-element-id={"dashboard-share-button-" + dashboard.name}
                                         onClick={() => confirmShare(dashboard)}
                                     />
                                     <Divider />
-                                    <Button
-                                        data-element-id={"dashboard-delete-button-" + dashboard.name}
-                                        text="Delete"
-                                        intent={Intent.DANGER}
-                                        icon="trash"
-                                        onClick={() => confirmDelete(dashboard)}
-                                    />
+                                    <DeleteButton itemName={dashboard.guid} onClick={() => confirmDelete(dashboard)} />
                                 </ButtonGroup>
                             </Card>
                         ))}
