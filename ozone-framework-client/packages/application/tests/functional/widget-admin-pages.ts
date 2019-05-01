@@ -1,6 +1,7 @@
 import { NightwatchAPI } from "./nightwatch";
 
 import { PageObject } from "./PageObject";
+import { GlobalElements } from "./selectors";
 
 export class WidgetAdmin extends PageObject {
     static Selector = `div[data-element-id="widget-admin-widget-dialog"]`;
@@ -9,11 +10,9 @@ export class WidgetAdmin extends PageObject {
 
     static CreateButton = `${WidgetAdmin.Selector} button[data-element-id="widget-admin-widget-create-button"]`;
 
-    static editWidgetButton = (title: string) =>
-        `button[data-element-id="widget-admin-widget-edit-button"][data-widget-title="${title}"]`;
+    static editWidgetButton = (title: string) => `${GlobalElements.STD_EDIT_BUTTON}[data-widget-title="${title}"]`;
 
-    static deleteWidgetButton = (title: string) =>
-        `button[data-element-id="widget-admin-widget-delete-button"][data-widget-title="${title}"]`;
+    static deleteWidgetButton = (title: string) => `${GlobalElements.STD_DELETE_BUTTON}[data-widget-title="${title}"]`;
 
     constructor(browser: NightwatchAPI) {
         super(browser, WidgetAdmin.Selector, "Widget Admin Widget");
@@ -133,14 +132,14 @@ export class PropertiesPanel extends PageObject {
 
     assertSubmitButtonIsDisabled(): this {
         this.browser.getAttribute(PropertiesPanel.SubmitButton, "disabled", (result) => {
-            this.browser.assert.equal(result.value, "true", this.msg("Submit button is disabled"));
+            this.browser.assert.equal(result.value, "true", this.msg("Submit button should be disabled"));
         });
         return this;
     }
 
     assertSubmitButtonIsEnabled(): this {
         this.browser.getAttribute(PropertiesPanel.SubmitButton, "disabled", (result) => {
-            this.browser.assert.equal(result.value, null, this.msg("Submit button is disabled"));
+            this.browser.assert.equal(result.value, null, this.msg("Submit button should be enabled"));
         });
         return this;
     }

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Column } from "react-table";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { object, string } from "yup";
 import { Button } from "@blueprintjs/core";

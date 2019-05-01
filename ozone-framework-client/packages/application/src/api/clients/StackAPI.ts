@@ -24,6 +24,7 @@ export interface StackQueryCriteria {
     limit?: number;
     offset?: number;
     userId?: number;
+    groupId?: number;
 }
 
 export class StackAPI {
@@ -80,7 +81,7 @@ export class StackAPI {
         });
     }
 
-    deleteStackAsAdmin(id: number): Promise<Response<StackDeleteAdminResponse>> {
+    async deleteStackAsAdmin(id: number): Promise<Response<StackDeleteAdminResponse>> {
         const requestData = qs.stringify({
             _method: "DELETE",
             adminEnabled: true,
@@ -95,7 +96,7 @@ export class StackAPI {
         });
     }
 
-    deleteStackAsUser(id: number): Promise<Response<StackDeleteUserResponse>> {
+    async deleteStackAsUser(id: number): Promise<Response<StackDeleteUserResponse>> {
         const requestData: any = qs.stringify({
             _method: "DELETE",
             data: JSON.stringify(mapIds(id))
@@ -151,5 +152,6 @@ function getOptionParams(options?: StackQueryCriteria): any | undefined {
     if (options.limit) params.max = options.limit;
     if (options.offset) params.offset = options.offset;
     if (options.userId) params.user_id = options.userId;
+    if (options.groupId) params.user_id = options.groupId;
     return params;
 }
