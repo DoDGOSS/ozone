@@ -23,7 +23,7 @@ import { ExpandoPanel } from "./ExpandoPanel";
 import { TabbedPanel } from "./TabbedPanel";
 import { FitPanel } from "./FitPanel";
 import { ProfileReference } from "../../api/models/UserDTO";
-import { isNil, orNull } from "../../utility";
+import { orNull } from "../../utility";
 
 export interface DashboardLayout {
     tree: DashboardNode | null;

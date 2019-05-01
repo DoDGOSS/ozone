@@ -2,25 +2,24 @@ import * as styles from "../Widgets.scss";
 
 import * as React from "react";
 
-import { Button, ButtonGroup, Divider, InputGroup, Intent, Tooltip } from "@blueprintjs/core";
+import { Button, ButtonGroup, Divider, Tooltip } from "@blueprintjs/core";
 
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 
-import { GenericTable } from "../../table/GenericTable";
+import { GenericTable } from "../../../generic-table/GenericTable";
+import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { WidgetSetup } from "./WidgetSetup";
-
-import { isNil } from "../../../../utility";
 
 interface WidgetsWidgetState {
     widgets: WidgetDTO[];
     loading: boolean;
     showTable: boolean;
     showWidgetSetup: boolean;
-    updatingWidget: any | undefined;
+    updatingWidget: WidgetDTO | undefined;
     widgetTypes: WidgetTypeReference[];
 }
 
@@ -91,7 +90,8 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                         <WidgetSetup
                             widget={this.state.updatingWidget}
                             widgetTypes={this.state.widgetTypes}
-                            closeSetup={() => {
+                            onUpdate={() => this.handleUpdate()}
+                            onClose={() => {
                                 this.handleUpdate();
                                 this.showSubSection(WidgetWidgetSubSection.TABLE);
                             }}
@@ -114,13 +114,8 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                 Cell: (row: { original: WidgetDTO }) => (
                     <div>
                         <ButtonGroup>
-                            <Button
-                                data-element-id="widget-admin-widget-edit-button"
-                                data-widget-title={row.original.value.namespace}
-                                text="Edit"
-                                intent={Intent.PRIMARY}
-                                icon="edit"
-                                small={true}
+                            <EditButton
+                                itemName={row.original.value.namespace}
                                 onClick={() => {
                                     this.setState({ updatingWidget: row.original });
                                     this.showSubSection(WidgetWidgetSubSection.SETUP);
@@ -128,19 +123,11 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                             />
                             <Divider />
                             <Tooltip
-                                content={
-                                    this.widgetPotentiallyInUse(row.original)
-                                        ? "Can't delete widget with assigned users or groups"
-                                        : ""
-                                }
+                                disabled={!this.widgetPotentiallyInUse(row.original)}
+                                content={"Can't delete widget with assigned users or groups"}
                             >
-                                <Button
-                                    data-element-id="widget-admin-widget-delete-button"
-                                    data-widget-title={row.original.value.namespace}
-                                    text={"Delete"}
-                                    intent={Intent.DANGER}
-                                    icon="trash"
-                                    small={true}
+                                <DeleteButton
+                                    itemName={row.original.value.namespace}
                                     disabled={this.widgetPotentiallyInUse(row.original)}
                                     onClick={() => this.confirmAndDeleteWidget(row.original)}
                                 />
@@ -190,10 +177,13 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
     }
 
     private confirmAndDeleteWidget = (widgetToRemove: WidgetDTO): void => {
-        console.log(widgetToRemove);
         showConfirmationDialog({
             title: "Warning",
-            message: `This action will permanently <strong>${widgetToRemove.value.namespace}</strong>`,
+            message: [
+                "This action will permanently delete ",
+                { text: widgetToRemove.value.namespace, style: "bold" },
+                "."
+            ],
             onConfirm: () => this.deleteWidget(widgetToRemove)
         });
     };

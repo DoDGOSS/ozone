@@ -1,14 +1,13 @@
-import * as styles from "../Widgets.scss";
-
 import * as React from "react";
 import { useMemo } from "react";
 
-import { Button, ButtonGroup, Intent } from "@blueprintjs/core";
+import { ButtonGroup } from "@blueprintjs/core";
 
 import { Column, TableCellRenderer } from "react-table";
 
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
-import { GenericTable } from "../../table/GenericTable";
+import { GenericTable } from "../../../generic-table/GenericTable";
+import { DeleteButton } from "../../../generic-table/TableButtons";
 
 export interface WidgetCellActions {
     onDelete: (widget: WidgetDTO) => void;
@@ -54,18 +53,8 @@ export const WidgetTable: React.FC<WidgetTableProps> = (props) => {
 
 function WidgetCellRenderer(actions: WidgetCellActions): TableCellRenderer {
     return (row: { original: WidgetDTO }) => (
-        <div>
-            <ButtonGroup>
-                <Button
-                    data-element-id="delete-widget-button"
-                    data-widget-title={row.original.value.namespace}
-                    text="Delete"
-                    intent={Intent.DANGER}
-                    icon="trash"
-                    small={true}
-                    onClick={() => actions.onDelete(row.original)}
-                />
-            </ButtonGroup>
-        </div>
+        <ButtonGroup>
+            <DeleteButton onClick={() => actions.onDelete(row.original)} itemName={row.original.value.namespace} />
+        </ButtonGroup>
     );
 }
