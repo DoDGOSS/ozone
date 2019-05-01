@@ -19,7 +19,7 @@ export const UserProfileDialog: React.FC = () => {
 
     return (
         <Dialog
-            className={classNames(themeClass, styles.userProfileDialog)}
+            className={themeClass}
             title="Profile"
             icon="wrench"
             isOpen={isOpen}
@@ -27,21 +27,20 @@ export const UserProfileDialog: React.FC = () => {
         >
             <div className={Classes.DIALOG_BODY}>
                 <DataSection title="User Information">
-                    <DataItem label="Username:">{user ? user.username : ""}</DataItem>
-                    <DataItem label="Full Name:">{user ? user.userRealName : ""}</DataItem>
-                    <DataItem label="E-mail:">{user ? user.email : ""}</DataItem>
-                    <DataItem label="Groups:">
+                    <div>
+                      <DataItem label="Username:">{user ? user.username : ""}</DataItem>
+                    </div>
+                    <div>
+                      <DataItem label="Full Name:">{user ? user.userRealName : ""}</DataItem>
+                    </div>
+                    <div>
+                      <DataItem label="E-mail:">{user ? user.email : ""}</DataItem>
+                    </div>
+                    <div>
+                      <DataItem label="Groups:">
                         {user ? user.groups.map((group) => group.displayName).join(", ") : ""}
-                    </DataItem>
-                </DataSection>
-
-                <DataSection title="User Preferences">
-                    <DataItem label="Enable Animations:">
-                        <input id="animations" type="checkbox" />
-                    </DataItem>
-                    <DataItem label="Enable Hints:">
-                        <input id="hints" type="checkbox" />
-                    </DataItem>
+                      </DataItem>
+                    </div>
                 </DataSection>
             </div>
         </Dialog>
