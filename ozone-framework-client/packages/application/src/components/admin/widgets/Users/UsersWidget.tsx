@@ -1,13 +1,13 @@
 import * as React from "react";
-import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
+import { Button, ButtonGroup, Divider } from "@blueprintjs/core";
 
-import { GenericTable } from "../../table/GenericTable";
-import { DeleteButton, EditButton } from "../../table/TableButtons";
+import { GenericTable } from "../../../generic-table/GenericTable";
+import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
-import { UserEditTabs } from "./UserEditTabs";
+import { UserSetup } from "./UserSetup";
 
-import { UserCreateRequest, UserDTO, UserUpdateRequest } from "../../../../api/models/UserDTO";
+import { UserDTO } from "../../../../api/models/UserDTO";
 import { userApi } from "../../../../api/clients/UserAPI";
 
 import * as styles from "../Widgets.scss";
@@ -78,17 +78,8 @@ export class UsersWidget extends React.Component<{}, State> {
                     </>
                 )}
 
-                {/* {showCreate && (
-                    <UserCreateForm
-                        onSubmit={this.createUser}
-                        onCancel={() => {
-                            this.showSubSection(UserWidgetSubSection.TABLE);
-                        }}
-                    />
-                )} */}
-
                 {showSetup && (
-                    <UserEditTabs
+                    <UserSetup
                         user={this.state.updatingUser}
                         onUpdate={this.handleUpdate}
                         onBack={() => {
@@ -114,7 +105,7 @@ export class UsersWidget extends React.Component<{}, State> {
             {
                 Header: "Actions",
                 sortable: false,
-                Cell: (row: any) => {
+                Cell: (row: { original: UserDTO }) => {
                     const user: UserDTO = row.original;
                     return (
                         // TODO - Abstract this to only have to provide onclick function name with styled buttons
@@ -165,7 +156,7 @@ export class UsersWidget extends React.Component<{}, State> {
     private confirmDeleteUser = async (user: UserDTO) => {
         showConfirmationDialog({
             title: "Warning",
-            message: "This action will permanently delete " + user.username + ".",
+            message: ["This action will permanently delete ", { text: user.username, style: "bold" }, "."],
             onConfirm: () => this.deleteUser(user)
         });
 

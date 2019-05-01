@@ -51,7 +51,7 @@ module.exports = {
 
         browser
             .click(MainPage.LOGOUT_BUTTON)
-            .waitForElementVisible(MainPage.WARNING_DIALOG, 2000, "[Warning Dialog] is visible");
+            .waitForElementVisible(MainPage.WARNING_DIALOG, 5000, "[Warning Dialog] is visible");
 
         browser.closeWindow().end();
     }
