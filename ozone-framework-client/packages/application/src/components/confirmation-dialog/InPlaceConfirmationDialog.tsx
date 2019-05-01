@@ -1,13 +1,18 @@
 import * as React from "react";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-import "./custom-style.scss";
 
-import { Button, Classes, Dialog, Intent } from "@blueprintjs/core";
+import "./custom-style.scss";
+import { Button, Classes, Intent } from "@blueprintjs/core";
+
+interface StyledString {
+    text: string;
+    style: "" | "bold" | "italics" | "both";
+}
 
 interface InPlaceConfirmationDialogProps {
     title: string;
-    message: string;
+    message: string | ((StyledString | string)[]);
     onConfirm: () => void;
     onCancel?: () => void;
 }
@@ -20,6 +25,11 @@ export const showConfirmationDialog = (props: InPlaceConfirmationDialogProps) =>
         cancel = props.onCancel;
     }
 
+    let message: any = props.message;
+    if (typeof props.message !== "string") {
+        message = buildStyledMessage(props.message);
+    }
+
     confirmAlert({
         onKeypressEscape: () => cancel(),
         onClickOutside: () => cancel(),
@@ -27,7 +37,7 @@ export const showConfirmationDialog = (props: InPlaceConfirmationDialogProps) =>
             return (
                 <div className={Classes.DIALOG}>
                     <div className={Classes.DIALOG_HEADER}>{props.title}</div>
-                    <div className={Classes.DIALOG_BODY}>{props.message}</div>
+                    <div className={Classes.DIALOG_BODY}>{message}</div>
                     <div className={Classes.DIALOG_FOOTER}>
                         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
                             <Button
@@ -59,3 +69,34 @@ export const showConfirmationDialog = (props: InPlaceConfirmationDialogProps) =>
         }
     });
 };
+
+function buildStyledMessage(messageWithStyle: (StyledString | string)[]): any {
+    return (
+        <div>
+            {(() => {
+                const textPieces = [];
+                let i: number = 0;
+                for (const chunk of messageWithStyle) {
+                    const style: { [key: string]: string } = {};
+                    if (typeof chunk === "string") {
+                        textPieces.push(<span key={i}>{chunk}</span>);
+                    } else {
+                        if (chunk.style === "bold") {
+                            style["fontWeight"] = "bold";
+                        }
+                        if (chunk.style === "italics") {
+                            style["fontStyle"] = "italic";
+                        }
+                        textPieces.push(
+                            <span key={i} style={style}>
+                                {chunk.text}
+                            </span>
+                        );
+                    }
+                    i++;
+                }
+                return textPieces;
+            })()}
+        </div>
+    );
+}

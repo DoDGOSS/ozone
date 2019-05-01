@@ -1,10 +1,10 @@
 import * as React from "react";
-import { Button, ButtonGroup, Divider, InputGroup, Intent } from "@blueprintjs/core";
+import { Button, ButtonGroup, Divider } from "@blueprintjs/core";
 
 import * as styles from "../Widgets.scss";
 
-import { GenericTable } from "../../table/GenericTable";
-import { DeleteButton, EditButton } from "../../table/TableButtons";
+import { GenericTable } from "../../../generic-table/GenericTable";
+import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 import { UserDTO } from "../../../../api/models/UserDTO";
 import {
     PreferenceCreateRequest,
@@ -76,7 +76,7 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
             { Header: "value", accessor: "value" },
             {
                 Header: "Actions",
-                Cell: (row: any) => (
+                Cell: (row: { original: PreferenceDTO }) => (
                     <div>
                         <ButtonGroup>
                             <EditButton onClick={() => this.showSettingsDialog(row.original)} />
@@ -143,7 +143,13 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
     private confirmDeletePreference = async (preference: PreferenceDeleteRequest) => {
         showConfirmationDialog({
             title: "Warning",
-            message: "This action will permanently delete " + preference.path + ":" + preference.namespace + ".",
+            message: [
+                "This action will permanently delete ",
+                { text: preference.namespace, style: "bold" },
+                " : ",
+                { text: preference.path, style: "bold" },
+                "."
+            ],
             onConfirm: () => this.deletePreference(preference)
         });
 

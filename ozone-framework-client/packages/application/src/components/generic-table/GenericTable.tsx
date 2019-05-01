@@ -1,15 +1,10 @@
-import * as React from "react";
+import React from "react";
 import ReactTable, { Column } from "react-table";
-import { Button, InputGroup, MenuItem, Tab, Tabs } from "@blueprintjs/core";
-import { ItemRenderer } from "@blueprintjs/select";
-import * as uuidv4 from "uuid/v4";
-import { Form, Formik, FormikActions, FormikProps } from "formik";
-import { array, boolean, number, object, string } from "yup";
+import { InputGroup } from "@blueprintjs/core";
 
-import { mainStore } from "../../../stores/MainStore";
-import * as styles from "../widgets/Widgets.scss";
+import * as styles from "./GenericTable.scss";
 
-import { classNames, isFunction } from "../../../utility";
+import { classNames, isFunction } from "../../utility";
 
 interface Props<T> {
     getColumns: () => Column[];
@@ -33,6 +28,7 @@ interface State<T> {
 export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
     filterable: boolean;
     searchCaseSensitive: boolean;
+    tableWidth: number = 0;
 
     constructor(props: Props<T>) {
         super(props);
@@ -46,20 +42,28 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
 
     render() {
         return (
-            <div className={styles.table}>
+            <div ref={(tableDiv) => this.setTableWidth(tableDiv)}>
                 {this.filterable && this.getSearchBox()}
-                <ReactTable
-                    data={this.getItems()}
-                    getTheadThProps={this.removeHideableHeaders}
-                    getTrProps={this.rowsAreClickable() ? this.clickableRowProps : () => ""}
-                    className={classNames("striped", this.props.classNames)}
-                    columns={this.getTableLayout()}
-                    pageSizeOptions={this.getReasonablePageSizeOptions()}
-                    defaultPageSize={20}
-                    {...this.buildReactTableProps()}
-                />
+                <div className={styles.table}>
+                    <ReactTable
+                        data={this.getItems()}
+                        getTheadThProps={this.removeHideableHeaders}
+                        getTrProps={this.rowsAreClickable() ? this.rowProps : () => ""}
+                        columns={this.getTableLayout()}
+                        pageSizeOptions={this.getReasonablePageSizeOptions()}
+                        {...this.buildReactTableProps()}
+                    />
+                </div>
             </div>
         );
+    }
+
+    // Unfinished attempt to allow you to specify column width by percentage, rather than pixel width.
+    // No idea why they didn't build in percentage widths in the first place.
+    private setTableWidth(tableDiv: any): void {
+        if (tableDiv && tableDiv.clientWidth !== this.tableWidth) {
+            this.tableWidth = tableDiv.clientWidth;
+        }
     }
 
     private buildReactTableProps() {
@@ -68,12 +72,16 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         props["minRows"] = 5;
         props["defaultPageSize"] = 1;
         props["showPagination"] = true;
+        props["className"] = classNames("-striped -highlight");
 
         if (this.props.reactTableProps) {
             for (const p in this.props.reactTableProps) {
                 if (this.props.reactTableProps.hasOwnProperty(p)) {
                     props[p] = this.props.reactTableProps[p];
                 }
+            }
+            if (this.props.reactTableProps.className) {
+                props["className"] = classNames("-striped -highlight", this.props.reactTableProps.className);
             }
         }
         return props;
@@ -96,6 +104,36 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         return isFunction(this.props.onSelect) || isFunction(this.props.onSelectionChange);
     }
 
+    private getTableLayout() {
+        if (this.props.title) {
+            return [
+                {
+                    Header: this.getTableMainHeader(this.props.title),
+                    columns: this.convertColumnsWithPercentageWidths(this.props.getColumns())
+                }
+            ];
+        } else {
+            return this.props.getColumns();
+        }
+    }
+
+    private convertColumnsWithPercentageWidths(columns: Column[]): Column[] {
+        return columns;
+        // if (this.tableWidth === 0) {
+        //     return columns;
+        // }
+        //
+        // for (const col of columns) {
+        //     if (col.width && (typeof col.width === 'string') && (col.width.includes('%'))) {
+        //         const percentageWidth: number = Number(mystring.replace('%','');)
+        //         if (percentageWidth) {
+        //             // table width is the full div, so account for borders....
+        //             const convertedWidth: number = Math.floor(percentageWidth/100 * (this.tableWidth*0.9));
+        //         }
+        //     }
+        // }
+    }
+
     private getItems(): any[] {
         if (this.props.customFilter && isFunction(this.props.customFilter)) {
             return this.props.customFilter(this.props.items, this.state.query, this.queryMatches);
@@ -111,19 +149,11 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         return items.filter((item) => this.someColumnOfItemContainsQuery(item, query));
     }
 
-    private getTableLayout() {
-        if (this.props.title) {
-            return [
-                {
-                    Header: this.getTableMainHeader(this.props.title),
-                    columns: this.props.getColumns()
-                }
-            ];
-        } else {
-            return this.props.getColumns();
-        }
-    }
-
+    /** TODO - could improve this - this may be slow if there are many items.
+     * Minimally make it wait for user to hit enter before filtering.
+     * Pagination handling? Always return to the front seems like the simplest (fro the user's perspective) option.
+     * Could like, record the current page's objects, and if any of them survive the filter, navigate to the page with the first of those objects.
+     */
     private someColumnOfItemContainsQuery(item: T, query: string): boolean {
         return this.checkColumnsRecursively(item, query, this.props.getColumns());
     }
@@ -152,11 +182,8 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
             if (typeof column.accessor === "function") {
                 valueInColumnForItem = column.accessor(item);
                 // some tables still use string accessors
-            } else if (typeof column.accessor === "string" && item.hasOwnProperty(column.accessor)) {
-                // hack to make ts compiler stop complaining.
-                // I'd be nice to not use string accessors anyway, but if people do, this should work.
-                const itemField: any = (item as { [key: string]: any })[column.accessor.toString()];
-                valueInColumnForItem = itemField;
+            } else if (typeof column.accessor === "string") {
+                valueInColumnForItem = this.getAttributeUsingStringAccessor(item, column.accessor.toString());
             }
             let safeValueInColumn = "";
             if (valueInColumnForItem !== undefined && valueInColumnForItem !== null) {
@@ -178,6 +205,29 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         }
     };
 
+    private getAttributeUsingStringAccessor(item: T, accessor: string): any {
+        // please use normal function accessors, instead of string accessors, especially if you're getting some sub-sub-attribute of the row.
+        //
+        // This has been tested to work with one level (i.e., accessor='.name'). It should work with arbitrary levels of nesting, but hasn't been tested to.
+        // Just don't use it. The react-table parser knows how to display columns using something like accessor='children[0].length', but this doesn't, and shouldn't.
+        // You could execute the strings as javascript instead of parsing as below, but that's just asking for code-injection trouble.
+        const accessorPieces = accessor.split(".");
+        if (accessorPieces.length === 1) {
+            // hack to make ts compiler stop complaining.
+            return (item as { [key: string]: any })[accessor.toString()];
+        } else {
+            let piece: { [key: string]: any } = item as { [key: string]: any };
+            for (const attr of accessorPieces) {
+                if (piece.hasOwnProperty(attr)) {
+                    piece = piece[attr];
+                } else {
+                    return undefined;
+                }
+            }
+            return piece;
+        }
+    }
+
     private getTableMainHeader(title: string): any {
         return <div>{title && <AlignedDiv message={title} alignment="left" />}</div>;
     }
@@ -191,7 +241,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
     }
 
     // derived from https://stackoverflow.com/questions/44845372
-    private clickableRowProps = (state: State<T>, rowInfo: any) => {
+    private rowProps = (state: State<T>, rowInfo: any) => {
         let propsForRow = {};
         if (rowInfo && rowInfo.row) {
             propsForRow = {
@@ -200,13 +250,17 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                 }
             };
 
+            // Should be able to do a simple compare, since the selected objects were just taken directly from the items list.
+            // So they should be the exact same items.
+            // If we change things to have some items start pre-selected, then we will have to add a comparator function.
+            // Though that'd only need to be used when this component initializes.
             if (this.state.selections.find((select) => select === rowInfo.original) !== undefined) {
                 propsForRow = {
                     onClick: (e: any) => {
                         this.selectItem(rowInfo.original);
                     },
                     style: {
-                        background: "#0b0", // "#00afec",
+                        background: "#00afec",
                         color: "white"
                     }
                 };

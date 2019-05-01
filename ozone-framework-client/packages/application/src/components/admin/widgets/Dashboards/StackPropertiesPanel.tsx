@@ -4,27 +4,30 @@ import * as React from "react";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { object, string } from "yup";
 
-import { CheckBox, FormError, TextField } from "../../../form";
+import { FormError, TextField } from "../../../form";
 import { Button } from "@blueprintjs/core";
 import { StackUpdateRequest } from "../../../../api/models/StackDTO";
 
-interface DashboardEditProps {
-    onUpdate: (data: StackUpdateRequest) => Promise<boolean>;
+interface StackEditProps {
+    saveStack: (data: StackUpdateRequest) => Promise<boolean>;
     stack: any;
 }
 
-export const DashboardPropertiesPanel: React.FC<DashboardEditProps> = ({ onUpdate, stack }) => (
+export const StackPropertiesPanel: React.FC<StackEditProps> = ({ saveStack, stack }) => (
     <Formik
         initialValues={stack}
-        validationSchema={EditDashboardSchema}
+        validationSchema={EditStackSchema}
         onSubmit={async (values: StackUpdateRequest, actions: FormikActions<StackUpdateRequest>) => {
-            const isSuccess = await onUpdate(values);
+            const isSuccess = await saveStack(values);
             actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
             actions.setSubmitting(false);
 
             if (isSuccess) {
                 actions.resetForm(values);
             }
+            // TODO broken here, see how other user-admin forms work
+            // Also fix inputs to be "" if null, and double check that the description field is supposed to be required, and that the test data should
+            // have nothing in that field. Seems like one of those things shouldn't be true.
         }}
     >
         {(formik: FormikProps<StackUpdateRequest>) => (
@@ -51,7 +54,7 @@ export const DashboardPropertiesPanel: React.FC<DashboardEditProps> = ({ onUpdat
     </Formik>
 );
 
-const EditDashboardSchema = object().shape({
+const EditStackSchema = object().shape({
     name: string().required("Required"),
     description: string().required("Required")
 });
