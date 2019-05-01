@@ -13,7 +13,6 @@ export class UserMenu extends React.Component {
         return (
             <Menu data-element-id="user-menu" className={classNames(styles.userMenu, Classes.ELEVATION_1)}>
                 <Menu.Item className={styles.menuItem} text="Profile" onClick={mainStore.showUserProfileDialog} />
-                <Menu.Item className={styles.menuItem} text="Themes" />
                 <Menu.Item
                     className={styles.menuItem}
                     data-element-id="administration"

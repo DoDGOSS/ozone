@@ -68,7 +68,6 @@ export const WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
                         data-element-id="widget-search-field"
                     />
                     <SortButton order={sortOrder} onClick={setSortOrder} />
-                    <Button minimal icon="pin" />
                     <Button minimal icon="cross" onClick={mainStore.closeWidgetToolbar} />
                 </div>
                 <hr />
