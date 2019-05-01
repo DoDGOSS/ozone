@@ -103,7 +103,7 @@ module.exports = {
             .waitForElementVisible(DashboardDialog.DASHBOARD_DIALOG, 2000, "[Dashboard Dialog] is visible.");
 
         browser
-            .click(DashboardDialog.shareDashboardByName(DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME))
+            .click(DashboardDialog.getShareButtonForDashboard(DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME))
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,

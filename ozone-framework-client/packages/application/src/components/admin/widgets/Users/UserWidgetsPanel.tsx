@@ -1,9 +1,6 @@
 import * as React from "react";
 
-import { Button, InputGroup } from "@blueprintjs/core";
-import { Column } from "react-table";
-
-import * as styles from "../Widgets.scss";
+import { Button } from "@blueprintjs/core";
 
 import { widgetApi, WidgetQueryCriteria } from "../../../../api/clients/WidgetAPI";
 import { UserDTO } from "../../../../api/models/UserDTO";
@@ -12,6 +9,8 @@ import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { UserWidgetsEditDialog } from "./UserWidgetsEditDialog";
 import { WidgetTable } from "../Widgets/WidgetTable";
+
+import * as styles from "../Widgets.scss";
 
 interface UserEditWidgetsProps {
     onUpdate: (update?: any) => void;
@@ -62,10 +61,8 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
 
                 <UserWidgetsEditDialog
                     show={this.state.showAdd}
-                    title="Add Widget(s) to User"
-                    confirmHandler={this.handleAddWidgetResponse}
-                    cancelHandler={this.handleAddWidgetCancel}
-                    columns={this.getDialogColumns()}
+                    onSubmit={this.addWidgets}
+                    onClose={this.closeWidgetDialog}
                 />
             </div>
         );
@@ -95,7 +92,7 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
         });
     };
 
-    private handleAddWidgetResponse = async (widgets: Array<WidgetDTO>) => {
+    private addWidgets = async (widgets: Array<WidgetDTO>) => {
         const responses = [];
         for (const widget of widgets) {
             if (this.state.widgets.findIndex((w) => w.id === widget.id) >= 0) {
@@ -117,7 +114,7 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
         return responses;
     };
 
-    private handleAddWidgetCancel = () => {
+    private closeWidgetDialog = () => {
         this.setState({
             showAdd: false
         });
@@ -126,12 +123,13 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
     private confirmDeleteWidget = async (widget: WidgetDTO) => {
         showConfirmationDialog({
             title: "Warning",
-            message:
-                "This action will permanently remove widget " +
-                widget.value.namespace +
-                " from user " +
-                this.props.user.userRealName +
-                ".",
+            message: [
+                "This action will remove widget ",
+                { text: widget.value.namespace, style: "bold" },
+                " from user ",
+                { text: this.props.user.userRealName, style: "bold" },
+                "."
+            ],
             onConfirm: () => this.removeWidget(widget)
         });
         return true;
@@ -148,18 +146,4 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
 
         return true;
     };
-
-    private getDialogColumns(): Column[] {
-        return [
-            {
-                Header: "Widgets",
-                columns: [
-                    { Header: "Title", accessor: "value.namespace" },
-                    { Header: "URL", accessor: "value.url" },
-                    { Header: "Users", accessor: "value.totalUsers" },
-                    { Header: "Groups", accessor: "value.totalGroups" }
-                ]
-            }
-        ];
-    }
 }

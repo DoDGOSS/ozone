@@ -1,9 +1,5 @@
 import { expectValidationSuccess } from "./assertions";
-import {
-    validateStack,
-    validateStackDeleteUserResponse,
-    validateStackGetResponse
-} from "../../src/api/models/StackDTO";
+import { validateStackDeleteUserResponse, validateStackGetResponse } from "../../src/api/models/StackDTO";
 import { STACK_DELETE_USER_RESPONSE } from "./delete-stack.data";
 import { GET_STACKS_RESPONSE } from "./get-stacks.data";
 import { GET_STACK_BY_ID_RESPONSE } from "./get-stack-by-id.data";

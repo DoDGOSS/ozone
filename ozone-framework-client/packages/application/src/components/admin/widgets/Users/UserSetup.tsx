@@ -9,23 +9,23 @@ import { UserPreferencesPanel } from "./UserPreferencesPanel";
 
 import { userApi } from "../../../../api/clients/UserAPI";
 import { UserCreateRequest, UserDTO, UserUpdateRequest } from "../../../../api/models/UserDTO";
-import { CancelButton } from "../../../form/index";
+import { CancelButton } from "../../../form";
 
 import * as styles from "../Widgets.scss";
 
-export interface UserEditTabsProps {
+export interface UserSetupProps {
     onUpdate: (update?: any) => void;
     onBack: () => void;
     user: UserDTO | undefined;
 }
 
-export interface UserEditTabsState {
+export interface UserSetupState {
     user: UserDTO | undefined;
 }
 
 // aka user-setup
-export class UserEditTabs extends React.Component<UserEditTabsProps, UserEditTabsState> {
-    constructor(props: UserEditTabsProps) {
+export class UserSetup extends React.Component<UserSetupProps, UserSetupState> {
+    constructor(props: UserSetupProps) {
         super(props);
         this.state = {
             user: this.props.user
@@ -93,6 +93,7 @@ export class UserEditTabs extends React.Component<UserEditTabsProps, UserEditTab
             this.setState({
                 user: response.data.data[0]
             });
+            this.props.onUpdate();
             return true;
         }
         return false;

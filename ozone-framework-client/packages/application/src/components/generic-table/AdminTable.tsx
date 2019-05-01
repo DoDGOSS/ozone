@@ -2,8 +2,8 @@ import * as React from "react";
 
 import ReactTable, { Column } from "react-table";
 import "react-table/react-table.css";
-import { mainStore } from "../../../stores/MainStore";
-import { classNames } from "../../../utility";
+import { mainStore } from "../../stores/MainStore";
+import { classNames } from "../../utility";
 
 export type AdminTableProps = {
     data: any[];

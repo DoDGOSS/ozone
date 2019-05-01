@@ -65,17 +65,23 @@ export namespace DashboardDialog {
 
     export const CREATE_DASHBOARD_DIALOG = "a[data-element-id='CreateDashboardDialog']";
 
-    export const EDIT_DASHBOARD_ID = "button[data-element-id='dashboard-edit-button-test1']";
+    function getActionButtonsForDashboard(dashboardname: string): string {
+        return `div[data-role="dashboard-actions"][data-name=${dashboardname}]`;
+    }
 
-    export const DELETE_DASHBOARD_ID = "button[data-element-id='dashboard-delete-button-test2']";
+    export function getEditButtonForDashboard(dashboardname: string): string {
+        return `${getActionButtonsForDashboard(dashboardname)} ${GlobalElements.STD_EDIT_BUTTON}`;
+    }
 
-    export const SHARE_DASHBOARD_ID = "button[data-element-id='dashboard-share-button-test2']";
+    export function getShareButtonForDashboard(dashboardname: string): string {
+        return `${getActionButtonsForDashboard(dashboardname)} ${GlobalElements.STD_SHARE_BUTTON}`;
+    }
+
+    export function getDeleteButtonForDashboard(dashboardname: string): string {
+        return `${getActionButtonsForDashboard(dashboardname)} ${GlobalElements.STD_DELETE_BUTTON}`;
+    }
 
     export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
-
-    export function shareDashboardByName(dashboardname: string): string {
-        return `button[data-element-id="dashboard-share-button-${dashboardname}"]`;
-    }
 
     export namespace CreateDashboard {
         export const NAME_FIELD = "input[data-role='field'][name='name']";
@@ -152,12 +158,8 @@ export namespace AdminWidget {
     }
 
     export function userTableEditButton(username: string): string {
-        return `${userTableActions(username)} button[data-element-id="user-admin-widget-edit-button"]`;
+        return `${userTableActions(username)} ${GlobalElements.STD_EDIT_BUTTON}`;
     }
-
-    export const CONFIRM_DELETE_ALERT = "div.delete-user-alert";
-
-    export const CONFIRM_DELETE_BUTTON = "div.delete-user-alert > div.bp3-alert-footer > button.bp3-intent-danger";
 
     export const SEARCH_FIELD = "input[data-element-id='search-field']";
 
@@ -177,11 +179,11 @@ export namespace DashboardAdminWidget {
     }
 
     export function dashboardTableEditButton(dashboardname: string): string {
-        return `${dashboardTableActions(dashboardname)} button[data-element-id="dashboard-admin-widget-edit-button"]`;
+        return `${dashboardTableActions(dashboardname)} ${GlobalElements.STD_EDIT_BUTTON}`;
     }
 
     export function dashboardTableDeleteButton(dashboardname: string): string {
-        return `${dashboardTableActions(dashboardname)} button[data-element-id="dashboard-admin-widget-delete-button"]`;
+        return `${dashboardTableActions(dashboardname)} ${GlobalElements.STD_DELETE_BUTTON}`;
     }
 
     // GROUPS TAB
@@ -198,9 +200,7 @@ export namespace DashboardAdminWidget {
     }
 
     export function dashboardGroupTableDeleteButton(groupname: string): string {
-        return `${dashboardGroupTableActions(
-            groupname
-        )} button[data-element-id="dashboard-admin-widget-delete-group-button"]`;
+        return `${dashboardGroupTableActions(groupname)} ${GlobalElements.STD_DELETE_BUTTON}`;
     }
 }
 
@@ -245,17 +245,17 @@ export namespace GroupAdminWidget {
         export const BACK_BUTTON = `${Main.DIALOG} span[data-element-id='group-admin-widget-edit-back-button'] button`;
     }
 
-    export namespace CreateGroup {
-        export const FORM = "div[data-element-id='group-admin-widget-create-form']";
+    export namespace GroupProperties {
+        export const FORM = "div[data-element-id='group-admin-widget-edit-form']";
 
-        export const NAME_INPUT = `${CreateGroup.FORM} input[name='name']`;
+        export const NAME_INPUT = `${GroupProperties.FORM} input[name='name']`;
 
-        export const DISPLAY_NAME_INPUT = `${CreateGroup.FORM} input[name='displayName']`;
+        export const DISPLAY_NAME_INPUT = `${GroupProperties.FORM} input[name='displayName']`;
 
-        export const DESCRIPTION_INPUT = `${CreateGroup.FORM} input[name='description']`;
+        export const DESCRIPTION_INPUT = `${GroupProperties.FORM} input[name='description']`;
 
         export const SUBMIT_BUTTON =
-            "div[data-element-id='group-admin-widget-create-submit-button'] > button[data-element-id='form-submit-button']";
+            "div[data-element-id='group-admin-widget-edit-submit-button'] > button[data-element-id='form-submit-button']";
     }
 
     export namespace EditGroup {
@@ -347,5 +347,11 @@ export namespace GlobalElements {
 
     export const GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON = "button[data-element-id='table-selector-confirm']";
 
-    export const GENERIC_TABLE_ADD_SEARCH_FIELD = "input[data-element-id='table-selector-search-field']";
+    export const GENERIC_TABLE_ADD_SEARCH_FIELD = `${GENERIC_TABLE_SELECTOR_DIALOG} input[data-element-id='search-field']`;
+
+    export const STD_EDIT_BUTTON = "a[data-element-id='edit-button']";
+
+    export const STD_DELETE_BUTTON = "a[data-element-id='delete-button']";
+
+    export const STD_SHARE_BUTTON = "a[data-element-id='share-button']";
 }

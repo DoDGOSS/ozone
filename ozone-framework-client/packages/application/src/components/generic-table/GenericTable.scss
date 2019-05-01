@@ -1,4 +1,5 @@
-@import "../../../common";
+@import "../../common";
+@import url('~react-table/react-table.css');
 
 :local .formBody {
   // background-color: #fff;
@@ -80,4 +81,10 @@ select{
 
 html {
 -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.ReactTable.-highlight .rt-tbody .rt-tr:not(.-padRow):hover {
+    filter: brightness(115%);
+    // background-color: rgba(247, 247, 247, 0.05) !important;
+    // color: rgba(50, 0, 0, 0.85) !important;
 }
