@@ -1,11 +1,11 @@
 import * as styles from "../Widgets.scss";
 
 import * as React from "react";
-import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
+import { Button, ButtonGroup } from "@blueprintjs/core";
 import { Column } from "react-table";
 
-import { DeleteButton } from "../../table/TableButtons";
-import { GenericTable } from "../../table/GenericTable";
+import { GenericTable } from "../../../generic-table/GenericTable";
+import { DeleteButton } from "../../../generic-table/TableButtons";
 import { UserGroupsEditDialog } from "./UserGroupsEditDialog";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
@@ -63,20 +63,8 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
 
                 <UserGroupsEditDialog
                     show={this.state.showAdd}
-                    title="Add Group(s) to User"
-                    confirmHandler={this.handleAddGroupResponse}
-                    cancelHandler={this.handleAddGroupCancel}
-                    columns={[
-                        {
-                            Header: "Groups",
-                            columns: [
-                                { Header: "Group Name", accessor: "name" },
-                                { Header: "Users", accessor: "totalUsers" },
-                                { Header: "Widgets", accessor: "totalWidgets" },
-                                { Header: "Dashboards", accessor: "totalDashboards" }
-                            ]
-                        }
-                    ]}
+                    onSubmit={this.addGroups}
+                    onClose={this.closeGroupsDialog}
                 />
             </div>
         );
@@ -90,7 +78,7 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
             { Header: "Dashboards", accessor: "totalDashboards" },
             {
                 Header: "Actions",
-                Cell: (row: any) => (
+                Cell: (row: { original: GroupDTO }) => (
                     <div>
                         <ButtonGroup>
                             <DeleteButton onClick={() => this.confirmDeleteGroup(row.original)} />
@@ -124,7 +112,7 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
         });
     };
 
-    private handleAddGroupResponse = async (groups: Array<GroupDTO>) => {
+    private addGroups = async (groups: Array<GroupDTO>) => {
         // const responses = await Promise.all(groups.map( async (group: GroupDTO) => {
         const responses = [];
         for (const group of groups) {
@@ -155,7 +143,7 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
         return responses;
     };
 
-    private handleAddGroupCancel = () => {
+    private closeGroupsDialog = () => {
         this.setState({
             showAdd: false
         });
@@ -164,12 +152,13 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
     private confirmDeleteGroup = async (group: GroupDTO) => {
         showConfirmationDialog({
             title: "Warning",
-            message:
-                "This action will permanently remove " +
-                this.props.user.userRealName +
-                " from group " +
-                group.name +
-                ".",
+            message: [
+                "This action will remove ",
+                { text: this.props.user.userRealName, style: "bold" },
+                " from group ",
+                { text: group.name, style: "bold" },
+                "."
+            ],
             onConfirm: () => this.removeGroup(group)
         });
         return true;

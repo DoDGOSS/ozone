@@ -52,7 +52,7 @@ module.exports = {
             .click(MainPage.DASHBOARD_BUTTON)
             .waitForElementVisible(DashboardDialog.DASHBOARD_DIALOG, 2000, "[Dashboard Dialog] is visible");
 
-        browser.click(DashboardDialog.EDIT_DASHBOARD_ID);
+        browser.click(DashboardDialog.getEditButtonForDashboard(DashboardDialog.CreateDashboard.CREATE_DASHBOARD_NAME));
 
         browser.pause(2000);
 
@@ -87,7 +87,7 @@ module.exports = {
             .waitForElementVisible(DashboardDialog.DASHBOARD_DIALOG, 2000, "[Dashboard Dialog] is visible");
 
         browser
-            .click(DashboardDialog.SHARE_DASHBOARD_ID)
+            .click(DashboardDialog.getShareButtonForDashboard(DashboardDialog.CreateDashboard.EDIT_DASHBOARD_NAME))
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,
@@ -116,7 +116,7 @@ module.exports = {
             .waitForElementVisible(DashboardDialog.DASHBOARD_DIALOG, 2000, "[Dashboard Dialog] is visible");
 
         browser
-            .click(DashboardDialog.DELETE_DASHBOARD_ID)
+            .click(DashboardDialog.getDeleteButtonForDashboard(DashboardDialog.CreateDashboard.EDIT_DASHBOARD_NAME))
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,

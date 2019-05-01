@@ -42,7 +42,7 @@ export const USER_AGREEMENT_DIALOG = {
     content:
         "<p>STANDARD MANDATORY NOTICE AND CONSENT PROVISION</b></p>" +
         "<p>By signing this document, you acknowledge and consent that when you access Department of Defense (DoD) information systems: </p>" +
-        "<p>You are accessing a U.S. Government (USG) infonnation system (IS) (which includes " +
+        "<p>You are accessing a U.S. Government (USG) information system (IS) (which includes " +
         "any device attached to this information system) that is provided for U.S. Government authorized use only. You consent to the following conditions:" +
         "<ul><li>The U.S. Government routinely intercepts and monitors communications on this " +
         "information system for purposes including, but not limited to, penetration testing, " +
@@ -51,7 +51,7 @@ export const USER_AGREEMENT_DIALOG = {
         "investigations.</li>" +
         "<li> At any time, the U.S. Government may inspect and seize data stored on this " +
         "information system. </li>" +
-        "<li>Communications using, or data stored on, this infonnation system are not private," +
+        "<li>Communications using, or data stored on, this information system are not private," +
         "are subject to routine monitoring, interception, and search, and may be disclosed " +
         "or used for any U.S. Government-authorized purpose. </li>" +
         "<li>This information system includes security measures (e.g., authentication and " +
