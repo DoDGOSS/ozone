@@ -319,7 +319,6 @@ class StackService {
                     returnValue = updatedGroups.collect{ serviceModelService.createServiceModel(stack) }
                 }
             } else if ('users' == params.tab) {
-
                 def stackDefaultGroup = stack.defaultGroup
 
                 def updatedUsers = []
@@ -340,7 +339,7 @@ class StackService {
                     }
                 }
                 if (!updatedUsers.isEmpty()) {
-                    returnValue = updatedUsers.collect{ serviceModelService.createServiceModel(it) }
+                    returnValue = updatedUsers.collect{ serviceModelService.createServiceModel(stack) }
                 }
             }
             else if ('dashboards' == params.tab) {
