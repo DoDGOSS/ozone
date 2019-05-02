@@ -18,28 +18,22 @@ export const UserProfileDialog: React.FC = () => {
     const onClose = mainStore.hideUserProfileDialog;
 
     return (
-        <Dialog
-            className={themeClass}
-            title="Profile"
-            icon="wrench"
-            isOpen={isOpen}
-            onClose={onClose}
-        >
+        <Dialog className={themeClass} title="Profile" icon="wrench" isOpen={isOpen} onClose={onClose}>
             <div className={Classes.DIALOG_BODY}>
                 <DataSection title="User Information">
                     <div>
-                      <DataItem label="Username:">{user ? user.username : ""}</DataItem>
+                        <DataItem label="Username:">{user ? user.username : ""}</DataItem>
                     </div>
                     <div>
-                      <DataItem label="Full Name:">{user ? user.userRealName : ""}</DataItem>
+                        <DataItem label="Full Name:">{user ? user.userRealName : ""}</DataItem>
                     </div>
                     <div>
-                      <DataItem label="E-mail:">{user ? user.email : ""}</DataItem>
+                        <DataItem label="E-mail:">{user ? user.email : ""}</DataItem>
                     </div>
                     <div>
-                      <DataItem label="Groups:">
-                        {user ? user.groups.map((group) => group.displayName).join(", ") : ""}
-                      </DataItem>
+                        <DataItem label="Groups:">
+                            {user ? user.groups.map((group) => group.displayName).join(", ") : ""}
+                        </DataItem>
                     </div>
                 </DataSection>
             </div>

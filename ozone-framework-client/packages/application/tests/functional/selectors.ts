@@ -170,9 +170,14 @@ export namespace DashboardAdminWidget {
     // DASHBOARD INITIAL PAGE & STATIC VALUES
     export const DIALOG = "div[data-element-id='dashboard-admin-widget-dialog']";
     export const GROUPS_TAB = "div[data-tab-id='dashboard_groups']";
+    export const USERS_TAB = "div[data-tab-id='dashboard_users']";
     export const DASHBOARD_ADMIN_TEST_DASHBOARD_NAME = "DAW_Test";
     export const DASHBOARD_DIALOG_CLOSE = "button[aria-label='Close'";
     export const CLOSE_DAW_BUTTON = "button[title='Close Window']";
+    export const ROW_BOX = "div[data-element-id='table-selector-dialog'] div[class='rt-tbody']";
+    export const FIRST_ROW = `${ROW_BOX} > div:nth-child(1) div`;
+    export const SECOND_ROW = `${ROW_BOX} > div:nth-child(2) div`;
+    export const BACK_BUTTON = "span[data-element-id='dashboard-admin-widget-edit-back-button']";
 
     export function dashboardTableActions(dashboardname: string): string {
         return `div[data-role="dashboard-admin-widget-actions"][data-dashboardname="${dashboardname}"]`;
@@ -188,12 +193,8 @@ export namespace DashboardAdminWidget {
 
     // GROUPS TAB
     export const ADD_GROUP_BUTTON = "button[data-element-id='group-edit-add-group-dialog-add-button']";
-    export const ROW_BOX = "div[data-element-id='table-selector-dialog'] div[class='rt-tbody']";
     export const FIRST_GROUP_NAME = "OWF Administrators";
     export const SECOND_GROUP_NAME = "OWF Users";
-    export const FIRST_GROUP = `${ROW_BOX} > div:nth-child(1) div`;
-    export const SECOND_GROUP = `${ROW_BOX} > div:nth-child(2) div`;
-    export const BACK_BUTTON = "span[data-element-id='dashboard-admin-widget-edit-back-button']";
 
     export function dashboardGroupTableActions(groupname: string): string {
         return `div[data-role="dashboard-admin-widget-group-actions"][data-groupname="${groupname}"]`;
@@ -201,6 +202,21 @@ export namespace DashboardAdminWidget {
 
     export function dashboardGroupTableDeleteButton(groupname: string): string {
         return `${dashboardGroupTableActions(groupname)} ${GlobalElements.STD_DELETE_BUTTON}`;
+    }
+
+    // USERS TAB
+    export const ADD_USER_BUTTON = "button[data-element-id='user-edit-add-user-dialog-add-button']";
+    export const FIRST_USERNAME = "testAdmin1";
+    export const SECOND_USERNAME = "testUser1";
+
+    export function dashboardUserTableActions(username: string): string {
+        return `div[data-role="dashboard-admin-widget-user-actions"][data-username="${username}"]`;
+    }
+
+    export function dashboardUserTableDeleteButton(username: string): string {
+        return `${dashboardUserTableActions(
+            username
+        )} button[data-element-id="dashboard-admin-widget-delete-user-button"]`;
     }
 }
 
