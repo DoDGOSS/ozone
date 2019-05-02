@@ -1,169 +1,224 @@
-import * as React from "react";
-import { Button, ButtonGroup } from "@blueprintjs/core";
-
-import { GenericTable } from "../../../generic-table/GenericTable";
-import { DeleteButton } from "../../../generic-table/TableButtons";
-import { StackUsersEditDialog } from "./StackUsersEditDialog";
-
-import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
-
-import { stackApi } from "../../../../api/clients/StackAPI";
-import { StackDTO, StackUpdateRequest } from "../../../../api/models/StackDTO";
-
-import { userApi } from "../../../../api/clients/UserAPI";
-import { UserDTO } from "../../../../api/models/UserDTO";
-
 import * as styles from "../Widgets.scss";
+
+import * as React from "react";
+import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
+
+import { AdminTable } from "../../../generic-table/AdminTable";
+import { StackUsersEditDialog } from "./StackUsersEditDialog";
+import { ConfirmationDialog } from "../../../confirmation-dialog/ConfirmationDialog";
+import { UserDTO } from "../../../../api/models/UserDTO";
+import { stackApi } from "../../../../api/clients/StackAPI";
+import { StackDTO } from "../../../../api/models/StackDTO";
+import { userApi, UserQueryCriteria } from "../../../../api/clients/UserAPI";
 
 interface StackEditUsersProps {
     onUpdate: (update?: any) => void;
-    stack: StackDTO;
+    stack: any;
 }
 
 export interface StackEditUsersState {
     users: UserDTO[];
+    filtered: UserDTO[];
+    filter: string;
     loading: boolean;
-    showUsersDialog: boolean;
+    pageSize: number;
+    stack: StackDTO;
+    showAdd: boolean;
+    showDelete: boolean;
+    confirmationMessage: string;
+    manageUser: UserDTO | undefined;
 }
 
 export class StackUsersPanel extends React.Component<StackEditUsersProps, StackEditUsersState> {
+    private readonly USERS_COLUMN_DEFINITION = [
+        {
+            Header: "Users",
+            columns: [
+                { Header: "Name", accessor: "userRealName" },
+                { Header: "Username", accessor: "username" },
+                { Header: "Email", accessor: "email" },
+                { Header: "Stacks", accessor: "totalStacks" },
+                { Header: "Widgets", accessor: "totalWidgets" },
+                { Header: "Dashboards", accessor: "totalDashboards" },
+                { Header: "Last Login", accessor: "lastLogin" }
+            ]
+        },
+        {
+            Header: "Actions",
+            Cell: (row: any) => (
+                <div>
+                    <ButtonGroup data-role="dashboard-admin-widget-user-actions" data-username={row.original.username}>
+                        <Button
+                            data-element-id="dashboard-admin-widget-delete-user-button"
+                            text="Delete"
+                            intent={Intent.DANGER}
+                            icon="trash"
+                            small={true}
+                            onClick={() => this.deleteUser(row.original)}
+                        />
+                    </ButtonGroup>
+                </div>
+            )
+        }
+    ];
+
     constructor(props: StackEditUsersProps) {
         super(props);
         this.state = {
-            users: [],
+            users: this.props.stack.users,
+            filtered: [],
+            filter: "",
             loading: true,
-            showUsersDialog: false
+            pageSize: 5,
+            stack: this.props.stack,
+            showAdd: false,
+            showDelete: false,
+            confirmationMessage: "",
+            manageUser: undefined
         };
     }
 
     componentDidMount() {
-        this.getUsers();
+        this.getStackUsers();
     }
 
     render() {
+        let data = this.state.users;
+        const filter = this.state.filter.toLowerCase();
+
+        if (filter) {
+            data = data.filter((row) => {
+                return row.userRealName.toLowerCase().includes(filter);
+            });
+        }
+
         return (
-            <div data-element-id="dashboard-admin-add-user">
-                <GenericTable
-                    items={this.state.users}
-                    getColumns={() => this.getTableColumns()}
-                    reactTableProps={{
-                        loading: this.state.loading
-                    }}
-                />
+            <div data-element-id="user-admin-widget-dialog">
+                <div className={styles.actionBar}>
+                    <InputGroup
+                        placeholder="Search..."
+                        leftIcon="search"
+                        value={this.state.filter}
+                        onChange={(e: any) => this.setState({ filter: e.target.value })}
+                        data-element-id="search-field"
+                    />
+                </div>
+
+                <div className={styles.table}>
+                    <AdminTable
+                        data={data}
+                        columns={this.USERS_COLUMN_DEFINITION}
+                        loading={this.state.loading}
+                        pageSize={this.state.pageSize}
+                    />
+                </div>
+
                 <div className={styles.buttonBar}>
                     <Button
                         text="Add"
-                        onClick={() => this.showAddUsersDialog()}
-                        data-element-id="dashboard-edit-add-user-dialog-add-button"
+                        disabled={!this.state.stack.approved}
+                        title={
+                            this.state.stack.approved
+                                ? undefined
+                                : "Users can only be added to Dashboards shared by Owner"
+                        }
+                        onClick={() => this.toggleShowAdd()}
+                        data-element-id="user-edit-add-user-dialog-add-button"
                     />
                 </div>
 
                 <StackUsersEditDialog
-                    show={this.state.showUsersDialog}
-                    onSubmit={this.addUsers}
-                    onClose={this.closeAddUsersDialog}
+                    show={this.state.showAdd}
+                    onSubmit={this.handleAddUserResponse}
+                    onClose={this.handleAddUserCancel}
+                />
+
+                <ConfirmationDialog
+                    show={this.state.showDelete}
+                    title="Warning"
+                    content={this.state.confirmationMessage}
+                    confirmHandler={this.handleConfirmationConfirmDelete}
+                    cancelHandler={this.handleConfirmationCancel}
+                    payload={this.state.manageUser}
                 />
             </div>
         );
     }
 
-    private getTableColumns() {
-        return [
-            { Header: "Name", id: "name", accessor: (user: UserDTO) => user.userRealName },
-            { Header: "Username", id: "username", accessor: (user: UserDTO) => user.username },
-            { Header: "Email", id: "email", accessor: (user: UserDTO) => user.email },
-            { Header: "Stacks", id: "totalStacks", accessor: (user: UserDTO) => user.totalStacks },
-            { Header: "Widgets", id: "totalWidgets", accessor: (user: UserDTO) => user.totalWidgets },
-            { Header: "Dashboards", id: "totalDashboards", accessor: (user: UserDTO) => user.totalDashboards },
-            { Header: "Last Login", id: "lastLogin", accessor: (user: UserDTO) => user.lastLogin },
-            {
-                Header: "Actions",
-                Cell: (row: { original: UserDTO }) => (
-                    <div>
-                        <ButtonGroup>
-                            <DeleteButton onClick={() => this.confirmRemoveUser(row.original)} />
-                        </ButtonGroup>
-                    </div>
-                )
-            }
-        ];
-    }
-
-    private showAddUsersDialog() {
+    private toggleShowAdd() {
         this.setState({
-            showUsersDialog: true
+            showAdd: true
         });
     }
 
-    private getUsers = async () => {
-        const currentStack: StackDTO = this.props.stack;
+    private getStackUsers() {
+        this.setState({
+            loading: true
+        });
+        stackApi.getStackById(this.state.stack.id).then((stackResponse) => {
+            const updatedStack = stackResponse.data.data[0];
 
-        const response = await userApi.getUsers();
+            const criteria: UserQueryCriteria = {
+                group_id: updatedStack.defaultGroup.id
+            };
 
-        // TODO: Handle failed request
-        if (response.status !== 200) return;
+            userApi.getUsers(criteria).then((userResponse) => {
+                // TODO: Handle failed request
+                if (userResponse.status !== 200) return;
+
+                this.setState({
+                    loading: false,
+                    users: userResponse.data.data,
+                    stack: updatedStack
+                });
+            });
+        });
+    }
+
+    private handleAddUserResponse = async (users: Array<UserDTO>) => {
+        const response = await stackApi.addStackUsers(this.state.stack.id, users);
+        if (response.status !== 200) {
+            return;
+        }
 
         this.setState({
-            users: response.data.data,
-            loading: false
+            showAdd: false
+        });
+
+        this.getStackUsers();
+    };
+
+    private handleAddUserCancel = () => {
+        this.setState({
+            showAdd: false
         });
     };
 
-    private addUsers = async (users: Array<UserDTO>) => {
-        const request: StackUpdateRequest = {
-            name: this.props.stack.name,
-            id: this.props.stack.id,
-            stackContext: this.props.stack.stackContext
-        };
-
-        const response = await stackApi.updateStack(request);
-
-        if (response.status !== 200) return;
+    private deleteUser = async (user: UserDTO) => {
+        const currentStack: StackDTO = this.state.stack;
 
         this.setState({
-            showUsersDialog: false
+            showDelete: true,
+            confirmationMessage: `This action will permanently delete <strong>${
+                user.userRealName
+            }</strong> from the dashboard <strong>${currentStack.name}</strong>`,
+            manageUser: user
         });
-
-        this.getUsers();
-        this.props.onUpdate();
     };
 
-    private closeAddUsersDialog = () => {
+    private handleConfirmationConfirmDelete = async (user: UserDTO) => {
         this.setState({
-            showUsersDialog: false
+            showDelete: false,
+            manageUser: undefined
         });
+
+        stackApi.removeStackUsers(this.state.stack.id, [user]).then(() => this.getStackUsers());
     };
 
-    private confirmRemoveUser = async (user: UserDTO) => {
-        showConfirmationDialog({
-            title: "Warning",
-            message: [
-                "This action will remove ",
-                { text: user.userRealName, style: "bold" },
-                " from ",
-                { text: this.props.stack.name, style: "bold" },
-                "."
-            ],
-            onConfirm: () => this.removeUser(user)
+    private handleConfirmationCancel = () => {
+        this.setState({
+            showDelete: false,
+            manageUser: undefined
         });
-        return true;
-    };
-
-    private removeUser = async (user: UserDTO) => {
-        const request: StackUpdateRequest = {
-            name: this.props.stack.name,
-            id: this.props.stack.id,
-            stackContext: this.props.stack.stackContext
-        };
-
-        const response = await stackApi.updateStack(request);
-
-        // TODO: Handle failed request
-        if (response.status !== 200) return false;
-
-        this.getUsers();
-        this.props.onUpdate();
-
-        return true;
     };
 }
