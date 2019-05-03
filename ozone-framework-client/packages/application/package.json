@@ -37,6 +37,7 @@
     "react": "16.8.6",
     "react-confirm-alert": "^2.4.1",
     "react-dom": "16.8.6",
+    "react-markdown": "4.0.8",
     "react-mosaic-component": "2.1.0",
     "react-router": "5.0.0",
     "react-router-dom": "5.0.0",
