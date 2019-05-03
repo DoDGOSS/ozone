@@ -1,12 +1,11 @@
 const path = require("path");
 
 const webpack = require("webpack");
-const HTMLWebpackPlugin = require("html-webpack-plugin");
-const { CheckerPlugin } = require("awesome-typescript-loader");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
+const { pageTemplates } = require("./scripts/page-templates");
 const { getLocalIdent } = require("./scripts/getCSSModuleLocalIdent");
 
 
@@ -14,43 +13,38 @@ const IS_DEVELOPMENT = process.env.NODE_ENV !== "production";
 
 
 const DefinePluginConfig = new webpack.DefinePlugin({
-    "process.env.NODE_ENV": JSON.stringify("production"),
+    "process.env.NODE_ENV": JSON.stringify("production")
 });
-
 
 const PUBLIC_PATH = "/";
 
-const HTMLTemplateConfig = new HTMLWebpackPlugin({
-    filename: "index.html",
-    template: "public/index.html",
-    templateParameters: {
-        PUBLIC_PATH: PUBLIC_PATH.replace(/\/*$/, "")
-    },
-    inject: false
-});
+const SASS_REGEX = /\.(scss|sass)$/;
+const SASS_MODULE_REGEX = /\.module\.(scss|sass)$/;
+
 
 module.exports = {
 
     devServer: {
         host: "0.0.0.0",
-        port: "3000",
+        port: process.env.PORT || "3000",
         hot: true,
         publicPath: PUBLIC_PATH,
         contentBase: path.join(__dirname, "public"),
         watchContentBase: true,
         headers: {
-            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Origin": "*"
         },
-        historyApiFallback: true,
+        historyApiFallback: true
     },
 
-    entry: [
-        "react-hot-loader/patch",
-        path.join(__dirname, "/src/index.tsx")
-    ],
+    entry: {
+        main: ["react-hot-loader/patch", path.join(__dirname, "/src/index.tsx")],
+        consent: ["react-hot-loader/patch", path.join(__dirname, "/src/pages/ConsentPage/index.tsx")]
+    },
 
     output: {
-        filename: "bundle.js",
+        filename: "[name].bundle.js",
+        chunkFilename: `[name].chunk.js`,
         path: path.join(__dirname, "/build"),
         publicPath: PUBLIC_PATH
     },
@@ -77,13 +71,29 @@ module.exports = {
             },
 
             {
-                test: /\.(scss|sass)$/,
+                test: SASS_REGEX,
+                exclude: SASS_MODULE_REGEX,
                 loaders: [
                     require.resolve("style-loader"),
                     {
                         loader: require.resolve("css-loader"),
                         options: {
                             modules: "global",
+                            getLocalIdent: getLocalIdent
+                        }
+                    },
+                    require.resolve("sass-loader")
+                ]
+            },
+
+            {
+                test: SASS_MODULE_REGEX,
+                loaders: [
+                    require.resolve("style-loader"),
+                    {
+                        loader: require.resolve("css-loader"),
+                        options: {
+                            modules: "local",
                             getLocalIdent: getLocalIdent
                         }
                     },
@@ -103,44 +113,44 @@ module.exports = {
     },
 
     resolve: {
-        extensions: [".ts", ".tsx", ".js"],
+        extensions: [".ts", ".tsx", ".js"]
     },
 
     mode: IS_DEVELOPMENT ? "development" : "production",
 
     plugins: IS_DEVELOPMENT ? [
-        new CheckerPlugin(),
         new CircularDependencyPlugin({
             exclude: /node_modules/,
             failOnError: true,
-            cwd: process.cwd(),
+            cwd: process.cwd()
         }),
         new webpack.HotModuleReplacementPlugin(),
-        HTMLTemplateConfig,
-        new BundleAnalyzerPlugin({
-            analyzerMode: "static",
-            openAnalyzer: false,
-            reportFilename: "bundle-analysis.html"
-        })
+        ...pageTemplates
     ] : [
-        new CheckerPlugin(),
         DefinePluginConfig,
-        HTMLTemplateConfig,
         new BundleAnalyzerPlugin({
             analyzerMode: "static",
             openAnalyzer: false,
-            reportFilename: "bundle-analysis.html"
-        })
+            reportFilename: "../reports/bundle-analysis.html"
+        }),
+        ...pageTemplates
     ],
 
     optimization: {
         splitChunks: {
             chunks: "all",
             cacheGroups: {
-                vendor: {
-                    filename: "vendor.js",
+                polyfill: {
+                    name: "polyfill",
+                    test: /[\\/]node_modules[\\/](core-js|regenerator-runtime)[\\/]/,
+                    priority: 0,
+                    enforce: true
+                },
+                vendors: {
+                    name: "vendors",
                     test: /[\\/]node_modules[\\/]/,
-                    priority: -10
+                    priority: -10,
+                    enforce: true
                 }
             }
         }

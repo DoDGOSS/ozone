@@ -16,9 +16,7 @@ export class MainStore {
     private readonly isDashboardDialogVisible$ = new BehaviorSubject(false);
     private readonly isHelpDialogVisible$ = new BehaviorSubject(false);
     private readonly isLoginDialogOpen$ = new BehaviorSubject(false);
-    private readonly isUserAgreementVisible$ = new BehaviorSubject(false);
     private readonly isUserProfileDialogVisible$ = new BehaviorSubject(false);
-    private readonly isWarningDialogVisible$ = new BehaviorSubject(false);
     private readonly isWidgetToolbarOpen$ = new BehaviorSubject(false);
 
     themeClass = () => asBehavior(this.themeClass$);
@@ -57,14 +55,6 @@ export class MainStore {
     isLoginDialogOpen = () => asBehavior(this.isLoginDialogOpen$);
     showLoginDialog = () => this.isLoginDialogOpen$.next(true);
     hideLoginDialog = () => this.isLoginDialogOpen$.next(false);
-
-    isWarningDialogVisible = () => asBehavior(this.isWarningDialogVisible$);
-    showWarningDialog = () => this.isWarningDialogVisible$.next(true);
-    hideWarningDialog = () => this.isWarningDialogVisible$.next(false);
-
-    isUserAgreementVisible = () => asBehavior(this.isUserAgreementVisible$);
-    showUserAgreement = () => this.isUserAgreementVisible$.next(true);
-    hideUserAgreement = () => this.isUserAgreementVisible$.next(false);
 
     isHelpDialogVisible = () => asBehavior(this.isHelpDialogVisible$);
     showHelpDialog = () => this.isHelpDialogVisible$.next(true);

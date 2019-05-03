@@ -11,10 +11,8 @@ import { DashboardDialog } from "../dashboard-screen/DashboardDialog";
 import { HelpDialog } from "../help-screen/HelpDialog";
 import { LoginDialog } from "../login-dialog/LoginDialog";
 import { NavigationBar } from "../navigation/NavigationBar";
-import { WarningDialog } from "../warning-screen/WarningDialog";
 import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
 import { WidgetToolbar } from "../widget-toolbar/WidgetToolbar";
-import { UserAgreement } from "../warning-screen/UserAgreement";
 import { UserProfileDialog } from "../user-profile/UserProfileDialog";
 
 import * as styles from "./index.scss";
@@ -37,9 +35,7 @@ export const HomeScreen: React.FC<{}> = () => {
 
             <CreateDashboardDialog />
             <ReplaceWidgetDialog />
-            <UserAgreement />
             <AboutDialog isVisible={isAboutVisible} onClose={() => mainStore.hideAboutDialog()} />
-            <WarningDialog />
             <HelpDialog />
             <DashboardDialog />
             <AdminToolsDialog />
