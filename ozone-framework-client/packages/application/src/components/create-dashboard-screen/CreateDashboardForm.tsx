@@ -15,7 +15,7 @@ import { FormError, SubmitButton, TextField } from "../form";
 import { PremadeLayouts } from "./PremadeLayouts";
 import { DashboardSelect } from "./DashboardSelect";
 
-import { handleStringChange } from "../../utility";
+import { handleStringChange, handleSelectChange } from "../../utility";
 
 export interface CreateDashboardFormProps {
     onSubmit: () => void;
@@ -35,6 +35,9 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
     const [selectedPresetLayout, setPresetLayout] = useState<string | null>(null);
     const handlePresetLayoutChange = handleStringChange(setPresetLayout);
 
+    const [selectedCopyLayout, setCopyLayout] = useState("");
+    const handleCopyLayoutChange = handleSelectChange(setCopyLayout);
+
     return (
         <Formik<CreateDashboardOptions>
             initialValues={{
@@ -45,7 +48,10 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
             }}
             onSubmit={(values: CreateDashboardOptions, actions: FormikActions<CreateDashboardOptions>) => {
                 values.presetLayoutName = selectedPresetLayout;
-
+                if(selectedValue=='copy'){
+                  values.presetLayoutName = selectedCopyLayout;
+                  console.log(values.presetLayoutName);
+                }
                 dashboardStore
                     .createDashboard(values)
                     .then(() => {
@@ -78,7 +84,9 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
                             <PremadeLayouts selectedValue={selectedPresetLayout} onChange={handlePresetLayoutChange} />
                         )}
                         <Radio label="Copy the layout of an existing page" value="copy" />
-                        {selectedValue === "copy" && <DashboardSelect />}
+                        {selectedValue === "copy" && (
+                          <DashboardSelect selectedValue={selectedCopyLayout} onChange={handleCopyLayoutChange}/>
+                        )}
                         <Radio label="Create a new layout" value="new" />
                     </RadioGroup>
 
