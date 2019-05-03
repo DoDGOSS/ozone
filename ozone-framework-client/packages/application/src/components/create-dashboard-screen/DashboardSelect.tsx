@@ -4,10 +4,17 @@ import { useEffect, useState } from "react";
 import { dashboardApi } from "../../api/clients/DashboardAPI";
 
 import { DashboardDTO } from "../../api/models/DashboardDTO";
+import { Field, FieldProps } from "formik";
 
 import * as styles from "./index.scss";
 
-export const DashboardSelect: React.FC<{}> = () => {
+export interface CopyLayoutsProps {
+    onChange: (event: React.FormEvent) => void;
+    selectedValue: string | "empty";
+}
+
+const _DashboardSelect: React.FC<CopyLayoutsProps & FieldProps<any>> = (props) => {
+    const { onChange, selectedValue } = props;
     const [dashboards, setDashboards] = useState<DashboardDTO[]>([]);
 
     useEffect(() => {
@@ -20,9 +27,10 @@ export const DashboardSelect: React.FC<{}> = () => {
 
     return (
         <div className={styles.select} data-element-id="DashboardSelect">
-            <select>
+            <select onChange={onChange}>
+                <option key='default' value='default'>Select</option>
                 {dashboards.map((dashboard) => (
-                    <option key={dashboard.guid} value={dashboard.name}>
+                    <option key={dashboard.guid} value={dashboard.guid}>
                         {dashboard.name}
                     </option>
                 ))}
@@ -30,3 +38,7 @@ export const DashboardSelect: React.FC<{}> = () => {
         </div>
     );
 };
+
+export const DashboardSelect: React.FC<CopyLayoutsProps> = (props) => (
+    <Field component={_DashboardSelect} {...props} />
+);
