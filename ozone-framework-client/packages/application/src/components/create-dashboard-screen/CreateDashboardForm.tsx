@@ -41,8 +41,6 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
     const [selectedCopyLayout, setCopyLayout] = useState("");
     const handleCopyLayoutChange = handleSelectChange(setCopyLayout);
 
-    // const [currentDashboard, setCurrentDashboard] = useState<DashboardDTO | null>(null);
-
     return (
         <Formik<CreateDashboardOptions>
             initialValues={{
