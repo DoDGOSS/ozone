@@ -20,9 +20,20 @@ const ConsentPageTemplate = new HTMLWebpackPlugin({
     inject: false
 });
 
+const LoginPageTemplate = new HTMLWebpackPlugin({
+    filename: "login.html",
+    template: "public/login.html",
+    templateParameters: {
+        PUBLIC_PATH: PUBLIC_PATH.replace(/\/*$/, "")
+    },
+    inject: false
+});
+
+
 module.exports = {
     pageTemplates: [
         IndexPageTemplate,
-        ConsentPageTemplate
+        ConsentPageTemplate,
+        LoginPageTemplate
     ]
 };

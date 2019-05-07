@@ -1,9 +1,11 @@
-import * as React from "react";
+import React from "react";
+
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { object, string } from "yup";
 
-import { FormError, SubmitButton, TextField } from "../form";
-import { authStore } from "../../stores/AuthStore";
+import { FormError, SubmitButton, TextField } from "../../components/form";
+
+import { authService } from "../../services/AuthService";
 
 export interface LoginFormProps {
     onSuccess: () => void;
@@ -20,12 +22,10 @@ export const LoginForm: React.FC<LoginFormProps> = (props) => {
             onSubmit={async (values: LoginRequest, actions: FormikActions<LoginRequest>) => {
                 actions.setSubmitting(false);
 
-                const isSuccess = await authStore.login(values.username, values.password);
+                const isSuccess = await authService.login(values.username, values.password);
 
                 if (isSuccess) {
                     props.onSuccess();
-                    // this setStatus causes error since the form closes during onSuccess().
-                    /* actions.setStatus(null); */
                 } else {
                     actions.setStatus({ error: "An unexpected error has occurred" });
                 }
