@@ -171,7 +171,11 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
     };
 
     private removeStack = async (stack: StackDTO) => {
-        console.log("Stubbed");
+        const response = await stackApi.deleteStackAsAdmin(stack.id);
+
+        // TODO: Handle failed request
+        if (response.status !== 200) return false;
+
         this.getStacks();
 
         return true;
