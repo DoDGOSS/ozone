@@ -9,7 +9,6 @@ import { CreateDashboardDialog } from "../create-dashboard-screen/CreateDashboar
 import { ReplaceWidgetDialog } from "../widget-dashboard/ReplaceWidgetDialog";
 import { DashboardDialog } from "../dashboard-screen/DashboardDialog";
 import { HelpDialog } from "../help-screen/HelpDialog";
-import { LoginDialog } from "../login-dialog/LoginDialog";
 import { NavigationBar } from "../navigation/NavigationBar";
 import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
 import { WidgetToolbar } from "../widget-toolbar/WidgetToolbar";
@@ -40,7 +39,6 @@ export const HomeScreen: React.FC<{}> = () => {
             <DashboardDialog />
             <AdminToolsDialog />
             <UserProfileDialog />
-            <LoginDialog />
         </div>
     );
 };

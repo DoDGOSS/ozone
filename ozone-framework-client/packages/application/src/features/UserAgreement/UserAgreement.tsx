@@ -22,7 +22,7 @@ export const UserAgreement: React.FC<UserAgreementProps> = (props) => {
             title={opts.title}
             content={opts.message}
             isOpen={props.isOpen}
-            actions={<Button text="Back" intent={Intent.SUCCESS} rightIcon="undo" onClick={props.onClose}/>}
+            actions={<Button text="Back" intent={Intent.SUCCESS} rightIcon="undo" onClick={props.onClose} />}
         />
     );
 };
