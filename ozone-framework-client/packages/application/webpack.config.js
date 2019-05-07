@@ -38,8 +38,9 @@ module.exports = {
     },
 
     entry: {
-        main: ["react-hot-loader/patch", path.join(__dirname, "/src/index.tsx")],
-        consent: ["react-hot-loader/patch", path.join(__dirname, "/src/pages/ConsentPage/index.tsx")]
+        main: ["react-hot-loader/patch", path.join(__dirname, "/src/pages/MainPage/index.tsx")],
+        consent: ["react-hot-loader/patch", path.join(__dirname, "/src/pages/ConsentPage/index.tsx")],
+        login: ["react-hot-loader/patch", path.join(__dirname, "/src/pages/LoginPage/index.tsx")]
     },
 
     output: {
@@ -146,15 +147,31 @@ module.exports = {
                     priority: 0,
                     enforce: true
                 },
+                blueprint: {
+                    name: "blueprint",
+                    test: /[\\/]node_modules[\\/](@blueprintjs|dom4|normalize\.css|popper\.js|react-popper|react-transition-group|resize-observer-polyfill|typed-styles|warning)[\\/]/,
+                    priority: 0,
+                    enforce: true
+                },
+                mosaic: {
+                    name: "mosaic",
+                    test: /[\\/]node_modules[\\/](react-mosaic-component|react-dnd|react-dnd-html5-backend)[\\/]/,
+                    priority: 0,
+                    enforce: true
+                },
                 vendors: {
                     name: "vendors",
                     test: /[\\/]node_modules[\\/]/,
                     priority: -10,
                     enforce: true
+                },
+                default: {
+                    minChunks: 5,
+                    priority: -20,
+                    reuseExistingChunk: true
                 }
             }
         }
     }
 
 };
-

@@ -7,7 +7,7 @@ import { CONSENT_NOTICE, USER_AGREEMENT } from "./messages";
 
 declare global {
     interface Window {
-        env: Environment;
+        env: { [key: string]: any };
     }
 }
 
@@ -24,7 +24,7 @@ const defaultEnvironment: Environment = {
             isEnabled: true,
             linkText: CONSENT_NOTICE.link
         },
-        nextUrl: "http://localhost:3000/"
+        nextUrl: "http://localhost:3000/login.html"
     },
     userAgreement: {
         title: USER_AGREEMENT.title,
@@ -38,5 +38,5 @@ export function setDefaultEnvironment() {
 }
 
 export function env(): Environment {
-    return window.env;
+    return window.env as Environment;
 }
