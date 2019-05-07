@@ -4,10 +4,12 @@ import { PageObject } from "./PageObject";
 import { WidgetAdmin } from "./widget-admin-pages";
 
 export class MainPage extends PageObject {
+    static Selector = `div[data-test-id="home-screen"]`;
+
     static UserMenuButton = `button[data-element-id="user-menu-button"]`;
 
     constructor(browser: NightwatchAPI) {
-        super(browser, "#root", "Main Page");
+        super(browser, MainPage.Selector, "Main Page");
     }
 
     openUserMenu(): UserMenu {

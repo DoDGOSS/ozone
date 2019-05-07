@@ -19,10 +19,19 @@ export const UserAgreement: React.FC<UserAgreementProps> = (props) => {
 
     return (
         <MarkdownDialog
+            testId="user-agreement"
             title={opts.title}
             content={opts.message}
             isOpen={props.isOpen}
-            actions={<Button text="Back" intent={Intent.SUCCESS} rightIcon="undo" onClick={props.onClose} />}
+            actions={
+                <Button
+                    data-test-id="user-agreement-back-button"
+                    text="Back"
+                    intent={Intent.SUCCESS}
+                    rightIcon="undo"
+                    onClick={props.onClose}
+                />
+            }
         />
     );
 };

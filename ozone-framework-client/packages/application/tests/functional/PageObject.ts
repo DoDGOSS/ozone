@@ -22,8 +22,23 @@ export abstract class PageObject {
         return this;
     }
 
+    waitUntilNotPresent(): this {
+        this.browser.waitForElementNotPresent(this.rootSelector, undefined, this.msg(`is not visible`));
+        return this;
+    }
+
+    waitUntilNotVisible(): this {
+        this.browser.waitForElementNotVisible(this.rootSelector, undefined, this.msg(`is not visible`));
+        return this;
+    }
+
     waitForElementVisible(selector: string, displayName: string): this {
         this.browser.waitForElementVisible(selector, undefined, this.msg(`${displayName} is visible`));
+        return this;
+    }
+
+    waitForElementNotVisible(selector: string, displayName: string): this {
+        this.browser.waitForElementNotVisible(selector, undefined, this.msg(`${displayName} is not visible`));
         return this;
     }
 
