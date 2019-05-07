@@ -10,15 +10,16 @@ export interface MarkdownDialogProps {
     content: string;
     isOpen: boolean;
     title: string;
+    testId?: string;
 }
 
 export const MarkdownDialog: React.FC<MarkdownDialogProps> = (props) => (
     <Dialog className={`bp3-dark ${styles.root}`} isOpen={props.isOpen} isCloseButtonShown={false} title={props.title}>
-        <div className={`${Classes.DIALOG_BODY} ${styles.content}`}>
+        <div className={`${Classes.DIALOG_BODY} ${styles.content}`} data-test-id={props.testId}>
             <ReactMarkdown source={props.content} />
             {props.additionalContent}
         </div>
-        <div className={`${Classes.DIALOG_FOOTER} ${styles.footer}`}>
+        <div data-test-role="dialog-actions" className={`${Classes.DIALOG_FOOTER} ${styles.footer}`}>
             <div className={Classes.DIALOG_FOOTER_ACTIONS}>{props.actions}</div>
         </div>
     </Dialog>

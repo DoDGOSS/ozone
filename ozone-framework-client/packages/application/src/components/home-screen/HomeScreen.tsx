@@ -26,7 +26,7 @@ export const HomeScreen: React.FC<{}> = () => {
     }, []);
 
     return (
-        <div className={styles.homeScreen}>
+        <div className={styles.homeScreen} data-test-id="home-screen">
             <NavigationBar className="bp3-dark" />
             <WidgetToolbar className={styles.widgetToolbar} />
 

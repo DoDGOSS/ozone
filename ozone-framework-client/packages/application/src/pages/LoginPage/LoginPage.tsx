@@ -30,7 +30,7 @@ export const LoginPage: React.FC<{}> = () => {
     }, []);
 
     return (
-        <div className={styles.root}>
+        <div data-test-id="login-page" className={styles.root}>
             <LoginDialog isOpen={!isAuthenticated} onSuccess={redirectToDesktop} />
             <RedirectDialog isOpen={isAuthenticated} nextUrl={loginOpts.nextUrl} />
         </div>

@@ -25,7 +25,6 @@ export const ConsentPage: React.FC<{}> = () => {
     return (
         <>
             <ConsentNotice opts={consentOpts} isOpen={isNoticeOpen} showUserAgreement={showUserAgreement} />
-
             <UserAgreement opts={agreementsOpts} isOpen={isAgreementOpen} onClose={showNotice} />
         </>
     );
