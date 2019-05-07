@@ -12,9 +12,9 @@ const NEW_GROUP_MODIFIED_NAME: string = "Modified New Group";
 const NEW_GROUP_DISPLAY_NAME: string = "New Group Display Name";
 const NEW_GROUP_DESCRIPTION: string = "New Group Description";
 
-const GROUP_ADD_WIDGET: string = "Modified New Group";
 const SEARCH_WIDGET: string = "Color";
 const ADDED_WIDGETS = ["Color Client", "Color Server"];
+const ADDED_STACK = "test2";
 
 const DEFAULT_USER_EMAILS = ["testAdmin1@ozone.test", "testUser1@ozone.test"];
 
@@ -318,7 +318,7 @@ module.exports = {
 
         openEditSectionForGroup(
             browser,
-            GROUP_ADD_WIDGET,
+            NEW_GROUP_MODIFIED_NAME,
             `${GroupAdminWidget.EditGroup.TAB_WIDGETS}`
         ).waitForElementVisible(GroupAdminWidget.WidgetsGroup.ADD_BUTTON, 2000, "[Group Widgets Interface] is visible");
 
@@ -363,7 +363,7 @@ module.exports = {
 
         openEditSectionForGroup(
             browser,
-            GROUP_ADD_WIDGET,
+            NEW_GROUP_MODIFIED_NAME,
             `${GroupAdminWidget.EditGroup.TAB_WIDGETS}`
         ).waitForElementVisible(GroupAdminWidget.WidgetsGroup.ADD_BUTTON, 2000, "[Group Widgets Interface] is visible");
 
@@ -397,7 +397,84 @@ module.exports = {
 
         browser
             .click(GroupAdminWidget.Main.BACK_BUTTON)
-            .waitForElementNotPresent(GroupAdminWidget.WidgetsGroup.ADD_BUTTON, 1000, "[Edit Widget Form] is closed");
+            .waitForElementNotPresent(GroupAdminWidget.WidgetsGroup.ADD_BUTTON, 1000, "[Edit Group Form] is closed");
+
+        browser.closeWindow().end();
+    },
+
+    "As an Administrator, I can add a stack to a group": (browser: NightwatchAPI) => {
+        loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.GROUPS);
+
+        browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
+
+        browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_MODIFIED_NAME);
+
+        openEditSectionForGroup(
+            browser,
+            NEW_GROUP_MODIFIED_NAME,
+            `${GroupAdminWidget.EditGroup.TAB_STACKS}`
+        ).waitForElementVisible(GroupAdminWidget.StacksGroup.ADD_BUTTON, 2000, "[Group Stacks Interface] is visible");
+
+        browser
+            .click(GroupAdminWidget.StacksGroup.ADD_BUTTON)
+            .waitForElementPresent(
+                GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
+                1000,
+                "[Stack Selection Dialog] is present"
+            );
+
+        browser
+            .setValue(GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD, ADDED_STACK)
+            .pause(1000)
+            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup']:nth-child(1)`)
+            .click(GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON)
+            .waitForElementNotPresent(
+                GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
+                1000,
+                "[Stack Selection Dialog] is closed"
+            );
+
+        browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(ADDED_STACK);
+
+        browser
+            .click(GroupAdminWidget.Main.BACK_BUTTON)
+            .waitForElementNotPresent(GroupAdminWidget.StacksGroup.ADD_BUTTON, 1000, "[Group Setup] is closed");
+
+        browser.closeWindow().end();
+    },
+
+    "As an Administrator, I can remove a stack from a group": (browser: NightwatchAPI) => {
+        loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+        openAdminWidget(browser, AdminWidgetType.GROUPS);
+
+        browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
+
+        browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_MODIFIED_NAME);
+
+        openEditSectionForGroup(
+            browser,
+            NEW_GROUP_MODIFIED_NAME,
+            `${GroupAdminWidget.EditGroup.TAB_STACKS}`
+        ).waitForElementVisible(GroupAdminWidget.StacksGroup.ADD_BUTTON, 2000, "[Group Stacks Interface] is visible");
+
+        browser
+            .click(`${GlobalElements.STD_DELETE_BUTTON}[data-widget-title="${ADDED_STACK}"]`)
+            .waitForElementPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                10000,
+                "[Confirmation Dialog] is present"
+            )
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .waitForElementNotPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                10000,
+                "[Confirmation Dialog] is not present"
+            );
+
+        browser
+            .click(GroupAdminWidget.Main.BACK_BUTTON)
+            .waitForElementNotPresent(GroupAdminWidget.StacksGroup.ADD_BUTTON, 1000, "[Group Setup] is closed");
 
         browser.closeWindow().end();
     },
