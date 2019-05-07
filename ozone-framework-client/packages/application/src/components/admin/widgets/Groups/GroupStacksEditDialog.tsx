@@ -15,7 +15,13 @@ export class GroupStacksEditDialog extends React.Component<SelectionDialogProps<
                 title="Add Stack(s) to Group"
                 show={this.props.show}
                 getItems={this.getAllStacks}
-                columns={[{ Header: "Name", accessor: "name" }]}
+                columns={[
+                    { Header: "Title", accessor: "name" },
+                    { Header: "Pages (Dashboards)", accessor: "totalDashboards" },
+                    { Header: "Widgets", accessor: "totalWidgets" },
+                    { Header: "Groups", accessor: "totalGroups" },
+                    { Header: "Users", accessor: "totalUsers" }
+                ]}
                 onSubmit={this.props.onSubmit}
                 onClose={this.props.onClose}
             />

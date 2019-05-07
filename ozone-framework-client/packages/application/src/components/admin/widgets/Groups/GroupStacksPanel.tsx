@@ -71,7 +71,11 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
 
     private getTableColumns(): Column[] {
         return [
-            { Header: "Name", accessor: "name" },
+            { Header: "Title", accessor: "name" },
+            { Header: "Pages (Dashboards)", accessor: "totalDashboards" },
+            { Header: "Widgets", accessor: "totalWidgets" },
+            { Header: "Groups", accessor: "totalGroups" },
+            { Header: "Users", accessor: "totalUsers" },
             {
                 Header: "Actions",
                 Cell: (row: { original: StackDTO }) => (
