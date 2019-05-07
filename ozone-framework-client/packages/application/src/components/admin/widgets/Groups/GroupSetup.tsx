@@ -5,7 +5,9 @@ import { Tab, Tabs } from "@blueprintjs/core";
 import { GroupPropertiesPanel } from "./GroupPropertiesPanel";
 import { GroupUsersPanel } from "./GroupUsersPanel";
 import { GroupWidgetsPanel } from "./GroupWidgetsPanel";
+import { GroupStacksPanel } from "./GroupStacksPanel";
 import { CancelButton } from "../../../form";
+
 import { GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
 import { groupApi } from "../../../../api/clients/GroupAPI";
 
@@ -50,7 +52,14 @@ export class GroupSetup extends React.Component<GroupSetupProps, GroupSetupState
                         id="group_widgets"
                         title="Widgets"
                         panel={this.emptyIfGroupNull(
-                            <GroupWidgetsPanel onUpdate={this.props.onUpdate} group={this.state.group} />
+                            <GroupWidgetsPanel onUpdate={this.props.onUpdate} group={this.state.group!} />
+                        )}
+                    />
+                    <Tab
+                        id="group_stacks"
+                        title="Stacks"
+                        panel={this.emptyIfGroupNull(
+                            <GroupStacksPanel onUpdate={this.props.onUpdate} group={this.state.group!} />
                         )}
                     />
                     <Tabs.Expander />
