@@ -26,6 +26,7 @@ export const ConsentNotice: React.FC<ConsentNoticeProps> = (props) => {
 
     return (
         <MarkdownDialog
+            testId="consent-notice"
             title={opts.title}
             content={opts.message}
             isOpen={props.isOpen}
