@@ -67,7 +67,7 @@ export const DashboardDialog: React.FC<{}> = () => {
             message: [
                 "You are allowing ",
                 { text: dashboard.name, style: "bold" },
-                "to be shared with other users. Press OK to confirm."
+                " to be shared with other users. Press OK to confirm."
             ],
             onConfirm: () => onShareConfirmed(dashboard)
         });
