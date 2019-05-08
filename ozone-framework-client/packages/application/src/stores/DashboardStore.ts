@@ -69,21 +69,17 @@ export class DashboardStore {
     };
 
     createDashboard = async (dashboard: CreateDashboardOptions) => {
-        const { tree, panels } = createPresetLayout(dashboard.presetLayoutName);
-
+        const { tree, panels } = await createPresetLayout(dashboard.presetLayoutName, dashboard.copyGuid);
         const opts: DashboardCreateOpts = {
             name: dashboard.name,
             tree,
             panels
         };
-
         const createResponse = await this.userDashboardApi.createDashboard(opts);
         if (createResponse.status !== 200) {
             throw new Error("Failed to create new dashboard");
         }
-
-        const createdDashboard = createResponse.data;
-
+        let createdDashboard = createResponse.data;
         await this.fetchUserDashboards(createdDashboard.guid);
     };
 
