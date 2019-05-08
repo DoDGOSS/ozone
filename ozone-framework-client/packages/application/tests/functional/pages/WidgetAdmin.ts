@@ -1,7 +1,7 @@
-import { NightwatchAPI } from "./nightwatch";
+import { NightwatchAPI } from "../nightwatch";
 
 import { PageObject } from "./PageObject";
-import { GlobalElements } from "./selectors";
+import { GlobalElements } from "../selectors";
 
 export class WidgetAdmin extends PageObject {
     static Selector = `div[data-element-id="widget-admin-widget-dialog"]`;
@@ -32,9 +32,9 @@ export class WidgetAdmin extends PageObject {
         return this;
     }
 
-    clickCreateButton(): CreateForm {
+    clickCreateButton(): WidgetAdminCreateForm {
         this.clickWhenVisible(WidgetAdmin.CreateButton, "[Widget Admin Widget] Create button is visible");
-        return new CreateForm(this.browser).waitUntilVisible();
+        return this.open(WidgetAdminCreateForm).waitUntilVisible();
     }
 
     setSearchValue(value: string): this {
@@ -53,9 +53,9 @@ export class WidgetAdmin extends PageObject {
         return this;
     }
 
-    editWidget(title: string): PropertiesPanel {
+    editWidget(title: string): WidgetAdminPropertiesPanel {
         this.browser.click(WidgetAdmin.editWidgetButton(title));
-        return new PropertiesPanel(this.browser).waitUntilVisible();
+        return this.open(WidgetAdminPropertiesPanel).waitUntilVisible();
     }
 
     assertCanDeleteWidget(title: string): this {
@@ -75,7 +75,7 @@ export class WidgetAdmin extends PageObject {
     }
 }
 
-export class CreateForm extends PageObject {
+export class WidgetAdminCreateForm extends PageObject {
     static DescriptorInput = `input[data-element-id="widget-admin-widget-descriptor-url-field"]`;
     static LoadButton = `button[data-element-id="widget-admin-widget-load-descriptor-button"]`;
     static LoadErrorMessage = `span[data-element-id="widget-admin-widget-descriptor-error-message"]`;
@@ -91,31 +91,31 @@ export class CreateForm extends PageObject {
     }
 
     assertLoadButtonIsDisabled(): this {
-        this.browser.getAttribute(CreateForm.LoadButton, "disabled", (result) => {
+        this.browser.getAttribute(WidgetAdminCreateForm.LoadButton, "disabled", (result) => {
             this.browser.assert.equal(result.value, "true", this.msg("Load button is disabled"));
         });
         return this;
     }
 
     assertLoadButtonIsEnabled(): this {
-        this.browser.getAttribute(CreateForm.LoadButton, "disabled", (result) => {
+        this.browser.getAttribute(WidgetAdminCreateForm.LoadButton, "disabled", (result) => {
             this.browser.assert.equal(result.value, null, this.msg("Load button is enabled"));
         });
         return this;
     }
 
     clickLoadButton(): this {
-        this.clickWhenVisible(CreateForm.LoadButton, "'Load descriptor'");
+        this.clickWhenVisible(WidgetAdminCreateForm.LoadButton, "'Load descriptor'");
         return this;
     }
 
-    clickCreateWithoutDescriptor(): PropertiesPanel {
-        this.clickWhenVisible(CreateForm.CreateWithoutDescriptor, "'Create without descriptor'");
-        return new PropertiesPanel(this.browser).waitUntilVisible();
+    clickCreateWithoutDescriptor(): WidgetAdminPropertiesPanel {
+        this.clickWhenVisible(WidgetAdminCreateForm.CreateWithoutDescriptor, "'Create without descriptor'");
+        return this.open(WidgetAdminPropertiesPanel).waitUntilVisible();
     }
 }
 
-export class PropertiesPanel extends PageObject {
+export class WidgetAdminPropertiesPanel extends PageObject {
     static Selector = "div[data-element-id='widget-admin-widget-properties-form']";
 
     static SubmitButton =
@@ -123,38 +123,38 @@ export class PropertiesPanel extends PageObject {
     static BackButton = `div[data-element-id="widget-admin-widget-setup-return-button"] button`;
 
     constructor(browser: NightwatchAPI) {
-        super(browser, PropertiesPanel.Selector, "Widget Admin Create Form - Properties Panel");
+        super(browser, WidgetAdminPropertiesPanel.Selector, "Widget Admin Create Form - Properties Panel");
     }
 
     assertContainsSubmitButton(): this {
-        return this.waitForElementPresent(PropertiesPanel.SubmitButton, "Submit button");
+        return this.waitForElementPresent(WidgetAdminPropertiesPanel.SubmitButton, "Submit button");
     }
 
     assertSubmitButtonIsDisabled(): this {
-        this.browser.getAttribute(PropertiesPanel.SubmitButton, "disabled", (result) => {
+        this.browser.getAttribute(WidgetAdminPropertiesPanel.SubmitButton, "disabled", (result) => {
             this.browser.assert.equal(result.value, "true", this.msg("Submit button should be disabled"));
         });
         return this;
     }
 
     assertSubmitButtonIsEnabled(): this {
-        this.browser.getAttribute(PropertiesPanel.SubmitButton, "disabled", (result) => {
+        this.browser.getAttribute(WidgetAdminPropertiesPanel.SubmitButton, "disabled", (result) => {
             this.browser.assert.equal(result.value, null, this.msg("Submit button should be enabled"));
         });
         return this;
     }
 
     clickSubmitButton(): this {
-        this.browser.click(PropertiesPanel.SubmitButton).pause(1000);
+        this.browser.click(WidgetAdminPropertiesPanel.SubmitButton).pause(1000);
         return this;
     }
 
     clickBackButton(): WidgetAdmin {
         this.browser
-            .click(PropertiesPanel.BackButton)
-            .waitForElementNotPresent(PropertiesPanel.Selector, undefined, this.msg("is closed"))
+            .click(WidgetAdminPropertiesPanel.BackButton)
+            .waitForElementNotPresent(WidgetAdminPropertiesPanel.Selector, undefined, this.msg("is closed"))
             .pause(1000);
 
-        return new WidgetAdmin(this.browser);
+        return this.open(WidgetAdmin);
     }
 }

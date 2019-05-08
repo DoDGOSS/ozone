@@ -1,13 +1,3 @@
-export namespace AdminWidgetsDialog {
-    export const WIDGETS_MENU_ADMIN_BUTTON = "div[data-element-id='Widget Administration']";
-
-    export const USER_MENU_ADMIN_BUTTON = "div[data-element-id='User Administration']";
-
-    export const DASHBOARDS_MENU_ADMIN_BUTTON = "div[data-element-id='Dashboard Administration']";
-
-    export const GROUPS_ADMIN_BUTTON = "div[data-element-id='Group Administration']";
-}
-
 export namespace MainPage {
     export const LOGIN_BUTTON = "button[data-element-id='login-button']";
 

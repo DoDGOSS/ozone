@@ -2,8 +2,9 @@ import { NightwatchAPI } from "nightwatch";
 
 import { AdminWidget, GlobalElements, UserAdminWidget } from "./selectors";
 
-import { AdminWidgetType, loggedInAs, openAdminWidget } from "./helpers";
+import { loggedInAs } from "./helpers";
 import { NightwatchCallbackResult } from "./nightwatch";
+import { UserAdmin } from "./pages";
 
 const LOGIN_USERNAME: string = "testAdmin1";
 const LOGIN_PASSWORD: string = "password";
@@ -65,9 +66,8 @@ module.exports = {
     // TODO - Change test to launch the widget when functionality is implemented
     "As an Administrator, I can view all Users in the User Admin Widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.USERS);
 
-        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
+        UserAdmin.navigateTo(browser);
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
@@ -80,9 +80,8 @@ module.exports = {
 
     "As an Administrator, I can view all Preferences in the User Admin Widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.USERS);
 
-        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
+        UserAdmin.navigateTo(browser);
 
         browser.click(AdminWidget.userTableEditButton("testUser1"));
 
@@ -102,9 +101,8 @@ module.exports = {
 
     "As an Administrator, I can create a new User": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.USERS);
 
-        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 1000, "[User Admin Widget] is visible");
+        UserAdmin.navigateTo(browser);
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
@@ -146,9 +144,8 @@ module.exports = {
 
     "As an Administrator, I can edit a User": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.USERS);
 
-        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 1000, "[User Admin Widget] is visible");
+        UserAdmin.navigateTo(browser);
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
@@ -205,9 +202,8 @@ module.exports = {
 
     "As an Administrator, I can add a widget to a user": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.USERS);
 
-        browser.waitForElementVisible(UserAdminWidget.Main.DIALOG, 2000, "[User Admin Widget] is visible");
+        UserAdmin.navigateTo(browser);
 
         browser.expect.element(UserAdminWidget.Main.DIALOG).text.to.contain(USER_ADD_WIDGET);
 
@@ -260,9 +256,8 @@ module.exports = {
 
     "As an Administrator, I can remove a widget from a user": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.USERS);
 
-        browser.waitForElementVisible(UserAdminWidget.Main.DIALOG, 2000, "[User Admin Widget] is visible");
+        UserAdmin.navigateTo(browser);
 
         openEditSectionForUser(
             browser,
@@ -304,7 +299,7 @@ module.exports = {
 
         // TODO - UNCOMMENT WHEN BACKEND IS FIXED
         // ADDED_WIDGETS.forEach((widget: string) => {
-        //     browser.expect.element(UserAdminWidget.Main.DIALOG).text.to.not.contain(widget);
+        //     browser.expect.element(UserAdminWidgetWidget.Main.DIALOG).text.to.not.contain(widget);
         // });
 
         browser
@@ -316,9 +311,8 @@ module.exports = {
 
     "As an Administrator, I can search for a User": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.USERS);
 
-        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 1000, "[User Admin Widget] is visible");
+        UserAdmin.navigateTo(browser);
 
         browser.setValue(AdminWidget.SEARCH_FIELD, NEW_USER_EMAIL);
 
@@ -341,9 +335,8 @@ module.exports = {
 
     "As an Administrator, I can delete a User": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.USERS);
 
-        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 1000, "[User Admin Widget] is visible");
+        UserAdmin.navigateTo(browser);
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
@@ -379,9 +372,8 @@ module.exports = {
 
     "As an Administrator, I can create a new preference for a user": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.USERS);
 
-        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 1000, "[User Admin Widget] is visible");
+        UserAdmin.navigateTo(browser);
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
