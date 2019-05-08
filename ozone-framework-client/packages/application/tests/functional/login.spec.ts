@@ -1,6 +1,6 @@
 import { NightwatchAPI } from "nightwatch";
 
-import { Application } from "./login-pages";
+import { Application } from "./pages";
 
 module.exports = {
     "Login as 'testAdmin1'": (browser: NightwatchAPI) => {

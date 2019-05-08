@@ -3,8 +3,7 @@ import { NightwatchAPI } from "nightwatch";
 import { GlobalElements, WidgetAdminWidget } from "./selectors";
 
 import { loggedInAs } from "./helpers";
-import { MainPage } from "./pages";
-import { CreateForm } from "./widget-admin-pages";
+import { HomeScreen, WidgetAdminCreateForm } from "./pages";
 
 const LOGIN_USERNAME: string = "testAdmin1";
 const LOGIN_PASSWORD: string = "password";
@@ -25,7 +24,7 @@ module.exports = {
     "As an Administrator, I can view all Widgets in the Widget Admin Widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
 
-        const widgetAdmin = new MainPage(browser)
+        const widgetAdmin = new HomeScreen(browser)
             .openUserMenu()
             .openAdminDialog()
             .openWidgetAdminWidget();
@@ -38,14 +37,14 @@ module.exports = {
     "As an Administrator, I can load a widget descriptor file": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
 
-        const widgetAdmin = new MainPage(browser)
+        const widgetAdmin = new HomeScreen(browser)
             .openUserMenu()
             .openAdminDialog()
             .openWidgetAdminWidget();
 
         const propertiesPanel = widgetAdmin.clickCreateButton().assertLoadButtonIsDisabled();
 
-        browser.setValue(CreateForm.DescriptorInput, "http://localhost:3000/examples/descriptor.json");
+        browser.setValue(WidgetAdminCreateForm.DescriptorInput, "http://localhost:3000/examples/descriptor.json");
 
         propertiesPanel.assertLoadButtonIsEnabled().clickLoadButton();
 
@@ -76,19 +75,19 @@ module.exports = {
     "As an Administrator, I can not load a widget descriptor file from an invalid URL": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
 
-        const widgetAdmin = new MainPage(browser)
+        const widgetAdmin = new HomeScreen(browser)
             .openUserMenu()
             .openAdminDialog()
             .openWidgetAdminWidget();
 
         const propertiesPanel = widgetAdmin.clickCreateButton().assertLoadButtonIsDisabled();
 
-        browser.setValue(CreateForm.DescriptorInput, "http://this.domain.does.not.exist/descriptor.json");
+        browser.setValue(WidgetAdminCreateForm.DescriptorInput, "http://this.domain.does.not.exist/descriptor.json");
 
         propertiesPanel.assertLoadButtonIsEnabled().clickLoadButton();
 
         browser.expect
-            .element(CreateForm.LoadErrorMessage)
+            .element(WidgetAdminCreateForm.LoadErrorMessage)
             .text.to.contain("Unable to retrieve descriptor information. Please check your URL and try again.");
 
         browser.closeWindow().end();
@@ -97,7 +96,7 @@ module.exports = {
     "As an Administrator, I can create a new widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
 
-        const widgetAdmin = new MainPage(browser)
+        const widgetAdmin = new HomeScreen(browser)
             .openUserMenu()
             .openAdminDialog()
             .openWidgetAdminWidget();
@@ -143,7 +142,7 @@ module.exports = {
     "As an Administrator, I can edit a widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
 
-        const widgetAdmin = new MainPage(browser)
+        const widgetAdmin = new HomeScreen(browser)
             .openUserMenu()
             .openAdminDialog()
             .openWidgetAdminWidget();
@@ -177,7 +176,7 @@ module.exports = {
     "As an Administrator, I can delete a widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
 
-        const mainPage = new MainPage(browser)
+        const mainPage = new HomeScreen(browser)
             .openUserMenu()
             .openAdminDialog()
             .openWidgetAdminWidget()
