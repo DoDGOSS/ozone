@@ -1,3 +1,5 @@
+import styles from "./index.module.scss";
+
 import React from "react";
 
 import { Form, Formik, FormikActions, FormikProps } from "formik";
@@ -32,11 +34,11 @@ export const LoginForm: React.FC<LoginFormProps> = (props) => {
             }}
         >
             {(formik: FormikProps<LoginRequest>) => (
-                <Form>
+                <Form className={styles.form}>
                     {formik.status && formik.status.error && <FormError message={formik.status.error} />}
 
-                    <TextField name="username" label="Username" labelInfo="(required)" />
-                    <TextField type="password" name="password" label="Password" labelInfo="(required)" />
+                    <TextField name="username" label="Username" labelError={true} />
+                    <TextField type="password" name="password" label="Password" labelError={true} />
 
                     <SubmitButton />
                 </Form>

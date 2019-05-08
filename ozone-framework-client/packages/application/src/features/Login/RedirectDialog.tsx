@@ -20,7 +20,7 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = (props) => {
             isOpen={props.isOpen}
         >
             <div className={classNames(Classes.DIALOG_BODY, styles.body)} data-test-id="redirect-dialog">
-                <div className={styles.flexVertical}>
+                <div className={styles.form}>
                     <AnchorButton href={props.nextUrl} text={"Continue to Desktop"} intent={Intent.SUCCESS} />
                 </div>
             </div>

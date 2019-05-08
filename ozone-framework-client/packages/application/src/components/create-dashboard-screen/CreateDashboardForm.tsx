@@ -15,6 +15,7 @@ import { FormError, SubmitButton, TextField } from "../form";
 import { PremadeLayouts } from "./PremadeLayouts";
 import { DashboardSelect } from "./DashboardSelect";
 
+import { assetUrl } from "../../server";
 import { handleStringChange } from "../../utility";
 
 export interface CreateDashboardFormProps {
@@ -63,7 +64,7 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
 
                     <div className={styles.form}>
                         <div className={styles.formIcon}>
-                            <img width="60px" src={formik.values.iconImageUrl} />
+                            <img width="60px" src={assetUrl(formik.values.iconImageUrl)} />
                         </div>
                         <div className={styles.formField}>
                             <TextField name="name" label="Title" labelInfo="(required)" />

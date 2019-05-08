@@ -29,17 +29,20 @@
 
     <bean id="ozoneCookieFilter" class="ozone.security.filters.OzoneCookieFilter"/>
 
-    <bean id="restAuthenticationEntryPoint" class="ozone.security.RestAuthenticationEntryPoint"/>
+    <bean id="ozoneAuthenticationEntryPoint"
+          class="ozone.security.OzoneAuthenticationEntryPoint">
+        <property name="redirectUrl" value="/login" />
+    </bean>
 
-    <bean id="restAuthenticationSuccessHandler"
+    <bean id="ozoneAuthenticationSuccessHandler"
           class="ozone.security.OzoneAuthenticationSuccessHandler">
         <property name="accountService" ref="accountService"/>
     </bean>
 
-    <bean id="restAuthenticationFailureHandler"
-          class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"/>
+    <bean id="ozoneAuthenticationFailureHandler"
+          class="ozone.security.OzoneAuthenticationFailureHandler"/>
 
-    <sec:http realm="OZONE" entry-point-ref="restAuthenticationEntryPoint">
+    <sec:http realm="OZONE" entry-point-ref="ozoneAuthenticationEntryPoint">
 
         <sec:port-mappings>
             <sec:port-mapping http="${ozone.unsecurePort}" https="${ozone.port}"/>
@@ -60,13 +63,16 @@
         <sec:intercept-url pattern="/perform_login*"
                            access="permitAll()" />
 
+        <sec:intercept-url pattern="/login*"
+                           access="permitAll()" />
+
         <sec:intercept-url pattern="/**"
                            access="hasAnyRole('ADMIN', 'USER', 'ORG_STEWARD')" />
 
         <sec:form-login login-page="/login"
                         login-processing-url="/perform_login"
-                        authentication-success-handler-ref="restAuthenticationSuccessHandler"
-                        authentication-failure-handler-ref="restAuthenticationFailureHandler"
+                        authentication-success-handler-ref="ozoneAuthenticationSuccessHandler"
+                        authentication-failure-handler-ref="ozoneAuthenticationFailureHandler"
                         default-target-url="/"
                         always-use-default-target="true"
                         username-parameter="username"

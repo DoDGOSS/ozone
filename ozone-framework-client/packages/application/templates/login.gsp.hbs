@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<%@ page contentType="text/html; UTF-8" %>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="${request.contextPath}/static/favicon.ico">
+    <title>Ozone Platform</title>
+{{#each stylesheets as |stylesheet|}}
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/{{{stylesheet}}}">
+{{/each}}
+</head>
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <script type="application/javascript">
+        window.env = window.env || {};
+        window.env.server = {
+            url: "http://localhost:8080",
+            contextPath: "${request.contextPath}",
+            staticAssetPath: "static"
+        };
+        window.env.login = {
+            nextUrl: "${request.contextPath}/"
+        };
+        window.env.consentNotice = {
+            isEnabled: true,
+            // title: "",
+            // message: "",
+            // details: {
+            //     isEnabled: true,
+            //     linkText: ""
+            // }
+        };
+        window.env.userAgreement = {
+            // title: "",
+            // message: ""
+        };
+    </script>
+
+{{#each scripts as |script|}}
+    <script type="application/javascript" src="${request.contextPath}/static/{{{script}}}"></script>
+{{/each}}
+</body>
+</html>

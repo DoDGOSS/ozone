@@ -97,6 +97,10 @@ class UrlMappings {
 
         '500' controller: 'error'
 
+        '/' view: '/index'
+        '/consent' view: '/consent'
+        '/login' view: '/login'
+
         '/js/config/config.js' controller: 'config', action: 'config'
 
         "/login/status" controller: 'login', action: 'showStatus'
