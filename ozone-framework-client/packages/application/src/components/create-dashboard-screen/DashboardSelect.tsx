@@ -10,11 +10,8 @@ import * as styles from "./index.scss";
 
 export interface CopyLayoutsProps {
     onChange: (event: React.FormEvent) => void;
-<<<<<<< HEAD
     selectedValue: string | "";
-=======
-    selectedValue: string | "empty";
->>>>>>> 2dca42d... reading in layout guids
+
 }
 
 const _DashboardSelect: React.FC<CopyLayoutsProps & FieldProps<any>> = (props) => {
@@ -31,11 +28,7 @@ const _DashboardSelect: React.FC<CopyLayoutsProps & FieldProps<any>> = (props) =
 
     return (
         <div className={styles.select} data-element-id="DashboardSelect">
-<<<<<<< HEAD
             <select onChange={onChange} data-element-id="Select">
-=======
-            <select onChange={onChange}>
->>>>>>> 2dca42d... reading in layout guids
                 <option key='default' value='default'>Select</option>
                 {dashboards.map((dashboard) => (
                     <option key={dashboard.guid} value={dashboard.guid}>
