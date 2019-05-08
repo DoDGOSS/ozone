@@ -14,6 +14,8 @@ import { DashboardDTO } from "../../api/models/DashboardDTO";
 import { showConfirmationDialog } from "../confirmation-dialog/InPlaceConfirmationDialog";
 import { EditDashboardForm } from "../create-dashboard-screen/EditDashboardForm";
 
+import { assetUrl } from "../../server";
+
 // TODO - convert to edit stacks
 // TODO - iconImageUrl not saving to database - clientAPI
 // TODO - style image
@@ -103,7 +105,7 @@ export const DashboardDialog: React.FC<{}> = () => {
                             <Card key={dashboard.guid}>
                                 <h4>{dashboard.name}</h4>
                                 <p>{dashboard.description}</p>
-                                <img src={dashboard.iconImageUrl} />
+                                <img src={assetUrl(dashboard.iconImageUrl)} />
                                 <ButtonGroup
                                     data-element-id={"dashboard-actions"}
                                     data-role={"dashboard-actions"}

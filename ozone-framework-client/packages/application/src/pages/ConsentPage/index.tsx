@@ -11,7 +11,7 @@ import * as ReactDOM from "react-dom";
 
 import { ConsentPage } from "./ConsentPage";
 
-import { setDefaultEnvironment } from "./environment";
+import { setDefaultEnvironment } from "../../environment";
 
 setDefaultEnvironment();
 

@@ -11,7 +11,7 @@ import ReactDOM from "react-dom";
 
 import { LoginPage } from "./LoginPage";
 
-import { setDefaultEnvironment } from "./environment";
+import { setDefaultEnvironment } from "../../environment";
 
 setDefaultEnvironment();
 

@@ -11,14 +11,12 @@ import "./index.scss";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-// import registerServiceWorker from "./registerServiceWorker";
-
 import { eventingService } from "../../services/EventingService";
 import { WidgetLauncherService } from "../../services/WidgetLauncherService";
 
 import { MainPage } from "./MainPage";
 
-import { setDefaultEnvironment } from "./environment";
+import { setDefaultEnvironment } from "../../environment";
 
 setDefaultEnvironment();
 
@@ -26,5 +24,3 @@ eventingService.init();
 new WidgetLauncherService().init();
 
 ReactDOM.render(<MainPage />, document.getElementById("root") as HTMLElement);
-
-// registerServiceWorker();

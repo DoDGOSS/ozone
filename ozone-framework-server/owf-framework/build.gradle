@@ -40,6 +40,7 @@ ext {
     releaseVersion = version.toString().replaceFirst("-", ".")
 
     tomcatBundleStaging = "$buildDir/staging/bundle"
+    clientStaging = "$buildDir/staging/client"
 }
 
 repositories {
@@ -69,6 +70,7 @@ grails {
 
 configurations {
     customTomcat {}
+    client {}
     drivers {}
     runtime.extendsFrom drivers
 }
@@ -83,6 +85,13 @@ dependencies {
     customTomcat(group: 'org.ozoneplatform', name: 'owf-custom-tomcat', version: '1.2.3-0') {
         artifact {
             name = 'owf-custom-tomcat'
+            type = 'zip'
+        }
+    }
+
+    client(group: 'org.ozoneplatform', name: 'ozone-client', version: '8.0.0-0-SNAPSHOT') {
+        artifact {
+            name = 'ozone-client'
             type = 'zip'
         }
     }
@@ -182,3 +191,46 @@ apply from: 'gradle/report-test-coverage.gradle'
 task wrapper(type: Wrapper) {
     gradleVersion = '4.2.1'
 }
+
+task extractClient(type: Sync, group: 'tasks') {
+    dependsOn(configurations.client)
+
+    from { // use of closure defers evaluation until execution time
+        configurations.client.collect { zipTree(it) }
+    }
+    into "$clientStaging"
+}
+
+task copyClientResources(type: Copy, group: 'tasks') {
+    dependsOn(extractClient)
+
+    from fileTree("$clientStaging").matching {
+        exclude "*.html", "*.gsp"
+    }
+    into file("src/main/resources/public")
+}
+
+task copyClientGsps(type: Copy, group: 'tasks') {
+    dependsOn(extractClient)
+
+    from fileTree("$clientStaging").matching {
+        include "*.gsp"
+    }
+    into file("grails-app/views")
+}
+
+build.dependsOn(copyClientResources, copyClientGsps)
+processResources.dependsOn(copyClientResources, copyClientGsps)
+
+task cleanClientResources(type: Delete, group: 'tasks') {
+    delete fileTree("src/main/resources/public").matching {
+        exclude '.gitignore'
+    }
+
+    delete("src/main/resources/public/examples",
+           "src/main/resources/public/images",
+           "src/main/resources/public/scripts",
+           "src/main/resources/public/assets")
+}
+
+clean.dependsOn(cleanClientResources)
