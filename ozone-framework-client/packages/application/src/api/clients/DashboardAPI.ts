@@ -27,6 +27,19 @@ export class DashboardAPI {
         });
     }
 
+    async getDashboard(guid: string): Promise<Response<DashboardDTO>> {
+      const requestData = qs.stringify({
+          data: JSON.stringify({ guid })
+      });
+
+      return this.gateway.get(`dashboard/${guid}/`, requestData, {
+          headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+          },
+          validate: validateDashboard
+      });
+    }
+
     async createDashboard(
         data: DashboardUpdateRequest,
         options?: DashboardUpdateParams
