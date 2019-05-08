@@ -2,7 +2,8 @@ import { NightwatchAPI, NightwatchCallbackResult } from "nightwatch";
 
 import { GlobalElements, GroupAdminWidget } from "./selectors";
 
-import { AdminWidgetType, loggedInAs, openAdminWidget } from "./helpers";
+import { loggedInAs } from "./helpers";
+import { GroupAdmin } from "./pages";
 
 const LOGIN_USERNAME: string = "testAdmin1";
 const LOGIN_PASSWORD: string = "password";
@@ -67,9 +68,8 @@ function openEditSectionForGroup(browser: NightwatchAPI, userDisplayName: string
 module.exports = {
     "As an Administrator, I can view all Groups in the Group Admin Widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
-        browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 1000, "[Group Admin Widget] is visible");
+        GroupAdmin.navigateTo(browser);
 
         browser.assert.containsText(
             GroupAdminWidget.Main.DIALOG,
@@ -82,9 +82,8 @@ module.exports = {
 
     "As an Administrator, I want to search for a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
-        browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 1000, "[Group Admin Widget] is visible");
+        GroupAdmin.navigateTo(browser);
 
         browser.clearValue(GroupAdminWidget.Main.SEARCH_FIELD).setValue(GroupAdminWidget.Main.SEARCH_FIELD, "USER");
 
@@ -101,9 +100,8 @@ module.exports = {
 
     "As an Administrator, I can create a new group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
-        browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 1000, "[Group Admin Widget] is visible");
+        GroupAdmin.navigateTo(browser);
 
         browser.waitForElementVisible(
             GroupAdminWidget.Main.CREATE_BUTTON,
@@ -147,9 +145,8 @@ module.exports = {
 
     "As an Administrator, I can edit a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
-        browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
+        GroupAdmin.navigateTo(browser);
 
         browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_NAME);
 
@@ -182,9 +179,8 @@ module.exports = {
 
     "As an Administrator, I can add a user to a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
-        browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
+        GroupAdmin.navigateTo(browser);
 
         browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_MODIFIED_NAME);
 
@@ -233,9 +229,8 @@ module.exports = {
 
     "As an Administrator, I can add remove a user from a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
-        browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
+        GroupAdmin.navigateTo(browser);
 
         browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_MODIFIED_NAME);
 
@@ -310,9 +305,8 @@ module.exports = {
 
     "As an Administrator, I can add a widget to a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
-        browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
+        GroupAdmin.navigateTo(browser);
 
         browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_MODIFIED_NAME);
 
@@ -355,9 +349,8 @@ module.exports = {
 
     "As an Administrator, I can remove a widget from a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
-        browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
+        GroupAdmin.navigateTo(browser);
 
         browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_MODIFIED_NAME);
 
@@ -404,9 +397,8 @@ module.exports = {
 
     "As an Administrator, I can add a stack to a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
-        browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
+        GroupAdmin.navigateTo(browser);
 
         browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_MODIFIED_NAME);
 
@@ -446,9 +438,8 @@ module.exports = {
 
     "As an Administrator, I can remove a stack from a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
-        browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 2000, "[Group Admin Widget] is visible");
+        GroupAdmin.navigateTo(browser);
 
         browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_MODIFIED_NAME);
 
@@ -481,9 +472,8 @@ module.exports = {
 
     "As an Administrator, I can delete a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.GROUPS);
 
-        browser.waitForElementVisible(GroupAdminWidget.Main.DIALOG, 1000, "[Group Admin Widget] is visible");
+        GroupAdmin.navigateTo(browser);
 
         browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_MODIFIED_NAME);
 
