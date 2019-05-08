@@ -17,6 +17,9 @@ import { DashboardSelect } from "./DashboardSelect";
 
 import { handleStringChange, handleSelectChange } from "../../utility";
 
+
+import { dashboardService } from "../../stores/DashboardService";
+
 export interface CreateDashboardFormProps {
     onSubmit: () => void;
 }
@@ -38,20 +41,25 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
     const [selectedCopyLayout, setCopyLayout] = useState("");
     const handleCopyLayoutChange = handleSelectChange(setCopyLayout);
 
+    // const [currentDashboard, setCurrentDashboard] = useState<DashboardDTO | null>(null);
+
     return (
         <Formik<CreateDashboardOptions>
             initialValues={{
                 name: "",
                 iconImageUrl: "/images/dashboard.png",
                 description: "",
-                presetLayoutName: null
+                presetLayoutName: null,
+                copyGuid:"",
             }}
             onSubmit={(values: CreateDashboardOptions, actions: FormikActions<CreateDashboardOptions>) => {
                 values.presetLayoutName = selectedPresetLayout;
                 if(selectedValue=='copy'){
-                  values.presetLayoutName = selectedCopyLayout;
-                  console.log(values.presetLayoutName);
+                  values.presetLayoutName = selectedValue;
+                  values.copyGuid = selectedCopyLayout;
+                  // onCopyDashboard(values.presetLayoutName);
                 }
+
                 dashboardStore
                     .createDashboard(values)
                     .then(() => {
@@ -61,6 +69,8 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
                     .catch(() => {
                         actions.setStatus({ error: "An unexpected error has occurred" });
                     });
+
+
             }}
         >
             {(formik: FormikProps<DashboardUpdateRequest>) => (

@@ -34,19 +34,18 @@ export class UserDashboardAPI {
         const stack = {
             name: opts.name
         };
-
         const dashboard = {
             name: opts.name,
             guid: uuid(),
             isdefault: !isNil(opts.isDefault) ? opts.isDefault : false,
             state: [],
-            layoutConfig: dashboardLayoutToJson({
+            layoutConfig:dashboardLayoutToJson(
+              {
                 tree: opts.tree || null,
                 panels: opts.panels || {}
-            }),
+              }),
             publishedToStore: false
         };
-
         const requestData = qs.stringify({
             _method: "POST",
             adminEnabled: false,
@@ -55,7 +54,6 @@ export class UserDashboardAPI {
             stackData: JSON.stringify(stack),
             dashboardData: JSON.stringify(dashboard)
         });
-
         return this.gateway.post("stack/addPage/", requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"

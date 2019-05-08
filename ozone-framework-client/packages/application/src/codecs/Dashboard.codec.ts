@@ -164,15 +164,27 @@ export function dashboardLayoutToJson(state: DashboardLayout): DashboardLayoutDT
 }
 
 export function panelToJson(panel: Panel<PanelState>): PanelDTO {
-    const state = panel.state().value;
-    return {
-        id: state.id,
-        title: state.title,
-        type: state.type,
-        userWidgetIds: state.widgets.map((widget) => widget.id),
-        activeWidgetId: getActiveWidgetId(state),
-        collapsed: isExpandoPanelState(state) ? state.collapsed : undefined
-    };
+    if(panel.state$){
+      let state = panel.state().value;
+      return {
+          id: state.id,
+          title: state.title,
+          type: state.type,
+          userWidgetIds: state.widgets.map((widget) => widget.id),
+          activeWidgetId: getActiveWidgetId(state),
+          collapsed: isExpandoPanelState(state) ? state.collapsed : undefined
+      };
+    }else{
+      // copy of dashboard has no state
+      return {
+          id: panel.id,
+          title: panel.title,
+          type: panel.type,
+          userWidgetIds: panel.widgets.map((widget) => panel.id),
+          activeWidgetId: getActiveWidgetId(panel),
+          collapsed: isExpandoPanelState(panel) ? state.collapsed : undefined
+      };
+    }
 }
 
 function getActiveWidgetId(state: PanelState): number | undefined {
