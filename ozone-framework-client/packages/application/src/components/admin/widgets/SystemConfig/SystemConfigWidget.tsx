@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useBehavior } from "../../../../hooks";
+import { InputGroup, Switch, Tab, Tabs } from "@blueprintjs/core";
+import { groupBy, isNil, keys, mapValues } from "lodash";
 
-import { Tab, Tabs } from "@blueprintjs/core";
+import { useBehavior } from "../../../../hooks";
 
 import { systemConfigStore } from "../../../../stores/SystemConfigStore";
 import { ConfigDTO } from "../../../../api/models/ConfigDTO";
 
-import { groupBy, isNil, keys, mapValues } from "lodash";
 import { classNames } from "../../../../utility";
 
 import * as styles from "./SystemConfigWidget.scss";
+import { systemConfigApi } from "../../../../api/clients/SystemConfigAPI";
 
 const AUDITING_TAB = "auditing";
 const BRANDING_TAB = "branding";
@@ -30,9 +31,9 @@ export const SystemConfigWidget: React.FC = () => {
     const accounts = getConfigGroup(configs, "USER_ACCOUNT_SETTINGS");
 
     return (
-        <div>
+        <div data-element-id="systemconfig-admin-widget-dialog">
             <Tabs
-                id="TabsExample"
+                id="ConfigTabs"
                 onChange={(newTabId: string) => setActiveTabId(newTabId)}
                 selectedTabId={activeTabId}
                 vertical={true}
@@ -72,13 +73,13 @@ interface ConfigSectionProps {
 }
 
 export const ConfigSection: React.FC<ConfigSectionProps> = ({ title, configs }) => (
-    <>
+    <div>
         {title !== "$DEFAULT$" && <FormRow className={styles.sectionTitle}>{title}</FormRow>}
 
         {configs.map((config) => (
             <ConfigField key={config.code} config={config} />
         ))}
-    </>
+    </div>
 );
 
 interface ConfigFieldProps {
@@ -91,15 +92,140 @@ export const ConfigField: React.FC<ConfigFieldProps> = ({ config }) => (
             <div className={styles.fieldTitle}>{config.title}</div>
             <div className={styles.fieldDescription}>{config.description}</div>
         </FormCell>
-        <FormCell>
-            <div>Value: {config.value}</div>
-            <div>Help: {config.help}</div>
-            <div>Type: {config.type}</div>
-            <div>Mutable: {config.mutable}</div>
+        <FormCell className={styles.centered}>
+            <div className={styles.centered}>{getConfigFieldValue(config)}</div>
         </FormCell>
     </FormRow>
 );
 
+function getConfigFieldValue(config: ConfigDTO): any {
+    if (
+        !(
+            config &&
+            config.hasOwnProperty("type") &&
+            config.hasOwnProperty("mutable") &&
+            config.hasOwnProperty("value") &&
+            config.hasOwnProperty("help") &&
+            config.hasOwnProperty("id") &&
+            config.hasOwnProperty("groupName")
+        )
+    ) {
+        return <div />;
+    }
+    if (config.type.toLowerCase() === "boolean" || config.type.toLowerCase() === "bool") {
+        return (
+            <div data-element-id={"InputFor_" + config.id} data-element-type="toggleInput">
+                <Switch
+                    className={styles.centered}
+                    defaultChecked={config.value !== undefined ? JSON.parse(config.value) : false}
+                    id={config.title}
+                    title={config.title}
+                    disabled={!config.mutable}
+                    onChange={(event) => {
+                        handleSwitchChange(config, event.currentTarget.checked);
+                    }}
+                    large={true}
+                />
+            </div>
+        );
+    } else if (config.type.toLowerCase() === "string") {
+        return (
+            <div>
+                <div data-element-id={"InputFor_" + config.id} data-element-type="stringInput">
+                    <InputGroup
+                        name={"NameFor_" + config.id}
+                        className={classNames(styles.centered, styles.wideInput)}
+                        defaultValue={config.value}
+                        disabled={!config.mutable}
+                        placeholder={config.help}
+                        onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            event.currentTarget.validationMessage === ""
+                                ? handleStringChange(config, event.currentTarget.value)
+                                : displayStringError(config, event.currentTarget.value);
+                        }}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            event.currentTarget.validationMessage === ""
+                                ? clearError(config)
+                                : displayStringError(config, event.currentTarget.value);
+                        }}
+                        pattern=".{0,2000}"
+                        large={false}
+                    />
+                </div>
+                <div id="errorText" data-element-id={"ErrorMessageFor_" + config.id}>
+                    {null}
+                </div>
+            </div>
+        );
+    } else if (config.type.toLowerCase() === "integer") {
+        return (
+            <div>
+                <div data-element-id={"InputFor_" + config.id} data-element-type="integerInput">
+                    <InputGroup
+                        name={"NameFor_" + config.id}
+                        className={classNames(styles.centered, styles.wideInput)}
+                        defaultValue={config.value}
+                        disabled={!config.mutable}
+                        placeholder={config.help}
+                        onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            event.currentTarget.validationMessage === ""
+                                ? handleStringChange(config, event.currentTarget.value.toString())
+                                : displayIntegerError(config);
+                        }}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            event.currentTarget.validationMessage === ""
+                                ? clearError(config)
+                                : displayIntegerError(config);
+                        }}
+                        required
+                        pattern="\d{1,9}"
+                        large={false}
+                        type="textarea"
+                    />
+                </div>
+                <div id="errorText" data-element-id={"ErrorMessageFor_" + config.id}>
+                    {null}
+                </div>
+            </div>
+        );
+    }
+}
+
+function displayStringError(config: ConfigDTO, newValue: string) {
+    const errorLocation = document.querySelector("[data-element-id=ErrorMessageFor_" + config.id + "]");
+    if (errorLocation) {
+        errorLocation.innerHTML = "Maximum characters allowed are 2000, you have " + newValue.length;
+    }
+}
+
+function displayIntegerError(config: ConfigDTO) {
+    const errorLocation = document.querySelector("[data-element-id=ErrorMessageFor_" + config.id + "]");
+    if (errorLocation) {
+        errorLocation.innerHTML = "You must enter a value between 0 and 999999999.";
+    }
+}
+
+function clearError(config: ConfigDTO) {
+    const errorLocation = document.querySelector("[data-element-id=ErrorMessageFor_" + config.id + "]");
+    if (errorLocation) {
+        errorLocation.innerHTML = "";
+    }
+}
+
+function handleSwitchChange(config: ConfigDTO, newValue: boolean) {
+    handleStringChange(config, newValue.toString());
+}
+
+function handleStringChange(config: ConfigDTO, newValue: string) {
+    const errorLocation = document.querySelector("[data-element-id=ErrorMessageFor_" + config.id + "]");
+    if (errorLocation) {
+        errorLocation.innerHTML = "";
+    }
+
+    if (config.value !== newValue) {
+        systemConfigApi.updateConfigById(config.id, newValue).then(() => systemConfigStore.fetch());
+    }
+}
 interface Props {
     className?: string;
 }
