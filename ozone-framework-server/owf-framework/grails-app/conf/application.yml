@@ -93,6 +93,9 @@ grails:
 
 ---
 environments:
+    development:
+        server:
+            # contextPath: "/owf"
     production:
         server:
             port: 8443
