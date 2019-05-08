@@ -1,0 +1,76 @@
+@import "../../theme";
+
+$dialog-width: 600px;
+$dialog-max-height: 60vh;
+
+$title-height: 40px;
+
+$footer-padding-top: .25rem;
+$footer-padding-bottom: .75rem;
+
+$content-margin: .5rem;
+$content-padding: 1rem;
+
+$content-height: ($content-margin * 2) + ($content-padding * 2) + $footer-padding-top + $footer-padding-bottom;
+
+.root {
+    max-height: $dialog-max-height;
+    width: $dialog-width;
+    padding: 0;
+}
+
+.content {
+    max-height: calc(#{$dialog-max-height} - #{$content-height} - #{$title-height});
+
+    overflow-y: auto;
+
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: .5rem;
+    background-color: rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 0 2px 1px rgba(0, 0, 0, 0.1);
+
+    margin: $content-margin;
+    padding: $content-padding;
+
+    &::-webkit-scrollbar {
+        width: $scrollbar-width;
+        height: auto;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: $scrollbar-handle-background-color;
+
+        border: $scrollbar-handle-border;
+        border-radius: $scrollbar-handle-border-radius;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: rgba(0, 0, 0, 0.1);
+
+        border-radius: $scrollbar-handle-border-radius;
+    }
+
+    p {
+        margin-bottom: .5rem;
+    }
+
+    ul, ol {
+        padding-left: 1rem;
+        margin: 0 0 .5rem 0;
+
+        ul, ol {
+            margin: .5rem 0;
+        }
+    }
+
+    li {
+        margin: 0 0 .5rem 0;
+    }
+
+
+}
+
+.footer {
+    padding-top: $footer-padding-top;
+    padding-bottom: $footer-padding-bottom;
+}

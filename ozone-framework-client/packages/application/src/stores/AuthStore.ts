@@ -28,17 +28,6 @@ export class AuthStore {
     user = () => asBehavior(this.user$);
     status = () => asBehavior(this.status$);
 
-    login = async (username: string, password: string) => {
-        try {
-            const user = (await this.gateway.login(username, password)).data;
-            this.onAuthenticateSuccess(user);
-            return true;
-        } catch (ex) {
-            this.onAuthenticationFailure(ex);
-            return false;
-        }
-    };
-
     logout = () => {
         this.gateway
             .logout()

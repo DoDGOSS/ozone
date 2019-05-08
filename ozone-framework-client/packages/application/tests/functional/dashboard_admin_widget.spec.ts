@@ -2,21 +2,14 @@ import { NightwatchAPI } from "nightwatch";
 
 import { DashboardAdminWidget, DashboardDialog, GlobalElements, MainPage } from "./selectors";
 
-import { AdminWidgetType, loggedInAs, openAdminWidget } from "./helpers";
+import { loggedInAs } from "./helpers";
+import { DashboardAdmin } from "./pages";
 
 module.exports = {
-    // TODO - Change test to launch the widget when functionality is implemented
     "As an Administrator, I can view all dashboards in the Dashboard Admin Widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
-        openAdminWidget(browser, AdminWidgetType.DASHBOARDS);
 
-        browser.waitForElementVisible(DashboardAdminWidget.DIALOG, 2000, "[Dashboard Admin Widget] is visible");
-
-        /* browser.assert.containsText(
-            DashboardAdminWidget.DIALOG,
-            "Dashboard Administration",
-            "[Dashboard Admin Widget] Displays dashboard information"
-        ); */
+        DashboardAdmin.navigateTo(browser);
 
         browser.closeWindow().end();
     },
@@ -57,10 +50,7 @@ module.exports = {
             );
 
         // NEXT we open admin dashboard widget, and try to add a group (add button should be disabled)
-
-        browser.waitForElementVisible(MainPage.USER_MENU_BUTTON, 2000, "[Main Page] User Menu Button is visible.");
-
-        openAdminWidget(browser, AdminWidgetType.DASHBOARDS);
+        DashboardAdmin.navigateTo(browser);
 
         browser.waitForElementVisible(
             DashboardAdminWidget.dashboardTableEditButton(DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME),
@@ -132,10 +122,7 @@ module.exports = {
         browser.click(DashboardAdminWidget.DASHBOARD_DIALOG_CLOSE);
 
         // Now that the dashboard is shared, we should be able to add groups
-
-        browser.waitForElementVisible(MainPage.USER_MENU_BUTTON);
-
-        openAdminWidget(browser, AdminWidgetType.DASHBOARDS);
+        DashboardAdmin.navigateTo(browser);
 
         browser.waitForElementVisible(
             DashboardAdminWidget.dashboardTableEditButton(DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME),
@@ -296,10 +283,7 @@ module.exports = {
             );
 
         // NEXT we open admin dashboard widget, and try to add a user (add button should be disabled)
-
-        browser.waitForElementVisible(MainPage.USER_MENU_BUTTON, 2000, "[Main Page] User Menu Button is visible.");
-
-        openAdminWidget(browser, AdminWidgetType.DASHBOARDS);
+        DashboardAdmin.navigateTo(browser);
 
         browser.waitForElementVisible(
             DashboardAdminWidget.dashboardTableEditButton(DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME),
@@ -371,10 +355,7 @@ module.exports = {
         browser.click(DashboardAdminWidget.DASHBOARD_DIALOG_CLOSE);
 
         // Now that the dashboard is shared, we should be able to add users
-
-        browser.waitForElementVisible(MainPage.USER_MENU_BUTTON);
-
-        openAdminWidget(browser, AdminWidgetType.DASHBOARDS);
+        DashboardAdmin.navigateTo(browser);
 
         browser.waitForElementVisible(
             DashboardAdminWidget.dashboardTableEditButton(DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME),
