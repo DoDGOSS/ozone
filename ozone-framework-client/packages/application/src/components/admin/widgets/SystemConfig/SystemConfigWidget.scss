@@ -4,13 +4,15 @@
 
 :local .formRow {
   display: table-row;
+  border-top: 4em solid transparent;
+  border-bottom: 4em solid transparent;
 }
 
 :local .formCell {
   display: table-cell;
-  border-top: 0.5em solid transparent;
-  border-bottom: 0.5em solid transparent;
-  border-right: 0.5em solid transparent;
+  border-top: 1em solid transparent;
+  border-bottom: 1em solid transparent;
+  border-right: 3em solid transparent;
 }
 
 :local .fieldTitle {
@@ -25,3 +27,27 @@
   font-weight: bold;
 }
 
+#errorText {
+  font-size: .8em;
+  color: red;
+}
+
+
+// https://stackoverflow.com/questions/396145/how-to-vertically-center-a-div-for-all-browsers
+:local .vCenter1 {
+  display: table;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+:local .centered {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+:local .wideInput {
+  width: 100%;
+}

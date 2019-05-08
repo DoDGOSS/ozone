@@ -20,6 +20,14 @@ export class SystemConfigAPI {
             validate: validateConfig
         });
     }
+
+    async updateConfigById(id: number, value: string): Promise<Response<ConfigDTO>> {
+        const requestData: ConfigUpdateRequest = {
+            id,
+            value
+        };
+        return this.updateConfig(requestData);
+    }
 }
 
 export const systemConfigApi = new SystemConfigAPI();
