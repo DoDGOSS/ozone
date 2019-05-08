@@ -10,7 +10,7 @@ import * as styles from "./index.scss";
 
 export interface CopyLayoutsProps {
     onChange: (event: React.FormEvent) => void;
-    selectedValue: string | "empty";
+    selectedValue: string | "";
 }
 
 const _DashboardSelect: React.FC<CopyLayoutsProps & FieldProps<any>> = (props) => {
