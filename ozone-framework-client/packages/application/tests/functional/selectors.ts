@@ -227,12 +227,18 @@ export namespace UserAdminWidget {
         export const TAB_PROPERTIES = `div[data-tab-id='user_properties']`;
 
         export const TAB_WIDGETS = `div[data-tab-id='user_widgets']`;
+
+        export const TAB_STACKS = `div[data-tab-id='user_stacks']`;
     }
 
     export namespace WidgetsUser {
         export const TAB = "div[data-element-id='user-admin-add-widget']";
 
         export const ADD_BUTTON = "button[data-element-id='user-edit-add-widget-dialog-add-button']";
+    }
+
+    export namespace StacksUser {
+        export const ADD_BUTTON = "button[data-element-id='user-edit-add-stack-dialog-add-button']";
     }
 
     export namespace UserPreferences {
