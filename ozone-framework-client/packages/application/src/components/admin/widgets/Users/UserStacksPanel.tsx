@@ -2,33 +2,32 @@ import * as styles from "../Widgets.scss";
 
 import * as React from "react";
 import { Column } from "react-table";
-import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
+import { Button, ButtonGroup } from "@blueprintjs/core";
 
 import { GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton } from "../../../generic-table/TableButtons";
-import { GroupStacksEditDialog } from "./GroupStacksEditDialog";
-
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 
-import { GroupDTO } from "../../../../api/models/GroupDTO";
 import { stackApi, StackQueryCriteria } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";
+import { UserDTO } from "../../../../api/models/UserDTO";
+import { UserStacksEditDialog } from "./UserStacksEditDialog";
 
-interface GroupEditStacksProps {
+interface UserEditStacksProps {
     onUpdate: (update?: any) => void;
-    group: GroupDTO;
+    user: UserDTO;
 }
 
-export interface GroupEditStacksState {
+export interface UserEditStacksState {
     stacks: StackDTO[];
     loading: boolean;
     showAdd: boolean;
 }
 
-export class GroupStacksPanel extends React.Component<GroupEditStacksProps, GroupEditStacksState> {
+export class UserStacksPanel extends React.Component<UserEditStacksProps, UserEditStacksState> {
     defaultPageSize: number = 5;
 
-    constructor(props: GroupEditStacksProps) {
+    constructor(props: UserEditStacksProps) {
         super(props);
         this.state = {
             stacks: [],
@@ -43,7 +42,7 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
 
     render() {
         return (
-            <div data-element-id="group-admin-add-stack">
+            <div data-element-id="user-admin-add-stack">
                 <GenericTable
                     items={this.state.stacks}
                     getColumns={() => this.getTableColumns()}
@@ -58,11 +57,11 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
                         text="Add"
                         onClick={() => this.showAdd()}
                         loading={this.state.loading}
-                        data-element-id="group-edit-add-stack-dialog-add-button"
+                        data-element-id="user-edit-add-stack-dialog-add-button"
                     />
                 </div>
 
-                <GroupStacksEditDialog show={this.state.showAdd} onSubmit={this.addStacks} onClose={this.closeDialog} />
+                <UserStacksEditDialog show={this.state.showAdd} onSubmit={this.addStacks} onClose={this.closeDialog} />
             </div>
         );
     }
@@ -95,10 +94,10 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
     }
 
     private getStacks = async () => {
-        const currentGroup: GroupDTO = this.props.group;
+        const currentUser: UserDTO = this.props.user;
 
         const criteria: StackQueryCriteria = {
-            groupId: currentGroup.id
+            userId: currentUser.id
         };
 
         const response = await stackApi.getStacks(criteria);
@@ -114,7 +113,7 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
 
     private addStacks = async (stacks: Array<StackDTO>) => {
         for (const newStack of stacks) {
-            const response = await stackApi.addStackGroups(newStack.id, [this.props.group]);
+            const response = await stackApi.addStackUsers(newStack.id, [this.props.user]);
             if (response.status !== 200) break;
         }
 
@@ -139,8 +138,8 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
             message: [
                 "This action will remove ",
                 { text: stack.name, style: "bold" },
-                " from group ",
-                { text: this.props.group.name, style: "bold" },
+                " from user ",
+                { text: this.props.user.username, style: "bold" },
                 "."
             ],
             onConfirm: () => this.removeStack(stack)
@@ -148,8 +147,7 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
     };
 
     private async removeStack(stack: StackDTO): Promise<boolean> {
-        const response = await stackApi.removeStackGroups(stack.id, [this.props.group]);
-        console.log(response);
+        const response = await stackApi.removeStackUsers(stack.id, [this.props.user]);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;
