@@ -27,7 +27,7 @@ const _DashboardSelect: React.FC<CopyLayoutsProps & FieldProps<any>> = (props) =
 
     return (
         <div className={styles.select} data-element-id="DashboardSelect">
-            <select onChange={onChange}>
+            <select onChange={onChange} data-element-id="Select">
                 <option key='default' value='default'>Select</option>
                 {dashboards.map((dashboard) => (
                     <option key={dashboard.guid} value={dashboard.guid}>
