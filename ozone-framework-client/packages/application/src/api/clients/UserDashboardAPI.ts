@@ -39,11 +39,10 @@ export class UserDashboardAPI {
             guid: uuid(),
             isdefault: !isNil(opts.isDefault) ? opts.isDefault : false,
             state: [],
-            layoutConfig:dashboardLayoutToJson(
-              {
+            layoutConfig: dashboardLayoutToJson({
                 tree: opts.tree || null,
                 panels: opts.panels || {}
-              }),
+            }),
             publishedToStore: false
         };
         const requestData = qs.stringify({

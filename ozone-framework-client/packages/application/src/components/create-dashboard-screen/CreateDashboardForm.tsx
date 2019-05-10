@@ -17,7 +17,6 @@ import { DashboardSelect } from "./DashboardSelect";
 
 import { handleStringChange, handleSelectChange } from "../../utility";
 
-
 import { dashboardService } from "../../stores/DashboardService";
 
 export interface CreateDashboardFormProps {
@@ -50,14 +49,14 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
                 iconImageUrl: "/images/dashboard.png",
                 description: "",
                 presetLayoutName: null,
-                copyGuid:"",
+                copyGuid: ""
             }}
             onSubmit={(values: CreateDashboardOptions, actions: FormikActions<CreateDashboardOptions>) => {
                 values.presetLayoutName = selectedPresetLayout;
-                if(selectedValue=='copy'){
-                  values.presetLayoutName = selectedValue;
-                  values.copyGuid = selectedCopyLayout;
-                  // onCopyDashboard(values.presetLayoutName);
+                if (selectedValue == "copy") {
+                    values.presetLayoutName = selectedValue;
+                    values.copyGuid = selectedCopyLayout;
+                    // onCopyDashboard(values.presetLayoutName);
                 }
 
                 dashboardStore
@@ -69,8 +68,6 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
                     .catch(() => {
                         actions.setStatus({ error: "An unexpected error has occurred" });
                     });
-
-
             }}
         >
             {(formik: FormikProps<DashboardUpdateRequest>) => (
@@ -95,7 +92,7 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
                         )}
                         <Radio label="Copy the layout of an existing page" value="copy" />
                         {selectedValue === "copy" && (
-                          <DashboardSelect selectedValue={selectedCopyLayout} onChange={handleCopyLayoutChange}/>
+                            <DashboardSelect selectedValue={selectedCopyLayout} onChange={handleCopyLayoutChange} />
                         )}
                         <Radio label="Create a new layout" value="new" />
                     </RadioGroup>
