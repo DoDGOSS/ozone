@@ -42,38 +42,42 @@ module.exports = {
         browser.closeWindow().end();
     },
 
-      //Copy
-      "As a user, I want to be able to copy an existing dashboard layout from another dashboard": (browser: NightwatchAPI) => {
-          loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+    //Copy
+    "As a user, I want to be able to copy an existing dashboard layout from another dashboard": (
+        browser: NightwatchAPI
+    ) => {
+        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
 
-          browser.waitForElementVisible(MainPage.DASHBOARD_BUTTON, 2000, "[Dashboard Button] is visible");
+        browser.waitForElementVisible(MainPage.DASHBOARD_BUTTON, 2000, "[Dashboard Button] is visible");
 
-          browser
-              .click(MainPage.DASHBOARD_BUTTON)
-              .waitForElementVisible(DashboardDialog.DASHBOARD_DIALOG, 2000, "[Dashboard Dialog] is visible");
+        browser
+            .click(MainPage.DASHBOARD_BUTTON)
+            .waitForElementVisible(DashboardDialog.DASHBOARD_DIALOG, 2000, "[Dashboard Dialog] is visible");
 
-          browser.click(DashboardDialog.CREATE_DASHBOARD_BUTTON);
+        browser.click(DashboardDialog.CREATE_DASHBOARD_BUTTON);
 
-          browser.setValue(
-              DashboardDialog.CreateDashboard.NAME_FIELD,
-              DashboardDialog.CreateDashboard.CREATE_DASHBOARD_NAME
-          );
+        browser.setValue(
+            DashboardDialog.CreateDashboard.NAME_FIELD,
+            DashboardDialog.CreateDashboard.CREATE_DASHBOARD_NAME
+        );
 
-          browser.click(DashboardDialog.CreateDashboard.COPY);
+        browser.click(DashboardDialog.CreateDashboard.COPY);
 
-          browser.click(DashboardDialog.CreateDashboard.COPY_DROPDOWN);
-          browser.click(DashboardDialog.CreateDashboard.FIRST_DASHBOARD);
+        browser.click(DashboardDialog.CreateDashboard.COPY_DROPDOWN);
+        browser.click(DashboardDialog.CreateDashboard.FIRST_DASHBOARD);
 
-          browser.click(DashboardDialog.CreateDashboard.SUBMIT).waitForElementNotPresent(
-              DashboardDialog.CREATE_DASHBOARD_BUTTON,
-              1000,
-              "[Create Dashboard Dialog] is closed"
-          );
+        browser
+            .click(DashboardDialog.CreateDashboard.SUBMIT)
+            .waitForElementNotPresent(
+                DashboardDialog.CREATE_DASHBOARD_BUTTON,
+                1000,
+                "[Create Dashboard Dialog] is closed"
+            );
 
-          browser.assert.containsText(MainPage.EMPTY_PANEL,"Placeholder", "[Empty Panel] is empty");
+        browser.assert.containsText(MainPage.EMPTY_PANEL, "Placeholder", "[Empty Panel] is empty");
 
-          browser.closeWindow().end();
-      },
+        browser.closeWindow().end();
+    },
 
     //    Edit
     "As an administrator, I can edit a dashboard": (browser: NightwatchAPI) => {
