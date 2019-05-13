@@ -32,10 +32,7 @@ export class DashboardAPI {
             data: JSON.stringify({ guid })
         });
 
-        return this.gateway.get(`dashboard/${guid}/`, requestData, {
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
+        return this.gateway.get(`dashboard/${guid}/`, {
             validate: validateDashboard
         });
     }
