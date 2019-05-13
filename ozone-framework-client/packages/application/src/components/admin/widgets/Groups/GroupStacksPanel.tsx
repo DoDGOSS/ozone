@@ -149,7 +149,6 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
 
     private async removeStack(stack: StackDTO): Promise<boolean> {
         const response = await stackApi.removeStackGroups(stack.id, [this.props.group]);
-        console.log(response);
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;

@@ -29,7 +29,6 @@ const renderWidgetType: ItemRenderer<WidgetTypeReference> = (
 };
 
 export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({ widget, onSubmit, widgetTypes }) => {
-    console.log(widget);
     return (
         <Formik
             initialValues={widget}
