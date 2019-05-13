@@ -17,22 +17,22 @@
     <script type="application/javascript">
         window.env = window.env || {};
         window.env.server = {
-            url: "http://localhost:8080",
+            url: '${grailsApplication.config.getProperty("owf.server.url")}',
             contextPath: "${request.contextPath}",
-            staticAssetPath: "static"
+            staticAssetPath: '${grailsApplication.config.getProperty("owf.server.staticAssetPath")}'
         };
         window.env.consentNotice = {
-            // title: "",
-            // message: "",
-            // details: {
-            //     isEnabled: true,
-            //     linkText: ""
-            // },
-            nextUrl: "${request.contextPath}/login"
+            title: '${grailsApplication.config.getProperty("owf.consent.title")}',
+            message: '${grailsApplication.config.getProperty("owf.consent.message").replace("\n", "¶")}'.replace(/¶/g, "\n"),
+            details: {
+                isEnabled: '${grailsApplication.config.getProperty("owf.consent.details.enabled")}',
+                linkText: '${grailsApplication.config.getProperty("owf.consent.details.linkText")}'
+            },
+            nextUrl: '${grailsApplication.config.getProperty("owf.consent.nextUrl")}'
         };
         window.env.userAgreement = {
-            // title: "",
-            // message: ""
+            title: '${grailsApplication.config.getProperty("owf.agreement.title")}',
+            message: '${grailsApplication.config.getProperty("owf.agreement.message").replace("\n", "¶")}'.replace(/¶/g, "\n")
         };
     </script>
 
