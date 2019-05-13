@@ -8,32 +8,20 @@
                            http://www.springframework.org/schema/security
                            http://www.springframework.org/schema/security/spring-security-4.2.xsd">
 
+    <import resource="beans/common.xml" />
+    <import resource="beans/basic-authentication.xml" />
 
-    <bean id="propConfig" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
-        <property name="location" value="classpath:ozone/framework/application.properties"/>
-    </bean>
+    <!-- Authentication manager must be defined using 'id' and not 'ref' -->
+    <sec:authentication-manager id="authenticationManager">
+        <sec:authentication-provider ref="basicAuthProvider"/>
+    </sec:authentication-manager>
 
-
-    <import resource="security/method-security.xml"/>
-
-    <import resource="security/authentication-providers.xml"/>
-
-
-    <bean id="authenticationEventPublisher"
-          primary="true"
-          class="org.springframework.security.authentication.DefaultAuthenticationEventPublisher"/>
-
-    <bean id="x509Filter" class="org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter">
-        <property name="authenticationManager" ref="authenticationManager"/>
-    </bean>
-
-    <bean id="ozoneCookieFilter" class="ozone.security.filters.OzoneCookieFilter"/>
-
-
-    <sec:http realm="OZONE">
+    <sec:http realm="OZONE"
+              authentication-manager-ref="authenticationManager"
+              entry-point-ref="ozoneAuthenticationEntryPoint">
 
         <sec:port-mappings>
-            <sec:port-mapping http="${ozone.unsecurePort}" https="${ozone.port}"/>
+            <sec:port-mapping http="8080" https="8443"/>
         </sec:port-mappings>
 
         <!-- CSRF protection must be disabled (enabled by default) to allow POST (& PATCH, PUT, DELETE) requests,
@@ -44,6 +32,8 @@
         <sec:headers>
             <sec:frame-options policy="SAMEORIGIN"/>
         </sec:headers>
+
+        <sec:custom-filter ref="ozoneCookieFilter" before="ANONYMOUS_FILTER"/>
 
         <sec:intercept-url pattern="/static/**"
                            access="permitAll()" />
@@ -62,6 +52,8 @@
 
         <sec:form-login login-page="/login"
                         login-processing-url="/perform_login"
+                        authentication-success-handler-ref="ozoneAuthenticationSuccessHandler"
+                        authentication-failure-handler-ref="ozoneAuthenticationFailureHandler"
                         default-target-url="/"
                         always-use-default-target="true"
                         username-parameter="username"
@@ -76,23 +68,6 @@
             <sec:concurrency-control max-sessions="1" expired-url="/login?time=1" />
         </sec:session-management>
 
-        <!-- Cannot use <sec:x509> element since it adds an extra authenticationprovider that bypasses the caching provider -->
-        <sec:custom-filter ref="x509Filter" position="X509_FILTER"/>
-
-        <sec:custom-filter ref="ozoneCookieFilter" before="ANONYMOUS_FILTER"/>
-
     </sec:http>
-
-
-    <sec:authentication-manager alias="authenticationManager">
-
-        <!-- Certificate Authentication -->
-        <sec:authentication-provider ref="cachingPreauthProvider"/>
-
-        <!-- HTTP Basic Authentication -->
-        <sec:authentication-provider ref="cachingUsernamePasswordAuthProvider"/>
-
-    </sec:authentication-manager>
-
 
 </beans>

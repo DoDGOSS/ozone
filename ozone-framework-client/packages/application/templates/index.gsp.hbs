@@ -17,18 +17,18 @@
     <script type="application/javascript">
         window.env = window.env || {};
         window.env.server = {
-            url: "http://localhost:8080",
+            url: '${grailsApplication.config.getProperty("owf.server.url")}',
             contextPath: "${request.contextPath}",
-            staticAssetPath: "static"
+            staticAssetPath: '${grailsApplication.config.getProperty("owf.server.staticAssetPath")}'
         };
         window.env.login = {
-            isEnabled: true,
-            loginUrl: "${request.contextPath}/login"
+            isEnabled: ${grailsApplication.config.getProperty("owf.login.enabled")},
+            loginUrl: '${grailsApplication.config.getProperty("owf.login.url")}'
         };
         window.env.logout = {
-            isEnabled: true,
-            logoutUrl: "${request.contextPath}/login?out=1"
-        }
+            isEnabled: ${grailsApplication.config.getProperty("owf.logout.enabled")},
+            logoutUrl: '${grailsApplication.config.getProperty("owf.logout.url")}'
+        };
     </script>
 
 {{#each scripts as |script|}}
