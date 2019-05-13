@@ -8,17 +8,20 @@ import { values } from "lodash";
 
 import { Button, Classes, InputGroup, Overlay } from "@blueprintjs/core";
 
-import { ConfirmationDialog } from "../confirmation-dialog/ConfirmationDialog";
-import { mainStore } from "../../stores/MainStore";
+import { UserWidget } from "../../models/UserWidget";
+
 import { dashboardStore } from "../../stores/DashboardStore";
 import { dashboardService } from "../../stores/DashboardService";
-import { UserWidget } from "../../models/UserWidget";
+import { mainStore } from "../../stores/MainStore";
+import { userWidgetApi } from "../../api/clients/UserWidgetAPI";
+
+import { ConfirmationDialog } from "../confirmation-dialog/ConfirmationDialog";
 
 import { PropsBase } from "../../common";
 import { SortButton, SortOrder } from "./SortButton";
 
+import { assetUrl } from "../../server";
 import { classNames, handleStringChange, isBlank } from "../../utility";
-import { userWidgetApi } from "../../api/clients/UserWidgetAPI";
 
 export const WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
     const isOpen = useBehavior(mainStore.isWidgetToolbarOpen);
@@ -99,6 +102,8 @@ export const UserWidgetTile: React.FC<WidgetProps> = ({ userWidget }) => {
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const [showDeleteButton, setShowDeleteButton] = useState(false);
 
+    const widget = userWidget.widget;
+
     return (
         <div
             className={styles.tile}
@@ -106,8 +111,8 @@ export const UserWidgetTile: React.FC<WidgetProps> = ({ userWidget }) => {
             onMouseLeave={() => setShowDeleteButton(false)}
         >
             <div className={styles.subtile} onClick={() => dashboardService.addWidget(userWidget)}>
-                <img className={styles.tileIcon} src={userWidget.widget.images.smallUrl} />
-                <span className={styles.tileTitle}>{userWidget.widget.title}</span>
+                <img className={styles.tileIcon} src={assetUrl(widget.images.smallUrl)} />
+                <span className={styles.tileTitle}>{widget.title}</span>
             </div>
             <div>
                 {showDeleteButton ? (

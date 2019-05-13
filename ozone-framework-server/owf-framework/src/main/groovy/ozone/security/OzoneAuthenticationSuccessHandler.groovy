@@ -1,5 +1,7 @@
 package ozone.security
 
+import groovy.transform.CompileStatic
+
 import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -13,10 +15,10 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import ozone.owf.grails.services.AccountService
 
+@CompileStatic
+final class OzoneAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-class OzoneAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-
-    AccountService accountService;
+    AccountService accountService
 
     @Override
     @Transactional
@@ -35,7 +37,7 @@ class OzoneAuthenticationSuccessHandler implements AuthenticationSuccessHandler 
             response.setContentType("application/json;charset=UTF-8")
             response.writer.write(content.toString())
             response.status = 400
-            clearAuthenticationAttributes(request);
+            clearAuthenticationAttributes(request)
             return
         }
 
@@ -44,7 +46,7 @@ class OzoneAuthenticationSuccessHandler implements AuthenticationSuccessHandler 
         response.setContentType("application/json;charset=UTF-8")
         response.writer.write(content.toString())
         response.status = 200
-        clearAuthenticationAttributes(request);
+        clearAuthenticationAttributes(request)
     }
 
     static void clearAuthenticationAttributes(HttpServletRequest request) {
