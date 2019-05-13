@@ -6,6 +6,7 @@ import { DashboardAdmin } from "./DashboardAdmin";
 import { GroupAdmin } from "./GroupAdmin";
 import { UserAdmin } from "./UserAdmin";
 import { WidgetAdmin } from "./WidgetAdmin";
+import { SysConfigAdmin } from "./SysConfigAdmin";
 
 export class AdminToolsDialog extends PageObject {
     static Selector = `div[data-element-id="administration"]`;
@@ -14,6 +15,7 @@ export class AdminToolsDialog extends PageObject {
     static UserAdminItem = `${AdminToolsDialog.Selector} div[data-element-id="User Administration"]`;
     static GroupsAdminItem = `${AdminToolsDialog.Selector} div[data-element-id="Group Administration"]`;
     static DashboardAdminItem = `${AdminToolsDialog.Selector} div[data-element-id="Dashboard Administration"]`;
+    static SysConfigAdminItem = `${AdminToolsDialog.Selector} div[data-element-id="System Configuration"]`;
 
     constructor(browser: NightwatchAPI) {
         super(browser, AdminToolsDialog.Selector, "Admin Tools Dialog");
@@ -37,5 +39,10 @@ export class AdminToolsDialog extends PageObject {
     openDashboardAdminWidget(): DashboardAdmin {
         this.clickWhenVisible(AdminToolsDialog.DashboardAdminItem, "Dashboard Admin widget tile");
         return this.open(DashboardAdmin).waitUntilVisible();
+    }
+
+    openSysConfigAdminWidget(): SysConfigAdmin {
+        this.clickWhenVisible(AdminToolsDialog.SysConfigAdminItem, "SysConfig Admin widget tile");
+        return this.open(SysConfigAdmin).waitUntilVisible();
     }
 }

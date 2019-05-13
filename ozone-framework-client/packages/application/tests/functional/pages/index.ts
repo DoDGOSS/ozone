@@ -10,3 +10,4 @@ export * from "./UserAdmin";
 export * from "./UserAgreementDialog";
 export * from "./UserMenu";
 export * from "./WidgetAdmin";
+export * from "./SysConfigAdmin";
