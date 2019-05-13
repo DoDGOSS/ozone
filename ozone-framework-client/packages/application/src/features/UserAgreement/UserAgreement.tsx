@@ -3,10 +3,7 @@ import { Button, Intent } from "@blueprintjs/core";
 
 import { MarkdownDialog } from "../../shared/components/MarkdownDialog/MarkdownDialog";
 
-export interface UserAgreementOptions {
-    title: string;
-    message: string;
-}
+import { UserAgreementOptions } from "../../environment";
 
 export interface UserAgreementProps {
     opts: UserAgreementOptions;

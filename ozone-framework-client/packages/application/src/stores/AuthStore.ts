@@ -8,6 +8,7 @@ import { AuthUserDTO } from "../api/models/AuthUserDTO";
 import { mainStore } from "./MainStore";
 import { AuthenticationError } from "../api/errors";
 import { isNil } from "../utility";
+import { env } from "../environment";
 
 export enum AuthStatus {
     PENDING,
@@ -32,7 +33,7 @@ export class AuthStore {
         this.gateway
             .logout()
             .then(() => {
-                location.reload();
+                window.open(env().logout.logoutUrl, "_self");
             })
             .catch(() => {
                 // TODO: Error handling

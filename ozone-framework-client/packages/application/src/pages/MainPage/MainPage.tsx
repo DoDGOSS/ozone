@@ -10,7 +10,7 @@ import { AuthStatus, authStore } from "../../stores/AuthStore";
 import { HomeScreen } from "../../components/home-screen/HomeScreen";
 import { ClassificationWrapper } from "../../components/classification/ClassificationWrapper";
 
-import { env } from "./environment";
+import { env } from "../../environment";
 
 export const MainPage: React.FC<{}> = () => {
     const loginOpts = useMemo(() => env().login, []);

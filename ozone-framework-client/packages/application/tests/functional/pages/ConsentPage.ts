@@ -9,7 +9,7 @@ export class ConsentPage extends PageObject {
     static Selector = `div[data-test-id="consent-notice"]`;
 
     static UserAgreementLink = `div[data-test-id="consent-notice"] a`;
-    static AcceptButton = `div[data-test-role="dialog-actions"] a[role="button"]`;
+    static AcceptButton = `div[data-test-role="dialog-actions"] button`;
 
     constructor(browser: NightwatchAPI) {
         super(browser, ConsentPage.Selector, "Consent Page");

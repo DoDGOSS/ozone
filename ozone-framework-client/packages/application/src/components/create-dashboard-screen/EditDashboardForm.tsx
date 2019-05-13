@@ -1,3 +1,5 @@
+import * as styles from "./index.scss";
+
 import * as React from "react";
 
 import { Form, Formik, FormikActions, FormikProps } from "formik";
@@ -8,10 +10,10 @@ import { DashboardUpdateRequest } from "../../api/models/DashboardDTO";
 
 import { FormError, TextField } from "../form";
 
-import * as styles from "./index.scss";
-
 import { stackApi } from "../../api/clients/StackAPI";
 import { dashboardApi } from "../../api/clients/DashboardAPI";
+
+import { assetUrl } from "../../server";
 
 export interface EditDashboardFormProps {
     onSubmit: () => void;
@@ -48,7 +50,7 @@ export const EditDashboardForm: React.FC<EditDashboardFormProps> = ({ onSubmit, 
 
                     <div className={styles.form}>
                         <div className={styles.formIcon}>
-                            <img width="60px" src={formik.values.iconImageUrl} />
+                            <img width="60px" src={assetUrl(formik.values.iconImageUrl)} />
                         </div>
                         <div className={styles.formField}>
                             <TextField name="name" label="Title" labelInfo="(required)" />
