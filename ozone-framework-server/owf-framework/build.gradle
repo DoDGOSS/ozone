@@ -123,7 +123,8 @@ dependencies {
     compile group: 'org.grails.plugins', name: 'events'
     compile group: 'org.grails.plugins', name: 'hibernate5'
     compile group: 'org.grails.plugins', name: 'gsp'
-
+    compile group: 'org.grails.plugins', name: 'external-config', version: '1.2.2'
+    
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind'
 
     console group: 'org.grails', name: 'grails-console'
@@ -223,14 +224,17 @@ build.dependsOn(copyClientResources, copyClientGsps)
 processResources.dependsOn(copyClientResources, copyClientGsps)
 
 task cleanClientResources(type: Delete, group: 'tasks') {
+    delete fileTree(dir: "grails-app/views", include: "*.gsp")
+
     delete fileTree("src/main/resources/public").matching {
         exclude '.gitignore'
     }
 
-    delete("src/main/resources/public/examples",
+    delete("src/main/resources/public/assets",
+           "src/main/resources/public/css",
+           "src/main/resources/public/examples",
            "src/main/resources/public/images",
-           "src/main/resources/public/scripts",
-           "src/main/resources/public/assets")
+           "src/main/resources/public/scripts")
 }
 
 clean.dependsOn(cleanClientResources)
