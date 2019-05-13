@@ -1,15 +1,18 @@
-import * as React from "react";
+import styles from "./index.scss";
+
+import React, { useMemo } from "react";
 
 import { Field, FieldProps } from "formik";
 
 import { FormGroup, InputGroup, Intent } from "@blueprintjs/core";
 
-import * as styles from "./index.scss";
+import { classNames } from "../../utility";
 
 export interface TextFieldProps {
     name: string;
     label?: string;
     labelInfo?: string;
+    labelError?: boolean;
     type?: string;
     disabled?: boolean;
     placeholder?: string;
@@ -21,11 +24,18 @@ const _TextField: React.FC<TextFieldProps & FieldProps<any>> = (props) => {
     const errors = props.form.errors[props.field.name];
     const showError = errors && props.form.touched[props.field.name];
 
+    const labelInfo = useMemo(() => {
+        if (props.labelError === true) {
+            return <span className={classNames(styles.labelValidationError, { show: showError })}>({errors})</span>;
+        }
+        return props.labelInfo;
+    }, [props.labelInfo, props.labelError, showError]);
+
     return (
         <FormGroup
             label={props.label}
             labelFor={props.name}
-            labelInfo={props.labelInfo}
+            labelInfo={labelInfo}
             inline={props.inline}
             className={props.className}
         >
@@ -38,7 +48,9 @@ const _TextField: React.FC<TextFieldProps & FieldProps<any>> = (props) => {
                 disabled={props.disabled}
                 placeholder={props.placeholder}
             />
-            {showError && <div className={styles.validationError}>{errors}</div>}
+            {props.labelError !== true && (
+                <div className={classNames(styles.validationError, { show: showError })}>{errors}</div>
+            )}
         </FormGroup>
     );
 };
