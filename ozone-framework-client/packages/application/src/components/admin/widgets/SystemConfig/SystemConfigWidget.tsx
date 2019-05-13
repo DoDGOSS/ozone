@@ -177,8 +177,7 @@ function getConfigFieldValue(config: ConfigDTO): any {
                                 ? clearError(config)
                                 : displayIntegerError(config);
                         }}
-                        required
-                        pattern="\d{1,9}"
+                        pattern="^([0-9]{1,2}|1[0-4][0-9]|150)$"
                         large={false}
                         type="textarea"
                     />
@@ -201,7 +200,7 @@ function displayStringError(config: ConfigDTO, newValue: string) {
 function displayIntegerError(config: ConfigDTO) {
     const errorLocation = document.querySelector("[data-element-id=ErrorMessageFor_" + config.id + "]");
     if (errorLocation) {
-        errorLocation.innerHTML = "You must enter a value between 0 and 999999999.";
+        errorLocation.innerHTML = "You must enter a value between 0 and 150.";
     }
 }
 
