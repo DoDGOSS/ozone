@@ -77,7 +77,6 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
     private getWidgets = async () => {
         const currentGroup: GroupDTO = this.props.group;
 
-        // console.log("current group:" + currentGroup.id)
         const criteria: WidgetQueryCriteria = {
             group_id: currentGroup.id
         };
