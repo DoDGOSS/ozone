@@ -72,8 +72,6 @@ export class GroupSetup extends React.Component<GroupSetupProps, GroupSetupState
     }
 
     private createOrUpdateGroup = async (group: GroupCreateRequest | GroupUpdateRequest) => {
-        console.log("Submitting group");
-
         if (group.active === undefined) {
             group.status = group.status || "inactive";
         } else {
@@ -93,7 +91,6 @@ export class GroupSetup extends React.Component<GroupSetupProps, GroupSetupState
             response.data.data.length !== undefined &&
             response.data.data.length > 0
         ) {
-            console.log(response.data);
             // this.setState({
             //     group: response.data.data[0]
             // });
