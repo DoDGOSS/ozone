@@ -32,7 +32,8 @@ export class UserDashboardAPI {
 
     async createDashboard(opts: DashboardCreateOpts): Promise<Response<DashboardDTO>> {
         const stack = {
-            name: opts.name
+            name: opts.name,
+            id: opts.stackId
         };
         const dashboard = {
             name: opts.name,
@@ -67,4 +68,5 @@ export const userDashboardApi = new UserDashboardAPI();
 export interface DashboardCreateOpts extends DashboardLayout {
     name: string;
     isDefault?: boolean;
+    stackId?: number;
 }

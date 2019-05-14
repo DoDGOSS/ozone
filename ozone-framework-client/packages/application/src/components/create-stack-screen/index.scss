@@ -1,0 +1,61 @@
+:local .dialog {
+  min-width: 600px !important;
+}
+
+:local .form {
+  display: flex !important;
+}
+
+:local .formIcon {
+  padding: 10px !important;
+  width: 20% !important;
+}
+
+:local .formField {
+  width: 80% !important;
+}
+
+:local .select {
+  padding-bottom: 15px !important;
+}
+
+:local .premadeLayout {
+  padding-bottom: 15px !important;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+:local(.premadeLayoutOption) {
+  flex: 0 0 auto;
+
+  margin: 0.5em;
+
+  &:not(:first-child) {
+  }
+}
+
+:local(.layoutIcon) {
+  cursor: pointer;
+
+  width: 59px;
+  height: 45px;
+
+  padding: .2em;
+}
+
+
+:local(.premadeLayoutRadio) {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+
+  &:checked + :local(.layoutIcon) {
+    border: 2px solid hsla(195, 50%, 41%, 0.5);
+    border-radius: 4px;
+    background: hsla(195, 50%, 41%, 0.2);
+  }
+}
+

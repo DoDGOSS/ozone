@@ -30,7 +30,7 @@ import { dashboardStore } from "../../stores/DashboardStore";
 export const NavigationBar: React.FC<PropsBase> = ({ className }) => {
     const user = useBehavior(authStore.user);
 
-    const isDashboardDialogVisible = useBehavior(mainStore.isDashboardDialogVisible);
+    const isStackDialogVisible = useBehavior(mainStore.isStackDialogVisible);
     const isHelpDialogVisible = useBehavior(mainStore.isHelpDialogVisible);
     const isWidgetToolbarOpen = useBehavior(mainStore.isWidgetToolbarOpen);
 
@@ -40,10 +40,10 @@ export const NavigationBar: React.FC<PropsBase> = ({ className }) => {
                 <CenterButton onClick={() => null} />
                 <OWFButton onClick={() => null} />
 
-                <DashboardsButton
-                    data-element-id="dashboards-button"
-                    active={isDashboardDialogVisible}
-                    onClick={mainStore.showDashboardDialog}
+                <StacksButton
+                    data-element-id="stacks-button"
+                    active={isStackDialogVisible}
+                    onClick={mainStore.showStackDialog}
                 />
 
                 <WidgetsButton active={isWidgetToolbarOpen} onClick={mainStore.toggleWidgetToolbar} />
@@ -86,19 +86,19 @@ interface OnClick {
     onClick: () => void;
 }
 
-const DashboardsButton: React.FC<Active & OnClick> = ({ active, onClick }) => (
+const StacksButton: React.FC<Active & OnClick> = ({ active, onClick }) => (
     <NavbarTooltip
-        title="Dashboards"
+        title="Stacks"
         shortcut="alt+shift+c"
-        description="Open the Dashboards window to start or manage your Dashboards."
+        description="Open the Stacks window to start or manage your Stacks."
     >
         <Button
             minimal
-            text="Dashboards"
+            text="Stacks"
             icon="control"
             active={active}
             onClick={onClick}
-            data-element-id="dashboards-button"
+            data-element-id="stacks-button"
         />
     </NavbarTooltip>
 );

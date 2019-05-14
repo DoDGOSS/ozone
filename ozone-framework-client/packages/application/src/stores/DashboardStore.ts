@@ -73,7 +73,8 @@ export class DashboardStore {
         const opts: DashboardCreateOpts = {
             name: dashboard.name,
             tree,
-            panels
+            panels,
+            stackId: dashboard.stackId
         };
         const createResponse = await this.userDashboardApi.createDashboard(opts);
         if (createResponse.status !== 200) {

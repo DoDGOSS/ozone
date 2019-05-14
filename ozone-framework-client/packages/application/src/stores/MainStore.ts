@@ -12,8 +12,8 @@ export class MainStore {
 
     private readonly isAboutVisible$ = new BehaviorSubject(false);
     private readonly isAdminToolsDialogOpen$ = new BehaviorSubject(false);
-    private readonly isCreateDashboardDialogVisible$ = new BehaviorSubject(false);
-    private readonly isDashboardDialogVisible$ = new BehaviorSubject(false);
+    private readonly isCreateStackDialogVisible$ = new BehaviorSubject(false);
+    private readonly isStackDialogVisible$ = new BehaviorSubject(false);
     private readonly isHelpDialogVisible$ = new BehaviorSubject(false);
     private readonly isLoginDialogOpen$ = new BehaviorSubject(false);
     private readonly isUserProfileDialogVisible$ = new BehaviorSubject(false);
@@ -36,9 +36,9 @@ export class MainStore {
         this.updateTheme(isBlank(this.themeClass$.value) ? DARK_THEME : "");
     };
 
-    isDashboardDialogVisible = () => asBehavior(this.isDashboardDialogVisible$);
-    showDashboardDialog = () => this.isDashboardDialogVisible$.next(true);
-    hideDashboardDialog = () => this.isDashboardDialogVisible$.next(false);
+    isStackDialogVisible = () => asBehavior(this.isStackDialogVisible$);
+    showStackDialog = () => this.isStackDialogVisible$.next(true);
+    hideStackDialog = () => this.isStackDialogVisible$.next(false);
 
     isWidgetToolbarOpen = () => asBehavior(this.isWidgetToolbarOpen$);
     closeWidgetToolbar = () => this.isWidgetToolbarOpen$.next(false);
@@ -48,9 +48,9 @@ export class MainStore {
     showAboutDialog = () => this.isAboutVisible$.next(true);
     hideAboutDialog = () => this.isAboutVisible$.next(false);
 
-    isCreateDashboardDialogVisible = () => asBehavior(this.isCreateDashboardDialogVisible$);
-    showCreateDashboardDialog = () => this.isCreateDashboardDialogVisible$.next(true);
-    hideCreateDashboardDialog = () => this.isCreateDashboardDialogVisible$.next(false);
+    isCreateStackDialogVisible = () => asBehavior(this.isCreateStackDialogVisible$);
+    showCreateStackDialog = () => this.isCreateStackDialogVisible$.next(true);
+    hideCreateStackDialog = () => this.isCreateStackDialogVisible$.next(false);
 
     isLoginDialogOpen = () => asBehavior(this.isLoginDialogOpen$);
     showLoginDialog = () => this.isLoginDialogOpen$.next(true);
