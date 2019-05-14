@@ -46,30 +46,56 @@ export namespace MainPage {
 
     export const USER_AGREEMENT_BACK = "button[data-element-id='back-button']";
 
-    export const DASHBOARD_BUTTON = "button[data-element-id='dashboards-button']";
+    export const STACKS_BUTTON = "button[data-element-id='stacks-button']";
 
     export const CLASSIFICATION_BANNER = "div[data-element-id='classification-banner'";
 
     export const EMPTY_PANEL = "div[class='mosaic-window-body'] > div";
 }
 
-export namespace DashboardDialog {
+export namespace StackDialog {
     export const CREATE_DASHBOARD_BUTTON = "button[data-element-id='dashboard-create-button']";
+    export const CREATE_STACK_BUTTON = "button[data-element-id='stack-create-button']";
 
-    export const DASHBOARD_DIALOG = "div[data-element-id='dashboard-dialog']";
+    export const STACK_DIALOG = "div[data-element-id='stack-dialog']";
 
+    export const CREATE_STACK_DIALOG = "a[data-element-id='CreateStackDialog']";
     export const CREATE_DASHBOARD_DIALOG = "a[data-element-id='CreateDashboardDialog']";
+
+    function getActionButtonsForStack(stackname: string): string {
+        return `div[data-role="stack-actions"][data-name=${stackname}]`;
+    }
 
     function getActionButtonsForDashboard(dashboardname: string): string {
         return `div[data-role="dashboard-actions"][data-name=${dashboardname}]`;
     }
 
-    export function getEditButtonForDashboard(dashboardname: string): string {
-        return `${getActionButtonsForDashboard(dashboardname)} ${GlobalElements.STD_EDIT_BUTTON}`;
+    export function getAddDashboardButtonForStack(stackname: string): string {
+        return `${getActionButtonsForStack(stackname)} ${GlobalElements.STD_ADD_BUTTON}`;
     }
 
-    export function getShareButtonForDashboard(dashboardname: string): string {
-        return `${getActionButtonsForDashboard(dashboardname)} ${GlobalElements.STD_SHARE_BUTTON}`;
+    export function getShareButtonForStack(stackname: string): string {
+        return `${getActionButtonsForStack(stackname)} ${GlobalElements.STD_SHARE_BUTTON}`;
+    }
+
+    export function getRestoreButtonForStack(stackname: string): string {
+        return `${getActionButtonsForStack(stackname)} ${GlobalElements.STD_RESTORE_BUTTON}`;
+    }
+
+    export function getEditButtonForStack(stackname: string): string {
+        return `${getActionButtonsForStack(stackname)} ${GlobalElements.STD_EDIT_BUTTON}`;
+    }
+
+    export function getDeleteButtonForStack(stackname: string): string {
+        return `${getActionButtonsForStack(stackname)} ${GlobalElements.STD_DELETE_BUTTON}`;
+    }
+
+    export function getRestoreButtonForDashboard(dashboardname: string): string {
+        return `${getActionButtonsForDashboard(dashboardname)} ${GlobalElements.STD_RESTORE_BUTTON}`;
+    }
+
+    export function getEditButtonForDashboard(dashboardname: string): string {
+        return `${getActionButtonsForDashboard(dashboardname)} ${GlobalElements.STD_EDIT_BUTTON}`;
     }
 
     export function getDeleteButtonForDashboard(dashboardname: string): string {
@@ -78,7 +104,7 @@ export namespace DashboardDialog {
 
     export const SUBMIT_BUTTON = "button[data-element-id='form-submit-button']";
 
-    export namespace CreateDashboard {
+    export namespace CreateStack {
         export const NAME_FIELD = "input[data-role='field'][name='name']";
 
         export const ICON_FIELD = "input[data-role='field'][name='iconImageUrl']";
@@ -91,7 +117,7 @@ export namespace DashboardDialog {
 
         export const COPY = "label[class='bp3-control bp3-radio']:nth-of-type(2)";
 
-        export const COPY_DROPDOWN = "select[data-element-id='Select']";
+        export const COPY_DROPDOWN = "div[data-element-id='DashboardSelect']";
 
         export const FIRST_DASHBOARD = "select[data-element-id='Select'] option:nth-child(2)";
 
@@ -99,9 +125,17 @@ export namespace DashboardDialog {
 
         export const SUBMIT = "button[data-element-id='form-submit-button']";
 
-        export const CREATE_DASHBOARD_NAME = "test1";
+        export const DROPDOWN_CARET = "svg[data-icon='chevron-right']";
 
-        export const EDIT_DASHBOARD_NAME = "test2";
+        export const CREATE_STACK_NAME = "test1";
+
+        export const EDIT_STACK_NAME = "test2";
+
+        export const CREATE_DASHBOARD_NAME = "testdash1";
+
+        export const EDIT_DASHBOARD_NAME = "testdash2";
+
+        export const COPY_DASHBOARD_NAME = "testdash3";
     }
 }
 
@@ -410,9 +444,13 @@ export namespace GlobalElements {
 
     export const GENERIC_TABLE_ADD_SEARCH_FIELD = `${GENERIC_TABLE_SELECTOR_DIALOG} input[data-element-id='search-field']`;
 
+    export const STD_ADD_BUTTON = "a[data-element-id='add-button']";
+
+    export const STD_SHARE_BUTTON = "a[data-element-id='share-button']";
+
+    export const STD_RESTORE_BUTTON = "a[data-element-id='restore-button']";
+
     export const STD_EDIT_BUTTON = "a[data-element-id='edit-button']";
 
     export const STD_DELETE_BUTTON = "a[data-element-id='delete-button']";
-
-    export const STD_SHARE_BUTTON = "a[data-element-id='share-button']";
 }
