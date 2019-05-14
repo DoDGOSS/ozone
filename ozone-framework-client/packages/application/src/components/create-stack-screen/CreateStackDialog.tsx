@@ -4,18 +4,19 @@ import { useBehavior } from "../../hooks";
 import { Classes, Dialog } from "@blueprintjs/core";
 
 import { mainStore } from "../../stores/MainStore";
-import { CreateDashboardForm } from "./CreateDashboardForm";
+import { CreateDashboardForm } from "../create-dashboard-screen/CreateDashboardForm";
 
 import { classNames } from "../../utility";
 
 import * as styles from "./index.scss";
 
-export const CreateDashboardDialog: React.FC<{}> = () => {
+export const CreateStackDialog: React.FC<{}> = () => {
     const themeClass = useBehavior(mainStore.themeClass);
-    const isVisible = useBehavior(mainStore.isCreateDashboardDialogVisible);
+    const isVisible = useBehavior(mainStore.isCreateStackDialogVisible);
 
-    const submitDashboard = () => {
-        mainStore.hideCreateDashboardDialog();
+    const submitStack = () => {
+        mainStore.hideCreateStackDialog();
+        mainStore.showStackDialog();
     };
 
     return (
@@ -23,11 +24,11 @@ export const CreateDashboardDialog: React.FC<{}> = () => {
             <Dialog
                 className={classNames(themeClass, styles.dialog)}
                 isOpen={isVisible}
-                onClose={mainStore.hideCreateDashboardDialog}
-                title="Create New Dashboard"
+                onClose={submitStack}
+                title="Create New Stack"
             >
-                <div data-element-id="CreateDashboardDialog" className={Classes.DIALOG_BODY}>
-                    <CreateDashboardForm onSubmit={submitDashboard} />
+                <div data-element-id="CreateStackDialog" className={Classes.DIALOG_BODY}>
+                    <CreateDashboardForm onSubmit={submitStack} />
                 </div>
 
                 <div className={Classes.DIALOG_FOOTER}>

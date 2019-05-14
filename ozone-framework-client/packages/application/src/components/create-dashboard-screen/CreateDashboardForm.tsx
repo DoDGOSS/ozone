@@ -17,12 +17,11 @@ import { DashboardSelect } from "./DashboardSelect";
 
 import { handleSelectChange, handleStringChange } from "../../utility";
 
-import { dashboardService } from "../../stores/DashboardService";
-
 import { assetUrl } from "../../server";
 
 export interface CreateDashboardFormProps {
     onSubmit: () => void;
+    stackId?: number;
 }
 
 export interface CreateDashboardOptions {
@@ -31,9 +30,10 @@ export interface CreateDashboardOptions {
     description: string;
     presetLayoutName: string | null;
     copyGuid: string;
+    stackId?: number;
 }
 
-export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubmit }) => {
+export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubmit, stackId }) => {
     const [selectedValue, setValue] = useState("");
     const handleRadioChange = handleStringChange(setValue);
 
@@ -43,8 +43,6 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
     const [selectedCopyLayout, setCopyLayout] = useState("");
     const handleCopyLayoutChange = handleSelectChange(setCopyLayout);
 
-    // const [currentDashboard, setCurrentDashboard] = useState<DashboardDTO | null>(null);
-
     return (
         <Formik<CreateDashboardOptions>
             initialValues={{
@@ -52,14 +50,14 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
                 iconImageUrl: "/images/dashboard.png",
                 description: "",
                 presetLayoutName: null,
-                copyGuid: ""
+                copyGuid: "",
+                stackId
             }}
             onSubmit={(values: CreateDashboardOptions, actions: FormikActions<CreateDashboardOptions>) => {
                 values.presetLayoutName = selectedPresetLayout;
                 if (selectedValue === "copy") {
                     values.presetLayoutName = selectedValue;
                     values.copyGuid = selectedCopyLayout;
-                    // onCopyDashboard(values.presetLayoutName);
                 }
 
                 dashboardStore
