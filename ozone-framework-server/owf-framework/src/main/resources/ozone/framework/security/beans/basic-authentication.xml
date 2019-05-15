@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+    <import resource="user-service.xml"/>
+    <import resource="user-cache.xml"/>
+
+    <!-- Authentication provider for username & password authentication -->
+    <bean id="basicAuthProvider"
+          class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <property name="userDetailsService" ref="userService"/>
+        <property name="userCache" ref="springUserCache"/>
+    </bean>
+
+    <!-- Custom authentication entry point to redirect to login from root URL -->
+    <bean id="ozoneAuthenticationEntryPoint"
+          class="ozone.security.OzoneAuthenticationEntryPoint">
+        <property name="redirectUrl" value="/login" />
+    </bean>
+
+    <!-- Custom authentication success handler to provide user details at login -->
+    <bean id="ozoneAuthenticationSuccessHandler"
+          class="ozone.security.OzoneAuthenticationSuccessHandler">
+        <property name="accountService" ref="accountService"/>
+    </bean>
+
+    <!-- Custom authentication failure handler to return 401 Unauthorized status -->
+    <bean id="ozoneAuthenticationFailureHandler"
+          class="ozone.security.OzoneAuthenticationFailureHandler"/>
+
+</beans>
