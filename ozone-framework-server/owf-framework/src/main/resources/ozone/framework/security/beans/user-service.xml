@@ -5,11 +5,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
-
+    <!-- The example DetailService implementation which reads from the preset user.properties file -->
     <bean id="userService" class="ozone.securitysample.authentication.basic.MyDetailsService">
         <property name="propertyFileName" value="/ozone/framework/users.properties"/>
     </bean>
 
-
 </beans>
-
