@@ -57,7 +57,7 @@ export const DEFAULT_LAYOUTS: Layout[] = [
     }
 ];
 
-export async function createPresetLayout(layoutName: string | null, guid: string | null): DashboardLayout {
+export async function createPresetLayout(layoutName: string | null, guid: string | null): Promise<DashboardLayout> {
     switch (layoutName) {
         case "Fit":
             return createFitLayout();
@@ -91,17 +91,18 @@ export async function createPresetLayout(layoutName: string | null, guid: string
     }
 }
 
-const onCopyDashboard = async (guid: string): DashboardLayout => {
-    let response = await dashboardApi.getDashboard(guid);
-    if (response.status !== 200) return;
-    else {
-        let layout = await JSON.parse(response.data.data[0].layoutConfig);
-        let panels = JSON.stringify(layout.panels);
-        panels = panels.replace(/\"userWidgetIds\":/g, '"widgets":');
-        panels = JSON.parse(panels);
-        layout.panels = panels;
-        return layout;
-    }
+const onCopyDashboard = async (guid: string | null): Promise<DashboardLayout> => {
+    const response = await dashboardApi.getDashboard(guid);
+    // if (response.status !== 200) return;
+    // else {
+    console.log(JSON.stringify(response));
+    const layout = JSON.parse(response.data.data[0].layoutConfig);
+    let panels = JSON.stringify(layout.panels);
+    panels = panels.replace(/\"userWidgetIds\":/g, '"widgets":');
+    panels = JSON.parse(panels);
+    layout.panels = panels;
+    return layout;
+    // }
 };
 
 function createTabbedFitFitLayout(): DashboardLayout {

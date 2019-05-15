@@ -15,7 +15,7 @@ import { FormError, SubmitButton, TextField } from "../form";
 import { PremadeLayouts } from "./PremadeLayouts";
 import { DashboardSelect } from "./DashboardSelect";
 
-import { handleStringChange, handleSelectChange } from "../../utility";
+import { handleSelectChange, handleStringChange } from "../../utility";
 
 import { dashboardService } from "../../stores/DashboardService";
 
@@ -28,6 +28,7 @@ export interface CreateDashboardOptions {
     iconImageUrl: string;
     description: string;
     presetLayoutName: string | null;
+    copyGuid: string;
 }
 
 export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubmit }) => {
@@ -53,7 +54,7 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
             }}
             onSubmit={(values: CreateDashboardOptions, actions: FormikActions<CreateDashboardOptions>) => {
                 values.presetLayoutName = selectedPresetLayout;
-                if (selectedValue == "copy") {
+                if (selectedValue === "copy") {
                     values.presetLayoutName = selectedValue;
                     values.copyGuid = selectedCopyLayout;
                     // onCopyDashboard(values.presetLayoutName);
