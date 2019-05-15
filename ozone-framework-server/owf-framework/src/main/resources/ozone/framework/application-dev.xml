@@ -5,8 +5,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
-    <import resource="session-control.xml"/>
-
-    <import resource="security-dev.xml"/>
+    <import resource="security/security-dev.xml"/>
 
 </beans>
