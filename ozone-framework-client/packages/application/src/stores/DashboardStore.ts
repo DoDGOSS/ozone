@@ -79,7 +79,7 @@ export class DashboardStore {
         if (createResponse.status !== 200) {
             throw new Error("Failed to create new dashboard");
         }
-        let createdDashboard = createResponse.data;
+        const createdDashboard = createResponse.data;
         await this.fetchUserDashboards(createdDashboard.guid);
     };
 

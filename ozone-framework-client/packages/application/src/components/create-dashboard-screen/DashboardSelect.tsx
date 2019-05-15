@@ -27,7 +27,7 @@ const _DashboardSelect: React.FC<CopyLayoutsProps & FieldProps<any>> = (props) =
 
     return (
         <div className={styles.select} data-element-id="DashboardSelect">
-            <select onChange={onChange} data-element-id="Select">
+            <select onChange={onChange} data-element-id="Select" className="select-css">
                 <option key="default" value="default">
                     Select
                 </option>

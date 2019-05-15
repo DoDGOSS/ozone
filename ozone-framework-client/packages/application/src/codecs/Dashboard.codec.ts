@@ -164,8 +164,9 @@ export function dashboardLayoutToJson(state: DashboardLayout): DashboardLayoutDT
 }
 
 export function panelToJson(panel: Panel<PanelState>): PanelDTO {
-    if (panel.state$) {
-        let state = panel.state().value;
+    console.log(panel);
+    if (panel.state) {
+        const state = panel.state().value;
         return {
             id: state.id,
             title: state.title,
@@ -180,9 +181,9 @@ export function panelToJson(panel: Panel<PanelState>): PanelDTO {
             id: panel.id,
             title: panel.title,
             type: panel.type,
-            userWidgetIds: panel.widgets.map((widget) => panel.id),
-            activeWidgetId: getActiveWidgetId(panel),
-            collapsed: isExpandoPanelState(panel) ? state.collapsed : undefined
+            userWidgetIds: Array(0),
+            activeWidgetId: 0,
+            collapsed: undefined
         };
     }
 }
