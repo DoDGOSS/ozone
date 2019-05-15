@@ -30,6 +30,7 @@ export interface DashboardDTO {
     stack?: StackDTO;
     type?: any;
     user: UserReference;
+    data?: any;
 }
 
 export const validateDashboard = createValidator<DashboardDTO>(DASHBOARD_SCHEMA);
