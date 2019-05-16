@@ -4,6 +4,8 @@ import * as React from "react";
 
 import { Field, FieldProps } from "formik";
 
+import { assetUrl } from "../../server";
+
 import { DEFAULT_LAYOUTS } from "../../stores/default-layouts";
 
 export interface PremadeLayoutsProps {
@@ -25,7 +27,7 @@ const _PremadeLayouts: React.FC<PremadeLayoutsProps & FieldProps<any>> = (props)
                         checked={layout.name === selectedValue}
                         value={layout.name}
                     />
-                    <img className={styles.layoutIcon} src={layout.iconUrl} />
+                    <img className={styles.layoutIcon} src={assetUrl(layout.iconUrl)} />
                 </label>
             ))}
         </div>

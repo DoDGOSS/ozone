@@ -22,6 +22,8 @@ const NEW_USER_PREFERENCE_NAMESPACE = "owf";
 const NEW_USER_PREFERENCE_PATH = "owf.test.preference";
 const NEW_USER_PREFERENCE_VALUE = "myTestPreference";
 
+const ADDED_STACK = "test2";
+
 function openEditSectionForUser(browser: NightwatchAPI, userDisplayName: string, section?: string) {
     let relevant_row: number = 0;
 
@@ -333,43 +335,6 @@ module.exports = {
         browser.closeWindow().end();
     },
 
-    "As an Administrator, I can delete a User": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
-
-        UserAdmin.navigateTo(browser);
-
-        browser.assert.containsText(
-            AdminWidget.USER_ADMIN_WIDGET_DIALOG,
-            NEW_USER_EMAIL,
-            "[User Admin Widget] Displays user information we wish to delete"
-        );
-
-        browser
-            .setValue(AdminWidget.SEARCH_FIELD, NEW_USER_EMAIL)
-            .click(
-                `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${
-                    GlobalElements.STD_DELETE_BUTTON
-                }`
-            )
-            .waitForElementPresent(
-                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
-                1000,
-                "[Confirmation Dialog] is present"
-            )
-            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
-            .waitForElementNotPresent(
-                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
-                1000,
-                "[Confirmation Dialog] is not present"
-            );
-
-        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
-
-        browser.expect.element(AdminWidget.USER_ADMIN_WIDGET_DIALOG).text.to.not.contain(NEW_USER_EMAIL);
-
-        browser.closeWindow().end();
-    },
-
     "As an Administrator, I can create a new preference for a user": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
 
@@ -425,6 +390,118 @@ module.exports = {
             NEW_USER_PREFERENCE_NAMESPACE,
             "[User Admin Widget] New User Preference successfully created"
         );
+
+        browser.closeWindow().end();
+    },
+
+    "As an Administrator, I can add a stack to a user": (browser: NightwatchAPI) => {
+        loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+
+        UserAdmin.navigateTo(browser);
+
+        browser.expect.element(UserAdminWidget.Main.DIALOG).text.to.contain(USER_ADD_WIDGET);
+
+        openEditSectionForUser(
+            browser,
+            USER_ADD_WIDGET,
+            `${UserAdminWidget.EditUser.TAB_STACKS}`
+        ).waitForElementVisible(UserAdminWidget.StacksUser.ADD_BUTTON, 2000, "[User Stacks Interface] is visible");
+
+        browser
+            .click(UserAdminWidget.StacksUser.ADD_BUTTON)
+            .waitForElementPresent(
+                GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
+                1000,
+                "[Stack Selection Dialog] is present"
+            );
+
+        browser
+            .setValue(GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD, ADDED_STACK)
+            .pause(1000)
+            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup']:nth-child(1)`)
+            .click(GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON)
+            .waitForElementNotPresent(
+                GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
+                1000,
+                "[Stack Selection Dialog] is closed"
+            );
+
+        browser.expect.element(UserAdminWidget.Main.DIALOG).text.to.contain(ADDED_STACK);
+
+        browser
+            .click(UserAdminWidget.Main.BACK_BUTTON)
+            .waitForElementNotPresent(UserAdminWidget.StacksUser.ADD_BUTTON, 1000, "[User Setup] is closed");
+
+        browser.closeWindow().end();
+    },
+
+    "As an Administrator, I can remove a stack from a user": (browser: NightwatchAPI) => {
+        loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+
+        UserAdmin.navigateTo(browser);
+
+        browser.expect.element(UserAdminWidget.Main.DIALOG).text.to.contain(USER_ADD_WIDGET);
+
+        openEditSectionForUser(
+            browser,
+            USER_ADD_WIDGET,
+            `${UserAdminWidget.EditUser.TAB_STACKS}`
+        ).waitForElementVisible(UserAdminWidget.StacksUser.ADD_BUTTON, 2000, "[User Stacks Interface] is visible");
+
+        browser
+            .click(`${GlobalElements.STD_DELETE_BUTTON}[data-widget-title="${ADDED_STACK}"]`)
+            .waitForElementPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                10000,
+                "[Confirmation Dialog] is present"
+            )
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .waitForElementNotPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                10000,
+                "[Confirmation Dialog] is not present"
+            );
+
+        browser
+            .click(UserAdminWidget.Main.BACK_BUTTON)
+            .waitForElementNotPresent(UserAdminWidget.StacksUser.ADD_BUTTON, 1000, "[User Setup] is closed");
+
+        browser.closeWindow().end();
+    },
+
+    "As an Administrator, I can delete a User": (browser: NightwatchAPI) => {
+        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+
+        UserAdmin.navigateTo(browser);
+
+        browser.assert.containsText(
+            AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+            NEW_USER_EMAIL,
+            "[User Admin Widget] Displays user information we wish to delete"
+        );
+
+        browser
+            .setValue(AdminWidget.SEARCH_FIELD, NEW_USER_EMAIL)
+            .click(
+                `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${
+                    GlobalElements.STD_DELETE_BUTTON
+                }`
+            )
+            .waitForElementPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                1000,
+                "[Confirmation Dialog] is present"
+            )
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .waitForElementNotPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                1000,
+                "[Confirmation Dialog] is not present"
+            );
+
+        browser.waitForElementVisible(AdminWidget.USER_ADMIN_WIDGET_DIALOG, 2000, "[User Admin Widget] is visible");
+
+        browser.expect.element(AdminWidget.USER_ADMIN_WIDGET_DIALOG).text.to.not.contain(NEW_USER_EMAIL);
 
         browser.closeWindow().end();
     }
