@@ -1,3 +1,4 @@
+export const SYSTEMCONFIG_MENU_ADMIN_BUTTON = "div[data-element-id='System Configuration']";
 export namespace MainPage {
     export const LOGIN_BUTTON = "button[data-element-id='login-button']";
 
@@ -20,6 +21,8 @@ export namespace MainPage {
     export const GROUPS_ADMIN_WIDGET = "div[data-element-id='group-admin-widget-dialog']";
 
     export const DASHBOARD_ADMIN_WIDGET = "div[data-element-id='dashboard-admin-widget-dialog']";
+
+    export const SYSTEMCONFIG_ADMIN_WIDGET = "div[data-element-id='systemconfig-admin-widget-dialog']";
 
     export const WARNING_DIALOG = "div[data-element-id='warning-dialog']";
 
@@ -214,6 +217,40 @@ export namespace DashboardAdminWidget {
     }
 }
 
+export namespace SystemConfigAdminWidget {
+    export namespace Main {
+        export const DIALOG = "div[data-element-id='systemconfig-admin-widget-dialog']";
+    }
+
+    export namespace InputSelector {
+        export const FIRST_TOGGLE = "div[data-element-type='toggleInput']";
+
+        export const FIRST_STRING = "div[data-element-type='stringInput']";
+
+        export const FIRST_INTEGER = "div[data-element-type='integerInput']";
+    }
+
+    export namespace TabSelector {
+        export const TAB_AUDITING = "div[data-tab-id='auditing']";
+
+        export const TAB_BRANDING = "div[data-tab-id='branding']";
+
+        export const TAB_ACCOUNTS = "div[data-tab-id='accounts']";
+
+        export const TAB_STORE = "div[data-tab-id='store']";
+    }
+
+    export namespace WidgetsUser {
+        export const TAB = "div[data-element-id='user-admin-add-widget']";
+
+        export const ADD_BUTTON = "button[data-element-id='user-edit-add-widget-dialog-add-button']";
+    }
+
+    export namespace UserPreferences {
+        export const PREFERENCE_DIALOG = "div[data-element-id='user-admin-preference-dialog']";
+    }
+}
+
 export namespace UserAdminWidget {
     export namespace Main {
         export const DIALOG = "div[data-element-id='user-admin-widget-dialog']";
@@ -231,12 +268,18 @@ export namespace UserAdminWidget {
         export const TAB_PROPERTIES = `div[data-tab-id='user_properties']`;
 
         export const TAB_WIDGETS = `div[data-tab-id='user_widgets']`;
+
+        export const TAB_STACKS = `div[data-tab-id='user_stacks']`;
     }
 
     export namespace WidgetsUser {
         export const TAB = "div[data-element-id='user-admin-add-widget']";
 
         export const ADD_BUTTON = "button[data-element-id='user-edit-add-widget-dialog-add-button']";
+    }
+
+    export namespace StacksUser {
+        export const ADD_BUTTON = "button[data-element-id='user-edit-add-stack-dialog-add-button']";
     }
 
     export namespace UserPreferences {

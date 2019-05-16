@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+    <import resource="user-service.xml"/>
+    <import resource="user-cache.xml"/>
+
+    <!-- Authentication provider for X509 certificate authentication -->
+    <bean id="certificateAuthProvider"
+          class="ozone.security.authentication.CachingPreAuthenticatedAuthenticationProvider">
+        <property name="preAuthenticatedUserDetailsService">
+            <bean class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+                <constructor-arg ref="userService"/>
+            </bean>
+        </property>
+        <property name="userCache" ref="springUserCache"/>
+        <property name="order">
+            <util:constant static-field="org.springframework.core.Ordered.HIGHEST_PRECEDENCE"/>
+        </property>
+    </bean>
+
+    <!-- Entry point to return a '403 Forbidden' error if certificate authentication fails -->
+    <bean id="authenticationEntryPoint"
+          class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
+
+</beans>

@@ -3,7 +3,7 @@ import React, { useMemo, useState } from "react";
 import { ConsentNotice } from "../../features/ConsentNotice";
 import { UserAgreement } from "../../features/UserAgreement";
 
-import { env } from "./environment";
+import { env } from "../../environment";
 
 export const ConsentPage: React.FC<{}> = () => {
     const consentOpts = useMemo(() => env().consentNotice, []);

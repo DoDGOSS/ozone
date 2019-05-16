@@ -5,6 +5,7 @@ import React from "react";
 import { UserWidget } from "../../models/UserWidget";
 
 import { SYSTEM_WIDGET_URLS } from "../../stores/system-widgets";
+import { serverContextUrl } from "../../server";
 
 export interface WidgetFrameProps {
     widget: UserWidget;
@@ -32,8 +33,8 @@ const _WidgetFrame: React.FC<WidgetFrameProps> = ({ widget }) => {
         locked: false,
         layout: "tabbed",
         webContextPath: "/",
-        preferenceLocation: "http://localhost:8080/prefs",
-        relayUrl: "http://localhost:3000",
+        preferenceLocation: `${serverContextUrl()}/prefs`,
+        relayUrl: serverContextUrl(),
         lang: "en_US",
         currentTheme: {
             themeName: "a_default",

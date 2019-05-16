@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="${request.contextPath}/static/favicon.ico">
+    <title>Ozone Platform</title>
+{{#each stylesheets as |stylesheet|}}
+    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/{{{stylesheet}}}">
+{{/each}}
+</head>
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <script type="application/javascript">
+        window.env = window.env || {};
+        window.env.server = {
+            url: '${grailsApplication.config.getProperty("owf.server.url")}',
+            contextPath: "${request.contextPath}",
+            staticAssetPath: '${grailsApplication.config.getProperty("owf.server.staticAssetPath")}'
+        };
+        window.env.login = {
+            nextUrl: '${grailsApplication.config.getProperty("owf.login.nextUrl")}'
+        };
+        window.env.consentNotice = {
+            title: '${grailsApplication.config.getProperty("owf.consent.title")}',
+            message: '${grailsApplication.config.getProperty("owf.consent.message").replace("\n", "¶")}'.replace(/¶/g, "\n"),
+            details: {
+                isEnabled: '${grailsApplication.config.getProperty("owf.consent.details.enabled")}',
+                linkText: '${grailsApplication.config.getProperty("owf.consent.details.linkText")}'
+            },
+            nextUrl: '${grailsApplication.config.getProperty("owf.consent.nextUrl")}'
+        };
+        window.env.userAgreement = {
+            title: '${grailsApplication.config.getProperty("owf.agreement.title")}',
+            message: '${grailsApplication.config.getProperty("owf.agreement.message").replace("\n", "¶")}'.replace(/¶/g, "\n")
+        };
+    </script>
+
+{{#each scripts as |script|}}
+    <script type="application/javascript" src="${request.contextPath}/static/{{{script}}}"></script>
+{{/each}}
+</body>
+</html>
