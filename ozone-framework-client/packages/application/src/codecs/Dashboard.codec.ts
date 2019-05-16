@@ -164,7 +164,6 @@ export function dashboardLayoutToJson(state: DashboardLayout): DashboardLayoutDT
 }
 
 export function panelToJson(panel: Panel<PanelState>): PanelDTO {
-    console.log(panel);
     if (panel.state) {
         const state = panel.state().value;
         return {
@@ -179,7 +178,7 @@ export function panelToJson(panel: Panel<PanelState>): PanelDTO {
         // copy of dashboard has no state
         return {
             id: panel.id,
-            title: panel.title,
+            title: "",
             type: panel.type,
             userWidgetIds: Array(0),
             activeWidgetId: 0,
