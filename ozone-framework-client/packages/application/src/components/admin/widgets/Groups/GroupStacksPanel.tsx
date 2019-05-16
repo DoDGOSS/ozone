@@ -10,9 +10,7 @@ import { GroupStacksEditDialog } from "./GroupStacksEditDialog";
 
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 
-import { groupApi } from "../../../../api/clients/GroupAPI";
-import { GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
-
+import { GroupDTO } from "../../../../api/models/GroupDTO";
 import { stackApi, StackQueryCriteria } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";
 

@@ -19,6 +19,8 @@ import { handleSelectChange, handleStringChange } from "../../utility";
 
 import { dashboardService } from "../../stores/DashboardService";
 
+import { assetUrl } from "../../server";
+
 export interface CreateDashboardFormProps {
     onSubmit: () => void;
 }
@@ -77,7 +79,7 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
 
                     <div className={styles.form}>
                         <div className={styles.formIcon}>
-                            <img width="60px" src={formik.values.iconImageUrl} />
+                            <img width="60px" src={assetUrl(formik.values.iconImageUrl)} />
                         </div>
                         <div className={styles.formField}>
                             <TextField name="name" label="Title" labelInfo="(required)" />

@@ -1,21 +1,31 @@
 import axios from "axios";
 
 import { Gateway, RequestOptions, Response } from "../api/interfaces";
+import { AuthenticationError, ValidationError } from "../api/errors";
 import { AuthUserDTO, validateAuthUser } from "../api/models/AuthUserDTO";
 
 import { trimEnd, trimStart } from "lodash";
 import { lazy } from "../utility";
-import { AuthenticationError, ValidationError } from "../api/errors";
+import { serverContextUrl } from "../server";
 
 export class OzoneGateway implements Gateway {
     static readonly instance = lazy(() => new OzoneGateway());
 
-    private readonly rootUrl: string;
+    private readonly baseUrl?: string;
+
+    private _rootUrl?: string;
 
     private _isAuthenticated: boolean = false;
 
-    constructor(baseUrl: string = "http://localhost:8080") {
-        this.rootUrl = trimEnd(baseUrl, "/");
+    constructor(baseUrl?: string) {
+        this.baseUrl = baseUrl;
+    }
+
+    private get rootUrl(): string {
+        if (!this._rootUrl) {
+            this._rootUrl = trimEnd(this.baseUrl || serverContextUrl(), "/");
+        }
+        return this._rootUrl;
     }
 
     get isAuthenticated(): boolean {

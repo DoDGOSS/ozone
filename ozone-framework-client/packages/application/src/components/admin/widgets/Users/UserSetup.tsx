@@ -12,6 +12,7 @@ import { UserCreateRequest, UserDTO, UserUpdateRequest } from "../../../../api/m
 import { CancelButton } from "../../../form";
 
 import * as styles from "../Widgets.scss";
+import { UserStacksPanel } from "./UserStacksPanel";
 
 export interface UserSetupProps {
     onUpdate: (update?: any) => void;
@@ -55,6 +56,14 @@ export class UserSetup extends React.Component<UserSetupProps, UserSetupState> {
                         disabled={this.state.user === undefined}
                         panel={this.emptyIfUserNull(
                             <UserWidgetsPanel onUpdate={this.props.onUpdate} user={this.state.user!} />
+                        )}
+                    />
+                    <Tab
+                        id="user_stacks"
+                        title="Stacks"
+                        disabled={this.state.user === undefined}
+                        panel={this.emptyIfUserNull(
+                            <UserStacksPanel onUpdate={this.props.onUpdate} user={this.state.user!} />
                         )}
                     />
                     <Tab
