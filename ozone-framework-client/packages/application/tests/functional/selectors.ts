@@ -49,6 +49,8 @@ export namespace MainPage {
     export const DASHBOARD_BUTTON = "button[data-element-id='dashboards-button']";
 
     export const CLASSIFICATION_BANNER = "div[data-element-id='classification-banner'";
+
+    export const EMPTY_PANEL = "div[class='mosaic-window-body'] > div";
 }
 
 export namespace DashboardDialog {
@@ -87,9 +89,11 @@ export namespace DashboardDialog {
 
         export const SELECT_PREMADE_LAYOUT = "div[data-element-id='PremadeLayoutsList']";
 
-        export const COPY = "input[type='radio'][value='copy']";
+        export const COPY = "label[class='bp3-control bp3-radio']:nth-of-type(2)";
 
-        export const COPY_DROPDOWN = "div[data-element-id='DashboardSelect']";
+        export const COPY_DROPDOWN = "select[data-element-id='Select']";
+
+        export const FIRST_DASHBOARD = "select[data-element-id='Select'] option:nth-child(2)";
 
         export const NEW = "input[type='radio'][value='new']";
 
