@@ -76,6 +76,10 @@ export function handleStringChange(handler: (value: string) => void) {
     return (event: React.FormEvent<HTMLElement>) => handler((event.target as HTMLInputElement).value);
 }
 
+export function handleSelectChange(handler: (value: string) => void) {
+    return (event: React.FormEvent<Element>) => handler((event.target as HTMLSelectElement).value);
+}
+
 export function classNames(...classes: ClassValue[]): string {
     return _classNames(classes);
 }

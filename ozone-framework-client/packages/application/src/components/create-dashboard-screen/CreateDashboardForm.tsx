@@ -15,8 +15,11 @@ import { FormError, SubmitButton, TextField } from "../form";
 import { PremadeLayouts } from "./PremadeLayouts";
 import { DashboardSelect } from "./DashboardSelect";
 
+import { handleSelectChange, handleStringChange } from "../../utility";
+
+import { dashboardService } from "../../stores/DashboardService";
+
 import { assetUrl } from "../../server";
-import { handleStringChange } from "../../utility";
 
 export interface CreateDashboardFormProps {
     onSubmit: () => void;
@@ -27,6 +30,7 @@ export interface CreateDashboardOptions {
     iconImageUrl: string;
     description: string;
     presetLayoutName: string | null;
+    copyGuid: string;
 }
 
 export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubmit }) => {
@@ -36,16 +40,27 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
     const [selectedPresetLayout, setPresetLayout] = useState<string | null>(null);
     const handlePresetLayoutChange = handleStringChange(setPresetLayout);
 
+    const [selectedCopyLayout, setCopyLayout] = useState("");
+    const handleCopyLayoutChange = handleSelectChange(setCopyLayout);
+
+    // const [currentDashboard, setCurrentDashboard] = useState<DashboardDTO | null>(null);
+
     return (
         <Formik<CreateDashboardOptions>
             initialValues={{
                 name: "",
                 iconImageUrl: "/images/dashboard.png",
                 description: "",
-                presetLayoutName: null
+                presetLayoutName: null,
+                copyGuid: ""
             }}
             onSubmit={(values: CreateDashboardOptions, actions: FormikActions<CreateDashboardOptions>) => {
                 values.presetLayoutName = selectedPresetLayout;
+                if (selectedValue === "copy") {
+                    values.presetLayoutName = selectedValue;
+                    values.copyGuid = selectedCopyLayout;
+                    // onCopyDashboard(values.presetLayoutName);
+                }
 
                 dashboardStore
                     .createDashboard(values)
@@ -79,7 +94,9 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
                             <PremadeLayouts selectedValue={selectedPresetLayout} onChange={handlePresetLayoutChange} />
                         )}
                         <Radio label="Copy the layout of an existing page" value="copy" />
-                        {selectedValue === "copy" && <DashboardSelect />}
+                        {selectedValue === "copy" && (
+                            <DashboardSelect selectedValue={selectedCopyLayout} onChange={handleCopyLayoutChange} />
+                        )}
                         <Radio label="Create a new layout" value="new" />
                     </RadioGroup>
 

@@ -3,6 +3,8 @@ import { FitPanel } from "../models/dashboard/FitPanel";
 import { TabbedPanel } from "../models/dashboard/TabbedPanel";
 import { ExpandoPanel } from "../models/dashboard/ExpandoPanel";
 
+import { dashboardApi, DashboardAPI } from "../api/clients/DashboardAPI";
+
 interface Layout {
     name: string;
     iconUrl: string;
@@ -55,7 +57,7 @@ export const DEFAULT_LAYOUTS: Layout[] = [
     }
 ];
 
-export function createPresetLayout(layoutName: string | null): DashboardLayout {
+export async function createPresetLayout(layoutName: string | null, guid: string | null): Promise<DashboardLayout> {
     switch (layoutName) {
         case "Fit":
             return createFitLayout();
@@ -79,6 +81,8 @@ export function createPresetLayout(layoutName: string | null): DashboardLayout {
             return createAccordFitFitLayout();
         case "Tab-Fit-Fit":
             return createTabbedFitFitLayout();
+        case "copy":
+            return await onCopyDashboard(guid);
         default:
             return {
                 tree: null,
@@ -86,6 +90,16 @@ export function createPresetLayout(layoutName: string | null): DashboardLayout {
             };
     }
 }
+
+const onCopyDashboard = async (guid: string | null): Promise<DashboardLayout> => {
+    const response = await dashboardApi.getDashboard(guid);
+    const layout = JSON.parse(response.data.data[0].layoutConfig);
+    let panels = JSON.stringify(layout.panels);
+    panels = panels.replace(/\"userWidgetIds\":/g, '"widgets":');
+    panels = JSON.parse(panels);
+    layout.panels = panels;
+    return layout;
+};
 
 function createTabbedFitFitLayout(): DashboardLayout {
     const tabbed = new TabbedPanel();
@@ -216,13 +230,14 @@ function createFitTabbed(): DashboardLayout {
 
 function createFitLayout(): DashboardLayout {
     const fitPanel = new FitPanel();
-
-    return {
+    const layout = {
         tree: fitPanel.id,
         panels: {
             [fitPanel.id]: fitPanel
         }
     };
+    console.log("makin a layout " + JSON.stringify(layout));
+    return layout;
 }
 
 function createSplitVertical(): DashboardLayout {
