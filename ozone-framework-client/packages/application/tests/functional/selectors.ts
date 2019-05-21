@@ -12,6 +12,12 @@ export namespace MainPage {
 
     export const ABOUT_DIALOG = "div[data-element-id='about-dialog']";
 
+    export const HELP_DIALOG = "div[data-element-id='help-dialog']";
+
+    export const HELP_DIALOG_BOX = "div[data-element-id='help-screen_helpDialog__3gAsy']";
+
+    export const HELP_SAMPLE_FILE = "div[data-element-id='bp3-tree-node-content-0'";
+
     export const ADMINISTRATION_BUTTON = "a[data-element-id='administration']";
 
     export const ADMINISTRATION_MENU = "div[data-element-id='administration']";
