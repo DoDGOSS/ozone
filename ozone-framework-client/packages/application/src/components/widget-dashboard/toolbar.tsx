@@ -1,14 +1,15 @@
+import styles from "./index.scss";
+
 import React from "react";
 
 import { Button, Menu, MenuItem, Popover, Position } from "@blueprintjs/core";
 
-import { ExpandButton, RemoveButton } from "react-mosaic-component";
+import { ExpandButton, RemoveButton } from "../../features/MosaicDashboard";
 
 import { Panel, PanelState } from "../../models/dashboard/types";
 
 import { dashboardService } from "../../stores/DashboardService";
 
-import * as styles from "./index.scss";
 import { DashboardPath } from "./types";
 
 export interface OptionsButtonProps {

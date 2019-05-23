@@ -1,6 +1,8 @@
 import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
+import { MosaicDropTargetPosition, MosaicPath } from "../features/MosaicDashboard";
+
 import { dashboardStore, DashboardStore } from "./DashboardStore";
 import { LayoutType, Panel, PanelState } from "../models/dashboard/types";
 import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
@@ -70,8 +72,20 @@ export class DashboardService {
      *
      * @returns true -- if the Widget was opened successfully
      */
-    addWidget(widget: UserWidget, title?: string): boolean {
-        return this.getCurrentDashboard().addWidget(widget, title);
+    addWidget(userWidget: UserWidget, title?: string): boolean {
+        return this.getCurrentDashboard().addWidget({ userWidget, title });
+    }
+
+    /**
+     * Add a UserWidget by Widget ID to the current Dashboard
+     *
+     * @returns true -- if the Widget was opened successfully
+     */
+    addUserWidgetById(widgetId: string, path?: MosaicPath, position?: MosaicDropTargetPosition): boolean {
+        const userWidget = dashboardStore.findUserWidgetByWidgetId(widgetId);
+        if (!userWidget) return false;
+
+        return this.getCurrentDashboard().addWidget({ userWidget, path, position });
     }
 
     /**
@@ -80,15 +94,12 @@ export class DashboardService {
      * @returns true -- if the Widget was launched successfully
      */
     launchWidget(args: WidgetLaunchArgs): boolean {
-        const userState = dashboardStore.userDashboards().value;
-        const userWidgets = values(userState.widgets);
+        const userWidget = findUserWidget(byGuidOrUniversalName(args.guid, args.universalName));
+        if (!userWidget) return false;
 
-        const widget = userWidgets.find(byGuidOrUniversalName(args.guid, args.universalName));
-        if (!widget) return false;
+        userWidget.launchData = args.data;
 
-        widget.launchData = args.data;
-
-        return this.addWidget(widget, args.title);
+        return this.addWidget(userWidget, args.title);
     }
 
     addLayout_TEMP = (layout: LayoutType) => {
@@ -112,6 +123,13 @@ export class DashboardService {
                 break;
         }
     };
+}
+
+function findUserWidget(predicate: Predicate<UserWidget>): UserWidget | undefined {
+    const userState = dashboardStore.userDashboards().value;
+    const userWidgets = values(userState.widgets);
+
+    return userWidgets.find(predicate);
 }
 
 function byGuidOrUniversalName(guid?: string, universalName?: string): Predicate<UserWidget> {
