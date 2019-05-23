@@ -51,6 +51,8 @@ export namespace MainPage {
     export const CLASSIFICATION_BANNER = "div[data-element-id='classification-banner'";
 
     export const EMPTY_PANEL = "div[class='mosaic-window-body'] > div";
+
+    export const DIALOG_CLOSE = "button[aria-label='Close']";
 }
 
 export namespace StackDialog {
@@ -203,7 +205,7 @@ export namespace DashboardAdminWidget {
     export const GROUPS_TAB = "div[data-tab-id='dashboard_groups']";
     export const USERS_TAB = "div[data-tab-id='dashboard_users']";
     export const DASHBOARD_ADMIN_TEST_DASHBOARD_NAME = "DAW_Test";
-    export const DASHBOARD_DIALOG_CLOSE = "button[aria-label='Close'";
+    export const DASHBOARD_DIALOG_CLOSE = "button[aria-label='Close']";
     export const CLOSE_DAW_BUTTON = "button[title='Close Window']";
     export const ROW_BOX = "div[data-element-id='table-selector-dialog'] div[class='rt-tbody']";
     export const FIRST_ROW = `${ROW_BOX} > div:nth-child(1) div`;

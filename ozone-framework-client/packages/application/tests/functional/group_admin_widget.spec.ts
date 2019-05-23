@@ -15,7 +15,7 @@ const NEW_GROUP_DESCRIPTION: string = "New Group Description";
 
 const SEARCH_WIDGET: string = "Color";
 const ADDED_WIDGETS = ["Color Client", "Color Server"];
-const ADDED_STACK = "test2";
+const DEFAULT_STACK = "Untitled";
 
 const DEFAULT_USER_EMAILS = ["testAdmin1@ozone.test", "testUser1@ozone.test"];
 
@@ -417,7 +417,7 @@ module.exports = {
             );
 
         browser
-            .setValue(GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD, ADDED_STACK)
+            .setValue(GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD, DEFAULT_STACK)
             .pause(1000)
             .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup']:nth-child(1)`)
             .click(GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON)
@@ -427,7 +427,7 @@ module.exports = {
                 "[Stack Selection Dialog] is closed"
             );
 
-        browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(ADDED_STACK);
+        browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(DEFAULT_STACK);
 
         browser
             .click(GroupAdminWidget.Main.BACK_BUTTON)
@@ -450,7 +450,7 @@ module.exports = {
         ).waitForElementVisible(GroupAdminWidget.StacksGroup.ADD_BUTTON, 2000, "[Group Stacks Interface] is visible");
 
         browser
-            .click(`${GlobalElements.STD_DELETE_BUTTON}[data-widget-title="${ADDED_STACK}"]`)
+            .click(`${GlobalElements.STD_DELETE_BUTTON}[data-widget-title="${DEFAULT_STACK}"]`)
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 10000,
