@@ -6,33 +6,25 @@ import { Form, Formik, FormikActions, FormikProps } from "formik";
 
 import { Button } from "@blueprintjs/core";
 
-import { DashboardUpdateRequest } from "../../api/models/DashboardDTO";
+import { StackDTO, StackUpdateRequest } from "../../api/models/StackDTO";
 
 import { FormError, TextField } from "../form";
 
 import { stackApi } from "../../api/clients/StackAPI";
-import { dashboardApi } from "../../api/clients/DashboardAPI";
 
 import { assetUrl } from "../../server";
 
-export interface EditDashboardFormProps {
+export interface EditStackFormProps {
     onSubmit: () => void;
-    dashboard: any;
+    stack: StackDTO;
 }
 
-export const EditDashboardForm: React.FC<EditDashboardFormProps> = ({ onSubmit, dashboard }) => {
+export const EditStackForm: React.FC<EditStackFormProps> = ({ onSubmit, stack }) => {
     return (
         <Formik
-            initialValues={dashboard}
-            onSubmit={async (values: DashboardUpdateRequest, actions: FormikActions<DashboardUpdateRequest>) => {
-                const stackData = {
-                    id: values.stack!.id,
-                    stackContext: values.stack!.stackContext,
-                    iconImageUrl: values.stack!.imageUrl,
-                    name: values.stack!.name
-                };
-
-                const isSuccess = [await dashboardApi.updateDashboard(values), await stackApi.updateStack(stackData)];
+            initialValues={stack}
+            onSubmit={async (values: StackUpdateRequest, actions: FormikActions<StackUpdateRequest>) => {
+                const isSuccess = [await stackApi.updateStack(values)];
 
                 actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
                 actions.setSubmitting(false);
@@ -45,13 +37,13 @@ export const EditDashboardForm: React.FC<EditDashboardFormProps> = ({ onSubmit, 
                 }
             }}
         >
-            {(formik: FormikProps<DashboardUpdateRequest>) => (
+            {(formik: FormikProps<StackUpdateRequest>) => (
                 <Form>
                     {formik.status && formik.status.error && <FormError message={formik.status.error} />}
 
                     <div className={styles.form}>
                         <div className={styles.formIcon}>
-                            <img width="60px" src={assetUrl(formik.values.iconImageUrl)} />
+                            <img width="60px" src={assetUrl(formik.values.imageUrl)} />
                         </div>
                         <div className={styles.formField}>
                             <TextField name="name" label="Title" labelInfo="(required)" />
