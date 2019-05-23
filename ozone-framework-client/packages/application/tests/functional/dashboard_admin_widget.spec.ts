@@ -1,6 +1,6 @@
 import { NightwatchAPI } from "nightwatch";
 
-import { DashboardAdminWidget, DashboardDialog, GlobalElements, MainPage } from "./selectors";
+import { DashboardAdminWidget, GlobalElements, MainPage, StackDialog } from "./selectors";
 
 import { loggedInAs } from "./helpers";
 import { DashboardAdmin } from "./pages";
@@ -18,38 +18,25 @@ module.exports = {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
 
         // First create Dashboard for testing
-        browser.waitForElementVisible(MainPage.DASHBOARD_BUTTON, 2000, "[Dashboard Button] is visible");
+        browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Dashboard Button] is visible");
 
         browser
-            .click(MainPage.DASHBOARD_BUTTON)
-            .waitForElementVisible(
-                DashboardDialog.CREATE_DASHBOARD_BUTTON,
-                2000,
-                "[Create Dashboard Button] is visible"
-            );
+            .click(MainPage.STACKS_BUTTON)
+            .waitForElementVisible(StackDialog.CREATE_STACK_BUTTON, 2000, "[Create Stack Button] is visible");
 
         browser
-            .click(DashboardDialog.CREATE_DASHBOARD_BUTTON)
-            .waitForElementVisible(
-                DashboardDialog.CreateDashboard.SUBMIT,
-                2000,
-                "[Create Dashboard Submit Button] is visible"
-            );
+            .click(StackDialog.CREATE_STACK_BUTTON)
+            .waitForElementVisible(StackDialog.CreateStack.SUBMIT, 2000, "[Create Stack Submit Button] is visible");
 
-        browser.setValue(
-            DashboardDialog.CreateDashboard.NAME_FIELD,
-            DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME
-        );
+        browser.setValue(StackDialog.CreateStack.NAME_FIELD, DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME);
 
         browser
-            .click(DashboardDialog.CreateDashboard.SUBMIT)
-            .waitForElementNotPresent(
-                DashboardDialog.CREATE_DASHBOARD_BUTTON,
-                1000,
-                "[Create Dashboard Dialog] is closed"
-            );
+            .click(StackDialog.CreateStack.SUBMIT)
+            .waitForElementNotPresent(StackDialog.CreateStack.SUBMIT, 1000, "[Create Stack Dialog] is closed")
+            .click(MainPage.DIALOG_CLOSE);
 
         // NEXT we open admin dashboard widget, and try to add a group (add button should be disabled)
+
         DashboardAdmin.navigateTo(browser);
 
         browser.waitForElementVisible(
@@ -86,19 +73,19 @@ module.exports = {
 
         // Since the add button is disabled, we need to share the dashboard to allow us to add groups
 
-        browser.waitForElementVisible(MainPage.DASHBOARD_BUTTON, 2000, "[Dashboard Button] is visible.");
+        browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Dashboard Button] is visible.");
 
         browser
-            .click(MainPage.DASHBOARD_BUTTON)
-            .waitForElementVisible(DashboardDialog.DASHBOARD_DIALOG, 2000, "[Dashboard Dialog] is visible.")
+            .click(MainPage.STACKS_BUTTON)
+            .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Dashboard Dialog] is visible.")
             .waitForElementVisible(
-                DashboardDialog.getShareButtonForDashboard(DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME),
+                StackDialog.getShareButtonForStack(DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME),
                 2000,
                 "[Dashboard Dialog] share button is visible."
             );
 
         browser
-            .click(DashboardDialog.getShareButtonForDashboard(DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME))
+            .click(StackDialog.getShareButtonForStack(DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME))
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,
@@ -250,37 +237,22 @@ module.exports = {
     "As an Administrator, I can add and remove users from a shared dashboard": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
 
-        // First create Dashboard for testing
-        browser.waitForElementVisible(MainPage.DASHBOARD_BUTTON, 2000, "[Dashboard Button] is visible");
+        browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
 
         browser
-            .click(MainPage.DASHBOARD_BUTTON)
-            .waitForElementVisible(
-                DashboardDialog.CREATE_DASHBOARD_BUTTON,
-                2000,
-                "[Create Dashboard Button] is visible"
-            );
+            .click(MainPage.STACKS_BUTTON)
+            .waitForElementVisible(StackDialog.CREATE_STACK_BUTTON, 2000, "[Create Stack Button] is visible.");
 
         browser
-            .click(DashboardDialog.CREATE_DASHBOARD_BUTTON)
-            .waitForElementVisible(
-                DashboardDialog.CreateDashboard.SUBMIT,
-                2000,
-                "[Create Dashboard Submit Button] is visible"
-            );
+            .click(StackDialog.CREATE_STACK_BUTTON)
+            .waitForElementVisible(StackDialog.CreateStack.SUBMIT, 2000, "[Create Stack Submit Button] is visible.");
 
-        browser.setValue(
-            DashboardDialog.CreateDashboard.NAME_FIELD,
-            DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME
-        );
+        browser.setValue(StackDialog.CreateStack.NAME_FIELD, DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME);
 
         browser
-            .click(DashboardDialog.CreateDashboard.SUBMIT)
-            .waitForElementNotPresent(
-                DashboardDialog.CREATE_DASHBOARD_BUTTON,
-                1000,
-                "[Create Dashboard Dialog] is closed"
-            );
+            .click(StackDialog.CreateStack.SUBMIT)
+            .waitForElementNotPresent(StackDialog.CreateStack.SUBMIT, 1000, "[Create Stack Dialog] is closed.")
+            .click(MainPage.DIALOG_CLOSE);
 
         // NEXT we open admin dashboard widget, and try to add a user (add button should be disabled)
         DashboardAdmin.navigateTo(browser);
@@ -319,19 +291,19 @@ module.exports = {
 
         // Since the add button is disabled, we need to share the dashboard to allow us to add users
 
-        browser.waitForElementVisible(MainPage.DASHBOARD_BUTTON, 2000, "[Dashboard Button] is visible.");
+        browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Dashboard Button] is visible.");
 
         browser
-            .click(MainPage.DASHBOARD_BUTTON)
-            .waitForElementVisible(DashboardDialog.DASHBOARD_DIALOG, 2000, "[Dashboard Dialog] is visible.")
+            .click(MainPage.STACKS_BUTTON)
+            .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Dashboard Dialog] is visible.")
             .waitForElementVisible(
-                DashboardDialog.getShareButtonForDashboard(DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME),
+                StackDialog.getShareButtonForStack(DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME),
                 2000,
                 "[Dashboard Dialog] share button is visible."
             );
 
         browser
-            .click(DashboardDialog.getShareButtonForDashboard(DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME))
+            .click(StackDialog.getShareButtonForStack(DashboardAdminWidget.DASHBOARD_ADMIN_TEST_DASHBOARD_NAME))
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,

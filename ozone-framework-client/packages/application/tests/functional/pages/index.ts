@@ -2,7 +2,7 @@ export * from "./AdminToolsDialog";
 export * from "./Application";
 export * from "./ConsentPage";
 export * from "./DashboardAdmin";
-export * from "./DashboardDialog";
+export * from "./StackDialog";
 export * from "./GroupAdmin";
 export * from "./HomeScreen";
 export * from "./LoginPage";

@@ -59,10 +59,12 @@ export interface StackCreateResponse {
 export const validateStackCreateResponse = createValidator<StackUpdateResponse>(STACK_CREATE_RESPONSE_SCHEMA);
 
 export interface StackUpdateRequest extends StackCreateRequest {
+    name: string;
     id: number;
     update_action?: "add" | "remove";
     tab?: "users" | "groups";
     data?: UserDTO[] | GroupDTO[];
+    imageUrl?: string;
 }
 
 export type StackUpdateResponse = StackCreateResponse;
