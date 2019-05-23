@@ -1,0 +1,27 @@
+:local .wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+:local .banner {
+  flex: 0 0 auto;
+
+  text-align: center;
+  line-height: 1.2rem;
+}
+
+:local .container {
+  flex: 1 0 auto;
+}
+
+:local .fullcenter {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

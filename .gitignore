@@ -2,6 +2,6 @@
 
 /.idea/
 /*.iml
-
+/ozone-framework-server/owf-framework/src/main/resources/public/*
 __pycache__
 *.pyc
