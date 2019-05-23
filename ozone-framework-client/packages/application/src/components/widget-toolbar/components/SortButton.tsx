@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Button } from "@blueprintjs/core";
 
 export type SortOrder = "asc" | "dsc";

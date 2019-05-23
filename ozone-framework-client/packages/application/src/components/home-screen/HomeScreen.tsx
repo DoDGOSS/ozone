@@ -1,4 +1,7 @@
-import * as React from "react";
+import styles from "./index.scss";
+
+import React from "react";
+import { useEffect } from "react";
 import { useBehavior } from "../../hooks";
 
 import { mainStore } from "../../stores/MainStore";
@@ -13,8 +16,6 @@ import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
 import { WidgetToolbar } from "../widget-toolbar/WidgetToolbar";
 import { UserProfileDialog } from "../user-profile/UserProfileDialog";
 
-import * as styles from "./index.scss";
-import { useEffect } from "react";
 import { dashboardStore } from "../../stores/DashboardStore";
 import { CreateStackDialog } from "../create-stack-screen/CreateStackDialog";
 
