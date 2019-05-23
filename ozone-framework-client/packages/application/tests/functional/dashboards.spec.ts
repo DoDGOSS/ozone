@@ -22,7 +22,7 @@ module.exports = {
 
         browser
             .click(StackDialog.CreateStack.SUBMIT)
-            .waitForElementNotPresent(StackDialog.CREATE_STACK_BUTTON, 1000, "[Create Stack Dialog] is closed.");
+            .waitForElementNotPresent(StackDialog.CreateStack.SUBMIT, 1000, "[Create Stack Dialog] is closed.");
 
         browser.closeWindow().end();
     },
@@ -53,6 +53,8 @@ module.exports = {
 
         browser.waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
 
+        browser.pause(500);
+
         browser.assert.containsText(
             StackDialog.STACK_DIALOG,
             StackDialog.CreateStack.EDIT_STACK_NAME,
@@ -72,7 +74,10 @@ module.exports = {
             .click(MainPage.STACKS_BUTTON)
             .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
 
+
+
         browser
+            .pause(500)
             .click(StackDialog.getShareButtonForStack(StackDialog.CreateStack.EDIT_STACK_NAME))
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
@@ -102,6 +107,7 @@ module.exports = {
             .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
 
         browser
+            .pause(500)
             .click(StackDialog.getAddDashboardButtonForStack(StackDialog.CreateStack.EDIT_STACK_NAME))
             .waitForElementVisible(
                 StackDialog.CreateStack.SUBMIT,
@@ -114,6 +120,8 @@ module.exports = {
         browser
             .click(StackDialog.SUBMIT_BUTTON)
             .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
+
+        browser.pause(500);
 
         browser.assert.containsText(
             StackDialog.STACK_DIALOG,
@@ -135,6 +143,7 @@ module.exports = {
             .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
 
         browser
+            .pause(500)
             .click(StackDialog.getAddDashboardButtonForStack(StackDialog.CreateStack.EDIT_STACK_NAME))
             .waitForElementVisible(
                 StackDialog.CreateStack.SUBMIT,
@@ -151,6 +160,8 @@ module.exports = {
         browser
             .click(StackDialog.SUBMIT_BUTTON)
             .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
+
+        browser.pause(500);
 
         browser.assert.containsText(
             StackDialog.STACK_DIALOG,
@@ -172,6 +183,7 @@ module.exports = {
             .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
 
         browser
+            .pause(500)
             .click(StackDialog.CreateStack.DROPDOWN_CARET)
             .waitForElementVisible(
                 StackDialog.getEditButtonForDashboard(StackDialog.CreateStack.CREATE_DASHBOARD_NAME),
@@ -190,6 +202,7 @@ module.exports = {
 
         browser
             .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.")
+            .pause(500)
             .click(StackDialog.CreateStack.DROPDOWN_CARET);
 
         browser.assert.containsText(
@@ -212,6 +225,7 @@ module.exports = {
             .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
 
         browser
+            .pause(500)
             .click(StackDialog.CreateStack.DROPDOWN_CARET)
             .waitForElementVisible(
                 StackDialog.getEditButtonForDashboard(StackDialog.CreateStack.EDIT_DASHBOARD_NAME),
@@ -257,6 +271,7 @@ module.exports = {
             );
 
         browser
+            .pause(500)
             .click(StackDialog.getDeleteButtonForStack(StackDialog.CreateStack.EDIT_STACK_NAME))
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
