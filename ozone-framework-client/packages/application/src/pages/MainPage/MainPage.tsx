@@ -3,6 +3,9 @@ import styles from "./index.module.scss";
 import React, { useEffect, useMemo } from "react";
 import { useBehavior } from "../../hooks";
 
+import { DragDropContextProvider } from "react-dnd";
+import HTML5Backend from "react-dnd-html5-backend";
+
 import { Spinner } from "@blueprintjs/core";
 
 import { AuthStatus, authStore } from "../../stores/AuthStore";
@@ -29,9 +32,11 @@ export const MainPage: React.FC<{}> = () => {
     }, [authStatus]);
 
     return (
-        <ClassificationWrapper>
-            {authStatus === AuthStatus.PENDING && <Spinner className={styles.loadingSpinner} />}
-            {authStatus === AuthStatus.LOGGED_IN && <HomeScreen />}
-        </ClassificationWrapper>
+        <DragDropContextProvider backend={HTML5Backend}>
+            <ClassificationWrapper>
+                {authStatus === AuthStatus.PENDING && <Spinner className={styles.loadingSpinner} />}
+                {authStatus === AuthStatus.LOGGED_IN && <HomeScreen />}
+            </ClassificationWrapper>
+        </DragDropContextProvider>
     );
 };

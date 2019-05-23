@@ -1,8 +1,13 @@
 import React from "react";
+import {
+    MosaicBranch,
+    MosaicNode,
+    MosaicParent,
+    MosaicWindow,
+    MosaicWithoutDragDropContext
+} from "../../features/MosaicDashboard";
 
-import { Mosaic, MosaicBranch, MosaicNode, MosaicParent, MosaicWindow } from "react-mosaic-component";
-
-export const DashboardLayout = Mosaic.ofType<string>();
+export const DashboardLayout = MosaicWithoutDragDropContext.ofType<string>();
 
 export const DashboardWindow = MosaicWindow.ofType<string>();
 

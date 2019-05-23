@@ -9,6 +9,7 @@ import { CreateDashboardOptions } from "../components/create-dashboard-screen/Cr
 import { createPresetLayout } from "./default-layouts";
 
 import { isNil, values } from "../utility";
+import { UserWidget } from "../models/UserWidget";
 
 const EMPTY_USER_DASHBOARDS_STATE: UserState = {
     dashboards: {},
@@ -35,6 +36,12 @@ export class DashboardStore {
     currentDashboard = () => asBehavior(this.currentDashboard$);
 
     isLoading = () => asBehavior(this.isLoading$);
+
+    findUserWidgetByWidgetId(id: string): UserWidget | undefined {
+        const userState = this.userDashboards$.value;
+        const userWidgets = values(userState.widgets);
+        return userWidgets.find((w: UserWidget) => w.widget.id === id);
+    }
 
     fetchUserDashboards = async (newCurrentGuid?: string | any) => {
         this.isLoading$.next(true);

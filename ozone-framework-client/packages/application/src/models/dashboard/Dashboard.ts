@@ -5,14 +5,17 @@ import { asBehavior } from "../../observables";
 
 import {
     Corner,
+    getAndAssertNodeAtPathExists,
     getNodeAtPath,
     getOtherDirection,
     getPathToCorner,
     MosaicDirection,
+    MosaicDropTargetPosition,
     MosaicNode,
     MosaicParent,
+    MosaicPath,
     updateTree
-} from "react-mosaic-component";
+} from "../../features/MosaicDashboard";
 
 import { UserWidget } from "../UserWidget";
 
@@ -53,6 +56,13 @@ export interface DashboardProps extends DashboardLayout {
     };
 }
 
+export interface AddWidgetOpts {
+    userWidget: UserWidget;
+    title?: string;
+    path?: MosaicPath;
+    position?: MosaicDropTargetPosition;
+}
+
 export class Dashboard {
     private readonly state$: BehaviorSubject<DashboardProps>;
 
@@ -82,16 +92,25 @@ export class Dashboard {
         return undefined;
     };
 
-    addWidget = (widget: UserWidget, title?: string): boolean => {
-        const existingWidget = this.findWidgetById(widget.widget.id);
+    addWidget = (opts: AddWidgetOpts): boolean => {
+        const { userWidget, title, path, position } = opts;
+
+        const existingWidget = this.findWidgetById(userWidget.widget.id);
         if (existingWidget) return false;
 
         const prev = this.state$.value;
         const { panels, tree } = prev;
 
-        const panel = new FitPanel(null, orNull(title), widget);
+        const panel = new FitPanel(null, orNull(title), userWidget);
 
-        const newTree = tree !== null ? addToTopRightOfLayout(tree, panel.id) : panel.id;
+        let newTree: DashboardNode;
+        if (tree === null) {
+            newTree = panel.id;
+        } else if (path !== undefined && position !== undefined) {
+            newTree = addToLayout(tree, panel.id, path, position);
+        } else {
+            newTree = addToTopRightOfLayout(tree, panel.id);
+        }
 
         this.state$.next({
             ...prev,
@@ -185,6 +204,42 @@ function findPanelIds(node: DashboardNode | null): string[] {
     if (node === null) return [];
     if (isString(node)) return [node];
     return [...findPanelIds(node.first), ...findPanelIds(node.second)];
+}
+
+function addToLayout(
+    layout: DashboardNode,
+    id: string,
+    targetPath: MosaicPath,
+    position: MosaicDropTargetPosition
+): DashboardNode {
+    const targetNode = getAndAssertNodeAtPathExists(layout, targetPath);
+
+    const newNode = id;
+
+    let first: DashboardNode;
+    let second: DashboardNode;
+
+    if (position === MosaicDropTargetPosition.LEFT || position === MosaicDropTargetPosition.TOP) {
+        first = newNode;
+        second = targetNode;
+    } else {
+        first = targetNode;
+        second = newNode;
+    }
+
+    let direction: MosaicDirection = "column";
+    if (position === MosaicDropTargetPosition.LEFT || position === MosaicDropTargetPosition.RIGHT) {
+        direction = "row";
+    }
+
+    const update = {
+        path: targetPath,
+        spec: {
+            $set: { first, second, direction }
+        }
+    };
+
+    return updateTree(layout, [update]);
 }
 
 function addToTopRightOfLayout(layout: DashboardNode, id: string): DashboardNode {
