@@ -5,9 +5,8 @@ import { mainStore } from "../../stores/MainStore";
 
 import { AboutDialog } from "../about/About";
 import { AdminToolsDialog } from "../admin-tools-dialog/AdminToolsDialog";
-import { CreateDashboardDialog } from "../create-dashboard-screen/CreateDashboardDialog";
 import { ReplaceWidgetDialog } from "../widget-dashboard/ReplaceWidgetDialog";
-import { DashboardDialog } from "../dashboard-screen/DashboardDialog";
+import { StackDialog } from "../stack-screen/StackDialog";
 import { HelpDialog } from "../help-screen/HelpDialog";
 import { NavigationBar } from "../navigation/NavigationBar";
 import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
@@ -17,6 +16,7 @@ import { UserProfileDialog } from "../user-profile/UserProfileDialog";
 import * as styles from "./index.scss";
 import { useEffect } from "react";
 import { dashboardStore } from "../../stores/DashboardStore";
+import { CreateStackDialog } from "../create-stack-screen/CreateStackDialog";
 
 export const HomeScreen: React.FC<{}> = () => {
     const isAboutVisible = useBehavior(mainStore.isAboutVisible);
@@ -32,11 +32,11 @@ export const HomeScreen: React.FC<{}> = () => {
 
             <WidgetDashboard className={styles.widgetDashboard} />
 
-            <CreateDashboardDialog />
+            <CreateStackDialog />
             <ReplaceWidgetDialog />
             <AboutDialog isVisible={isAboutVisible} onClose={() => mainStore.hideAboutDialog()} />
             <HelpDialog />
-            <DashboardDialog />
+            <StackDialog />
             <AdminToolsDialog />
             <UserProfileDialog />
         </div>

@@ -1,0 +1,90 @@
+@import "../../common";
+@import url('~react-table/react-table.css');
+
+:local .formBody {
+  // background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+:local .formBody {
+  padding: 0.5em;
+}
+
+:local .formBody,
+:local .table,
+:local .buttonBar,
+:local .actionBar,
+:local .widget_body{
+  margin: 0.5em;
+}
+:local .buttonBar {
+  display: flex;
+  justify-content: space-between;
+}
+
+:local .createIntent > div > form{
+  padding:2em;
+}
+:local .inline_form_label > label{
+  min-width: 150px;
+}
+
+:local .inline_form_label > div {
+  width: calc(100% - 170px);
+}
+
+ .bp3-dark > .pagination-bottom > .-pagination > .-previous > button,
+ .bp3-dark > .pagination-bottom > .-pagination > .-center > span > .-pageJump > input,
+ .bp3-dark > .pagination-bottom > .-pagination > .-next > button,
+ .bp3-dark > .pagination-bottom > .-pagination > .-center > span > select,
+ .bp3-dark > .rt-table > .rt-thead >.rt-tr > .rt-th > div > div > input
+        {
+          color:$text-color_dark;
+          background-color: $background-color_dark;
+        }
+
+ .bp3-dark > .rt-table > .rt-thead >.rt-tr > .rt-th > div > div > input,
+  .rt-noData{
+   border:.5px solid $text-color_dark;
+   padding:.4em;
+   border-radius: 5px;
+   color:$text-color_dark;
+   background-color: $background-color_dark;
+ }
+
+//chrome scroll bar fix
+ /* width */
+ ::-webkit-scrollbar {
+   height: 4px;
+ }
+ /* Track */
+ ::-webkit-scrollbar-track {
+   background: $background-color_dark;
+ }
+ /* Handle */
+ ::-webkit-scrollbar-thumb {
+   border-radius: 8px;
+   background: #48aff0 !important;
+ }
+
+ /* Handle on hover */
+ ::-webkit-scrollbar-thumb:hover {
+   background: #48aff0;
+ }
+
+ //firefox drop arrow
+select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+html {
+-ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.ReactTable.-highlight .rt-tbody .rt-tr:not(.-padRow):hover {
+    filter: brightness(115%);
+    // background-color: rgba(247, 247, 247, 0.05) !important;
+    // color: rgba(50, 0, 0, 0.85) !important;
+}
