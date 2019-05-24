@@ -2,7 +2,7 @@ import * as styles from "./DashboardPanel.scss";
 
 import React, { ReactNode } from "react";
 
-import { isExpandoPanel, isFitPanel, isTabbedPanel, Panel, PanelState } from "../../../models/dashboard/types";
+import { isExpandoPanel, isFitPanel, isTabbedPanel, Panel, PanelState } from "../../../models/panel";
 import { DashboardPath, DashboardWindow } from "../types";
 
 import { DashboardTabbedPanel } from "./DashboardTabbedPanel";

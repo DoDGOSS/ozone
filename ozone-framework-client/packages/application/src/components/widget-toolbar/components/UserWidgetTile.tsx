@@ -1,36 +1,21 @@
 import styles from "../index.scss";
 
 import React from "react";
-import { ConnectDragPreview, ConnectDragSource, DragSource, DragSourceConnector, DragSourceMonitor } from "react-dnd";
-import { defer } from "lodash";
+import { DragSource } from "react-dnd";
 
-import { MosaicDragType, MosaicDropData } from "../../../features/MosaicDashboard";
+import { MosaicDragType } from "../../../features/MosaicDashboard";
 import { mainStore } from "../../../stores/MainStore";
 import { dashboardService } from "../../../stores/DashboardService";
-
-import { MOSAIC_CONTEXT_ID } from "../../../constants";
+import { beginWidgetDrag, collectDragProps, DragSourceProps, endWidgetDrag } from "../../../shared/dragAndDrop";
 
 export interface UserWidgetTileProps {
     iconUrl: string;
     onClick: () => void;
     title: string;
-    widgetId: string;
-    onDragStart?: (userWidgetId: string) => void;
-    onDragEnd?: (userWidgetId: string) => void;
+    userWidgetId: number;
 }
 
-export interface UserWidgetTileDragSourceProps {
-    connectDragSource: ConnectDragSource;
-    connectDragPreview: ConnectDragPreview;
-}
-
-interface UserWidgetDragItem {
-    widgetId: string;
-    hideTimerId: number;
-    mosaicId: string;
-}
-
-type Props = UserWidgetTileProps & UserWidgetTileDragSourceProps;
+type Props = UserWidgetTileProps & DragSourceProps;
 
 const _InternalWidgetTile: React.FC<Props> = (props) =>
     props.connectDragSource(
@@ -42,47 +27,15 @@ const _InternalWidgetTile: React.FC<Props> = (props) =>
 
 const InternalWidgetTile = React.memo(_InternalWidgetTile);
 
-export const UserWidgetTile = DragSource(
-    MosaicDragType.WINDOW,
-    {
-        beginDrag,
-        endDrag
-    },
-    collectDragProps
-)(InternalWidgetTile);
+const endDrag = endWidgetDrag<Props>(({ userWidgetId, dropResult }) => {
+    dashboardService.addUserWidgetById(userWidgetId, dropResult.path, dropResult.position);
+});
 
-function beginDrag(props: Props): UserWidgetDragItem {
-    const { widgetId } = props;
+const beginDrag = beginWidgetDrag<Props>(({ props, defer }) => {
+    defer(mainStore.closeWidgetToolbar);
+    return props.userWidgetId;
+});
 
-    if (props.onDragStart) {
-        props.onDragStart(widgetId);
-    }
-
-    const hideTimerId = defer(mainStore.closeWidgetToolbar);
-
-    return {
-        widgetId,
-        hideTimerId,
-        mosaicId: MOSAIC_CONTEXT_ID
-    };
-}
-
-function endDrag(props: Props, monitor: DragSourceMonitor) {
-    const item = monitor.getItem() as UserWidgetDragItem;
-    const { widgetId, hideTimerId } = item;
-    window.clearTimeout(hideTimerId);
-
-    const dropResult = (monitor.getDropResult() || {}) as MosaicDropData;
-    dashboardService.addUserWidgetById(widgetId, dropResult.path, dropResult.position);
-
-    if (props.onDragEnd) {
-        props.onDragEnd(widgetId);
-    }
-}
-
-function collectDragProps(connect: DragSourceConnector): UserWidgetTileDragSourceProps {
-    return {
-        connectDragSource: connect.dragSource(),
-        connectDragPreview: connect.dragPreview()
-    };
-}
+export const UserWidgetTile = DragSource(MosaicDragType.WINDOW, { beginDrag, endDrag }, collectDragProps)(
+    InternalWidgetTile
+) as React.ComponentType<UserWidgetTileProps>;

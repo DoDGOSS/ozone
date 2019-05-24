@@ -3,9 +3,8 @@ import { find } from "lodash";
 import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../../observables";
 
-import { UserWidget } from "../UserWidget";
-
 import { LayoutType, Panel, PanelState } from "./types";
+import { WidgetInstance } from "../WidgetInstance";
 
 export abstract class AbstractPanel<T extends PanelState> implements Panel<T> {
     protected readonly state$: BehaviorSubject<T>;
@@ -30,8 +29,8 @@ export abstract class AbstractPanel<T extends PanelState> implements Panel<T> {
 
     abstract closeWidget(widgetId: string): void;
 
-    findWidgetById = (widgetId: string): UserWidget | undefined => {
+    findWidget(instanceId: string): WidgetInstance | undefined {
         const { widgets } = this.state$.value;
-        return find(widgets, (w) => w.widget.id === widgetId);
-    };
+        return find(widgets, (w) => w.id === instanceId);
+    }
 }

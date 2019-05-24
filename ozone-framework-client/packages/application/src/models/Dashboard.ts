@@ -1,7 +1,7 @@
 import { dropRight, isString, omit, pick, set } from "lodash";
 
 import { BehaviorSubject } from "rxjs";
-import { asBehavior } from "../../observables";
+import { asBehavior } from "../observables";
 
 import {
     Corner,
@@ -15,18 +15,15 @@ import {
     MosaicParent,
     MosaicPath,
     updateTree
-} from "../../features/MosaicDashboard";
+} from "../features/MosaicDashboard";
 
-import { UserWidget } from "../UserWidget";
+import { UserWidget } from "./UserWidget";
 
-import { DashboardNode, DashboardPath } from "../../components/widget-dashboard/types";
-import { LayoutType, Panel, PanelState } from "./types";
+import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
+import { ProfileReference } from "../api/models/UserDTO";
 
-import { ExpandoPanel } from "./ExpandoPanel";
-import { TabbedPanel } from "./TabbedPanel";
-import { FitPanel } from "./FitPanel";
-import { ProfileReference } from "../../api/models/UserDTO";
-import { orNull } from "../../utility";
+import { ExpandoPanel, FitPanel, LayoutType, Panel, PanelState, TabbedPanel } from "./panel";
+import { WidgetInstance } from "./WidgetInstance";
 
 export interface DashboardLayout {
     tree: DashboardNode | null;
@@ -76,13 +73,16 @@ export class Dashboard {
 
     state = () => asBehavior(this.state$);
 
-    findWidgetById = (widgetId: string): UserWidget | undefined => {
+    /**
+     * Find a Widget instance in any of the Dashboard Panels
+     */
+    findWidget(instanceId: string): WidgetInstance | undefined {
         const { panels } = this.state$.value;
 
         for (const panelId in panels) {
             if (panels.hasOwnProperty(panelId)) {
                 const panel: Panel<any> = panels[panelId];
-                const widget = panel.findWidgetById(widgetId);
+                const widget = panel.findWidget(instanceId);
                 if (widget !== undefined) {
                     return widget;
                 }
@@ -90,18 +90,16 @@ export class Dashboard {
         }
 
         return undefined;
-    };
+    }
 
-    addWidget = (opts: AddWidgetOpts): boolean => {
+    addWidget(opts: AddWidgetOpts): boolean {
         const { userWidget, title, path, position } = opts;
-
-        const existingWidget = this.findWidgetById(userWidget.widget.id);
-        if (existingWidget) return false;
 
         const prev = this.state$.value;
         const { panels, tree } = prev;
 
-        const panel = new FitPanel(null, orNull(title), userWidget);
+        const instance = WidgetInstance.create(userWidget);
+        const panel = new FitPanel({ title, widget: instance });
 
         let newTree: DashboardNode;
         if (tree === null) {
@@ -122,9 +120,9 @@ export class Dashboard {
         });
 
         return true;
-    };
+    }
 
-    addPanel = (panel: Panel<PanelState>) => {
+    addPanel(panel: Panel<PanelState>) {
         const prev = this.state$.value;
         const { panels, tree } = prev;
 
@@ -138,7 +136,7 @@ export class Dashboard {
                 [panel.id]: panel
             }
         });
-    };
+    }
 
     /**
      * Set the new dashboard layout and check for changes to open/closed panels.
@@ -168,7 +166,7 @@ export class Dashboard {
         });
     }
 
-    setPanelLayout = (panel: Panel<PanelState>, path: DashboardPath, layout: LayoutType) => {
+    setPanelLayout(panel: Panel<PanelState>, path: DashboardPath, layout: LayoutType) {
         const prev = this.state$.value;
         const { tree, panels } = prev;
 
@@ -177,14 +175,14 @@ export class Dashboard {
         const { widgets } = panel.state().value;
         let newPanel: Panel<PanelState> | undefined;
         if (layout === "fit") {
-            const newWidget = widgets.length > 0 ? widgets[0] : null;
-            newPanel = new FitPanel(null, null, newWidget);
+            const widget = widgets.length > 0 ? widgets[0] : undefined;
+            newPanel = new FitPanel({ widget });
         } else if (layout === "tabbed") {
-            newPanel = new TabbedPanel(null, "", widgets);
+            newPanel = new TabbedPanel({ widgets });
         } else if (layout === "accordion") {
-            newPanel = new ExpandoPanel("accordion", null, "", widgets);
+            newPanel = new ExpandoPanel("accordion", { widgets });
         } else if (layout === "portal") {
-            newPanel = new ExpandoPanel("portal", null, "", widgets);
+            newPanel = new ExpandoPanel("portal", { widgets });
         }
 
         if (newPanel !== undefined) {
@@ -197,7 +195,7 @@ export class Dashboard {
                 panels: newPanels
             });
         }
-    };
+    }
 }
 
 function findPanelIds(node: DashboardNode | null): string[] {

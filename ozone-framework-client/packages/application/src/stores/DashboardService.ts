@@ -4,13 +4,9 @@ import { asBehavior } from "../observables";
 import { MosaicDropTargetPosition, MosaicPath } from "../features/MosaicDashboard";
 
 import { dashboardStore, DashboardStore } from "./DashboardStore";
-import { LayoutType, Panel, PanelState } from "../models/dashboard/types";
+import { ExpandoPanel, FitPanel, LayoutType, Panel, PanelState, TabbedPanel } from "../models/panel";
 import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
-import { Dashboard } from "../models/dashboard/Dashboard";
-
-import { FitPanel } from "../models/dashboard/FitPanel";
-import { TabbedPanel } from "../models/dashboard/TabbedPanel";
-import { ExpandoPanel } from "../models/dashboard/ExpandoPanel";
+import { Dashboard } from "../models/Dashboard";
 import { UserWidget } from "../models/UserWidget";
 
 import { WidgetLaunchArgs } from "../services/WidgetLaunchArgs";
@@ -81,8 +77,8 @@ export class DashboardService {
      *
      * @returns true -- if the Widget was opened successfully
      */
-    addUserWidgetById(widgetId: string, path?: MosaicPath, position?: MosaicDropTargetPosition): boolean {
-        const userWidget = dashboardStore.findUserWidgetByWidgetId(widgetId);
+    addUserWidgetById(id: number, path?: MosaicPath, position?: MosaicDropTargetPosition): boolean {
+        const userWidget = dashboardStore.findUserWidgetById(id);
         if (!userWidget) return false;
 
         return this.getCurrentDashboard().addWidget({ userWidget, path, position });
@@ -143,15 +139,15 @@ function createSampleFitPanel(): FitPanel {
 }
 
 function createSampleTabbedPanel(): TabbedPanel {
-    return new TabbedPanel(null, "New Tabbed Panel", []);
+    return new TabbedPanel({ title: "New Tabbed Panel" });
 }
 
 function createSampleAccordionPanel(): ExpandoPanel {
-    return new ExpandoPanel("accordion", null, "New Accordion Panel", []);
+    return new ExpandoPanel("accordion", { title: "New Accordion Panel" });
 }
 
 function createSamplePortalPanel(): ExpandoPanel {
-    return new ExpandoPanel("portal", null, "New Portal Panel", []);
+    return new ExpandoPanel("portal", { title: "New Portal Panel" });
 }
 
 export const dashboardService = new DashboardService();
