@@ -27,13 +27,13 @@ const _WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
         let _userWidgets = values(userDashboards.widgets).filter((w) => w.widget.isVisible);
 
         if (sortOrder === "asc") {
-            _userWidgets.sort((a, b) => a.widget.title.localeCompare(b.widget.title));
+            _userWidgets.sort((a, b) => a.title.localeCompare(b.title));
         } else {
-            _userWidgets.sort((a, b) => b.widget.title.localeCompare(a.widget.title));
+            _userWidgets.sort((a, b) => b.title.localeCompare(a.title));
         }
         if (!isBlank(filter)) {
             _userWidgets = _userWidgets.filter((row) => {
-                return row.widget.title.toLowerCase().includes(filter.toLocaleLowerCase());
+                return row.title.toLowerCase().includes(filter.toLocaleLowerCase());
             });
         }
         return _userWidgets;

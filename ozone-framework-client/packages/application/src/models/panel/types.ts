@@ -1,10 +1,9 @@
 import { BehaviorObservable } from "../../observables";
 
-import { UserWidget } from "../UserWidget";
-
 import { FitPanel } from "./FitPanel";
 import { TabbedPanel, TabbedPanelState } from "./TabbedPanel";
 import { ExpandoPanel, ExpandoPanelState } from "./ExpandoPanel";
+import { WidgetInstance } from "../WidgetInstance";
 
 export type LayoutType = "fit" | "tabbed" | "accordion" | "portal";
 
@@ -12,7 +11,7 @@ export interface PanelState {
     id: string;
     title: string;
     type: LayoutType;
-    widgets: UserWidget[];
+    widgets: WidgetInstance[];
 }
 
 export interface Panel<T extends PanelState> {
@@ -22,9 +21,9 @@ export interface Panel<T extends PanelState> {
 
     state(): BehaviorObservable<T>;
 
-    closeWidget(widgetId: string): void;
+    closeWidget(instanceId: string): void;
 
-    findWidgetById(widgetId: string): UserWidget | undefined;
+    findWidget(instanceId: string): WidgetInstance | undefined;
 }
 
 export function isFitPanel(panel: Panel<any>): panel is FitPanel {
