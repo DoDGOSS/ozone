@@ -4,12 +4,20 @@ import { UserWidgetDTO } from "../api/models/UserWidgetDTO";
 
 import { UserWidget } from "../models/UserWidget";
 
-import { Dashboard, DashboardLayout, DashboardProps } from "../models/dashboard/Dashboard";
-import { ExpandoPanel } from "../models/dashboard/ExpandoPanel";
-import { FitPanel } from "../models/dashboard/FitPanel";
-import { Stack } from "../models/dashboard/Stack";
-import { TabbedPanel } from "../models/dashboard/TabbedPanel";
-import { isExpandoPanelState, isTabbedPanelState, LayoutType, Panel, PanelState } from "../models/dashboard/types";
+import { Dashboard, DashboardLayout, DashboardProps } from "../models/Dashboard";
+import { Stack } from "../models/Stack";
+import { WidgetInstance } from "../models/WidgetInstance";
+
+import {
+    ExpandoPanel,
+    FitPanel,
+    isExpandoPanelState,
+    isTabbedPanelState,
+    LayoutType,
+    Panel,
+    PanelState,
+    TabbedPanel
+} from "../models/panel";
 
 import { DashboardNode } from "../components/widget-dashboard/types";
 
@@ -23,12 +31,17 @@ export interface UserState {
     widgets: NumericDictionary<UserWidget>;
 }
 
+export interface WidgetInstanceDTO {
+    id: string;
+    userWidgetId: number;
+}
+
 export interface PanelDTO {
     id: string;
     title: string;
     type: LayoutType;
-    userWidgetIds: number[];
-    activeWidgetId?: number;
+    widgets: WidgetInstanceDTO[];
+    activeWidgetId?: string;
     collapsed?: boolean[];
 }
 
@@ -126,18 +139,39 @@ class UserStateDeserializer {
     }
 
     private createPanel(dto: PanelDTO): Panel<PanelState> {
-        const _widgets = dto.userWidgetIds.map((id) => this.widgets[id]);
-        const _activeWidget = dto.activeWidgetId ? this.widgets[dto.activeWidgetId] : undefined;
+        const widgets = dto.widgets.map((instance) => {
+            const userWidget = this.widgets[instance.userWidgetId];
+            return WidgetInstance.create(userWidget, instance.id);
+        });
 
         switch (dto.type) {
             case "fit":
-                return new FitPanel(dto.id, dto.title, _widgets[0]);
+                return new FitPanel({
+                    id: dto.id,
+                    title: dto.title,
+                    widget: widgets[0]
+                });
             case "tabbed":
-                return new TabbedPanel(dto.id, dto.title, _widgets, _activeWidget);
+                return new TabbedPanel({
+                    id: dto.id,
+                    title: dto.title,
+                    widgets,
+                    activeWidget: widgets.find((w) => w.id === dto.activeWidgetId)
+                });
             case "accordion":
-                return new ExpandoPanel("accordion", dto.id, dto.title, _widgets, dto.collapsed);
+                return new ExpandoPanel("accordion", {
+                    id: dto.id,
+                    title: dto.title,
+                    widgets,
+                    collapsed: dto.collapsed
+                });
             case "portal":
-                return new ExpandoPanel("portal", dto.id, dto.title, _widgets, dto.collapsed);
+                return new ExpandoPanel("portal", {
+                    id: dto.id,
+                    title: dto.title,
+                    widgets,
+                    collapsed: dto.collapsed
+                });
         }
     }
 }
@@ -170,7 +204,10 @@ export function panelToJson(panel: Panel<PanelState>): PanelDTO {
             id: state.id,
             title: state.title,
             type: state.type,
-            userWidgetIds: state.widgets.map((widget) => widget.id),
+            widgets: state.widgets.map((instance) => ({
+                id: instance.id,
+                userWidgetId: instance.userWidget.id
+            })),
             activeWidgetId: getActiveWidgetId(state),
             collapsed: isExpandoPanelState(state) ? state.collapsed : undefined
         };
@@ -180,14 +217,14 @@ export function panelToJson(panel: Panel<PanelState>): PanelDTO {
             id: panel.id,
             title: "",
             type: panel.type,
-            userWidgetIds: Array(0),
-            activeWidgetId: 0,
+            widgets: [],
+            activeWidgetId: undefined,
             collapsed: undefined
         };
     }
 }
 
-function getActiveWidgetId(state: PanelState): number | undefined {
+function getActiveWidgetId(state: PanelState): string | undefined {
     return (isTabbedPanelState(state) || isExpandoPanelState(state)) && state.activeWidget !== null
         ? state.activeWidget.id
         : undefined;

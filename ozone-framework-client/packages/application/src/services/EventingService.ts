@@ -3,7 +3,7 @@ import { isRegExp, map } from "lodash";
 import { Observable, Subject } from "rxjs";
 import { filter } from "rxjs/operators";
 
-import { UserWidget } from "../models/UserWidget";
+import { WidgetInstance } from "../models/WidgetInstance";
 
 import { dashboardStore } from "../stores/DashboardStore";
 import { errorStore } from "./ErrorStore";
@@ -26,7 +26,7 @@ interface Widget2 {
 }
 
 interface WidgetClient {
-    id: string;
+    instanceId: string;
     info: Widget2;
     functions?: string[];
     origin: string;
@@ -94,7 +94,7 @@ export class EventingService {
 
         const message = formatRpcMessage(service, "..", args);
 
-        const iframeWindow = findWidgetIFrameWindow(target.id);
+        const iframeWindow = findWidgetIFrameWindow(target.instanceId);
 
         iframeWindow.postMessage(message, target.origin);
     }
@@ -131,24 +131,28 @@ export class EventingService {
 
     private onWidgetInit(message: RpcMessage): void {
         try {
-            const widget = findWidgetInDashboard(message.senderId);
+            const instance = findWidgetInDashboard(message.senderId);
+            const instanceId = instance.id;
 
-            this.widgets[widget.widget.id] = {
-                id: widget.widget.id,
+            const userWidget = instance.userWidget;
+            const widget = userWidget.widget;
+
+            this.widgets[instanceId] = {
+                instanceId: instanceId,
                 info: {
-                    id: widget.widget.id,
-                    name: widget.widget.title,
-                    url: widget.widget.url,
-                    frameId: `widget-${widget.widget.id}`,
-                    widgetGuid: widget.widget.id,
-                    widgetName: widget.widget.title,
-                    universalName: widget.widget.universalName || ""
+                    id: instanceId,
+                    name: userWidget.title,
+                    url: widget.url,
+                    frameId: `widget-${instanceId}`,
+                    widgetGuid: widget.id,
+                    widgetName: userWidget.title,
+                    universalName: widget.universalName || ""
                 },
                 ready: false,
                 origin: message.raw.origin
             };
 
-            this.call(widget.widget.id, "after_container_init", [window.name, `{"id":"${window.name}"}`]);
+            this.call(instanceId, "after_container_init", [window.name, `{"id":"${window.name}"}`]);
         } catch (error) {
             errorStore.warning("EventingService Error", `onWidgetInit error: ${error.message}`);
         }
@@ -287,13 +291,13 @@ export class EventingService {
     private isSubscribed(client: WidgetClient, channel: string): boolean {
         const subscriptions = this.subscriptions[channel] || [];
         for (const subscriber of subscriptions) {
-            if (subscriber.id === client.id) return true;
+            if (subscriber.instanceId === client.instanceId) return true;
         }
         return false;
     }
 
     private broadcastMessage(client: WidgetClient, channel: string, message: any): void {
-        const senderId = client.id;
+        const senderId = client.instanceId;
 
         const subscriptions = this.subscriptions[channel] || [];
         for (const subscriber of subscriptions) {
@@ -367,19 +371,15 @@ function findWidgetIFrameWindow(id: string): Window {
     return contentWindow;
 }
 
-function findWidgetInDashboard(widgetId: string): UserWidget {
+function findWidgetInDashboard(instanceId: string): WidgetInstance {
     const dashboard = dashboardStore.currentDashboard().value;
     if (isNil(dashboard)) {
         throw new Error("no current Dashboard exists");
     }
 
-    const widget = dashboard.findWidgetById(widgetId);
+    const widget = dashboard.findWidget(instanceId);
     if (isNil(widget)) {
-        throw new Error(`Widget [id: ${widgetId}] not in current Dashboard`);
-    }
-
-    if (isNil(widget.widget.url)) {
-        throw new Error(`Widget [id: ${widgetId}] has no URL property`);
+        throw new Error(`Widget instance [id: ${instanceId}] not in current Dashboard`);
     }
 
     return widget;

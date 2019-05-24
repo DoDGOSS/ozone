@@ -1,7 +1,7 @@
 import React from "react";
 import { useBehavior } from "../../../hooks";
 
-import { FitPanel } from "../../../models/dashboard/FitPanel";
+import { FitPanel } from "../../../models/panel/FitPanel";
 import { WidgetFrame } from "../WidgetFrame";
 
 export interface DashboardFitPanelProps {
@@ -16,7 +16,7 @@ const _DashboardFitPanel: React.FC<DashboardFitPanelProps> = ({ panel }) => {
     if (widget === null) {
         return <div>Placeholder</div>;
     } else {
-        return <WidgetFrame widget={widget} />;
+        return <WidgetFrame widgetInstance={widget} />;
     }
 };
 

@@ -6,7 +6,7 @@ import { Button, Menu, MenuItem, Popover, Position } from "@blueprintjs/core";
 
 import { ExpandButton, RemoveButton } from "../../features/MosaicDashboard";
 
-import { Panel, PanelState } from "../../models/dashboard/types";
+import { Panel, PanelState } from "../../models/panel/types";
 
 import { dashboardService } from "../../stores/DashboardService";
 

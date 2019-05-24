@@ -37,7 +37,7 @@ const _UserWidgetItem: React.FC<UserWidgetItemProps> = ({ userWidget }) => {
     return (
         <div className={styles.tile} onMouseEnter={deleteButton.show} onMouseLeave={deleteButton.hide}>
             <UserWidgetTile
-                widgetId={widget.id}
+                userWidgetId={userWidget.id}
                 title={widget.title}
                 iconUrl={assetUrl(widget.images.smallUrl)}
                 onClick={addWidget}
