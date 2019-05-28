@@ -188,7 +188,7 @@ export class MosaicWithoutDragDropContext<T extends MosaicKey = string> extends 
             const { renderTile, resize } = this.props;
             return (
                 <>
-                    <MosaicRoot root={root} renderTile={renderTile} resize={resize} />,
+                    <MosaicRoot root={root} renderTile={renderTile} resize={resize} />
                     <RootDropTargets />
                 </>
             );

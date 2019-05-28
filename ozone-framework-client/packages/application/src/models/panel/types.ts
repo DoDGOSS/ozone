@@ -14,7 +14,7 @@ export interface PanelState {
     widgets: WidgetInstance[];
 }
 
-export interface Panel<T extends PanelState> {
+export interface Panel<T extends PanelState = PanelState> {
     readonly id: string;
     readonly type: LayoutType;
     readonly title: string;

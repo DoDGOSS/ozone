@@ -1,3 +1,4 @@
+/* tslint:disable:member-access interface-name */
 /*
  * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
  *
@@ -23,9 +24,12 @@ import classNames from "classnames";
 import { ITabProps, Tab, TabId } from "./tab";
 import { generateTabPanelId, generateTabTitleId, TabTitle } from "./tabTitle";
 
-import { AbstractPureComponent, Classes, DISPLAYNAME_PREFIX, IProps, Keys, Utils } from "@blueprintjs/core";
+import { Classes, DISPLAYNAME_PREFIX, IProps, Keys, Utils } from "@blueprintjs/core";
+import { MosaicDragType, MosaicDropTarget, TablistDropData } from "../../../../features/MosaicDashboard";
 
-export const Expander: React.FC<{}> = () => <div className={Classes.FLEX_EXPANDER} />;
+import { ConnectDropTarget, DropTarget, DropTargetMonitor } from "react-dnd";
+
+export const Expander: React.FC<{}> = () => <div className={Classes.FLEX_EXPANDER}/>;
 
 type TabElement = React.ReactElement<ITabProps & { children: React.ReactNode }>;
 
@@ -84,6 +88,8 @@ export interface ITabsProps extends IProps {
      * A callback function that is invoked when a tab in the tab list is clicked.
      */
     onChange?(newTabId: TabId, prevTabId: TabId | undefined, event: React.MouseEvent<HTMLElement>): void;
+
+    panelId: string;
 }
 
 export interface ITabsState {
@@ -91,7 +97,16 @@ export interface ITabsState {
     selectedTabId?: TabId;
 }
 
-export class Tabs extends AbstractPureComponent<ITabsProps, ITabsState> {
+interface TabsDropProps {
+    connectDropTarget: ConnectDropTarget;
+    isOver: boolean;
+    isOverSelf: boolean;
+    isDragging: boolean;
+}
+
+type TabsDndProps = ITabsProps & TabsDropProps;
+
+class TabsBase extends React.Component<TabsDndProps, ITabsState> {
     /** Insert a `Tabs.Expander` between any two children to right-align all subsequent children. */
     public static Expander = Expander;
 
@@ -111,7 +126,7 @@ export class Tabs extends AbstractPureComponent<ITabsProps, ITabsState> {
         tablist: (tabElement: HTMLDivElement) => (this.tablistElement = tabElement)
     };
 
-    constructor(props?: ITabsProps) {
+    constructor(props: TabsDndProps) {
         super(props);
         const selectedTabId = this.getInitialSelectedTabId();
         this.state = { selectedTabId };
@@ -128,16 +143,18 @@ export class Tabs extends AbstractPureComponent<ITabsProps, ITabsState> {
 
         const tabIndicator = this.props.animate ? (
             <div className={Classes.TAB_INDICATOR_WRAPPER} style={indicatorWrapperStyle}>
-                <div className={Classes.TAB_INDICATOR} />
+                <div className={Classes.TAB_INDICATOR}/>
             </div>
         ) : null;
 
         const classes = classNames(Classes.TABS, { [Classes.VERTICAL]: this.props.vertical }, this.props.className);
-        const tabListClasses = classNames(Classes.TAB_LIST, {
-            [Classes.LARGE]: this.props.large
+        const tabListClasses = classNames(Classes.TAB_LIST, "mosaic-drop-target", {
+            [Classes.LARGE]: this.props.large,
+            "drop-target-over": this.props.isOver,
+            "drop-target-over-self": this.props.isOverSelf
         });
 
-        return (
+        return this.props.connectDropTarget(
             <div className={classes}>
                 <div
                     className={tabListClasses}
@@ -148,6 +165,9 @@ export class Tabs extends AbstractPureComponent<ITabsProps, ITabsState> {
                 >
                     {tabIndicator}
                     {tabTitles}
+                    <div className={classNames("drop-target-container", { "-dragging": this.props.isDragging })}>
+                        <MosaicDropTarget position="fill" path={[]}/>
+                    </div>
                 </div>
                 {tabPanels}
             </div>
@@ -325,3 +345,21 @@ function getKeyCodeDirection(e: React.KeyboardEvent<HTMLElement>) {
 function isTabElement(child: any): child is TabElement {
     return Utils.isElementOfType(child, Tab);
 }
+
+export const Tabs = DropTarget(
+    MosaicDragType.WINDOW,
+    {
+        drop: (props: TabsDndProps, monitor: DropTargetMonitor, component: TabsBase): TablistDropData => {
+            return {
+                type: "tablist",
+                panelId: props.panelId
+            };
+        }
+    },
+    (connect, monitor): TabsDropProps => ({
+        connectDropTarget: connect.dropTarget(),
+        isOver: monitor.isOver(),
+        isOverSelf: monitor.isOver({ shallow: true }),
+        isDragging: monitor.getItem() !== null && monitor.getItemType() === MosaicDragType.WINDOW
+    })
+)(TabsBase as any) as React.ElementType<ITabsProps>;

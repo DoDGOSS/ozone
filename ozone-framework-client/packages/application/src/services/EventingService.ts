@@ -138,7 +138,7 @@ export class EventingService {
             const widget = userWidget.widget;
 
             this.widgets[instanceId] = {
-                instanceId: instanceId,
+                instanceId,
                 info: {
                     id: instanceId,
                     name: userWidget.title,
