@@ -5,8 +5,6 @@ import { asBehavior } from "../observables";
 
 import { MosaicDirection, MosaicNode, MosaicParent, MosaicPath } from "../features/MosaicDashboard/types";
 
-import { MosaicDropTargetPosition } from "../features/MosaicDashboard/internalTypes";
-
 import {
     Corner,
     getAndAssertNodeAtPathExists,
@@ -17,7 +15,6 @@ import {
 
 import { createRemoveUpdate, updateTree } from "../features/MosaicDashboard/util/mosaicUpdates";
 
-
 import { UserWidget } from "./UserWidget";
 
 import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
@@ -25,6 +22,7 @@ import { ProfileReference } from "../api/models/UserDTO";
 
 import { ExpandoPanel, FitPanel, LayoutType, Panel, PanelState, TabbedPanel } from "./panel";
 import { WidgetInstance } from "./WidgetInstance";
+import { MosaicDropTargetPosition } from "../shared/dragAndDrop";
 
 export interface DashboardLayout {
     tree: DashboardNode | null;
@@ -185,11 +183,10 @@ export class Dashboard {
         if (tree === null) return;
 
         const removeUpdate = createRemoveUpdate(tree, path);
-        const newTree = updateTree(tree, [ removeUpdate ]);
+        const newTree = updateTree(tree, [removeUpdate]);
 
         this.setLayout(newTree);
     }
-
 
     /**
      * Set the new dashboard layout without checking for changes to the panels.
@@ -222,7 +219,7 @@ export class Dashboard {
         }
 
         if (newPanel !== undefined) {
-            const newTree = updateTree(tree, [ { path, spec: { $set: newPanel.id } } ]);
+            const newTree = updateTree(tree, [{ path, spec: { $set: newPanel.id } }]);
             const newPanels = set(omit(panels, panel.id), newPanel.id, newPanel);
 
             this.state$.next({
@@ -236,8 +233,8 @@ export class Dashboard {
 
 function findPanelIds(node: DashboardNode | null): string[] {
     if (node === null) return [];
-    if (isString(node)) return [ node ];
-    return [ ...findPanelIds(node.first), ...findPanelIds(node.second) ];
+    if (isString(node)) return [node];
+    return [...findPanelIds(node.first), ...findPanelIds(node.second)];
 }
 
 function addToLayout(
@@ -273,7 +270,7 @@ function addToLayout(
         }
     };
 
-    return updateTree(layout, [ update ]);
+    return updateTree(layout, [update]);
 }
 
 function addToTopRightOfLayout(layout: DashboardNode, id: string): DashboardNode {
@@ -302,7 +299,7 @@ function addToTopRightOfLayout(layout: DashboardNode, id: string): DashboardNode
         }
     };
 
-    return updateTree(layout, [ update ]);
+    return updateTree(layout, [update]);
 }
 
 export const EMPTY_DASHBOARD = new Dashboard({

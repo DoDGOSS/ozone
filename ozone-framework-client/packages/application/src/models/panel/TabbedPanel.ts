@@ -59,11 +59,11 @@ export class TabbedPanel extends AbstractPanel<TabbedPanelState> {
         const prev = this.state$.value;
         const { activeWidget, widgets } = prev;
 
-        const instances = !isArray(instance) ? [ instance ] : instance;
+        const instances = !isArray(instance) ? [instance] : instance;
 
         this.state$.next({
             ...prev,
-            widgets: [ ...widgets, ...instances ],
+            widgets: [...widgets, ...instances],
             activeWidget: last(instances) || activeWidget
         });
     }

@@ -3,8 +3,19 @@
 import React from "react";
 import { Icon } from "@blueprintjs/core";
 import classNames from "classnames";
-import { dropRight, isEmpty, isEqual } from "lodash";
+import { isEmpty } from "lodash";
 import { ConnectableElement, ConnectDropTarget, DragSource, DropTarget } from "react-dnd";
+
+import { dragDropService } from "../../stores/DragDropService";
+import {
+    beginWidgetDrag,
+    collectDragProps,
+    DragDataType,
+    DragSourceProps,
+    endWidgetDrag,
+    MosaicDragItem,
+    MosaicDragType
+} from "../../shared/dragAndDrop";
 
 import { DEFAULT_CONTROLS_WITH_CREATION, DEFAULT_CONTROLS_WITHOUT_CREATION } from "./buttons/defaultToolbarControls";
 import { Separator } from "./buttons/Separator";
@@ -14,20 +25,10 @@ import {
     MosaicWindowActionsPropType,
     MosaicWindowContext
 } from "./contextTypes";
-import { DropDataType, MosaicDragItem } from "./internalTypes";
 import { MosaicDropTarget } from "./MosaicDropTarget";
-import { CreateNode, MosaicBranch, MosaicDirection, MosaicDragType, MosaicKey, MosaicPath } from "./types";
-import { createDragToUpdates } from "./util/mosaicUpdates";
+import { CreateNode, MosaicBranch, MosaicDirection, MosaicKey } from "./types";
 import { getAndAssertNodeAtPathExists } from "./util/mosaicUtilities";
 import { getBlueprintClasses, getBlueprintIconClass } from "./util/blueprint";
-import {
-    beginWidgetDrag,
-    collectDragProps,
-    DragDataType,
-    DragSourceProps,
-    endWidgetDrag
-} from "../../shared/dragAndDrop";
-import { dashboardService } from "../../stores/DashboardService";
 
 export interface MosaicWindowProps<T extends MosaicKey> {
     title: string;
@@ -50,17 +51,18 @@ export interface InternalDropTargetProps {
     draggedMosaicId: string | undefined;
 }
 
-export type InternalMosaicWindowProps<T extends MosaicKey> =
-    MosaicWindowProps<T>
-    & InternalDropTargetProps
-    & DragSourceProps;
+export type InternalMosaicWindowProps<T extends MosaicKey> = MosaicWindowProps<T> &
+    InternalDropTargetProps &
+    DragSourceProps;
 
 export interface InternalMosaicWindowState {
     additionalControlsOpen: boolean;
 }
 
-export class InternalMosaicWindow<T extends MosaicKey> extends React.Component<InternalMosaicWindowProps<T>,
-    InternalMosaicWindowState> {
+export class InternalMosaicWindow<T extends MosaicKey> extends React.Component<
+    InternalMosaicWindowProps<T>,
+    InternalMosaicWindowState
+> {
     static defaultProps: Partial<InternalMosaicWindowProps<any>> = {
         additionalControlButtonText: "More",
         draggable: true,
@@ -71,7 +73,7 @@ export class InternalMosaicWindow<T extends MosaicKey> extends React.Component<I
                 </div>
                 <div className="mosaic-window-body">
                     <h4>{title}</h4>
-                    <Icon iconSize={72} icon="application"/>
+                    <Icon iconSize={72} icon="application" />
                 </div>
             </div>
         ),
@@ -126,10 +128,10 @@ export class InternalMosaicWindow<T extends MosaicKey> extends React.Component<I
                         <div className="mosaic-window-additional-actions-bar">{additionalControls}</div>
                         {connectDragPreview(renderPreview!(this.props))}
                         <div className="drop-target-container">
-                            <MosaicDropTarget path={path} position="top"/>
-                            <MosaicDropTarget path={path} position="bottom"/>
-                            <MosaicDropTarget path={path} position="left"/>
-                            <MosaicDropTarget path={path} position="right"/>
+                            <MosaicDropTarget path={path} position="top" />
+                            <MosaicDropTarget path={path} position="bottom" />
+                            <MosaicDropTarget path={path} position="left" />
+                            <MosaicDropTarget path={path} position="right" />
                         </div>
                     </div>
                 )}
@@ -201,7 +203,7 @@ export class InternalMosaicWindow<T extends MosaicKey> extends React.Component<I
                             <span className="control-text">{additionalControlButtonText!}</span>
                         </button>
                     )}
-                    {hasAdditionalControls && <Separator/>}
+                    {hasAdditionalControls && <Separator />}
                     {toolbarControls}
                 </div>
             </div>
@@ -264,42 +266,21 @@ export class InternalMosaicWindow<T extends MosaicKey> extends React.Component<I
 const beginDrag = beginWidgetDrag<InternalMosaicWindowProps<any>>(({ props, defer, component }) => {
     defer(() => component.context.mosaicActions.hide(component.props.path));
     return {
-        type: DragDataType.WINDOW
+        type: DragDataType.WINDOW,
+        path: component.props.path
     };
 });
 
 const endDrag = endWidgetDrag<InternalMosaicWindowProps<any>>(({ dragData, dropData, component }) => {
-    const ownPath = component.props.path;
-
-    if (dropData.type === DropDataType.MOSAIC) {
-        const { mosaicActions } = component.context;
-        const { position, path: destinationPath } = dropData;
-        if (position != null && destinationPath != null && !isEqual(destinationPath, ownPath)) {
-            mosaicActions.updateTree(createDragToUpdates(mosaicActions.getRoot(), ownPath, destinationPath, position));
-        } else {
-            // TODO: restore node from captured state
-            mosaicActions.updateTree([
-                {
-                    path: dropRight(ownPath),
-                    spec: {
-                        splitPercentage: {
-                            $set: null
-                        }
-                    }
-                }
-            ]);
-        }
-    } else if (dropData.type === DropDataType.TABLIST) {
-        const sourcePath: MosaicPath = component.props.path;
-
-        dashboardService.moveWindowToTabbedPanel(sourcePath, dropData.panelId, dropData.index);
-    }
+    dragDropService.handleDropEvent(dragData, dropData);
 });
 
-
 // Each step exported here just to keep react-hot-loader happy
-export const SourceConnectedInternalMosaicWindow =
-    DragSource(MosaicDragType.WINDOW, { beginDrag, endDrag }, collectDragProps)(InternalMosaicWindow);
+export const SourceConnectedInternalMosaicWindow = DragSource(
+    MosaicDragType.WINDOW,
+    { beginDrag, endDrag },
+    collectDragProps
+)(InternalMosaicWindow);
 
 export const SourceDropConnectedInternalMosaicWindow = DropTarget(
     MosaicDragType.WINDOW,

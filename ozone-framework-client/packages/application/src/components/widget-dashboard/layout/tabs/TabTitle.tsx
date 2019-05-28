@@ -19,18 +19,21 @@
 
 import React from "react";
 import classNames from "classnames";
+import { DragSource } from "react-dnd";
 
 import { Classes, DISPLAYNAME_PREFIX } from "@blueprintjs/core";
-import { ITabProps, TabId } from "./tab";
-import { DragSource } from "react-dnd";
-import { MosaicDragType } from "../../../../features/MosaicDashboard";
+
+import { dragDropService } from "../../../../stores/DragDropService";
 import {
     beginWidgetDrag,
     collectDragProps,
     DragDataType,
     DragSourceProps,
-    endWidgetDrag
+    endWidgetDrag,
+    MosaicDragType
 } from "../../../../shared/dragAndDrop";
+
+import { ITabProps, TabId } from "./tab";
 
 export interface ITabTitleProps extends ITabProps {
     /** Handler invoked when this tab is clicked. */
@@ -89,7 +92,7 @@ const beginDrag = beginWidgetDrag<Props>(({ props }) => {
 });
 
 const endDrag = endWidgetDrag<Props>(({ dragData, dropData }) => {
-    // dashboardService.addUserWidgetById(userWidgetId, dropResult.path, dropResult.position);
+    dragDropService.handleDropEvent(dragData, dropData);
 });
 
 export const TabTitle = DragSource(MosaicDragType.WINDOW, { beginDrag, endDrag }, collectDragProps)(

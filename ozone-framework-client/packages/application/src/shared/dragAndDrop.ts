@@ -1,9 +1,18 @@
-import { ConnectDragPreview, ConnectDragSource, DragSourceConnector, DragSourceMonitor } from "react-dnd";
+import {
+    ConnectDragPreview,
+    ConnectDragSource,
+    DragSourceConnector,
+    DragSourceMonitor,
+    DropTargetMonitor
+} from "react-dnd";
 import { defer } from "lodash";
 
-import { DropData } from "../features/MosaicDashboard";
-
 import { MOSAIC_CONTEXT_ID } from "../constants";
+import { MosaicPath } from "../features/MosaicDashboard/types";
+
+export const MosaicDragType = {
+    WINDOW: "MosaicWindow"
+};
 
 export interface DragSourceProps {
     connectDragSource: ConnectDragSource;
@@ -25,7 +34,8 @@ export const DragDataType = {
 } as const;
 
 export interface WindowDragData {
-    type: "window"
+    type: "window";
+    path: MosaicPath;
 }
 
 export interface WidgetDragData {
@@ -51,6 +61,38 @@ export interface BeginDragEvent<P> {
 
 export type BeginDragCallback<P> = (event: BeginDragEvent<P>) => DragData | undefined;
 
+export type MosaicDropTargetPosition = "top" | "bottom" | "left" | "right" | "root" | "fill";
+export const MosaicDropTargetPosition = {
+    TOP: "top" as "top",
+    BOTTOM: "bottom" as "bottom",
+    LEFT: "left" as "left",
+    RIGHT: "right" as "right"
+};
+
+export type DropData = MosaicDropData | TablistDropData;
+
+export const DropDataType = {
+    MOSAIC: "mosaic",
+    TABLIST: "tablist"
+} as const;
+
+export interface MosaicDropData {
+    type: "mosaic";
+    position?: MosaicDropTargetPosition;
+    path?: MosaicPath;
+}
+
+export interface TablistDropData {
+    type: "tablist";
+    index?: number;
+    panelId?: string;
+}
+
+export interface MosaicDragItem {
+    mosaicId: string;
+    hideTimer: number;
+}
+
 export interface EndDragEvent<P> {
     dragData?: DragData;
     dropData: DropData;
@@ -60,6 +102,10 @@ export interface EndDragEvent<P> {
 }
 
 export type EndDragCallback<P> = (event: EndDragEvent<P>) => void;
+
+export function getDropItem(monitor: DropTargetMonitor): DragItem {
+    return monitor.getItem() || {};
+}
 
 export function beginWidgetDrag<P>(callback: BeginDragCallback<P>): BeginDragSpec<DragItem, P> {
     return (props: P, monitor: DragSourceMonitor, component: any): DragItem => {

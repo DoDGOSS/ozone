@@ -1,8 +1,6 @@
 import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
-import { MosaicDropTargetPosition, MosaicPath } from "../features/MosaicDashboard";
-
 import { dashboardStore, DashboardStore } from "./DashboardStore";
 import { ExpandoPanel, FitPanel, isTabbedPanel, LayoutType, Panel, PanelState, TabbedPanel } from "../models/panel";
 import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
@@ -13,6 +11,8 @@ import { WidgetLaunchArgs } from "../services/WidgetLaunchArgs";
 
 import { isNil, Predicate, values } from "../utility";
 import { WidgetInstance } from "../models/WidgetInstance";
+import { MosaicPath } from "../features/MosaicDashboard/types";
+import { MosaicDropTargetPosition } from "../shared/dragAndDrop";
 
 export class DashboardService {
     private readonly store: DashboardStore;
@@ -51,6 +51,14 @@ export class DashboardService {
         }
         return dashboard;
     };
+
+    getPanelById(panelId: string): Panel | null {
+        const dashboard = this.store.currentDashboard().value;
+        if (dashboard === null) return null;
+
+        const panel = dashboard.state().value.panels[panelId];
+        return panel ? panel : null;
+    }
 
     setLayout = (tree: DashboardNode | null) => {
         this.getCurrentDashboard().setLayout(tree);
@@ -106,24 +114,6 @@ export class DashboardService {
         const widgetInstance = WidgetInstance.create(userWidget);
 
         panel.addWidgetInstance(widgetInstance);
-    }
-
-    moveWindowToTabbedPanel(windowPath: MosaicPath, panelId: string | undefined, tabIndex: number | undefined) {
-        if (!panelId) return;
-
-        const dashboard = this.getCurrentDashboard();
-        const layout = dashboard.state().value.tree;
-        if (!layout) return;
-
-        const sourcePanel = dashboard.getPanelByPath(windowPath);
-        if (!sourcePanel) return;
-        const widgets = sourcePanel.state().value.widgets;
-
-        const targetPanel = dashboard.getPanelById(panelId);
-        if (!targetPanel || !isTabbedPanel(targetPanel)) return;
-
-        dashboard.removeNode(windowPath);
-        targetPanel.addWidgetInstance(widgets);
     }
 
     /**

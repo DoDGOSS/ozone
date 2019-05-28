@@ -5,11 +5,10 @@ import { useBehavior } from "../../../hooks";
 
 import { Button } from "@blueprintjs/core";
 
-import { Tab } from "./tabs/tab";
-import { Tabs } from "./tabs/tabs";
-
 import { Panel, TabbedPanel } from "../../../models/panel";
 
+import { Tab } from "./tabs/tab";
+import { Tabs } from "./tabs/tabs";
 import { WidgetFrame } from "../WidgetFrame";
 
 export interface DashboardTabbedPanelProps {
@@ -19,11 +18,12 @@ export interface DashboardTabbedPanelProps {
 export const DashboardTabbedPanel: React.FC<DashboardTabbedPanelProps> = ({ panel }) => {
     const { widgets, activeWidget } = useBehavior(panel.state);
 
-    const widgetTitles = useMemo(() => widgets.map(
-        (instance) => createWidgetTabTitle(panel, instance.id, instance.userWidget.title)),
-        [ widgets ]);
+    const widgetTitles = useMemo(
+        () => widgets.map((instance) => createWidgetTabTitle(panel, instance.id, instance.userWidget.title)),
+        [widgets]
+    );
 
-    const setActiveWidget = useCallback((newTabId: string) => panel.setActiveWidget(newTabId.substring(4)), [ panel ]);
+    const setActiveWidget = useCallback((newTabId: string) => panel.setActiveWidget(newTabId.substring(4)), [panel]);
 
     return (
         <Tabs
@@ -41,7 +41,7 @@ export const DashboardTabbedPanel: React.FC<DashboardTabbedPanelProps> = ({ pane
                     widgetInstanceId={widget.id}
                     className={styles.tab}
                     title={widgetTitles[idx]}
-                    panel={<WidgetFrame widgetInstance={widget}/>}
+                    panel={<WidgetFrame widgetInstance={widget} />}
                 />
             ))}
         </Tabs>
