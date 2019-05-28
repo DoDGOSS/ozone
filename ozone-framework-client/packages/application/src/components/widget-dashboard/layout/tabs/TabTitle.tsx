@@ -1,3 +1,4 @@
+/* tslint:disable:member-access interface-name */
 /*
  * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
  *
@@ -23,7 +24,13 @@ import { Classes, DISPLAYNAME_PREFIX } from "@blueprintjs/core";
 import { ITabProps, TabId } from "./tab";
 import { DragSource } from "react-dnd";
 import { MosaicDragType } from "../../../../features/MosaicDashboard";
-import { beginInstanceDrag, collectDragProps, DragSourceProps, endInstanceDrag } from "../../../../shared/dragAndDrop";
+import {
+    beginWidgetDrag,
+    collectDragProps,
+    DragDataType,
+    DragSourceProps,
+    endWidgetDrag
+} from "../../../../shared/dragAndDrop";
 
 export interface ITabTitleProps extends ITabProps {
     /** Handler invoked when this tab is clicked. */
@@ -74,12 +81,15 @@ export function generateTabTitleId(parentId: TabId, tabId: TabId) {
     return `${Classes.TAB}-title_${parentId}_${tabId}`;
 }
 
-const endDrag = endInstanceDrag<Props>(({ widgetInstanceId, dropResult }) => {
-    // dashboardService.addUserWidgetById(userWidgetId, dropResult.path, dropResult.position);
+const beginDrag = beginWidgetDrag<Props>(({ props }) => {
+    return {
+        type: DragDataType.INSTANCE,
+        widgetInstanceId: props.widgetInstanceId
+    };
 });
 
-const beginDrag = beginInstanceDrag<Props>(({ props }) => {
-    return props.widgetInstanceId;
+const endDrag = endWidgetDrag<Props>(({ dragData, dropData }) => {
+    // dashboardService.addUserWidgetById(userWidgetId, dropResult.path, dropResult.position);
 });
 
 export const TabTitle = DragSource(MosaicDragType.WINDOW, { beginDrag, endDrag }, collectDragProps)(

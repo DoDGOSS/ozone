@@ -23,11 +23,14 @@ const dropTarget = {
     drop: (props: Props, monitor: DropTargetMonitor, component: MosaicDropTargetClass): MosaicDropData => {
         if (component.context.mosaicId === ((monitor.getItem() || {}) as MosaicDragItem).mosaicId) {
             return {
+                type: "mosaic",
                 path: props.path,
                 position: props.position
             };
         } else {
-            return {};
+            return {
+                type: "mosaic"
+            };
         }
     }
 };

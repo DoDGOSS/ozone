@@ -44,7 +44,7 @@ export const WidgetDashboard: React.FC<PropsBase> = (props) => {
     return (
         <div className={classNames(styles.dashboard, className, { dragging: isDragging })}>
             <DashboardLayout
-                className={classNames("mosaic-blueprint-theme", "mosaic", "mosaic-drop-target", themeClass)}
+                className={classNames("mosaic-blueprint-theme", themeClass)}
                 value={tree}
                 onChange={onChange}
                 onRelease={onRelease}

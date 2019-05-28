@@ -28,6 +28,10 @@
 }
 
 
+.bp3-tab-panel:local(.tab) {
+  margin-top: 0.5em;
+}
+
 :local(.tab).bp3-tab {
   padding-left: .5em;
   padding-right: 0;

@@ -1,7 +1,7 @@
 import { MosaicPath } from "./types";
 import { DropTargetMonitor } from "react-dnd";
 
-export type MosaicDropTargetPosition = "top" | "bottom" | "left" | "right" | "root";
+export type MosaicDropTargetPosition = "top" | "bottom" | "left" | "right" | "root" | "fill";
 export const MosaicDropTargetPosition = {
     TOP: "top" as "top",
     BOTTOM: "bottom" as "bottom",
@@ -9,9 +9,23 @@ export const MosaicDropTargetPosition = {
     RIGHT: "right" as "right"
 };
 
+export type DropData = MosaicDropData | TablistDropData;
+
+export const DropDataType = {
+    MOSAIC: "mosaic",
+    TABLIST: "tablist"
+} as const;
+
 export interface MosaicDropData {
-    path?: MosaicPath;
+    type: "mosaic";
     position?: MosaicDropTargetPosition;
+    path?: MosaicPath;
+}
+
+export interface TablistDropData {
+    type: "tablist";
+    index?: number;
+    panelId?: string;
 }
 
 export interface MosaicDragItem {

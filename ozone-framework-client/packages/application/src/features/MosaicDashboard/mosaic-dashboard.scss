@@ -101,6 +101,9 @@
     display: block;
 }
 
+$mosaic-toolbar-height: 30px;
+$tablist-height: 35px;
+
 $root-drop-target-size: 20px;
 $drop-target-size-inactive: 30%;
 $drop-target-size-active: 50%;
@@ -123,6 +126,19 @@ $drop-target-size-active: 50%;
     }
 }
 
+.mosaic-drop-target.-tabbed .drop-target-container .drop-target {
+    &.top {
+        bottom: calc(100% - #{$mosaic-toolbar-height});
+    }
+
+    &.left, &.right {
+        top: $tablist-height + $mosaic-toolbar-height;
+
+        &.drop-target-hover {
+            top: 0;
+        }
+    }
+}
 
 .mosaic-drop-target .drop-target-container {
     max-width: unset;
