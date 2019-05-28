@@ -70,8 +70,27 @@ export class DragDropService {
     }
 
     private handleInstanceDropEvent(dragData: InstanceDragData, dropData: DropData): void {
-        // TODO:
+        switch (dropData.type) {
+            case DropDataType.MOSAIC:
+                this.moveInstanceToMosaic(dragData, dropData);
+                break;
+            case DropDataType.TABLIST:
+                break;
+        }
     }
+
+    private moveInstanceToMosaic(dragData: InstanceDragData, dropData: MosaicDropData): void {
+        const { widgetInstanceId } = dragData;
+        const { path, position } = dropData;
+        const panel = this.dashboardService.findPanelByWidgetId(widgetInstanceId);
+        if (!panel) return;
+
+        const instance = panel.closeWidget(widgetInstanceId);
+        if (!instance) return;
+
+        this.dashboardService.addWidgetInstance({ instance, path, position });
+    }
+
 
     private addWidgetToTabbedPanel(
         userWidgetId: number,
@@ -88,7 +107,7 @@ export class DragDropService {
 
         const widgetInstance = WidgetInstance.create(userWidget);
 
-        panel.addWidgetInstance(widgetInstance);
+        panel.addWidget(widgetInstance);
     }
 
     private moveWindowInMosaic(dragData: WindowDragData, dropData: MosaicDropData): void {
@@ -130,7 +149,7 @@ export class DragDropService {
         if (!targetPanel || !isTabbedPanel(targetPanel)) return;
 
         dashboard.removeNode(windowPath);
-        targetPanel.addWidgetInstance(widgets);
+        targetPanel.addWidget(widgets);
     }
 }
 

@@ -46,11 +46,13 @@ export class ExpandoPanel extends AbstractPanel<ExpandoPanelState> {
         });
     }
 
-    closeWidget(instanceId: string): void {
+    closeWidget(instanceId: string): WidgetInstance | undefined {
         const prev = this.state$.value;
         const { activeWidget, widgets, collapsed } = prev;
 
         const widgetIdx = findIndex(widgets, (w) => w.id === instanceId);
+        const instance = widgets[widgetIdx];
+
         const nextWidgets = omitIndex(widgets, widgetIdx);
         const nextCollapsed = omitIndex(collapsed, widgetIdx);
         const nextActive = getNextActiveWidget(activeWidget, instanceId, nextWidgets);
@@ -61,6 +63,8 @@ export class ExpandoPanel extends AbstractPanel<ExpandoPanelState> {
             collapsed: nextCollapsed,
             activeWidget: nextActive
         });
+
+        return instance;
     }
 }
 
