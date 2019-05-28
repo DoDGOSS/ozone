@@ -3,19 +3,20 @@ import { dropRight, isString, omit, pick, set } from "lodash";
 import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
+import { MosaicDirection, MosaicNode, MosaicParent, MosaicPath } from "../features/MosaicDashboard/types";
+
+import { MosaicDropTargetPosition } from "../features/MosaicDashboard/internalTypes";
+
 import {
     Corner,
     getAndAssertNodeAtPathExists,
     getNodeAtPath,
     getOtherDirection,
-    getPathToCorner,
-    MosaicDirection,
-    MosaicDropTargetPosition,
-    MosaicNode,
-    MosaicParent,
-    MosaicPath,
-    updateTree
-} from "../features/MosaicDashboard";
+    getPathToCorner
+} from "../features/MosaicDashboard/util/mosaicUtilities";
+
+import { createRemoveUpdate, updateTree } from "../features/MosaicDashboard/util/mosaicUpdates";
+
 
 import { UserWidget } from "./UserWidget";
 
@@ -155,6 +156,41 @@ export class Dashboard {
         });
     }
 
+    getPanelByPath(path: MosaicPath): Panel | null {
+        const { tree, panels } = this.state$.value;
+        if (tree === null) return null;
+
+        const node = getNodeAtPath(tree, path);
+        if (node === null) return null;
+
+        if (typeof node !== "string") return null;
+
+        const panel = panels[node];
+        if (!panel) return null;
+
+        return panel;
+    }
+
+    getPanelById(panelId: string): Panel | null {
+        const { panels } = this.state$.value;
+
+        const panel = panels[panelId];
+        if (!panel) return null;
+
+        return panel;
+    }
+
+    removeNode(path: MosaicPath): void {
+        const { tree } = this.state$.value;
+        if (tree === null) return;
+
+        const removeUpdate = createRemoveUpdate(tree, path);
+        const newTree = updateTree(tree, [ removeUpdate ]);
+
+        this.setLayout(newTree);
+    }
+
+
     /**
      * Set the new dashboard layout without checking for changes to the panels.
      */
@@ -186,7 +222,7 @@ export class Dashboard {
         }
 
         if (newPanel !== undefined) {
-            const newTree = updateTree(tree, [{ path, spec: { $set: newPanel.id } }]);
+            const newTree = updateTree(tree, [ { path, spec: { $set: newPanel.id } } ]);
             const newPanels = set(omit(panels, panel.id), newPanel.id, newPanel);
 
             this.state$.next({
@@ -200,8 +236,8 @@ export class Dashboard {
 
 function findPanelIds(node: DashboardNode | null): string[] {
     if (node === null) return [];
-    if (isString(node)) return [node];
-    return [...findPanelIds(node.first), ...findPanelIds(node.second)];
+    if (isString(node)) return [ node ];
+    return [ ...findPanelIds(node.first), ...findPanelIds(node.second) ];
 }
 
 function addToLayout(
@@ -237,7 +273,7 @@ function addToLayout(
         }
     };
 
-    return updateTree(layout, [update]);
+    return updateTree(layout, [ update ]);
 }
 
 function addToTopRightOfLayout(layout: DashboardNode, id: string): DashboardNode {
@@ -266,7 +302,7 @@ function addToTopRightOfLayout(layout: DashboardNode, id: string): DashboardNode
         }
     };
 
-    return updateTree(layout, [update]);
+    return updateTree(layout, [ update ]);
 }
 
 export const EMPTY_DASHBOARD = new Dashboard({

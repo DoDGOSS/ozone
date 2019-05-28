@@ -9,7 +9,6 @@ import { Tab } from "./tabs/tab";
 import { Tabs } from "./tabs/tabs";
 
 import { Panel, TabbedPanel } from "../../../models/panel";
-import { UserWidget } from "../../../models/UserWidget";
 
 import { WidgetFrame } from "../WidgetFrame";
 
@@ -20,13 +19,16 @@ export interface DashboardTabbedPanelProps {
 export const DashboardTabbedPanel: React.FC<DashboardTabbedPanelProps> = ({ panel }) => {
     const { widgets, activeWidget } = useBehavior(panel.state);
 
-    const widgetTitles = useMemo(() => widgets.map((widget) => createWidgetTabTitle(panel, widget.userWidget)), [
-        widgets
-    ]);
-    const setActiveWidget = useCallback((newTabId: string) => panel.setActiveWidget(newTabId.substring(4)), [panel]);
+    const widgetTitles = useMemo(() => widgets.map(
+        (instance) => createWidgetTabTitle(panel, instance.id, instance.userWidget.title)),
+        [ widgets ]);
+
+    const setActiveWidget = useCallback((newTabId: string) => panel.setActiveWidget(newTabId.substring(4)), [ panel ]);
 
     return (
         <Tabs
+            id={panel.id}
+            panelId={panel.id}
             selectedTabId={activeWidget ? `tab-${activeWidget.id}` : undefined}
             onChange={setActiveWidget}
             className={styles.tabsList}
@@ -39,22 +41,22 @@ export const DashboardTabbedPanel: React.FC<DashboardTabbedPanelProps> = ({ pane
                     widgetInstanceId={widget.id}
                     className={styles.tab}
                     title={widgetTitles[idx]}
-                    panel={<WidgetFrame widgetInstance={widget} />}
+                    panel={<WidgetFrame widgetInstance={widget}/>}
                 />
             ))}
         </Tabs>
     );
 };
 
-function createWidgetTabTitle(panel: Panel<any>, userWidget: UserWidget): JSX.Element {
+function createWidgetTabTitle(panel: Panel<any>, instanceId: string, title: string): JSX.Element {
     return (
         <>
-            <span className={styles.tabTitle}>{userWidget.widget.title}</span>
+            <span className={styles.tabTitle}>{title}</span>
             <Button
                 className={styles.tabTitleClose}
                 icon="cross"
                 minimal={true}
-                onClick={() => panel.closeWidget(userWidget.widget.id)}
+                onClick={() => panel.closeWidget(instanceId)}
             />
         </>
     );

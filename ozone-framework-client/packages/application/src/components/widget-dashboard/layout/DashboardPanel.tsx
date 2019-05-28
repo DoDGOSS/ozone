@@ -11,22 +11,25 @@ import { DashboardExpandoPanel } from "./DashboardExpandoPanel";
 import { createWidgetToolbar } from "../toolbar";
 
 import { isEqual } from "lodash";
+import { classNames } from "../../../utility";
 
 export interface DashboardPanelProps {
     panel: Panel<PanelState>;
     path: DashboardPath;
 }
 
-const _DashboardPanel: React.FC<DashboardPanelProps> = ({ panel, path }) => (
-    <DashboardWindow
-        className={styles.dashboardWindow}
-        path={path}
-        title={panel.title}
-        toolbarControls={createWidgetToolbar(panel, path)}
-    >
-        {createPanel(panel)}
-    </DashboardWindow>
-);
+const _DashboardPanel: React.FC<DashboardPanelProps> = ({ panel, path }) => {
+    return (
+        <DashboardWindow
+            className={classNames(styles.dashboardWindow, { "-tabbed": isTabbedPanel(panel) })}
+            path={path}
+            title={panel.title}
+            toolbarControls={createWidgetToolbar(panel, path)}
+        >
+            {createPanel(panel)}
+        </DashboardWindow>
+    );
+};
 
 export const DashboardPanel = React.memo(
     _DashboardPanel,

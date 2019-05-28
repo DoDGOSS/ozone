@@ -1,4 +1,4 @@
-import { findIndex } from "lodash";
+import { findIndex, isArray, last } from "lodash";
 
 import { PanelState } from "./types";
 import { AbstractPanel } from "./AbstractPanel";
@@ -52,6 +52,19 @@ export class TabbedPanel extends AbstractPanel<TabbedPanelState> {
         this.state$.next({
             ...prev,
             activeWidget: widget
+        });
+    }
+
+    addWidgetInstance(instance: WidgetInstance | WidgetInstance[]): void {
+        const prev = this.state$.value;
+        const { activeWidget, widgets } = prev;
+
+        const instances = !isArray(instance) ? [ instance ] : instance;
+
+        this.state$.next({
+            ...prev,
+            widgets: [ ...widgets, ...instances ],
+            activeWidget: last(instances) || activeWidget
         });
     }
 }

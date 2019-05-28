@@ -1,3 +1,4 @@
+/* tslint:disable:member-access interface-name */
 /*
  * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
  *
@@ -20,7 +21,6 @@ import React from "react";
 import classNames from "classnames";
 
 import { Classes, DISPLAYNAME_PREFIX, IProps } from "@blueprintjs/core";
-import { UserWidget } from "../../../../models/UserWidget";
 
 export type TabId = string | number;
 
@@ -71,7 +71,6 @@ export class Tab extends React.PureComponent<ITabProps, {}> {
     public static displayName = `${DISPLAYNAME_PREFIX}.Tab`;
 
     // this component is never rendered directly; see Tabs#renderTabPanel()
-    /* istanbul ignore next */
     public render() {
         const { className, panel } = this.props;
         return (

@@ -4,7 +4,7 @@ import { asBehavior } from "../observables";
 import { MosaicDropTargetPosition, MosaicPath } from "../features/MosaicDashboard";
 
 import { dashboardStore, DashboardStore } from "./DashboardStore";
-import { ExpandoPanel, FitPanel, LayoutType, Panel, PanelState, TabbedPanel } from "../models/panel";
+import { ExpandoPanel, FitPanel, isTabbedPanel, LayoutType, Panel, PanelState, TabbedPanel } from "../models/panel";
 import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
 import { Dashboard } from "../models/Dashboard";
 import { UserWidget } from "../models/UserWidget";
@@ -12,6 +12,7 @@ import { UserWidget } from "../models/UserWidget";
 import { WidgetLaunchArgs } from "../services/WidgetLaunchArgs";
 
 import { isNil, Predicate, values } from "../utility";
+import { WidgetInstance } from "../models/WidgetInstance";
 
 export class DashboardService {
     private readonly store: DashboardStore;
@@ -82,6 +83,47 @@ export class DashboardService {
         if (!userWidget) return false;
 
         return this.getCurrentDashboard().addWidget({ userWidget, path, position });
+    }
+
+    addWidgetToTabbedPanel(userWidgetId: number, panelId: string | undefined, tabIndex: number | undefined): void {
+        if (!panelId) return;
+
+        const userWidget = dashboardStore.findUserWidgetById(userWidgetId);
+        if (!userWidget) return;
+
+        const dashboard = this.getCurrentDashboard();
+        const panel = dashboard.state().value.panels[panelId];
+        if (!panel) {
+            console.warn(`addWidgetToTabbedPanel: panel with id ${panelId} not found`);
+            return;
+        }
+
+        if (!isTabbedPanel(panel)) {
+            console.warn(`addWidgetToTabbedPanel: panel with id ${panelId} is not a TabbedPanel`);
+            return;
+        }
+
+        const widgetInstance = WidgetInstance.create(userWidget);
+
+        panel.addWidgetInstance(widgetInstance);
+    }
+
+    moveWindowToTabbedPanel(windowPath: MosaicPath, panelId: string | undefined, tabIndex: number | undefined) {
+        if (!panelId) return;
+
+        const dashboard = this.getCurrentDashboard();
+        const layout = dashboard.state().value.tree;
+        if (!layout) return;
+
+        const sourcePanel = dashboard.getPanelByPath(windowPath);
+        if (!sourcePanel) return;
+        const widgets = sourcePanel.state().value.widgets;
+
+        const targetPanel = dashboard.getPanelById(panelId);
+        if (!targetPanel || !isTabbedPanel(targetPanel)) return;
+
+        dashboard.removeNode(windowPath);
+        targetPanel.addWidgetInstance(widgets);
     }
 
     /**
