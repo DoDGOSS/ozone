@@ -56,14 +56,6 @@ export type TileRenderer<T extends MosaicKey> = (t: T, path: MosaicBranch[]) => 
  */
 export type CreateNode<T extends MosaicKey> = (...args: any[]) => Promise<MosaicNode<T>> | MosaicNode<T>;
 
-/**
- * Used by `react-dnd`
- * @type {{WINDOW: string}}
- */
-export const MosaicDragType = {
-    WINDOW: "MosaicWindow"
-};
-
 export interface EnabledResizeOptions {
     minimumPaneSizePercentage?: number; // Default: 20
 }

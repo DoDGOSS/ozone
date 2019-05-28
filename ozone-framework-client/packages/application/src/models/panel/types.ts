@@ -26,11 +26,11 @@ export interface Panel<T extends PanelState = PanelState> {
     findWidget(instanceId: string): WidgetInstance | undefined;
 }
 
-export function isFitPanel(panel: Panel<any>): panel is FitPanel {
+export function isFitPanel(panel: Panel): panel is FitPanel {
     return panel.type === "fit";
 }
 
-export function isTabbedPanel(panel: Panel<any>): panel is TabbedPanel {
+export function isTabbedPanel(panel: Panel): panel is TabbedPanel {
     return panel.type === "tabbed";
 }
 
@@ -38,7 +38,7 @@ export function isTabbedPanelState(state: PanelState): state is TabbedPanelState
     return state.type === "tabbed";
 }
 
-export function isExpandoPanel(panel: Panel<any>): panel is ExpandoPanel {
+export function isExpandoPanel(panel: Panel): panel is ExpandoPanel {
     return panel.type === "accordion" || panel.type === "portal";
 }
 

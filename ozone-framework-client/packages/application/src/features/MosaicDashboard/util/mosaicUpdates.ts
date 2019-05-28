@@ -1,7 +1,6 @@
 import update from "immutability-helper";
 import { drop, dropRight, isEqual, last, set, take } from "lodash";
 
-import { MosaicDropTargetPosition } from "../internalTypes";
 import {
     MosaicBranch,
     MosaicDirection,
@@ -12,6 +11,7 @@ import {
     MosaicUpdateSpec
 } from "../types";
 import { getAndAssertNodeAtPathExists, getOtherBranch } from "./mosaicUtilities";
+import { MosaicDropTargetPosition } from "../../../shared/dragAndDrop";
 
 /**
  * Used to prepare `update` for `immutability-helper`
