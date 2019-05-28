@@ -4,10 +4,10 @@ import React from "react";
 
 import { Button, Menu, MenuItem, Popover, Position } from "@blueprintjs/core";
 
-import { ExpandButton, RemoveButton } from "../../features/MosaicDashboard";
+import { ExpandButton } from "../../features/MosaicDashboard/buttons/ExpandButton";
+import { RemoveButton } from "../../features/MosaicDashboard/buttons/RemoveButton";
 
-import { Panel, PanelState } from "../../models/panel/types";
-
+import { Panel, PanelState } from "../../models/panel";
 import { dashboardService } from "../../stores/DashboardService";
 
 import { DashboardPath } from "./types";

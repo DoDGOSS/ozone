@@ -2,15 +2,17 @@
 
 import React from "react";
 import { ConnectDropTarget, DropTarget } from "react-dnd";
-import { Icon } from "@blueprintjs/core";
 import classNames from "classnames";
 import { noop } from "lodash";
 
+import { Icon } from "@blueprintjs/core";
+
 import { MosaicContext } from "./contextTypes";
-import { CreateNode, MosaicDragType, MosaicKey } from "./types";
-import { getBlueprintClasses, getBlueprintIconClass } from "./util/blueprint";
-import { getDropItem } from "./internalTypes";
+import { CreateNode, MosaicKey } from "./types";
 import { MosaicDropTarget } from "./MosaicDropTarget";
+import { getBlueprintClasses, getBlueprintIconClass } from "./util/blueprint";
+
+import { getDropItem, MosaicDragType } from "../../shared/dragAndDrop";
 
 export interface MosaicZeroStateProps<T extends MosaicKey> {
     createNode?: CreateNode<T>;
@@ -20,7 +22,7 @@ interface MosaicZeroStateDropProps {
     connectDropTarget: ConnectDropTarget;
     isDragging: boolean;
     isOver: boolean;
-    draggedMosaicId: string;
+    draggedMosaicId?: string;
 }
 
 type Props<T extends MosaicKey> = MosaicZeroStateProps<T> & MosaicZeroStateDropProps;

@@ -1,11 +1,10 @@
 import React from "react";
+import { DropTarget } from "react-dnd";
 import classNames from "classnames";
 import { values } from "lodash";
-import { DropTarget } from "react-dnd";
 
-import { MosaicDropTargetPosition } from "./internalTypes";
 import { MosaicDropTarget } from "./MosaicDropTarget";
-import { MosaicDragType } from "./types";
+import { MosaicDragType, MosaicDropTargetPosition } from "../../shared/dragAndDrop";
 
 export interface RootDropTargetsProps {
     isDragging: boolean;

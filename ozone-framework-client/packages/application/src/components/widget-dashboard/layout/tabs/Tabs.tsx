@@ -20,16 +20,17 @@
 
 import React from "react";
 import classNames from "classnames";
+import { ConnectDropTarget, DropTarget, DropTargetMonitor } from "react-dnd";
+
+import { Classes, DISPLAYNAME_PREFIX, IProps, Keys, Utils } from "@blueprintjs/core";
 
 import { ITabProps, Tab, TabId } from "./tab";
 import { generateTabPanelId, generateTabTitleId, TabTitle } from "./tabTitle";
 
-import { Classes, DISPLAYNAME_PREFIX, IProps, Keys, Utils } from "@blueprintjs/core";
-import { MosaicDragType, MosaicDropTarget, TablistDropData } from "../../../../features/MosaicDashboard";
+import { MosaicDropTarget } from "../../../../features/MosaicDashboard/MosaicDropTarget";
+import { MosaicDragType, TablistDropData } from "../../../../shared/dragAndDrop";
 
-import { ConnectDropTarget, DropTarget, DropTargetMonitor } from "react-dnd";
-
-export const Expander: React.FC<{}> = () => <div className={Classes.FLEX_EXPANDER}/>;
+export const Expander: React.FC<{}> = () => <div className={Classes.FLEX_EXPANDER} />;
 
 type TabElement = React.ReactElement<ITabProps & { children: React.ReactNode }>;
 
@@ -84,12 +85,12 @@ export interface ITabsProps extends IProps {
      */
     vertical?: boolean;
 
+    panelId: string;
+
     /**
      * A callback function that is invoked when a tab in the tab list is clicked.
      */
     onChange?(newTabId: TabId, prevTabId: TabId | undefined, event: React.MouseEvent<HTMLElement>): void;
-
-    panelId: string;
 }
 
 export interface ITabsState {
@@ -143,7 +144,7 @@ class TabsBase extends React.Component<TabsDndProps, ITabsState> {
 
         const tabIndicator = this.props.animate ? (
             <div className={Classes.TAB_INDICATOR_WRAPPER} style={indicatorWrapperStyle}>
-                <div className={Classes.TAB_INDICATOR}/>
+                <div className={Classes.TAB_INDICATOR} />
             </div>
         ) : null;
 
@@ -166,7 +167,7 @@ class TabsBase extends React.Component<TabsDndProps, ITabsState> {
                     {tabIndicator}
                     {tabTitles}
                     <div className={classNames("drop-target-container", { "-dragging": this.props.isDragging })}>
-                        <MosaicDropTarget position="fill" path={[]}/>
+                        <MosaicDropTarget position="fill" path={[]} />
                     </div>
                 </div>
                 {tabPanels}
