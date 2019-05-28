@@ -4,7 +4,7 @@ import { asBehavior } from "../observables";
 import { dashboardStore, DashboardStore } from "./DashboardStore";
 import { ExpandoPanel, FitPanel, isTabbedPanel, LayoutType, Panel, PanelState, TabbedPanel } from "../models/panel";
 import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
-import { Dashboard } from "../models/Dashboard";
+import { AddWidgetInstanceOpts, Dashboard } from "../models/Dashboard";
 import { UserWidget } from "../models/UserWidget";
 
 import { WidgetLaunchArgs } from "../services/WidgetLaunchArgs";
@@ -60,6 +60,19 @@ export class DashboardService {
         return panel ? panel : null;
     }
 
+    findPanelByWidgetId(instanceId: string): Panel | null {
+        const dashboard = this.store.currentDashboard().value;
+        if (dashboard === null) return null;
+
+        const panels = dashboard.state().value.panels;
+        for (const panel of values(panels)) {
+            if (panel.findWidget(instanceId)) return panel;
+        }
+
+        return null;
+    }
+
+
     setLayout = (tree: DashboardNode | null) => {
         this.getCurrentDashboard().setLayout(tree);
     };
@@ -82,6 +95,15 @@ export class DashboardService {
     }
 
     /**
+     * Add a Widget instance to the current Dashboard
+     *
+     * @returns true -- if the Widget was opened successfully
+     */
+    addWidgetInstance(opts: AddWidgetInstanceOpts): boolean {
+        return this.getCurrentDashboard().addWidgetInstance(opts);
+    }
+
+    /**
      * Add a UserWidget by Widget ID to the current Dashboard
      *
      * @returns true -- if the Widget was opened successfully
@@ -91,29 +113,6 @@ export class DashboardService {
         if (!userWidget) return false;
 
         return this.getCurrentDashboard().addWidget({ userWidget, path, position });
-    }
-
-    addWidgetToTabbedPanel(userWidgetId: number, panelId: string | undefined, tabIndex: number | undefined): void {
-        if (!panelId) return;
-
-        const userWidget = dashboardStore.findUserWidgetById(userWidgetId);
-        if (!userWidget) return;
-
-        const dashboard = this.getCurrentDashboard();
-        const panel = dashboard.state().value.panels[panelId];
-        if (!panel) {
-            console.warn(`addWidgetToTabbedPanel: panel with id ${panelId} not found`);
-            return;
-        }
-
-        if (!isTabbedPanel(panel)) {
-            console.warn(`addWidgetToTabbedPanel: panel with id ${panelId} is not a TabbedPanel`);
-            return;
-        }
-
-        const widgetInstance = WidgetInstance.create(userWidget);
-
-        panel.addWidgetInstance(widgetInstance);
     }
 
     /**

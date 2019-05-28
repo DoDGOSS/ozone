@@ -27,7 +27,7 @@ export abstract class AbstractPanel<T extends PanelState> implements Panel<T> {
 
     state = () => asBehavior(this.state$);
 
-    abstract closeWidget(widgetId: string): void;
+    abstract closeWidget(instanceId: string): WidgetInstance | undefined;
 
     findWidget(instanceId: string): WidgetInstance | undefined {
         const { widgets } = this.state$.value;

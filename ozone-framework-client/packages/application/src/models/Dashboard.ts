@@ -59,6 +59,13 @@ export interface AddWidgetOpts {
     position?: MosaicDropTargetPosition;
 }
 
+export interface AddWidgetInstanceOpts {
+    instance: WidgetInstance;
+    title?: string;
+    path?: MosaicPath;
+    position?: MosaicDropTargetPosition;
+}
+
 export class Dashboard {
     private readonly state$: BehaviorSubject<DashboardProps>;
 
@@ -91,13 +98,12 @@ export class Dashboard {
         return undefined;
     }
 
-    addWidget(opts: AddWidgetOpts): boolean {
-        const { userWidget, title, path, position } = opts;
+    addWidgetInstance(opts: AddWidgetInstanceOpts): boolean {
+        const { instance, title, path, position } = opts;
 
         const prev = this.state$.value;
         const { panels, tree } = prev;
 
-        const instance = WidgetInstance.create(userWidget);
         const panel = new FitPanel({ title, widget: instance });
 
         let newTree: DashboardNode;
@@ -119,6 +125,13 @@ export class Dashboard {
         });
 
         return true;
+    }
+
+    addWidget(opts: AddWidgetOpts): boolean {
+        const { userWidget, ...rest} = opts;
+        const instance = WidgetInstance.create(userWidget);
+
+        return this.addWidgetInstance({ instance, ...rest });
     }
 
     addPanel(panel: Panel<PanelState>) {

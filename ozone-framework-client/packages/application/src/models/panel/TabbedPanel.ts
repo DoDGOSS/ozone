@@ -29,11 +29,26 @@ export class TabbedPanel extends AbstractPanel<TabbedPanelState> {
         });
     }
 
-    closeWidget(instanceId: string): void {
+    addWidget(instance: WidgetInstance | WidgetInstance[]): void {
+        const prev = this.state$.value;
+        const { activeWidget, widgets } = prev;
+
+        const instances = !isArray(instance) ? [instance] : instance;
+
+        this.state$.next({
+            ...prev,
+            widgets: [...widgets, ...instances],
+            activeWidget: last(instances) || activeWidget
+        });
+    }
+
+    closeWidget(instanceId: string): WidgetInstance | undefined {
         const prev = this.state$.value;
         const { activeWidget, widgets } = prev;
 
         const widgetIdx = findIndex(widgets, (w) => w.id === instanceId);
+        const instance = widgets[widgetIdx];
+
         const nextWidgets = omitIndex(widgets, widgetIdx);
         const nextActive = getNextActiveWidget(activeWidget, instanceId, nextWidgets);
 
@@ -42,6 +57,8 @@ export class TabbedPanel extends AbstractPanel<TabbedPanelState> {
             widgets: nextWidgets,
             activeWidget: nextActive
         });
+
+        return instance;
     }
 
     setActiveWidget(instanceId: string): void {
@@ -52,19 +69,6 @@ export class TabbedPanel extends AbstractPanel<TabbedPanelState> {
         this.state$.next({
             ...prev,
             activeWidget: widget
-        });
-    }
-
-    addWidgetInstance(instance: WidgetInstance | WidgetInstance[]): void {
-        const prev = this.state$.value;
-        const { activeWidget, widgets } = prev;
-
-        const instances = !isArray(instance) ? [instance] : instance;
-
-        this.state$.next({
-            ...prev,
-            widgets: [...widgets, ...instances],
-            activeWidget: last(instances) || activeWidget
         });
     }
 }
