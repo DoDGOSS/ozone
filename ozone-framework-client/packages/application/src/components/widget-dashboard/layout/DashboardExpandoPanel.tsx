@@ -3,12 +3,24 @@ import styles from "./DashboardExpandoPanel.scss";
 import React, { useCallback } from "react";
 import { useBehavior } from "../../../hooks";
 
+import { DragSource } from "react-dnd";
+
 import { Button } from "@blueprintjs/core";
 
 import { WidgetInstance } from "../../../models/WidgetInstance";
 import { ExpandoPanel } from "../../../models/panel";
 
 import { WidgetFrame } from "../WidgetFrame";
+
+import { dragDropService } from "../../../stores/DragDropService";
+import {
+    beginWidgetDrag,
+    collectDragProps,
+    DragDataType,
+    DragSourceProps,
+    endWidgetDrag,
+    MosaicDragType
+} from "../../../shared/dragAndDrop";
 
 import { classNames } from "../../../utility";
 
@@ -18,13 +30,17 @@ export interface ExpandoHeaderProps {
     collapsed: boolean;
 }
 
-const ExpandoHeader: React.FC<ExpandoHeaderProps> = ({ panel, widget, collapsed }) => {
+type ExpandoHeaderDndProps = ExpandoHeaderProps & DragSourceProps;
+
+const _ExpandoHeader: React.FC<ExpandoHeaderDndProps> = (props) => {
+    const { panel, widget, collapsed, connectDragSource } = props;
+
     const collapseIcon = collapsed ? "plus" : "minus";
     const toggleCollapsed = useCallback(() => panel.setCollapsed(widget.id, !collapsed), [widget, collapsed]);
     const closeWidget = useCallback(() => panel.closeWidget(widget.id), [panel, widget]);
 
-    return (
-        <div className={styles.header}>
+    return connectDragSource(
+        <div className={styles.header} draggable={true}>
             <span className={styles.headerTitle}>{widget.userWidget.title}</span>
             <span className={styles.headerControls}>
                 <Button className={styles.headerButton} icon={collapseIcon} minimal={true} onClick={toggleCollapsed} />
@@ -33,6 +49,21 @@ const ExpandoHeader: React.FC<ExpandoHeaderProps> = ({ panel, widget, collapsed 
         </div>
     );
 };
+
+const beginDrag = beginWidgetDrag<ExpandoHeaderDndProps>(({ props }) => {
+    return {
+        type: DragDataType.INSTANCE,
+        widgetInstanceId: props.widget.id
+    };
+});
+
+const endDrag = endWidgetDrag<ExpandoHeaderDndProps>(({ dragData, dropData }) => {
+    dragDropService.handleDropEvent(dragData, dropData);
+});
+
+export const ExpandoHeader = DragSource(MosaicDragType.WINDOW, { beginDrag, endDrag }, collectDragProps)(
+    _ExpandoHeader
+) as React.ComponentType<ExpandoHeaderProps>;
 
 export interface ExpandoContainerProps {
     panel: ExpandoPanel;

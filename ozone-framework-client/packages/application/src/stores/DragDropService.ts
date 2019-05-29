@@ -11,6 +11,7 @@ import {
     DropDataType,
     InstanceDragData,
     MosaicDropData,
+    TablistDropData,
     WidgetDragData,
     WindowDragData
 } from "../shared/dragAndDrop";
@@ -75,6 +76,7 @@ export class DragDropService {
                 this.moveInstanceToMosaic(dragData, dropData);
                 break;
             case DropDataType.TABLIST:
+                this.moveInstanceToTabbedPanel(dragData, dropData);
                 break;
         }
     }
@@ -91,6 +93,22 @@ export class DragDropService {
         this.dashboardService.addWidgetInstance({ instance, path, position });
     }
 
+    private moveInstanceToTabbedPanel(dragData: InstanceDragData, dropData: TablistDropData): void {
+        const { widgetInstanceId } = dragData;
+        const sourcePanel = this.dashboardService.findPanelByWidgetId(widgetInstanceId);
+        if (!sourcePanel) return;
+
+        const { panelId: targetPanelId } = dropData;
+        if (!targetPanelId) return;
+
+        const targetPanel = this.dashboardService.getPanelById(targetPanelId);
+        if (!targetPanel || !isTabbedPanel(targetPanel)) return;
+
+        const widgetInstance = sourcePanel.closeWidget(widgetInstanceId);
+        if (!widgetInstance) return;
+
+        targetPanel.addWidget(widgetInstance);
+    }
 
     private addWidgetToTabbedPanel(
         userWidgetId: number,

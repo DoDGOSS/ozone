@@ -128,7 +128,7 @@ export class Dashboard {
     }
 
     addWidget(opts: AddWidgetOpts): boolean {
-        const { userWidget, ...rest} = opts;
+        const { userWidget, ...rest } = opts;
         const instance = WidgetInstance.create(userWidget);
 
         return this.addWidgetInstance({ instance, ...rest });
