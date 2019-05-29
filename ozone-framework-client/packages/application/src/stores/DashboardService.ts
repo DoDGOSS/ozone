@@ -72,7 +72,6 @@ export class DashboardService {
         return null;
     }
 
-
     setLayout = (tree: DashboardNode | null) => {
         this.getCurrentDashboard().setLayout(tree);
     };
