@@ -133,6 +133,8 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                             <Popover content={this.renderEditMenu(row.original)}
                               position={Position.BOTTOM_RIGHT}>
                               <Button
+                                data-element-id="edit-menu-button"
+                                data-widget-title={row.original.value.namespace ? row.original.value.namespace : ""}
                                 rightIcon="caret-down"
                                 intent={Intent.PRIMARY}
                               />

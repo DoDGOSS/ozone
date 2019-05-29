@@ -7,8 +7,8 @@ export interface EditMenuProps {
 
 export const EditMenu: React.FC<EditMenuProps> = (props) => {
   return (
-    <Menu>
-      <MenuItem text="Export" onClick={props.openExportDialog} />
+    <Menu data-element-id="edit-menu">
+      <MenuItem data-element-id="export-button" text="Export" onClick={props.openExportDialog} />
     </Menu>
   );
 };

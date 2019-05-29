@@ -173,6 +173,50 @@ module.exports = {
         browser.closeWindow().end();
     },
 
+    "As an Administrator, I can export a widget": (browser: NightwatchAPI) => {
+        loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
+
+        const widgetAdmin = new HomeScreen(browser)
+            .openUserMenu()
+            .openAdminDialog()
+            .openWidgetAdminWidget();
+
+        const exportDialog = widgetAdmin
+            .setSearchValue("Widget Administration")
+            .editMenuWidget("Widget Administration")
+            .assertContainsExportButton()
+            .clickExportButton();
+
+        exportDialog
+            .assertContainsConfirmButton()
+            .assertContainsCancelButton()
+            .assertConfirmButtonIsDisabled()
+            .assertNotContainsErrorText();
+
+        browser
+            .clearValue(WidgetAdminWidget.ExportDialog.FILENAME_INPUT)
+            .setValue(WidgetAdminWidget.ExportDialog.FILENAME_INPUT, 'Invalid!@#')
+            .click(WidgetAdminWidget.ExportDialog.FORM)
+            .pause(500);
+
+        exportDialog
+            .assertConfirmButtonIsDisabled()
+            .assertContainsErrorText();
+
+        browser
+            .clearValue(WidgetAdminWidget.ExportDialog.FILENAME_INPUT)
+            .setValue(WidgetAdminWidget.ExportDialog.FILENAME_INPUT, 'Export-Widget_valid')
+            .click(WidgetAdminWidget.ExportDialog.FORM)
+            .pause(500);
+
+        exportDialog
+            .assertConfirmButtonIsEnabled()
+            .assertNotContainsErrorText()
+            .clickConfirmButton();
+
+        browser.closeWindow().end();
+    },
+
     "As an Administrator, I can delete a widget": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
 
