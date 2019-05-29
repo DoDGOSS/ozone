@@ -50,14 +50,13 @@ export class ExportDialog extends React.Component<ExportDialogProps, {}> {
                 onClose={this.props.onClose}
                 canOutsideClickClose={false}
                 title={`Export ${this.props.widget.value.namespace}`}
-                data-element-id="export-dialog"
             >
                 <Formik initialValues={{filename: ""}} validationSchema={ExportFormSchema} onSubmit={this.getWidgetExport}>
                     {(formik: FormikProps<ExportForm>) => {
                         const { dirty, isValid, isSubmitting } = formik;
 
                         return (
-                          <Form>
+                          <Form data-element-id="export-dialog-form">
                             <div className={Classes.DIALOG_BODY}>
                                 {formik.status && formik.status.error && <FormError message={formik.status.error} />}
                                 <TextField type="text" name="filename" label="File Name" labelInfo="(required)" />
@@ -78,7 +77,7 @@ export class ExportDialog extends React.Component<ExportDialogProps, {}> {
                                         onClick={this.props.onClose}
                                         intent={Intent.DANGER}
                                         rightIcon="cross"
-                                        data-element-id="export-cancel"
+                                        data-element-id="export-dialog-cancel"
                                     >
                                         Cancel
                                     </Button>
