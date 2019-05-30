@@ -2,7 +2,7 @@ import * as styles from "../Widgets.scss";
 
 import * as React from "react";
 
-import { Button, ButtonGroup, Divider, Tooltip } from "@blueprintjs/core";
+import { Button, ButtonGroup, Divider, Tooltip, Intent, Popover, Position } from "@blueprintjs/core";
 
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
@@ -11,6 +11,9 @@ import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 
 import { GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
+import { EditMenu } from "./export/EditMenu"
+import { ExportDialog } from "./export/ExportDialog";
+import { ExportErrorDialog } from "./export/ExportErrorDialog";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { WidgetSetup } from "./WidgetSetup";
 
@@ -21,6 +24,8 @@ interface WidgetsWidgetState {
     showWidgetSetup: boolean;
     updatingWidget: WidgetDTO | undefined;
     widgetTypes: WidgetTypeReference[];
+    exportDialog: React.Component | undefined;
+    exportErrorDialog: React.Component | undefined;
 }
 
 // TODO
@@ -45,7 +50,9 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
             loading: true,
             showTable: true,
             showWidgetSetup: false,
-            updatingWidget: undefined
+            updatingWidget: undefined,
+            exportDialog: undefined,
+            exportErrorDialog: undefined
         };
 
         this.handleUpdate = this.handleUpdate.bind(this);
@@ -63,6 +70,8 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
 
         return (
             <div data-element-id="widget-admin-widget-dialog">
+                {this.state.exportDialog}
+                {this.state.exportErrorDialog}
                 {showTable && (
                     <div>
                         <GenericTable
@@ -121,6 +130,15 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                                     this.showSubSection(WidgetWidgetSubSection.SETUP);
                                 }}
                             />
+                            <Popover content={this.renderEditMenu(row.original)}
+                              position={Position.BOTTOM_RIGHT}>
+                              <Button
+                                data-element-id="edit-menu-button"
+                                data-widget-title={row.original.value.namespace ? row.original.value.namespace : ""}
+                                rightIcon="caret-down"
+                                intent={Intent.PRIMARY}
+                              />
+                            </Popover>
                             <Divider />
                             <Tooltip
                                 disabled={!this.widgetPotentiallyInUse(row.original)}
@@ -198,4 +216,23 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
 
         return true;
     };
+
+    private renderEditMenu = (widget: WidgetDTO) => {
+      return (<EditMenu openExportDialog={() => this.setState({exportDialog: this.renderExportDialog(widget)})} />);
+    }
+
+    private renderExportDialog = (widget: WidgetDTO) => {
+      return (<ExportDialog
+        widget={widget}
+        onClose={() => this.setState({exportDialog: undefined})}
+        openExportErrorDialog={() => this.setState({exportErrorDialog: this.renderExportErrorDialog(widget)})}
+      />);
+    }
+
+    private renderExportErrorDialog = (widget: WidgetDTO) => {
+      return (<ExportErrorDialog
+        widget={widget}
+        onClose={() => this.setState({exportErrorDialog: undefined})}
+      />);
+    }
 }
