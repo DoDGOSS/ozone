@@ -433,6 +433,12 @@ export namespace WidgetAdminWidget {
         export const SUBMIT_BUTTON =
             "div[data-element-id='widget-admin-widget-edit-submit-button'] > button[data-element-id='form-submit-button']";
     }
+
+    export namespace ExportDialog {
+        export const FORM = "form[data-element-id='export-dialog-form']";
+
+        export const FILENAME_INPUT = `${ExportDialog.FORM} input[name='filename']`;
+    }
 }
 
 export namespace GlobalElements {
@@ -453,6 +459,8 @@ export namespace GlobalElements {
     export const STD_RESTORE_BUTTON = "a[data-element-id='restore-button']";
 
     export const STD_EDIT_BUTTON = "a[data-element-id='edit-button']";
+
+    export const STD_EDIT_MENU_BUTTON = "button[data-element-id='edit-menu-button']";
 
     export const STD_DELETE_BUTTON = "a[data-element-id='delete-button']";
 }
