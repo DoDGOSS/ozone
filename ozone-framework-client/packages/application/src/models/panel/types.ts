@@ -21,6 +21,8 @@ export interface Panel<T extends PanelState = PanelState> {
 
     state(): BehaviorObservable<T>;
 
+    addWidgets(instance: WidgetInstance | WidgetInstance[]): boolean;
+
     closeWidget(instanceId: string): WidgetInstance | undefined;
 
     findWidget(instanceId: string): WidgetInstance | undefined;
