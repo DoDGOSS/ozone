@@ -1,19 +1,18 @@
-import { cloneDeep, dropRight, isEqual } from "lodash";
+import { cloneDeep, isEqual } from "lodash";
 
 import { dashboardStore, DashboardStore } from "./DashboardStore";
 import { Dashboard } from "../models/Dashboard";
 import { WidgetInstance } from "../models/WidgetInstance";
 import {
-    DragData,
     DragDataType,
     DropData,
     DropDataType,
+    EndDragEvent,
     InstanceDragData,
     setSaveSnapshotCallback,
     WidgetDragData,
     WindowDragData
 } from "../shared/dragAndDrop";
-import { MosaicUpdate } from "../features/MosaicDashboard/types";
 import { createDragToUpdates, updateTree } from "../features/MosaicDashboard/util/mosaicUpdates";
 import { dashboardService, DashboardService } from "./DashboardService";
 import { DashboardNode } from "../components/widget-dashboard/types";
@@ -37,22 +36,35 @@ export class DragDropService {
     }
 
     restoreSnapshot(): void {
+        if (!this.snapshot) return;
         this.dashboardService.setLayout(this.snapshot);
-        this.snapshot = null;
     }
 
-    handleDropEvent(dragData: DragData | undefined, dropData: DropData): void {
+    handleDropEvent = (event: EndDragEvent<any>): void => {
+        const { dragData, dropData, monitor } = event;
+
+        // Restore the snapshot if the drop was not caught by a drop handler
+        if (!monitor.didDrop()) {
+            this.restoreSnapshot();
+            return;
+        }
+
         if (!dragData || dropData.type !== DropDataType.MOSAIC) return;
 
         switch (dragData.type) {
             case DragDataType.WINDOW:
-                return this.handleWindowDropEvent(dragData, dropData);
+                this.handleWindowDropEvent(dragData, dropData);
+                break;
             case DragDataType.WIDGET:
-                return this.handleWidgetDropEvent(dragData, dropData);
+                this.handleWidgetDropEvent(dragData, dropData);
+                break;
             case DragDataType.INSTANCE:
-                return this.handleInstanceDropEvent(dragData, dropData);
+                this.handleInstanceDropEvent(dragData, dropData);
+                break;
         }
-    }
+
+        this.snapshot = null;
+    };
 
     private handleWindowDropEvent(dragData: WindowDragData, dropData: DropData): void {
         if (dropData.position !== "center") {
@@ -96,17 +108,11 @@ export class DragDropService {
         const { position, path: targetPath } = dropData;
         const sourcePath = dragData.path;
 
-        let updates: MosaicUpdate<string>[];
-        if (position != null && targetPath != null && !isEqual(targetPath, sourcePath)) {
-            updates = createDragToUpdates(layout, sourcePath, targetPath, position);
-        } else {
-            updates = [
-                {
-                    path: dropRight(sourcePath),
-                    spec: { splitPercentage: { $set: null } }
-                }
-            ];
+        if (position == null || targetPath == null || isEqual(targetPath, sourcePath)) {
+            this.restoreSnapshot();
+            return;
         }
+        const updates = createDragToUpdates(layout, sourcePath, targetPath, position);
         const newLayout = updateTree(layout, updates);
 
         this.dashboardService.setLayout(newLayout);
@@ -124,7 +130,9 @@ export class DragDropService {
         const widgetInstances = sourcePanel.state().value.widgets;
 
         const isSuccess = targetPanel.addWidgets(widgetInstances);
-        if (!isSuccess) {
+        if (isSuccess) {
+            dashboard.removeNode(dragData.path);
+        } else {
             this.restoreSnapshot();
         }
     }

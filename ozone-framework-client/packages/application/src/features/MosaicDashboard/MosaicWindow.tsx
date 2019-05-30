@@ -251,9 +251,7 @@ const dragSpec = {
             path: component.props.path
         };
     }),
-    endDrag: endWidgetDrag<InternalMosaicWindowProps<any>>(({ dragData, dropData, component }) => {
-        dragDropService.handleDropEvent(dragData, dropData);
-    })
+    endDrag: endWidgetDrag<InternalMosaicWindowProps<any>>(dragDropService.handleDropEvent)
 };
 
 // Each step exported here just to keep react-hot-loader happy
