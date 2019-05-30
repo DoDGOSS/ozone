@@ -12,6 +12,8 @@ export class WidgetAdmin extends PageObject {
 
     static editWidgetButton = (title: string) => `${GlobalElements.STD_EDIT_BUTTON}[data-widget-title="${title}"]`;
 
+    static editMenuWidgetButton = (title: string) => `${GlobalElements.STD_EDIT_MENU_BUTTON}[data-widget-title="${title}"]`;
+
     static deleteWidgetButton = (title: string) => `${GlobalElements.STD_DELETE_BUTTON}[data-widget-title="${title}"]`;
 
     constructor(browser: NightwatchAPI) {
@@ -56,6 +58,11 @@ export class WidgetAdmin extends PageObject {
     editWidget(title: string): WidgetAdminPropertiesPanel {
         this.browser.click(WidgetAdmin.editWidgetButton(title));
         return this.open(WidgetAdminPropertiesPanel).waitUntilVisible();
+    }
+
+    editMenuWidget(title: string): WidgetAdminEditMenuPopover {
+        this.browser.click(WidgetAdmin.editMenuWidgetButton(title));
+        return this.open(WidgetAdminEditMenuPopover).waitUntilVisible();
     }
 
     assertCanDeleteWidget(title: string): this {
@@ -155,6 +162,76 @@ export class WidgetAdminPropertiesPanel extends PageObject {
             .waitForElementNotPresent(WidgetAdminPropertiesPanel.Selector, undefined, this.msg("is closed"))
             .pause(1000);
 
+        return this.open(WidgetAdmin);
+    }
+}
+
+export class WidgetAdminEditMenuPopover extends PageObject {
+    static Selector = "ul[data-element-id='edit-menu']";
+    static ExportButton = `a[data-element-id="export-button"]`;
+
+    constructor(browser: NightwatchAPI) {
+        super(browser, WidgetAdminEditMenuPopover.Selector, "Widget Admin Edit Menu Popover");
+    }
+
+    assertContainsExportButton(): this {
+        return this.waitForElementPresent(WidgetAdminEditMenuPopover.ExportButton, "Export button");
+    }
+
+    clickExportButton(): WidgetAdminExportDialog {
+        this.browser.click(WidgetAdminEditMenuPopover.ExportButton).pause(1000);
+        return this.open(WidgetAdminExportDialog);
+    }
+}
+
+export class WidgetAdminExportDialog extends PageObject {
+    static Selector = "form[data-element-id='export-dialog-form']";
+    static ConfirmButton = `button[data-element-id="export-dialog-confirm"]`;
+    static CancelButton = `button[data-element-id="export-dialog-cancel"]`;
+
+    constructor(browser: NightwatchAPI) {
+        super(browser, WidgetAdminExportDialog.Selector, "Widget Admin Export Dialog");
+    }
+
+    assertContainsConfirmButton(): this {
+        return this.waitForElementPresent(WidgetAdminExportDialog.ConfirmButton, "Confirm button");
+    }
+
+    assertContainsCancelButton(): this {
+        return this.waitForElementPresent(WidgetAdminExportDialog.CancelButton, "Cancel button");
+    }
+
+    assertConfirmButtonIsDisabled(): this {
+        this.browser.getAttribute(WidgetAdminExportDialog.ConfirmButton, "disabled", (result) => {
+            this.browser.assert.equal(result.value, "true", this.msg("Confirm button should be disabled"));
+        });
+        return this;
+    }
+
+    assertConfirmButtonIsEnabled(): this {
+        this.browser.getAttribute(WidgetAdminExportDialog.ConfirmButton, "disabled", (result) => {
+            this.browser.assert.equal(result.value, null, this.msg("Confirm button should be enabled"));
+        });
+        return this;
+    }
+
+    assertContainsErrorText(): this {
+        this.browser.assert.containsText(
+            WidgetAdminExportDialog.Selector,
+            'Invalid characters!',
+            this.msg(`Export dialog filename contains error`)
+        );
+        return this;
+    }
+
+    assertNotContainsErrorText(): this {
+        this.browser.expect.element(WidgetAdminExportDialog.Selector)
+            .text.to.not.contain('Invalid characters!');
+        return this;
+    }
+
+    clickConfirmButton(): WidgetAdmin {
+        this.browser.click(WidgetAdminExportDialog.ConfirmButton).pause(1000);
         return this.open(WidgetAdmin);
     }
 }
