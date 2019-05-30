@@ -34,18 +34,17 @@ const _InternalWidgetTile: React.FC<Props> = (props) =>
 
 const InternalWidgetTile = React.memo(_InternalWidgetTile);
 
-const endDrag = endWidgetDrag<Props>(({ dragData, dropData }) => {
-    dragDropService.handleDropEvent(dragData, dropData);
-});
+const dragSpec = {
+    beginDrag: beginWidgetDrag<Props>(({ props, defer }) => {
+        defer(mainStore.closeWidgetToolbar);
+        return {
+            type: DragDataType.WIDGET,
+            userWidgetId: props.userWidgetId
+        };
+    }),
+    endDrag: endWidgetDrag<Props>(dragDropService.handleDropEvent)
+};
 
-const beginDrag = beginWidgetDrag<Props>(({ props, defer }) => {
-    defer(mainStore.closeWidgetToolbar);
-    return {
-        type: DragDataType.WIDGET,
-        userWidgetId: props.userWidgetId
-    };
-});
-
-export const UserWidgetTile = DragSource(MosaicDragType.WINDOW, { beginDrag, endDrag }, collectDragProps)(
+export const UserWidgetTile = DragSource(MosaicDragType.WINDOW, dragSpec, collectDragProps)(
     InternalWidgetTile
 ) as React.ComponentType<UserWidgetTileProps>;

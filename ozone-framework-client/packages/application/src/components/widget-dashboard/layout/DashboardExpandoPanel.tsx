@@ -50,18 +50,17 @@ const _ExpandoHeader: React.FC<ExpandoHeaderDndProps> = (props) => {
     );
 };
 
-const beginDrag = beginWidgetDrag<ExpandoHeaderDndProps>(({ props }) => {
-    return {
-        type: DragDataType.INSTANCE,
-        widgetInstanceId: props.widget.id
-    };
-});
+const dragSpec = {
+    beginDrag: beginWidgetDrag<ExpandoHeaderDndProps>(({ props }) => {
+        return {
+            type: DragDataType.INSTANCE,
+            widgetInstanceId: props.widget.id
+        };
+    }),
+    endDrag: endWidgetDrag<ExpandoHeaderDndProps>(dragDropService.handleDropEvent)
+};
 
-const endDrag = endWidgetDrag<ExpandoHeaderDndProps>(({ dragData, dropData }) => {
-    dragDropService.handleDropEvent(dragData, dropData);
-});
-
-export const ExpandoHeader = DragSource(MosaicDragType.WINDOW, { beginDrag, endDrag }, collectDragProps)(
+export const ExpandoHeader = DragSource(MosaicDragType.WINDOW, dragSpec, collectDragProps)(
     _ExpandoHeader
 ) as React.ComponentType<ExpandoHeaderProps>;
 

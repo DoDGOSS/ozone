@@ -84,17 +84,16 @@ export function generateTabTitleId(parentId: TabId, tabId: TabId) {
     return `${Classes.TAB}-title_${parentId}_${tabId}`;
 }
 
-const beginDrag = beginWidgetDrag<Props>(({ props }) => {
-    return {
-        type: DragDataType.INSTANCE,
-        widgetInstanceId: props.widgetInstanceId
-    };
-});
+const dragSpec = {
+    beginDrag: beginWidgetDrag<Props>(({ props }) => {
+        return {
+            type: DragDataType.INSTANCE,
+            widgetInstanceId: props.widgetInstanceId
+        };
+    }),
+    endDrag: endWidgetDrag<Props>(dragDropService.handleDropEvent)
+};
 
-const endDrag = endWidgetDrag<Props>(({ dragData, dropData }) => {
-    dragDropService.handleDropEvent(dragData, dropData);
-});
-
-export const TabTitle = DragSource(MosaicDragType.WINDOW, { beginDrag, endDrag }, collectDragProps)(
+export const TabTitle = DragSource(MosaicDragType.WINDOW, dragSpec, collectDragProps)(
     TabTitleBase
 ) as React.ComponentType<ITabTitleProps>;
