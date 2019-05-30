@@ -32,6 +32,23 @@ export class ExpandoPanel extends AbstractPanel<ExpandoPanelState> {
         });
     }
 
+    getMoveControls(instance: WidgetInstance) {
+        console.log("getMoveControls " + instance.id);
+
+        const prev = this.state$.value;
+        const { widgets } = prev;
+
+        const widgetCount = widgets.length;
+        const widgetIdx = findIndex(widgets, (w) => w.id === instance.id);
+
+        return {
+            canMoveUp: widgetCount > 1 && widgetIdx > 0,
+            moveUp: () => this.swapWidgets(widgetIdx, widgetIdx - 1),
+            canMoveDown: widgetCount > 1 && widgetIdx < widgetCount - 1,
+            moveDown: () => this.swapWidgets(widgetIdx, widgetIdx + 1)
+        };
+    }
+
     setCollapsed(instanceId: string, value: boolean): void {
         const prev = this.state$.value;
         const { widgets, collapsed } = prev;
@@ -80,6 +97,17 @@ export class ExpandoPanel extends AbstractPanel<ExpandoPanelState> {
 
         return instance;
     }
+
+    private swapWidgets(idx1: number, idx2: number): void {
+        const prev = this.state$.value;
+        const { collapsed, widgets } = prev;
+
+        this.state$.next({
+            ...prev,
+            widgets: swap(widgets, idx1, idx2),
+            collapsed: swap(collapsed, idx1, idx2)
+        });
+    }
 }
 
 function calcCollapsed(widgets: WidgetInstance[] = [], collapsed: boolean[] = []) {
@@ -87,4 +115,12 @@ function calcCollapsed(widgets: WidgetInstance[] = [], collapsed: boolean[] = []
         return Array(widgets.length).fill(false);
     }
     return collapsed;
+}
+
+function swap<T>(array: T[], idx1: number, idx2: number): T[] {
+    const arrayCopy = [...array];
+    const temp = arrayCopy[idx1];
+    arrayCopy[idx1] = arrayCopy[idx2];
+    arrayCopy[idx2] = temp;
+    return arrayCopy;
 }
