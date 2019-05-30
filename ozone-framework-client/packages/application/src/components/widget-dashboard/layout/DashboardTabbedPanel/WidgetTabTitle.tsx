@@ -1,0 +1,45 @@
+import styles from "./index.module.scss";
+
+import React, { useCallback, useMemo } from "react";
+import { useBehavior } from "../../../../hooks";
+import { Button } from "@blueprintjs/core";
+
+import { TabbedPanel } from "../../../../models/panel";
+import { WidgetInstance } from "../../../../models/WidgetInstance";
+
+export interface WidgetTabTitleProps {
+    panel: TabbedPanel;
+    widget: WidgetInstance;
+}
+
+export const WidgetTabTitle: React.FC<WidgetTabTitleProps> = (props) => {
+    const { panel, widget } = props;
+
+    const { widgets } = useBehavior(panel.state);
+    const controls = useMemo(() => panel.getMoveControls(widget), [widgets]);
+
+    const closeWidget = useCallback(() => panel.closeWidget(widget.id), [panel, widget]);
+
+    return (
+        <div className={styles.tabTitle}>
+            <span className={styles.tabTitleText}>{widget.userWidget.title}</span>
+            <Button className={styles.tabTitleClose} icon="cross" minimal={true} onClick={closeWidget} />
+            {controls.canMoveLeft && (
+                <Button
+                    className={styles.tabTitleMove}
+                    icon="chevron-left"
+                    minimal={true}
+                    onClick={controls.moveLeft}
+                />
+            )}
+            {controls.canMoveRight && (
+                <Button
+                    className={styles.tabTitleMove}
+                    icon="chevron-right"
+                    minimal={true}
+                    onClick={controls.moveRight}
+                />
+            )}
+        </div>
+    );
+};

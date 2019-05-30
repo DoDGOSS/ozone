@@ -5,7 +5,7 @@ import { AbstractPanel } from "./AbstractPanel";
 import { WidgetInstance } from "../WidgetInstance";
 
 import { getNextActiveWidget } from "./common";
-import { omitIndex, uuid } from "../../utility";
+import { omitIndex, swapIndices, uuid } from "../../utility";
 
 export interface TabbedPanelState extends PanelState {
     activeWidget: WidgetInstance | null;
@@ -73,6 +73,31 @@ export class TabbedPanel extends AbstractPanel<TabbedPanelState> {
         this.state$.next({
             ...prev,
             activeWidget: widget
+        });
+    }
+
+    getMoveControls(instance: WidgetInstance) {
+        const prev = this.state$.value;
+        const { widgets } = prev;
+
+        const widgetCount = widgets.length;
+        const widgetIdx = findIndex(widgets, (w) => w.id === instance.id);
+
+        return {
+            canMoveLeft: widgetCount > 1 && widgetIdx > 0,
+            moveLeft: () => this.swapWidgets(widgetIdx, widgetIdx - 1),
+            canMoveRight: widgetCount > 1 && widgetIdx < widgetCount - 1,
+            moveRight: () => this.swapWidgets(widgetIdx, widgetIdx + 1)
+        };
+    }
+
+    private swapWidgets(idx1: number, idx2: number): void {
+        const prev = this.state$.value;
+        const { widgets } = prev;
+
+        this.state$.next({
+            ...prev,
+            widgets: swapIndices(widgets, idx1, idx2)
         });
     }
 }

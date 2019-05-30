@@ -33,7 +33,7 @@ import {
     MosaicDragType
 } from "../../../../shared/dragAndDrop";
 
-import { ITabProps, TabId } from "./tab";
+import { ITabProps, TabId } from "./Tab";
 
 export interface ITabTitleProps extends ITabProps {
     /** Handler invoked when this tab is clicked. */

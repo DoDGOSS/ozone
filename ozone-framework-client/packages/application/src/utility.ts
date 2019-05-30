@@ -151,3 +151,11 @@ export function cleanNullableProp<T>(value: T | null): T | string {
         return value;
     }
 }
+
+export function swapIndices<T>(array: T[], idx1: number, idx2: number): T[] {
+    const arrayCopy = [...array];
+    const temp = arrayCopy[idx1];
+    arrayCopy[idx1] = arrayCopy[idx2];
+    arrayCopy[idx2] = temp;
+    return arrayCopy;
+}
