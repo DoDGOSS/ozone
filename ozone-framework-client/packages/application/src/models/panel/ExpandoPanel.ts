@@ -5,7 +5,7 @@ import { AbstractPanel } from "./AbstractPanel";
 import { WidgetInstance } from "../WidgetInstance";
 
 import { getNextActiveWidget } from "./common";
-import { omitIndex, uuid } from "../../utility";
+import { omitIndex, swapIndices, uuid } from "../../utility";
 
 export interface ExpandoPanelState extends PanelState {
     collapsed: boolean[];
@@ -30,23 +30,6 @@ export class ExpandoPanel extends AbstractPanel<ExpandoPanelState> {
             collapsed: calcCollapsed(opts.widgets, opts.collapsed),
             activeWidget: opts.activeWidget || null
         });
-    }
-
-    getMoveControls(instance: WidgetInstance) {
-        console.log("getMoveControls " + instance.id);
-
-        const prev = this.state$.value;
-        const { widgets } = prev;
-
-        const widgetCount = widgets.length;
-        const widgetIdx = findIndex(widgets, (w) => w.id === instance.id);
-
-        return {
-            canMoveUp: widgetCount > 1 && widgetIdx > 0,
-            moveUp: () => this.swapWidgets(widgetIdx, widgetIdx - 1),
-            canMoveDown: widgetCount > 1 && widgetIdx < widgetCount - 1,
-            moveDown: () => this.swapWidgets(widgetIdx, widgetIdx + 1)
-        };
     }
 
     setCollapsed(instanceId: string, value: boolean): void {
@@ -98,14 +81,29 @@ export class ExpandoPanel extends AbstractPanel<ExpandoPanelState> {
         return instance;
     }
 
+    getMoveControls(instance: WidgetInstance) {
+        const prev = this.state$.value;
+        const { widgets } = prev;
+
+        const widgetCount = widgets.length;
+        const widgetIdx = findIndex(widgets, (w) => w.id === instance.id);
+
+        return {
+            canMoveUp: widgetCount > 1 && widgetIdx > 0,
+            moveUp: () => this.swapWidgets(widgetIdx, widgetIdx - 1),
+            canMoveDown: widgetCount > 1 && widgetIdx < widgetCount - 1,
+            moveDown: () => this.swapWidgets(widgetIdx, widgetIdx + 1)
+        };
+    }
+
     private swapWidgets(idx1: number, idx2: number): void {
         const prev = this.state$.value;
         const { collapsed, widgets } = prev;
 
         this.state$.next({
             ...prev,
-            widgets: swap(widgets, idx1, idx2),
-            collapsed: swap(collapsed, idx1, idx2)
+            widgets: swapIndices(widgets, idx1, idx2),
+            collapsed: swapIndices(collapsed, idx1, idx2)
         });
     }
 }
@@ -115,12 +113,4 @@ function calcCollapsed(widgets: WidgetInstance[] = [], collapsed: boolean[] = []
         return Array(widgets.length).fill(false);
     }
     return collapsed;
-}
-
-function swap<T>(array: T[], idx1: number, idx2: number): T[] {
-    const arrayCopy = [...array];
-    const temp = arrayCopy[idx1];
-    arrayCopy[idx1] = arrayCopy[idx2];
-    arrayCopy[idx2] = temp;
-    return arrayCopy;
 }

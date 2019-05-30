@@ -23,8 +23,8 @@ import classNames from "classnames";
 
 import { Classes, DISPLAYNAME_PREFIX, IProps, Keys, Utils } from "@blueprintjs/core";
 
-import { ITabProps, Tab, TabId } from "./tab";
-import { generateTabPanelId, generateTabTitleId, TabTitle } from "./tabTitle";
+import { ITabProps, Tab, TabId } from "./Tab";
+import { generateTabPanelId, generateTabTitleId, TabTitle } from "./TabTitle";
 
 export const Expander: React.FC<{}> = () => <div className={Classes.FLEX_EXPANDER} />;
 
