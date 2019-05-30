@@ -1,7 +1,6 @@
-import { dropRight, isEqual } from "lodash";
+import { cloneDeep, dropRight, isEqual } from "lodash";
 
 import { dashboardStore, DashboardStore } from "./DashboardStore";
-import { isTabbedPanel } from "../models/panel";
 import { Dashboard } from "../models/Dashboard";
 import { WidgetInstance } from "../models/WidgetInstance";
 import {
@@ -10,26 +9,41 @@ import {
     DropData,
     DropDataType,
     InstanceDragData,
-    MosaicDropData,
-    TablistDropData,
+    setSaveSnapshotCallback,
     WidgetDragData,
     WindowDragData
 } from "../shared/dragAndDrop";
-import { MosaicPath, MosaicUpdate } from "../features/MosaicDashboard/types";
+import { MosaicUpdate } from "../features/MosaicDashboard/types";
 import { createDragToUpdates, updateTree } from "../features/MosaicDashboard/util/mosaicUpdates";
 import { dashboardService, DashboardService } from "./DashboardService";
+import { DashboardNode } from "../components/widget-dashboard/types";
 
 export class DragDropService {
     private readonly dashboardStore: DashboardStore;
     private readonly dashboardService: DashboardService;
 
+    private snapshot: DashboardNode | null = null;
+
     constructor(_dashboardStore?: DashboardStore, _dashboardService?: DashboardService) {
         this.dashboardStore = _dashboardStore || dashboardStore;
         this.dashboardService = _dashboardService || dashboardService;
+
+        setSaveSnapshotCallback(() => this.saveSnapshot());
+    }
+
+    saveSnapshot(): void {
+        const dashboard = this.getCurrentDashboard();
+        this.snapshot = cloneDeep(dashboard.state().value.tree);
+    }
+
+    restoreSnapshot(): void {
+        this.dashboardService.setLayout(this.snapshot);
+        this.snapshot = null;
     }
 
     handleDropEvent(dragData: DragData | undefined, dropData: DropData): void {
-        if (!dragData) return;
+        if (!dragData || dropData.type !== DropDataType.MOSAIC) return;
+
         switch (dragData.type) {
             case DragDataType.WINDOW:
                 return this.handleWindowDropEvent(dragData, dropData);
@@ -37,6 +51,32 @@ export class DragDropService {
                 return this.handleWidgetDropEvent(dragData, dropData);
             case DragDataType.INSTANCE:
                 return this.handleInstanceDropEvent(dragData, dropData);
+        }
+    }
+
+    private handleWindowDropEvent(dragData: WindowDragData, dropData: DropData): void {
+        if (dropData.position !== "center") {
+            this.moveWindowToMosaic(dragData, dropData);
+        } else {
+            this.moveWindowToPanel(dragData, dropData);
+        }
+    }
+
+    private handleWidgetDropEvent(dragData: WidgetDragData, dropData: DropData): void {
+        if (dropData.position !== "center") {
+            this.addWidgetToMosaic(dragData, dropData);
+        } else {
+            this.addWidgetToPanel(dragData, dropData);
+        }
+    }
+
+    private handleInstanceDropEvent(dragData: InstanceDragData, dropData: DropData): void {
+        if (dropData.type !== "mosaic") return;
+
+        if (dropData.position !== "center") {
+            this.moveInstanceToMosaic(dragData, dropData);
+        } else {
+            this.moveInstanceToPanel(dragData, dropData);
         }
     }
 
@@ -48,87 +88,7 @@ export class DragDropService {
         return dashboard;
     }
 
-    private handleWindowDropEvent(dragData: WindowDragData, dropData: DropData): void {
-        switch (dropData.type) {
-            case DropDataType.MOSAIC:
-                this.moveWindowInMosaic(dragData, dropData);
-                break;
-            case DropDataType.TABLIST:
-                this.moveWindowToTabbedPanel(dragData.path, dropData.panelId, dropData.index);
-                break;
-        }
-    }
-
-    private handleWidgetDropEvent(dragData: WidgetDragData, dropData: DropData): void {
-        switch (dropData.type) {
-            case DropDataType.MOSAIC:
-                this.dashboardService.addUserWidgetById(dragData.userWidgetId, dropData.path, dropData.position);
-                break;
-            case DropDataType.TABLIST:
-                this.addWidgetToTabbedPanel(dragData.userWidgetId, dropData.panelId, dropData.index);
-                break;
-        }
-    }
-
-    private handleInstanceDropEvent(dragData: InstanceDragData, dropData: DropData): void {
-        switch (dropData.type) {
-            case DropDataType.MOSAIC:
-                this.moveInstanceToMosaic(dragData, dropData);
-                break;
-            case DropDataType.TABLIST:
-                this.moveInstanceToTabbedPanel(dragData, dropData);
-                break;
-        }
-    }
-
-    private moveInstanceToMosaic(dragData: InstanceDragData, dropData: MosaicDropData): void {
-        const { widgetInstanceId } = dragData;
-        const { path, position } = dropData;
-        const panel = this.dashboardService.findPanelByWidgetId(widgetInstanceId);
-        if (!panel) return;
-
-        const instance = panel.closeWidget(widgetInstanceId);
-        if (!instance) return;
-
-        this.dashboardService.addWidgetInstance({ instance, path, position });
-    }
-
-    private moveInstanceToTabbedPanel(dragData: InstanceDragData, dropData: TablistDropData): void {
-        const { widgetInstanceId } = dragData;
-        const sourcePanel = this.dashboardService.findPanelByWidgetId(widgetInstanceId);
-        if (!sourcePanel) return;
-
-        const { panelId: targetPanelId } = dropData;
-        if (!targetPanelId) return;
-
-        const targetPanel = this.dashboardService.getPanelById(targetPanelId);
-        if (!targetPanel || !isTabbedPanel(targetPanel)) return;
-
-        const widgetInstance = sourcePanel.closeWidget(widgetInstanceId);
-        if (!widgetInstance) return;
-
-        targetPanel.addWidget(widgetInstance);
-    }
-
-    private addWidgetToTabbedPanel(
-        userWidgetId: number,
-        panelId: string | undefined,
-        tabIndex: number | undefined
-    ): void {
-        if (!panelId) return;
-
-        const userWidget = dashboardStore.findUserWidgetById(userWidgetId);
-        if (!userWidget) return;
-
-        const panel = this.dashboardService.getPanelById(panelId);
-        if (!panel || !isTabbedPanel(panel)) return;
-
-        const widgetInstance = WidgetInstance.create(userWidget);
-
-        panel.addWidget(widgetInstance);
-    }
-
-    private moveWindowInMosaic(dragData: WindowDragData, dropData: MosaicDropData): void {
+    private moveWindowToMosaic(dragData: WindowDragData, dropData: DropData): void {
         const dashboard = this.getCurrentDashboard();
         const layout = dashboard.state().value.tree;
         if (!layout) return;
@@ -152,22 +112,71 @@ export class DragDropService {
         this.dashboardService.setLayout(newLayout);
     }
 
-    private moveWindowToTabbedPanel(windowPath: MosaicPath, panelId: string | undefined, tabIndex: number | undefined) {
-        if (!panelId) return;
+    private moveWindowToPanel(dragData: WindowDragData, dropData: DropData): void {
+        if (!dropData.path) return;
 
         const dashboard = this.getCurrentDashboard();
-        const layout = dashboard.state().value.tree;
-        if (!layout) return;
 
-        const sourcePanel = dashboard.getPanelByPath(windowPath);
+        const sourcePanel = dashboard.getPanelByPath(dragData.path);
+        const targetPanel = this.dashboardService.getPanelByPath(dropData.path);
+        if (!sourcePanel || !targetPanel) return;
+
+        const widgetInstances = sourcePanel.state().value.widgets;
+
+        const isSuccess = targetPanel.addWidgets(widgetInstances);
+        if (!isSuccess) {
+            this.restoreSnapshot();
+        }
+    }
+
+    private addWidgetToMosaic(dragData: WidgetDragData, dropData: DropData): void {
+        this.dashboardService.addUserWidgetById(dragData.userWidgetId, dropData.path, dropData.position);
+    }
+
+    private addWidgetToPanel(dragData: WidgetDragData, dropData: DropData): void {
+        if (!dropData.path) return;
+
+        const panel = this.dashboardService.getPanelByPath(dropData.path);
+        if (!panel) return;
+
+        const userWidget = this.dashboardStore.findUserWidgetById(dragData.userWidgetId);
+        if (!userWidget) return;
+
+        const widgetInstance = WidgetInstance.create(userWidget);
+
+        panel.addWidgets(widgetInstance);
+    }
+
+    private moveInstanceToMosaic(dragData: InstanceDragData, dropData: DropData): void {
+        const { widgetInstanceId } = dragData;
+        const { path, position } = dropData;
+
+        const panel = this.dashboardService.findPanelByWidgetId(widgetInstanceId);
+        if (!panel) return;
+
+        const instance = panel.closeWidget(widgetInstanceId);
+        if (!instance) return;
+
+        this.dashboardService.addWidgetInstance({ instance, path, position });
+    }
+
+    private moveInstanceToPanel(dragData: InstanceDragData, dropData: DropData): void {
+        if (!dropData.path) return;
+
+        const { widgetInstanceId } = dragData;
+        const sourcePanel = this.dashboardService.findPanelByWidgetId(widgetInstanceId);
         if (!sourcePanel) return;
-        const widgets = sourcePanel.state().value.widgets;
 
-        const targetPanel = dashboard.getPanelById(panelId);
-        if (!targetPanel || !isTabbedPanel(targetPanel)) return;
+        const targetPanel = this.dashboardService.getPanelByPath(dropData.path);
+        if (!targetPanel) return;
 
-        dashboard.removeNode(windowPath);
-        targetPanel.addWidget(widgets);
+        const widgetInstance = sourcePanel.findWidget(widgetInstanceId);
+        if (!widgetInstance) return;
+
+        const isSuccess = targetPanel.addWidgets(widgetInstance);
+        if (isSuccess) {
+            sourcePanel.closeWidget(widgetInstanceId);
+        }
     }
 }
 

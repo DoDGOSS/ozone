@@ -1,4 +1,4 @@
-import { clone, findIndex } from "lodash";
+import { clone, findIndex, isArray } from "lodash";
 
 import { PanelState } from "./types";
 import { AbstractPanel } from "./AbstractPanel";
@@ -44,6 +44,20 @@ export class ExpandoPanel extends AbstractPanel<ExpandoPanelState> {
             ...prev,
             collapsed: nextCollapsed
         });
+    }
+
+    addWidgets(instance: WidgetInstance | WidgetInstance[]): boolean {
+        const prev = this.state$.value;
+        const { widgets } = prev;
+
+        const instances = !isArray(instance) ? [instance] : instance;
+
+        this.state$.next({
+            ...prev,
+            widgets: [...widgets, ...instances]
+        });
+
+        return true;
     }
 
     closeWidget(instanceId: string): WidgetInstance | undefined {

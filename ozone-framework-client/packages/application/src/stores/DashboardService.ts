@@ -60,6 +60,13 @@ export class DashboardService {
         return panel ? panel : null;
     }
 
+    getPanelByPath(path: MosaicPath): Panel | null {
+        const dashboard = this.store.currentDashboard().value;
+        if (dashboard === null) return null;
+
+        return dashboard.getPanelByPath(path);
+    }
+
     findPanelByWidgetId(instanceId: string): Panel | null {
         const dashboard = this.store.currentDashboard().value;
         if (dashboard === null) return null;
