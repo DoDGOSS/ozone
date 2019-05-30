@@ -20,6 +20,10 @@ export class FitPanel extends AbstractPanel<PanelState> {
         });
     }
 
+    addWidgets(instance: WidgetInstance | WidgetInstance[]): boolean {
+        return false;
+    }
+
     closeWidget(): WidgetInstance | undefined {
         const prev = this.state$.value;
 

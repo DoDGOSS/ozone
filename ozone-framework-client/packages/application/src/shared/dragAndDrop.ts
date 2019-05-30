@@ -1,13 +1,14 @@
 import {
     ConnectDragPreview,
     ConnectDragSource,
+    ConnectDropTarget,
     DragSourceConnector,
     DragSourceMonitor,
+    DropTargetConnector,
     DropTargetMonitor
 } from "react-dnd";
 import { defer } from "lodash";
 
-import { MOSAIC_CONTEXT_ID } from "../constants";
 import { MosaicPath } from "../features/MosaicDashboard/types";
 
 export const MosaicDragType = {
@@ -22,7 +23,6 @@ export interface DragSourceProps {
 export interface DragItem {
     dragData?: DragData;
     deferTimerId?: number;
-    mosaicId?: string;
 }
 
 export type DragData = WindowDragData | WidgetDragData | InstanceDragData;
@@ -61,36 +61,23 @@ export interface BeginDragEvent<P> {
 
 export type BeginDragCallback<P> = (event: BeginDragEvent<P>) => DragData | undefined;
 
-export type MosaicDropTargetPosition = "top" | "bottom" | "left" | "right" | "root" | "fill";
+export type MosaicDropTargetPosition = "top" | "bottom" | "left" | "right" | "center";
 export const MosaicDropTargetPosition = {
     TOP: "top" as "top",
     BOTTOM: "bottom" as "bottom",
     LEFT: "left" as "left",
-    RIGHT: "right" as "right"
+    RIGHT: "right" as "right",
+    CENTER: "center" as "center"
 };
 
-export type DropData = MosaicDropData | TablistDropData;
-
 export const DropDataType = {
-    MOSAIC: "mosaic",
-    TABLIST: "tablist"
+    MOSAIC: "mosaic"
 } as const;
 
-export interface MosaicDropData {
+export interface DropData {
     type: "mosaic";
     position?: MosaicDropTargetPosition;
     path?: MosaicPath;
-}
-
-export interface TablistDropData {
-    type: "tablist";
-    index?: number;
-    panelId?: string;
-}
-
-export interface MosaicDragItem {
-    mosaicId: string;
-    hideTimer: number;
 }
 
 export interface EndDragEvent<P> {
@@ -103,13 +90,17 @@ export interface EndDragEvent<P> {
 
 export type EndDragCallback<P> = (event: EndDragEvent<P>) => void;
 
-export function getDropItem(monitor: DropTargetMonitor): DragItem {
-    return monitor.getItem() || {};
+let saveSnapshot: () => void | undefined;
+
+export function setSaveSnapshotCallback(callback: () => void): void {
+    saveSnapshot = callback;
 }
 
 export function beginWidgetDrag<P>(callback: BeginDragCallback<P>): BeginDragSpec<DragItem, P> {
     return (props: P, monitor: DragSourceMonitor, component: any): DragItem => {
         let deferTimerId: number | undefined;
+
+        if (saveSnapshot) saveSnapshot();
 
         const data = callback({
             props,
@@ -125,8 +116,7 @@ export function beginWidgetDrag<P>(callback: BeginDragCallback<P>): BeginDragSpe
 
         return {
             dragData: data,
-            deferTimerId,
-            mosaicId: MOSAIC_CONTEXT_ID
+            deferTimerId
         };
     };
 }
@@ -149,6 +139,20 @@ export function endWidgetDrag<P>(callback: EndDragCallback<P>): EndDragSpec<P> {
             monitor,
             component
         });
+    };
+}
+
+export interface DropTargetProps {
+    connectDropTarget: ConnectDropTarget;
+    isOver: boolean;
+    isOverShallow: boolean;
+}
+
+export function collectDropProps(connect: DropTargetConnector, monitor: DropTargetMonitor): DropTargetProps {
+    return {
+        connectDropTarget: connect.dropTarget(),
+        isOver: monitor.isOver(),
+        isOverShallow: monitor.isOver({ shallow: true })
     };
 }
 

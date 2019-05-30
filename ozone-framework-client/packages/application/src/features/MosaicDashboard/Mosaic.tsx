@@ -3,16 +3,16 @@
 import React from "react";
 import classNames from "classnames";
 import { countBy, keys, pickBy } from "lodash";
+import { uuid } from "../../utility";
 
 import { ModernMosaicContext, MosaicContext, MosaicRootActions } from "./contextTypes";
 import { MosaicRoot } from "./MosaicRoot";
 import { MosaicZeroState } from "./MosaicZeroState";
-import { RootDropTargets } from "./RootDropTargets";
 import { MosaicKey, MosaicNode, MosaicPath, MosaicUpdate, ResizeOptions, TileRenderer } from "./types";
 import { createExpandUpdate, createHideUpdate, createRemoveUpdate, updateTree } from "./util/mosaicUpdates";
 import { getLeaves } from "./util/mosaicUtilities";
 
-import { MOSAIC_CONTEXT_ID } from "../../constants";
+import { DropTargetContainer } from "./DropTargetContainer";
 
 const DEFAULT_EXPAND_PERCENTAGE = 70;
 
@@ -72,10 +72,7 @@ export interface MosaicState<T extends MosaicKey> {
     mosaicId: string;
 }
 
-export class MosaicWithoutDragDropContext<T extends MosaicKey = string> extends React.PureComponent<
-    MosaicProps<T>,
-    MosaicState<T>
-> {
+export class Mosaic<T extends MosaicKey = string> extends React.PureComponent<MosaicProps<T>, MosaicState<T>> {
     static defaultProps = {
         onChange: () => void 0,
         zeroStateView: <MosaicZeroState />,
@@ -85,15 +82,12 @@ export class MosaicWithoutDragDropContext<T extends MosaicKey = string> extends 
     static childContextTypes = MosaicContext;
 
     static ofType<T extends MosaicKey>() {
-        return MosaicWithoutDragDropContext as new (
-            props: MosaicProps<T>,
-            context?: any
-        ) => MosaicWithoutDragDropContext<T>;
+        return Mosaic as new (props: MosaicProps<T>, context?: any) => Mosaic<T>;
     }
 
     state: MosaicState<T> = {
         currentNode: null,
-        mosaicId: MOSAIC_CONTEXT_ID
+        mosaicId: uuid()
     };
 
     getChildContext(): MosaicContext<T> {
@@ -105,7 +99,9 @@ export class MosaicWithoutDragDropContext<T extends MosaicKey = string> extends 
 
         return (
             <ModernMosaicContext.Provider value={this.childContext as MosaicContext<any>}>
-                <div className={classNames(className, "mosaic mosaic-drop-target")}>{this.renderTree()}</div>
+                <DropTargetContainer className={classNames("mosaic", className)} path={[]}>
+                    {this.renderTree()}
+                </DropTargetContainer>
             </ModernMosaicContext.Provider>
         );
     }
@@ -186,12 +182,7 @@ export class MosaicWithoutDragDropContext<T extends MosaicKey = string> extends 
             return this.props.zeroStateView!;
         } else {
             const { renderTile, resize } = this.props;
-            return (
-                <>
-                    <MosaicRoot root={root} renderTile={renderTile} resize={resize} />
-                    <RootDropTargets />
-                </>
-            );
+            return <MosaicRoot root={root} renderTile={renderTile} resize={resize} />;
         }
     }
 
@@ -206,24 +197,4 @@ export class MosaicWithoutDragDropContext<T extends MosaicKey = string> extends 
             }
         }
     }
-}
-
-// @(DragDropContext(HTML5) as ClassDecorator)
-export class Mosaic<T extends MosaicKey = string> extends MosaicWithoutDragDropContext<T> {
-    static ofType<T extends MosaicKey>() {
-        return Mosaic as new (props: MosaicProps<T>, context?: any) => Mosaic<T>;
-    }
-}
-
-// Factory that works with generics
-export function MosaicFactory<T extends MosaicKey = string>(
-    props: MosaicProps<T> & React.Attributes,
-    ...children: React.ReactNode[]
-) {
-    const element: React.ReactElement<MosaicProps<T>> = React.createElement(
-        Mosaic as React.ComponentClass<MosaicProps<T>>,
-        props,
-        ...children
-    );
-    return element;
 }

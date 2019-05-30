@@ -105,8 +105,8 @@ $mosaic-toolbar-height: 30px;
 $tablist-height: 35px;
 
 $root-drop-target-size: 20px;
-$drop-target-size-inactive: 30%;
-$drop-target-size-active: 50%;
+$drop-target-size-inactive: 100px;
+$drop-target-size-active: 100px;
 
 .mosaic-drop-target.mosaic > .drop-target-container .drop-target {
     &.left {

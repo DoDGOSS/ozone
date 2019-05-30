@@ -1,4 +1,4 @@
-import { findIndex, isArray, last } from "lodash";
+import { findIndex, isArray } from "lodash";
 
 import { PanelState } from "./types";
 import { AbstractPanel } from "./AbstractPanel";
@@ -29,17 +29,18 @@ export class TabbedPanel extends AbstractPanel<TabbedPanelState> {
         });
     }
 
-    addWidget(instance: WidgetInstance | WidgetInstance[]): void {
+    addWidgets(instance: WidgetInstance | WidgetInstance[]): boolean {
         const prev = this.state$.value;
-        const { activeWidget, widgets } = prev;
+        const { widgets } = prev;
 
         const instances = !isArray(instance) ? [instance] : instance;
 
         this.state$.next({
             ...prev,
-            widgets: [...widgets, ...instances],
-            activeWidget: last(instances) || activeWidget
+            widgets: [...widgets, ...instances]
         });
+
+        return true;
     }
 
     closeWidget(instanceId: string): WidgetInstance | undefined {
