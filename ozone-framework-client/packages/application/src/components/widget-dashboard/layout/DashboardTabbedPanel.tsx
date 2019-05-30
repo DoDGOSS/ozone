@@ -28,7 +28,6 @@ export const DashboardTabbedPanel: React.FC<DashboardTabbedPanelProps> = ({ pane
     return (
         <Tabs
             id={panel.id}
-            panelId={panel.id}
             selectedTabId={activeWidget ? `tab-${activeWidget.id}` : undefined}
             onChange={setActiveWidget}
             className={styles.tabsList}

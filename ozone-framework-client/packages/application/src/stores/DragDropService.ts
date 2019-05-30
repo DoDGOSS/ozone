@@ -178,6 +178,9 @@ export class DragDropService {
         const targetPanel = this.dashboardService.getPanelByPath(dropData.path);
         if (!targetPanel) return;
 
+        // Ignore drops when the instance is already in the target panel
+        if (sourcePanel === targetPanel) return;
+
         const widgetInstance = sourcePanel.findWidget(widgetInstanceId);
         if (!widgetInstance) return;
 
