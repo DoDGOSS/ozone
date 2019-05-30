@@ -81,8 +81,6 @@ export interface ITabsProps extends IProps {
      */
     vertical?: boolean;
 
-    panelId: string;
-
     /**
      * A callback function that is invoked when a tab in the tab list is clicked.
      */
