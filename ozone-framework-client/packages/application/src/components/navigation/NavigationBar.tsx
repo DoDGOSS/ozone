@@ -56,7 +56,7 @@ export const NavigationBar: React.FC<PropsBase> = ({ className }) => {
             <NavbarGroup className={styles.group} align={Alignment.RIGHT}>
                 <Button minimal icon="floppy-disk" onClick={() => dashboardStore.saveCurrentDashboard()} />
                 <Popover position={Position.BOTTOM_RIGHT} minimal={true} content={<AddLayoutMenu />}>
-                    <Button minimal icon="add" />
+                    <Button minimal icon="add" data-element-id="add-layout" />
                 </Popover>
                 <NavbarDivider />
                 <ThemeButton onClick={mainStore.toggleTheme} />
@@ -71,7 +71,11 @@ const AddLayoutMenu: React.FC<{}> = () => {
     return (
         <Menu>
             <MenuItem text="Fit Panel" onClick={() => dashboardService.addLayout_TEMP("fit")} />
-            <MenuItem text="Tabbed Panel" onClick={() => dashboardService.addLayout_TEMP("tabbed")} />
+            <MenuItem
+                text="Tabbed Panel"
+                data-element-id="tabbed-panel"
+                onClick={() => dashboardService.addLayout_TEMP("tabbed")}
+            />
             <MenuItem text="Accordion Panel" onClick={() => dashboardService.addLayout_TEMP("accordion")} />
             <MenuItem text="Portal Panel" onClick={() => dashboardService.addLayout_TEMP("portal")} />
         </Menu>

@@ -48,6 +48,20 @@ export class DashboardAPI {
         });
     }
 
+    async restoreDashboard(
+        data: DashboardUpdateRequest,
+        options?: DashboardUpdateParams
+    ): Promise<Response<DashboardUpdateResponse>> {
+        const requestData = buildDashboardUpdateRequest(data, options);
+
+        return this.gateway.post(`dashboard/restore/${data.guid}/`, requestData, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            validate: validateDashboardUpdateResponse
+        });
+    }
+
     async updateDashboard(
         data: DashboardUpdateRequest,
         options?: DashboardUpdateParams
