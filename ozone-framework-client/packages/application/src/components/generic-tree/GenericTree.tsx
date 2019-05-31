@@ -1,5 +1,8 @@
 import React from "react";
 import { Classes, Icon, Intent, ITreeNode, Position, Tooltip, Tree } from "@blueprintjs/core";
+import { dashboardApi, DashboardAPI } from "../../api/clients/DashboardAPI";
+import { dashboardStore, DashboardStore } from "../../stores/DashboardStore";
+import { mainStore, MainStore } from "../../stores/MainStore";
 
 interface Props {
     nodes: ITreeNode[];
@@ -40,7 +43,8 @@ export class GenericTree extends React.Component<State, Props> {
         this.setState(this.state);
     };
 
-    private handleNodeDoubleClick = (nodeData: ITreeNode) => {
-        console.log("CODE HERE TO OPEN STACK OR DASHBOARD FOR: " + nodeData.label);
+    private handleNodeDoubleClick = async (nodeData: ITreeNode): Promise<any> => {
+        const response = await dashboardStore.fetchUserDashboards(nodeData.id);
+        mainStore.hideStackDialog();
     };
 }

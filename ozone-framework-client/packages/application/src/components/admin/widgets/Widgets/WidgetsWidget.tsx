@@ -11,7 +11,7 @@ import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 
 import { GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
-import { EditMenu } from "./export/EditMenu"
+import { EditMenu } from "./export/EditMenu";
 import { ExportDialog } from "./export/ExportDialog";
 import { ExportErrorDialog } from "./export/ExportErrorDialog";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
@@ -130,14 +130,13 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                                     this.showSubSection(WidgetWidgetSubSection.SETUP);
                                 }}
                             />
-                            <Popover content={this.renderEditMenu(row.original)}
-                              position={Position.BOTTOM_RIGHT}>
-                              <Button
-                                data-element-id="edit-menu-button"
-                                data-widget-title={row.original.value.namespace ? row.original.value.namespace : ""}
-                                rightIcon="caret-down"
-                                intent={Intent.PRIMARY}
-                              />
+                            <Popover content={this.renderEditMenu(row.original)} position={Position.BOTTOM_RIGHT}>
+                                <Button
+                                    data-element-id="edit-menu-button"
+                                    data-widget-title={row.original.value.namespace ? row.original.value.namespace : ""}
+                                    rightIcon="caret-down"
+                                    intent={Intent.PRIMARY}
+                                />
                             </Popover>
                             <Divider />
                             <Tooltip
@@ -218,21 +217,20 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
     };
 
     private renderEditMenu = (widget: WidgetDTO) => {
-      return (<EditMenu openExportDialog={() => this.setState({exportDialog: this.renderExportDialog(widget)})} />);
-    }
+        return <EditMenu openExportDialog={() => this.setState({ exportDialog: this.renderExportDialog(widget) })} />;
+    };
 
     private renderExportDialog = (widget: WidgetDTO) => {
-      return (<ExportDialog
-        widget={widget}
-        onClose={() => this.setState({exportDialog: undefined})}
-        openExportErrorDialog={() => this.setState({exportErrorDialog: this.renderExportErrorDialog(widget)})}
-      />);
-    }
+        return (
+            <ExportDialog
+                widget={widget}
+                onClose={() => this.setState({ exportDialog: undefined })}
+                openExportErrorDialog={() => this.setState({ exportErrorDialog: this.renderExportErrorDialog(widget) })}
+            />
+        );
+    };
 
     private renderExportErrorDialog = (widget: WidgetDTO) => {
-      return (<ExportErrorDialog
-        widget={widget}
-        onClose={() => this.setState({exportErrorDialog: undefined})}
-      />);
-    }
+        return <ExportErrorDialog widget={widget} onClose={() => this.setState({ exportErrorDialog: undefined })} />;
+    };
 }
