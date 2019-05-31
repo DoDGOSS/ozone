@@ -4,7 +4,7 @@ import React from "react";
 import { DragSource } from "react-dnd";
 
 import { mainStore } from "../../../stores/MainStore";
-import { dragDropService } from "../../../stores/DragDropService";
+import { dragDropService } from "../../../services/DragDropService";
 
 import {
     beginWidgetDrag,
@@ -42,7 +42,8 @@ const dragSpec = {
             userWidgetId: props.userWidgetId
         };
     }),
-    endDrag: endWidgetDrag<Props>(dragDropService.handleDropEvent)
+    endDrag: endWidgetDrag<Props>(dragDropService.handleDropEvent),
+    canDrag: dragDropService.canDrag
 };
 
 export const UserWidgetTile = DragSource(MosaicDragType.WINDOW, dragSpec, collectDragProps)(

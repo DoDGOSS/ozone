@@ -3,7 +3,7 @@ import styles from "../index.scss";
 import React, { useCallback } from "react";
 import { useToggleable } from "../../../hooks";
 
-import { dashboardService } from "../../../stores/DashboardService";
+import { dashboardService } from "../../../services/DashboardService";
 import { userWidgetApi } from "../../../api/clients/UserWidgetAPI";
 import { dashboardStore } from "../../../stores/DashboardStore";
 import { UserWidget } from "../../../models/UserWidget";
@@ -23,7 +23,7 @@ const _UserWidgetItem: React.FC<UserWidgetItemProps> = ({ userWidget }) => {
     const deleteConfirmation = useToggleable(false);
 
     const addWidget = useCallback(() => {
-        dashboardService.addWidget(userWidget);
+        dashboardService.addWidget({ widget: userWidget });
     }, [userWidget]);
 
     const deleteWidget = useCallback(() => {

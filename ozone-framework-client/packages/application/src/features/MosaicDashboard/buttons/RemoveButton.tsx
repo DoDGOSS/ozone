@@ -1,20 +1,23 @@
 import React from "react";
-import classNames from "classnames";
 
 import { MosaicWindowContext } from "../contextTypes";
 import { MosaicKey } from "../types";
-import { getBlueprintIconClass } from "../util/blueprint";
-import { createDefaultToolbarButton, MosaicButtonProps } from "./MosaicButton";
+import { MosaicButtonProps } from "./MosaicButton";
+import { Button } from "@blueprintjs/core";
 
 export class RemoveButton<T extends MosaicKey> extends React.PureComponent<MosaicButtonProps> {
     static contextTypes = MosaicWindowContext;
     context!: MosaicWindowContext<T>;
 
     render() {
-        return createDefaultToolbarButton(
-            "Close Window",
-            classNames("close-button", getBlueprintIconClass("CROSS")),
-            this.remove
+        return (
+            <Button
+                minimal
+                className="mosaic-default-control close-button"
+                title={"Close Window"}
+                icon="cross"
+                onClick={this.remove}
+            />
         );
     }
 
@@ -25,5 +28,3 @@ export class RemoveButton<T extends MosaicKey> extends React.PureComponent<Mosai
         }
     };
 }
-
-export const RemoveButtonFactory = React.createFactory(RemoveButton);

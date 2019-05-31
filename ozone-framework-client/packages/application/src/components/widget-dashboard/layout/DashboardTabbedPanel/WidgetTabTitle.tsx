@@ -6,6 +6,7 @@ import { Button } from "@blueprintjs/core";
 
 import { TabbedPanel } from "../../../../models/panel";
 import { WidgetInstance } from "../../../../models/WidgetInstance";
+import { dashboardStore } from "../../../../stores/DashboardStore";
 
 export interface WidgetTabTitleProps {
     panel: TabbedPanel;
@@ -15,6 +16,9 @@ export interface WidgetTabTitleProps {
 export const WidgetTabTitle: React.FC<WidgetTabTitleProps> = (props) => {
     const { panel, widget } = props;
 
+    const dashboard = useBehavior(dashboardStore.currentDashboard);
+    const { isLocked } = useBehavior(dashboard.state);
+
     const { widgets } = useBehavior(panel.state);
     const controls = useMemo(() => panel.getMoveControls(widget), [widgets]);
 
@@ -23,8 +27,8 @@ export const WidgetTabTitle: React.FC<WidgetTabTitleProps> = (props) => {
     return (
         <div className={styles.tabTitle}>
             <span className={styles.tabTitleText}>{widget.userWidget.title}</span>
-            <Button className={styles.tabTitleClose} icon="cross" minimal={true} onClick={closeWidget} />
-            {controls.canMoveLeft && (
+            {!isLocked && <Button className={styles.tabTitleClose} icon="cross" minimal={true} onClick={closeWidget} />}
+            {!isLocked && controls.canMoveLeft && (
                 <Button
                     className={styles.tabTitleMove}
                     icon="chevron-left"
@@ -32,7 +36,7 @@ export const WidgetTabTitle: React.FC<WidgetTabTitleProps> = (props) => {
                     onClick={controls.moveLeft}
                 />
             )}
-            {controls.canMoveRight && (
+            {!isLocked && controls.canMoveRight && (
                 <Button
                     className={styles.tabTitleMove}
                     icon="chevron-right"

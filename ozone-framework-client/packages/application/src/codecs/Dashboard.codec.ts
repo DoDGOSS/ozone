@@ -186,6 +186,7 @@ export function dashboardToUpdateRequest(dashboard: Dashboard): DashboardUpdateR
         iconImageUrl: state.imageUrl,
         isdefault: state.isDefault,
         layoutConfig: JSON.stringify(dashboardLayoutToJson(state)),
+        locked: state.isLocked,
         name: state.name
     };
 }

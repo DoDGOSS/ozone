@@ -1,18 +1,20 @@
-import styles from "./index.scss";
+import styles from "../index.scss";
 
 import React, { useMemo } from "react";
 
 import { Classes, Menu } from "@blueprintjs/core";
-import { mainStore } from "../../stores/MainStore";
-import { authStore } from "../../stores/AuthStore";
+import { mainStore } from "../../../stores/MainStore";
+import { authStore } from "../../../stores/AuthStore";
 
-import { classNames } from "../../utility";
-import { useBehavior } from "../../hooks";
-import { env } from "../../environment";
+import { classNames } from "../../../utility";
+import { useBehavior } from "../../../hooks";
+import { env } from "../../../environment";
 
 export const UserMenu: React.FC = () => {
     const logoutOpts = useMemo(() => env().logout, []);
-    const isAdmin = useBehavior(authStore.user) ? useBehavior(authStore.user)!.isAdmin : false;
+
+    const user = useBehavior(authStore.user);
+    const isAdmin = user && user.isAdmin;
 
     return (
         <Menu data-element-id="user-menu" className={classNames(styles.userMenu, Classes.ELEVATION_1)}>

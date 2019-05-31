@@ -4,9 +4,9 @@ import React from "react";
 import { Icon } from "@blueprintjs/core";
 import classNames from "classnames";
 import { isEmpty } from "lodash";
-import { ConnectableElement, ConnectDropTarget, DragSource, DropTarget } from "react-dnd";
+import { ConnectableElement, DragSource } from "react-dnd";
 
-import { dragDropService } from "../../stores/DragDropService";
+import { dragDropService } from "../../services/DragDropService";
 import {
     beginWidgetDrag,
     collectDragProps,
@@ -90,15 +90,7 @@ export class InternalMosaicWindow<T extends MosaicKey> extends React.Component<
     }
 
     render() {
-        const {
-            className,
-            isOver,
-            renderPreview,
-            additionalControls,
-            connectDropTarget,
-            connectDragPreview,
-            path
-        } = this.props;
+        const { className, renderPreview, additionalControls, connectDragPreview, path } = this.props;
 
         return (
             <ModernMosaicWindowContext.Provider value={this.childContext}>
@@ -244,14 +236,15 @@ export class InternalMosaicWindow<T extends MosaicKey> extends React.Component<
 }
 
 const dragSpec = {
-    beginDrag: beginWidgetDrag<InternalMosaicWindowProps<any>>(({ props, defer, component }) => {
+    beginDrag: beginWidgetDrag<InternalMosaicWindowProps<any>>(({ defer, component }) => {
         defer(() => component.context.mosaicActions.hide(component.props.path));
         return {
             type: DragDataType.WINDOW,
             path: component.props.path
         };
     }),
-    endDrag: endWidgetDrag<InternalMosaicWindowProps<any>>(dragDropService.handleDropEvent)
+    endDrag: endWidgetDrag<InternalMosaicWindowProps<any>>(dragDropService.handleDropEvent),
+    canDrag: dragDropService.canDrag
 };
 
 // Each step exported here just to keep react-hot-loader happy

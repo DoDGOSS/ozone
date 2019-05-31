@@ -4,7 +4,7 @@ import { useBehavior } from "../../hooks";
 import { Button, Classes, Dialog, Intent } from "@blueprintjs/core";
 
 import { mainStore } from "../../stores/MainStore";
-import { dashboardService } from "../../stores/DashboardService";
+import { dashboardService } from "../../services/DashboardService";
 
 import { defaults } from "lodash";
 
