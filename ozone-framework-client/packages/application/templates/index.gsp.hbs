@@ -29,6 +29,7 @@
             isEnabled: ${grailsApplication.config.getProperty("owf.logout.enabled")},
             logoutUrl: '${grailsApplication.config.getProperty("owf.logout.url")}'
         };
+        window.env.autoSaveInterval = ${grailsApplication.config.getProperty("owf.autoSaveInterval")};
     </script>
 
 {{#each scripts as |script|}}
