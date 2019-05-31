@@ -54,7 +54,7 @@ const _NavigationBar: React.FC<PropsBase> = ({ className }) => {
                 <Button minimal icon="floppy-disk" onClick={() => dashboardStore.saveCurrentDashboard()} />
                 {!isLocked && (
                     <Popover position={Position.BOTTOM_RIGHT} minimal={true} content={<AddLayoutMenu />}>
-                    <Button minimal icon="add" data-element-id="add-layout" />
+                        <Button minimal icon="add" data-element-id="add-layout" />
                     </Popover>
                 )}
                 <NavbarDivider />

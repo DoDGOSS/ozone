@@ -1,6 +1,3 @@
-import { IdDTO } from "./IdDTO";
-import { createValidator } from "./validate";
-
 export interface HelpDTO {
     text: string;
     path: string;
