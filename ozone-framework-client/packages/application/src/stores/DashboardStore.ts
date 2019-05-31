@@ -92,8 +92,9 @@ export class DashboardStore {
     };
 
     saveCurrentDashboard = async () => {
+        if (this.isLoading$.value) return;
+
         const currentDashboard = this.currentDashboard$.value;
-        if (currentDashboard === null) return;
 
         const request = dashboardToUpdateRequest(currentDashboard);
 

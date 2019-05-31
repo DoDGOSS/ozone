@@ -1,8 +1,4 @@
-import * as qs from "qs";
-
 import { Gateway, getGateway, Response } from "../interfaces";
-
-import { HelpGetResponse } from "./../models/HelpDTO";
 
 export class HelpAPI {
     private readonly gateway: Gateway;

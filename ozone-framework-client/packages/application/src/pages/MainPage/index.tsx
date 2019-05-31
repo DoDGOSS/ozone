@@ -4,6 +4,7 @@ import "regenerator-runtime/runtime";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/select/lib/css/blueprint-select.css";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 import "../../features/MosaicDashboard/mosaic-dashboard.scss";
 

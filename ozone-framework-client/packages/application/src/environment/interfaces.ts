@@ -10,6 +10,7 @@ export interface Environment {
     logout: LogoutOptions;
     consentNotice: ConsentNoticeOptions;
     userAgreement: UserAgreementOptions;
+    autoSaveInterval?: number;
 }
 
 export interface ServerOptions {

@@ -2,8 +2,6 @@ import * as React from "react";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
-import { classNames } from "../../utility";
-
 import * as styles from "./index.scss";
 import { useBehavior } from "../../hooks";
 import { authStore } from "../../stores/AuthStore";
