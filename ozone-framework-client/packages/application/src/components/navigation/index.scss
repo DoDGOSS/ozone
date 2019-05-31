@@ -22,19 +22,21 @@ $hoverIndicatorWidth: 4px;
 
     &.bp3-minimal {
       &:hover, &:active, &.bp3-active {
-        color: $navbarHovorColor;
-        background: $background-color_dark;
-
-        border-top: $hoverIndicatorWidth solid $navbarHovorColor;
-        border-bottom: $hoverIndicatorWidth solid transparent;
-        border-radius: 0;
-
-        .bp3-icon {
+        &:not(.bp3-disabled) {
           color: $navbarHovorColor;
-        }
+          background: $background-color_dark;
 
-        .bp3-button-text {
-          color: $navbarHovorColor;
+          border-top: $hoverIndicatorWidth solid $navbarHovorColor;
+          border-bottom: $hoverIndicatorWidth solid transparent;
+          border-radius: 0;
+
+          .bp3-icon {
+            color: $navbarHovorColor;
+          }
+
+          .bp3-button-text {
+            color: $navbarHovorColor;
+          }
         }
       }
     }

@@ -1,18 +1,18 @@
 import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
-import { dashboardStore, DashboardStore } from "./DashboardStore";
-import { ExpandoPanel, FitPanel, isTabbedPanel, LayoutType, Panel, PanelState, TabbedPanel } from "../models/panel";
+import { dashboardStore, DashboardStore } from "../stores/DashboardStore";
+import { ExpandoPanel, FitPanel, LayoutType, Panel, PanelState, TabbedPanel } from "../models/panel";
 import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
-import { AddWidgetInstanceOpts, Dashboard } from "../models/Dashboard";
+import { AddWidgetOpts, Dashboard, DashboardProps } from "../models/Dashboard";
 import { UserWidget } from "../models/UserWidget";
 
-import { WidgetLaunchArgs } from "../services/WidgetLaunchArgs";
+import { WidgetLaunchArgs } from "./WidgetLaunchArgs";
 
 import { isNil, Predicate, values } from "../utility";
-import { WidgetInstance } from "../models/WidgetInstance";
 import { MosaicPath } from "../features/MosaicDashboard/types";
 import { MosaicDropTargetPosition } from "../shared/dragAndDrop";
+import { errorStore } from "./ErrorStore";
 
 export class DashboardService {
     private readonly store: DashboardStore;
@@ -52,19 +52,16 @@ export class DashboardService {
         return dashboard;
     };
 
-    getPanelById(panelId: string): Panel | null {
-        const dashboard = this.store.currentDashboard().value;
-        if (dashboard === null) return null;
+    private get dashboard(): Dashboard {
+        return this.store.currentDashboard().value;
+    }
 
-        const panel = dashboard.state().value.panels[panelId];
-        return panel ? panel : null;
+    private get dashboardState(): DashboardProps {
+        return this.dashboard.state().value;
     }
 
     getPanelByPath(path: MosaicPath): Panel | null {
-        const dashboard = this.store.currentDashboard().value;
-        if (dashboard === null) return null;
-
-        return dashboard.getPanelByPath(path);
+        return this.dashboard.getPanelByPath(path);
     }
 
     findPanelByWidgetId(instanceId: string): Panel | null {
@@ -80,33 +77,29 @@ export class DashboardService {
     }
 
     setLayout = (tree: DashboardNode | null) => {
-        this.getCurrentDashboard().setLayout(tree);
+        this.dashboard.setLayout(tree);
     };
 
     setLayoutFast = (tree: DashboardNode | null) => {
-        this.getCurrentDashboard().setLayoutFast(tree);
+        this.dashboard.setLayoutFast(tree);
     };
 
     setPanelLayout = (panel: Panel<PanelState>, path: DashboardPath, layout: LayoutType) => {
-        this.getCurrentDashboard().setPanelLayout(panel, path, layout);
+        this.dashboard.setPanelLayout(panel, path, layout);
     };
 
     /**
-     * Add a UserWidget to the current Dashboard
+     * Add a UserWidget or WidgetInstance to the current Dashboard
      *
      * @returns true -- if the Widget was opened successfully
      */
-    addWidget(userWidget: UserWidget, title?: string): boolean {
-        return this.getCurrentDashboard().addWidget({ userWidget, title });
-    }
+    addWidget(opts: AddWidgetOpts): boolean {
+        if (this.dashboardState.isLocked) {
+            errorStore.notice("Dashboard Locked", "The current Dashboard is locked and Widgets may not be added.");
+            return false;
+        }
 
-    /**
-     * Add a Widget instance to the current Dashboard
-     *
-     * @returns true -- if the Widget was opened successfully
-     */
-    addWidgetInstance(opts: AddWidgetInstanceOpts): boolean {
-        return this.getCurrentDashboard().addWidgetInstance(opts);
+        return this.dashboard.addWidget(opts);
     }
 
     /**
@@ -118,7 +111,7 @@ export class DashboardService {
         const userWidget = dashboardStore.findUserWidgetById(id);
         if (!userWidget) return false;
 
-        return this.getCurrentDashboard().addWidget({ userWidget, path, position });
+        return this.addWidget({ widget: userWidget, path, position });
     }
 
     /**
@@ -132,7 +125,7 @@ export class DashboardService {
 
         userWidget.launchData = args.data;
 
-        return this.addWidget(userWidget, args.title);
+        return this.addWidget({ widget: userWidget, title: args.title });
     }
 
     addLayout_TEMP = (layout: LayoutType) => {

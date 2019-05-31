@@ -23,7 +23,7 @@ import { DragSource } from "react-dnd";
 
 import { Classes, DISPLAYNAME_PREFIX } from "@blueprintjs/core";
 
-import { dragDropService } from "../../../../stores/DragDropService";
+import { dragDropService } from "../../../../services/DragDropService";
 import {
     beginWidgetDrag,
     collectDragProps,
@@ -91,7 +91,8 @@ const dragSpec = {
             widgetInstanceId: props.widgetInstanceId
         };
     }),
-    endDrag: endWidgetDrag<Props>(dragDropService.handleDropEvent)
+    endDrag: endWidgetDrag<Props>(dragDropService.handleDropEvent),
+    canDrag: dragDropService.canDrag
 };
 
 export const TabTitle = DragSource(MosaicDragType.WINDOW, dragSpec, collectDragProps)(

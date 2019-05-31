@@ -1,17 +1,21 @@
-import * as styles from "./DashboardPanel.scss";
+import styles from "./DashboardPanel.scss";
 
 import React, { ReactNode } from "react";
+import { useBehavior } from "../../../hooks";
+import { isEqual } from "lodash";
 
 import { isExpandoPanel, isFitPanel, isTabbedPanel, Panel, PanelState } from "../../../models/panel";
+
+import { ExpandButton } from "../../../features/MosaicDashboard/buttons/ExpandButton";
+import { RemoveButton } from "../../../features/MosaicDashboard/buttons/RemoveButton";
+import { dashboardStore } from "../../../stores/DashboardStore";
+
 import { DashboardPath, DashboardWindow } from "../types";
+import { OptionsButton } from "../internal/OptionsButton";
 
-import { DashboardTabbedPanel } from "./DashboardTabbedPanel";
-import { DashboardFitPanel } from "./DashboardFitPanel";
 import { DashboardExpandoPanel } from "./DashboardExpandoPanel";
-import { createWidgetToolbar } from "../toolbar";
-
-import { isEqual } from "lodash";
-import { classNames } from "../../../utility";
+import { DashboardFitPanel } from "./DashboardFitPanel";
+import { DashboardTabbedPanel } from "./DashboardTabbedPanel";
 
 export interface DashboardPanelProps {
     panel: Panel<PanelState>;
@@ -19,12 +23,23 @@ export interface DashboardPanelProps {
 }
 
 const _DashboardPanel: React.FC<DashboardPanelProps> = ({ panel, path }) => {
+    const dashboard = useBehavior(dashboardStore.currentDashboard);
+    const { isLocked } = useBehavior(dashboard.state);
+
+    const toolbarControls = (
+        <>
+            {!isLocked && <OptionsButton panel={panel} path={path} />}
+            <ExpandButton />
+            {!isLocked && <RemoveButton />}
+        </>
+    );
+
     return (
         <DashboardWindow
-            className={classNames(styles.dashboardWindow, { "-tabbed": isTabbedPanel(panel) })}
+            className={styles.dashboardWindow}
             path={path}
             title={panel.title}
-            toolbarControls={createWidgetToolbar(panel, path)}
+            toolbarControls={toolbarControls}
         >
             {createPanel(panel)}
         </DashboardWindow>

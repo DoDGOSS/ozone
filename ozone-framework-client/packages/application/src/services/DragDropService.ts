@@ -1,7 +1,7 @@
 import { cloneDeep, isEqual } from "lodash";
 
-import { dashboardStore, DashboardStore } from "./DashboardStore";
-import { Dashboard } from "../models/Dashboard";
+import { dashboardStore, DashboardStore } from "../stores/DashboardStore";
+import { Dashboard, DashboardProps } from "../models/Dashboard";
 import { WidgetInstance } from "../models/WidgetInstance";
 import {
     DragDataType,
@@ -31,14 +31,15 @@ export class DragDropService {
     }
 
     saveSnapshot(): void {
-        const dashboard = this.getCurrentDashboard();
-        this.snapshot = cloneDeep(dashboard.state().value.tree);
+        this.snapshot = cloneDeep(this.dashboardState.tree);
     }
 
     restoreSnapshot(): void {
         if (!this.snapshot) return;
         this.dashboardService.setLayout(this.snapshot);
     }
+
+    canDrag = (): boolean => !this.dashboardState.isLocked;
 
     handleDropEvent = (event: EndDragEvent<any>): void => {
         const { dragData, dropData, monitor } = event;
@@ -66,6 +67,14 @@ export class DragDropService {
         this.snapshot = null;
     };
 
+    private get dashboard(): Dashboard {
+        return this.dashboardStore.currentDashboard().value;
+    }
+
+    private get dashboardState(): DashboardProps {
+        return this.dashboard.state().value;
+    }
+
     private handleWindowDropEvent(dragData: WindowDragData, dropData: DropData): void {
         if (dropData.position !== "center") {
             this.moveWindowToMosaic(dragData, dropData);
@@ -92,17 +101,8 @@ export class DragDropService {
         }
     }
 
-    private getCurrentDashboard(): Dashboard {
-        const dashboard = this.dashboardStore.currentDashboard().value;
-        if (dashboard === null) {
-            throw new Error("No Dashboard is available");
-        }
-        return dashboard;
-    }
-
     private moveWindowToMosaic(dragData: WindowDragData, dropData: DropData): void {
-        const dashboard = this.getCurrentDashboard();
-        const layout = dashboard.state().value.tree;
+        const layout = this.dashboardState.tree;
         if (!layout) return;
 
         const { position, path: targetPath } = dropData;
@@ -121,7 +121,7 @@ export class DragDropService {
     private moveWindowToPanel(dragData: WindowDragData, dropData: DropData): void {
         if (!dropData.path) return;
 
-        const dashboard = this.getCurrentDashboard();
+        const dashboard = this.dashboard;
 
         const sourcePanel = dashboard.getPanelByPath(dragData.path);
         const targetPanel = this.dashboardService.getPanelByPath(dropData.path);
@@ -165,7 +165,7 @@ export class DragDropService {
         const instance = panel.closeWidget(widgetInstanceId);
         if (!instance) return;
 
-        this.dashboardService.addWidgetInstance({ instance, path, position });
+        this.dashboardService.addWidget({ widget: instance, path, position });
     }
 
     private moveInstanceToPanel(dragData: InstanceDragData, dropData: DropData): void {

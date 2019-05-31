@@ -48,6 +48,19 @@ export class ErrorStore {
             )
         });
     };
+
+    notice = (title: string, message: string) => {
+        ErrorToaster.show({
+            icon: "warning-sign",
+            intent: Intent.WARNING,
+            message: (
+                <>
+                    <div style={{ fontWeight: "bold" }}>{title}</div>
+                    <div>{message}</div>
+                </>
+            )
+        });
+    };
 }
 
 export const errorStore = new ErrorStore();

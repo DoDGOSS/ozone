@@ -7,7 +7,7 @@ import { Spinner } from "@blueprintjs/core";
 
 import { PropsBase } from "../../common";
 
-import { dashboardService } from "../../stores/DashboardService";
+import { dashboardService } from "../../services/DashboardService";
 import { dashboardStore } from "../../stores/DashboardStore";
 import { mainStore } from "../../stores/MainStore";
 

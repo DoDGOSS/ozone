@@ -5,7 +5,7 @@ import { useBehavior } from "../../../../hooks";
 import { DragSource } from "react-dnd";
 import { Button } from "@blueprintjs/core";
 
-import { dragDropService } from "../../../../stores/DragDropService";
+import { dragDropService } from "../../../../services/DragDropService";
 import {
     beginWidgetDrag,
     collectDragProps,
@@ -17,6 +17,7 @@ import {
 
 import { ExpandoPanel } from "../../../../models/panel";
 import { WidgetInstance } from "../../../../models/WidgetInstance";
+import { dashboardStore } from "../../../../stores/DashboardStore";
 
 export interface ExpandoHeaderProps {
     panel: ExpandoPanel;
@@ -29,6 +30,9 @@ type ExpandoHeaderDndProps = ExpandoHeaderProps & DragSourceProps;
 const _ExpandoHeader: React.FC<ExpandoHeaderDndProps> = (props) => {
     const { panel, widget, collapsed, connectDragSource } = props;
 
+    const dashboard = useBehavior(dashboardStore.currentDashboard);
+    const { isLocked } = useBehavior(dashboard.state);
+
     const { widgets } = useBehavior(panel.state);
     const moveControls = useMemo(() => panel.getMoveControls(widget), [widgets]);
 
@@ -40,22 +44,28 @@ const _ExpandoHeader: React.FC<ExpandoHeaderDndProps> = (props) => {
         <div className={styles.header} draggable={true}>
             <span className={styles.headerTitle}>{widget.userWidget.title}</span>
             <span className={styles.headerControls}>
-                <Button
-                    className={styles.headerButton}
-                    icon="chevron-up"
-                    minimal={true}
-                    disabled={!moveControls.canMoveUp}
-                    onClick={moveControls.moveUp}
-                />
-                <Button
-                    className={styles.headerButton}
-                    icon="chevron-down"
-                    minimal={true}
-                    disabled={!moveControls.canMoveDown}
-                    onClick={moveControls.moveDown}
-                />
+                {!isLocked && (
+                    <Button
+                        className={styles.headerButton}
+                        icon="chevron-up"
+                        minimal={true}
+                        disabled={!moveControls.canMoveUp}
+                        onClick={moveControls.moveUp}
+                    />
+                )}
+                {!isLocked && (
+                    <Button
+                        className={styles.headerButton}
+                        icon="chevron-down"
+                        minimal={true}
+                        disabled={!moveControls.canMoveDown}
+                        onClick={moveControls.moveDown}
+                    />
+                )}
                 <Button className={styles.headerButton} icon={collapseIcon} minimal={true} onClick={toggleCollapsed} />
-                <Button className={styles.headerButton} icon="cross" minimal={true} onClick={closeWidget} />
+                {!isLocked && (
+                    <Button className={styles.headerButton} icon="cross" minimal={true} onClick={closeWidget} />
+                )}
             </span>
         </div>
     );
@@ -68,7 +78,8 @@ const dragSpec = {
             widgetInstanceId: props.widget.id
         };
     }),
-    endDrag: endWidgetDrag<ExpandoHeaderDndProps>(dragDropService.handleDropEvent)
+    endDrag: endWidgetDrag<ExpandoHeaderDndProps>(dragDropService.handleDropEvent),
+    canDrag: dragDropService.canDrag
 };
 
 export const ExpandoHeader = DragSource(MosaicDragType.WINDOW, dragSpec, collectDragProps)(
