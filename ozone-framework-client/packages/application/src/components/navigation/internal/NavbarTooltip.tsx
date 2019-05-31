@@ -1,10 +1,9 @@
-import * as styles from "./index.scss";
+import styles from "../index.scss";
 
-import * as React from "react";
-
+import React from "react";
 import { Position, Tooltip } from "@blueprintjs/core";
 
-import { TOOLTIP_DELAY_MS } from "../../constants";
+import { TOOLTIP_DELAY_MS } from "../../../constants";
 
 export type NavbarTooltipProps = {
     title: string;

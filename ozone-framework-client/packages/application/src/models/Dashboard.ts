@@ -53,14 +53,7 @@ export interface DashboardProps extends DashboardLayout {
 }
 
 export interface AddWidgetOpts {
-    userWidget: UserWidget;
-    title?: string;
-    path?: MosaicPath;
-    position?: MosaicDropTargetPosition;
-}
-
-export interface AddWidgetInstanceOpts {
-    instance: WidgetInstance;
+    widget: UserWidget | WidgetInstance;
     title?: string;
     path?: MosaicPath;
     position?: MosaicDropTargetPosition;
@@ -98,8 +91,20 @@ export class Dashboard {
         return undefined;
     }
 
-    addWidgetInstance(opts: AddWidgetInstanceOpts): boolean {
-        const { instance, title, path, position } = opts;
+    lock = (): void => {
+        const prev = this.state$.value;
+        this.state$.next({ ...prev, isLocked: true });
+    };
+
+    unlock = (): void => {
+        const prev = this.state$.value;
+        this.state$.next({ ...prev, isLocked: false });
+    };
+
+    addWidget(opts: AddWidgetOpts): boolean {
+        const { widget, title, path, position } = opts;
+
+        const instance = widget instanceof UserWidget ? WidgetInstance.create(widget) : widget;
 
         const prev = this.state$.value;
         const { panels, tree } = prev;
@@ -125,13 +130,6 @@ export class Dashboard {
         });
 
         return true;
-    }
-
-    addWidget(opts: AddWidgetOpts): boolean {
-        const { userWidget, ...rest } = opts;
-        const instance = WidgetInstance.create(userWidget);
-
-        return this.addWidgetInstance({ instance, ...rest });
     }
 
     addPanel(panel: Panel<PanelState>) {
@@ -177,15 +175,6 @@ export class Dashboard {
         if (typeof node !== "string") return null;
 
         const panel = panels[node];
-        if (!panel) return null;
-
-        return panel;
-    }
-
-    getPanelById(panelId: string): Panel | null {
-        const { panels } = this.state$.value;
-
-        const panel = panels[panelId];
         if (!panel) return null;
 
         return panel;

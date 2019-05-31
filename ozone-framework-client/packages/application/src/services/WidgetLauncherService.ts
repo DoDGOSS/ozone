@@ -1,5 +1,5 @@
 import { eventingService, EventingService, parseJson } from "./EventingService";
-import { DashboardService, dashboardService } from "../stores/DashboardService";
+import { DashboardService, dashboardService } from "./DashboardService";
 import { errorStore } from "./ErrorStore";
 import { expectArgument, RpcMessage } from "./RpcMessage";
 
