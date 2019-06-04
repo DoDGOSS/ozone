@@ -1,4 +1,5 @@
 from django.contrib import admin
+from owf_framework.stacks.admin import StackGroupInline
 from .models import OWFGroup
 
 class OWFGroupPeopleInline(admin.TabularInline):
@@ -9,7 +10,7 @@ class OWFGroupAdmin(admin.ModelAdmin):
     search_fields = ('display_name', 'name',)
     verbose_name = 'OWF Group'
     verbose_name_plural = 'OWF Groups'
-    inlines = [OWFGroupPeopleInline,]
+    inlines = [OWFGroupPeopleInline, StackGroupInline,]
     exclude = ('person',)
 
 admin.site.register(OWFGroup, OWFGroupAdmin)
