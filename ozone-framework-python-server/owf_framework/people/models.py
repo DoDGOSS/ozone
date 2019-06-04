@@ -13,8 +13,8 @@ class Person(models.Model):
     email_show = models.BooleanField(blank=False, default=False)
     username = models.CharField(null=False, blank=False, max_length=200, unique=True)
     enabled = models.BooleanField(blank=False, default=True)
-    description = models.CharField(max_length=255, blank=True)
-    email = models.CharField(max_length=255, blank=True)
+    description = models.CharField(max_length=255, blank=True, null=True)
+    email = models.CharField(max_length=255, blank=True, null=True)
     last_login = models.DateTimeField(blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
