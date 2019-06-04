@@ -3,9 +3,12 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from .models import Person
 
+from owf_framework.owf_groups.admin import OWFGroupPeopleInline
+
 class PersonAdmin(admin.ModelAdmin):
     list_display = ('id', 'user_real_name', 'username', 'email', 'description')
     search_fields = ('user_real_name', 'username', 'email')
+    inlines = [OWFGroupPeopleInline,]
 
 admin.site.register(Person, PersonAdmin)
 
