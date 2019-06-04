@@ -6,7 +6,10 @@
 
 # Apply database migrations
 echo "Apply database migrations"
-python manage.py migrate
+until python manage.py migrate --no-input; do
+  >&2 echo "db is unvailable - retrying"
+  sleep 5
+done
 
 # Load fixture data
 echo "Load default users"
