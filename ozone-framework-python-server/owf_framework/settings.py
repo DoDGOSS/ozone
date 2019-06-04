@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'owf_framework.owf_groups',
     'owf_framework.people',
     'owf_framework.stacks',
     'owf_framework.widgets',
