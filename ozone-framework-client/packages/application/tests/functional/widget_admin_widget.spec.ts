@@ -195,17 +195,15 @@ module.exports = {
 
         browser
             .clearValue(WidgetAdminWidget.ExportDialog.FILENAME_INPUT)
-            .setValue(WidgetAdminWidget.ExportDialog.FILENAME_INPUT, 'Invalid!@#')
+            .setValue(WidgetAdminWidget.ExportDialog.FILENAME_INPUT, "Invalid!@#")
             .click(WidgetAdminWidget.ExportDialog.FORM)
             .pause(500);
 
-        exportDialog
-            .assertConfirmButtonIsDisabled()
-            .assertContainsErrorText();
+        exportDialog.assertConfirmButtonIsDisabled().assertContainsErrorText();
 
         browser
             .clearValue(WidgetAdminWidget.ExportDialog.FILENAME_INPUT)
-            .setValue(WidgetAdminWidget.ExportDialog.FILENAME_INPUT, 'Export-Widget_valid')
+            .setValue(WidgetAdminWidget.ExportDialog.FILENAME_INPUT, "Export-Widget_valid")
             .click(WidgetAdminWidget.ExportDialog.FORM)
             .pause(500);
 
