@@ -12,7 +12,8 @@ export class WidgetAdmin extends PageObject {
 
     static editWidgetButton = (title: string) => `${GlobalElements.STD_EDIT_BUTTON}[data-widget-title="${title}"]`;
 
-    static editMenuWidgetButton = (title: string) => `${GlobalElements.STD_EDIT_MENU_BUTTON}[data-widget-title="${title}"]`;
+    static editMenuWidgetButton = (title: string) =>
+        `${GlobalElements.STD_EDIT_MENU_BUTTON}[data-widget-title="${title}"]`;
 
     static deleteWidgetButton = (title: string) => `${GlobalElements.STD_DELETE_BUTTON}[data-widget-title="${title}"]`;
 
@@ -218,15 +219,14 @@ export class WidgetAdminExportDialog extends PageObject {
     assertContainsErrorText(): this {
         this.browser.assert.containsText(
             WidgetAdminExportDialog.Selector,
-            'Invalid characters!',
+            "Invalid characters!",
             this.msg(`Export dialog filename contains error`)
         );
         return this;
     }
 
     assertNotContainsErrorText(): this {
-        this.browser.expect.element(WidgetAdminExportDialog.Selector)
-            .text.to.not.contain('Invalid characters!');
+        this.browser.expect.element(WidgetAdminExportDialog.Selector).text.to.not.contain("Invalid characters!");
         return this;
     }
 
