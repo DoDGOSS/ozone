@@ -11,7 +11,7 @@ export interface State {
     nodes: ITreeNode[] | undefined;
 }
 
-// use Component so it re-renders everytime: `nodes` are not a primitive type
+// use Component so it re-renders every time: `nodes` are not a primitive type
 // and therefore aren't included in shallow prop comparison
 export class HelpTree extends React.Component<State, Props> {
     constructor(props: Props) {
@@ -43,7 +43,6 @@ export class HelpTree extends React.Component<State, Props> {
     };
 
     private handleNodeDoubleClick = (nodeData: ITreeNode) => {
-        console.log(nodeData);
         if (nodeData.icon === "document") {
             const fullUrl = serverHostUrl() + "/help" + nodeData.id;
             window.open(fullUrl);
