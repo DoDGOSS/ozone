@@ -58,7 +58,7 @@ export const HelpDialog: React.FC = () => {
         if (data.length === 0) {
             showConfirmationDialogWithoutCancel({
                 title: "Warning",
-                message: ["There are no help files in the Help Folder. Contact admin."],
+                message: ["There are no help files in the Help Folder. Please contact your OWF Administrator or view the OWF Administrator's Guide."],
                 onConfirm: () => {
                     mainStore.hideHelpDialog();
                 }

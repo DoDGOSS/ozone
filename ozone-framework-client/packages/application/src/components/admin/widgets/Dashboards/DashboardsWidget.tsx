@@ -124,7 +124,7 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
     private getTableColumns(): Column[] {
         return [
             { Header: "Title", accessor: "name" },
-            { Header: "Pages (Dashboards)", accessor: "totalDashboards" },
+            { Header: "Dashboards", accessor: "totalDashboards" },
             { Header: "Widgets", accessor: "totalWidgets" },
             { Header: "Groups", accessor: "totalGroups" },
             { Header: "Users", accessor: "totalUsers" },
