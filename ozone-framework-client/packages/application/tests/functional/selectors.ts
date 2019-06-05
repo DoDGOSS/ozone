@@ -53,6 +53,12 @@ export namespace MainPage {
     export const EMPTY_PANEL = "div[class='mosaic-window-body'] > div";
 
     export const DIALOG_CLOSE = "button[aria-label='Close']";
+
+    export const ADD_LAYOUT = "button[data-element-id='add-layout']";
+
+    export const TABBED_LAYOUT_BUTTON = "a[data-element-id='tabbed-panel']";
+
+    export const TABBED_PANEL = "div[class='bp3-tab-list']";
 }
 
 export namespace StackDialog {
@@ -64,11 +70,14 @@ export namespace StackDialog {
     export const CREATE_STACK_DIALOG = "a[data-element-id='CreateStackDialog']";
     export const CREATE_DASHBOARD_DIALOG = "a[data-element-id='CreateDashboardDialog']";
 
-    function getActionButtonsForStack(stackname: string): string {
+    export const STACK_LIST = "span[icon='chevron-right']:nth-of-type(1)";
+    export const DASHBOARD = "li[class='bp3-tree-node']:nth-of-type(1)";
+
+    export function getActionButtonsForStack(stackname: string): string {
         return `div[data-role="stack-actions"][data-name=${stackname}]`;
     }
 
-    function getActionButtonsForDashboard(dashboardname: string): string {
+    export function getActionButtonsForDashboard(dashboardname: string): string {
         return `div[data-role="dashboard-actions"][data-name=${dashboardname}]`;
     }
 
@@ -115,7 +124,9 @@ export namespace StackDialog {
 
         export const PREMADE = "input[type='radio'][value='premade']";
 
-        export const SELECT_PREMADE_LAYOUT = "div[data-element-id='PremadeLayoutsList']";
+        export const SELECT_PREMADE_LAYOUT = "label[class='bp3-control bp3-radio']:nth-of-type(1)";
+
+        export const QUAD = "label[class='create-dashboard-screen_premadeLayoutOption__3-BMM']:nth-of-type(11)";
 
         export const COPY = "label[class='bp3-control bp3-radio']:nth-of-type(2)";
 
