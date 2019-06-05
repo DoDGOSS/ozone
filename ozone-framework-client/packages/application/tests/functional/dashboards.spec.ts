@@ -74,8 +74,6 @@ module.exports = {
             .click(MainPage.STACKS_BUTTON)
             .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
 
-
-
         browser
             .pause(500)
             .click(StackDialog.getShareButtonForStack(StackDialog.CreateStack.EDIT_STACK_NAME))
