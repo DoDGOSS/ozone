@@ -13,11 +13,13 @@ import {
 } from "../generic-table/TableButtons";
 
 import { mainStore } from "../../stores/MainStore";
+import { dashboardStore, DashboardStore } from "../../stores/DashboardStore";
 
 import { dashboardApi } from "../../api/clients/DashboardAPI";
 import { stackApi } from "../../api/clients/StackAPI";
 
 import { showConfirmationDialog } from "../confirmation-dialog/InPlaceConfirmationDialog";
+import { showInvalidActionDialog } from "../confirmation-dialog/InPlaceInvalidActionDialog";
 import { EditDashboardForm } from "../create-dashboard-screen/EditDashboardForm";
 
 import { DashboardDTO } from "../../api/models/DashboardDTO";
@@ -120,7 +122,11 @@ export const StackDialog: React.FC<{}> = () => {
     };
 
     const restoreDashboard = async (dashboard: DashboardDTO) => {
-        console.log("RESTORE DASHBOARD HERE.  Dashboard is: " + JSON.stringify(dashboard));
+        if (dashboard.publishedToStore == false) {
+            restoreUnsharedDashboard();
+        } else {
+            confirmRestoreDashboard(dashboard);
+        }
     };
 
     const showEditDashboardDialog = async (dashboard: DashboardDTO) => {
@@ -173,6 +179,34 @@ export const StackDialog: React.FC<{}> = () => {
         });
     };
 
+    const confirmRestoreDashboard = async (dashboard: DashboardDTO) => {
+        showConfirmationDialog({
+            title: "Warning",
+            message: [
+                "You are discarding all changes made to ",
+                { text: dashboard.name, style: "bold" },
+                " and restoring it's default setting. Press OK to confirm."
+            ],
+            onConfirm: () => onRestoerDashboardConfirmed(dashboard)
+        });
+    };
+
+    const restoreUnsharedDashboard = async () => {
+        showInvalidActionDialog({
+            title: "Warning",
+            message: ["Dashboards cannot be restored until they are shared."]
+        });
+    };
+
+    const onRestoerDashboardConfirmed = async (dashboard: DashboardDTO) => {
+        const response = await dashboardApi.restoreDashboard(dashboard);
+        if (response.status !== 200) return false;
+
+        const set = await dashboardStore.fetchUserDashboards(dashboard.guid);
+        mainStore.hideStackDialog();
+        return true;
+    };
+
     const onDeleteStackConfirmed = async (stack: StackDTO) => {
         const response = await stackApi.deleteStackAsAdmin(stack.id);
         if (response.status !== 200) return false;
@@ -208,7 +242,7 @@ export const StackDialog: React.FC<{}> = () => {
                             <GenericTree
                                 nodes={stacks.map((stack) => {
                                     const stackNode: ITreeNode = {
-                                        id: stack.id,
+                                        id: stack.stackContext,
                                         hasCaret: notOnlyDefaultDashboardInStack(stack),
                                         label: stack.name,
                                         icon: "control",
