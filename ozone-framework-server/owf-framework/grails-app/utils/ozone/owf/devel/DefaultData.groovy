@@ -238,7 +238,7 @@ class DefaultData {
               width         : 400,
               height        : 400],
 
-             [displayName   : 'Dashboard Administration',
+             [displayName   : 'Stack Administration',
               widgetGuid    : '2a34e59c-9cc5-484f-a4e4-e19042d73a43',
               universalName : 'org.ozoneplatform.owf.admin.DashboardAdmin',
               widgetUrl     : 'local:dashboard_admin',
