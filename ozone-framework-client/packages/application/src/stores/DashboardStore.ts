@@ -36,7 +36,7 @@ export class DashboardStore {
 
     isLoading = () => asBehavior(this.isLoading$);
 
-    fetchUserDashboards = async (newCurrentGuid?: string) => {
+    fetchUserDashboards = async (newCurrentGuid?: string | any) => {
         this.isLoading$.next(true);
 
         let response = await this.userDashboardApi.getOwnDashboards();
