@@ -32,6 +32,8 @@ import { DropTargetContainer } from "./DropTargetContainer";
 
 export interface MosaicWindowProps<T extends MosaicKey> {
     title: string;
+    titleClassname?: string;
+    titleElement?: React.ReactNode;
     path: MosaicBranch[];
     className?: string;
     toolbarControls?: React.ReactNode;
@@ -125,6 +127,8 @@ export class InternalMosaicWindow<T extends MosaicKey> extends React.Component<
     private renderToolbar() {
         const {
             title,
+            titleClassname,
+            titleElement,
             draggable,
             additionalControls,
             additionalControlButtonText,
@@ -146,8 +150,8 @@ export class InternalMosaicWindow<T extends MosaicKey> extends React.Component<
         }
 
         let titleDiv: React.ReactElement<any> = (
-            <div title={title} className="mosaic-window-title">
-                {title}
+            <div title={title} className={classNames("mosaic-window-title", titleClassname)}>
+                {titleElement || title}
             </div>
         );
 

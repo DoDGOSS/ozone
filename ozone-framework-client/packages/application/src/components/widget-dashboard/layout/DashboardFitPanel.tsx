@@ -14,11 +14,9 @@ const _DashboardFitPanel: React.FC<DashboardFitPanelProps> = ({ panel }) => {
 
     const widget = widgets.length >= 1 ? widgets[0] : null;
 
-    if (widget === null) {
-        return <div>Placeholder</div>;
-    } else {
-        return <WidgetFrame widgetInstance={widget} />;
-    }
+    if (widget === null) return null;
+
+    return <WidgetFrame widgetInstance={widget} />;
 };
 
 export const DashboardFitPanel = React.memo(_DashboardFitPanel);
