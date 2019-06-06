@@ -1,6 +1,6 @@
 import { clone, findIndex, isArray } from "lodash";
 
-import { PanelState } from "./types";
+import { AddWidgetsOpts, PanelState } from "./types";
 import { AbstractPanel } from "./AbstractPanel";
 import { WidgetInstance } from "../WidgetInstance";
 
@@ -46,7 +46,7 @@ export class ExpandoPanel extends AbstractPanel<ExpandoPanelState> {
         });
     }
 
-    addWidgets(instance: WidgetInstance | WidgetInstance[]): boolean {
+    addWidgets(instance: WidgetInstance | WidgetInstance[], opts?: AddWidgetsOpts): void {
         const prev = this.state$.value;
         const { widgets } = prev;
 
@@ -57,7 +57,7 @@ export class ExpandoPanel extends AbstractPanel<ExpandoPanelState> {
             widgets: [...widgets, ...instances]
         });
 
-        return true;
+        if (opts && opts.onSuccess) opts.onSuccess();
     }
 
     closeWidget(instanceId: string): WidgetInstance | undefined {

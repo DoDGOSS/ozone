@@ -8,7 +8,6 @@ import { mainStore } from "../../stores/MainStore";
 
 import { AboutDialog } from "../about/About";
 import { AdminToolsDialog } from "../admin-tools-dialog/AdminToolsDialog";
-import { ReplaceWidgetDialog } from "../widget-dashboard/ReplaceWidgetDialog";
 import { StackDialog } from "../stack-screen/StackDialog";
 import { HelpDialog } from "../help-screen/HelpDialog";
 import { NavigationBar } from "../navigation/NavigationBar";
@@ -34,7 +33,6 @@ export const HomeScreen: React.FC<{}> = () => {
             <WidgetDashboard className={styles.widgetDashboard} />
 
             <CreateStackDialog />
-            <ReplaceWidgetDialog />
             <AboutDialog isVisible={isAboutVisible} onClose={() => mainStore.hideAboutDialog()} />
             <HelpDialog />
             <StackDialog />

@@ -3,7 +3,7 @@ import { find } from "lodash";
 import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../../observables";
 
-import { LayoutType, Panel, PanelState } from "./types";
+import { AddWidgetsOpts, LayoutType, Panel, PanelState } from "./types";
 import { WidgetInstance } from "../WidgetInstance";
 
 export abstract class AbstractPanel<T extends PanelState> implements Panel<T> {
@@ -27,7 +27,7 @@ export abstract class AbstractPanel<T extends PanelState> implements Panel<T> {
 
     state = () => asBehavior(this.state$);
 
-    abstract addWidgets(instance: WidgetInstance | WidgetInstance[]): boolean;
+    abstract addWidgets(instance: WidgetInstance | WidgetInstance[], opts?: AddWidgetsOpts): void;
 
     abstract closeWidget(instanceId: string): WidgetInstance | undefined;
 

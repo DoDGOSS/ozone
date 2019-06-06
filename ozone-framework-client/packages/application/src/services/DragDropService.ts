@@ -1,6 +1,7 @@
 import { cloneDeep, isEqual } from "lodash";
 
-import { dashboardStore, DashboardStore } from "../stores/DashboardStore";
+import { DashboardNode } from "../components/widget-dashboard/types";
+import { createDragToUpdates, updateTree } from "../features/MosaicDashboard/util/mosaicUpdates";
 import { Dashboard, DashboardProps } from "../models/Dashboard";
 import { WidgetInstance } from "../models/WidgetInstance";
 import {
@@ -13,9 +14,9 @@ import {
     WidgetDragData,
     WindowDragData
 } from "../shared/dragAndDrop";
-import { createDragToUpdates, updateTree } from "../features/MosaicDashboard/util/mosaicUpdates";
+import { dashboardStore, DashboardStore } from "../stores/DashboardStore";
+
 import { dashboardService, DashboardService } from "./DashboardService";
-import { DashboardNode } from "../components/widget-dashboard/types";
 
 export class DragDropService {
     private readonly dashboardStore: DashboardStore;
@@ -75,8 +76,12 @@ export class DragDropService {
         return this.dashboard.state().value;
     }
 
+    private isMosaicDrop(dropData: DropData): boolean {
+        return !this.dashboardState.tree || dropData.position !== "center";
+    }
+
     private handleWindowDropEvent(dragData: WindowDragData, dropData: DropData): void {
-        if (dropData.position !== "center") {
+        if (this.isMosaicDrop(dropData)) {
             this.moveWindowToMosaic(dragData, dropData);
         } else {
             this.moveWindowToPanel(dragData, dropData);
@@ -84,7 +89,7 @@ export class DragDropService {
     }
 
     private handleWidgetDropEvent(dragData: WidgetDragData, dropData: DropData): void {
-        if (dropData.position !== "center") {
+        if (this.isMosaicDrop(dropData)) {
             this.addWidgetToMosaic(dragData, dropData);
         } else {
             this.addWidgetToPanel(dragData, dropData);
@@ -92,9 +97,7 @@ export class DragDropService {
     }
 
     private handleInstanceDropEvent(dragData: InstanceDragData, dropData: DropData): void {
-        if (dropData.type !== "mosaic") return;
-
-        if (dropData.position !== "center") {
+        if (this.isMosaicDrop(dropData)) {
             this.moveInstanceToMosaic(dragData, dropData);
         } else {
             this.moveInstanceToPanel(dragData, dropData);
@@ -129,12 +132,10 @@ export class DragDropService {
 
         const widgetInstances = sourcePanel.state().value.widgets;
 
-        const isSuccess = targetPanel.addWidgets(widgetInstances);
-        if (isSuccess) {
-            dashboard.removeNode(dragData.path);
-        } else {
-            this.restoreSnapshot();
-        }
+        targetPanel.addWidgets(widgetInstances, {
+            onSuccess: () => dashboard.removeNode(dragData.path),
+            onFailure: () => this.restoreSnapshot()
+        });
     }
 
     private addWidgetToMosaic(dragData: WidgetDragData, dropData: DropData): void {
@@ -184,10 +185,9 @@ export class DragDropService {
         const widgetInstance = sourcePanel.findWidget(widgetInstanceId);
         if (!widgetInstance) return;
 
-        const isSuccess = targetPanel.addWidgets(widgetInstance);
-        if (isSuccess) {
-            sourcePanel.closeWidget(widgetInstanceId);
-        }
+        targetPanel.addWidgets(widgetInstance, {
+            onSuccess: () => sourcePanel.closeWidget(widgetInstanceId)
+        });
     }
 }
 
