@@ -2,7 +2,7 @@ import * as React from "react";
 import { AnchorButton, Intent } from "@blueprintjs/core";
 
 interface TableButtonProps {
-    onClick: () => void;
+    onClick: (event?: any) => void;
     disabled?: boolean;
     itemName?: string;
 }

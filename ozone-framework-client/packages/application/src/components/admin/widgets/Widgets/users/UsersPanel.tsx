@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, ButtonGroup } from "@blueprintjs/core";
 
-import { showConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { showConfirmationDialog } from "../../../../confirmation-dialog/showConfirmationDialog";
 
 import { userApi } from "../../../../../api/clients/UserAPI";
 import { widgetApi } from "../../../../../api/clients/WidgetAPI";
@@ -45,17 +45,15 @@ export class UsersPanel extends React.Component<Props, State> {
     getAllUsers = async () => {
         const response = await userApi.getUsers();
         // TODO: Handle failed request
-        if (response.status !== 200) return;
+        if (response.status !== 200) return [];
 
-        this.setState({
-            allUsers: this.parseUserDTOs(response.data.data)
-        });
+        return this.parseUserDTOs(response.data.data);
     };
 
     getWidgetUsers = async () => {
         const response = await userApi.getUsersForWidget(this.props.widget.id);
         // TODO: Handle failed request
-        if (response.status !== 200) return;
+        if (response.status !== 200) return [];
 
         this.setState({
             widgetUsers: this.parseUserDTOs(response.data.data),
@@ -93,7 +91,7 @@ export class UsersPanel extends React.Component<Props, State> {
                 isOpen={this.state.dialogOpen}
                 onClose={() => this.closeDialog()}
                 onSubmit={(selections: User[]) => this.addSelectedUsers(selections)}
-                allUsers={this.state.allUsers}
+                getAllUsers={this.getAllUsers}
             />
         );
     }

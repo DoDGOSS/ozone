@@ -4,4 +4,38 @@
   -o-animation: react-confirm-alert-fadeIn 0s 0s forwards;
   animation: react-confirm-alert-fadeIn 0s 0s forwards;
   background: rgba(16, 22, 26, 0.7);
+  pointer-events: all;
+}
+
+table {
+  border-spacing: 3px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+tr {
+    border: solid;
+    border-width: 1px;
+    border-color: lightgray;
+}
+
+th {
+  text-align: left;
+  font-weight: normal;
+}
+
+.scrollable {
+    height: 320px; // should be sufficient for most everything?
+    overflow: auto;
+    border: solid;
+    border-width: 1px;
+    border-color: gray;
+}
+
+:local ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+}
+:local ::-webkit-scrollbar {
+    width: auto !important;
+    background: transparent;
 }

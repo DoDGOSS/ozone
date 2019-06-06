@@ -14,7 +14,7 @@ import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 import { EditMenu } from "./export/EditMenu";
 import { ExportDialog } from "./export/ExportDialog";
 import { ExportErrorDialog } from "./export/ExportErrorDialog";
-import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 import { WidgetSetup } from "./WidgetSetup";
 import { GroupDTO } from "../../../../api/models/GroupDTO";
 

@@ -41,7 +41,7 @@ export interface WidgetPropertiesDTO {
     smallIconUrl: string;
     totalGroups: number;
     totalUsers: number;
-    universalName: string | null;
+    universalName: string;
     url: string;
     visible: boolean;
     widgetTypes: WidgetTypeDTO[];

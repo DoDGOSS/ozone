@@ -43,6 +43,11 @@ export interface DashboardGetResponse {
 
 export const validateDashboardGetResponse = createValidator<DashboardGetResponse>(DASHBOARD_GET_RESPONSE_SCHEMA);
 
+// tslint:disable-next-line
+export interface DashboardCreateRequest extends DashboardUpdateRequest {
+    //
+}
+
 export interface DashboardUpdateRequest {
     dashboardPosition?: number;
     description?: string;

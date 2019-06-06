@@ -43,7 +43,7 @@ export function userWidgetFromJson(dto: UserWidgetDTO): UserWidget {
             isMobileReady: props.mobileReady,
             isSingleton: props.singleton,
             title: props.originalName,
-            universalName: optional(props.universalName),
+            universalName: props.universalName,
             url: props.url,
             isVisible: props.visible,
             types: props.widgetTypes.map(widgetTypeFromJson),

@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Divider } from "@blueprintjs/core";
 import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 
-import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 import { UserSetup } from "./UserSetup";
 
 import { UserDTO } from "../../../../api/models/UserDTO";

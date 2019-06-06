@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useBehavior } from "../../hooks";
+import { useBehavior, useStateAsyncInit } from "../../hooks";
 
 import { Button, ButtonGroup, Classes, Dialog, Divider, Intent, ITreeNode, Spinner } from "@blueprintjs/core";
 
@@ -14,11 +14,15 @@ import {
 import { mainStore } from "../../stores/MainStore";
 import { dashboardStore } from "../../stores/DashboardStore";
 
+import { groupApi } from "../../api/clients/GroupAPI";
 import { dashboardApi } from "../../api/clients/DashboardAPI";
 import { stackApi } from "../../api/clients/StackAPI";
+import { storeMetaAPI } from "../../api/clients/StoreMetaAPI";
 
-import { showConfirmationDialog } from "../confirmation-dialog/InPlaceConfirmationDialog";
-import { showInvalidActionDialog } from "../confirmation-dialog/InPlaceInvalidActionDialog";
+import { storeExportService } from "../../services/StoreExportService";
+import { authService } from "../../services/AuthService";
+
+import { showConfirmationDialog } from "../confirmation-dialog/showConfirmationDialog";
 import { EditDashboardForm } from "../create-dashboard-screen/EditDashboardForm";
 
 import { DashboardDTO } from "../../api/models/DashboardDTO";
@@ -28,6 +32,8 @@ import { CreateDashboardForm } from "../create-dashboard-screen/CreateDashboardF
 import { EditStackForm } from "../create-stack-screen/EditStackForm";
 import { userDashboardApi } from "../../api/clients/UserDashboardAPI";
 import { UserDashboardDTO } from "../../api/models/UserDashboardDTO";
+
+import { uuid } from "../../utility";
 
 // TODO - iconImageUrl not saving to database - clientAPI
 // TODO - style image
@@ -53,27 +59,50 @@ const fetchUserDashboardsAndStacks = (
             dispatchDashboardState(false);
         });
 
-        stackApi.getStacks().then((stackResponse) => {
-            if (stackResponse.status !== 200) return;
+        authService.check().then(async (currentUser) => {
+            const allUserGroupsResponse = await groupApi.getGroups({ user_id: currentUser.data.id });
+            if (allUserGroupsResponse.status !== 200) return;
+            const allUserGroups = allUserGroupsResponse.data.data;
 
-            dispatchStackResult(
-                stackResponse.data.data.filter((stack) =>
-                    userDashboards.some((userDashboard) => userDashboard.stack.id === stack.id)
-                )
-            );
+            const stackResponseForUser = await stackApi.getStacks({ userId: currentUser.data.id });
+            if (stackResponseForUser.status !== 200) return;
+            const allPermittedStacks = stackResponseForUser.data.data;
+
+            for (const userGroup of allUserGroups) {
+                const stackResponseForGroup = await stackApi.getStacks({ groupId: userGroup.id });
+                if (stackResponseForGroup.status !== 200) return;
+
+                for (const stack of stackResponseForGroup.data.data) {
+                    if (!allPermittedStacks.find((s) => s.stackContext === stack.stackContext)) {
+                        allPermittedStacks.push(stack);
+                    }
+                }
+            }
+
+            dispatchStackResult(allPermittedStacks);
+
             dispatchStackState(false);
         });
     });
+};
+
+const checkForStores = async () => {
+    return storeMetaAPI.getStores().then((stores) => stores.length > 0);
 };
 
 export const StackDialog: React.FC<{}> = () => {
     const themeClass = useBehavior(mainStore.themeClass);
     const isVisible = useBehavior(mainStore.isStackDialogVisible);
 
+    // I think this is essentially a useBehavior, but don't got time to figure out how to do it that way
+    const [storeConnected, setStoreConnected] = useState(false);
+    checkForStores().then(setStoreConnected);
+
     const [showDashboardEdit, setDashboardEdit] = useState(false);
     const [showStackEdit, setStackEdit] = useState(false);
     const [showAddDashboard, setAddDashboard] = useState(false);
-    const [currentDashboard, setCurrentDashboard] = useState<DashboardDTO | null>(null);
+    const [dashboardToBeEdited, setDashboardToBeEdited] = useState<DashboardDTO | null>(null);
+    const [stackToBeEdited, setStackToBeEdited] = useState<StackDTO | null>(null);
     const [dashboards, setDashboards] = useState<DashboardDTO[]>([]);
     const [currentStack, setCurrentStack] = useState<StackDTO | null>(null);
     const [stacks, setStacks] = useState<StackDTO[]>([]);
@@ -86,10 +115,24 @@ export const StackDialog: React.FC<{}> = () => {
         }
     }, [isVisible]);
 
+    useEffect(() => {
+        getCurrentDash();
+    }, [dashboards]);
+
     function fetchData() {
         setStacksLoading(true);
         setDashLoading(true);
         fetchUserDashboardsAndStacks(setDashboards, setStacks, setDashLoading, setStacksLoading);
+    }
+
+    function getCurrentDash() {
+        const dash = dashboardStore.currentDashboard().value;
+        if (!dash) return null;
+        const currentDash = dashboards.find((d) => d.guid === dash.state().value.guid);
+        if (!currentDash) return null;
+        if (currentDash.stack) {
+            setCurrentStack(currentDash.stack);
+        }
     }
 
     function notOnlyDefaultDashboardInStack(stack: StackDTO) {
@@ -99,13 +142,13 @@ export const StackDialog: React.FC<{}> = () => {
 
         const hasDefaultDashboard: boolean = dashboards
             .filter((dashboard) => (dashboard.stack ? dashboard.stack.id === stack.id : false))
-            .some((dashboard) => dashboard.name === stack.name);
+            .some((dashboard) => dashboard.name === stack.name + " (default)");
 
         return numOfDashboards > 1 || (!hasDefaultDashboard && numOfDashboards > 0);
     }
 
     const addNewDashboardToStack = async (stack: StackDTO) => {
-        setCurrentStack(stack);
+        setStackToBeEdited(stack);
         setAddDashboard(true);
     };
 
@@ -127,13 +170,13 @@ export const StackDialog: React.FC<{}> = () => {
     };
 
     const showEditDashboardDialog = async (dashboard: DashboardDTO) => {
+        setDashboardToBeEdited(dashboard);
         setDashboardEdit(true);
-        setCurrentDashboard(dashboard);
     };
 
     const showEditStackDialog = async (stack: StackDTO) => {
+        setStackToBeEdited(stack);
         setStackEdit(true);
-        setCurrentStack(stack);
     };
 
     const onDashboardEditSubmitted = (dashboard: DashboardDTO) => {
@@ -156,12 +199,46 @@ export const StackDialog: React.FC<{}> = () => {
             onConfirm: () => onDeleteStackConfirmed(stack)
         });
     };
+    const onDeleteStackConfirmed = async (stack: StackDTO) => {
+        const response = await stackApi.deleteStackAsAdmin(stack.id);
+        if (response.status !== 200) return false;
+
+        fetchData();
+        return true;
+    };
 
     const confirmDashboardDelete = async (dashboard: DashboardDTO) => {
         showConfirmationDialog({
             title: "Warning",
             message: ["This action will permanently delete ", { text: dashboard.name, style: "bold" }, "."],
             onConfirm: () => onDeleteDashboardConfirmed(dashboard)
+        });
+    };
+    const onDeleteDashboardConfirmed = async (dashboard: DashboardDTO) => {
+        const response = await dashboardApi.deleteDashboard(dashboard.guid);
+        if (response.status !== 200) return false;
+
+        fetchData();
+        return true;
+    };
+
+    const shareOrPush = async (stack: StackDTO) => {
+        if (storeConnected) {
+            confirmPush(stack);
+        } else {
+            confirmShare(stack);
+        }
+    };
+
+    const confirmPush = async (stack: StackDTO) => {
+        showConfirmationDialog({
+            title: "Push stack to store",
+            message: [
+                "You are uploading this Stack to a Store.",
+                "\n",
+                "If you have access to more than one Store, you will be prompted to choose."
+            ],
+            onConfirm: () => storeExportService.uploadStack(stack.id)
         });
     };
 
@@ -177,25 +254,25 @@ export const StackDialog: React.FC<{}> = () => {
         });
     };
 
+    const onShareConfirmed = async (stack: StackDTO) => {
+        const response = await stackApi.shareStack(stack.id);
+        if (response.status !== 200) return false;
+
+        fetchData();
+        return true;
+    };
+
     const confirmRestoreDashboard = async (dashboard: DashboardDTO) => {
         showConfirmationDialog({
             title: "Warning",
             message: [
                 "You are discarding all changes made to ",
                 { text: dashboard.name, style: "bold" },
-                " and restoring it's default setting. Press OK to confirm."
+                " and restoring its default setting. Press OK to confirm."
             ],
             onConfirm: () => onRestoreDashboardConfirmed(dashboard)
         });
     };
-
-    const restoreUnsharedDashboard = async () => {
-        showInvalidActionDialog({
-            title: "Warning",
-            message: ["Dashboards cannot be restored until they are shared."]
-        });
-    };
-
     const onRestoreDashboardConfirmed = async (dashboard: DashboardDTO) => {
         const response = await dashboardApi.restoreDashboard(dashboard);
         if (response.status !== 200) return false;
@@ -205,30 +282,13 @@ export const StackDialog: React.FC<{}> = () => {
         return true;
     };
 
-    const onDeleteStackConfirmed = async (stack: StackDTO) => {
-        const response = await stackApi.deleteStackAsAdmin(stack.id);
-        if (response.status !== 200) return false;
-
-        fetchData();
-        return true;
+    const restoreUnsharedDashboard = async () => {
+        showConfirmationDialog({
+            title: "Warning",
+            message: ["Dashboards cannot be restored until they are shared."],
+            hideCancel: true
+        });
     };
-
-    const onDeleteDashboardConfirmed = async (dashboard: DashboardDTO) => {
-        const response = await dashboardApi.deleteDashboard(dashboard.guid);
-        if (response.status !== 200) return false;
-
-        fetchData();
-        return true;
-    };
-
-    const onShareConfirmed = async (stack: StackDTO) => {
-        const response = await stackApi.shareStack(stack.id);
-        if (response.status !== 200) return false;
-
-        fetchData();
-        return true;
-    };
-
     return (
         <div>
             {!(showDashboardEdit || showStackEdit) && (
@@ -239,8 +299,13 @@ export const StackDialog: React.FC<{}> = () => {
                         ) : (
                             <GenericTree
                                 nodes={stacks.map((stack) => {
+                                    const firstDash = dashboards.find((dashboard) =>
+                                        dashboard.stack ? dashboard.stack.id === stack.id : false
+                                    );
                                     const stackNode: ITreeNode = {
-                                        id: stack.stackContext,
+                                        id: firstDash ? firstDash.guid : "_NoDash_" + uuid(), // since this must be unique
+                                        // @ts-ignore
+                                        key: stack.stackContext, // ignore that 'key' technically isn't part of ITreeNode
                                         hasCaret: notOnlyDefaultDashboardInStack(stack),
                                         label: stack.name,
                                         icon: "control",
@@ -256,32 +321,61 @@ export const StackDialog: React.FC<{}> = () => {
                                                 <Divider />
                                                 <CompactAddButton
                                                     itemName="Add New Dashboard"
-                                                    onClick={() => addNewDashboardToStack(stack)}
+                                                    onClick={(event) => {
+                                                        // don't let the click activate the tree node
+                                                        event.stopPropagation();
+                                                        addNewDashboardToStack(stack);
+                                                    }}
                                                 />
                                                 <Divider />
                                                 <CompactShareButton
                                                     itemName={
-                                                        stack.approved
-                                                            ? "Only Approved/Non-Shared Stacks Can Be Shared"
+                                                        // sorry about the nesting
+                                                        firstDash === undefined
+                                                            ? "Can't " +
+                                                              (storeConnected ? "push" : "share") +
+                                                              " an empty stack."
+                                                            : storeConnected
+                                                            ? "Push Stack To Store"
                                                             : "Share Stack"
+                                                        // stack.approved // TODO? fix approval. Ignore for now.
+                                                        // ? "Share Stack"
+                                                        // : "Only Approved Stacks Can Be Shared"
                                                     }
-                                                    disabled={stack.approved}
-                                                    onClick={() => confirmShare(stack)}
+                                                    // disabled={!stack.approved && !storeConnected} // This don't work.
+                                                    onClick={(event) => {
+                                                        // don't let the click activate the tree node
+                                                        event.stopPropagation();
+                                                        shareOrPush(stack);
+                                                    }}
+                                                    disabled={firstDash === undefined}
                                                 />
                                                 <Divider />
                                                 <CompactRestoreButton
                                                     itemName="Restore Stack"
-                                                    onClick={() => restoreStack(stack)}
+                                                    onClick={(event) => {
+                                                        // don't let the click activate the tree node
+                                                        event.stopPropagation();
+                                                        restoreStack(stack);
+                                                    }}
                                                 />
                                                 <Divider />
                                                 <CompactEditButton
                                                     itemName="Edit Stack"
-                                                    onClick={() => showEditStackDialog(stack)}
+                                                    onClick={(event) => {
+                                                        // don't let the click activate the tree node
+                                                        event.stopPropagation();
+                                                        showEditStackDialog(stack);
+                                                    }}
                                                 />
                                                 <Divider />
                                                 <CompactDeleteButton
                                                     itemName="Delete Stack"
-                                                    onClick={() => confirmStackDelete(stack)}
+                                                    onClick={(event) => {
+                                                        // don't let the click activate the tree node
+                                                        event.stopPropagation();
+                                                        confirmStackDelete(stack);
+                                                    }}
                                                 />
                                                 <Divider />
                                             </ButtonGroup>
@@ -293,6 +387,8 @@ export const StackDialog: React.FC<{}> = () => {
                                             .map((dashboard) => {
                                                 const dashNode: ITreeNode = {
                                                     id: dashboard.guid,
+                                                    // @ts-ignore
+                                                    key: dashboard.guid, // ignore that 'key' technically isn't part of ITreeNode
                                                     hasCaret: false,
                                                     label: dashboard.name,
                                                     icon: "control",
@@ -305,17 +401,29 @@ export const StackDialog: React.FC<{}> = () => {
                                                             <Divider />
                                                             <CompactRestoreButton
                                                                 itemName="Restore Dashboard"
-                                                                onClick={() => restoreDashboard(dashboard)}
+                                                                onClick={(event) => {
+                                                                    // don't let the click activate the tree node
+                                                                    event.stopPropagation();
+                                                                    restoreDashboard(dashboard);
+                                                                }}
                                                             />
                                                             <Divider />
                                                             <CompactEditButton
                                                                 itemName="Edit Dashboard"
-                                                                onClick={() => showEditDashboardDialog(dashboard)}
+                                                                onClick={(event) => {
+                                                                    // don't let the click activate the tree node
+                                                                    event.stopPropagation();
+                                                                    showEditDashboardDialog(dashboard);
+                                                                }}
                                                             />
                                                             <Divider />
                                                             <CompactDeleteButton
                                                                 itemName="Delete Dashboard"
-                                                                onClick={() => confirmDashboardDelete(dashboard)}
+                                                                onClick={(event) => {
+                                                                    // don't let the click activate the tree node
+                                                                    event.stopPropagation();
+                                                                    confirmDashboardDelete(dashboard);
+                                                                }}
                                                             />
                                                             <Divider />
                                                         </ButtonGroup>
@@ -347,7 +455,7 @@ export const StackDialog: React.FC<{}> = () => {
                     </div>
                 </Dialog>
             )}
-            {showDashboardEdit && currentDashboard && (
+            {showDashboardEdit && dashboardToBeEdited && (
                 <Dialog
                     className={themeClass}
                     isOpen={showDashboardEdit}
@@ -356,8 +464,8 @@ export const StackDialog: React.FC<{}> = () => {
                 >
                     <div data-element-id="EditDashboardDialog" className={Classes.DIALOG_BODY}>
                         <EditDashboardForm
-                            dashboard={currentDashboard}
-                            onSubmit={() => onDashboardEditSubmitted(currentDashboard)}
+                            dashboard={dashboardToBeEdited}
+                            onSubmit={() => onDashboardEditSubmitted(dashboardToBeEdited)}
                         />
                     </div>
 
@@ -366,7 +474,7 @@ export const StackDialog: React.FC<{}> = () => {
                     </div>
                 </Dialog>
             )}
-            {showStackEdit && currentStack && (
+            {showStackEdit && stackToBeEdited && (
                 <Dialog
                     className={themeClass}
                     isOpen={showStackEdit}
@@ -374,7 +482,7 @@ export const StackDialog: React.FC<{}> = () => {
                     title="Edit Stack"
                 >
                     <div data-element-id="EditStackDialog" className={Classes.DIALOG_BODY}>
-                        <EditStackForm stack={currentStack} onSubmit={onStackEditSubmitted} />
+                        <EditStackForm stack={stackToBeEdited} onSubmit={onStackEditSubmitted} />
                     </div>
 
                     <div className={Classes.DIALOG_FOOTER}>
@@ -382,7 +490,7 @@ export const StackDialog: React.FC<{}> = () => {
                     </div>
                 </Dialog>
             )}
-            {showAddDashboard && currentStack && (
+            {showAddDashboard && stackToBeEdited && (
                 <Dialog
                     className={themeClass}
                     isOpen={showAddDashboard}
@@ -390,7 +498,7 @@ export const StackDialog: React.FC<{}> = () => {
                     title="Create New Dashboard"
                 >
                     <div data-element-id="CreateDashboardDialog" className={Classes.DIALOG_BODY}>
-                        <CreateDashboardForm stackId={currentStack.id} onSubmit={onAddNewDashboardSubmitted} />
+                        <CreateDashboardForm stackId={stackToBeEdited.id} onSubmit={onAddNewDashboardSubmitted} />
                     </div>
 
                     <div className={Classes.DIALOG_FOOTER}>

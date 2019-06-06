@@ -5,9 +5,15 @@ import { AddWidgetOpts, Dashboard, DashboardProps } from "../models/Dashboard";
 import { ExpandoPanel, FitPanel, isExpandoPanel, LayoutType, Panel, PanelState, TabbedPanel } from "../models/panel";
 import { UserWidget } from "../models/UserWidget";
 import { WidgetInstance } from "../models/WidgetInstance";
+import { Widget } from "../models/Widget";
+
 import { MosaicDropTargetPosition } from "../shared/dragAndDrop";
+import { MosaicBranch, MosaicNode, MosaicParent } from "../features/MosaicDashboard/types";
+
 import { dashboardStore, DashboardStore } from "../stores/DashboardStore";
-import { hasSameId, isNil, Predicate, some, values } from "../utility";
+import { hasSameId, isNil, Predicate, some, uuid, values } from "../utility";
+
+import { authService } from "./AuthService";
 
 import { errorStore } from "./ErrorStore";
 import { WidgetLaunchArgs } from "./WidgetLaunchArgs";
@@ -67,7 +73,6 @@ export class DashboardService {
             errorStore.notice("Dashboard Locked", "The current Dashboard is locked and Widgets may not be added.");
             return false;
         }
-
         const { widget, title } = getUserWidget(opts.widget);
         if (widget.isSingleton && dashboard.containsWidget(hasSameId(widget))) {
             errorStore.notice("Singleton Widget", `The Widget '${title}' is a Singleton and may not be added twice.`);
@@ -81,6 +86,48 @@ export class DashboardService {
         }
 
         return isSuccess;
+    }
+
+    async addWidgetSimple(
+        widget: Widget,
+        destDashboard?: Dashboard,
+        path?: MosaicPath,
+        positionInDash?: MosaicDropTargetPosition
+    ): Promise<boolean> {
+        const importingUser = (await authService.check()).data;
+        const userWidgets: UserWidget[] = values(dashboardStore.userDashboards().value.widgets);
+        let highestID: number = 0;
+        for (const uWidget of userWidgets) {
+            if (uWidget.id > highestID) {
+                highestID = uWidget.id;
+            }
+        }
+        const userWidget: UserWidget = new UserWidget({
+            id: highestID + 1,
+            isDisabled: false,
+            isEditable: true,
+            isFavorite: false,
+            isGroupWidget: false,
+            position: 0,
+            title: widget.title,
+            user: {
+                username: importingUser.username,
+                displayName: importingUser.userRealName
+            },
+            widget: widget
+        });
+
+        const widgetOpts = {
+            widget: userWidget,
+            title: widget.title,
+            path: path,
+            position: positionInDash
+        };
+        if (destDashboard) {
+            return destDashboard.addWidget(widgetOpts);
+        } else {
+            return this.addWidget(widgetOpts);
+        }
     }
 
     /**
@@ -232,6 +279,41 @@ function createSampleAccordionPanel(): ExpandoPanel {
 
 function createSamplePortalPanel(): ExpandoPanel {
     return new ExpandoPanel("portal", { title: "New Portal Panel" });
+}
+
+// tslint:disable:no-bitwise
+export function mosaicPathFromCode(code: number): MosaicBranch[] {
+    // Places the panels in a sane way, making sure no panel is initially less than half the size of any other panel.
+    // remember this is a KD tree, where the way to add a panel is to essentaily split an existing one in half.
+    // Sorry that it's bitwise stuff.
+    const firstBitMask = 1;
+    const path: MosaicBranch[] = [];
+    const pathDirections: MosaicBranch[] = ["first", "second"];
+
+    while (code > 1) {
+        const firstBit = code & firstBitMask; // going to be either 1 or 0
+        path.push(pathDirections[firstBit]);
+        code = code >> 1; // remove the smallest
+    }
+    return path;
+}
+export function mosaicPositionFromCode(code: number): MosaicDropTargetPosition {
+    // remember this is a KD tree, where the way to add a panel is to essentaily split an existing one in half.
+    // So the path goes around in a circle, splitting all nodes of one size before going around and splitting all nodes on the next level.
+    // The direction of split thus has to alternate at each level.
+    // I.e.:
+    // 0 : center (first thing must go in center)
+    // 1 : right
+    // 2 - 3 : bottom
+    // 4 - 7 : right
+    // 8 - 15 : bottom
+    // etc
+
+    if (code === 0) {
+        return MosaicDropTargetPosition.CENTER;
+    }
+    const whatLevelOfSplitAreWeOn = Math.floor(Math.log2(code)) + 1;
+    return whatLevelOfSplitAreWeOn % 2 === 1 ? MosaicDropTargetPosition.RIGHT : MosaicDropTargetPosition.BOTTOM;
 }
 
 export const dashboardService = new DashboardService();

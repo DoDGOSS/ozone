@@ -14,6 +14,6 @@ export class Application extends PageObject {
     }
 
     waitForConsentPage(): ConsentPage {
-        return this.open(ConsentPage).waitUntilVisible(5000);
+        return this.open(ConsentPage).waitUntilVisible(7000);
     }
 }

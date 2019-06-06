@@ -16,10 +16,10 @@ import {
 import { Stack } from "../models/Stack";
 import { UserWidget } from "../models/UserWidget";
 import { WidgetInstance } from "../models/WidgetInstance";
-import { optional, values } from "../utility";
 
 import { userWidgetFromJson } from "./UserWidget.codec";
 
+import { optional, uuid, values } from "../utility";
 export interface UserState {
     dashboards: Dictionary<Dashboard>;
     stacks: NumericDictionary<Stack>;
@@ -59,8 +59,11 @@ class UserStateDeserializer {
         userWidgets.forEach((userWidget) => this.addWidget(userWidget));
 
         dashboards.forEach((dashboard) => {
-            this.addStack(dashboard.stack);
-            this.addDashboard(dashboard);
+            if (dashboard.stack) {
+                // TODO create a new stack for any orphaned dashboards.
+                this.addStack(dashboard.stack);
+                this.addDashboard(dashboard);
+            }
         });
 
         return {
@@ -177,6 +180,21 @@ class UserStateDeserializer {
     };
 }
 
+export function dashboardToCreateRequest(dashboard: Dashboard): DashboardUpdateRequest {
+    const state = dashboard.state().value;
+
+    return {
+        dashboardPosition: state.position,
+        description: state.description,
+        guid: uuid(),
+        iconImageUrl: state.imageUrl,
+        isdefault: state.isDefault,
+        layoutConfig: JSON.stringify(dashboardLayoutToJson(state)),
+        locked: state.isLocked,
+        name: state.name
+    };
+}
+
 export function dashboardToUpdateRequest(dashboard: Dashboard): DashboardUpdateRequest {
     const state = dashboard.state().value;
 
@@ -207,7 +225,12 @@ export function panelToJson(panel: Panel<PanelState>): PanelDTO {
             id: state.id,
             title: state.title,
             type: state.type,
-            widgets: state.widgets.map(widgetInstanceToJson),
+            widgets: state.widgets
+                .filter((instance) => instance.userWidget !== undefined)
+                .map((instance) => ({
+                    id: instance.id,
+                    userWidgetId: instance.userWidget.id
+                })),
             activeWidgetId: getActiveWidgetId(state),
             collapsed: isExpandoPanelState(state) ? state.collapsed : undefined
         };

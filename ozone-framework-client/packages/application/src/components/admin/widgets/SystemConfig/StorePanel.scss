@@ -1,0 +1,39 @@
+@import "../../../../common";
+
+:local .variableWidthLeft {
+    width:auto;
+    overflow:hidden;
+}
+:local .fixedRightAddStoreButton {
+    min-width:10em;
+    width:auto;
+    float:right;
+}
+
+:local .storeItem {
+    min-height: 100px;
+    margin-bottom: 20px;
+    border:1px;
+}
+
+:local .storeIcon {
+    padding: 1em;
+    float: left;
+}
+
+:local .storeLabel {
+    float:left;
+    width:100%;
+}
+
+:local .storeDescription {
+    padding-top: 1em;
+    width:auto;
+    overflow:hidden;
+}
+
+:local .storeButtons {
+    padding-top: 1em;
+    padding-left: 8px;
+    float:right;
+}

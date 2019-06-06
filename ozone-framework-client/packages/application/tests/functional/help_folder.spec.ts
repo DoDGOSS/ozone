@@ -9,7 +9,7 @@ module.exports = {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
 
         browser
-            .waitForElementVisible(MainPage.HELP_BUTTON, 2000, "[Help Dialog Button] is visible.")
+            .waitForElementVisible(MainPage.HELP_BUTTON, 3000, "[Help Dialog Button] is visible.")
             .click(MainPage.HELP_BUTTON);
 
         browser.waitForElementVisible(MainPage.HELP_DIALOG, 2000, "[Help Dialog Box] is visible.");

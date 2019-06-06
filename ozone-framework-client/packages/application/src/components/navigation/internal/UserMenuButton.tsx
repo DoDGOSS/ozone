@@ -3,6 +3,7 @@ import { Button, Popover, Position } from "@blueprintjs/core";
 
 import { useBehavior } from "../../../hooks";
 import { authStore } from "../../../stores/AuthStore";
+import { mainStore } from "../../../stores/MainStore";
 
 import { NavbarTooltip } from "./NavbarTooltip";
 import { UserMenu } from "./UserMenu";
@@ -19,7 +20,13 @@ const _UserMenuButton: React.FC = () => {
                 position={Position.BOTTOM_RIGHT}
                 modifiers={{ arrow: { enabled: false } }}
             >
-                <Button minimal text={displayName} rightIcon="menu" data-element-id="user-menu-button" />
+                <Button
+                    minimal
+                    text={displayName}
+                    rightIcon="menu"
+                    data-element-id="user-menu-button"
+                    onClick={mainStore.hideStore}
+                />
             </Popover>
         </NavbarTooltip>
     );

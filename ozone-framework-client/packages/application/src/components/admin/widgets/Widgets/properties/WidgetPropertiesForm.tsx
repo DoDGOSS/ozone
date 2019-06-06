@@ -43,24 +43,30 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
     return (
         <Formik
             ref={form}
-            initialValues={widget}
+            initialValues={getInitValues(widget)}
             validationSchema={WidgetPropertiesSchema}
+            enableReinitialize={true}
             onSubmit={async (
                 values: WidgetCreateRequest | WidgetUpdateRequest,
-                actions: FormikActions<WidgetCreateRequest>
+                actions: FormikActions<WidgetCreateRequest | WidgetUpdateRequest>
             ) => {
                 values.height = Number(values.height);
                 values.width = Number(values.width);
 
+                if (widget.universalName && widget.universalName !== "" && "id" in values) {
+                    // universalName is ID in store. So it cannot be editable.
+                    values.universalName = widget.universalName;
+                }
                 const isSuccess = await onSubmit(values);
-                actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
                 if (isSuccess) {
+                    actions.setStatus(null); // what does this do?
                     OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
+                    actions.resetForm(values);
                 } else {
                     OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
+                    actions.setStatus({ error: "An unexpected error has occurred" });
                 }
             }}
-            enableReinitialize={true}
         >
             {(formik: FormikProps<WidgetCreateRequest | WidgetUpdateRequest>) => (
                 <div data-element-id="widget-admin-widget-properties-form">
@@ -70,7 +76,7 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
                                 inline={true}
                                 className={styles.inline_form_label}
                                 name="displayName"
-                                label="Name"
+                                label="Name *"
                                 placeholder="MyAppComponent"
                             />
                             <TextField
@@ -89,9 +95,10 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
                             />
                             <TextField
                                 inline={true}
+                                disabled={(widget as WidgetUpdateRequest).id !== undefined}
                                 className={styles.inline_form_label}
                                 name="universalName"
-                                label="Universal Name"
+                                label="Universal Name *"
                                 placeholder="MyAppComponent.mycompany.com"
                             />
 
@@ -106,30 +113,35 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
                                 inline={true}
                                 className={styles.inline_form_label}
                                 name="widgetUrl"
-                                label="URL"
+                                label="URL *"
                                 placeholder="https://mycompany.com/appcomponent/MyAppComponent.html"
                             />
                             <TextField
                                 inline={true}
                                 className={styles.inline_form_label}
                                 name="imageUrlSmall"
-                                label="Small Icon URL"
+                                label="Small Icon URL *"
                                 placeholder="https://mycompany.com/appcomponent/images/containerIcon.png"
                             />
                             <TextField
                                 inline={true}
                                 className={styles.inline_form_label}
                                 name="imageUrlMedium"
-                                label="Medium Icon URL"
+                                label="Medium Icon URL *"
                                 placeholder="https://mycompany.com/appcomponent/images/launchMenuIcon.png"
                             />
 
-                            <TextField inline={true} className={styles.inline_form_label} name="width" label="Width" />
+                            <TextField
+                                inline={true}
+                                className={styles.inline_form_label}
+                                name="width"
+                                label="Width *"
+                            />
                             <TextField
                                 inline={true}
                                 className={styles.inline_form_label}
                                 name="height"
-                                label="Height"
+                                label="Height *"
                             />
 
                             {/* The initial value of the dropdown needs to be set manually. */}
@@ -191,6 +203,13 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
     );
 };
 
+function getInitValues(widget: WidgetCreateRequest | WidgetUpdateRequest): WidgetCreateRequest | WidgetUpdateRequest {
+    if ((!widget.universalName || widget.universalName === "") && (widget.displayName && widget.displayName !== "")) {
+        widget.universalName = widget.displayName + "_";
+    }
+    return widget;
+}
+
 const WidgetPropertiesSchema = object().shape({
     displayName: string().required("Required"),
     widgetUrl: string().required("Required"),
@@ -207,7 +226,7 @@ const WidgetPropertiesSchema = object().shape({
         .min(200)
         .required("Required"),
     widgetGuid: string(),
-    universalName: string(),
+    universalName: string().required("Required"),
     visible: boolean(),
     background: boolean(),
     singleton: boolean(),

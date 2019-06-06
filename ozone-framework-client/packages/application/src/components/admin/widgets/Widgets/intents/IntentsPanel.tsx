@@ -2,9 +2,8 @@ import * as React from "react";
 
 import { Button, ButtonGroup, Divider, Intent as bpIntent } from "@blueprintjs/core";
 
-// @ts-ignore
 import { ColumnTabulator, GenericTable } from "../../../../generic-table/GenericTable";
-import { showConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { showConfirmationDialog } from "../../../../confirmation-dialog/showConfirmationDialog";
 
 import { Intent } from "../../../../../models/compat";
 import { IntentDTO, IntentsDTO } from "../../../../../api/models/IntentDTO";

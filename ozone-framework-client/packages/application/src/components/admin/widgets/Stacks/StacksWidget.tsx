@@ -5,8 +5,8 @@ import { Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
 import { stackApi } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";
 
+import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
-import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 
 import { StackSetup } from "./StackSetup";
@@ -30,9 +30,7 @@ enum StackWidgetSubSection {
     SETUP
 }
 
-// everything else has been changed to `Stacks*` because that's what they are, but this and src/stores/system-widgets
-// have been kept as DashboardsWidget out of fear of changing the name.
-export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
+export class StacksWidget extends React.Component<{}, StacksWidgetState> {
     defaultPageSize: number = 5;
 
     constructor(props: any) {
@@ -61,7 +59,7 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
                 {showTable && (
                     <div>
                         <GenericTable
-                            title={"Stacks"}
+                            title={"Stack Permissions"}
                             items={this.state.stacks}
                             getColumns={() => this.getTableColumns()}
                             tableProps={{

@@ -44,6 +44,7 @@ export class GroupSetup extends React.Component<GroupSetupProps, GroupSetupState
                     <Tab
                         id="group_users"
                         title="Users"
+                        disabled={this.state.group === undefined}
                         panel={this.emptyIfGroupNull(
                             <GroupUsersPanel onUpdate={this.props.onUpdate} group={this.state.group!} />
                         )}
@@ -51,6 +52,7 @@ export class GroupSetup extends React.Component<GroupSetupProps, GroupSetupState
                     <Tab
                         id="group_widgets"
                         title="Widgets"
+                        disabled={this.state.group === undefined}
                         panel={this.emptyIfGroupNull(
                             <GroupWidgetsPanel onUpdate={this.props.onUpdate} group={this.state.group!} />
                         )}
@@ -58,6 +60,7 @@ export class GroupSetup extends React.Component<GroupSetupProps, GroupSetupState
                     <Tab
                         id="group_stacks"
                         title="Stacks"
+                        disabled={this.state.group === undefined}
                         panel={this.emptyIfGroupNull(
                             <GroupStacksPanel onUpdate={this.props.onUpdate} group={this.state.group!} />
                         )}
@@ -91,9 +94,9 @@ export class GroupSetup extends React.Component<GroupSetupProps, GroupSetupState
             response.data.data.length !== undefined &&
             response.data.data.length > 0
         ) {
-            // this.setState({
-            //     group: response.data.data[0]
-            // });
+            this.setState({
+                group: response.data.data[0]
+            });
             this.props.onUpdate();
             return true;
         }

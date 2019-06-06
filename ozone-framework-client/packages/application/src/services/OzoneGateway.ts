@@ -92,7 +92,6 @@ export class OzoneGateway implements Gateway {
                 headers,
                 params
             });
-
             if (validate) validate(response.data);
 
             return response;
