@@ -23,6 +23,7 @@ export interface Panel<T extends PanelState = PanelState> {
     readonly id: string;
     readonly type: LayoutType;
     readonly title: string;
+    readonly widgetCount: number;
 
     state(): BehaviorObservable<T>;
 
@@ -31,6 +32,8 @@ export interface Panel<T extends PanelState = PanelState> {
     closeWidget(instanceId: string): WidgetInstance | undefined;
 
     findWidget(instanceId: string): WidgetInstance | undefined;
+
+    setTitle(value: string): void;
 }
 
 export function isFitPanel(panel: Panel): panel is FitPanel {

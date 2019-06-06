@@ -1,6 +1,6 @@
 import styles from "./DashboardPanel.scss";
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useCallback } from "react";
 import { useBehavior } from "../../../hooks";
 import { isEqual } from "lodash";
 
@@ -11,6 +11,7 @@ import { RemoveButton } from "../../../features/MosaicDashboard/buttons/RemoveBu
 import { dashboardStore } from "../../../stores/DashboardStore";
 
 import { DashboardPath, DashboardWindow } from "../types";
+import { EditableText } from "../internal/EditableText";
 import { OptionsButton } from "../internal/OptionsButton";
 
 import { DashboardExpandoPanel } from "./DashboardExpandoPanel";
@@ -26,6 +27,8 @@ const _DashboardPanel: React.FC<DashboardPanelProps> = ({ panel, path }) => {
     const dashboard = useBehavior(dashboardStore.currentDashboard);
     const { isLocked } = useBehavior(dashboard.state);
 
+    const { title: panelTitle } = useBehavior(panel.state);
+
     const toolbarControls = (
         <>
             {!isLocked && <OptionsButton panel={panel} path={path} />}
@@ -34,11 +37,17 @@ const _DashboardPanel: React.FC<DashboardPanelProps> = ({ panel, path }) => {
         </>
     );
 
+    const setPanelTitle = useCallback((newTitle: string) => panel.setTitle(newTitle), [panelTitle]);
+
+    const titleElement = <EditableText value={panelTitle} disabled={isLocked} onChange={setPanelTitle} />;
+
     return (
         <DashboardWindow
             className={styles.dashboardWindow}
             path={path}
-            title={panel.title}
+            title={panelTitle}
+            titleClassname={styles.windowTitle}
+            titleElement={titleElement}
             toolbarControls={toolbarControls}
         >
             {createPanel(panel)}

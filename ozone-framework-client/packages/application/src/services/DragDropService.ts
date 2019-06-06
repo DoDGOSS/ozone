@@ -31,14 +31,15 @@ export class DragDropService {
         setSaveSnapshotCallback(() => this.saveSnapshot());
     }
 
-    saveSnapshot(): void {
+    saveSnapshot = (): void => {
         this.snapshot = cloneDeep(this.dashboardState.tree);
-    }
+    };
 
-    restoreSnapshot(): void {
+    restoreSnapshot = (): void => {
         if (!this.snapshot) return;
         this.dashboardService.setLayout(this.snapshot);
-    }
+        this.snapshot = null;
+    };
 
     canDrag = (): boolean => !this.dashboardState.isLocked;
 
@@ -64,8 +65,6 @@ export class DragDropService {
                 this.handleInstanceDropEvent(dragData, dropData);
                 break;
         }
-
-        this.snapshot = null;
     };
 
     private get dashboard(): Dashboard {

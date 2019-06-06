@@ -133,8 +133,12 @@ $drop-target-size-active: 25%;
     left: 0;
     display: none;
 
-    &.-dragging {
+    &.-hover-self {
+        background: rgba(72, 175, 240, 0.2);
+        border: 2px solid #2b95d6;
+        border-radius: 3px;
         display: block;
+        z-index: 4;
     }
 
     .drop-target {
