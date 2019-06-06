@@ -2,7 +2,7 @@ import { isArray } from "lodash";
 
 import { uuid } from "../../utility";
 import { errorStore } from "../../services/ErrorStore";
-import { showReplaceWidgetDialog } from "../../components/widget-dashboard/ReplaceWidgetDialog";
+import { showReplaceWidgetDialog } from "../../components/widget-dashboard/internal/ReplaceWidgetDialog";
 
 import { WidgetInstance } from "../WidgetInstance";
 

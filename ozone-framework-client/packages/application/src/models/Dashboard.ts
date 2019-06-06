@@ -207,17 +207,17 @@ export class Dashboard {
 
         if (!tree) throw new Error("setPanelLayout: no current Dashboard tree");
 
-        const { widgets } = panel.state().value;
+        const { title, widgets } = panel.state().value;
         let newPanel: Panel<PanelState> | undefined;
         if (layout === "fit") {
             const widget = widgets.length > 0 ? widgets[0] : undefined;
-            newPanel = new FitPanel({ widget });
+            newPanel = new FitPanel({ title, widget });
         } else if (layout === "tabbed") {
-            newPanel = new TabbedPanel({ widgets });
+            newPanel = new TabbedPanel({ title, widgets });
         } else if (layout === "accordion") {
-            newPanel = new ExpandoPanel("accordion", { widgets });
+            newPanel = new ExpandoPanel("accordion", { title, widgets });
         } else if (layout === "portal") {
-            newPanel = new ExpandoPanel("portal", { widgets });
+            newPanel = new ExpandoPanel("portal", { title, widgets });
         }
 
         if (newPanel !== undefined) {

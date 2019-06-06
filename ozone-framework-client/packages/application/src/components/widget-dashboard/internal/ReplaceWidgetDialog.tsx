@@ -1,10 +1,10 @@
 import React, { useCallback } from "react";
-import { useBehavior } from "../../hooks";
+import { useBehavior } from "../../../hooks";
 import { Button, Classes, Intent } from "@blueprintjs/core";
 import { confirmAlert } from "react-confirm-alert";
 
-import { mainStore } from "../../stores/MainStore";
-import { classNames } from "../../utility";
+import { mainStore } from "../../../stores/MainStore";
+import { classNames } from "../../../utility";
 
 export interface ReplaceWidgetDialogProps {
     onConfirm?: () => void;

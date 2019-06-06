@@ -25,6 +25,10 @@ export abstract class AbstractPanel<T extends PanelState> implements Panel<T> {
         return this.state$.value.title;
     }
 
+    get widgetCount(): number {
+        return this.state$.value.widgets.length;
+    }
+
     state = () => asBehavior(this.state$);
 
     abstract addWidgets(instance: WidgetInstance | WidgetInstance[], opts?: AddWidgetsOpts): void;
@@ -34,5 +38,14 @@ export abstract class AbstractPanel<T extends PanelState> implements Panel<T> {
     findWidget(instanceId: string): WidgetInstance | undefined {
         const { widgets } = this.state$.value;
         return find(widgets, (w) => w.id === instanceId);
+    }
+
+    setTitle(value: string): void {
+        const prev = this.state$.value;
+
+        this.state$.next({
+            ...prev,
+            title: value
+        });
     }
 }

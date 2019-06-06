@@ -18,14 +18,24 @@ type DropTargetContainerDndProps = DropTargetContainerProps & DropTargetProps;
 
 class DropTargetContainerBase extends React.PureComponent<DropTargetContainerDndProps> {
     render() {
-        const { children, className, connectDropTarget, dropTargets, forwardRef, isOver, path } = this.props;
+        const {
+            children,
+            className,
+            connectDropTarget,
+            dropTargets,
+            forwardRef,
+            isOver,
+            isOverShallow,
+            path
+        } = this.props;
 
         const classes = classNames("mosaic-drop-target", className, { "drop-target-hover": isOver });
+        const containerClasses = classNames("drop-target-container", { "-hover-self": isOverShallow });
 
         return connectDropTarget(
             <div className={classes} ref={forwardRef ? forwardRef : null}>
                 {children}
-                <div className="drop-target-container">
+                <div className={containerClasses}>
                     {dropTargets ? (
                         dropTargets
                     ) : (
