@@ -1,6 +1,7 @@
 from django.db import models
 from owf_framework.people.models import Person
 
+
 class OWFGroup(models.Model):
     id = models.BigAutoField(primary_key=True)
     version = models.BigIntegerField(default=1)
@@ -19,6 +20,7 @@ class OWFGroup(models.Model):
 
     class Meta:
         db_table = 'owf_group'
+
 
 class OWFGroupPeople(models.Model):
     group = models.ForeignKey(OWFGroup, on_delete=models.CASCADE)

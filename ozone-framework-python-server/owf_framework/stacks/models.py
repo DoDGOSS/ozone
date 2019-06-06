@@ -1,6 +1,7 @@
 from django.db import models
 from owf_framework.owf_groups.models import OWFGroup
 
+
 class Stack(models.Model):
     id = models.BigAutoField(primary_key=True)
     version = models.BigIntegerField(default=1)
