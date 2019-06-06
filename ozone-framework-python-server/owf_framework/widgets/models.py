@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class WidgetDefinition(models.Model):
     id = models.BigAutoField(primary_key=True)
     version = models.BigIntegerField(default=1)
