@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from owf_framework.owf_groups.admin import OWFGroupPeopleInline
 from .models import Person
 
+
 class PersonWidgetDefinitionInline(admin.TabularInline):
     model = Person.widget_definitions.through
 
@@ -11,10 +12,11 @@ class PersonWidgetDefinitionInline(admin.TabularInline):
 class PersonAdmin(admin.ModelAdmin):
     list_display = ('id', 'user_real_name', 'username', 'email', 'description')
     search_fields = ('user_real_name', 'username', 'email')
-    inlines = [OWFGroupPeopleInline, PersonWidgetDefinitionInline,]
+    inlines = [OWFGroupPeopleInline, PersonWidgetDefinitionInline, ]
 
 
 admin.site.register(Person, PersonAdmin)
+
 
 class PersonInline(admin.StackedInline):
     model = Person
