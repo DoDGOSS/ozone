@@ -1,7 +1,9 @@
 import React from "react";
-import { Button } from "@blueprintjs/core";
+import { useBehavior } from "../../../hooks";
+import { AnchorButton, Button } from "@blueprintjs/core";
 
 import { Dashboard } from "../../../models/Dashboard";
+import { mainStore } from "../../../stores/MainStore";
 
 import { NavbarTooltip } from "./NavbarTooltip";
 
@@ -11,6 +13,7 @@ export interface LockButtonProps {
 }
 
 const _LockButton: React.FC<LockButtonProps> = ({ dashboard, isLocked }) => {
+    const isStoreOpen = useBehavior(mainStore.isStoreOpen);
     const tooltipProps = {
         title: isLocked ? "Unlock Dashboard" : "Lock Dashboard",
         description: isLocked
@@ -20,12 +23,13 @@ const _LockButton: React.FC<LockButtonProps> = ({ dashboard, isLocked }) => {
 
     const buttonProps = {
         icon: isLocked ? "lock" : "unlock",
-        onClick: isLocked ? dashboard.unlock : dashboard.lock
+        onClick: isLocked ? dashboard.unlock : dashboard.lock,
+        disabled: isStoreOpen
     } as const;
 
     return (
         <NavbarTooltip {...tooltipProps}>
-            <Button minimal {...buttonProps} />
+            <AnchorButton minimal {...buttonProps} />
         </NavbarTooltip>
     );
 };

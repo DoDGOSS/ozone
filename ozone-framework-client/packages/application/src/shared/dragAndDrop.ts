@@ -131,7 +131,6 @@ export function endWidgetDrag<P>(callback: EndDragCallback<P>): EndDragSpec<P> {
         }
 
         const dropData = (monitor.getDropResult() || {}) as DropData;
-
         callback({
             dragData,
             dropData,

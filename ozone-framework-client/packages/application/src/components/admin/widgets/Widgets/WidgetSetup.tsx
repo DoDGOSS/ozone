@@ -14,6 +14,7 @@ import { WidgetPropertiesPanel } from "./properties/WidgetPropertiesPanel";
 import { IntentsPanel } from "./intents/IntentsPanel";
 import { UsersPanel } from "./users/UsersPanel";
 import { GroupsPanel } from "./groups/GroupsPanel";
+import { StoreComponent } from "../../../Store/StoreComponent";
 
 export interface WidgetSetupProps {
     widget: WidgetDTO | undefined;

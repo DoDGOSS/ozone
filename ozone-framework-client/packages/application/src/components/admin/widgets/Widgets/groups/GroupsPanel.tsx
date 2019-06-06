@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, ButtonGroup, Intent } from "@blueprintjs/core";
 
-import { showConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { showConfirmationDialog } from "../../../../confirmation-dialog/showConfirmationDialog";
 import { groupApi } from "../../../../../api/clients/GroupAPI";
 import { widgetApi } from "../../../../../api/clients/WidgetAPI";
 
@@ -16,7 +16,6 @@ import { StackDTO } from "../../../../../api/models/StackDTO";
 interface State {
     loading: boolean;
     widgetGroups: Group[];
-    allGroups: Group[];
     dialogOpen: boolean;
 }
 
@@ -31,24 +30,20 @@ export class GroupsPanel extends React.Component<Props, State> {
         this.state = {
             loading: true,
             widgetGroups: [],
-            allGroups: [],
             dialogOpen: false
         };
     }
 
     componentDidMount() {
-        this.getAllGroups();
         this.getWidgetGroups();
     }
 
     getAllGroups = async () => {
         const response = await groupApi.getGroups();
         // TODO: Handle failed request
-        if (response.status !== 200) return;
+        if (response.status !== 200) return [];
 
-        this.setState({
-            allGroups: this.parseGroupDTOs(response.data.data)
-        });
+        return this.parseGroupDTOs(response.data.data);
     };
 
     getWidgetGroups = async () => {
@@ -120,7 +115,7 @@ export class GroupsPanel extends React.Component<Props, State> {
                 isOpen={this.state.dialogOpen}
                 onClose={() => this.closeDialog()}
                 onSubmit={(selections: Group[]) => this.addSelectedGroups(selections)}
-                allGroups={this.state.allGroups}
+                getAllGroups={this.getAllGroups}
             />
         );
     }
@@ -189,11 +184,9 @@ export class GroupsPanel extends React.Component<Props, State> {
     }
 
     openDialog(): void {
-        this.getAllGroups().then(() =>
-            this.setState({
-                dialogOpen: true
-            })
-        );
+        this.setState({
+            dialogOpen: true
+        });
     }
 
     closeDialog(): void {

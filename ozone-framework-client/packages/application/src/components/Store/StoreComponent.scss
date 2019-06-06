@@ -1,0 +1,49 @@
+@import "../../common";
+
+:local .dialog {
+  width: 80% !important;
+  max-width: none !important;
+  // {width: "80%", maxWidth: "none"}
+  padding: 30;
+}
+
+:local .bp3-input-group {
+    width: 100%;
+}
+
+.bp3-spinner {
+    height: 100%;
+}
+
+:local .full {
+    height:100%;
+    width:100%;
+}
+
+:local .fullCenteredThin {
+    height:100%;
+    width:100%;
+    padding:8px;
+    justify-content:center;
+}
+
+:local .fullCentered {
+    height:100%;
+    width:100%;
+    padding:30px;
+    justify-content:center;
+}
+
+:local .storeBanner {
+    // filter: brightness(50%);
+    width:100%;
+    margin-bottom:8px;
+}
+
+.storeTitle {
+    margin: 8px;
+    margin-left: 14px;
+    margin-right: 14px;
+    font-weight: bold;
+    font-size: 1.3em;
+}

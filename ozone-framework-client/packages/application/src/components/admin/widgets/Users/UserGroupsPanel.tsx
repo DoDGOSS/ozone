@@ -6,7 +6,7 @@ import { Button, ButtonGroup, Intent, Position, Toaster } from "@blueprintjs/cor
 import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton } from "../../../generic-table/TableButtons";
 import { UserGroupsEditDialog } from "./UserGroupsEditDialog";
-import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 import { GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
 import { UserDTO } from "../../../../api/models/UserDTO";
 import { groupApi, GroupQueryCriteria } from "../../../../api/clients/GroupAPI";

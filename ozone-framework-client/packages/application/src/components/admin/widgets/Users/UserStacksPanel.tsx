@@ -5,7 +5,7 @@ import { Button, ButtonGroup, Intent, Position, Toaster } from "@blueprintjs/cor
 
 import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton } from "../../../generic-table/TableButtons";
-import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 
 import { stackApi, StackQueryCriteria } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";

@@ -6,7 +6,7 @@ import { widgetApi, WidgetQueryCriteria } from "../../../../api/clients/WidgetAP
 import { UserDTO } from "../../../../api/models/UserDTO";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 
-import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 import { UserWidgetsEditDialog } from "./UserWidgetsEditDialog";
 import { WidgetTable } from "../Widgets/WidgetTable";
 

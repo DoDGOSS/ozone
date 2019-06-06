@@ -21,6 +21,8 @@ import {
 import { GroupDTO } from "../models/GroupDTO";
 import { UserDTO } from "../models/UserDTO";
 
+import { dashboardApi } from "./DashboardAPI";
+
 export interface StackQueryCriteria {
     limit?: number;
     offset?: number;
@@ -83,6 +85,11 @@ export class StackAPI {
     }
 
     async deleteStackAsAdmin(id: number): Promise<Response<StackDeleteAdminResponse>> {
+        // need to delete any dashboards that point to this, otherwise they stay unfindable and
+        // undeletable in the system forever, with a null stack pointer that breaks anything that
+        // assumes dashboards have stacks.
+        await dashboardApi.deleteDashboardsInStack(id);
+
         const requestData = qs.stringify({
             _method: "DELETE",
             adminEnabled: true,

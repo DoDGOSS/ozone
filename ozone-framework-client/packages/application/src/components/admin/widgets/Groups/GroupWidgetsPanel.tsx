@@ -3,7 +3,7 @@ import { Button, Intent, Position, Toaster } from "@blueprintjs/core";
 
 import { GroupWidgetsEditDialog } from "./GroupWidgetEditDialog";
 
-import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 
 import { GroupDTO } from "../../../../api/models/GroupDTO";
 

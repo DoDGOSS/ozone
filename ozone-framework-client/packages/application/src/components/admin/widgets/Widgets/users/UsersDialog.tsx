@@ -5,7 +5,9 @@ import { classNames } from "../../../../../utility";
 
 import { User } from "../../../../../models/User";
 import { mainStore } from "../../../../../stores/MainStore";
-import { ColumnTabulator, GenericTable } from "../../../../generic-table/GenericTable";
+import { ColumnTabulator } from "../../../../generic-table/GenericTable";
+import { SelectionDialogProps, TableSelectionDialog } from "../../../../table-selection-dialog/TableSelectionDialog";
+
 import * as styles from "./UsersDialog.scss";
 
 interface State {
@@ -18,7 +20,7 @@ interface Props {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (userSelections: User[]) => void;
-    allUsers: User[];
+    getAllUsers: () => Promise<User[]>;
 }
 
 export class UsersDialog extends React.Component<Props, State> {
@@ -33,44 +35,19 @@ export class UsersDialog extends React.Component<Props, State> {
 
     render() {
         return (
-            <Dialog
-                title={"Add User"}
-                className={classNames(styles.dialog, mainStore.getTheme())}
-                isOpen={this.props.isOpen}
+            <TableSelectionDialog
+                title="Grant User(s) permissions to access Widget"
+                show={this.props.isOpen}
+                getItems={this.props.getAllUsers}
+                columns={
+                    [
+                        { title: "Full Name", field: "displayName" },
+                        { title: "Last Sign In", field: "lastLogin" }
+                    ] as ColumnTabulator[]
+                }
+                onSubmit={this.props.onSubmit}
                 onClose={this.props.onClose}
-            >
-                <div className={classNames(Classes.DIALOG_BODY, styles.dialogBody)}>
-                    <div style={{ flex: 1, flexDirection: "column" }}>
-                        <GenericTable
-                            title="Users"
-                            items={this.props.allUsers}
-                            getColumns={() =>
-                                [
-                                    { title: "Full Name", field: "displayName" },
-                                    { title: "Last Sign In", field: "lastLogin" }
-                                ] as ColumnTabulator[]
-                            }
-                            multiSelection={true}
-                            onSelectionChange={(selections: User[]) => {
-                                this.setState({
-                                    selectedUsers: selections
-                                });
-                            }}
-                            {...this.props}
-                        />
-                        <br />
-                        <div>
-                            <Button text="Add" disabled={this.state.selectedUsers.length === 0} onClick={this.submit} />
-                            <Button text="Cancel" onClick={this.props.onClose} />
-                        </div>
-                    </div>
-                </div>
-            </Dialog>
+            />
         );
     }
-
-    submit = () => {
-        this.props.onSubmit(this.state.selectedUsers);
-        this.props.onClose();
-    };
 }

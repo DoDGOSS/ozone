@@ -23,7 +23,7 @@ export class ConsentPage extends PageObject {
 
     clickAcceptButton(): LoginPage {
         this.clickWhenVisible(ConsentPage.AcceptButton, "Accept button");
-        this.waitUntilNotPresent();
+        this.waitUntilNotPresent(10000);
         return this.open(LoginPage).waitUntilVisible(5000);
     }
 }

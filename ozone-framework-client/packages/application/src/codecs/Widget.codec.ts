@@ -1,15 +1,14 @@
-import { WidgetDTO } from "../api/models/WidgetDTO";
+import { WidgetCreateRequest, WidgetDTO, WidgetUpdateRequest } from "../api/models/WidgetDTO";
 
 import { Widget } from "../models/Widget";
 
 import { intentFromJson } from "./Intent.codec";
 import { widgetTypeFromJson } from "./WidgetType.codec";
 
-import { optional } from "../utility";
+import { optional, uuid } from "../utility";
 
 export function widgetFromJson(dto: WidgetDTO): Widget {
     const props = dto.value;
-
     return new Widget({
         description: optional(props.description),
         descriptorUrl: optional(props.descriptorUrl),
@@ -37,7 +36,7 @@ export function widgetFromJson(dto: WidgetDTO): Widget {
             totalUsers: props.totalUsers
         },
         title: props.namespace,
-        universalName: optional(props.universalName),
+        universalName: props.universalName,
         url: props.url,
         types: props.widgetTypes.map(widgetTypeFromJson),
         version: optional(props.widgetVersion),
@@ -45,4 +44,49 @@ export function widgetFromJson(dto: WidgetDTO): Widget {
         x: props.x,
         y: props.y
     });
+}
+
+export function widgetCreateRequestFromWidget(widget: Widget): WidgetCreateRequest {
+    return {
+        displayName: widget.title,
+        widgetVersion: widget.version ? widget.version : "",
+        description: widget.description ? widget.description : "",
+        widgetUrl: widget.url,
+        imageUrlSmall: widget.images.smallUrl,
+        imageUrlMedium: widget.images.largeUrl,
+        width: widget.width,
+        height: widget.height,
+        widgetGuid: uuid(),
+        universalName: widget.universalName,
+        visible: widget.isVisible,
+        background: widget.isBackground,
+        singleton: widget.isSingleton,
+        mobileReady: widget.isMobileReady,
+        widgetTypes: widget.types,
+        descriptorUrl: widget.descriptorUrl,
+        intents: widget.intents
+    };
+}
+
+export function widgetUpdateRequestFromWidget(widget: Widget): WidgetUpdateRequest {
+    return {
+        displayName: widget.title,
+        widgetVersion: widget.version ? widget.version : "",
+        description: widget.description ? widget.description : "",
+        widgetUrl: widget.url,
+        imageUrlSmall: widget.images.smallUrl,
+        imageUrlMedium: widget.images.largeUrl,
+        width: widget.width,
+        height: widget.height,
+        widgetGuid: widget.id,
+        id: widget.id,
+        universalName: widget.universalName,
+        visible: widget.isVisible,
+        background: widget.isBackground,
+        singleton: widget.isSingleton,
+        mobileReady: widget.isMobileReady,
+        widgetTypes: widget.types,
+        descriptorUrl: widget.descriptorUrl,
+        intents: widget.intents
+    };
 }

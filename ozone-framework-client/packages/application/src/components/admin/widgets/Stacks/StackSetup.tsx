@@ -6,13 +6,13 @@ import { stackApi } from "../../../../api/clients/StackAPI";
 import { StackPropertiesPanel } from "./StackPropertiesPanel";
 import { StackUsersPanel } from "./StackUsersPanel";
 import { StackGroupsPanel } from "./StackGroupsPanel";
-import { StackDTO, StackUpdateRequest } from "../../../../api/models/StackDTO";
+import { StackCreateRequest, StackDTO, StackUpdateRequest } from "../../../../api/models/StackDTO";
 import { CancelButton } from "../../../form";
 
 import * as styles from "../Widgets.scss";
 
 export interface StackSetupProps {
-    onUpdate: (update?: any) => void;
+    onUpdate: (update?: StackCreateRequest | StackUpdateRequest) => void;
     onBack: () => void;
     stack: StackDTO | undefined;
 }
@@ -36,13 +36,12 @@ export class StackSetup extends React.Component<StackSetupProps, StackSetupState
                     <Tab
                         id="dashboard_properties"
                         title="Properties"
-                        panel={this.emptyIfStackNull(
-                            <StackPropertiesPanel saveStack={this.createOrUpdateStack} stack={this.state.stack!} />
-                        )}
+                        panel={<StackPropertiesPanel saveStack={this.createOrUpdateStack} stack={this.state.stack} />}
                     />
                     <Tab
                         id="dashboard_groups"
                         title="Groups"
+                        disabled={this.state.stack === undefined}
                         panel={this.emptyIfStackNull(
                             <StackGroupsPanel onUpdate={this.props.onUpdate} stack={this.state.stack!} />
                         )}
@@ -50,6 +49,7 @@ export class StackSetup extends React.Component<StackSetupProps, StackSetupState
                     <Tab
                         id="dashboard_users"
                         title="Users"
+                        disabled={this.state.stack === undefined}
                         panel={this.emptyIfStackNull(
                             <StackUsersPanel onUpdate={this.props.onUpdate} stack={this.state.stack!} />
                         )}
@@ -63,7 +63,7 @@ export class StackSetup extends React.Component<StackSetupProps, StackSetupState
         );
     }
 
-    private createOrUpdateStack = async (stack: /*StackCreateRequest |*/ StackUpdateRequest) => {
+    private createOrUpdateStack = async (stack: StackCreateRequest | StackUpdateRequest) => {
         let response: any;
         if ("id" in stack) {
             response = await stackApi.updateStack(stack);

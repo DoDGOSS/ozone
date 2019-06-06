@@ -12,7 +12,7 @@ export class StackUsersEditDialog extends React.Component<SelectionDialogProps<U
     render() {
         return (
             <TableSelectionDialog
-                title="Add Users(s) to Stack"
+                title="Add User(s) to Stack"
                 show={this.props.show}
                 getItems={this.dataLoader}
                 columns={

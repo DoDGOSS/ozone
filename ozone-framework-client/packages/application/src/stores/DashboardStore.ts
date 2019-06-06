@@ -43,7 +43,13 @@ export class DashboardStore {
         return userWidgets.find((w: UserWidget) => w.id === id);
     }
 
-    fetchUserDashboards = async (newCurrentGuid?: string | any) => {
+    findUserWidgetByUniversalName(universalName: string): UserWidget | undefined {
+        const userState = this.userDashboards$.value;
+        const userWidgets = values(userState.widgets);
+        return userWidgets.find((w: UserWidget) => w.widget.universalName === universalName);
+    }
+
+    fetchUserDashboards = async (newCurrentDashGuid?: string | any) => {
         this.isLoading$.next(true);
 
         let response = await this.userDashboardApi.getOwnDashboards();
@@ -55,8 +61,10 @@ export class DashboardStore {
             response = await this.createDefaultDashboard();
         }
 
-        const userDashboards = deserializeUserState(response.data.dashboards, response.data.widgets);
-        this.updateUserState(userDashboards, newCurrentGuid);
+        const newState = deserializeUserState(response.data.dashboards, response.data.widgets);
+        this.userDashboards$.next(newState);
+
+        this.setCurrentDashboard(newState, newCurrentDashGuid);
 
         this.isLoading$.next(false);
     };
@@ -106,12 +114,10 @@ export class DashboardStore {
         }
     };
 
-    private updateUserState = (state: UserState, newCurrentGuid?: string) => {
-        this.userDashboards$.next(state);
+    private setCurrentDashboard = (newState: UserState, newCurrentGuid: string) => {
+        const dashboards = values(newState.dashboards);
 
         const currentDashboard = this.currentDashboard$.value;
-        const dashboards = values(state.dashboards);
-
         if (dashboards.length <= 0) {
             this.currentDashboard$.next(EMPTY_DASHBOARD);
             return;
@@ -124,6 +130,7 @@ export class DashboardStore {
 
         const currentGuid = !isNil(newCurrentGuid) ? newCurrentGuid : currentDashboard.guid;
         const newCurrentDashboard = dashboards.find((dashboard) => dashboard.guid === currentGuid);
+
         if (newCurrentDashboard === undefined) {
             this.currentDashboard$.next(dashboards[0]);
             return;

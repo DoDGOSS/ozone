@@ -5,7 +5,9 @@ import { classNames } from "../../../../../utility";
 
 import { Group } from "../../../../../models/Group";
 import { mainStore } from "../../../../../stores/MainStore";
-import { ColumnTabulator, GenericTable } from "../../../../generic-table/GenericTable";
+import { ColumnTabulator } from "../../../../generic-table/GenericTable";
+import { TableSelectionDialog } from "../../../../table-selection-dialog/TableSelectionDialog";
+
 import * as styles from "./GroupsDialog.scss";
 
 interface State {
@@ -18,7 +20,7 @@ interface Props {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (newGroups: Group[]) => void;
-    allGroups: Group[];
+    getAllGroups: () => Promise<Group[]>;
 }
 
 export class GroupsDialog extends React.Component<Props, State> {
@@ -33,48 +35,19 @@ export class GroupsDialog extends React.Component<Props, State> {
 
     render() {
         return (
-            <Dialog
-                title={"Add Group"}
-                className={classNames(styles.dialog, mainStore.getTheme())}
-                isOpen={this.props.isOpen}
+            <TableSelectionDialog
+                title="Grant Group(s) permissions to access Widget"
+                show={this.props.isOpen}
+                getItems={this.props.getAllGroups}
+                columns={
+                    [
+                        { title: "Name", field: "name" },
+                        { title: "Description", field: "description" }
+                    ] as ColumnTabulator[]
+                }
+                onSubmit={this.props.onSubmit}
                 onClose={this.props.onClose}
-            >
-                <div className={classNames(Classes.DIALOG_BODY, styles.dialogBody)}>
-                    <div style={{ flex: 1, flexDirection: "column" }}>
-                        <GenericTable
-                            title="Groups"
-                            items={this.props.allGroups}
-                            getColumns={() =>
-                                [
-                                    { title: "Name", field: "name" },
-                                    { title: "Description", field: "description" }
-                                ] as ColumnTabulator[]
-                            }
-                            multiSelection={true}
-                            onSelectionChange={(selections: Group[]) => {
-                                this.setState({
-                                    selectedGroups: selections
-                                });
-                            }}
-                            {...this.props}
-                        />
-                        <br />
-                        <div>
-                            <Button
-                                text="Add"
-                                disabled={this.state.selectedGroups.length === 0}
-                                onClick={this.submit}
-                            />
-                            <Button text="Cancel" onClick={this.props.onClose} />
-                        </div>
-                    </div>
-                </div>
-            </Dialog>
+            />
         );
     }
-
-    submit = () => {
-        this.props.onSubmit(this.state.selectedGroups);
-        this.props.onClose();
-    };
 }

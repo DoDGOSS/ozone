@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
-import { Button } from "@blueprintjs/core";
-
 import { useBehavior } from "../../../hooks";
+import { Button } from "@blueprintjs/core";
 import { Shortcuts, useHotkey } from "../../../shared/hotkeys";
+import { dashboardStore } from "../../../stores/DashboardStore";
 import { mainStore } from "../../../stores/MainStore";
 
 import { NavbarTooltip } from "./NavbarTooltip";
@@ -13,6 +13,7 @@ export interface WidgetsButtonProps {
 
 const _WidgetsButton: React.FC<WidgetsButtonProps> = ({ isLocked }) => {
     const isActive = useBehavior(mainStore.isWidgetToolbarOpen);
+    const storeIsOpen = useBehavior(mainStore.isStoreOpen);
 
     const toggleWidgetToolbar = useCallback(() => {
         if (!isLocked) mainStore.toggleWidgetToolbar();
@@ -32,7 +33,7 @@ const _WidgetsButton: React.FC<WidgetsButtonProps> = ({ isLocked }) => {
                 text="Widgets"
                 icon="widget"
                 active={isActive}
-                disabled={isLocked}
+                disabled={isLocked || storeIsOpen}
                 onClick={toggleWidgetToolbar}
                 data-element-id="widgets-button"
             />

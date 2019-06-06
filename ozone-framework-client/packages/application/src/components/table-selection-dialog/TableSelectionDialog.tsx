@@ -87,7 +87,11 @@ export abstract class TableSelectionDialog<T> extends React.Component<
                     </div>
                     <div className={Classes.DIALOG_FOOTER}>
                         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                            <Button onClick={this.submit} data-element-id="table-selector-confirm">
+                            <Button
+                                onClick={this.submit}
+                                data-element-id="table-selector-confirm"
+                                disabled={this.state.selected === undefined || this.state.selected.length === 0}
+                            >
                                 OK
                             </Button>
                             <Button onClick={this.props.onClose} data-element-id="table-selector-cancel">

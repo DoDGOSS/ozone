@@ -250,7 +250,7 @@ export const USER_WIDGET_PROPERTIES_SCHEMA = {
             type: "string"
         },
         universalName: {
-            type: ["string", "null"]
+            type: ["string"]
         },
         url: {
             type: "string"

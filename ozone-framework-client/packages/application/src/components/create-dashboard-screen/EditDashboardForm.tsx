@@ -6,7 +6,7 @@ import { Form, Formik, FormikActions, FormikProps } from "formik";
 
 import { Button, Intent, Position, Toaster } from "@blueprintjs/core";
 
-import { DashboardUpdateRequest } from "../../api/models/DashboardDTO";
+import { DashboardDTO, DashboardUpdateRequest } from "../../api/models/DashboardDTO";
 
 import { FormError, TextField } from "../form";
 
@@ -25,26 +25,23 @@ const OzoneToaster = Toaster.create({
 });
 
 export const EditDashboardForm: React.FC<EditDashboardFormProps> = ({ onSubmit, dashboard }) => {
+    const initialFormValues = getInitialValues(dashboard);
     return (
         <Formik
-            initialValues={dashboard}
+            initialValues={initialFormValues}
             onSubmit={async (values: DashboardUpdateRequest, actions: FormikActions<DashboardUpdateRequest>) => {
-                const stackData = {
-                    id: values.stack!.id,
-                    stackContext: values.stack!.stackContext,
-                    iconImageUrl: values.stack!.imageUrl,
-                    name: values.stack!.name
-                };
+                dashboard.name = values.name;
+                // dashboard.iconImageUrl = values.iconImageUrl;
+                dashboard.description = values.description;
 
-                const isSuccess = [await dashboardApi.updateDashboard(values), await stackApi.updateStack(stackData)];
+                const response = await dashboardApi.updateDashboard(dashboard);
 
-                actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
                 actions.setSubmitting(false);
 
-                if (isSuccess) {
+                if (response.status === 200) {
                     OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
-                    onSubmit();
                     actions.setStatus(null);
+                    onSubmit();
                 } else {
                     OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
                     actions.setStatus({ error: "An unexpected error has occurred" });
@@ -56,12 +53,13 @@ export const EditDashboardForm: React.FC<EditDashboardFormProps> = ({ onSubmit, 
                     {formik.status && formik.status.error && <FormError message={formik.status.error} />}
 
                     <div className={styles.form}>
-                        <div className={styles.formIcon}>
+                        {/* Removed due to bug on backend I couldn't fix; iconImageUrl is never saved. */}
+                        {/* <div className={styles.formIcon}>
                             <img width="60px" src={assetUrl(formik.values.iconImageUrl)} />
-                        </div>
+                        </div> */}
                         <div className={styles.formField}>
                             <TextField name="name" label="Title" labelInfo="(required)" />
-                            <TextField name="iconImageUrl" label="Icon Url" />
+                            {/* <TextField name="iconImageUrl" label="Icon Url" /> */}
                             <TextField name="description" label="Description" />
                         </div>
                     </div>
@@ -79,3 +77,11 @@ export const EditDashboardForm: React.FC<EditDashboardFormProps> = ({ onSubmit, 
         </Formik>
     );
 };
+
+function getInitialValues(dash: DashboardDTO): any {
+    return {
+        name: dash.name ? dash.name : "",
+        iconImageUrl: dash.iconImageUrl ? dash.iconImageUrl : "",
+        description: dash.description ? dash.description : ""
+    };
+}

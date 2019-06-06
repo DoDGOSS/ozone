@@ -1,14 +1,14 @@
 import styles from "./index.scss";
 
 import React from "react";
+import { useBehavior } from "../../hooks";
+
 import { Alignment, Navbar, NavbarDivider, NavbarGroup, NavbarHeading } from "@blueprintjs/core";
 
 import { PropsBase } from "../../common";
-import { useBehavior } from "../../hooks";
-import { Shortcuts, useHotkey } from "../../shared/hotkeys";
-import { dashboardStore } from "../../stores/DashboardStore";
-import { mainStore } from "../../stores/MainStore";
+
 import { classNames } from "../../utility";
+import { dashboardStore } from "../../stores/DashboardStore";
 
 import {
     AddLayoutButton,
@@ -27,13 +27,12 @@ const _NavigationBar: React.FC<PropsBase> = ({ className }) => {
     const dashboard = useBehavior(dashboardStore.currentDashboard);
     const { isLocked } = useBehavior(dashboard.state);
 
-    useHotkey({ combo: Shortcuts.showSwitcher, onKeyDown: mainStore.showWidgetSwitcher });
-
     return (
         <Navbar className={classNames(styles.navbar, className)}>
             <NavbarGroup className={styles.group} align={Alignment.LEFT}>
                 <StoreButton />
                 <DesktopButton />
+
                 <StacksButton />
                 <WidgetsButton isLocked={isLocked} />
             </NavbarGroup>

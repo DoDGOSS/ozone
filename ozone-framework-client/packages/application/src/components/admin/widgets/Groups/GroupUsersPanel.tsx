@@ -7,7 +7,7 @@ import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTab
 import { DeleteButton } from "../../../generic-table/TableButtons";
 import { GroupUsersEditDialog } from "./GroupUsersEditDialog";
 
-import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 
 import { groupApi } from "../../../../api/clients/GroupAPI";
 import { GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";

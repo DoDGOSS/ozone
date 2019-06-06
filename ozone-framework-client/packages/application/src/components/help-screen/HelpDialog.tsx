@@ -7,7 +7,7 @@ import { Dialog, ITreeNode, Spinner } from "@blueprintjs/core";
 import { mainStore } from "../../stores/MainStore";
 import { classNames } from "../../utility";
 
-import { showConfirmationDialogWithoutCancel } from "../confirmation-dialog/InPlaceConfirmationDialogWithoutCancel";
+import { showConfirmationDialog } from "../confirmation-dialog/showConfirmationDialog";
 
 import { helpApi } from "../../api/clients/HelpAPI";
 import { HelpFileDTO, HelpFolderDTO, HelpItemDTO, isHelpFolder } from "../../api/models/HelpDTO";
@@ -29,13 +29,15 @@ export const HelpDialog: React.FC = () => {
             if (response.status !== 200) return;
 
             if (response.data.length === 0) {
-                showConfirmationDialogWithoutCancel({
+                showConfirmationDialog({
                     title: "Warning",
                     message: [
                         "There are no help files in the Help Folder. ",
+                        "\n",
                         "Please contact your OWF Administrator or view the OWF Administrator's Guide."
                     ],
-                    onConfirm: closeDialogBox
+                    onConfirm: closeDialogBox,
+                    hideCancel: true
                 });
                 return;
             }
