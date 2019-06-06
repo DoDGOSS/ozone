@@ -23,7 +23,10 @@ const _StacksButton: React.FC = () => {
                 text="Stacks"
                 icon="control"
                 active={isActive}
-                onClick={mainStore.showStackDialog}
+                onClick={() => {
+                    mainStore.showStackDialog();
+                    mainStore.hideStore();
+                }}
                 data-element-id="stacks-button"
             />
         </NavbarTooltip>

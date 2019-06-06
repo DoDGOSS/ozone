@@ -174,7 +174,6 @@ export class Dashboard {
         } else {
             newTree = addToTopRightOfLayout(tree, panel.id);
         }
-
         this.state$.next({
             ...prev,
             tree: newTree,
@@ -206,11 +205,20 @@ export class Dashboard {
         }
     }
 
-    addPanel(panel: Panel<PanelState>) {
+    addPanel(panel: Panel<PanelState>, path?: MosaicPath, position?: MosaicDropTargetPosition) {
         const prev = this.state$.value;
         const { panels, tree } = prev;
 
-        const newTree = tree !== null ? addToTopRightOfLayout(tree, panel.id) : panel.id;
+        let newTree;
+        if (tree !== null) {
+            if (path !== undefined && position !== undefined) {
+                newTree = addToLayout(tree, panel.id, path, position);
+            } else {
+                newTree = addToTopRightOfLayout(tree, panel.id);
+            }
+        } else {
+            newTree = panel.id;
+        }
 
         this.state$.next({
             ...prev,

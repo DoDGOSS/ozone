@@ -26,10 +26,9 @@ export interface CreateDashboardFormProps {
 
 export interface CreateDashboardOptions {
     name: string;
-    iconImageUrl: string;
     description: string;
     presetLayoutName: string | null;
-    copyGuid: string;
+    copyGuid: string | null;
     stackId?: number;
 }
 
@@ -47,7 +46,6 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
         <Formik<CreateDashboardOptions>
             initialValues={{
                 name: "",
-                iconImageUrl: "/images/dashboard.png",
                 description: "",
                 presetLayoutName: null,
                 copyGuid: "",
@@ -76,16 +74,13 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
                     {formik.status && formik.status.error && <FormError message={formik.status.error} />}
 
                     <div className={styles.form}>
-                        <div className={styles.formIcon}>
-                            <img width="60px" src={assetUrl(formik.values.iconImageUrl)} />
-                        </div>
+                        {/* Image url stuff removed because bug on backend I couldn't fix; iconImageUrl is never saved. -Chris */}
                         <div className={styles.formField}>
                             <TextField name="name" label="Title" labelInfo="(required)" />
-                            <TextField name="iconImageUrl" label="Icon Url" />
+                            {/* <TextField name="iconImageUrl" label="Icon Url" /> */}
                             <TextField name="description" label="Description" />
                         </div>
                     </div>
-
                     <RadioGroup onChange={handleRadioChange} selectedValue={selectedValue}>
                         <Radio label="Choose a premade layout" value="premade" />
                         {selectedValue === "premade" && (

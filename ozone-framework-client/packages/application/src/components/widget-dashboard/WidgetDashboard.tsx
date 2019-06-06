@@ -44,7 +44,7 @@ export const WidgetDashboard: React.FC<PropsBase> = (props) => {
         return <Spinner className={styles.loadingSpinner} />;
     }
 
-    document.title = dashboard.name;
+    document.title = "Ozone - " + dashboard.name;
 
     return (
         <>

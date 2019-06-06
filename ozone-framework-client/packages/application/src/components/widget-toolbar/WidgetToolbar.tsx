@@ -24,7 +24,11 @@ const _WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
     const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 
     const userWidgets = useMemo(() => {
-        let _userWidgets = values(userDashboards.widgets).filter((w) => w.widget.isVisible);
+        let _userWidgets = values(userDashboards.widgets)
+            .filter((w) => w.widget.isVisible)
+            .filter(
+                (w) => !(w.widget.types && w.widget.types.length === 1 && w.widget.types[0].name === "marketplace")
+            );
 
         if (sortOrder === "asc") {
             _userWidgets.sort((a, b) => a.title.localeCompare(b.title));
@@ -37,7 +41,7 @@ const _WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
             });
         }
         return _userWidgets;
-    }, [userDashboards, sortOrder, filter]);
+    }, [userDashboards, sortOrder, filter, isOpen]);
 
     const widgetItems = useMemo(
         () =>

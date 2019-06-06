@@ -23,7 +23,7 @@ export const DashboardTabbedPanel: React.FC<DashboardTabbedPanelProps> = ({ pane
             id={panel.id}
             selectedTabId={activeWidget ? `tab-${activeWidget.id}` : undefined}
             onChange={setActiveWidget}
-            className={styles.tabsList}
+            className={styles.dashboardPanelTabsList}
             animate={false}
         >
             {widgets.map((widget, idx) => (
@@ -31,7 +31,7 @@ export const DashboardTabbedPanel: React.FC<DashboardTabbedPanelProps> = ({ pane
                     key={`tab-${widget.id}`}
                     id={`tab-${widget.id}`}
                     widgetInstanceId={widget.id}
-                    className={styles.tab}
+                    className={styles.dashboardTab}
                     title={<WidgetTabTitle panel={panel} widget={widget} />}
                     panel={<WidgetFrame widgetInstance={widget} />}
                 />

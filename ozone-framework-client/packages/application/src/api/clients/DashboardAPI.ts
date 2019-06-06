@@ -88,6 +88,18 @@ export class DashboardAPI {
             validate: validateDashboard
         });
     }
+
+    async deleteDashboardsInStack(stackID: number): Promise<void> {
+        const response = await this.getDashboards();
+        if (response.status === 200 && response.data && response.data.data) {
+            for (const dash of response.data.data) {
+                if (!dash.stack || dash.stack.id === stackID) {
+                    await this.deleteDashboard(dash.guid);
+                }
+            }
+        }
+        return;
+    }
 }
 
 export const dashboardApi = new DashboardAPI();

@@ -43,5 +43,6 @@ function getOptionParams(options?: UserWidgetQueryCriteria): any | undefined {
     const params: any = {};
     if (options.limit) params.max = options.limit;
     if (options.offset) params.offset = options.offset;
+    if (options.user_id) params.user_id = options.user_id;
     return params;
 }

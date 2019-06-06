@@ -12,8 +12,6 @@ export namespace MainPage {
 
     export const ABOUT_DIALOG = "div[data-element-id='about-dialog']";
 
-    export const HELP_DIALOG = "div[data-element-id='help-dialog']";
-
     export const HELP_BUTTON = "button[data-element-id='help-button']";
 
     export const HELP_SAMPLE_FILE = ".bp3-tree-node-content-0";
@@ -26,7 +24,7 @@ export namespace MainPage {
 
     export const GROUPS_ADMIN_WIDGET = "div[data-element-id='group-admin-widget-dialog']";
 
-    export const DASHBOARD_ADMIN_WIDGET = "div[data-element-id='stack-admin-widget-dialog']";
+    export const STACK_ADMIN_WIDGET = "div[data-element-id='stack-admin-widget-dialog']";
 
     export const SYSTEMCONFIG_ADMIN_WIDGET = "div[data-element-id='systemconfig-admin-widget-dialog']";
 
@@ -36,7 +34,7 @@ export namespace MainPage {
 
     export const LOGOUT_BUTTON = "a[data-element-id='logout-button']";
 
-    export const WIDGETS_BUTTON = "button[data-element-id='widgets-button']";
+    export const WIDGETS_BUTTON = "a[data-element-id='widgets-button']";
 
     export const WIDGETS_DIALOG = "div[data-element-id='widgets-dialog']";
 
@@ -221,7 +219,7 @@ export namespace StackAdminWidget {
     export const DIALOG = "div[data-element-id='stack-admin-widget-dialog']";
     export const GROUPS_TAB = "div[data-tab-id='dashboard_groups']";
     export const USERS_TAB = "div[data-tab-id='dashboard_users']";
-    export const DASHBOARD_ADMIN_TEST_DASHBOARD_NAME = "DAW_Test";
+    export const STACK_ADMIN_TEST_DASHBOARD_NAME = "DAW_Test";
     export const DASHBOARD_DIALOG_CLOSE = "button[aria-label='Close']";
     export const CLOSE_DAW_BUTTON = "button[title='Close Window']";
     export const ROW_BOX = "div[data-element-id='table-selector-dialog'] div[class='rt-tbody']";
@@ -264,7 +262,7 @@ export namespace StackAdminWidget {
     }
 
     export function dashboardUserTableDeleteButton(username: string): string {
-        return `${dashboardUserTableActions(username)} button[data-element-id="stack-admin-widget-delete-user-button"]`;
+        return `${dashboardUserTableActions(username)} ${GlobalElements.STD_DELETE_BUTTON}`;
     }
 }
 

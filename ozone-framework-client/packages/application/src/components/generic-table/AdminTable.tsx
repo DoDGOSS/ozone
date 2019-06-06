@@ -21,6 +21,7 @@ export type AdminTableProps = {
 const PAGE_SIZE_OPTIONS = [5, 10, 20, 25, 50, 100];
 
 // Todo
+// Please just use GenericTable.
 
 // Add filter functionality - https://codesandbox.io/s/r74mokr5x4 (react-table-filter implementation)
 // https://react-table.js.org/#/story/custom-filtering

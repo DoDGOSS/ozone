@@ -4,6 +4,8 @@ import { ITreeNode, Tree } from "@blueprintjs/core";
 import { dashboardStore } from "../../stores/DashboardStore";
 import { mainStore } from "../../stores/MainStore";
 
+import { showToast } from "../../components/toaster/Toaster";
+
 interface Props {
     nodes: ITreeNode[];
 }
@@ -28,7 +30,7 @@ export class GenericTree extends React.Component<State, Props> {
                 contents={this.state.nodes}
                 onNodeCollapse={this.handleNodeCollapse}
                 onNodeExpand={this.handleNodeExpand}
-                onNodeDoubleClick={this.handleNodeDoubleClick}
+                onNodeClick={this.handleNodeClick}
             />
         );
     }
@@ -43,7 +45,15 @@ export class GenericTree extends React.Component<State, Props> {
         this.setState(this.state);
     };
 
-    private handleNodeDoubleClick = async (nodeData: ITreeNode): Promise<any> => {
+    private handleNodeClick = async (nodeData: ITreeNode): Promise<any> => {
+        if (nodeData.id === undefined || String(nodeData.id).startsWith("_NoDash_")) {
+            showToast({
+                message: "Can't open an empty stack - add a dashboard to it first."
+            });
+            return new Promise(() => {
+                return;
+            });
+        }
         const response = await dashboardStore.fetchUserDashboards(nodeData.id);
         mainStore.hideStackDialog();
     };

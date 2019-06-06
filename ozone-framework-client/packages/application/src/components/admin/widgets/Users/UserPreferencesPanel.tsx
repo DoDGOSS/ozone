@@ -15,7 +15,7 @@ import {
     PreferenceUpdateRequest
 } from "../../../../api/models/PreferenceDTO";
 import { preferenceApi } from "../../../../api/clients/PreferenceAPI";
-import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
+import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 import { UserPreferenceDialog } from "./UserPreferenceDialog";
 
 interface UserEditPreferencesProps {

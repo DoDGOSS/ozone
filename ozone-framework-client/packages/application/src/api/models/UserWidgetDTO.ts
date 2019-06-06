@@ -36,7 +36,7 @@ export interface UserWidgetPropertiesDTO {
     position: number;
     singleton: boolean;
     smallIconUrl: string;
-    universalName: string | null;
+    universalName: string;
     url: string;
     userId: string;
     userRealName: string;

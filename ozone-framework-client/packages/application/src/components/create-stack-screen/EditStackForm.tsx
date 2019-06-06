@@ -24,19 +24,23 @@ const OzoneToaster = Toaster.create({
 });
 
 export const EditStackForm: React.FC<EditStackFormProps> = ({ onSubmit, stack }) => {
+    const initialFormValues = getInitialValues(stack);
     return (
         <Formik
-            initialValues={stack}
+            initialValues={initialFormValues}
             onSubmit={async (values: StackUpdateRequest, actions: FormikActions<StackUpdateRequest>) => {
-                const isSuccess = [await stackApi.updateStack(values)];
+                stack.name = values.name;
+                stack.imageUrl = values.imageUrl;
+                stack.description = values.description;
 
-                actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
+                const isSuccess = [await stackApi.updateStack(stack)];
+
                 actions.setSubmitting(false);
 
                 if (isSuccess) {
                     OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
-                    onSubmit();
                     actions.setStatus(null);
+                    onSubmit();
                 } else {
                     OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
                     actions.setStatus({ error: "An unexpected error has occurred" });
@@ -53,7 +57,7 @@ export const EditStackForm: React.FC<EditStackFormProps> = ({ onSubmit, stack })
                         </div>
                         <div className={styles.formField}>
                             <TextField name="name" label="Title" labelInfo="(required)" />
-                            <TextField name="iconImageUrl" label="Icon Url" />
+                            <TextField name="imageUrl" label="Icon Url" />
                             <TextField name="description" label="Description" />
                         </div>
                     </div>
@@ -71,3 +75,11 @@ export const EditStackForm: React.FC<EditStackFormProps> = ({ onSubmit, stack })
         </Formik>
     );
 };
+
+function getInitialValues(stack: StackDTO): any {
+    return {
+        name: stack.name ? stack.name : "",
+        imageUrl: stack.imageUrl ? stack.imageUrl : "",
+        description: stack.description ? stack.description : ""
+    };
+}

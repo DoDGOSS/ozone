@@ -11,12 +11,19 @@ import { backendContextPath, backendUrl, frontendUrl } from "../../environment";
 import { SYSTEM_WIDGET_URLS } from "../../stores/system-widgets";
 import { classNames } from "../../utility";
 
+import { storeMetaService } from "../../services/StoreMetaService";
+
 export interface WidgetFrameProps {
     widgetInstance: WidgetInstance;
 }
 
 const _WidgetFrame: React.FC<WidgetFrameProps> = ({ widgetInstance }) => {
     const userWidget: UserWidget = widgetInstance.userWidget;
+    if (!userWidget) {
+        // undefined if it used to hold a widget that's since been deleted.
+        return <div />;
+    }
+
     const widget: Widget = userWidget.widget;
 
     const url = widget.url;

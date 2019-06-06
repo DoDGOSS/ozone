@@ -118,7 +118,7 @@ export const WIDGET_PROPERTIES_SCHEMA = {
             type: "number"
         },
         universalName: {
-            type: ["string", "null"]
+            type: ["string"]
         },
         url: {
             type: "string"

@@ -29,7 +29,7 @@ export class WidgetProps {
     };
     title: string;
     types: WidgetType[];
-    universalName?: string;
+    universalName: string;
     url: string;
     version?: string;
     width: number;

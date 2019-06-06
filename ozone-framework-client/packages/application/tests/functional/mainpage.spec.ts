@@ -8,7 +8,7 @@ module.exports = {
     "As a user, I can see the classification banner": (browser: NightwatchAPI) => {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
 
-        browser.waitForElementVisible(MainPage.CLASSIFICATION_BANNER, 1000, "[Classification Banner] is visible");
+        browser.waitForElementVisible(MainPage.CLASSIFICATION_BANNER, 2000, "[Classification Banner] is visible");
 
         browser.closeWindow().end();
     },
@@ -16,7 +16,7 @@ module.exports = {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
 
         browser
-            .waitForElementVisible(MainPage.USER_MENU_BUTTON, 2000, "[Main Page] User Menu button is visible.")
+            .waitForElementVisible(MainPage.USER_MENU_BUTTON, 4000, "[Main Page] User Menu button is visible.")
             .click(MainPage.USER_MENU_BUTTON);
 
         browser.waitForElementVisible(
@@ -31,12 +31,12 @@ module.exports = {
         loggedInAs(browser, "testUser1", "password", "Test User 1");
 
         browser
-            .waitForElementVisible(MainPage.USER_MENU_BUTTON, 2000, "[Main Page] User Menu button is visible.")
+            .waitForElementVisible(MainPage.USER_MENU_BUTTON, 4000, "[Main Page] User Menu button is visible.")
             .click(MainPage.USER_MENU_BUTTON);
 
         browser.waitForElementNotPresent(
             MainPage.ADMINISTRATION_BUTTON,
-            2000,
+            3000,
             "[Main Page] Administration button is not present."
         );
 

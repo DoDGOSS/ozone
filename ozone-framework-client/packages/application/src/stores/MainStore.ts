@@ -7,9 +7,12 @@ import { isBlank } from "../utility";
 
 export class MainStore {
     private readonly themeClass$ = new BehaviorSubject(DARK_THEME);
+    private readonly storeUrl$ = new BehaviorSubject("");
 
     private readonly isAboutVisible$ = new BehaviorSubject(false);
     private readonly isAdminToolsDialogOpen$ = new BehaviorSubject(false);
+    private readonly isStoreOpen$ = new BehaviorSubject(false);
+    private readonly storeShouldRefresh$ = new BehaviorSubject(true);
     private readonly isCreateStackDialogVisible$ = new BehaviorSubject(false);
     private readonly isStackDialogVisible$ = new BehaviorSubject(false);
     private readonly isHelpDialogVisible$ = new BehaviorSubject(false);
@@ -18,13 +21,10 @@ export class MainStore {
     private readonly isWidgetToolbarOpen$ = new BehaviorSubject(false);
 
     themeClass = () => asBehavior(this.themeClass$);
-
     getTheme = () => this.themeClass$.value;
-
     setTheme = (newTheme: string) => {
         this.themeClass$.next(newTheme);
     };
-
     updateTheme = async (newTheme: string) => {
         const result = await themeApi.setTheme(newTheme);
         this.themeClass$.next(result.data);
@@ -54,6 +54,15 @@ export class MainStore {
     isCreateStackDialogVisible = () => asBehavior(this.isCreateStackDialogVisible$);
     showCreateStackDialog = () => this.isCreateStackDialogVisible$.next(true);
     hideCreateStackDialog = () => this.isCreateStackDialogVisible$.next(false);
+
+    isStoreOpen = () => asBehavior(this.isStoreOpen$);
+    showStore = () => this.isStoreOpen$.next(true);
+    hideStore = () => this.isStoreOpen$.next(false);
+    toggleStore = () => this.isStoreOpen$.next(!this.isStoreOpen$.value);
+
+    storeShouldRefresh = () => asBehavior(this.storeShouldRefresh$);
+    refreshStore = () => this.storeShouldRefresh$.next(true);
+    storeHasRefreshed = () => this.storeShouldRefresh$.next(false);
 
     isHelpDialogVisible = () => asBehavior(this.isHelpDialogVisible$);
     showHelpDialog = () => this.isHelpDialogVisible$.next(true);

@@ -48,6 +48,7 @@ export class UserDashboardAPI {
             }),
             publishedToStore: false
         };
+
         const requestData = qs.stringify({
             _method: "POST",
             adminEnabled: false,
@@ -71,4 +72,5 @@ export interface DashboardCreateOpts extends DashboardLayout {
     name: string;
     isDefault?: boolean;
     stackId?: number;
+    stackName?: string;
 }
