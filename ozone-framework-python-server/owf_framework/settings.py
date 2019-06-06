@@ -126,3 +126,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Use the following line if you want to disable password restrictions.
+# Do NOT use in production!
+# AUTH_PASSWORD_VALIDATORS = []
