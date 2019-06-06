@@ -1,66 +1,75 @@
-import * as React from "react";
+import React, { useCallback } from "react";
 import { useBehavior } from "../../hooks";
-
-import { Button, Classes, Dialog, Intent } from "@blueprintjs/core";
+import { Button, Classes, Intent } from "@blueprintjs/core";
+import { confirmAlert } from "react-confirm-alert";
 
 import { mainStore } from "../../stores/MainStore";
-import { dashboardService } from "../../services/DashboardService";
+import { classNames } from "../../utility";
 
-import { defaults } from "lodash";
+export interface ReplaceWidgetDialogProps {
+    onConfirm?: () => void;
+    onCancel?: () => void;
+}
 
-import { CONFIRMATION_DIALOG } from "../../messages";
-
-const DEFAULT_PROPS = {
-    title: CONFIRMATION_DIALOG.title,
-    content: CONFIRMATION_DIALOG.content,
-    confirm: CONFIRMATION_DIALOG.confirm,
-    cancel: CONFIRMATION_DIALOG.cancel
-};
-
-export type ConfirmationProps = Partial<typeof DEFAULT_PROPS>;
-
-export const ReplaceWidgetDialog: React.FC<ConfirmationProps> = (props) => {
-    const { title, content, confirm, cancel } = defaults({}, props, DEFAULT_PROPS);
+const _ReplaceWidgetDialog: React.FC<ReplaceWidgetDialogProps & { onClose: () => void }> = (props) => {
+    const { onConfirm, onCancel, onClose } = props;
 
     const themeClass = useBehavior(mainStore.themeClass);
-    const isOpen = useBehavior(dashboardService.isConfirmationDialogVisible);
+
+    const _onConfirm = useCallback(() => {
+        if (onConfirm) {
+            onConfirm();
+        }
+        onClose();
+    }, [onConfirm, onClose]);
+
+    const _onCancel = useCallback(() => {
+        if (onCancel) {
+            onCancel();
+        }
+        onClose();
+    }, [onCancel, onClose]);
 
     return (
-        <div>
-            <Dialog
-                className={themeClass}
-                isOpen={isOpen}
-                onClose={dashboardService.cancelReplaceWidget}
-                isCloseButtonShown={true}
-                title={title}
-            >
-                <div
-                    data-element-id="confirmation-dialog"
-                    className={Classes.DIALOG_BODY}
-                    dangerouslySetInnerHTML={{ __html: content }}
-                />
+        <div className={classNames(Classes.DIALOG, themeClass)}>
+            <div className={Classes.DIALOG_HEADER}>
+                <header className={Classes.HEADING}>Confirm Replace Widget</header>
+            </div>
 
-                <div className={Classes.DIALOG_FOOTER}>
-                    <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                        <Button
-                            onClick={dashboardService.confirmReplaceWidget}
-                            intent={Intent.SUCCESS}
-                            rightIcon="tick"
-                            data-element-id="confirmation-dialog-confirm"
-                        >
-                            {confirm.text}
-                        </Button>
-                        <Button
-                            onClick={dashboardService.cancelReplaceWidget}
-                            intent={Intent.DANGER}
-                            rightIcon="cross"
-                            data-element-id="confirmation-cancel"
-                        >
-                            {cancel.text}
-                        </Button>
-                    </div>
+            <div className={Classes.DIALOG_BODY} data-element-id="confirmation-dialog">
+                <span>The current Widget will be closed and replaced with the new Widget. Continue?</span>
+            </div>
+
+            <div className={Classes.DIALOG_FOOTER}>
+                <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+                    <Button
+                        text="OK"
+                        rightIcon="tick"
+                        intent={Intent.SUCCESS}
+                        onClick={_onConfirm}
+                        data-element-id="confirmation-dialog-confirm"
+                    />
+                    <Button
+                        text="Cancel"
+                        rightIcon="cross"
+                        intent={Intent.DANGER}
+                        onClick={_onCancel}
+                        data-element-id="confirmation-cancel"
+                    />
                 </div>
-            </Dialog>
+            </div>
         </div>
     );
 };
+
+const ReplaceWidgetDialog = React.memo(_ReplaceWidgetDialog);
+
+export function showReplaceWidgetDialog(props: ReplaceWidgetDialogProps): void {
+    confirmAlert({
+        closeOnClickOutside: false,
+        closeOnEscape: false,
+        customUI: ({ onClose }) => {
+            return <ReplaceWidgetDialog onClose={onClose} {...props} />;
+        }
+    });
+}

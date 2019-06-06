@@ -1,56 +1,21 @@
-import { BehaviorSubject } from "rxjs";
-import { asBehavior } from "../observables";
-
-import { dashboardStore, DashboardStore } from "../stores/DashboardStore";
-import { ExpandoPanel, FitPanel, LayoutType, Panel, PanelState, TabbedPanel } from "../models/panel";
 import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
-import { AddWidgetOpts, Dashboard, DashboardProps } from "../models/Dashboard";
-import { UserWidget } from "../models/UserWidget";
-
-import { WidgetLaunchArgs } from "./WidgetLaunchArgs";
-
-import { isNil, Predicate, values } from "../utility";
 import { MosaicPath } from "../features/MosaicDashboard/types";
+import { AddWidgetOpts, Dashboard, DashboardProps } from "../models/Dashboard";
+import { ExpandoPanel, FitPanel, LayoutType, Panel, PanelState, TabbedPanel } from "../models/panel";
+import { UserWidget } from "../models/UserWidget";
 import { MosaicDropTargetPosition } from "../shared/dragAndDrop";
+import { dashboardStore, DashboardStore } from "../stores/DashboardStore";
+import { isNil, Predicate, values } from "../utility";
+
 import { errorStore } from "./ErrorStore";
+import { WidgetLaunchArgs } from "./WidgetLaunchArgs";
 
 export class DashboardService {
     private readonly store: DashboardStore;
 
-    private readonly isConfirmationDialogVisible$ = new BehaviorSubject(false);
-    private replaceWidgetCallback?: () => void;
-
     constructor(store?: DashboardStore) {
         this.store = store || dashboardStore;
     }
-
-    isConfirmationDialogVisible = () => asBehavior(this.isConfirmationDialogVisible$);
-
-    showConfirmationDialog = (callback: () => void) => {
-        this.isConfirmationDialogVisible$.next(true);
-        this.replaceWidgetCallback = callback;
-    };
-
-    cancelReplaceWidget = () => {
-        this.isConfirmationDialogVisible$.next(false);
-
-        this.replaceWidgetCallback = undefined;
-    };
-
-    confirmReplaceWidget = () => {
-        this.isConfirmationDialogVisible$.next(false);
-
-        if (this.replaceWidgetCallback) this.replaceWidgetCallback();
-        this.replaceWidgetCallback = undefined;
-    };
-
-    getCurrentDashboard = (): Dashboard => {
-        const dashboard = this.store.currentDashboard().value;
-        if (dashboard === null) {
-            throw new Error("No Dashboard is available");
-        }
-        return dashboard;
-    };
 
     private get dashboard(): Dashboard {
         return this.store.currentDashboard().value;
@@ -129,23 +94,21 @@ export class DashboardService {
     }
 
     addLayout_TEMP = (layout: LayoutType) => {
-        const dashboard = this.getCurrentDashboard();
-
         switch (layout) {
             case "fit":
-                dashboard.addPanel(createSampleFitPanel());
+                this.dashboard.addPanel(createSampleFitPanel());
                 break;
 
             case "tabbed":
-                dashboard.addPanel(createSampleTabbedPanel());
+                this.dashboard.addPanel(createSampleTabbedPanel());
                 break;
 
             case "accordion":
-                dashboard.addPanel(createSampleAccordionPanel());
+                this.dashboard.addPanel(createSampleAccordionPanel());
                 break;
 
             case "portal":
-                dashboard.addPanel(createSamplePortalPanel());
+                this.dashboard.addPanel(createSamplePortalPanel());
                 break;
         }
     };

@@ -66,5 +66,5 @@ export class ErrorStore {
 export const errorStore = new ErrorStore();
 
 const ErrorToaster = Toaster.create({
-    position: Position.BOTTOM_RIGHT
+    position: Position.BOTTOM
 });

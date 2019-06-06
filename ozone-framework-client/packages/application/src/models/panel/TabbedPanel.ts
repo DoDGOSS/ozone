@@ -1,6 +1,6 @@
 import { findIndex, isArray } from "lodash";
 
-import { PanelState } from "./types";
+import { AddWidgetsOpts, PanelState } from "./types";
 import { AbstractPanel } from "./AbstractPanel";
 import { WidgetInstance } from "../WidgetInstance";
 
@@ -29,7 +29,7 @@ export class TabbedPanel extends AbstractPanel<TabbedPanelState> {
         });
     }
 
-    addWidgets(instance: WidgetInstance | WidgetInstance[]): boolean {
+    addWidgets(instance: WidgetInstance | WidgetInstance[], opts?: AddWidgetsOpts): void {
         const prev = this.state$.value;
         const { activeWidget, widgets } = prev;
 
@@ -43,7 +43,7 @@ export class TabbedPanel extends AbstractPanel<TabbedPanelState> {
             activeWidget: activeWidget ? activeWidget : nextActive
         });
 
-        return true;
+        if (opts && opts.onSuccess) opts.onSuccess();
     }
 
     closeWidget(instanceId: string): WidgetInstance | undefined {

@@ -14,6 +14,11 @@ export interface PanelState {
     widgets: WidgetInstance[];
 }
 
+export interface AddWidgetsOpts {
+    onSuccess?: () => void;
+    onFailure?: () => void;
+}
+
 export interface Panel<T extends PanelState = PanelState> {
     readonly id: string;
     readonly type: LayoutType;
@@ -21,7 +26,7 @@ export interface Panel<T extends PanelState = PanelState> {
 
     state(): BehaviorObservable<T>;
 
-    addWidgets(instance: WidgetInstance | WidgetInstance[]): boolean;
+    addWidgets(instance: WidgetInstance | WidgetInstance[], opts?: AddWidgetsOpts): void;
 
     closeWidget(instanceId: string): WidgetInstance | undefined;
 
