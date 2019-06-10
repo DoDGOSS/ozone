@@ -1,7 +1,7 @@
 import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
-import { Dashboard, EMPTY_DASHBOARD } from "../models/dashboard/Dashboard";
+import { Dashboard, EMPTY_DASHBOARD } from "../models/Dashboard";
 import { DashboardCreateOpts, userDashboardApi, UserDashboardAPI } from "../api/clients/UserDashboardAPI";
 import { dashboardApi, DashboardAPI } from "../api/clients/DashboardAPI";
 import { dashboardToUpdateRequest, deserializeUserState, UserState } from "../codecs/Dashboard.codec";
@@ -9,6 +9,7 @@ import { CreateDashboardOptions } from "../components/create-dashboard-screen/Cr
 import { createPresetLayout } from "./default-layouts";
 
 import { isNil, values } from "../utility";
+import { UserWidget } from "../models/UserWidget";
 
 const EMPTY_USER_DASHBOARDS_STATE: UserState = {
     dashboards: {},
@@ -35,6 +36,12 @@ export class DashboardStore {
     currentDashboard = () => asBehavior(this.currentDashboard$);
 
     isLoading = () => asBehavior(this.isLoading$);
+
+    findUserWidgetById(id: number): UserWidget | undefined {
+        const userState = this.userDashboards$.value;
+        const userWidgets = values(userState.widgets);
+        return userWidgets.find((w: UserWidget) => w.id === id);
+    }
 
     fetchUserDashboards = async (newCurrentGuid?: string | any) => {
         this.isLoading$.next(true);
@@ -85,8 +92,9 @@ export class DashboardStore {
     };
 
     saveCurrentDashboard = async () => {
+        if (this.isLoading$.value) return;
+
         const currentDashboard = this.currentDashboard$.value;
-        if (currentDashboard === null) return;
 
         const request = dashboardToUpdateRequest(currentDashboard);
 

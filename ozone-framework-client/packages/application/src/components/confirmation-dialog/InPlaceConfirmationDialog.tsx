@@ -1,14 +1,10 @@
-import * as React from "react";
-import { confirmAlert } from "react-confirm-alert";
-import "react-confirm-alert/src/react-confirm-alert.css";
-
 import "./custom-style.scss";
-import { Button, Classes, Intent } from "@blueprintjs/core";
 
-interface StyledString {
-    text: string;
-    style: "" | "bold" | "italics" | "both";
-}
+import React from "react";
+import { Button, Classes, Intent } from "@blueprintjs/core";
+import { confirmAlert } from "react-confirm-alert";
+
+import { buildStyledMessage, StyledString } from "./StyledString";
 
 interface InPlaceConfirmationDialogProps {
     title: string;
@@ -69,34 +65,3 @@ export const showConfirmationDialog = (props: InPlaceConfirmationDialogProps) =>
         }
     });
 };
-
-function buildStyledMessage(messageWithStyle: (StyledString | string)[]): any {
-    return (
-        <div>
-            {(() => {
-                const textPieces = [];
-                let i: number = 0;
-                for (const chunk of messageWithStyle) {
-                    const style: { [key: string]: string } = {};
-                    if (typeof chunk === "string") {
-                        textPieces.push(<span key={i}>{chunk}</span>);
-                    } else {
-                        if (chunk.style === "bold") {
-                            style["fontWeight"] = "bold";
-                        }
-                        if (chunk.style === "italics") {
-                            style["fontStyle"] = "italic";
-                        }
-                        textPieces.push(
-                            <span key={i} style={style}>
-                                {chunk.text}
-                            </span>
-                        );
-                    }
-                    i++;
-                }
-                return textPieces;
-            })()}
-        </div>
-    );
-}

@@ -1,3 +1,5 @@
+import styles from "./index.scss";
+
 import React, { useEffect, useState } from "react";
 import { useBehavior } from "../../hooks";
 
@@ -7,10 +9,8 @@ import { classNames } from "../../utility";
 
 import { showConfirmationDialogWithoutCancel } from "../confirmation-dialog/InPlaceConfirmationDialogWithoutCancel";
 
-import * as styles from "./index.scss";
-
 import { helpApi } from "../../api/clients/HelpAPI";
-import { HelpDTO } from "./../../api/models/HelpDTO";
+import { HelpDTO } from "../../api/models/HelpDTO";
 
 import { HelpTree } from "./HelpTree";
 
@@ -58,7 +58,9 @@ export const HelpDialog: React.FC = () => {
         if (data.length === 0) {
             showConfirmationDialogWithoutCancel({
                 title: "Warning",
-                message: ["There are no help files in the Help Folder. Please contact your OWF Administrator or view the OWF Administrator's Guide."],
+                message: [
+                    "There are no help files in the Help Folder. Please contact your OWF Administrator or view the OWF Administrator's Guide."
+                ],
                 onConfirm: () => {
                     mainStore.hideHelpDialog();
                 }
@@ -92,8 +94,8 @@ export const HelpDialog: React.FC = () => {
     };
 
     const checkChildFiles = (node: any) => {
-        if(node['children']){
-            for (let file of node['children']) {
+        if (node["children"]) {
+            for (const file of node["children"]) {
                 if (file["children"] === null || file["children"] === undefined) {
                     assignChildFile(file);
                 }
