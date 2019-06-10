@@ -1,9 +1,7 @@
-import { DashboardLayout } from "../models/dashboard/Dashboard";
-import { FitPanel } from "../models/dashboard/FitPanel";
-import { TabbedPanel } from "../models/dashboard/TabbedPanel";
-import { ExpandoPanel } from "../models/dashboard/ExpandoPanel";
+import { DashboardLayout } from "../models/Dashboard";
+import { ExpandoPanel, FitPanel, TabbedPanel } from "../models/panel";
 
-import { dashboardApi, DashboardAPI } from "../api/clients/DashboardAPI";
+import { dashboardApi } from "../api/clients/DashboardAPI";
 
 interface Layout {
     name: string;
@@ -230,14 +228,12 @@ function createFitTabbed(): DashboardLayout {
 
 function createFitLayout(): DashboardLayout {
     const fitPanel = new FitPanel();
-    const layout = {
+    return {
         tree: fitPanel.id,
         panels: {
             [fitPanel.id]: fitPanel
         }
     };
-    console.log("makin a layout " + JSON.stringify(layout));
-    return layout;
 }
 
 function createSplitVertical(): DashboardLayout {

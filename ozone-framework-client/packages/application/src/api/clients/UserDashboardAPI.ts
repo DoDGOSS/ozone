@@ -4,7 +4,7 @@ import { Gateway, getGateway, Response } from "../interfaces";
 import { UserDashboardsGetResponse, validateUserDashboardsGetResponse } from "../models/UserDashboardDTO";
 import { DashboardDTO, validateDashboard } from "../models/DashboardDTO";
 import { dashboardLayoutToJson } from "../../codecs/Dashboard.codec";
-import { DashboardLayout } from "../../models/dashboard/Dashboard";
+import { DashboardLayout } from "../../models/Dashboard";
 
 import { isNil, uuid } from "../../utility";
 

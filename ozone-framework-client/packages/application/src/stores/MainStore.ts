@@ -41,6 +41,7 @@ export class MainStore {
     hideStackDialog = () => this.isStackDialogVisible$.next(false);
 
     isWidgetToolbarOpen = () => asBehavior(this.isWidgetToolbarOpen$);
+    showWidgetToolbar = () => this.isWidgetToolbarOpen$.next(true);
     closeWidgetToolbar = () => this.isWidgetToolbarOpen$.next(false);
     toggleWidgetToolbar = () => this.isWidgetToolbarOpen$.next(!this.isWidgetToolbarOpen$.value);
 

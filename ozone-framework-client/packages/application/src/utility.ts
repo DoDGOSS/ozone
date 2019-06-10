@@ -151,3 +151,28 @@ export function cleanNullableProp<T>(value: T | null): T | string {
         return value;
     }
 }
+
+export function swapIndices<T>(array: T[], idx1: number, idx2: number): T[] {
+    const arrayCopy = [...array];
+    const temp = arrayCopy[idx1];
+    arrayCopy[idx1] = arrayCopy[idx2];
+    arrayCopy[idx2] = temp;
+    return arrayCopy;
+}
+
+export function asInteger(value: unknown, defaultValue: number = 0): number {
+    if (typeof value === "number") {
+        return parseInt(value.toFixed(0), 10);
+    }
+
+    if (typeof value === "string") {
+        const parsed = parseInt(value, 10);
+        return !isNaN(parsed) ? parsed : defaultValue;
+    }
+
+    return defaultValue;
+}
+
+export function clampMinimum(num: number, minimum: number): number {
+    return num >= minimum ? num : minimum;
+}
