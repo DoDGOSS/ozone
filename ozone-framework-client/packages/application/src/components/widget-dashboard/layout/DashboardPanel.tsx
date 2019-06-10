@@ -1,32 +1,59 @@
-import * as styles from "./DashboardPanel.scss";
+import styles from "./DashboardPanel.scss";
 
-import React, { ReactNode } from "react";
-
-import { isExpandoPanel, isFitPanel, isTabbedPanel, Panel, PanelState } from "../../../models/dashboard/types";
-import { DashboardPath, DashboardWindow } from "../types";
-
-import { DashboardTabbedPanel } from "./DashboardTabbedPanel";
-import { DashboardFitPanel } from "./DashboardFitPanel";
-import { DashboardExpandoPanel } from "./DashboardExpandoPanel";
-import { createWidgetToolbar } from "../toolbar";
-
+import React, { ReactNode, useCallback } from "react";
+import { useBehavior } from "../../../hooks";
 import { isEqual } from "lodash";
+
+import { isExpandoPanel, isFitPanel, isTabbedPanel, Panel, PanelState } from "../../../models/panel";
+
+import { ExpandButton } from "../../../features/MosaicDashboard/buttons/ExpandButton";
+import { RemoveButton } from "../../../features/MosaicDashboard/buttons/RemoveButton";
+import { dashboardStore } from "../../../stores/DashboardStore";
+
+import { DashboardPath, DashboardWindow } from "../types";
+import { EditableText } from "../internal/EditableText";
+import { OptionsButton } from "../internal/OptionsButton";
+
+import { DashboardExpandoPanel } from "./DashboardExpandoPanel";
+import { DashboardFitPanel } from "./DashboardFitPanel";
+import { DashboardTabbedPanel } from "./DashboardTabbedPanel";
 
 export interface DashboardPanelProps {
     panel: Panel<PanelState>;
     path: DashboardPath;
 }
 
-const _DashboardPanel: React.FC<DashboardPanelProps> = ({ panel, path }) => (
-    <DashboardWindow
-        className={styles.dashboardWindow}
-        path={path}
-        title={panel.title}
-        toolbarControls={createWidgetToolbar(panel, path)}
-    >
-        {createPanel(panel)}
-    </DashboardWindow>
-);
+const _DashboardPanel: React.FC<DashboardPanelProps> = ({ panel, path }) => {
+    const dashboard = useBehavior(dashboardStore.currentDashboard);
+    const { isLocked } = useBehavior(dashboard.state);
+
+    const { title: panelTitle } = useBehavior(panel.state);
+
+    const toolbarControls = (
+        <>
+            {!isLocked && <OptionsButton panel={panel} path={path} />}
+            <ExpandButton />
+            {!isLocked && <RemoveButton />}
+        </>
+    );
+
+    const setPanelTitle = useCallback((newTitle: string) => panel.setTitle(newTitle), [panelTitle]);
+
+    const titleElement = <EditableText value={panelTitle} disabled={isLocked} onChange={setPanelTitle} />;
+
+    return (
+        <DashboardWindow
+            className={styles.dashboardWindow}
+            path={path}
+            title={panelTitle}
+            titleClassname={styles.windowTitle}
+            titleElement={titleElement}
+            toolbarControls={toolbarControls}
+        >
+            {createPanel(panel)}
+        </DashboardWindow>
+    );
+};
 
 export const DashboardPanel = React.memo(
     _DashboardPanel,

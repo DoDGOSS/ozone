@@ -1,16 +1,3 @@
-export const CONFIRMATION_DIALOG = {
-    title: "Warning",
-    content: `Are you sure?`,
-    confirm: {
-        text: "OK",
-        icon: "tick"
-    },
-    cancel: {
-        text: "Cancel",
-        icon: "cross"
-    }
-};
-
 export const ABOUT = {
     title: "Ozone Widget Framework",
     content:

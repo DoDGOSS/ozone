@@ -1,6 +1,6 @@
-import * as styles from "./index.scss";
+import styles from "./index.scss";
 
-import * as React from "react";
+import React from "react";
 import { useBehavior } from "../../hooks";
 
 import {
@@ -16,23 +16,24 @@ import {
     Position
 } from "@blueprintjs/core";
 
-import { authStore } from "../../stores/AuthStore";
 import { mainStore } from "../../stores/MainStore";
-import { dashboardService } from "../../stores/DashboardService";
+import { dashboardService } from "../../services/DashboardService";
 
-import { NavbarTooltip } from "./NavbarTooltip";
-import { UserMenu } from "./UserMenu";
+import { NavbarTooltip } from "./internal/NavbarTooltip";
 import { PropsBase } from "../../common";
 
 import { classNames } from "../../utility";
 import { dashboardStore } from "../../stores/DashboardStore";
+import { LockButton } from "./internal/LockButton";
+import { WidgetsButton } from "./internal/WidgetsButton";
+import { StacksButton } from "./internal/StacksButton";
+import { UserMenuButton } from "./internal/UserMenuButton";
 
-export const NavigationBar: React.FC<PropsBase> = ({ className }) => {
-    const user = useBehavior(authStore.user);
-
-    const isStackDialogVisible = useBehavior(mainStore.isStackDialogVisible);
+const _NavigationBar: React.FC<PropsBase> = ({ className }) => {
     const isHelpDialogVisible = useBehavior(mainStore.isHelpDialogVisible);
-    const isWidgetToolbarOpen = useBehavior(mainStore.isWidgetToolbarOpen);
+
+    const dashboard = useBehavior(dashboardStore.currentDashboard);
+    const { isLocked } = useBehavior(dashboard.state);
 
     return (
         <Navbar className={classNames(styles.navbar, className)}>
@@ -40,13 +41,8 @@ export const NavigationBar: React.FC<PropsBase> = ({ className }) => {
                 <CenterButton onClick={() => null} />
                 <OWFButton onClick={() => null} />
 
-                <StacksButton
-                    data-element-id="stacks-button"
-                    active={isStackDialogVisible}
-                    onClick={mainStore.showStackDialog}
-                />
-
-                <WidgetsButton active={isWidgetToolbarOpen} onClick={mainStore.toggleWidgetToolbar} />
+                <StacksButton />
+                <WidgetsButton />
             </NavbarGroup>
 
             <NavbarGroup className={styles.group} align={Alignment.CENTER}>
@@ -54,18 +50,23 @@ export const NavigationBar: React.FC<PropsBase> = ({ className }) => {
             </NavbarGroup>
 
             <NavbarGroup className={styles.group} align={Alignment.RIGHT}>
+                <LockButton />
                 <Button minimal icon="floppy-disk" onClick={() => dashboardStore.saveCurrentDashboard()} />
-                <Popover position={Position.BOTTOM_RIGHT} minimal={true} content={<AddLayoutMenu />}>
-                    <Button minimal icon="add" data-element-id="add-layout" />
-                </Popover>
+                {!isLocked && (
+                    <Popover position={Position.BOTTOM_RIGHT} minimal={true} content={<AddLayoutMenu />}>
+                        <Button minimal icon="add" data-element-id="add-layout" />
+                    </Popover>
+                )}
                 <NavbarDivider />
                 <ThemeButton onClick={mainStore.toggleTheme} />
                 <HelpButton active={isHelpDialogVisible} onClick={mainStore.showHelpDialog} />
-                <UserMenuButton userName={user ? user.userRealName : "Unknown User"} />
+                <UserMenuButton />
             </NavbarGroup>
         </Navbar>
     );
 };
+
+export const NavigationBar = React.memo(_NavigationBar);
 
 const AddLayoutMenu: React.FC<{}> = () => {
     return (
@@ -90,23 +91,6 @@ interface OnClick {
     onClick: () => void;
 }
 
-const StacksButton: React.FC<Active & OnClick> = ({ active, onClick }) => (
-    <NavbarTooltip
-        title="Stacks"
-        shortcut="alt+shift+c"
-        description="Open the Stacks window to start or manage your Stacks."
-    >
-        <Button
-            minimal
-            text="Stacks"
-            icon="control"
-            active={active}
-            onClick={onClick}
-            data-element-id="stacks-button"
-        />
-    </NavbarTooltip>
-);
-
 const CenterButton: React.FC<OnClick> = ({ onClick }) => (
     <NavbarTooltip title="AppsMall Center" shortcut="alt+shift+a" description="Open AppsMall">
         <Button minimal icon="shopping-cart" onClick={onClick} data-element-id="center-button" />
@@ -114,7 +98,7 @@ const CenterButton: React.FC<OnClick> = ({ onClick }) => (
 );
 
 const ThemeButton: React.FC<OnClick> = ({ onClick }) => (
-    <NavbarTooltip title="theme switch" shortcut="alt+shift+t" description="toggle theme">
+    <NavbarTooltip title="Theme" shortcut="alt+shift+t" description="Toggle between light and dark themes.">
         <Button minimal icon="moon" onClick={onClick} data-element-id="theme-button" />
     </NavbarTooltip>
 );
@@ -125,38 +109,8 @@ const OWFButton: React.FC<OnClick> = ({ onClick }) => (
     </NavbarTooltip>
 );
 
-const WidgetsButton: React.FC<Active & OnClick> = ({ active, onClick }) => (
-    <NavbarTooltip
-        title="Widgets"
-        shortcut="alt+shift+f"
-        description="Open or close the Widgets toolbar to add Widgets to your Dashboard."
-    >
-        <Button
-            minimal
-            text="Widgets"
-            icon="widget"
-            active={active}
-            onClick={onClick}
-            data-element-id="widgets-button"
-        />
-    </NavbarTooltip>
-);
-
 const HelpButton: React.FC<Active & OnClick> = ({ active, onClick }) => (
     <NavbarTooltip title="Help" shortcut="alt+shift+h" description="Show the Help window.">
         <Button minimal icon="help" active={active} onClick={onClick} />
-    </NavbarTooltip>
-);
-
-const UserMenuButton: React.FC<{ userName: string }> = ({ userName }) => (
-    <NavbarTooltip title="User Profile" description="Open the User Profile options window.">
-        <Popover
-            content={<UserMenu />}
-            minimal
-            position={Position.BOTTOM_RIGHT}
-            modifiers={{ arrow: { enabled: false } }}
-        >
-            <Button minimal text={userName} icon="menu" rightIcon="caret-down" data-element-id="user-menu-button" />
-        </Popover>
     </NavbarTooltip>
 );

@@ -17,7 +17,7 @@ export function userWidgetFromJson(dto: UserWidgetDTO): UserWidget {
         isEditable: props.editable,
         isFavorite: props.favorite,
         isGroupWidget: props.groupWidget,
-        originalTitle: props.originalName,
+        title: props.namespace,
         position: props.position,
         user: {
             username: props.userId,
@@ -42,7 +42,7 @@ export function userWidgetFromJson(dto: UserWidgetDTO): UserWidget {
             isMinimized: props.minimized,
             isMobileReady: props.mobileReady,
             isSingleton: props.singleton,
-            title: props.namespace,
+            title: props.originalName,
             universalName: optional(props.universalName),
             url: props.url,
             isVisible: props.visible,

@@ -10,8 +10,8 @@ export class UserWidgetProps {
     /** Transient value used to pass launch data to a Widget using the Widget Launcher API */
     launchData?: string;
 
-    originalTitle: string;
     position: number;
+    title: string;
     user: {
         username: string;
         displayName: string;

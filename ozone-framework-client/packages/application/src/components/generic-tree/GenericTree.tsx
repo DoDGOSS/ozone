@@ -1,8 +1,8 @@
 import React from "react";
-import { Classes, Icon, Intent, ITreeNode, Position, Tooltip, Tree } from "@blueprintjs/core";
-import { dashboardApi, DashboardAPI } from "../../api/clients/DashboardAPI";
-import { dashboardStore, DashboardStore } from "../../stores/DashboardStore";
-import { mainStore, MainStore } from "../../stores/MainStore";
+import { ITreeNode, Tree } from "@blueprintjs/core";
+
+import { dashboardStore } from "../../stores/DashboardStore";
+import { mainStore } from "../../stores/MainStore";
 
 interface Props {
     nodes: ITreeNode[];

@@ -1,5 +1,4 @@
-import * as React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useBehavior } from "../../hooks";
 
 import { Button, ButtonGroup, Classes, Dialog, Divider, Intent, ITreeNode, Spinner } from "@blueprintjs/core";
@@ -13,7 +12,7 @@ import {
 } from "../generic-table/TableButtons";
 
 import { mainStore } from "../../stores/MainStore";
-import { dashboardStore, DashboardStore } from "../../stores/DashboardStore";
+import { dashboardStore } from "../../stores/DashboardStore";
 
 import { dashboardApi } from "../../api/clients/DashboardAPI";
 import { stackApi } from "../../api/clients/StackAPI";
@@ -94,14 +93,12 @@ export const StackDialog: React.FC<{}> = () => {
     }
 
     function notOnlyDefaultDashboardInStack(stack: StackDTO) {
-        const numOfDashboards = dashboards.filter((dashboard) => {
-            if (dashboard.stack && dashboard.stack.id === stack.id) {
-                return dashboard;
-            }
-        }).length;
+        const numOfDashboards = dashboards.filter((dashboard) =>
+            dashboard.stack ? dashboard.stack.id === stack.id : false
+        ).length;
 
         const hasDefaultDashboard: boolean = dashboards
-            .filter((dashboard) => dashboard.stack!.id === stack.id)
+            .filter((dashboard) => (dashboard.stack ? dashboard.stack.id === stack.id : false))
             .some((dashboard) => dashboard.name === stack.name);
 
         return numOfDashboards > 1 || (!hasDefaultDashboard && numOfDashboards > 0);
@@ -122,7 +119,7 @@ export const StackDialog: React.FC<{}> = () => {
     };
 
     const restoreDashboard = async (dashboard: DashboardDTO) => {
-        if (dashboard.publishedToStore == false) {
+        if (!dashboard.publishedToStore) {
             restoreUnsharedDashboard();
         } else {
             confirmRestoreDashboard(dashboard);
@@ -187,7 +184,7 @@ export const StackDialog: React.FC<{}> = () => {
                 { text: dashboard.name, style: "bold" },
                 " and restoring it's default setting. Press OK to confirm."
             ],
-            onConfirm: () => onRestoerDashboardConfirmed(dashboard)
+            onConfirm: () => onRestoreDashboardConfirmed(dashboard)
         });
     };
 
@@ -198,11 +195,11 @@ export const StackDialog: React.FC<{}> = () => {
         });
     };
 
-    const onRestoerDashboardConfirmed = async (dashboard: DashboardDTO) => {
+    const onRestoreDashboardConfirmed = async (dashboard: DashboardDTO) => {
         const response = await dashboardApi.restoreDashboard(dashboard);
         if (response.status !== 200) return false;
 
-        const set = await dashboardStore.fetchUserDashboards(dashboard.guid);
+        await dashboardStore.fetchUserDashboards(dashboard.guid);
         mainStore.hideStackDialog();
         return true;
     };
@@ -248,10 +245,7 @@ export const StackDialog: React.FC<{}> = () => {
                                         icon: "control",
                                         isExpanded:
                                             notOnlyDefaultDashboardInStack(stack) &&
-                                            currentStack &&
-                                            currentStack.id === stack.id
-                                                ? true
-                                                : false,
+                                            (currentStack ? currentStack.id === stack.id : false),
                                         secondaryLabel: (
                                             <ButtonGroup
                                                 data-element-id={"stack-actions"}
@@ -292,7 +286,9 @@ export const StackDialog: React.FC<{}> = () => {
                                             </ButtonGroup>
                                         ),
                                         childNodes: dashboards
-                                            .filter((dashboard) => dashboard.stack!.id === stack.id)
+                                            .filter((dashboard) =>
+                                                dashboard.stack ? dashboard.stack.id === stack.id : false
+                                            )
                                             .map((dashboard) => {
                                                 const dashNode: ITreeNode = {
                                                     id: dashboard.guid,

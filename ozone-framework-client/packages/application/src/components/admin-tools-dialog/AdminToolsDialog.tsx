@@ -1,6 +1,6 @@
-import * as styles from "./index.scss";
+import styles from "./index.scss";
 
-import * as React from "react";
+import React from "react";
 import { useMemo } from "react";
 import { useBehavior } from "../../hooks";
 
@@ -8,11 +8,11 @@ import { values } from "lodash";
 
 import { Classes, Dialog } from "@blueprintjs/core";
 
-import { dashboardStore } from "../../stores/DashboardStore";
 import { UserWidget } from "../../models/UserWidget";
 import { UserState } from "../../codecs/Dashboard.codec";
 
-import { dashboardService } from "../../stores/DashboardService";
+import { dashboardService } from "../../services/DashboardService";
+import { dashboardStore } from "../../stores/DashboardStore";
 import { mainStore } from "../../stores/MainStore";
 
 import { WidgetTile } from "./WidgetTile";
@@ -43,7 +43,7 @@ export const AdminToolsDialog: React.FC<{}> = () => {
                                 title={userWidget.widget.title}
                                 iconUrl={userWidget.widget.images.largeUrl}
                                 onClick={() => {
-                                    dashboardService.addWidget(userWidget);
+                                    dashboardService.addWidget({ widget: userWidget });
                                     mainStore.hideAdminToolsDialog();
                                 }}
                             />

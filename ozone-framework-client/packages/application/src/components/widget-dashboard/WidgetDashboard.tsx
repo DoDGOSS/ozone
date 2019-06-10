@@ -7,7 +7,7 @@ import { Spinner } from "@blueprintjs/core";
 
 import { PropsBase } from "../../common";
 
-import { dashboardService } from "../../stores/DashboardService";
+import { dashboardService } from "../../services/DashboardService";
 import { dashboardStore } from "../../stores/DashboardStore";
 import { mainStore } from "../../stores/MainStore";
 
@@ -44,7 +44,7 @@ export const WidgetDashboard: React.FC<PropsBase> = (props) => {
     return (
         <div className={classNames(styles.dashboard, className, { dragging: isDragging })}>
             <DashboardLayout
-                className={classNames("mosaic-blueprint-theme", "mosaic", "mosaic-drop-target", themeClass)}
+                className={classNames("mosaic-blueprint-theme", themeClass)}
                 value={tree}
                 onChange={onChange}
                 onRelease={onRelease}
