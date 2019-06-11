@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    ports:
+      - "54321:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+  web:
+    build: .
+    # command: python manage.py runserver 0.0.0.0:8000
+    entrypoint: /code/docker-entrypoint.sh
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
