@@ -1,0 +1,37 @@
+[
+    {
+        "pk": 1,
+        "model": "auth.user",
+        "fields": {
+            "password": "pbkdf2_sha256$150000$6U8FxMiPvxif$BWnm5S1P0xM+SbgL6MpLkWY6zHxdk5F2aGSodNZOPWI=",
+            "is_superuser": true,
+            "username": "admin",
+            "first_name": "Administrator",
+            "last_name": "GOSS",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2019-05-30T14:17:09.953",
+            "email": "admin@goss.com",
+            "groups": [
+
+            ]
+        }
+    }, {
+        "model": "people.person",
+        "pk": 1,
+        "fields": {
+            "version": 1,
+            "user_real_name": "Administrator GOSS",
+            "last_notification": null,
+            "requires_sync": false,
+            "prev_login": null,
+            "email_show": false,
+            "username": "admin",
+            "enabled": true,
+            "description": "",
+            "email": "",
+            "last_login": null,
+            "user": 1
+        }
+    }
+]
