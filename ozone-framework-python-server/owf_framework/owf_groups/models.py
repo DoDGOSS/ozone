@@ -5,14 +5,14 @@ from owf_framework.people.models import Person
 class OWFGroup(models.Model):
     id = models.BigAutoField(primary_key=True)
     version = models.BigIntegerField(default=1)
-    stack_id = models.BigIntegerField(blank=True, null=True)
+    stack_id = models.ForeignKey('stacks.Stack', blank=True, null=True, on_delete=models.SET_NULL)
     display_name = models.CharField(null=True, blank=True, max_length=200)
-    stack_default = models.BooleanField(blank=False, null=False)
+    stack_default = models.BooleanField(default=False, blank=False, null=False)
     name = models.CharField(null=False, blank=False, max_length=200)
-    status = models.CharField(null=False, blank=False, max_length=8)
+    status = models.CharField(default='active', null=False, blank=False, max_length=8)
     description = models.CharField(blank=True, null=True, max_length=255)
     email = models.CharField(blank=True, null=True, max_length=255)
-    automatic = models.BooleanField(blank=False, null=False)
+    automatic = models.BooleanField(default=False, blank=False, null=False)
     people = models.ManyToManyField(Person, through='OWFGroupPeople')
 
     def __str__(self):
