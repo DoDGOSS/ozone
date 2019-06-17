@@ -1,6 +1,6 @@
 import * as styles from "./index.scss";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useBehavior } from "../../hooks";
 
 import { Spinner } from "@blueprintjs/core";
@@ -14,7 +14,9 @@ import { mainStore } from "../../stores/MainStore";
 import { DashboardLayout, DashboardNode, DashboardPath } from "./types";
 import { DashboardPanel } from "./layout/DashboardPanel";
 
-import { classNames } from "../../utility";
+import { classNames, isNil } from "../../utility";
+import { systemConfigStore } from "../../stores/SystemConfigStore";
+import { BackgroundImage } from "../branding/BackgroundImage";
 
 export const WidgetDashboard: React.FC<PropsBase> = (props) => {
     const { className } = props;
@@ -24,7 +26,7 @@ export const WidgetDashboard: React.FC<PropsBase> = (props) => {
     const isLoading = useBehavior(dashboardStore.isLoading);
     const dashboard = useBehavior(dashboardStore.currentDashboard);
     const { tree, panels } = useBehavior(dashboard.state);
-
+    const backgroundimgconfig = useBehavior(systemConfigStore.backgroundImageConfig);
     const [isDragging, setIsDragging] = useState(false);
 
     const onChange = useCallback((currentNode: DashboardNode | null) => {
@@ -43,13 +45,17 @@ export const WidgetDashboard: React.FC<PropsBase> = (props) => {
 
     return (
         <div className={classNames(styles.dashboard, className, { dragging: isDragging })}>
-            <DashboardLayout
-                className={classNames("mosaic-blueprint-theme", themeClass)}
-                value={tree}
-                onChange={onChange}
-                onRelease={onRelease}
-                renderTile={(id: string, path: DashboardPath) => <DashboardPanel panel={panels[id]} path={path} />}
-            />
+            {!tree && backgroundimgconfig && backgroundimgconfig.value ? (
+                <BackgroundImage imgUrl={backgroundimgconfig.value} />
+            ) : (
+                <DashboardLayout
+                    className={classNames("mosaic-blueprint-theme", themeClass)}
+                    value={tree}
+                    onChange={onChange}
+                    onRelease={onRelease}
+                    renderTile={(id: string, path: DashboardPath) => <DashboardPanel panel={panels[id]} path={path} />}
+                />
+            )}
         </div>
     );
 };

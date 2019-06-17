@@ -281,6 +281,40 @@ export namespace SystemConfigAdminWidget {
         export const FIRST_STRING = "div[data-element-type='stringInput']";
 
         export const FIRST_INTEGER = "div[data-element-type='integerInput']";
+
+        export const CUSTOM_BACKGROUND_URL = "div[data-element-id='InputFor_14']";
+
+        export const CUSTOM_HEADER_URL = "div[data-element-id='InputFor_15']";
+
+        export const CUSTOM_HEADER_HEIGHT = "div[data-element-id='InputFor_16']";
+
+        export const CUSTOM_FOOTER_URL = "div[data-element-id='InputFor_17']";
+
+        export const CUSTOM_FOOTER_HEIGHT = "div[data-element-id='InputFor_18']";
+
+        export const CUSTOM_HEADFOOT_CSS = "div[data-element-id='InputFor_19']";
+
+        export const CUSTOM_HEADFOOT_JS = "div[data-element-id='InputFor_20']";
+    }
+
+    export namespace InputTestValues {
+        export const BACKGROUND_IMG_URL_VAL = "http://localhost:3000/images/widget-icons/ChannelShouter.png";
+
+        export const HEADER_URL_VAL = "header.html";
+
+        export const HEADER_HEIGHT_VAL = "100";
+
+        export const FOOTER_URL_VAL = "footer.html";
+
+        export const FOOTER_HEIGHT_VAL = "80";
+
+        export const CSS_IMPORT_1_VAL = "test.css";
+
+        export const CSS_IMPORT_2_VAL = "test2.css";
+
+        export const JS_IMPORT_1_VAL = "test.js";
+
+        export const JS_IMPORT_2_VAL = "test2.js";
     }
 
     export namespace TabSelector {
@@ -480,4 +514,14 @@ export namespace GlobalElements {
     export const STD_EDIT_MENU_BUTTON = "button[data-element-id='edit-menu-button']";
 
     export const STD_DELETE_BUTTON = "a[data-element-id='delete-button']";
+
+    export const CUSTOM_BACKGROUND_IMAGE = "div[data-element-id='custom-background-image']";
+
+    export const CUSTOM_HEADER = "div[data-element-id='sysconfig-custom-header']";
+
+    export const CUSTOM_FOOTER = "div[data-element-id='sysconfig-custom-footer']";
+
+    export const CUSTOM_CSS = "link[id='custom-added-css']";
+
+    export const CUSTOM_JS = "script[id='custom-added-js']";
 }
