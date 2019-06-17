@@ -16,7 +16,7 @@ import { HomeScreen } from "../../components/home-screen/HomeScreen";
 import { ClassificationWrapper } from "../../components/classification/ClassificationWrapper";
 
 import { asInteger, clampMinimum, isNil } from "../../utility";
-
+import { systemConfigStore } from "../../stores/SystemConfigStore";
 import { DEFAULT_AUTO_SAVE_INTERVAL, MINIMUM_AUTO_SAVE_INTERVAL } from "../../constants";
 
 export const MainPage: React.FC<{}> = () => {
@@ -26,6 +26,10 @@ export const MainPage: React.FC<{}> = () => {
 
     useEffect(() => {
         authStore.check();
+    }, []);
+
+    useEffect(() => {
+        systemConfigStore.fetchConfigs();
     }, []);
 
     // Redirect to login if required

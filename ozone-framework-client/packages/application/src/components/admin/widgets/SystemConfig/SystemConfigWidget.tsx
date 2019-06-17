@@ -19,7 +19,7 @@ const STORE_TAB = "store";
 
 export const SystemConfigWidget: React.FC = () => {
     useEffect(() => {
-        systemConfigStore.fetch();
+        systemConfigStore.fetchConfigs();
     }, []);
 
     const [activeTabId, setActiveTabId] = useState(AUDITING_TAB);
@@ -86,17 +86,21 @@ interface ConfigFieldProps {
     config: ConfigDTO;
 }
 
-export const ConfigField: React.FC<ConfigFieldProps> = ({ config }) => (
-    <FormRow>
-        <FormCell>
-            <div className={styles.fieldTitle}>{config.title}</div>
-            <div className={styles.fieldDescription}>{config.description}</div>
-        </FormCell>
-        <FormCell className={styles.centered}>
-            <div className={styles.centered}>{getConfigFieldValue(config)}</div>
-        </FormCell>
-    </FormRow>
-);
+export const ConfigField: React.FC<ConfigFieldProps> = ({ config }) =>
+    // Suppress the 'Free Text Message' sysconfig option
+    config.title !== "Free Text Message" ? (
+        <FormRow>
+            <FormCell>
+                <div className={styles.fieldTitle}>{config.title}</div>
+                <div className={styles.fieldDescription}>{config.description}</div>
+            </FormCell>
+            <FormCell className={styles.centered}>
+                <div className={styles.centered}>{getConfigFieldValue(config)}</div>
+            </FormCell>
+        </FormRow>
+    ) : (
+        <br />
+    );
 
 function getConfigFieldValue(config: ConfigDTO): any {
     if (
@@ -222,7 +226,7 @@ function handleStringChange(config: ConfigDTO, newValue: string) {
     }
 
     if (config.value !== newValue) {
-        systemConfigApi.updateConfigById(config.id, newValue).then(() => systemConfigStore.fetch());
+        systemConfigApi.updateConfigById(config.id, newValue).then(() => systemConfigStore.fetchConfigs());
     }
 }
 interface Props {
