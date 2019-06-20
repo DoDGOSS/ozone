@@ -1,0 +1,45 @@
+task extractClient(type: Sync, group: 'tasks') {
+    dependsOn(configurations.client)
+
+    from { // use of closure defers evaluation until execution time
+        configurations.client.collect { zipTree(it) }
+    }
+    into "$clientStaging"
+}
+
+task copyClientResources(type: Copy, group: 'tasks') {
+    dependsOn(extractClient)
+
+    from fileTree("$clientStaging").matching {
+        exclude "*.html", "*.gsp"
+    }
+    into file("src/main/resources/public")
+}
+
+task copyClientGsps(type: Copy, group: 'tasks') {
+    dependsOn(extractClient)
+
+    from fileTree("$clientStaging").matching {
+        include "*.gsp"
+    }
+    into file("grails-app/views")
+}
+
+build.dependsOn(copyClientResources, copyClientGsps)
+processResources.dependsOn(copyClientResources, copyClientGsps)
+
+task cleanClientResources(type: Delete, group: 'tasks') {
+    delete fileTree(dir: "grails-app/views", include: "*.gsp")
+
+    delete fileTree("src/main/resources/public").matching {
+        exclude '.gitignore'
+    }
+
+    delete("src/main/resources/public/assets",
+            "src/main/resources/public/css",
+            "src/main/resources/public/examples",
+            "src/main/resources/public/images",
+            "src/main/resources/public/scripts")
+}
+
+clean.dependsOn(cleanClientResources)

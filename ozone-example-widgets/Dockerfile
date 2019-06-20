@@ -1,4 +1,4 @@
-FROM node:10.11.0-stretch
+FROM node:10.16.0-stretch
 
 WORKDIR /app
 

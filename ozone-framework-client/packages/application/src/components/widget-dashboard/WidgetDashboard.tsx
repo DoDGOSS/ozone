@@ -26,7 +26,7 @@ export const WidgetDashboard: React.FC<PropsBase> = (props) => {
     const isLoading = useBehavior(dashboardStore.isLoading);
     const dashboard = useBehavior(dashboardStore.currentDashboard);
     const { tree, panels } = useBehavior(dashboard.state);
-    const backgroundimgconfig = useBehavior(systemConfigStore.backgroundImageConfig);
+    const backgroundImageUrl = useBehavior(systemConfigStore.backgroundImageUrl);
     const [isDragging, setIsDragging] = useState(false);
 
     const onChange = useCallback((currentNode: DashboardNode | null) => {
@@ -45,8 +45,8 @@ export const WidgetDashboard: React.FC<PropsBase> = (props) => {
 
     return (
         <div className={classNames(styles.dashboard, className, { dragging: isDragging })}>
-            {!tree && backgroundimgconfig && backgroundimgconfig.value ? (
-                <BackgroundImage imgUrl={backgroundimgconfig.value} />
+            {!tree && backgroundImageUrl ? (
+                <BackgroundImage imgUrl={backgroundImageUrl} />
             ) : (
                 <DashboardLayout
                     className={classNames("mosaic-blueprint-theme", themeClass)}

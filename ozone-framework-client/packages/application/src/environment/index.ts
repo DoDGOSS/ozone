@@ -9,6 +9,7 @@ export * from "./interfaces";
 const defaultEnvironment: Environment = {
     server: {
         url: "http://localhost:8080",
+        frontendUrl: "http://localhost:3000",
         contextPath: "",
         staticAssetPath: ""
     },
