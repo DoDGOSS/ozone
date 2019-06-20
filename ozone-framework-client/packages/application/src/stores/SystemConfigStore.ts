@@ -1,15 +1,22 @@
 import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
+import { Response } from "../api/interfaces";
 import { ConfigDTO } from "../api/models/ConfigDTO";
 import { SystemConfigAPI, systemConfigApi as configApiDefault } from "../api/clients/SystemConfigAPI";
+import { systemConfigFromJson } from "../codecs/SystemConfig.codec";
+import { isBlank, isNil } from "../utility";
+
+const CUSTOM_JS_ID = "custom-added-js";
+const CUSTOM_CSS_ID = "custom-added-css";
 
 export class SystemConfigStore {
     private readonly configs$ = new BehaviorSubject<ConfigDTO[]>([]);
-    private readonly backgroundImageConfig$ = new BehaviorSubject<ConfigDTO | null>(null);
+
+    private readonly backgroundImageConfig$ = new BehaviorSubject<string | undefined>(undefined);
     private readonly headerHeight$ = new BehaviorSubject<string | undefined>(undefined);
-    private readonly footerHeight$ = new BehaviorSubject<string | undefined>(undefined);
     private readonly headerBody$ = new BehaviorSubject<string | undefined>(undefined);
+    private readonly footerHeight$ = new BehaviorSubject<string | undefined>(undefined);
     private readonly footerBody$ = new BehaviorSubject<string | undefined>(undefined);
 
     private readonly configApi: SystemConfigAPI;
@@ -19,85 +26,88 @@ export class SystemConfigStore {
     }
 
     configs = () => asBehavior(this.configs$);
-    backgroundImageConfig = () => asBehavior(this.backgroundImageConfig$);
+
+    backgroundImageUrl = () => asBehavior(this.backgroundImageConfig$);
     headerHeight = () => asBehavior(this.headerHeight$);
-    footerHeight = () => asBehavior(this.footerHeight$);
     headerBody = () => asBehavior(this.headerBody$);
+    footerHeight = () => asBehavior(this.footerHeight$);
     footerBody = () => asBehavior(this.footerBody$);
 
-    fetchConfigs = async () => {
-        return this.configApi.getConfigs().then(async (results) => {
-            if (results.status !== 200) {
-                // TODO: Error handling?
-                this.configs$.next([]);
-            } else {
-                this.configs$.next(results.data);
-                this.backgroundImageConfig$.next(
-                    results.data.filter((config) => config.code === "owf.custom.background.url")[0]
-                );
-                this.headerHeight$.next(
-                    results.data.filter((config) => config.code === "owf.custom.header.height")[0].value
-                );
-                this.footerHeight$.next(
-                    results.data.filter((config) => config.code === "owf.custom.footer.height")[0].value
-                );
-                this.headerBody$.next(
-                    await this.getBodyFromUrl(
-                        results.data.filter((config) => config.code === "owf.custom.header.url")[0].value
-                    )
-                );
-                this.footerBody$.next(
-                    await this.getBodyFromUrl(
-                        results.data.filter((config) => config.code === "owf.custom.footer.url")[0].value
-                    )
-                );
-                this.includeCSS(results.data.filter((config) => config.code === "owf.custom.css")[0].value);
-                this.includeJS(results.data.filter((config) => config.code === "owf.custom.jss")[0].value);
-            }
-        });
+    fetchConfigs = (): void => {
+        this.configApi.getConfigs().then(this.updateConfigs);
     };
 
-    private async getBodyFromUrl(urlString: string | undefined) {
-        if (urlString !== undefined) {
-            const headResponse = await fetch(urlString);
-            if (!headResponse.ok) {
-                return;
-            }
-            return await headResponse.text();
-        } else {
-            return "";
+    private updateConfigs = (results: Response<ConfigDTO[]>): void => {
+        // TODO: Error handling?
+        if (results.status !== 200) {
+            this.configs$.next([]);
+            return;
         }
-    }
 
-    private includeJS(urlString: string | undefined) {
-        if (urlString !== undefined && urlString !== null) {
-            while (document.getElementById("custom-added-js")) {
-                document.body.removeChild(document.getElementById("custom-added-js")!);
-            }
-            urlString.split(/\s*,\s*/).forEach((jsUrl) => {
-                const scriptToAdd = document.createElement("script");
-                scriptToAdd.src = jsUrl;
-                scriptToAdd.id = "custom-added-js";
-                document.body.appendChild(scriptToAdd);
-            });
-        }
-    }
+        this.configs$.next(results.data);
 
-    private includeCSS(urlString: string | undefined) {
-        if (urlString !== undefined && urlString !== null) {
-            while (document.getElementById("custom-added-css")) {
-                document.body.removeChild(document.getElementById("custom-added-css")!);
-            }
-            urlString.split(/\s*,\s*/).forEach((cssUrl) => {
-                const cssToAdd = document.createElement("link");
-                cssToAdd.href = cssUrl;
-                cssToAdd.type = "text/css";
-                cssToAdd.rel = "stylesheet";
-                cssToAdd.id = "custom-added-css";
-                document.body.appendChild(cssToAdd);
-            });
-        }
-    }
+        const sysConfig = systemConfigFromJson(results.data);
+
+        this.backgroundImageConfig$.next(sysConfig.backgroundImageUrl);
+        this.headerHeight$.next(sysConfig.headerHeight);
+        this.footerHeight$.next(sysConfig.footerHeight);
+
+        getBodyFromUrl(sysConfig.headerUrl).then((headerBody) => this.headerBody$.next(headerBody));
+
+        getBodyFromUrl(sysConfig.footerUrl).then((footerBody) => this.footerBody$.next(footerBody));
+
+        createCustomScriptElements(sysConfig.customJs);
+
+        createCustomStylesheetElements(sysConfig.customCss);
+    };
 }
 
 export const systemConfigStore = new SystemConfigStore();
+
+async function getBodyFromUrl(url: string | undefined): Promise<string | undefined> {
+    if (url === undefined || isBlank(url)) return undefined;
+
+    const response = await fetch(url);
+    if (!response.ok) return undefined;
+
+    const body = await response.text();
+    if (isBlank(body)) return undefined;
+    return body;
+}
+
+function createCustomScriptElements(urlString: string | undefined): void {
+    if (isNil(urlString) || isBlank(urlString)) return;
+
+    removeElementsById(CUSTOM_JS_ID);
+
+    urlString.split(/\s*,\s*/).forEach((jsUrl) => {
+        const scriptToAdd = document.createElement("script");
+        scriptToAdd.src = jsUrl;
+        scriptToAdd.id = CUSTOM_JS_ID;
+        document.body.appendChild(scriptToAdd);
+    });
+}
+
+function createCustomStylesheetElements(urlString: string | undefined): void {
+    if (isNil(urlString) || isBlank(urlString)) return;
+
+    removeElementsById(CUSTOM_CSS_ID);
+
+    urlString.split(/\s*,\s*/).forEach((cssUrl) => {
+        const cssToAdd = document.createElement("link");
+        cssToAdd.href = cssUrl;
+        cssToAdd.type = "text/css";
+        cssToAdd.rel = "stylesheet";
+        cssToAdd.id = CUSTOM_CSS_ID;
+        document.body.appendChild(cssToAdd);
+    });
+}
+
+function removeElementsById(id: string): void {
+    while (true) {
+        let element = document.getElementById(id);
+        if (isNil(element)) break;
+
+        document.body.removeChild(element);
+    }
+}

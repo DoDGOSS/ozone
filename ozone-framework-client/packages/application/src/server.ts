@@ -5,7 +5,15 @@ import { env } from "./environment";
 let _contextPath: string | undefined;
 let _contextUrl: string | undefined;
 let _serverHostUrl: string | undefined;
+let _frontendHostUrl: string | undefined;
 let _staticAssetPath: string | undefined;
+
+export function frontendHostUrl(): string {
+    if (!_frontendHostUrl) {
+        _frontendHostUrl = normalize(env().server.frontendUrl);
+    }
+    return _frontendHostUrl;
+}
 
 export function serverHostUrl(): string {
     if (!_serverHostUrl) {

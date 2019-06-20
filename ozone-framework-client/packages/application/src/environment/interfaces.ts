@@ -15,6 +15,7 @@ export interface Environment {
 
 export interface ServerOptions {
     url: string;
+    frontendUrl: string;
     contextPath: string;
     staticAssetPath: string;
 }
