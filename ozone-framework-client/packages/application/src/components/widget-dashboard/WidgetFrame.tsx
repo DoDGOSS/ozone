@@ -6,7 +6,7 @@ import { UserWidget } from "../../models/UserWidget";
 import { Widget } from "../../models/Widget";
 import { WidgetInstance } from "../../models/WidgetInstance";
 
-import { serverContextUrl } from "../../server";
+import { contextPath, frontendHostUrl, serverContextUrl } from "../../server";
 
 import { SYSTEM_WIDGET_URLS } from "../../stores/system-widgets";
 
@@ -36,9 +36,9 @@ const _WidgetFrame: React.FC<WidgetFrameProps> = ({ widgetInstance }) => {
         containerVersion: "7.15.1",
         locked: false,
         layout: "",
-        webContextPath: "/",
+        webContextPath: contextPath(),
         preferenceLocation: `${serverContextUrl()}/prefs`,
-        relayUrl: "http://localhost:3000", // TODO: serverContextUrl()
+        relayUrl: frontendHostUrl(),
         lang: "en_US",
         currentTheme: {
             themeName: "a_default",
