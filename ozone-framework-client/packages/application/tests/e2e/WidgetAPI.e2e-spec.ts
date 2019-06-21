@@ -11,7 +11,7 @@ import {
     WidgetUpdateRequest
 } from "../../src/api/models/WidgetDTO";
 
-import { NodeGateway } from "./node-gateway";
+import { NodeGateway } from "./NodeGateway";
 
 import { logResponse } from "./assertions";
 

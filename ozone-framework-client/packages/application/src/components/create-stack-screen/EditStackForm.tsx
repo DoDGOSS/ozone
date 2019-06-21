@@ -12,7 +12,7 @@ import { FormError, TextField } from "../form";
 
 import { stackApi } from "../../api/clients/StackAPI";
 
-import { assetUrl } from "../../server";
+import { assetUrl } from "../../environment";
 
 export interface EditStackFormProps {
     onSubmit: () => void;

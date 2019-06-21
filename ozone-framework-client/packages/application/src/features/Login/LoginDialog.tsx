@@ -14,7 +14,13 @@ export interface LoginDialogProps {
 }
 
 export const LoginDialog: React.FC<LoginDialogProps> = (props) => (
-    <Dialog className={classNames("bp3-dark", styles.dialog)} title="Login" icon="log-in" isOpen={props.isOpen}>
+    <Dialog
+        className={classNames("bp3-dark", styles.dialog)}
+        title="Login"
+        icon="log-in"
+        isOpen={props.isOpen}
+        isCloseButtonShown={false}
+    >
         <div className={classNames(Classes.DIALOG_BODY, styles.body)} data-test-id="login-dialog">
             <AuthStatusCallout />
             <LoginForm onSuccess={props.onSuccess} />

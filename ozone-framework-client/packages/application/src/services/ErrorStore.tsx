@@ -1,8 +1,9 @@
-import * as React from "react";
+import React from "react";
 
 import { Subject } from "rxjs";
 import { asObservable } from "../observables";
 import { Intent, Position, Toaster } from "@blueprintjs/core";
+import { lazy } from "../utility";
 
 interface ErrorReport {
     title: string;
@@ -20,7 +21,7 @@ export class ErrorStore {
 
         console.error(new Error(`${title}: ${message}`));
 
-        ErrorToaster.show({
+        getToaster().show({
             icon: "warning-sign",
             intent: Intent.DANGER,
             message: (
@@ -37,7 +38,7 @@ export class ErrorStore {
 
         console.error(new Error(`${title}: ${message}`));
 
-        ErrorToaster.show({
+        getToaster().show({
             icon: "warning-sign",
             intent: Intent.WARNING,
             message: (
@@ -50,7 +51,7 @@ export class ErrorStore {
     };
 
     notice = (title: string, message: string) => {
-        ErrorToaster.show({
+        getToaster().show({
             icon: "warning-sign",
             intent: Intent.WARNING,
             message: (
@@ -65,6 +66,4 @@ export class ErrorStore {
 
 export const errorStore = new ErrorStore();
 
-const ErrorToaster = Toaster.create({
-    position: Position.BOTTOM
-});
+const getToaster = lazy(() => Toaster.create({ position: Position.BOTTOM }));

@@ -2,7 +2,7 @@ import * as styles from "./index.scss";
 
 import * as React from "react";
 
-import { assetUrl } from "../../server";
+import { assetUrl } from "../../environment";
 
 export type WidgetTileProps = {
     title: string;

@@ -17,7 +17,7 @@ import { DashboardSelect } from "./DashboardSelect";
 
 import { handleSelectChange, handleStringChange } from "../../utility";
 
-import { assetUrl } from "../../server";
+import { assetUrl } from "../../environment";
 
 export interface CreateDashboardFormProps {
     onSubmit: () => void;

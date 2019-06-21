@@ -33,8 +33,6 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
             loading: true,
             showAdd: false
         };
-
-        this.confirmDeleteWidget = this.confirmDeleteWidget.bind(this);
     }
 
     componentDidMount() {

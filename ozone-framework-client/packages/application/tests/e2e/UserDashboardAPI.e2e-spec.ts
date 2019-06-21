@@ -5,11 +5,11 @@ import { UserDashboardAPI } from "../../src/api/clients/UserDashboardAPI";
 import { DashboardDTO } from "../../src/api/models/DashboardDTO";
 import { StackDTO } from "../../src/api/models/StackDTO";
 
-import { NodeGateway } from "./node-gateway";
+import { NodeGateway } from "./NodeGateway";
 
 import { logResponse } from "./assertions";
 
-describe(UserDashboardAPI.name, () => {
+describe("User Dashboard API", () => {
     let gateway: NodeGateway;
 
     let dashboardApi: DashboardAPI;

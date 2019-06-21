@@ -80,7 +80,7 @@ export async function createPresetLayout(layoutName: string | null, guid: string
         case "Tab-Fit-Fit":
             return createTabbedFitFitLayout();
         case "copy":
-            return await onCopyDashboard(guid);
+            return onCopyDashboard(guid);
         default:
             return {
                 tree: null,
@@ -93,7 +93,7 @@ const onCopyDashboard = async (guid: string | null): Promise<DashboardLayout> =>
     const response = await dashboardApi.getDashboard(guid);
     const layout = JSON.parse(response.data.data[0].layoutConfig);
     let panels = JSON.stringify(layout.panels);
-    panels = panels.replace(/\"userWidgetIds\":/g, '"widgets":');
+    panels = panels.replace(/"userWidgetIds":/g, '"widgets":');
     panels = JSON.parse(panels);
     layout.panels = panels;
     return layout;
