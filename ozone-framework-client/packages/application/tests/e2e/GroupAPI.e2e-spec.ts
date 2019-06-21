@@ -3,7 +3,7 @@ import "./matchers";
 import { GroupAPI } from "../../src/api/clients/GroupAPI";
 import { GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../src/api/models/GroupDTO";
 
-import { NodeGateway } from "./node-gateway";
+import { NodeGateway } from "./NodeGateway";
 
 import { optional } from "../../src/utility";
 

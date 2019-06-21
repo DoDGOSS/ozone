@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { Field, FieldProps } from "formik";
 
-import { assetUrl } from "../../server";
+import { assetUrl } from "../../environment";
 
 import { DEFAULT_LAYOUTS } from "../../stores/default-layouts";
 

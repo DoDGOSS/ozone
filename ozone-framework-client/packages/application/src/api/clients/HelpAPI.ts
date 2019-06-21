@@ -1,4 +1,5 @@
 import { Gateway, getGateway, Response } from "../interfaces";
+import { HelpGetResponse, validateHelpGetResponse } from "../models/HelpDTO";
 
 export class HelpAPI {
     private readonly gateway: Gateway;
@@ -7,12 +8,10 @@ export class HelpAPI {
         this.gateway = gateway || getGateway();
     }
 
-    getHelpFiles(): Promise<Response<any>> {
-        return this.gateway.get("helpFiles/", {});
-    }
-
-    getHelpFileById(path: string): Promise<Response<any>> {
-        return this.gateway.get(`help${path}/`, {});
+    getHelpFiles(): Promise<Response<HelpGetResponse>> {
+        return this.gateway.get("helpFiles/", {
+            validate: validateHelpGetResponse
+        });
     }
 }
 

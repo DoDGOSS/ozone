@@ -4,10 +4,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="${request.contextPath}/static/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="${grailsApplication.config.getProperty('owf.server.staticAssetPath')}/favicon.ico">
     <title>Ozone Platform</title>
 {{#each stylesheets as |stylesheet|}}
-    <link rel="stylesheet" type="text/css" href="${request.contextPath}/static/{{{stylesheet}}}">
+    <link rel="stylesheet" type="text/css" href="${grailsApplication.config.getProperty('owf.server.staticAssetPath')}/{{{stylesheet}}}">
 {{/each}}
 </head>
 <body>
@@ -17,9 +18,8 @@
     <script type="application/javascript">
         window.env = window.env || {};
         window.env.server = {
-            url: '${grailsApplication.config.getProperty("owf.server.url")}',
-            frontendUrl: '${grailsApplication.config.getProperty("owf.server.url")}',
-            contextPath: "${request.contextPath}",
+            backendUrl: '${grailsApplication.config.getProperty("owf.server.backendUrl")}',
+            frontendUrl: '${grailsApplication.config.getProperty("owf.server.frontendUrl")}',
             staticAssetPath: '${grailsApplication.config.getProperty("owf.server.staticAssetPath")}'
         };
         window.env.login = {
@@ -34,7 +34,7 @@
     </script>
 
 {{#each scripts as |script|}}
-    <script type="application/javascript" src="${request.contextPath}/static/{{{script}}}"></script>
+    <script type="application/javascript" src="${grailsApplication.config.getProperty('owf.server.staticAssetPath')}/{{{script}}}"></script>
 {{/each}}
 </body>
 </html>

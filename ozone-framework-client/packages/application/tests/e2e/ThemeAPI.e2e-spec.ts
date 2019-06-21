@@ -1,4 +1,4 @@
-import { NodeGateway } from "./node-gateway";
+import { NodeGateway } from "./NodeGateway";
 import { ThemeAPI } from "../../src/api/clients/ThemeAPI";
 import { logResponse } from "./assertions";
 import { PreferenceAPI } from "../../src/api/clients/PreferenceAPI";

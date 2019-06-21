@@ -8,7 +8,8 @@ import HTML5Backend from "react-dnd-html5-backend";
 
 import { Spinner } from "@blueprintjs/core";
 
-import { env } from "../../environment";
+import { env, loginUrl } from "../../environment";
+
 import { AuthStatus, authStore } from "../../stores/AuthStore";
 import { dashboardStore } from "../../stores/DashboardStore";
 
@@ -20,7 +21,7 @@ import { systemConfigStore } from "../../stores/SystemConfigStore";
 import { DEFAULT_AUTO_SAVE_INTERVAL, MINIMUM_AUTO_SAVE_INTERVAL } from "../../constants";
 
 export const MainPage: React.FC<{}> = () => {
-    const loginOpts = useMemo(() => env().login, []);
+    const isLoginEnabled = useMemo(() => env().login.isEnabled, []);
 
     const authStatus = useBehavior(authStore.status);
 
@@ -35,8 +36,8 @@ export const MainPage: React.FC<{}> = () => {
     // Redirect to login if required
     useEffect(() => {
         // TODO: Fallback if logged out and login screen is disabled
-        if (authStatus === AuthStatus.LOGGED_OUT && loginOpts.isEnabled) {
-            window.open(loginOpts.loginUrl, "_self");
+        if (authStatus === AuthStatus.LOGGED_OUT && isLoginEnabled) {
+            window.open(loginUrl(), "_self");
         }
     }, [authStatus]);
 

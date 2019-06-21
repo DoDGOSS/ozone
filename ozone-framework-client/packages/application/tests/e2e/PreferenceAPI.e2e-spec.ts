@@ -6,7 +6,7 @@ import {
     PreferenceDTO,
     PreferenceUpdateRequest
 } from "../../src/api/models/PreferenceDTO";
-import { NodeGateway } from "./node-gateway";
+import { NodeGateway } from "./NodeGateway";
 import { PREFERENCES } from "../unit/data";
 import { checkForDefaultPrefs, logResponse } from "./assertions";
 import { AuthUserDTO } from "../../src/api/models/AuthUserDTO";
@@ -86,7 +86,7 @@ describe("Preference API", () => {
 
         expect(response.status).toEqual(200);
         expect(response.data).toEqual({
-            serverVersion: "7.17.2-0"
+            serverVersion: "8.0.0-0"
         });
     });
 
