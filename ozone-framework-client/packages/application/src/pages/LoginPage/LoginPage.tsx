@@ -1,16 +1,13 @@
 import styles from "./index.module.scss";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-
 import { Spinner } from "@blueprintjs/core";
 
-import { authService } from "../../services/AuthService";
-
+import { env, loginNextUrl } from "../../environment";
 import { LoginDialog, RedirectDialog, useSearchParams } from "../../features/Login";
 import { ConsentNotice } from "../../features/ConsentNotice";
 import { UserAgreement } from "../../features/UserAgreement";
-
-import { env } from "../../environment";
+import { authService } from "../../services/AuthService";
 
 enum LoginState {
     Loading,
@@ -21,9 +18,10 @@ enum LoginState {
 }
 
 export const LoginPage: React.FC<{}> = () => {
-    const loginOpts = useMemo(() => env().login, []);
     const consentOpts = useMemo(() => env().consentNotice, []);
     const agreementsOpts = useMemo(() => env().userAgreement, []);
+
+    const nextUrl = useMemo(() => loginNextUrl(), []);
 
     const params = useSearchParams();
     const showLogin = useMemo(() => hasStatusParam(params), [params]);
@@ -31,7 +29,7 @@ export const LoginPage: React.FC<{}> = () => {
     const [state, setState] = useState<LoginState>(showLogin ? LoginState.Login : LoginState.Loading);
 
     const redirectToDesktop = useCallback(() => {
-        window.open(loginOpts.nextUrl, "_self");
+        window.open(nextUrl, "_self");
         setState(LoginState.Redirect);
     }, []);
 
@@ -65,7 +63,7 @@ export const LoginPage: React.FC<{}> = () => {
 
             <LoginDialog isOpen={state === LoginState.Login} onSuccess={redirectToDesktop} />
 
-            <RedirectDialog isOpen={state === LoginState.Redirect} nextUrl={loginOpts.nextUrl} />
+            <RedirectDialog isOpen={state === LoginState.Redirect} nextUrl={nextUrl} />
         </div>
     );
 };

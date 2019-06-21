@@ -1,7 +1,7 @@
 import React from "react";
 import { ITreeNode, Tree } from "@blueprintjs/core";
 
-import { serverHostUrl } from "../../server";
+import { backendUrl } from "../../environment";
 
 interface Props {
     nodes: ITreeNode[];
@@ -44,7 +44,7 @@ export class HelpTree extends React.Component<State, Props> {
 
     private handleNodeDoubleClick = (nodeData: ITreeNode) => {
         if (nodeData.icon === "document") {
-            const fullUrl = serverHostUrl() + "/help" + nodeData.id;
+            const fullUrl = backendUrl() + "/help" + nodeData.id;
             window.open(fullUrl);
         }
     };
