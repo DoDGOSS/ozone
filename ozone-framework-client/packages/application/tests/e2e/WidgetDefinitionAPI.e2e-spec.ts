@@ -1,6 +1,6 @@
 import { WidgetDefinitionAPI } from "../../src/api/clients/WidgetDefinitionAPI";
 
-import { NodeGateway } from "./node-gateway";
+import { NodeGateway } from "./NodeGateway";
 
 import { WIDGET_DEFINITION } from "../unit/data";
 import { logResponse } from "./assertions";

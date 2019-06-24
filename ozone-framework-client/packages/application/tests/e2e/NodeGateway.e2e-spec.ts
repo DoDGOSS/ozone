@@ -1,4 +1,4 @@
-import { NodeGateway } from "./node-gateway";
+import { NodeGateway } from "./NodeGateway";
 
 test("login (POST /perform_login)", async () => {
     const gateway = new NodeGateway();

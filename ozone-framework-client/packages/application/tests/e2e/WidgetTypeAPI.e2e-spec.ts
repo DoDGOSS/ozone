@@ -1,6 +1,6 @@
 import { WidgetTypeAPI } from "../../src/api/clients/WidgetTypeAPI";
 
-import { NodeGateway } from "./node-gateway";
+import { NodeGateway } from "./NodeGateway";
 import { WIDGET_TYPES } from "../unit/data";
 
 describe("Widget Type API", () => {

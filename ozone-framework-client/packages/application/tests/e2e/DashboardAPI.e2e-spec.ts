@@ -1,6 +1,6 @@
 import { DashboardAPI } from "../../src/api/clients/DashboardAPI";
 
-import { NodeGateway } from "./node-gateway";
+import { NodeGateway } from "./NodeGateway";
 import { DashboardUpdateRequest } from "../../src/api/models/DashboardDTO";
 
 describe("Dashboard API", () => {

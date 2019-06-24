@@ -36,10 +36,10 @@ task cleanClientResources(type: Delete, group: 'tasks') {
     }
 
     delete("src/main/resources/public/assets",
-            "src/main/resources/public/css",
-            "src/main/resources/public/examples",
-            "src/main/resources/public/images",
-            "src/main/resources/public/scripts")
+           "src/main/resources/public/css",
+           "src/main/resources/public/examples",
+           "src/main/resources/public/images",
+           "src/main/resources/public/scripts")
 }
 
 clean.dependsOn(cleanClientResources)

@@ -1,26 +1,26 @@
-import { defaultsDeep } from "lodash";
+import { defaultsDeep, trimEnd, trimStart } from "lodash";
 
 import { Environment } from "./interfaces";
 
-import { CONSENT_NOTICE, USER_AGREEMENT } from "../pages/ConsentPage/messages";
+import { CONSENT_NOTICE, USER_AGREEMENT } from "./messages";
+import { lazy } from "../utility";
 
 export * from "./interfaces";
 
 const defaultEnvironment: Environment = {
     server: {
-        url: "http://localhost:8080",
+        backendUrl: "http://localhost:8080/owf",
         frontendUrl: "http://localhost:3000",
-        contextPath: "",
         staticAssetPath: ""
     },
     login: {
         isEnabled: true,
-        loginUrl: "http://localhost:3000/login.html",
-        nextUrl: "http://localhost:3000/"
+        loginUrl: "./login.html",
+        nextUrl: "./"
     },
     logout: {
         isEnabled: true,
-        logoutUrl: "http://localhost:3000/login.html?out=1"
+        logoutUrl: "./login.html?out=1"
     },
     consentNotice: {
         isEnabled: true,
@@ -30,7 +30,7 @@ const defaultEnvironment: Environment = {
             isEnabled: true,
             linkText: CONSENT_NOTICE.link
         },
-        nextUrl: "http://localhost:3000/login.html"
+        nextUrl: "./login.html"
     },
     userAgreement: {
         title: USER_AGREEMENT.title,
@@ -45,4 +45,71 @@ export function setDefaultEnvironment() {
 
 export function env(): Environment {
     return window.env as Environment;
+}
+
+/**
+ * returns the URL of the backend (with no trailing slash)
+ */
+export const backendUrl = lazy(() => normalize(env().server.backendUrl));
+
+/**
+ * returns the context path of the backend URL (with leading slash and no trialing slash)
+ */
+export const backendContextPath = lazy(() => new URL(backendUrl()).pathname);
+
+/**
+ * returns the URL of the frontend (with no trailing slash)
+ */
+export const frontendUrl = lazy(() => normalize(env().server.frontendUrl));
+
+/**
+ * @returns the URL for static assets (with no trailing slash, may be relative or absolute)
+ */
+export const staticAssetPath = lazy(() => trimEnd(resolveFrontendUrl(env().server.staticAssetPath), "/"));
+
+export const loginUrl = lazy(() => resolveFrontendUrl(env().login.loginUrl));
+
+export const loginNextUrl = lazy(() => resolveFrontendUrl(env().login.nextUrl));
+
+export const logoutUrl = lazy(() => resolveFrontendUrl(env().logout.logoutUrl));
+
+export const consentNextUrl = lazy(() => {
+    const nextUrl = env().consentNotice.nextUrl;
+    if (!nextUrl) return loginUrl();
+    return resolveFrontendUrl(nextUrl);
+});
+
+/**
+ * @returns the URL of an asset, resolved relative to the static asset path
+ */
+export function assetUrl(path?: string): string {
+    if (!path) return "";
+
+    // Absolute path?
+    if (path.startsWith("http")) {
+        return path;
+    }
+
+    return `${staticAssetPath()}/${normalize(path)}`;
+}
+
+/**
+ * @returns a URL path relative to the frontend URL, or an absolute URL if it is not relative
+ */
+function resolveFrontendUrl(url: string): string {
+    const _url = new URL(url, `${frontendUrl()}/`);
+
+    // Absolute path?
+    if (!_url.href.startsWith(frontendUrl())) {
+        return _url.href + _url.search;
+    }
+
+    return _url.pathname + _url.search;
+}
+
+/**
+ * @returns the value with leading and trailing slashes removed
+ */
+function normalize(value: string): string {
+    return trimStart(trimEnd(value, "/"), "/");
 }

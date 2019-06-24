@@ -6,7 +6,7 @@ import { AuthUserDTO, validateAuthUser } from "../api/models/AuthUserDTO";
 
 import { trimEnd, trimStart } from "lodash";
 import { lazy } from "../utility";
-import { serverContextUrl } from "../server";
+import { backendUrl } from "../environment";
 
 export class OzoneGateway implements Gateway {
     static readonly instance = lazy(() => new OzoneGateway());
@@ -23,7 +23,7 @@ export class OzoneGateway implements Gateway {
 
     private get rootUrl(): string {
         if (!this._rootUrl) {
-            this._rootUrl = trimEnd(this.baseUrl || serverContextUrl(), "/");
+            this._rootUrl = trimEnd(this.baseUrl || backendUrl(), "/");
         }
         return this._rootUrl;
     }
@@ -176,7 +176,7 @@ export class OzoneGateway implements Gateway {
     }
 
     toLogin(): Promise<Response<any>> {
-        // That doesn't work, but we can't include mainStore because that causes a circular depency chain. Or twenty.
+        // That doesn't work, but we can't include mainStore because that causes a circular dependency chain. Or twenty.
         // this.logout();
         return new Promise<Response<{}>>(() => {
             return {};
