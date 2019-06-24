@@ -5,7 +5,7 @@ import { AnchorButton, Button, Intent } from "@blueprintjs/core";
 
 import { MarkdownDialog } from "../../shared/components/MarkdownDialog/MarkdownDialog";
 
-import { ConsentNoticeOptions } from "../../environment";
+import { consentNextUrl, ConsentNoticeOptions } from "../../environment";
 
 export interface ConsentNoticeProps {
     opts: ConsentNoticeOptions;
@@ -21,8 +21,8 @@ export const ConsentNotice: React.FC<ConsentNoticeProps> = (props) => {
         if (onAccept) {
             return <Button text="Accept" intent={Intent.SUCCESS} rightIcon="tick" onClick={onAccept} />;
         }
-        return <AnchorButton text="Accept" intent={Intent.SUCCESS} rightIcon="tick" href={opts.nextUrl} />;
-    }, [onAccept, opts.nextUrl]);
+        return <AnchorButton text="Accept" intent={Intent.SUCCESS} rightIcon="tick" href={consentNextUrl()} />;
+    }, [onAccept]);
 
     const userAgreementLink = useMemo(() => {
         if (!opts.details.isEnabled) return undefined;

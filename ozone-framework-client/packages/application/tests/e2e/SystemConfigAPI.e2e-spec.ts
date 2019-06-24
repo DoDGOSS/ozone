@@ -1,8 +1,8 @@
 import { SystemConfigAPI } from "../../src/api/clients/SystemConfigAPI";
 
-import { NodeGateway } from "./node-gateway";
+import { NodeGateway } from "./NodeGateway";
 
-describe("AppConfig API", () => {
+describe("System Config API", () => {
     let gateway: NodeGateway;
     let configApi: SystemConfigAPI;
 

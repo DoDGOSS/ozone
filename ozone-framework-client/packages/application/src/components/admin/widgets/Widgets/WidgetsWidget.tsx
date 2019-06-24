@@ -54,9 +54,6 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
             exportDialog: undefined,
             exportErrorDialog: undefined
         };
-
-        this.handleUpdate = this.handleUpdate.bind(this);
-        this.columns = this.columns.bind(this);
     }
 
     componentDidMount() {
@@ -189,9 +186,9 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
         });
     };
 
-    private handleUpdate(update?: any) {
+    private handleUpdate = (update?: any) => {
         this.getWidgets();
-    }
+    };
 
     private confirmAndDeleteWidget = (widgetToRemove: WidgetDTO): void => {
         showConfirmationDialog({

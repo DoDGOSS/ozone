@@ -1,6 +1,6 @@
 import { AdministrationAPI } from "../../src/api/clients/AdministrationAPI";
 
-import { NodeGateway } from "./node-gateway";
+import { NodeGateway } from "./NodeGateway";
 import { checkForDefaultPrefs } from "./assertions";
 
 describe("Administration API", () => {

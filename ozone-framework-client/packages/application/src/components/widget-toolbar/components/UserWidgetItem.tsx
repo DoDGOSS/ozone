@@ -3,16 +3,15 @@ import styles from "../index.scss";
 import React, { useCallback } from "react";
 import { useToggleable } from "../../../hooks";
 
-import { dashboardService } from "../../../services/DashboardService";
+import { assetUrl } from "../../../environment";
 import { userWidgetApi } from "../../../api/clients/UserWidgetAPI";
-import { dashboardStore } from "../../../stores/DashboardStore";
 import { UserWidget } from "../../../models/UserWidget";
+import { dashboardService } from "../../../services/DashboardService";
+import { dashboardStore } from "../../../stores/DashboardStore";
 
 import { DeleteWidgetButton } from "./DeleteWidgetButton";
 import { MarkdownConfirmationDialog } from "./MarkdownConfirmationDialog";
 import { UserWidgetTile } from "./UserWidgetTile";
-
-import { assetUrl } from "../../../server";
 
 export interface UserWidgetItemProps {
     userWidget: UserWidget;

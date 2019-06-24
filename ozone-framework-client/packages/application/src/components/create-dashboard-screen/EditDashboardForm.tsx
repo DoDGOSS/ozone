@@ -13,7 +13,7 @@ import { FormError, TextField } from "../form";
 import { stackApi } from "../../api/clients/StackAPI";
 import { dashboardApi } from "../../api/clients/DashboardAPI";
 
-import { assetUrl } from "../../server";
+import { assetUrl } from "../../environment";
 
 export interface EditDashboardFormProps {
     onSubmit: () => void;

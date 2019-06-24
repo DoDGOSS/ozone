@@ -18,6 +18,7 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = (props) => {
             title="Login Success"
             icon="log-in"
             isOpen={props.isOpen}
+            isCloseButtonShown={false}
         >
             <div className={classNames(Classes.DIALOG_BODY, styles.body)} data-test-id="redirect-dialog">
                 <div className={styles.form}>
