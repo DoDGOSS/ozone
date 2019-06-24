@@ -1,13 +1,13 @@
-import * as React from "react";
+import styles from "../Widgets.scss";
+
+import React from "react";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
-import { object, string } from "yup";
+import * as yup from "yup";
 import { Button } from "@blueprintjs/core";
 
-import { CheckBox, FormError, TextField } from "../../../form";
-import { cleanNullableProp } from "../../../../utility";
 import { GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
-
-import * as styles from "../Widgets.scss";
+import { cleanNullableProp } from "../../../../utility";
+import { CheckBox, FormError, TextField } from "../../../form";
 
 interface GroupEditProps {
     onSave: (data: GroupCreateRequest | GroupUpdateRequest) => Promise<boolean>;
@@ -96,14 +96,10 @@ function convertDTOtoUpdateRequest(group: GroupDTO): GroupUpdateRequest {
     };
 }
 
-const EditGroupSchema = object().shape({
-    name: string().required("Required"),
-
-    displayName: string().required("Required"),
-
-    description: string().required("Required"),
-
-    active: string(),
-
-    userManagement: string()
+const EditGroupSchema = yup.object().shape({
+    name: yup.string().required("Required"),
+    displayName: yup.string().required("Required"),
+    description: yup.string().required("Required"),
+    active: yup.string(),
+    automatic: yup.string()
 });

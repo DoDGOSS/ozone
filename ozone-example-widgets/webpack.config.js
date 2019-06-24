@@ -4,13 +4,12 @@ const webpack = require("webpack");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 
 
-const IS_DEVELOPMENT = process.env.NODE_ENV !== "production";
-
+const isProduction = process.env.NODE_ENV === "production";
+const isDevelopment = process.env.NODE_ENV !== "production";
 
 const DefinePluginConfig = new webpack.DefinePlugin({
     "process.env.NODE_ENV": JSON.stringify("production"),
 });
-
 
 const PUBLIC_PATH = "/";
 
@@ -23,11 +22,31 @@ const HTML_TEMPLATES = [
     htmlTemplate("src/widgets/widget-search/index.html", "widget_search.html"),
 ];
 
+const STATS_OPTIONS = {
+    all: false,
+    entrypoints: true,
+    errorDetails: true,
+    errors: true,
+    maxModules: 0,
+    modules: false,
+    moduleTrace: true,
+    warnings: true
+};
 
 module.exports = {
 
+    mode: isProduction ? "production" : "development",
+
+    stats: STATS_OPTIONS,
+
+    performance: {
+        hints: false
+    },
+
+    devtool: isProduction ? "source-map" : "cheap-module-source-map",
+
     devServer: {
-        host: "localhost",
+        host: "0.0.0.0",
         port: "4000",
         hot: true,
         publicPath: PUBLIC_PATH,
@@ -37,6 +56,7 @@ module.exports = {
             "Access-Control-Allow-Origin": "*",
         },
         historyApiFallback: true,
+        stats: STATS_OPTIONS
     },
 
     entry: {
@@ -82,7 +102,10 @@ module.exports = {
             {
                 enforce: "pre",
                 test: /\.js$/,
-                loader: require.resolve("source-map-loader")
+                loader: require.resolve("source-map-loader"),
+                exclude: [
+                    /[\\/]node_modules[\\/](react-data-grid)[\\/]/
+                ]
             },
 
             {
@@ -141,9 +164,7 @@ module.exports = {
         extensions: [".ts", ".tsx", ".js"],
     },
 
-    mode: IS_DEVELOPMENT ? "development" : "production",
-
-    plugins: IS_DEVELOPMENT ? [
+    plugins: isDevelopment ? [
         new webpack.HotModuleReplacementPlugin(),
         ...HTML_TEMPLATES
     ] : [
