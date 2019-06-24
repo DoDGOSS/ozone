@@ -18,6 +18,7 @@
         window.env = window.env || {};
         window.env.server = {
             url: '${grailsApplication.config.getProperty("owf.server.url")}',
+            frontendUrl: '${grailsApplication.config.getProperty("owf.server.url")}',
             contextPath: "${request.contextPath}",
             staticAssetPath: '${grailsApplication.config.getProperty("owf.server.staticAssetPath")}'
         };
