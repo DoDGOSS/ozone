@@ -1,10 +1,10 @@
 import { StackAPI } from "../../src/api/clients/StackAPI";
 import { StackCreateRequest, StackDTO, StackUpdateRequest } from "../../src/api/models/StackDTO";
 
-import { NodeGateway } from "./node-gateway";
+import { NodeGateway } from "./NodeGateway";
 import { logResponse } from "./assertions";
 
-describe(StackAPI.name, () => {
+describe("Stack API", () => {
     let gateway: NodeGateway;
     let stackApi: StackAPI;
 

@@ -145,5 +145,5 @@ function getSessionCookie(headers: any) {
 }
 
 function getDefaultBaseUrl(): string {
-    return get(process.env, "OZONE_API_SERVER_URL", "http://localhost:8080") as string;
+    return get(process.env, "OZONE_API_SERVER_URL", "http://localhost:8080/owf") as string;
 }

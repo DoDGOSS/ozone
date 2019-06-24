@@ -1,6 +1,6 @@
 import { UserWidgetAPI } from "../../src/api/clients/UserWidgetAPI";
 
-import { NodeGateway } from "./node-gateway";
+import { NodeGateway } from "./NodeGateway";
 
 import { logResponse } from "./assertions";
 

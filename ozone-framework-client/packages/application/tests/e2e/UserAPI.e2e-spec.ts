@@ -1,7 +1,7 @@
 import { UserAPI } from "../../src/api/clients/UserAPI";
 import { UserDTO } from "../../src/api/models/UserDTO";
 
-import { NodeGateway } from "./node-gateway";
+import { NodeGateway } from "./NodeGateway";
 import { USERS } from "../unit/data";
 
 describe("User API", () => {

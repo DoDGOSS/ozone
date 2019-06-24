@@ -105,7 +105,7 @@ function createCustomStylesheetElements(urlString: string | undefined): void {
 
 function removeElementsById(id: string): void {
     while (true) {
-        let element = document.getElementById(id);
+        const element = document.getElementById(id);
         if (isNil(element)) break;
 
         document.body.removeChild(element);

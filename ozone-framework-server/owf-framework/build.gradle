@@ -22,7 +22,7 @@ buildscript {
 
 
 group 'org.ozoneplatform'
-version '7.17.2-0'
+version '8.0.0-0'
 
 
 apply plugin: 'idea'
