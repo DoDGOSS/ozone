@@ -1,0 +1,19 @@
+= Related Documents
+
+.Related Documents
+[cols="1s,3"]
+|===
+| Document | Purpose
+
+| Quick Start Guide
+| Walkthrough of basic OWF functions such as using widgets; unpacking the OWF bundle; setting up a local instance of OWF; installing security certificates; truststore and keystore configuration.
+
+| User's Guide
+| Understanding the OWF user interface; adding, deleting, modifying widgets and using intents; accessing and using the Store;using dashboards; creating, deleting, adding, switching, modifying dashboard pages; defining accessibility features such as high-contrast themes.
+
+| Administrator's Guide
+| Understanding administrative tools: adding, deleting, and editing users, groups, widgets, and dashboards; creating default content for users, groups and group dashboards.
+
+| Configuration Guide
+| Overview of basic architecture and security; OWF installation instructions; instructions for modifying default settings; database set up and logging guidance; framework and theme customization instructions; OWF upgrade instructions; directions for adding and deleting help content.
+|===

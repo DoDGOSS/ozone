@@ -1,0 +1,15 @@
+:file-bundle: ozone-framework-8.0.0.0.zip
+:file-app-yml: application.yml
+:file-user-props: users.properties
+
+:path-tomcat: /tomcat
+:path-classpath: {path-tomcat}/lib
+:path-webapps: {path-tomcat}/webapps
+:path-ozone: {path-classpath}/ozone/framework
+:path-app-yml: {path-ozone}/{file-app-yml}
+:path-user-props: {path-ozone}/{file-user-props}
+:path-ozone-security: {path-ozone}/security
+
+:version-tomcat: v8.5.23
+
+:url-github: https://github.com/ozoneplatform/

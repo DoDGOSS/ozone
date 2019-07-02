@@ -1,0 +1,119 @@
+[appendix]
+= Custom Security Modules
+
+== Requirements for Customizing Security
+
+The Spring Security Framework allows individual deployments to customize the OWF authentication and authorization mechanism. Developers can use the security plugin to integrate with any available enterprise security solutions. When customizing the security plugin, it is important to remember OWF/Store requirements for the plugin. These five requirements are described in this section.
+
+NOTE: The requirements for OWF and the Store are in addition to any general Web application requirements relating to Spring Security.
+
+. User principal implements the `UserDetails` interface and (optionally) the `OWFUserDetails` interface. +
++
+Like all Spring Security Web applications, OWF expects its security plugin to provide a UserDetails object which represents the logged-in user. A custom plugin should set this object as the principal on the `Authentication` object stored within the active `SecurityContext`. Optionally, the provided object may implement the `OWFUserDetails` interface. In addition to the fields supported by the `UserDetails` interface, the `OWFUserDetails` interface supports access to the user's OWF display name, organization and email. The source code for `OWFUserDetails` can be found in the `owf-security` project repository.
+
+. `ROLE_USER` granted to all users. +
++
+The user principal object's `getAuthorities()` method must return a collection that includes the ROLE_USER GrantedAuthority.
+
+. ROLE_ADMIN granted to OWF administrators. +
++
+The user principal object's `getAuthorities()` method must return a collection that includes the `ROLE_ADMIN` `GrantedAuthority` if the user is to have administrative access.
+
+. OZONELOGIN cookie set when the user signs in and deleted on sign out. +
++
+The user interface performs a check for the existence of a cookie named `OZONELOGIN` during the page load. If the cookie does not exist, the interface will not load, but will instead present a message indicating that the user is not signed in. It is up to the security plugin to create this cookie when the user signs in, and to delete it when they sign out. This mechanism prevents users from signing out, and then pressing the browser's Back button to get back into an OWF instance that cannot communicate with the server due to failed authentication. The sample security plug-in configurations contain filters that manage this process. It is recommended that custom configurations include this default implementation of the cookie behavior by using the same `ozoneCookieFilter` beans that are included in the sample configuration.
+
+. Session management configurations must be present. +
++
+These configurations include the `concurrencyFilter` bean, the `concurrentSessionControlStrategy` bean, the `sessionRegistry` bean as well as a `<session-management>` element and a `<custom-filter>` element which references the `concurrencyFilter`. It is important not to change the id of the `concurrentSessionControlStrategy`, as it is referenced by id from within the application. +
++
+NOTE: The `maximumSessions` setting contained in the XML configuration will be overwritten at runtime, since the maximum number of sessions is configured in the Application Configuration UI.
+
+
+== Custom Security Classes
+
+=== OWFUserDetails
+
+_Package: ``ozone.security.authentication``_
+
+This interface defines interactions for a data model that OWF requires in order to handle OWF user groups. Using an implementation of this interface (and implementations may vary) will ensure that OWF user groups work.
+
+This interface extends the `UserDetails` interface as defined by Spring Security.
+
+Please refer to the Spring Security API documentation for more details regarding the `UserDetails` interface: https://docs.spring.io/autorepo/docs/spring-security/4.0.0.RELEASE/apidocs/org/springframework/security/core/userdetails/UserDetails.html.
+
+.OWFUserDetails.java
+[source,java]
+----
+package ozone.security.authentication;
+
+public interface OWFUserDetails extends UserDetails {
+
+    public Collection<OwfGroup> getOwfGroups();
+
+    public String getDisplayName();
+
+    public String getOrganization();
+
+    public String getEmail();
+
+}
+----
+
+
+=== OWFUserDetailsImpl
+
+_Package: ``ozone.security.authentication``_
+
+This class is a sample implementation of the `OWFUserDetails` interface. It is not mandatory to use this implementation.
+
+NOTE: If a custom implementation is written, authorities must be write-accessible; create a `setAuthorities` method.
+
+
+===  OWFGroup
+
+_Package: ``ozone.security.authorization.target``_
+
+This interface describes a single OWF user group. A group is a way of collecting OWF users and being able to assign widgets and other behaviors to them collectively:
+
+.OwfGroup.java
+[source,java]
+----
+package ozone.security.authorization.target;
+
+public interface OwfGroup {
+
+    public String getOwfGroupName();
+
+    public String getOwfGroupDescription();
+
+    public String getOwfGroupEmail();
+
+    public boolean isActive();
+
+}
+----
+
+
+=== OwfGroupImpl
+
+_Package: ``ozone.security.authorization.model``_
+
+This class implements the `OwfGroup` interface. It can be used as-is in a security implementation, or one can be created as needed.
+
+
+=== GrantedAuthorityImpl
+
+_Package: ``ozone.security.authorization.model``_
+
+This class implements the Spring Security interface `GrantedAuthority`. It can be used as-is in a security implementation, or one can be created as needed.
+
+
+=== MyDetailsService
+
+_Package: ``ozone.securitysample.authentication.basic``_
+
+This class is a sample implementation of the Spring Security `UserDetailsService`. It reads user authentication and authorization details (username, password, roles, and groups) from the `users.properties` file.
+
+WARNING: This is intended only to be used in testing and development environments. The usernames and passwords are stored in plain-text, creating a severe security risk for any production environment. +
+For a production deployment, a custom implementation of the UserDetailsService should be used. For example, the user's details may be retrieved from an external service such as LDAP.

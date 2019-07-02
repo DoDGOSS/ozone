@@ -1,0 +1,48 @@
+include::../../_variables.asciidoc[]
+
+= Using PostgreSQL
+
+. Create either a new login role or a new schema in order to avoid database object name collisions between OWF and other database applications.
+
+. Edit the user so that it can create database objects.
+
+. Create a new database. Use UTF-8 as encoding (default).
+
+. OWF does not provide a JDBC driver for PostgreSQL. Obtain the appropriate JDBC driver and place it into the Web server's classpath. For example, if running Tomcat, the driver can be placed in the `{path-classpath}/` directory.
+
+. Open the `{path-app-yml}` file and modify the `environments.production.dataSource` section using the values that are appropriate for the OWF environment.
++
+[source,yaml]
+.Example: application.yml
+----
+dataSource:
+    pooled: true
+    dbCreate: "none"
+    username: "owf_user"
+    password: "owf"
+    driverClassName: "org.postgresql.Driver"
+    url: "jdbc:postgresql://localhost:5432/OWF"
+    dialect: "org.hibernate.dialect.PostgreSQLDialect"
+    properties:
+        minEvictableIdleTimeMillis: 180000
+        timeBetweenEvictionRunsMillis: 180000
+        numTestsPerEvictionRun: 3
+        testOnBorrow: true
+        testWhileIdle: true
+        testOnReturn: true
+        validationQuery: "SELECT 1"
+----
++
+In the example above, a PostgreSQL database user named `owf_user` with a password of `owf` is used, for a database named `owf`.
+
+. Before starting OWF, run the following scripts to create the database schema and the initial data: +
+`/dbscripts/postgres/owf-7.17.0-postgresql-create.sql`
+
+. To load the initial sample data into the database, run the following script: +
+`/dbscripts/postgres/owf-7.17.0-postgresql-data.sql`
+
+
+[discrete]
+===== Notes:
+
+* Old versions of the SQL scripts are included under `/database/archive/`. These are included for convenience for people upgrading from older versions of OWF.

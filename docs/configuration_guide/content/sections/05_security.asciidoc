@@ -1,0 +1,145 @@
+include::../_variables.asciidoc[]
+
+[#security]
+= Security
+
+== Overview
+
+OWF allows an administrator to customize the type of security that is implemented for authentication and authorization.
+
+OWF uses a pluggable security solution based on Spring Security 4.x and ships with sample security plugins that can be used as a basis for building a custom security plugin.
+
+Familiarity with Spring Security (https://spring.io/projects/spring-security) will help administrators customize OWF.
+
+
+=== Basic Security Concepts and OWF
+
+While this guide is not intended as a comprehensive guide to basic security concepts, Web security, or Spring Security, there are a few key concepts that must be understood in order to use the sample OWF security plugins and the OWF security plugin architecture.
+
+First are the concepts of authentication and authorization, known colloquially as auth & auth. Authentication essentially means providing proof that the user is exactly who they are presenting themselves to be. Some authentication techniques include a username/password combination, an X509 certificate, a CAC card and card reader, or various biometric solutions. Authorization, on the other hand, is determining the specific access rights that an individual user should have. Consider the following:
+
+* "Bill is allowed to log into the system – prove that you are Bill," is a matter of authentication.
+* "Bill has access to resources," is a question of authorization.
+
+By necessity, authentication occurs before authorization. Once authentication is satisfied, OWF moves to authorize. OWF has two authorization concepts at this time. First, OWF needs to know whether or not a user has OWF administrative access via ROLE_ADMIN or is only a regular user, via ROLE_USER. Administrative access provides a user access to the administrative widgets and the administrative console. Regular users have access only to the framework and their assigned dashboards.
+
+Second, OWF needs to know what external OWF user groups (if any) the user has been assigned. There are two kinds of user groups; automatic user groups, which are pulled in from an external authorization source, such as LDAP or a configuration file, and manual user groups, which are set up from within OWF. If an automatic user group is new to OWF, all of the automatic user groups' details such as description, active/inactive status, contact email address, and name come from the external source. But after the initial creation of the group in OWF, no further updates to the description, status, etc. are made.
+
+
+=== Production Deployments
+
+The samples included with OWF are *NOT* production-quality samples. They are intended to provide examples on how to easily integrate various security solutions with OWF, not to provide a comprehensive security solution out of the box or a comprehensive tutorial on Spring Security.
+
+It is expected that each organization using OWF will examine its security guidelines and enterprise-wide authentication/authorization solutions and produce an OWF security plugin that is both secure and meets its standards. That solution can then be shared among OWF deployments within the organization.
+
+
+== Default Security Configuration
+
+The OWF Bundle is configured to run by default on `localhost` with a predefined set of users.
+
+When using the default Tomcat bundle, externalized configuration files should be placed in the `{path-ozone}/` folder.  If using an application server other than Tomcat, copy the override files into the directory that will include them in the classpath for that specific application server.
+
+WARNING: The sample security modules are included as examples and should NOT be used in a production environment. For more information, please refer to the OWF Security section.
+
+To add users to any security module using certificate authentication, generate a user PKI certificate that can be recognized by OWF.
+
+
+[#default-users-config]
+=== Adding Users, Roles, & Groups
+
+The addition of users, groups, and roles into OWF depends on the choice of security implementation. The following example outlines the procedures for adding users, groups, and roles when using the sample security configurations.
+
+By default, authorization credentials are validated by the sample `MyDetailsService`. This example service is pre-configured to read the user information from the `/tomcat/lib/ozone/framework/users.properties` file.
+
+IMPORTANT: The default `MyDetailsService` will not automatically create database entries for users. If a new user is added to the `users.properties` file, a corresponding user record must be manually added to the database.
+
+. Edit `{path-user-props}` +
++
+[source,properties]
+----
+testUser1=password,ROLE_USER,Test User 1,[group1;I am a sample Group 1 from users.properties;test@gmail.com;active]
+testUser2=password,ROLE_USER,Test User 2
+testUser3=password,ROLE_USER,Test User 3
+testAdmin1=password,ROLE_ADMIN,Test Admin 1,[group1;I am a sample Group 1 from users.properties;test@email.com;active],[group2;I am a sample Group 2 from users.properties;test2@email.com;active],[group3;I am a sample Group 3 from users.properties;test3@email.com;inactive]
+----
++
+NOTE: To include space characters in the user names, escape the space characters using the `\` character.
+
+. Add users to the file in accordance with the following rules:
+** Data Format: +
+`username=password,role,display name,[group name;group description;group contact email;active/inactive]`
+** All of the information for a single user, including group information, should be on a single line.
+** Multiple groups may be delimited by commas.
+** Group information is optional and may be left out for any single user.
+** Once a group has been created for the first time, the description, contact email, and active/inactive status will not effect those values within OWF – that information must be managed through the OWF Group Manager administrative widget.
+
+. Save the file and restart the OWF server.
+
+Any changes (additions, deletions, or modifications) to the `{file-user-props}` will only take effect once the OWF server has been restarted.
+
+NOTE: If a custom web server or application container is being used along with the provided example security, the `{file-user-props}` file can be copied to any directory that is on the classpath of the Web server in use. For example, if using Jetty, the file can be copied to the `/jetty/resources/` directory.
+
+
+== Sample Security Modules
+
+WARNING: Most of the examples provided contain various obvious security hazards -– for example, the `users.properties` file contains a list of usernames, roles, and user groups on the hard drive in plain text in a properties file. *These are undeniable security hazards.* Keep this in mind when using the samples.
+
+
+=== Installing Security Modules
+
+The OZONE-security files offer multiple examples of security options. *These are intended as examples and should in no way be used in a production environment.*
+
+For each available security option, there is a specific XML file which must be installed. Installing a new security module is accomplished in just a few simple steps:
+
+. Stop the application server. +
+An administrator can accomplish this by running the ozone/tomcat/bin/shutdown.bat or /shutdown.sh file, depending on the operating system in use.
+
+. Edit the application.xml file located in ozone/tomcat/lib/ozone/framework/ +
+Modify the <import resources="security/security.xml"/> line to point to the desired security configuration file.
+
+. Restart the application server by running either the ozone/tomcat/start.bat or /start.sh file, depending on the operating system in use.
+
+
+=== X.509 Certificate (PKI) Only
+
+The `ozone/tomcat/lib/ozone/framework/examples/security_cert-only.xml` file eliminates the login form authentication. If the user does not present a valid X.509 certificate, they will be denied access to the system.
+
+To use this security plugin:
+
+. Stop the application server.
+
+. Edit the `application.xml` file located in `ozone/tomcat/lib/ozone/framework/`
+** Modify the `<import resources="security/security.xml"/>` line to point to the certificate-only configuration. +
+_Example: ``<import resources="security/security_cert-only.xml"/>``_
+
+. Edit the `server.xml` file located in `ozone/tomcat/conf/`
+** Set the HTTPS-enabled `Connector` element `clientAuth` property to `"true"`
+
+. Restart the application server by running either the `ozone/tomcat/start.bat` or `/start.sh` file, depending on the operating system in use.
+
+.Example: application.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+    <import resource="session-control.xml"/>
+    <import resource="security/security-cert_only.xml"/>
+
+</beans>
+----
+
+
+==== Installing User Certificates (PKI)
+
+In order to use certificate-based authentication, both the server and clients must be configured with the appropriate certificates. Sample certificates are included in the bundle under the `tomcat/certs/` directory.
+
+These default client certificates can be used by importing the included `testUser1.p12` or `testAdmin1.p12` certificate into the user's browser.
+
+The `testUser1` certificate grants regular user permissions to use the application, while the `testAdmin1` certificate grants both regular user administrator permissions. The private key password for both certificates is `password`.
+
+Please refer to the *Ozone Quick Start Guide* for detailed instructions on importing the user certificates into a web browser.

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Color Client</title>
+    <script type="application/javascript" src="./owf-widget.js"></script>
+
+    <script type="application/javascript" src="ColorClient.js"></script>
+</head>
+<body>
+    <h1>Color Client</h1>
+    <button type="button" onclick="getColors()">List Colors</button>
+    <select id="colors" onclick="setColor(this.value)"></select>
+    <div></div>
+    <div id="errors" style="color:red; font-weight:bold; display:none;"></div>
+</body>
+</html>

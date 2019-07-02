@@ -1,0 +1,62 @@
+ifndef::imagesdir[]
+:imagesdir: ../images/
+endif::[]
+
+== Development Build Process
+
+=== Additional requirements
+
+* Gradle (or use the included Gradle wrapper script, gradlew)
+* Java JDK
+* Cloned ozone GitHub repository
+* Docker (optional)
+
+=== Starting the frontend
+
+.Start using Node.js and npm
+----
+/ozone/ozone-framework-client$ npm install
+/ozone/ozone-framework-client$ gradle install
+/ozone/ozone-framework-client$ npm run start
+----
+
+*OR*
+
+.Start using Docker
+----
+./redeploy-client.sh
+----
+
+
+=== Starting the backend
+
+.Start using Gradle
+----
+// Navigate to ozone-framework-server directory from within the cloned ozone repository
+ozone$ cd ozone-framework-server
+
+// Install all required dependencies with gradle or gradlew
+ozone/ozone-framework-server$ cd ozone-classic-bom/ && gradle install && cd ..
+ozone/ozone-framework-server$ cd owf-appconfig/ && gradle install && cd ..
+ozone/ozone-framework-server$ cd owf-auditing/ && gradle install && cd ..
+ozone/ozone-framework-server$ cd owf-messaging/ && gradle install && cd ..
+ozone/ozone-framework-server$ cd owf-security/ && gradle install && cd ..
+ozone/ozone-framework-server$ cd owf-custom-tomcat/ && gradle install && cd ..
+ozone/ozone-framework-server$ cd owf-framework/ && gradle install
+
+// Start the backend server
+/ozone/ozone-framework-server/owf-framework$ gradle :buildRun
+----
+
+*OR*
+
+.Start using Docker
+----
+ozone$ ./redeploy-server.sh
+----
+
+==== Accessing OWF
+
+After the backend server has finished the initialization process, and the frontend is being served, OWF can be accessed by opening a web browser and navigating to the following URL:
+
+* https://localhost:3000/

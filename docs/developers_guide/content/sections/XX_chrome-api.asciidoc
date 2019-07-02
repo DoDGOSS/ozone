@@ -1,0 +1,3 @@
+= Chrome API (Unsupported)
+
+WARNING: The Chrome API is not currently supported in OWF v8.

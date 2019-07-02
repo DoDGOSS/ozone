@@ -1,0 +1,16 @@
+= v7.17.2.1
+
+This release focused on updating the example security module configurations and documentation.
+
+*General:*
+
+* Documentation fixes and improvements for using the example security modules
+• Correct the version of the owf-security module to the release version number
+
+*Backend:*
+
+* Clean up the example security module configurations
+
+*Frontend:*
+
+* _n/a_

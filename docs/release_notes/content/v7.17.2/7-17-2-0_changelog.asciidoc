@@ -1,0 +1,32 @@
+= v7.17.2.0
+
+This release focused on updating dependencies, bug fixes, and updating certificates and sample data.
+
+*General:*
+
+* Release bundle Tomcat upgraded to v8.5.23
+* Gradle build
+** Gradle task to assemble custom OWF Tomcat bundle
+** Gradle tasks to compile and bundle frontend assets
+
+*Backend:*
+
+* Upgrade Groovy to v2.4.13
+* Upgrade Grails to v3.3.2
+* Upgrade Spring to v4.3.12
+* Upgrade Spring Security (in owf-security module) to v4.2.3
+** Example security resource .xml files updated for Spring v4 schemas
+** Default login uses Spring Form Login instead of HTTP Basic Auth
+* Upgrade Hibernate to v5.1.9
+* Remapping of static asset URLs; redirects have been added to support legacy URLs
+
+*Frontend:*
+
+* JavaScript bundled using Node.js and Gulp
+* Stylesheets compiled using JRuby with SASS and Compass gems
+* Upgrade JQuery to v3.2.1
+* Upgrade Lodash to v4.17.4
+* Upgrade Underscore to v1.8.3
+* Upgrade Handlebars to v4
+* Upgrade Backbone to v1.3.3
+* Upgrade Require.js to v2.3.5

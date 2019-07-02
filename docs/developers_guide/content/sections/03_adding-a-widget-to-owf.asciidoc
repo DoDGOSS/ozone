@@ -1,0 +1,88 @@
+include::_variables.asciidoc[]
+
+[#add-a-widget]
+= Adding a Widget to OWF
+
+== Overview
+
+OWF provides a Widget Manager, located by clicking the Administration link in the drop-down User Menu (you must be an OWF administrator to see the Administration link) and then click Widgets. Administrators can use this manager to create widget descriptor files and add widget definitions to OWF. The manager allows an administrator to complete the widget definition or edit the descriptor URL in the user interface, then OWF maps the widget to users in the system. Once a widget definition has been created and mapped to a user, it will then be added to the user’s Widgets menu or toolbar depending on the widget type.
+
+Due to the fact that a widget definition actually points to the URL of a lightweight Web application, an administrator is not required to update widget definitions unless the location of the widget changes.
+
+
+== Walkthrough
+
+[#creating-descriptors]
+=== Creating Descriptor Files for Widgets
+
+Developers can save the Widget information in the descriptor file and then share that file with administrators. This allows administrators to import data instead of typing entries for each field. The administrator simply enters a URL and the widget's information is automatically retrieved from a descriptor file that a developer maintains. Administrators can change properties in the widget’s definition once it has been added to OWF. However, an administrator’s changes will only affect their deployment of OWF, unless the administrator exports those changes to the Web-accessible location where the descriptor URLs are stored.
+
+Descriptor URLs offer several benefits. They reduce the risk of typing errors when entering widget data into the OWF interface. They allow for several installations of OWF to easily share widget information via the descriptor file. In addition, descriptor files can contain a universal name which is a developer-generated, custom identifier that can be used to identify the widget across multiple OWF instances.
+
+To support Internet Explorer 10 and higher, the location that hosts Widget descriptor files must be CORS enabled. Usually, the Web app used to create the Widget also serves as the host for the descriptor file. The method used to configure CORS support will vary based on the type of Web app platform used. For backwards compatibility, the format of the descriptor file itself is unchanged. The template is located in etc/widget/descriptor within the OWF bundle.
+
+To create a widget descriptor URL, follow these instructions:
+
+. Sign in to OWF as an administrator.
+
+. Click the Administration link, located on the drop-down User Menu on the toolbar to open the Administration Tools. Select Widgets to open the Widgets Manager.
+
+. Click Create to open the Widget Editor.
+
+. Click “Don’t have a descriptor URL?”
+
+. Populate the mandatory fields in the definition and click Apply.
++
+NOTE: For more information about specific entry fields, please see the Administrator’s Guide.
+
+. OPTIONAL: Add the capability to send intents. An Intent is simply an object describing an action and a data type. Sending an Intent should be tied to a user-generated action such as clicking a button or link. (If the widget does not require an intent, skip this step.)
+Developers should use the Widget Editor to add and edit intents.
+
+.. To add an intent, select the Intents tab in the Widget Editor and click Create.
+
+.. Populate the following fields:
+
+... *Action* - The Action should be a verb describing what the user is trying to do (i.e. plot, pan, zoom, view, graph, etc.).
++
+NOTE: Intents are NOT case sensitive.
+
+... *Data Type* - The Data Type is an object containing the data that the intent is sending. It describes what type of data is being acted upon. The data type format is described in 12.4.1: Recommended Intents Data Type Conventions. +
++
+The format of the data depends solely on how the sending or receiving widget is expecting to use the data. For example, “application/vnd.owf.sample.price” tells the NYSE Widget’s how to display price.
+
+... *Send* – Checked by default, this field identifies if the widget can send intents.
+
+... *Receive* – This field identifies if the widget can receive intents.
+
+.. Click OK.
+
+. Return to the Widget Manager.
+
+. Select the new Widget.
+
+. Click the split Edit button, then select Export from the drop-down menu.
+
+. Enter a File Name (this will be the name of the HTML descriptor file) and click OK.
+
+. Save the file to a Web-accessible location like a directory where widget data is stored.
+
+. Return to the OWF user interface and open the Widget Manager.
+
+. Select the new widget, and click Edit.
+
+. From the Widget Editor, enter the new Descriptor URL location, click Load, then, click Apply.
+
+NOTE: From the Widget Editor, administrators can edit the widget descriptor URL. However, those changes will not change the “master” copy of the descriptor unless they replace the descriptor file stored at the Web-accessible location referenced above.
+
+
+=== Sharing Descriptor Files
+
+There are two ways to share widget descriptors:
+
+. *Export the file* +
+To obtain an exportable HTML file, select the widget in the Widget Manager, click the split edit button and select Export. +
++
+Exporting the widget descriptor URL only sends a copy of the file. The administrator will not receive future updates to that file that is stored on the Web-accessible location.
+
+. *Share the descriptor location* +
+Sending a link to the widget descriptor file that is stored on a Web-accessible location will enable the administrator to receive updates to the widget descriptor URL by clicking Load, then Apply in the Widget Editor.

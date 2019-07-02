@@ -1,0 +1,3 @@
+= Drag & Drop API (Unsupported)
+
+WARNING: The Drag & Drop API is not currently supported in OWF v8.

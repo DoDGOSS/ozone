@@ -1,0 +1,14 @@
+{
+  "name": "developers-guide-examples",
+  "version": "8.0.0",
+  "description": "",
+  "scripts": {
+    "start": "node ./bin/serve.js"
+  },
+  "author": "DOD GOSS",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^10.0",
+    "express": "4.17.1"
+  }
+}
