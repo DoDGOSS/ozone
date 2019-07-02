@@ -1,0 +1,42 @@
+= Ozone User's Guide
+:doctype: book
+:reproducible:
+:author: DOD GOSS
+:revnumber: 8.0.0.0
+:revdate: 2019-07-01
+:toc: left
+:toclevels: 6
+:sectnums:
+:sectnumlevels: 6
+:chapter-label:
+:xrefstyle: full
+:icons: font
+:icon-set: fas
+ifeval::["{outfilesuffix}" == ".html"]
+:source-highlighter: highlightjs
+endif::[]
+ifeval::["{outfilesuffix}" == ".pdf"]
+:pdf-stylesdir: common/resources
+:pdf-style: ozone-pdf
+:pdf-page-size: Letter
+endif::[]
+
+
+:leveloffset: +1
+
+include::sections/01_introduction.asciidoc[]
+
+include::sections/02_getting-started.asciidoc[]
+
+include::sections/03_dashboards.asciidoc[]
+
+include::sections/04_widgets.asciidoc[]
+
+include::sections/05_customize.asciidoc[]
+
+include::sections/06_intents.asciidoc[]
+
+include::../../common/glossary.asciidoc[]
+
+:leveloffset: -1
+

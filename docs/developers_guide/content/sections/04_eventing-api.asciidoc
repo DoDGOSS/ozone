@@ -1,0 +1,137 @@
+include::_variables.asciidoc[]
+
+= Eventing API
+
+== Overview
+
+In order to create rich, interactive and integrated presentation-tier workflows, widgets must be able to communicate with each other; one method to do this is via the Eventing, or Publish-Subscribe, API. The Eventing API is a client-side browser communication mechanism that allows widgets to communicate with each other by using an asynchronous publish-subscribe messaging system.
+
+Widgets have the ability to send and receive data on named channels. All widgets can be built so they can publish messages to any channel, just as all widgets can be built to subscribe to any channel at any time.
+
+There are two main components to the Eventing API. The first component is the supporting infrastructure within OWF that routes messages; however, this should remain mostly transparent to the widget developer. The second component, of more direct interest to developers, is the infrastructure available to each widget, detailed below.
+
+
+== Walkthrough
+
+This walkthrough will go through the process of creating a new widget called Second Tracker. The new widget will use the Eventing API to track how many seconds the Announcing Clock widget has been running. The Announcing Clock widget, created in <<creating-a-widget>>, must be updated to broadcast an event using the Eventing API.
+
+[NOTE]
+.Example files
+====
+The source files for this walkthrough are available under the `{path-examples}/` directory.
+
+* `SecondTracker.html`
+* `SecondTracker.js`
+* `AnnouncingClock_Eventing.html`
+* `AnnouncingClock_Eventing.js`
+====
+
+
+*Step 1 - Create the Second Tracker widget*
+
+Create the following files in the `{path-server-public}/` directory:
+
+[source,html]
+.SecondTracker.html
+----
+include::{relpath-examples}/SecondTracker.html[]
+----
+
+The relay file is configured by setting `OWF.relayFile` to the location of the file. In the above example, `/owf-sample-html/` is assumed to be the root context. The developer must replace `/owf-sample-html/js/eventing/` with the correct relative location of the `rpc_relay.uncompressed.html file` (see the note below for more information).
+
+IMPORTANT: Pay attention to the OWF relay file argument. In order to work correctly, the relay file must be specified with full location details, but without a fully qualified path. In the case where the relay is residing at `http://server/path/relay.html`, the path used must be from the context root of the local widget. In this case, it would be `/path/relay.html`. Do not include the protocol.
+
+
+[source,javascript]
+.SecondTracker.js
+----
+include::{relpath-examples}/SecondTracker.js[tags=**]
+----
+
+The code above performs several functions:
+
+The initial code waits for the page to be loaded, using the standard `DOMContentLoaded` event. Once the page is ready, the widget must also wait for OWF to become ready. The `OWF.ready` function takes a callback that executes when the widget has connected to OWF and the widget APIs are ready to use.
+
+[source,javascript]
+.SecondTracker.js
+----
+include::{relpath-examples}/SecondTracker.js[tag=onload]
+----
+
+The `start` function initializes the widget. It subscribes to the channel `ClockChannel`, passing in its `update` function. Additionally, if the widget has been launched using the Launcher API, it uses the launch data to select a different channel name to subscribe to. Refer to the <<launcher-api>> for additional details.
+
+The `update` function serves as a callback for the Eventing API. Whenever a message is broadcast on the channel that the update function was subscribed to (in this case, `ClockChannel`), the function will be invoked. All Eventing API callback functions should take two arguments: `sender` and `message`. When the update function is fired, the count is incremented, and the `innerHTML` of the `currentTime` span is updated to reflect the message sent by the clock.
+
+
+*Step 2 - Include the Widget API JavaScript library*
+
+The Announcing Clock must be updated to publish messages on the expected channel.
+
+Replace the code in the `AnnouncingClock.html` file with the following:
+
+[source,html]
+.AnnouncingClock.html
+----
+include::{relpath-examples}/AnnouncingClock_Eventing.html[tags=**]
+----
+
+Notice that the following `<script>` tags have been added:
+
+[source,html,indent=0]
+----
+include::{relpath-examples}/AnnouncingClock_Eventing.html[tag=api]
+----
+
+
+*Step 3 - Broadcast a message using the Eventing API*
+
+Replace the code in the `AnnouncingClock.js` file with the following:
+
+[source,javascript]
+.AnnouncingClock.js
+----
+include::{relpath-examples}/AnnouncingClock_Eventing.js[tags=**]
+----
+
+The `updateClock` function has been modified to publish the current time. See the code snippet below:
+
+[source,javascript,indent=0]
+----
+include::{relpath-examples}/AnnouncingClock_Eventing.js[tag=publish]
+----
+
+Once complete, any widget that subscribes to `ClockChannel` will receive messages broadcast from this widget. Once this widget is closed, the broadcast will stop.
+
+
+*Step 4 - Start the web server*
+
+include::common/start-sample-server.asciidoc[]
+
+
+*Step 5 - Add the Second Tracker and Announcing Clock widgets to OWF*
+
+To test the added Eventing API functionality, the widgets must be run from within OWF. Add the Second Tracker and modified Announcing Clock widgets to OWF via the OWF Admin page. For details on how to do this, see <<add-a-widget>>.
+
+
+== Additional Considerations
+
+=== Channel Conventions
+
+It is important to use a unique channel name so widgets are not accidentally published or subscribed to a pre-existing channel.
+
+One approach is to use a hierarchical naming pattern with the levels of the hierarchy separated by a dot (`.`). To form a unique channel, prefix the channel name with a customer domain name reversing the component order. For example, if developing a widget for a company with the domain name of `mycompany.com`, the channel name’s prefix would be `com.mycompany`. From that point, naming conventions for an individual’s organization can be used to complete the channel name.
+
+
+=== Payload Conventions: JSON Encoding
+
+It is acceptable to directly encode the data broadcasted on Eventing channels as a simple string. This approach works when sending only a single variable. While a flat string would require the least amount of overhead, it leads to rigid code in the data, especially if the complexity of the sent data increases, because the code that parses the string may not be flexible. In that case, refactoring the message payload may break contract with established listening widgets.
+
+Sending JSON objects with the data directly embedded is an approach that leads to considerably more flexible code. This process allows for the adding of additional data without having to re-code widgets that may not have been updated to communicate with the most current version of the broadcasting widget.
+
+
+include::common/data-uri-convention.asciidoc[leveloffset=+2]
+
+
+=== Eventing API Enhancements
+
+OWF automatically enables the Eventing API and the Drag & Drop API. By automatically enabling the Eventing API, a widget activates when a user clicks inside it. Without it, users would have to click once to focus the widget and then click a second time to activate it. The Eventing API also activates Drag & Drop indicators. For example, a widget will activate when a user drags the mouse over it.

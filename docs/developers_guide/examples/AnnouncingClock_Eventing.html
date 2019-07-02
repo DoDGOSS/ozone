@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Announcing Clock (Eventing)</title>
+
+    <link type="text/css" rel="stylesheet" href="./css/widget.css">
+
+    <!-- tag::api[] -->
+    <script type="application/javascript" src="./owf-widget.js"></script>
+    <script type="application/javascript">
+        // If not set, defaults to /<context>/js/eventing/rpc_relay.uncompressed.html
+        // OWF.relayFile = "/owf-sample-html/js/eventing/rpc_relay.uncompressed.html";
+    </script>
+    <!-- end::api[] -->
+
+    <script type="application/javascript" src="./AnnouncingClock_Eventing.js"></script>
+</head>
+<body>
+    <div class="widgetContents">
+        <div class="panel-header">
+            Announcing Clock
+        </div>
+
+        <div id="error-panel" class="error-panel">
+        </div>
+
+        <div class="panel-body">
+            <div class="clock-frame">
+                <span id="clock">&nbsp;</span>
+            </div>
+        </div>
+
+        <div class="button-panel">
+        </div>
+
+        <div id="message-panel" class="message-panel">
+        </div>
+    </div>
+</body>
+</html>
