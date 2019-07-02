@@ -1,0 +1,38 @@
+[glossary]
+= Glossary
+
+[glossary]
+
+Accordion (layout)::
+    display widgets in equal, horizontal panes that do not scroll (each individual widget may scroll using its own scroll bar)
+
+App::
+    deprecated term for a dashboard
+
+App Component::
+    deprecated term for a widget
+
+Dashboard::
+    an organized collection of widgets
+
+Intent::
+    qwerty
+
+Marketplace::
+    a searchable catalog of shared listings of widgets and dashboards (also referred to as the Store)
+
+OWF::
+    abbreviation for Ozone Widget Framework
+
+Store::
+    commonly used term for the Ozone Marketplace
+
+Toolbar::
+    qwerty
+
+User::
+    a person signed into the Ozone application, usually referring to a person without administrative privileges
+
+Widget::
+    a light-weight, single-purpose Web application that offers a summary or limited view of a larger Web application and may be configured by the user and displayed within a Dashboard
+

@@ -1,0 +1,12 @@
+ifndef::path-root[]
+:path-root: ../..
+endif::[]
+
+:path-full: ozone/docs/developers_guide
+:path-examples: examples
+:relpath-examples: {path-root}/{path-examples}
+
+:path-server: node-server
+:path-server-public: {path-server}/public
+
+:url-server: http://localhost:5000

@@ -1,0 +1,70 @@
+include::../_variables.asciidoc[]
+
+[#overview]
+= Overview
+
+== Purpose
+
+The Ozone Widget Framework (OWF) is a set of tools, generally delivered in the OWF Bundle. When deployed, OWF is used for organizing and displaying Web applications (widgets) in a single browser window known as an OZONE dashboard.
+
+
+== Dependencies
+
+The OWF Bundle is shipped with Tomcat {version-tomcat} and requires Java 8 or higher. If running OWF with a Web server other than Tomcat, see that Web server's documentation for any additional requirements.
+
+
+== Components
+
+=== Ozone Widget Framework (OWF) Web Application
+
+owf.war::
+This file, located in the `{path-webapps}/` folder, contains the components which make up the OWF application. Whether a user logs in and accesses the framework, or an administrator logs in to modify preferences, the `owf.war` is the application that launches those pages to the browser.
+
+
+=== Pluggable Security
+
+OWF allows an administrator to customize the type of security that will be implemented for user authentication and authorization.
+
+
+==== Example Security Configuration
+
+Included within the OWF bundle `{path-ozone-security}/` is the default `security.xml` Spring configuration file, as well as additional example configurations files.
+
+These default and example security files are intended ONLY as examples and should NOT be used in a production environment.
+
+Please refer to the <<security>> section of this guide for further details about OWF Security.
+
+===== Username and Password Security (Default)
+
+security.xml::
+Contains the default sample security implementation that uses a login form requiring a username and password.
+
+
+===== Certificate-only (X509) Security
+
+security_cert-only.xml::
+Contains the sample certificate-only (X509) security implementation that uses PKI certificates for client authentication. If no authentication is provided, the user is denied access to the system.
+
+
+===== Central Authentication Service (CAS) Security
+
+securty_cas-only.xml::
+Contains the sample CAS security implementation that uses an external authentication service for client authentication.
+
+
+==== Additional Resources (OWF Security Project)
+
+For building custom security implementations, the `owf-security` project may be referenced or used a starting point. The source code for this project is available at the Ozone Platform organization GitHub repositories located at {url-github}.
+
+In previous releases, these files were distributed in the bundle in the `ozone-security-project.zip` file. As described above, the `owf-security` project repository is the new location for the latest versions of these files.
+
+
+=== Sample Widgets
+
+A set of example widgets are provided with the system in order to demonstrate the functionality of the widget APIs.
+
+The example widgets are enabled by default, and run embedded within the main application inside the `owf.war` file.
+
+In previous OWF releases, an additional set of sample widgets utilizing various web technologies and frameworks was provided in the `owf-sample-widgets.zip` file. Due to the declining prevalence of these technologies, this file is no longer being distributed with the bundle. However, the sources for these sample widgets are still available within the `owf-framework` repository, located under the `/sample-widgets/` folder.
+
+The OWF Developer's Guide includes specific examples and guides regarding the developing widgets and utilizing the widget APIs.

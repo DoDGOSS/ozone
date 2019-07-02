@@ -1,0 +1,5 @@
+= Logging API (Unsupported)
+
+WARNING: The Logging API is not currently supported in OWF v8.
+
+It is recommended that widget developers use the native Web browser logging capabilities, such as `console.log`, `console.warn`, and `console.error`.
