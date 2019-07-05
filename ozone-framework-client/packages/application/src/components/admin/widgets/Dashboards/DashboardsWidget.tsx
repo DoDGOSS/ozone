@@ -72,16 +72,6 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
                                 defaultPageSize: this.defaultPageSize
                             }}
                         />
-                        <div className={styles.buttonBar}>
-                            <Button
-                                text="Create"
-                                onClick={() => {
-                                    this.setState({ updatingStack: undefined });
-                                    this.showSubSection(StackWidgetSubSection.SETUP);
-                                }}
-                                data-element-id="create-dashboard-button"
-                            />
-                        </div>
                     </div>
                 )}
 
