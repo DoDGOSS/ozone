@@ -79,7 +79,8 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
                     <StackSetup
                         stack={this.state.updatingStack}
                         onUpdate={this.handleUpdate}
-                        onBack={() => {
+                        onBack={async () => {
+                            await this.getStacks();
                             this.showSubSection(StackWidgetSubSection.TABLE);
                         }}
                     />
