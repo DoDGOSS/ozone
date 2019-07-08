@@ -29,8 +29,16 @@ const renderWidgetType: ItemRenderer<WidgetTypeReference> = (
 };
 
 export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({ widget, onSubmit, widgetTypes }) => {
+    const form = React.useRef<Formik<WidgetCreateRequest>>(null);
+    React.useEffect(() => {
+        if (form.current) {
+            form.current.getFormikActions().validateForm();
+        }
+    });
+
     return (
         <Formik
+            ref={form}
             initialValues={widget}
             validationSchema={WidgetPropertiesSchema}
             onSubmit={async (
