@@ -1,0 +1,139 @@
+:experimental:
+ifndef::imagesdir[]
+:imagesdir: ../images/
+endif::[]
+
+[#create-dashboard]
+= Create a Dashboard
+
+Ozone includes a new intuitive Dashboard Builder where you can design and customize dashboards on the fly without the need to access a builder specific view while working within a dashboard.
+
+To create a new Stack:
+
+. Click the btn:[Stacks] button (image:stacks-button.png[]) on the toolbar to open the Stacks Menu.
+
+. Click btn:[Create New] at the bottom of the screen to open the Create New Stack window.
+
+. Give the Stack:
+
+.. _(required)_ A title
++
+NOTE: The Stack cannot be saved without a title.
+
+.. _(optional)_ An image URL that appears in the Stacks window.
+
+.. _(optional)_ A description
+
+. Choose a layout for the Stack. Click the radio button beside the selected layout method. Layout options include:
+
+.. btn:[Choose a template] -- Choose one of the pre made layouts.
+
+.. btn:[Copy the layout of an existing Dashboard] -- Clicking this causes a drop-down menu to appear below the selection title. Choose a dashboard from this menu. The new dashboard will adopt the layout of the selected dashboard. However, it will not copy the widgets associated with that layout.
+
+.. btn:[Create a new layout] -- Opens the Dashboard Builder allowing the user to create a new layout. More information on creating a new layout is found in section Use the Dashboard Builder.
+
+. Click btn:[OK]. The dashboard will automatically open.
+
+. To add widgets to the Dashboard, click the widget button on the OZONE Toolbar and select widgets by clicking them. If the Dashboard has more than one pane, click the pane where the widget will open.
+
+Next time the Dashboard menu is opened, it will contain this dashboard. This dashboard belongs to the user who created it and it cannot be shared with other OWF users until it is shared with the Store. To do this, open Dashboards and click the btn:[Details] button on the Dashboard, then, select btn:[Share] (image:share-button.png[]).
+
+
+NOTE: Creating a new Stack, in effect, creates a one-dashboard stack. The Stack and the single Dashboard share the same title, description and icon. The layout assigned to this Stack applies to the single Dashboard rather than the Stack. Users can add additional dashboards, and therefore additional layouts, to this Stack. When more than one Dashboard is added to a Stack, the user has the ability to change the single Dashboard's properties. Also each Dashboard is edited independent from other pages or the parent Stack.
+
+.Stacks dialog
+image::stack-dialog.png[]
+
+.Pre-made Layout Templates
+image::create-new-stack.png[]
+
+Descriptions and instructions for adding widgets to the four layouts are explained in the following sections. Information on customizing dashboard layouts can be found in section <<use-dashboard-builder>>.
+
+
+== Dashboard Builder Components
+
+.Dashboard Builder
+image::dashboard-builder.png[]
+
+The Dashboard Builder allows users to create custom layouts for their dashboard.
+
+When you open a dashboard, it has the potential to display a variety of information. What the user sees depends on the dashboard layout. There are four layout/pane types. Each type can be used as the only layout for the Dashboard or used as a portion of the dashboard configuration. The four types are included in a list of dashboard layout templates users can select from when creating their own Dashboards.
+
+The types along with other Dashboard Builder tools are described in the following sections.
+
+
+== Dashboard Layout/Panel Types
+
+Ozone supports four different layout/pane types and any conglomeration of those types. Each type is described in this section. During the design process, any of the layouts can comprise a whole dashboard or a panel within the dashboard:
+
+Accordion panel::
+See <<accordion-layout>> for more details.
+
+Portal panel::
+See <<portal-layout>> for more details.
+
+Tabbed panel::
+See <<tabbed-layout>> for more details.
+
+Fit panel::
+See <<fit-layout>> for more details.
+
+In this new builder, a user has the ability to change any selected panel/widget and configure it to display in any available panel type. The panel setting can be changed by selecting the gear box and making the choice you desire. If you have multiple widgets open in this panel, all corresponding widgets will be converted.
+
+.Change panel layout
+image::change-layout.png[]
+
+
+=== Free-form Layout
+
+Free-form layouts, similar to the desktop on computers, allow the user to open widgets from the Widget Sidebar and arrange widgets freely. These layouts are fully customized and allow the ability to mix and match panels / widgets. This is the base configuration of all available widgets and is constantly customizable.
+
+.Free-form Layout
+image::free-form-layout.png[]
+
+
+[#accordion-layout]
+=== Accordion Layout
+
+Accordion layouts display widgets in equal, horizontal panes. When a widget is added to the dashboard, all the widgets are resized to display equally in the Ozone window. The Ozone window does not scroll. Each individual widget (as shown below) will scroll using its own scroll bar.
+
+.Accordion Layout
+image::accordion-layout.png[]
+
+
+[#portal-layout]
+=== Portal Layout
+
+Portal layouts comprise a column-oriented layout that organizes widgets of varying heights. Each new widget loads above the first one on the screen. The user drags a dividing bar to specify widget's height. The widgets and the Ozone window scroll.
+
+.Portal Layout
+image::portal-layout.png[]
+
+
+[#tabbed-layout]
+=== Tabbed Layout
+
+Tabbed layouts display one widget per screen. Like browser tabs, the tabs at the top of the screen switch from one widget to another.
+
+.Tabbed Layout
+image::tabbed-layout.png[]
+
+
+[#fit-layout]
+=== Fit Layout
+
+Fit layouts allow a user to place a single widget on the screen. An open widget shows no border or chrome and will occupy the full size of the available framework. Think of it like making a PowerPoint presentation full-screen within the designated Ozone window. If a user wishes to open an additional widget, they will be notified that the initial widget will be replaced by the new one.
+
+NOTE: Some widgets are opened automatically by other widgets. In these cases, the widgets will "float" on top of the dashboard.
+
+.Fit Layout
+image::fit-layout.png[]
+
+
+== Additional Dashboard Builder Tools
+
+image:lock-button.png[] -- Lock/Unlock Dashboard::
+Use this button to restrict changes to the dashboard layout and the widgets displayed on it. When the dashboard is locked, widgets cannot be added, removed, or moved and sections cannot be edited.
+
+image:save-button.png[] -- Save Dashboard::
+Use this button to save changes made to the dashboard and layout. Alternately, if the auto save feature is enabled, the dashboard will be automatically saved at an interval specified by the administrator _(defaults to 15 minutes)_.

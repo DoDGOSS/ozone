@@ -1,0 +1,38 @@
+:experimental:
+ifndef::imagesdir[]
+:imagesdir: ../images/
+endif::[]
+
+= Introduction
+
+== Overview
+
+This guide provides an introduction and instructions for using the OZONE Widget Framework (OWF) general features and functions. Separate guides explain administrative features and configuration settings.
+
+OWF can operate with the Store or independently. This document will explain both behaviors if OWF operates differently when used independently or as an integrated program with the Store.
+
+
+== Objectives
+
+OWF operates as a framework that allows users to create custom layouts and workflows for the listings that they acquire from the Store or an administrator. The framework allows information from different agencies and servers to communicate inside a browser window without sending information back to the respective systems.
+
+While the Store can operate independently, using it with OWF provides users with one location for everything they need to do their jobs, from searching and discovering new tools, to starting and managing those tools or building their own workflows.
+
+
+== Document Scope
+
+This guide is intended for OWF users with basic user privileges. It describes Dashboards, Widgets and the Dashboard Builder, as basic users can do this action.
+Note: Administrative tools and features are described in the Administrators' Guides.
+
+
+include::../../../common/related-documents.asciidoc[leveloffset=+1]
+
+
+== Basic Architecture
+
+The Store and OWF consists of a number of components that were designed to be independently deployed or located on the same server. The simplest deployment scenario places them all on the same physical machine. These components are shown in detail in the below diagram:
+
+.Basic system architecture diagram
+image::ozone-architecture.png[]
+
+NOTE: Any Java Servlet-compliant application server can host the Ozone application. Additionally, the CAS server and LDAP components are examples of possible security integrations -- the Pluggable Security component acts as an adapter to integrate with many different enterprise security solutions.

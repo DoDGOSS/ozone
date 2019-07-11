@@ -1,0 +1,40 @@
+:experimental:
+ifndef::imagesdir[]
+:imagesdir: ../images/
+endif::[]
+
+= Additional Fetaures
+
+== User Profile
+
+.Ozone Profile Information
+image::user-profile.png[]
+
+In Ozone, users cannot customize their User Information. They can only view it.
+
+To access the profile in Ozone, click the btn:[Profile] option from the drop-down User Menu.
+
+The Ozone Profile page shows User identification including:
+
+* Username
+* Full name
+* E-mail
+* A list of the user's groups
+
+
+== Themes
+
+In addition to the default light theme, Ozone provides an alternate dark theme.
+
+To switch between the light and dark themes, click the moon icon in the top right menu or press kbd:[Alt+Shift+T].
+
+.Change theme
+image::change-theme.png[]
+
+
+== About Window
+
+Assessed by clicking the drop-down User Menu on the right-side of the screen, the About window displays information that can be customized by an administrator:
+
+.Ozone About window
+image::about-window.png[]

@@ -1,0 +1,81 @@
+:experimental:
+ifndef::imagesdir[]
+:imagesdir: ../images/
+endif::[]
+
+= Intents
+
+Intents are the instructions for carrying out a widget's intentions. There are three main aspects to intent:
+
+Action::
+The widgets action. For example, think of actions as verbs like `view`, `share`, `edit`, etc.
+
+Data Type::
+The type of data that is requested or sent.
+
+Send/Receive::
+The direction of the intent request. A widget can send, receive or send and receive an intent request.
+
+NOTE: This information is only metadata used as a placeholder. For any intents to function in Ozone, a developer has to code the actual function into a widget. Instructions for doing this are found in the _Ozone Developer's Guide_.
+
+Intents allow users to determine how widget(s) use and share data. This binding capability enables a widget that collects data to easily send that data to a widget that displays data in an understandable way.
+
+_Example:_ +
+The NYSE widget records daily stock exchange rates. It stores the data as a giant file that is difficult to read and understand. To make the data useful, the NYSE widget has a *send* intent that allows it to identify widgets that can graph data. Any widget that has can *receive* graphing intents will appear. Then, the user decides which graphing widget they want to send the NYSE widget's data.
+
+Widgets may have multiple intents associated with them. Users cannot create widget intents. Administrators and developers (logged in as administrators) add widget intents through the Ozone interface. Developers also add the intents through widget descriptor URLs.
+
+
+== Add Intents to Listings
+
+When an OZONE Widget is created in the Store, there are no intents associated with it. Users/listing owners can create, edit and delete intents for OZONE Widgets using the Create/Edit Listing page in the Store. The following instructions reference using the Store to create an intent.
+
+To add an intent:
+
+. Open the Create/Edit Listing Page.
+
+. On the Create/Edit Listing page, select listing type: `Widget`
+
+. Click the btn:[New Intent] button. This opens the "Add Intent" form.
+
+. Select the intent's action and data type from the drop-down menus, select the direction(s) of the intent, then click btn:[OK]. _(The following sections will describe each of these actions.)_
+
+The Store ships with the following Actions:
+
+Edit:: Allows widgets the ability to edit a specified data type.
+Pick:: Allows widgets the ability to pick files from their service to use in a client widget.
+Save:: Allows widgets the ability to save data.
+Share:: Allows widgets the ability to share a specified data type.
+Subscribe:: Allows widgets the ability to subscribe to a specified data type.
+View:: Allows widgets the ability to view a specified data type.
+
+The Store ships with the following Data Types:
+
+Audio:: Audio files
+Image:: Image files
+JSON:: JSON documents
+Text:: Textual information
+URI:: Uniform Resource Identifier
+Video:: Video files
+
+Widgets can send and receive intents:
+
+Send:: Allows widgets to send information to other widgets.
+Receive:: Allows widget to receive information to from other widgets.
+
+Users cannot create new intents. Administrators must create the new intents. See the _Store Administrator's Guide_ for details.
+
+
+== Edit & Delete Intents
+
+To edit or delete a listing's Intent, start by editing the listing:
+
+. Open the Edit Listing Page in the Store.
+
+. On the Edit Listing page, scroll to the Intents section.
+
+. Hover over the Intent to see the editing and deleting functions.
+
+. Click the btn:[Edit] button (pencil icon) to edit the intent. +
+_or_ +
+Click the btn:[Delete] button (minus sign icon) to delete the intent.
