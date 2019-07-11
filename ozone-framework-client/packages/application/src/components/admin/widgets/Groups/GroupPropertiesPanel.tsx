@@ -3,7 +3,7 @@ import styles from "../Widgets.scss";
 import React from "react";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import * as yup from "yup";
-import { Button } from "@blueprintjs/core";
+import { Button, Intent, Position, Toaster } from "@blueprintjs/core";
 
 import { GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
 import { cleanNullableProp } from "../../../../utility";
@@ -13,6 +13,10 @@ interface GroupEditProps {
     onSave: (data: GroupCreateRequest | GroupUpdateRequest) => Promise<boolean>;
     group: GroupDTO | undefined;
 }
+
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
 
 export const GroupPropertiesPanel: React.FC<GroupEditProps> = ({ onSave, group }) => (
     <Formik
@@ -27,7 +31,10 @@ export const GroupPropertiesPanel: React.FC<GroupEditProps> = ({ onSave, group }
             actions.setSubmitting(false);
 
             if (isSuccess) {
+                OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
                 actions.resetForm(values);
+            } else {
+                OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
             }
         }}
     >

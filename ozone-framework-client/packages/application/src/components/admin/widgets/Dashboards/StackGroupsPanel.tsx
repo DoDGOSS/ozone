@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, ButtonGroup } from "@blueprintjs/core";
+import { Button, ButtonGroup, Intent, Position, Toaster } from "@blueprintjs/core";
 import { Column } from "react-table";
 
 import { GenericTable } from "../../../generic-table/GenericTable";
@@ -12,6 +12,7 @@ import { stackApi } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";
 
 import * as styles from "../Widgets.scss";
+import { Http2ServerRequest } from "http2";
 
 interface StackEditGroupsProps {
     onUpdate: (update?: any) => void;
@@ -23,6 +24,10 @@ export interface StackEditGroupsState {
     loading: boolean;
     showGroupsDialog: boolean;
 }
+
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
 
 // TODO It should close regardless. Apply fix to stackapi that was applied to
 export class StackGroupsPanel extends React.Component<StackEditGroupsProps, StackEditGroupsState> {
@@ -112,7 +117,10 @@ export class StackGroupsPanel extends React.Component<StackEditGroupsProps, Stac
 
     private addGroups = async (groups: Array<GroupDTO>) => {
         const response = await stackApi.addStackGroups(this.props.stack.id, groups);
-        if (response.status !== 200) {
+        if (response.status === 200) {
+            OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
+        } else {
+            OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
             return;
         }
 

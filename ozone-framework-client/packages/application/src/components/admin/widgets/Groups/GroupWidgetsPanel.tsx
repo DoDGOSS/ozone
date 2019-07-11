@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button } from "@blueprintjs/core";
+import { Button, Intent, Position, Toaster } from "@blueprintjs/core";
 
 import { GroupWidgetsEditDialog } from "./GroupWidgetEditDialog";
 
@@ -23,6 +23,10 @@ export interface GroupEditWidgetState {
     loading: boolean;
     showAdd: boolean;
 }
+
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
 
 export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, GroupEditWidgetState> {
     defaultPageSize: number = 5;
@@ -95,7 +99,12 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         const responses = [];
         for (const widget of widgets) {
             const response = await widgetApi.addWidgetGroups(widget.id, this.props.group.id);
-            if (response.status !== 200) return;
+            if (response.status === 200) {
+                OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
+            } else {
+                OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
+                return;
+            }
 
             responses.push(response.data.data);
         }

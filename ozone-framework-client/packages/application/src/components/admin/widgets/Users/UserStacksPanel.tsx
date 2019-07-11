@@ -2,7 +2,7 @@ import * as styles from "../Widgets.scss";
 
 import * as React from "react";
 import { Column } from "react-table";
-import { Button, ButtonGroup } from "@blueprintjs/core";
+import { Button, ButtonGroup, Intent, Position, Toaster } from "@blueprintjs/core";
 
 import { GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton } from "../../../generic-table/TableButtons";
@@ -23,6 +23,10 @@ export interface UserEditStacksState {
     loading: boolean;
     showAdd: boolean;
 }
+
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
 
 export class UserStacksPanel extends React.Component<UserEditStacksProps, UserEditStacksState> {
     defaultPageSize: number = 5;
@@ -114,7 +118,12 @@ export class UserStacksPanel extends React.Component<UserEditStacksProps, UserEd
     private addStacks = async (stacks: Array<StackDTO>) => {
         for (const newStack of stacks) {
             const response = await stackApi.addStackUsers(newStack.id, [this.props.user]);
-            if (response.status !== 200) break;
+            if (response.status === 200) {
+                OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
+            } else {
+                OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
+                break;
+            }
         }
 
         this.setState({
