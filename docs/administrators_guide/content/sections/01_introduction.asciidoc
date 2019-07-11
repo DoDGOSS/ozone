@@ -1,0 +1,15 @@
+= Introduction
+
+== Objectives
+
+This guide covers topics relevant to administering the OZONE Widget Framework.
+
+== Document Scope
+
+This guide is intended for administrators of an OWF instance. An administrator is, for the purpose of this guide, defined as someone who maintains the OWF application and handles user and application component settings. In this document, the term "Store" refers to OZONE Marketplace (OMP). Both applications share features described in this guide and both may be configured to OWF.
+
+== OWF Purpose
+
+OWF is a set of tools, generally delivered in the OWF Bundle. When deployed, OWF is used for organizing and displaying Widgets in a single browser window known as an OZONE Application.
+
+include::../../../common/related-documents.asciidoc[leveloffset=+1]

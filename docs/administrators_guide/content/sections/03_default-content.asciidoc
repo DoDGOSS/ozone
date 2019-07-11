@@ -1,0 +1,23 @@
+:experimental:
+ifndef::imagesdir[]
+:imagesdir: ../images/
+endif::[]
+
+= Default Content
+
+OWF ships with a default user profile and default user groups. Administrators can use the default profile and default group to add dashboards and widgets to a user or several users' instance of OWF.
+
+.Group Manager -- Default groups
+image::group-admin-widget.png[]
+
+OWF Users::
+A default group that ships with OWF. Every user is automatically assigned to it.
++
+Like an OWF group, Dashboards and Widgets assigned to OWF Users are available to all users in the group. Since all users are automatically members of the OWF Users group, this group can be used to assign Dashboards and Widgets to all users.
+
+OWF Administrators::
+A default group that ships with OWF. Every administrator is assigned to this group.
++
+Like any OWF group, Dashboards and Widgets assigned to OWF Administrators are available to all group members. Since all administrators are automatically members of this group, it can be used to assign Dashboards and Widgets to all administrators. Users cannot be assigned to this group and administrators cannot delete the default Editors and Managers populating this group.
+
+NOTE: The *OWF Administrators* and *OWF Users* groups cannot be deleted, renamed or deactivated. In the event that either group is single-selected in the Groups manager, the Delete button will be grayed out. If either (or both) groups are selected along with other manual groups, the btn:[Delete] button will be active. However, upon clicking btn:[Delete], only the manual groups will be removed from the system. Additionally, the Users tab in the Group Editor is disabled for these groups. Any user with access to OWF will receive *OWF Users* group resources. Any user reported to have an administrative role by the underlying security system will receive OWF Administrators group resources. If these groups are removed from the OWF database, restarting the OWF server will recreate them with no custom dashboards or widgets.
