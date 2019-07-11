@@ -14,9 +14,9 @@ export namespace MainPage {
 
     export const HELP_DIALOG = "div[data-element-id='help-dialog']";
 
-    export const HELP_DIALOG_BOX = "div[data-element-id='help-screen_helpDialog__3gAsy']";
+    export const HELP_BUTTON = "button[data-element-id='help-button']";
 
-    export const HELP_SAMPLE_FILE = "div[data-element-id='bp3-tree-node-content-0'";
+    export const HELP_SAMPLE_FILE = ".bp3-tree-node-content-0";
 
     export const ADMINISTRATION_BUTTON = "a[data-element-id='administration']";
 
@@ -26,7 +26,7 @@ export namespace MainPage {
 
     export const GROUPS_ADMIN_WIDGET = "div[data-element-id='group-admin-widget-dialog']";
 
-    export const DASHBOARD_ADMIN_WIDGET = "div[data-element-id='dashboard-admin-widget-dialog']";
+    export const DASHBOARD_ADMIN_WIDGET = "div[data-element-id='stack-admin-widget-dialog']";
 
     export const SYSTEMCONFIG_ADMIN_WIDGET = "div[data-element-id='systemconfig-admin-widget-dialog']";
 
@@ -216,9 +216,9 @@ export namespace AdminWidget {
     export const PREFERENCES_TAB = "div[data-tab-id='user_preferences']";
 }
 
-export namespace DashboardAdminWidget {
+export namespace StackAdminWidget {
     // DASHBOARD INITIAL PAGE & STATIC VALUES
-    export const DIALOG = "div[data-element-id='dashboard-admin-widget-dialog']";
+    export const DIALOG = "div[data-element-id='stack-admin-widget-dialog']";
     export const GROUPS_TAB = "div[data-tab-id='dashboard_groups']";
     export const USERS_TAB = "div[data-tab-id='dashboard_users']";
     export const DASHBOARD_ADMIN_TEST_DASHBOARD_NAME = "DAW_Test";
@@ -227,10 +227,10 @@ export namespace DashboardAdminWidget {
     export const ROW_BOX = "div[data-element-id='table-selector-dialog'] div[class='rt-tbody']";
     export const FIRST_ROW = `${ROW_BOX} > div:nth-child(1) div`;
     export const SECOND_ROW = `${ROW_BOX} > div:nth-child(2) div`;
-    export const BACK_BUTTON = "span[data-element-id='dashboard-admin-widget-edit-back-button']";
+    export const BACK_BUTTON = "span[data-element-id='stack-admin-widget-edit-back-button']";
 
     export function dashboardTableActions(dashboardname: string): string {
-        return `div[data-role="dashboard-admin-widget-actions"][data-dashboardname="${dashboardname}"]`;
+        return `div[data-role="stack-admin-widget-actions"][data-dashboardname="${dashboardname}"]`;
     }
 
     export function dashboardTableEditButton(dashboardname: string): string {
@@ -247,7 +247,7 @@ export namespace DashboardAdminWidget {
     export const SECOND_GROUP_NAME = "OWF Users";
 
     export function dashboardGroupTableActions(groupname: string): string {
-        return `div[data-role="dashboard-admin-widget-group-actions"][data-groupname="${groupname}"]`;
+        return `div[data-role="stack-admin-widget-group-actions"][data-groupname="${groupname}"]`;
     }
 
     export function dashboardGroupTableDeleteButton(groupname: string): string {
@@ -260,13 +260,11 @@ export namespace DashboardAdminWidget {
     export const SECOND_USERNAME = "testUser1";
 
     export function dashboardUserTableActions(username: string): string {
-        return `div[data-role="dashboard-admin-widget-user-actions"][data-username="${username}"]`;
+        return `div[data-role="stack-admin-widget-user-actions"][data-username="${username}"]`;
     }
 
     export function dashboardUserTableDeleteButton(username: string): string {
-        return `${dashboardUserTableActions(
-            username
-        )} button[data-element-id="dashboard-admin-widget-delete-user-button"]`;
+        return `${dashboardUserTableActions(username)} button[data-element-id="stack-admin-widget-delete-user-button"]`;
     }
 }
 
