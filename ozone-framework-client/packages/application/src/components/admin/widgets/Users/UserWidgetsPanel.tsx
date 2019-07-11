@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Button } from "@blueprintjs/core";
+import { Button, Intent, Position, Toaster } from "@blueprintjs/core";
 
 import { widgetApi, WidgetQueryCriteria } from "../../../../api/clients/WidgetAPI";
 import { UserDTO } from "../../../../api/models/UserDTO";
@@ -22,6 +22,10 @@ export interface UserEditWidgetsState {
     loading: boolean;
     showAdd: boolean;
 }
+
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
 
 export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, UserEditWidgetsState> {
     defaultPageSize: number = 5;
@@ -97,7 +101,12 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
                 continue;
             }
             const response = await widgetApi.addWidgetUsers(widget.id, this.props.user.id);
-            if (response.status !== 200) return;
+            if (response.status === 200) {
+                OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
+            } else {
+                OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
+                return;
+            }
 
             responses.push(response.data.data);
         }
