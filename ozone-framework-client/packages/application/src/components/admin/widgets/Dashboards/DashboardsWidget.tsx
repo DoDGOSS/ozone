@@ -19,7 +19,6 @@ interface StacksWidgetState {
     loading: boolean;
     showTable: boolean;
     showStackSetup: boolean;
-    showAssignToMe: boolean;
     updatingStack: StackDTO | undefined;
 }
 // TODO
@@ -43,7 +42,6 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
             stacks: [],
             loading: true,
             showTable: true,
-            showAssignToMe: false,
             showStackSetup: false,
             updatingStack: undefined
         };
@@ -128,18 +126,6 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
                                 this.setState({ updatingStack: row.original });
                                 this.showSubSection(StackWidgetSubSection.SETUP);
                             }}
-                        />
-                        <Divider />
-                        <Button
-                            data-element-id={"dashboard-admin-widget-assign-to-me"}
-                            text="Assign To Me"
-                            intent={Intent.SUCCESS}
-                            icon="following"
-                            small={true}
-                            onClick={() => {
-                                console.log("Unimplemented: should assign ", row.original, "to current user (you).");
-                            }}
-                            data-widget-name={row.original.name}
                         />
                         <Divider />
                         <DeleteButton

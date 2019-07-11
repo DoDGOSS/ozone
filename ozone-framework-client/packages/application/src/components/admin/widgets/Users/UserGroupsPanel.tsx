@@ -1,7 +1,7 @@
 import * as styles from "../Widgets.scss";
 
 import * as React from "react";
-import { Button, ButtonGroup } from "@blueprintjs/core";
+import { Button, ButtonGroup, Intent, Position, Toaster } from "@blueprintjs/core";
 import { Column } from "react-table";
 
 import { GenericTable } from "../../../generic-table/GenericTable";
@@ -22,6 +22,10 @@ export interface UserEditGroupsState {
     loading: boolean;
     showAdd: boolean;
 }
+
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
 
 export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEditGroupsState> {
     defaultPageSize: number;
@@ -128,7 +132,12 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
 
             const response = await groupApi.updateGroup(request);
 
-            if (response.status !== 200) return;
+            if (response.status === 200) {
+                OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
+            } else {
+                OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
+                return;
+            }
 
             responses.push(response.data.data);
         }
