@@ -23,6 +23,7 @@ function print_bold() {
 }
 
 
+build administrators_guide "Ozone Administrator's Guide"
 build configuration_guide "Ozone Configuration Guide"
 build developers_guide "Ozone Developer's Guide"
 build quick_start_guide "Ozone Quick Start Guide"

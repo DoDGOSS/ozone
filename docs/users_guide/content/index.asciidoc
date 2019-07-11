@@ -12,6 +12,8 @@
 :xrefstyle: full
 :icons: font
 :icon-set: fas
+:imagesdir: images/
+:experimental:
 ifeval::["{outfilesuffix}" == ".html"]
 :source-highlighter: highlightjs
 endif::[]
@@ -30,11 +32,13 @@ include::sections/02_getting-started.asciidoc[]
 
 include::sections/03_dashboards.asciidoc[]
 
-include::sections/04_widgets.asciidoc[]
+include::sections/04_create-dashboard.asciidoc[]
 
-include::sections/05_customize.asciidoc[]
+include::sections/05_widgets.asciidoc[]
 
 include::sections/06_intents.asciidoc[]
+
+include::sections/07_additional-features.asciidoc[]
 
 include::../../common/glossary.asciidoc[]
 
