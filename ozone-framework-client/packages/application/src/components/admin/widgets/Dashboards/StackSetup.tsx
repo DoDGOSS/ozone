@@ -55,7 +55,7 @@ export class StackSetup extends React.Component<StackSetupProps, StackSetupState
                         )}
                     />
                     <Tabs.Expander />
-                    <span data-element-id="dashboard-admin-widget-edit-back-button">
+                    <span data-element-id="stack-admin-widget-edit-back-button">
                         <CancelButton onClick={this.props.onBack} />
                     </span>
                 </Tabs>

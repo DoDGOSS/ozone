@@ -2,7 +2,7 @@ import { NightwatchAPI } from "../nightwatch";
 
 import { PageObject } from "./PageObject";
 
-import { DashboardAdmin } from "./DashboardAdmin";
+import { StackAdmin } from "./StackAdmin";
 import { GroupAdmin } from "./GroupAdmin";
 import { UserAdmin } from "./UserAdmin";
 import { WidgetAdmin } from "./WidgetAdmin";
@@ -14,7 +14,7 @@ export class AdminToolsDialog extends PageObject {
     static WidgetAdminItem = `${AdminToolsDialog.Selector} div[data-element-id="Widget Administration"]`;
     static UserAdminItem = `${AdminToolsDialog.Selector} div[data-element-id="User Administration"]`;
     static GroupsAdminItem = `${AdminToolsDialog.Selector} div[data-element-id="Group Administration"]`;
-    static DashboardAdminItem = `${AdminToolsDialog.Selector} div[data-element-id="Dashboard Administration"]`;
+    static StackAdminItem = `${AdminToolsDialog.Selector} div[data-element-id="Stack Administration"]`;
     static SysConfigAdminItem = `${AdminToolsDialog.Selector} div[data-element-id="System Configuration"]`;
 
     constructor(browser: NightwatchAPI) {
@@ -36,9 +36,9 @@ export class AdminToolsDialog extends PageObject {
         return this.open(GroupAdmin).waitUntilVisible();
     }
 
-    openDashboardAdminWidget(): DashboardAdmin {
-        this.clickWhenVisible(AdminToolsDialog.DashboardAdminItem, "Dashboard Admin widget tile");
-        return this.open(DashboardAdmin).waitUntilVisible();
+    openStackAdminWidget(): StackAdmin {
+        this.clickWhenVisible(AdminToolsDialog.StackAdminItem, "Stack Admin widget tile");
+        return this.open(StackAdmin).waitUntilVisible();
     }
 
     openSysConfigAdminWidget(): SysConfigAdmin {
