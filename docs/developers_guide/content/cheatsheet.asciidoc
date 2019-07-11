@@ -1,6 +1,0 @@
-[source,asciidoc]
-----
-\ifeval::["{basebackend}" == "html"]
-...
-\endif::[]
-----
