@@ -47,9 +47,9 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
             Header: "Actions",
             Cell: (row: any) => (
                 <div>
-                    <ButtonGroup data-role="dashboard-admin-widget-user-actions" data-username={row.original.username}>
+                    <ButtonGroup data-role="stack-admin-widget-user-actions" data-username={row.original.username}>
                         <Button
-                            data-element-id="dashboard-admin-widget-delete-user-button"
+                            data-element-id="stack-admin-widget-delete-user-button"
                             text="Delete"
                             intent={Intent.DANGER}
                             icon="trash"
