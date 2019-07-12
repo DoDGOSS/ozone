@@ -80,10 +80,7 @@ export class StackGroupsPanel extends React.Component<StackEditGroupsProps, Stac
                 Header: "Actions",
                 Cell: (row: { original: GroupDTO }) => (
                     <div>
-                        <ButtonGroup
-                            data-role="dashboard-admin-widget-group-actions"
-                            data-groupname={row.original.name}
-                        >
+                        <ButtonGroup data-role="stack-admin-widget-group-actions" data-groupname={row.original.name}>
                             <DeleteButton onClick={() => this.confirmRemoveUser(row.original)} />
                         </ButtonGroup>
                     </div>
