@@ -60,7 +60,7 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
         const showStackSetup = this.state.showStackSetup;
 
         return (
-            <div data-element-id="dashboard-admin-widget-dialog">
+            <div data-element-id="stack-admin-widget-dialog">
                 {showTable && (
                     <div>
                         <GenericTable
@@ -122,7 +122,7 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
             {
                 Header: "Actions",
                 Cell: (row: { original: StackDTO }) => (
-                    <ButtonGroup data-role="dashboard-admin-widget-actions" data-dashboardname={row.original.name}>
+                    <ButtonGroup data-role="stack-admin-widget-actions" data-dashboardname={row.original.name}>
                         <EditButton
                             onClick={() => {
                                 this.setState({ updatingStack: row.original });
@@ -131,7 +131,7 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
                         />
                         <Divider />
                         <Button
-                            data-element-id={"dashboard-admin-widget-assign-to-me"}
+                            data-element-id={"stack-admin-widget-assign-to-me"}
                             text="Assign To Me"
                             intent={Intent.SUCCESS}
                             icon="following"

@@ -62,7 +62,9 @@ export const HelpDialog: React.FC = () => {
             onOpened={fetchHelp}
             onClose={closeDialogBox}
         >
-            <div style={{ overflowY: "scroll" }}>{isLoading ? <Spinner /> : <HelpTree nodes={nodes} />}</div>
+            <div style={{ overflowY: "scroll" }} data-element-id="help-dialog">
+                {isLoading ? <Spinner /> : <HelpTree nodes={nodes} />}
+            </div>
         </Dialog>
     );
 };
