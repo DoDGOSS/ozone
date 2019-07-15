@@ -9,14 +9,14 @@ import { mainStore } from "../../stores/MainStore";
 
 import { AboutDialog } from "../about/About";
 import { AdminToolsDialog } from "../admin-tools-dialog/AdminToolsDialog";
+import { CreateStackDialog } from "../create-stack-screen/CreateStackDialog";
 import { HelpDialog } from "../help-screen/HelpDialog";
 import { NavigationBar } from "../navigation/NavigationBar";
 import { StackDialog } from "../stack-screen/StackDialog";
 import { UserProfileDialog } from "../user-profile/UserProfileDialog";
 import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
+import { WidgetSwitcher } from "../widget-switcher/WidgetSwitcher";
 import { WidgetToolbar } from "../widget-toolbar/WidgetToolbar";
-
-import { CreateStackDialog } from "../create-stack-screen/CreateStackDialog";
 
 export const HomeScreen: React.FC<{}> = () => {
     const isAboutVisible = useBehavior(mainStore.isAboutVisible);
@@ -40,6 +40,7 @@ export const HomeScreen: React.FC<{}> = () => {
             <StackDialog />
             <AdminToolsDialog />
             <UserProfileDialog />
+            <WidgetSwitcher />
         </div>
     );
 };

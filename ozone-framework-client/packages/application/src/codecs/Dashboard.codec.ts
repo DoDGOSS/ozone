@@ -1,13 +1,8 @@
 import { DashboardUpdateRequest } from "../api/models/DashboardDTO";
 import { UserDashboardDTO, UserDashboardStackDTO } from "../api/models/UserDashboardDTO";
 import { UserWidgetDTO } from "../api/models/UserWidgetDTO";
-
-import { UserWidget } from "../models/UserWidget";
-
+import { DashboardNode } from "../components/widget-dashboard/types";
 import { Dashboard, DashboardLayout, DashboardProps } from "../models/Dashboard";
-import { Stack } from "../models/Stack";
-import { WidgetInstance } from "../models/WidgetInstance";
-
 import {
     ExpandoPanel,
     FitPanel,
@@ -18,12 +13,12 @@ import {
     PanelState,
     TabbedPanel
 } from "../models/panel";
-
-import { DashboardNode } from "../components/widget-dashboard/types";
+import { Stack } from "../models/Stack";
+import { UserWidget } from "../models/UserWidget";
+import { WidgetInstance } from "../models/WidgetInstance";
+import { optional, values } from "../utility";
 
 import { userWidgetFromJson } from "./UserWidget.codec";
-
-import { optional, values } from "../utility";
 
 export interface UserState {
     dashboards: Dictionary<Dashboard>;
@@ -48,6 +43,7 @@ export interface PanelDTO {
 export interface DashboardLayoutDTO {
     tree: DashboardNode | null;
     panels: PanelDTO[];
+    backgroundWidgets: WidgetInstanceDTO[];
 }
 
 export function deserializeUserState(dashboards: UserDashboardDTO[], userWidgets: UserWidgetDTO[]): UserState {
@@ -112,7 +108,10 @@ class UserStateDeserializer {
             panels[_panel.id] = _panel;
         }
 
+        const backgroundWidgets = layout.backgroundWidgets.map(this.createWidgetInstance);
+
         const props: DashboardProps = {
+            backgroundWidgets,
             description: optional(dto.description),
             guid: dto.guid,
             imageUrl: optional(dto.iconImageUrl),
@@ -139,10 +138,7 @@ class UserStateDeserializer {
     }
 
     private createPanel(dto: PanelDTO): Panel<PanelState> {
-        const widgets = dto.widgets.map((instance) => {
-            const userWidget = this.widgets[instance.userWidgetId];
-            return WidgetInstance.create(userWidget, instance.id);
-        });
+        const widgets = dto.widgets.map(this.createWidgetInstance);
 
         switch (dto.type) {
             case "fit":
@@ -174,6 +170,11 @@ class UserStateDeserializer {
                 });
         }
     }
+
+    private createWidgetInstance = (dto: WidgetInstanceDTO): WidgetInstance => {
+        const userWidget = this.widgets[dto.userWidgetId];
+        return WidgetInstance.create(userWidget, dto.id);
+    };
 }
 
 export function dashboardToUpdateRequest(dashboard: Dashboard): DashboardUpdateRequest {
@@ -194,7 +195,8 @@ export function dashboardToUpdateRequest(dashboard: Dashboard): DashboardUpdateR
 export function dashboardLayoutToJson(state: DashboardLayout): DashboardLayoutDTO {
     return {
         tree: state.tree,
-        panels: values(state.panels).map(panelToJson)
+        panels: values(state.panels).map(panelToJson),
+        backgroundWidgets: state.backgroundWidgets.map(widgetInstanceToJson)
     };
 }
 
@@ -205,10 +207,7 @@ export function panelToJson(panel: Panel<PanelState>): PanelDTO {
             id: state.id,
             title: state.title,
             type: state.type,
-            widgets: state.widgets.map((instance) => ({
-                id: instance.id,
-                userWidgetId: instance.userWidget.id
-            })),
+            widgets: state.widgets.map(widgetInstanceToJson),
             activeWidgetId: getActiveWidgetId(state),
             collapsed: isExpandoPanelState(state) ? state.collapsed : undefined
         };
@@ -223,6 +222,13 @@ export function panelToJson(panel: Panel<PanelState>): PanelDTO {
             collapsed: undefined
         };
     }
+}
+
+export function widgetInstanceToJson(instance: WidgetInstance): WidgetInstanceDTO {
+    return {
+        id: instance.id,
+        userWidgetId: instance.userWidget.id
+    };
 }
 
 function getActiveWidgetId(state: PanelState): string | undefined {

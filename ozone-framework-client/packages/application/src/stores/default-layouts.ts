@@ -1,7 +1,6 @@
+import { dashboardApi } from "../api/clients/DashboardAPI";
 import { DashboardLayout } from "../models/Dashboard";
 import { ExpandoPanel, FitPanel, TabbedPanel } from "../models/panel";
-
-import { dashboardApi } from "../api/clients/DashboardAPI";
 
 interface Layout {
     name: string;
@@ -83,6 +82,7 @@ export async function createPresetLayout(layoutName: string | null, guid: string
             return onCopyDashboard(guid);
         default:
             return {
+                backgroundWidgets: [],
                 tree: null,
                 panels: {}
             };
@@ -105,6 +105,7 @@ function createTabbedFitFitLayout(): DashboardLayout {
     const fitPanel2 = new FitPanel();
 
     return {
+        backgroundWidgets: [],
         tree: {
             direction: "column",
             first: tabbed.id,
@@ -129,6 +130,7 @@ function createAccordFitFitLayout(): DashboardLayout {
     const fitPanel2 = new FitPanel();
 
     return {
+        backgroundWidgets: [],
         tree: {
             direction: "row",
             first: accordion.id,
@@ -151,6 +153,7 @@ function createTabbedAccordian(): DashboardLayout {
     const accordion = new ExpandoPanel("accordion");
     const tabbed = new TabbedPanel();
     return {
+        backgroundWidgets: [],
         tree: {
             direction: "row",
             first: tabbed.id,
@@ -168,6 +171,7 @@ function createTabbedLayout(): DashboardLayout {
     const tabbed = new TabbedPanel();
 
     return {
+        backgroundWidgets: [],
         tree: tabbed.id,
         panels: {
             [tabbed.id]: tabbed
@@ -180,6 +184,7 @@ function createPortalLayout(): DashboardLayout {
     const portal2 = new ExpandoPanel("portal");
 
     return {
+        backgroundWidgets: [],
         tree: {
             direction: "row",
             first: portal1.id,
@@ -196,6 +201,7 @@ function createAccordianFit(): DashboardLayout {
     const accordion = new ExpandoPanel("accordion");
     const fitPanel = new FitPanel();
     return {
+        backgroundWidgets: [],
         tree: {
             direction: "row",
             first: accordion.id,
@@ -213,6 +219,7 @@ function createFitTabbed(): DashboardLayout {
     const fitPanel = new FitPanel();
     const tabbed = new TabbedPanel();
     return {
+        backgroundWidgets: [],
         tree: {
             direction: "column",
             first: fitPanel.id,
@@ -229,6 +236,7 @@ function createFitTabbed(): DashboardLayout {
 function createFitLayout(): DashboardLayout {
     const fitPanel = new FitPanel();
     return {
+        backgroundWidgets: [],
         tree: fitPanel.id,
         panels: {
             [fitPanel.id]: fitPanel
@@ -240,6 +248,7 @@ function createSplitVertical(): DashboardLayout {
     const fitPanel1 = new FitPanel();
     const fitPanel2 = new FitPanel();
     return {
+        backgroundWidgets: [],
         tree: {
             direction: "row",
             first: fitPanel1.id,
@@ -256,6 +265,7 @@ function createSplitHorizontal(): DashboardLayout {
     const fitPanel1 = new FitPanel();
     const fitPanel2 = new FitPanel();
     return {
+        backgroundWidgets: [],
         tree: {
             direction: "column",
             first: fitPanel1.id,
@@ -275,6 +285,7 @@ function createFit4Layout(): DashboardLayout {
     const fitPanel4 = new FitPanel();
 
     return {
+        backgroundWidgets: [],
         tree: {
             direction: "row",
             first: {

@@ -1,9 +1,7 @@
 import { cloneDeep, isEqual } from "lodash";
 
 import { DashboardNode } from "../components/widget-dashboard/types";
-import { createDragToUpdates, updateTree } from "../features/MosaicDashboard/util/mosaicUpdates";
 import { Dashboard, DashboardProps } from "../models/Dashboard";
-import { WidgetInstance } from "../models/WidgetInstance";
 import {
     DragDataType,
     DropData,
@@ -88,11 +86,10 @@ export class DragDropService {
     }
 
     private handleWidgetDropEvent(dragData: WidgetDragData, dropData: DropData): void {
-        if (this.isMosaicDrop(dropData)) {
-            this.addWidgetToMosaic(dragData, dropData);
-        } else {
-            this.addWidgetToPanel(dragData, dropData);
-        }
+        const { userWidgetId } = dragData;
+        const { path: targetPath, position } = dropData;
+
+        this.dashboardService.addUserWidgetById(userWidgetId, targetPath, position);
     }
 
     private handleInstanceDropEvent(dragData: InstanceDragData, dropData: DropData): void {
@@ -104,89 +101,40 @@ export class DragDropService {
     }
 
     private moveWindowToMosaic(dragData: WindowDragData, dropData: DropData): void {
-        const layout = this.dashboardState.tree;
-        if (!layout) return;
-
         const { position, path: targetPath } = dropData;
-        const sourcePath = dragData.path;
+        const { path: sourcePath } = dragData;
 
         if (position == null || targetPath == null || isEqual(targetPath, sourcePath)) {
             this.restoreSnapshot();
             return;
         }
-        const updates = createDragToUpdates(layout, sourcePath, targetPath, position);
-        const newLayout = updateTree(layout, updates);
 
-        this.dashboardService.setLayout(newLayout);
+        this.dashboardService.moveWindowToMosaic(sourcePath, targetPath, position);
     }
 
     private moveWindowToPanel(dragData: WindowDragData, dropData: DropData): void {
-        if (!dropData.path) return;
+        const { path: sourcePath } = dragData;
+        const { path: targetPath } = dropData;
 
-        const dashboard = this.dashboard;
+        if (!targetPath) return;
 
-        const sourcePanel = dashboard.getPanelByPath(dragData.path);
-        const targetPanel = this.dashboardService.getPanelByPath(dropData.path);
-        if (!sourcePanel || !targetPanel) return;
-
-        const widgetInstances = sourcePanel.state().value.widgets;
-
-        targetPanel.addWidgets(widgetInstances, {
-            onSuccess: () => dashboard.removeNode(dragData.path),
-            onFailure: () => this.restoreSnapshot()
-        });
-    }
-
-    private addWidgetToMosaic(dragData: WidgetDragData, dropData: DropData): void {
-        this.dashboardService.addUserWidgetById(dragData.userWidgetId, dropData.path, dropData.position);
-    }
-
-    private addWidgetToPanel(dragData: WidgetDragData, dropData: DropData): void {
-        if (!dropData.path) return;
-
-        const panel = this.dashboardService.getPanelByPath(dropData.path);
-        if (!panel) return;
-
-        const userWidget = this.dashboardStore.findUserWidgetById(dragData.userWidgetId);
-        if (!userWidget) return;
-
-        const widgetInstance = WidgetInstance.create(userWidget);
-
-        panel.addWidgets(widgetInstance);
+        this.dashboardService.moveWindowToPanel(sourcePath, targetPath, () => this.restoreSnapshot());
     }
 
     private moveInstanceToMosaic(dragData: InstanceDragData, dropData: DropData): void {
         const { widgetInstanceId } = dragData;
         const { path, position } = dropData;
 
-        const panel = this.dashboardService.findPanelByWidgetId(widgetInstanceId);
-        if (!panel) return;
-
-        const instance = panel.closeWidget(widgetInstanceId);
-        if (!instance) return;
-
-        this.dashboardService.addWidget({ widget: instance, path, position });
+        this.dashboardService.moveInstanceToMosaic(widgetInstanceId, path, position);
     }
 
     private moveInstanceToPanel(dragData: InstanceDragData, dropData: DropData): void {
-        if (!dropData.path) return;
-
         const { widgetInstanceId } = dragData;
-        const sourcePanel = this.dashboardService.findPanelByWidgetId(widgetInstanceId);
-        if (!sourcePanel) return;
+        const { path: targetPath } = dropData;
 
-        const targetPanel = this.dashboardService.getPanelByPath(dropData.path);
-        if (!targetPanel) return;
+        if (!targetPath) return;
 
-        // Ignore drops when the instance is already in the target panel
-        if (sourcePanel === targetPanel) return;
-
-        const widgetInstance = sourcePanel.findWidget(widgetInstanceId);
-        if (!widgetInstance) return;
-
-        targetPanel.addWidgets(widgetInstance, {
-            onSuccess: () => sourcePanel.closeWidget(widgetInstanceId)
-        });
+        this.dashboardService.moveInstanceToPanel(widgetInstanceId, targetPath);
     }
 }
 

@@ -3,8 +3,10 @@ import { dropRight, isString, omit, pick, set } from "lodash";
 import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
+import { ProfileReference } from "../api/models/UserDTO";
+import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
 import { MosaicDirection, MosaicNode, MosaicParent, MosaicPath } from "../features/MosaicDashboard/types";
-
+import { createRemoveUpdate, updateTree } from "../features/MosaicDashboard/util/mosaicUpdates";
 import {
     Corner,
     getAndAssertNodeAtPathExists,
@@ -12,21 +14,18 @@ import {
     getOtherDirection,
     getPathToCorner
 } from "../features/MosaicDashboard/util/mosaicUtilities";
-
-import { createRemoveUpdate, updateTree } from "../features/MosaicDashboard/util/mosaicUpdates";
-
-import { UserWidget } from "./UserWidget";
-
-import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
-import { ProfileReference } from "../api/models/UserDTO";
+import { MosaicDropTargetPosition } from "../shared/dragAndDrop";
+import { flatMap, Predicate, some, values } from "../utility";
 
 import { ExpandoPanel, FitPanel, LayoutType, Panel, PanelState, TabbedPanel } from "./panel";
-import { WidgetInstance } from "./WidgetInstance";
-import { MosaicDropTargetPosition } from "../shared/dragAndDrop";
+import { UserWidget } from "./UserWidget";
+import { Widget } from "./Widget";
+import { getInstanceWidgetsOf, getWidgetOf, WidgetInstance } from "./WidgetInstance";
 
 export interface DashboardLayout {
     tree: DashboardNode | null;
-    panels: Dictionary<Panel<any>>;
+    panels: Dictionary<Panel>;
+    backgroundWidgets: WidgetInstance[];
 }
 
 export interface DashboardProps extends DashboardLayout {
@@ -70,6 +69,10 @@ export class Dashboard {
         return this.state$.value.guid;
     }
 
+    get isLocked() {
+        return this.state$.value.isLocked;
+    }
+
     get name() {
         return this.state$.value.name;
     }
@@ -84,7 +87,7 @@ export class Dashboard {
 
         for (const panelId in panels) {
             if (panels.hasOwnProperty(panelId)) {
-                const panel: Panel<any> = panels[panelId];
+                const panel: Panel = panels[panelId];
                 const widget = panel.findWidget(instanceId);
                 if (widget !== undefined) {
                     return widget;
@@ -93,6 +96,26 @@ export class Dashboard {
         }
 
         return undefined;
+    }
+
+    getWidgets(): WidgetInstance[] {
+        const { backgroundWidgets, panels } = this.state$.value;
+
+        const panelWidgets = flatMap(panels, (panel) => panel.state().value.widgets);
+
+        return [...panelWidgets, ...backgroundWidgets];
+    }
+
+    containsWidget(predicate: Predicate<Widget>): boolean {
+        const { backgroundWidgets, panels } = this.state$.value;
+
+        if (some(getInstanceWidgetsOf(backgroundWidgets), predicate)) return true;
+
+        for (const panel of values(panels)) {
+            if (some(getInstanceWidgetsOf(panel.state().value.widgets), predicate)) return true;
+        }
+
+        return false;
     }
 
     lock = (): void => {
@@ -113,6 +136,25 @@ export class Dashboard {
         const prev = this.state$.value;
         const { panels, tree } = prev;
 
+        // Background widget?
+        if (getWidgetOf(instance).isBackground) {
+            this.state$.next({
+                ...prev,
+                backgroundWidgets: [...prev.backgroundWidgets, instance]
+            });
+            return true;
+        }
+
+        // Add to panel?
+        if (tree !== null && path !== undefined && position === "center") {
+            const targetPanel = this.getPanelByPath(path);
+            if (targetPanel) {
+                targetPanel.addWidgets(instance);
+                return true;
+            }
+        }
+
+        // Add to mosaic
         const panel = new FitPanel({ title, widget: instance });
 
         let newTree: DashboardNode;
@@ -309,6 +351,7 @@ function addToTopRightOfLayout(layout: DashboardNode, id: string): DashboardNode
 }
 
 export const EMPTY_DASHBOARD = new Dashboard({
+    backgroundWidgets: [],
     guid: "",
     isAlteredByAdmin: false,
     isDefault: true,

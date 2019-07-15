@@ -2,10 +2,8 @@ import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
 import { themeApi } from "../api/clients/ThemeAPI";
-
-import { isBlank } from "../utility";
-
 import { DARK_THEME } from "../constants";
+import { isBlank } from "../utility";
 
 export class MainStore {
     private readonly themeClass$ = new BehaviorSubject(DARK_THEME);
@@ -16,6 +14,7 @@ export class MainStore {
     private readonly isStackDialogVisible$ = new BehaviorSubject(false);
     private readonly isHelpDialogVisible$ = new BehaviorSubject(false);
     private readonly isUserProfileDialogVisible$ = new BehaviorSubject(false);
+    private readonly isWidgetSwitcherVisible$ = new BehaviorSubject(false);
     private readonly isWidgetToolbarOpen$ = new BehaviorSubject(false);
 
     themeClass = () => asBehavior(this.themeClass$);
@@ -43,6 +42,10 @@ export class MainStore {
     showWidgetToolbar = () => this.isWidgetToolbarOpen$.next(true);
     closeWidgetToolbar = () => this.isWidgetToolbarOpen$.next(false);
     toggleWidgetToolbar = () => this.isWidgetToolbarOpen$.next(!this.isWidgetToolbarOpen$.value);
+
+    isWidgetSwitcherVisible = () => asBehavior(this.isWidgetSwitcherVisible$);
+    showWidgetSwitcher = () => this.isWidgetSwitcherVisible$.next(true);
+    hideWidgetSwitcher = () => this.isWidgetSwitcherVisible$.next(false);
 
     isAboutVisible = () => asBehavior(this.isAboutVisible$);
     showAboutDialog = () => this.isAboutVisible$.next(true);
