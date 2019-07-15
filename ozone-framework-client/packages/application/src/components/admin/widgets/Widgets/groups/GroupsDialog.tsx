@@ -5,7 +5,7 @@ import { classNames } from "../../../../../utility";
 
 import { Group } from "../../../../../models/Group";
 import { mainStore } from "../../../../../stores/MainStore";
-import { GenericTable } from "../../../../generic-table/GenericTable";
+import { ColumnTabulator, GenericTable } from "../../../../generic-table/GenericTable";
 import * as styles from "./GroupsDialog.scss";
 
 interface State {
@@ -44,18 +44,12 @@ export class GroupsDialog extends React.Component<Props, State> {
                         <GenericTable
                             title="Groups"
                             items={this.props.allGroups}
-                            getColumns={() => [
-                                {
-                                    Header: "Name",
-                                    id: "name",
-                                    accessor: (group: Group) => group.name
-                                },
-                                {
-                                    Header: "Description",
-                                    id: "description",
-                                    accessor: (group: Group) => group.description
-                                }
-                            ]}
+                            getColumns={() =>
+                                [
+                                    { title: "Name", field: "name" },
+                                    { title: "Description", field: "description" }
+                                ] as ColumnTabulator[]
+                            }
                             multiSelection={true}
                             onSelectionChange={(selections: Group[]) => {
                                 this.setState({

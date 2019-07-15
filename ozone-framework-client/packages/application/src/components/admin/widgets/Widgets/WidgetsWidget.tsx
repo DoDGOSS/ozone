@@ -9,13 +9,14 @@ import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 
-import { GenericTable } from "../../../generic-table/GenericTable";
+import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 import { EditMenu } from "./export/EditMenu";
 import { ExportDialog } from "./export/ExportDialog";
 import { ExportErrorDialog } from "./export/ExportErrorDialog";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { WidgetSetup } from "./WidgetSetup";
+import { GroupDTO } from "../../../../api/models/GroupDTO";
 
 interface WidgetsWidgetState {
     widgets: WidgetDTO[];
@@ -74,8 +75,8 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                         <GenericTable
                             items={this.state.widgets}
                             getColumns={this.columns}
-                            reactTableProps={{
-                                defaultPageSize: this.defaultPageSize
+                            tableProps={{
+                                paginationSize: this.defaultPageSize
                             }}
                         />
                         <div className={styles.buttonBar}>
@@ -110,47 +111,52 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
 
     private columns = () => {
         return [
-            { Header: "Title", id: "title", accessor: (widget: WidgetDTO) => widget.value.namespace },
-            { Header: "URL", id: "url", accessor: (widget: WidgetDTO) => widget.value.url },
-            { Header: "Users", id: "users", accessor: (widget: WidgetDTO) => widget.value.totalUsers },
-            { Header: "Groups", id: "groups", accessor: (widget: WidgetDTO) => widget.value.totalGroups },
+            { title: "Title", field: "value.namespace" },
+            { title: "URL", field: "value.url" },
+            { title: "Users", field: "value.totalUsers" },
+            { title: "Groups", field: "value.totalGroups" },
             // TODO - Abstract this to only have to provide onclick function name with styled buttons
             {
-                Header: "Actions",
-                Cell: (row: { original: WidgetDTO }) => (
-                    <div>
-                        <ButtonGroup>
-                            <EditButton
-                                itemName={row.original.value.namespace}
-                                onClick={() => {
-                                    this.setState({ updatingWidget: row.original });
-                                    this.showSubSection(WidgetWidgetSubSection.SETUP);
-                                }}
-                            />
-                            <Popover content={this.renderEditMenu(row.original)} position={Position.BOTTOM_RIGHT}>
-                                <Button
-                                    data-element-id="edit-menu-button"
-                                    data-widget-title={row.original.value.namespace ? row.original.value.namespace : ""}
-                                    rightIcon="caret-down"
-                                    intent={Intent.PRIMARY}
+                title: "Actions",
+                width: 180,
+                formatter: (row: any) => {
+                    const data: WidgetDTO = row.cell._cell.row.data;
+                    return (
+                        <div>
+                            <ButtonGroup>
+                                <EditButton
+                                    itemName={data.value.namespace}
+                                    onClick={() => {
+                                        this.setState({ updatingWidget: data });
+                                        this.showSubSection(WidgetWidgetSubSection.SETUP);
+                                    }}
                                 />
-                            </Popover>
-                            <Divider />
-                            <Tooltip
-                                disabled={!this.widgetPotentiallyInUse(row.original)}
-                                content={"Can't delete widget with assigned users or groups"}
-                            >
-                                <DeleteButton
-                                    itemName={row.original.value.namespace}
-                                    disabled={this.widgetPotentiallyInUse(row.original)}
-                                    onClick={() => this.confirmAndDeleteWidget(row.original)}
-                                />
-                            </Tooltip>
-                        </ButtonGroup>
-                    </div>
-                )
+                                <Popover content={this.renderEditMenu(data)} position={Position.BOTTOM_RIGHT}>
+                                    <Button
+                                        data-element-id="edit-menu-button"
+                                        data-widget-title={data.value.namespace ? data.value.namespace : ""}
+                                        rightIcon="caret-down"
+                                        intent={Intent.PRIMARY}
+                                        small={true}
+                                    />
+                                </Popover>
+                                <Divider />
+                                <Tooltip
+                                    disabled={!this.widgetPotentiallyInUse(data)}
+                                    content={"Can't delete widget with assigned users or groups"}
+                                >
+                                    <DeleteButton
+                                        itemName={data.value.namespace}
+                                        disabled={this.widgetPotentiallyInUse(data)}
+                                        onClick={() => this.confirmAndDeleteWidget(data)}
+                                    />
+                                </Tooltip>
+                            </ButtonGroup>
+                        </div>
+                    );
+                }
             }
-        ];
+        ] as ColumnTabulator[];
     };
 
     private widgetPotentiallyInUse(widget: WidgetDTO): boolean {

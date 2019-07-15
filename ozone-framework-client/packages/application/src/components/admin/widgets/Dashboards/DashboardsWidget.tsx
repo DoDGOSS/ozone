@@ -1,13 +1,12 @@
 import * as React from "react";
 
 import { Button, ButtonGroup, Divider, Intent } from "@blueprintjs/core";
-import { Column } from "react-table";
 
 import { stackApi } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";
 
+import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
-import { GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 
 import { StackSetup } from "./StackSetup";
@@ -55,6 +54,8 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
         this.getStacks();
     }
 
+    componentWillUnmount() {}
+
     render() {
         const showTable = this.state.showTable;
         const showStackSetup = this.state.showStackSetup;
@@ -67,9 +68,9 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
                             title={"Stacks"}
                             items={this.state.stacks}
                             getColumns={() => this.getTableColumns()}
-                            reactTableProps={{
+                            tableProps={{
                                 loading: this.state.loading,
-                                defaultPageSize: this.defaultPageSize
+                                paginationSize: this.defaultPageSize
                             }}
                         />
                         <div className={styles.buttonBar}>
@@ -121,44 +122,45 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
         this.getStacks();
     }
 
-    private getTableColumns(): Column[] {
+    private getTableColumns(): ColumnTabulator[] {
         return [
-            { Header: "Title", accessor: "name" },
-            { Header: "Dashboards", accessor: "totalDashboards" },
-            { Header: "Widgets", accessor: "totalWidgets" },
-            { Header: "Groups", accessor: "totalGroups" },
-            { Header: "Users", accessor: "totalUsers" },
+            { title: "Title", field: "name" },
+            { title: "Dashboards", field: "totalDashboards" },
+            { title: "Widgets", field: "totalWidgets" },
+            { title: "Groups", field: "totalGroups" },
+            { title: "Users", field: "totalUsers" },
             {
-                Header: "Actions",
-                Cell: (row: { original: StackDTO }) => (
-                    <ButtonGroup data-role="dashboard-admin-widget-actions" data-dashboardname={row.original.name}>
-                        <EditButton
-                            onClick={() => {
-                                this.setState({ updatingStack: row.original });
-                                this.showSubSection(StackWidgetSubSection.SETUP);
-                            }}
-                        />
-                        <Divider />
-                        <Button
-                            data-element-id={"dashboard-admin-widget-assign-to-me"}
-                            text="Assign To Me"
-                            intent={Intent.SUCCESS}
-                            icon="following"
-                            small={true}
-                            onClick={() => {
-                                console.log("Unimplemented: should assign ", row.original, "to current user (you).");
-                            }}
-                            data-widget-name={row.original.name}
-                        />
-                        <Divider />
-                        <DeleteButton
-                            onClick={() => this.confirmDeleteStack(row.original)}
-                            itemName={row.original.name}
-                        />
-                    </ButtonGroup>
-                )
+                title: "Actions",
+                width: 300,
+                formatter: (row: { cell: { _cell: { row: { data: StackDTO } } } }) => {
+                    const data: StackDTO = row.cell._cell.row.data;
+                    return (
+                        <ButtonGroup data-role="dashboard-admin-widget-actions" data-dashboardname={data.name}>
+                            <EditButton
+                                onClick={() => {
+                                    this.setState({ updatingStack: data });
+                                    this.showSubSection(StackWidgetSubSection.SETUP);
+                                }}
+                            />
+                            <Divider />
+                            <Button
+                                data-element-id={"dashboard-admin-widget-assign-to-me"}
+                                text="Assign To Me"
+                                intent={Intent.SUCCESS}
+                                icon="following"
+                                small={true}
+                                onClick={() => {
+                                    console.log("Unimplemented: should assign ", data, "to current user (you).");
+                                }}
+                                data-widget-name={data.name}
+                            />
+                            <Divider />
+                            <DeleteButton onClick={() => this.confirmDeleteStack(data)} itemName={data.name} />
+                        </ButtonGroup>
+                    );
+                }
             }
-        ];
+        ] as ColumnTabulator[];
     }
 
     private confirmDeleteStack = async (stack: StackDTO) => {

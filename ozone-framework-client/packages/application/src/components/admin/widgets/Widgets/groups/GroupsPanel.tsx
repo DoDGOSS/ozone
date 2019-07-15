@@ -9,8 +9,9 @@ import { Group } from "../../../../../models/Group";
 import { GroupDTO } from "../../../../../api/models/GroupDTO";
 import { groupFromJson } from "../../../../../codecs/Group.codec";
 import { WidgetDTO } from "../../../../../api/models/WidgetDTO";
-import { GenericTable } from "../../../../generic-table/GenericTable";
+import { ColumnTabulator, GenericTable } from "../../../../generic-table/GenericTable";
 import { GroupsDialog } from "./GroupsDialog";
+import { StackDTO } from "../../../../../api/models/StackDTO";
 
 interface State {
     loading: boolean;
@@ -128,26 +129,32 @@ export class GroupsPanel extends React.Component<Props, State> {
         return (
             <GenericTable
                 items={this.state.widgetGroups}
-                getColumns={() => [
-                    { Header: "Name", id: "name", accessor: (group: Group) => group.name },
-                    { Header: "Description", id: "description", accessor: (group: Group) => group.description },
-                    {
-                        Header: "Remove",
-                        Cell: (row: { original: Group }) => (
-                            <ButtonGroup>
-                                <Button
-                                    data-element-id="widget-admin-group-remove-button"
-                                    data-widget-title={row.original.name}
-                                    text={"Remove"}
-                                    intent={Intent.DANGER}
-                                    icon="trash"
-                                    small={true}
-                                    onClick={() => this.confirmAndDeleteGroup(row.original)}
-                                />
-                            </ButtonGroup>
-                        )
-                    }
-                ]}
+                getColumns={() =>
+                    [
+                        { title: "Name", field: "name", width: 300 },
+                        { title: "Description", field: "description", width: 300 },
+                        {
+                            title: "Remove",
+                            width: 90,
+                            formatter: (row: any) => {
+                                const data: Group = row.cell._cell.row.data;
+                                return (
+                                    <ButtonGroup>
+                                        <Button
+                                            data-element-id="widget-admin-group-remove-button"
+                                            data-widget-title={data.name}
+                                            text={"Remove"}
+                                            intent={Intent.DANGER}
+                                            icon="trash"
+                                            small={true}
+                                            onClick={() => this.confirmAndDeleteGroup(data)}
+                                        />
+                                    </ButtonGroup>
+                                );
+                            }
+                        }
+                    ] as ColumnTabulator[]
+                }
             />
         );
     }
