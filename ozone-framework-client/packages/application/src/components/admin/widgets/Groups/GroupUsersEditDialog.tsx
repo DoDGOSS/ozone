@@ -3,6 +3,7 @@ import * as React from "react";
 import { SelectionDialogProps, TableSelectionDialog } from "../../../table-selection-dialog/TableSelectionDialog";
 import { userApi } from "../../../../api/clients/UserAPI";
 import { UserDTO } from "../../../../api/models/UserDTO";
+import { ColumnTabulator } from "../../../generic-table/GenericTable";
 
 export class GroupUsersEditDialog extends React.Component<SelectionDialogProps<UserDTO>> {
     constructor(props: SelectionDialogProps<UserDTO>) {
@@ -15,15 +16,17 @@ export class GroupUsersEditDialog extends React.Component<SelectionDialogProps<U
                 title="Add User(s) to Group"
                 show={this.props.show}
                 getItems={this.getAllUsers}
-                columns={[
-                    { Header: "Name", accessor: "userRealName" },
-                    { Header: "Username", accessor: "username" },
-                    { Header: "Email", accessor: "email" },
-                    { Header: "Groups", accessor: "totalGroups" },
-                    { Header: "Widgets", accessor: "totalWidgets" },
-                    { Header: "Dashboards", accessor: "totalDashboards" },
-                    { Header: "Last Login", accessor: "lastLogin" }
-                ]}
+                columns={
+                    [
+                        { title: "Name", field: "userRealName" },
+                        { title: "Username", field: "username" },
+                        { title: "Email", field: "email" },
+                        { title: "Groups", field: "totalGroups" },
+                        { title: "Widgets", field: "totalWidgets" },
+                        { title: "Dashboards", field: "totalDashboards" },
+                        { title: "Last Login", field: "lastLogin" }
+                    ] as ColumnTabulator[]
+                }
                 onSubmit={this.props.onSubmit}
                 onClose={this.props.onClose}
             />

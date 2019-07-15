@@ -36,25 +36,6 @@
   width: calc(100% - 170px);
 }
 
- .bp3-dark > .pagination-bottom > .-pagination > .-previous > button,
- .bp3-dark > .pagination-bottom > .-pagination > .-center > span > .-pageJump > input,
- .bp3-dark > .pagination-bottom > .-pagination > .-next > button,
- .bp3-dark > .pagination-bottom > .-pagination > .-center > span > select,
- .bp3-dark > .rt-table > .rt-thead >.rt-tr > .rt-th > div > div > input
-        {
-          color:$text-color_dark;
-          background-color: $background-color_dark;
-        }
-
- .bp3-dark > .rt-table > .rt-thead >.rt-tr > .rt-th > div > div > input,
-  .rt-noData{
-   border:.5px solid $text-color_dark;
-   padding:.4em;
-   border-radius: 5px;
-   color:$text-color_dark;
-   background-color: $background-color_dark;
- }
-
 //chrome scroll bar fix
  /* width */
  ::-webkit-scrollbar {

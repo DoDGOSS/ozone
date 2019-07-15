@@ -2,6 +2,7 @@ import { SelectionDialogProps, TableSelectionDialog } from "../../../table-selec
 import { userApi } from "../../../../api/clients/UserAPI";
 import { UserDTO } from "../../../../api/models/UserDTO";
 import React from "react";
+import { ColumnTabulator } from "../../../generic-table/GenericTable";
 
 export class StackUsersEditDialog extends React.Component<SelectionDialogProps<UserDTO>> {
     constructor(props: SelectionDialogProps<UserDTO>) {
@@ -14,15 +15,17 @@ export class StackUsersEditDialog extends React.Component<SelectionDialogProps<U
                 title="Add Users(s) to Stack"
                 show={this.props.show}
                 getItems={this.dataLoader}
-                columns={[
-                    { Header: "Name", id: "userRealName", accessor: (user: UserDTO) => user.userRealName },
-                    { Header: "UserName", id: "username", accessor: (user: UserDTO) => user.username },
-                    { Header: "Email", id: "email", accessor: (user: UserDTO) => user.email },
-                    { Header: "Stacks", id: "totalStacks", accessor: (user: UserDTO) => user.totalStacks },
-                    { Header: "Widgets", id: "totalWidgets", accessor: (user: UserDTO) => user.totalWidgets },
-                    { Header: "Dashboards", id: "totalDashboards", accessor: (user: UserDTO) => user.totalDashboards },
-                    { Header: "Last Login", id: "lastLogin", accessor: (user: UserDTO) => user.lastLogin }
-                ]}
+                columns={
+                    [
+                        { title: "Name", field: "userRealName" },
+                        { title: "UserName", field: "username" },
+                        { title: "Email", field: "email" },
+                        { title: "Stacks", field: "totalStacks" },
+                        { title: "Widgets", field: "totalWidgets" },
+                        { title: "Dashboards", field: "totalDashboards" },
+                        { title: "Last Login", field: "lastLogin" }
+                    ] as ColumnTabulator[]
+                }
                 onSubmit={this.props.onSubmit}
                 onClose={this.props.onClose}
             />

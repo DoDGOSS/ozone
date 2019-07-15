@@ -1,9 +1,8 @@
 import * as React from "react";
 
-import { Column } from "react-table";
 import { Button, Classes, Dialog } from "@blueprintjs/core";
 
-import { GenericTable } from "../generic-table/GenericTable";
+import { ColumnTabulator, GenericTable } from "../generic-table/GenericTable";
 import { mainStore } from "../../stores/MainStore";
 import { classNames } from "../../utility";
 
@@ -26,7 +25,7 @@ class TableSelectionDialogProps<T> extends SelectionDialogProps<T> {
     title?: string; /** title for the dialog */
     items?: Array<T>; /** available items for the displayed table */
     getItems?: () => Promise<Array<T>>; /** available items for the displayed table */
-    columns: Column<any>[]; /** react-table Column definition for the displayed table */
+    columns: ColumnTabulator<T>[]; /** react-tabulator Column definition for the displayed table */
 }
 
 /**
@@ -43,7 +42,8 @@ export abstract class TableSelectionDialog<T> extends React.Component<
     TableSelectionDialogState<T>
 > {
     defaultPageSize: number = 5;
-    constructor(props: TableSelectionDialogProps<T>) {
+
+    protected constructor(props: TableSelectionDialogProps<T>) {
         super(props);
 
         this.state = {
@@ -78,9 +78,9 @@ export abstract class TableSelectionDialog<T> extends React.Component<
                                 getColumns={() => this.props.columns}
                                 multiSelection={true}
                                 onSelectionChange={this.setSelected}
-                                reactTableProps={{
+                                tableProps={{
                                     loading: this.state.loading,
-                                    pageSize: this.defaultPageSize
+                                    paginationSize: this.defaultPageSize
                                 }}
                             />
                         </div>
