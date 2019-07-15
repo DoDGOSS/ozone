@@ -3,6 +3,7 @@ import * as React from "react";
 import { SelectionDialogProps, TableSelectionDialog } from "../../../table-selection-dialog/TableSelectionDialog";
 import { stackApi } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";
+import { ColumnTabulator } from "../../../generic-table/GenericTable";
 
 export class UserStacksEditDialog extends React.Component<SelectionDialogProps<StackDTO>> {
     constructor(props: SelectionDialogProps<StackDTO>) {
@@ -15,13 +16,15 @@ export class UserStacksEditDialog extends React.Component<SelectionDialogProps<S
                 title="Add Stack(s) to User"
                 show={this.props.show}
                 getItems={this.getAllStacks}
-                columns={[
-                    { Header: "Title", accessor: "name" },
-                    { Header: "Pages (Dashboards)", accessor: "totalDashboards" },
-                    { Header: "Widgets", accessor: "totalWidgets" },
-                    { Header: "Groups", accessor: "totalGroups" },
-                    { Header: "Users", accessor: "totalUsers" }
-                ]}
+                columns={
+                    [
+                        { title: "Title", field: "name" },
+                        { title: "Pages (Dashboards)", field: "totalDashboards" },
+                        { title: "Widgets", field: "totalWidgets" },
+                        { title: "Groups", field: "totalGroups" },
+                        { title: "Users", field: "totalUsers" }
+                    ] as ColumnTabulator[]
+                }
                 onSubmit={this.props.onSubmit}
                 onClose={this.props.onClose}
             />

@@ -2,9 +2,8 @@ import * as styles from "../Widgets.scss";
 
 import * as React from "react";
 import { Button, ButtonGroup } from "@blueprintjs/core";
-import { Column } from "react-table";
 
-import { GenericTable } from "../../../generic-table/GenericTable";
+import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton } from "../../../generic-table/TableButtons";
 import { UserGroupsEditDialog } from "./UserGroupsEditDialog";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
@@ -47,9 +46,9 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
                     title={"Groups"}
                     items={this.state.groups}
                     getColumns={() => this.getColumns()}
-                    reactTableProps={{
+                    tableProps={{
                         loading: this.state.loading,
-                        defaultPageSize: this.defaultPageSize
+                        paginationSize: this.defaultPageSize
                     }}
                 />
 
@@ -70,23 +69,27 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
         );
     }
 
-    getColumns(): Column[] {
+    getColumns(): ColumnTabulator[] {
         return [
-            { Header: "Group Name", accessor: "name" },
-            { Header: "Users", accessor: "totalUsers" },
-            { Header: "Widgets", accessor: "totalWidgets" },
-            { Header: "Dashboards", accessor: "totalDashboards" },
+            { title: "Group Name", field: "name" },
+            { title: "Users", field: "totalUsers" },
+            { title: "Widgets", field: "totalWidgets" },
+            { title: "Dashboards", field: "totalDashboards" },
             {
-                Header: "Actions",
-                Cell: (row: { original: GroupDTO }) => (
-                    <div>
-                        <ButtonGroup>
-                            <DeleteButton onClick={() => this.confirmDeleteGroup(row.original)} />
-                        </ButtonGroup>
-                    </div>
-                )
+                title: "Actions",
+                width: 90,
+                formatter: (row: any) => {
+                    const data: GroupDTO = row.cell._cell.row.data;
+                    return (
+                        <div>
+                            <ButtonGroup>
+                                <DeleteButton onClick={() => this.confirmDeleteGroup(data)} />
+                            </ButtonGroup>
+                        </div>
+                    );
+                }
             }
-        ];
+        ] as ColumnTabulator[];
     }
 
     private showAdd() {

@@ -10,6 +10,7 @@ import { UserDTO } from "../../../../api/models/UserDTO";
 import { stackApi } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";
 import { userApi, UserQueryCriteria } from "../../../../api/clients/UserAPI";
+import {ColumnTabulator} from "../../../generic-table/GenericTable";
 
 interface StackEditUsersProps {
     onUpdate: (update?: any) => void;
@@ -32,33 +33,37 @@ export interface StackEditUsersState {
 export class StackUsersPanel extends React.Component<StackEditUsersProps, StackEditUsersState> {
     private readonly USERS_COLUMN_DEFINITION = [
         {
-            Header: "Users",
+            title: "Users",
             columns: [
-                { Header: "Name", accessor: "userRealName" },
-                { Header: "Username", accessor: "username" },
-                { Header: "Email", accessor: "email" },
-                { Header: "Stacks", accessor: "totalStacks" },
-                { Header: "Widgets", accessor: "totalWidgets" },
-                { Header: "Dashboards", accessor: "totalDashboards" },
-                { Header: "Last Login", accessor: "lastLogin" }
-            ]
+                { title: "Name", field: "userRealName" },
+                { title: "Username", field: "username" },
+                { title: "Email", field: "email" },
+                { title: "Stacks", field: "totalStacks" },
+                { title: "Widgets", field: "totalWidgets" },
+                { title: "Dashboards", field: "totalDashboards" },
+                { title: "Last Login", field: "lastLogin" }
+            ] as ColumnTabulator[]
         },
         {
-            Header: "Actions",
-            Cell: (row: any) => (
-                <div>
-                    <ButtonGroup data-role="dashboard-admin-widget-user-actions" data-username={row.original.username}>
-                        <Button
-                            data-element-id="dashboard-admin-widget-delete-user-button"
-                            text="Delete"
-                            intent={Intent.DANGER}
-                            icon="trash"
-                            small={true}
-                            onClick={() => this.deleteUser(row.original)}
-                        />
-                    </ButtonGroup>
-                </div>
-            )
+            title: "Actions",
+            width: 90,
+            formatter: (row: any) => {
+                const data: any = row.cell._cell.row.data;
+                return (
+                    <div>
+                        <ButtonGroup data-role="dashboard-admin-widget-user-actions" data-username={data.username}>
+                            <Button
+                                data-element-id="dashboard-admin-widget-delete-user-button"
+                                text="Delete"
+                                intent={Intent.DANGER}
+                                icon="trash"
+                                small={true}
+                                onClick={() => this.deleteUser(data)}
+                            />
+                        </ButtonGroup>
+                    </div>
+                );
+            }
         }
     ];
 
