@@ -54,8 +54,6 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
         this.getStacks();
     }
 
-    componentWillUnmount() {}
-
     render() {
         const showTable = this.state.showTable;
         const showStackSetup = this.state.showStackSetup;
