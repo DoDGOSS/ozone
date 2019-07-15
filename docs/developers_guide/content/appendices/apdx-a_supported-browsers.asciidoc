@@ -1,2 +1,0 @@
-[appendix]
-= Supported Browsers

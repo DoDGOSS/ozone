@@ -50,13 +50,7 @@ include::sections/XX_state-api.asciidoc[]
 
 include::../../common/glossary.asciidoc[]
 
-include::appendices/apdx-a_supported-browsers.asciidoc[]
-
-include::appendices/apdx-b_known-issues.asciidoc[]
-
-include::appendices/apdx-c_jvm-compatability.asciidoc[]
-
-include::appendices/apdx-d_dependency-versions.asciidoc[]
+include::appendices/apdx-a_war-deployment.asciidoc[]
 
 :leveloffset: -1
 
