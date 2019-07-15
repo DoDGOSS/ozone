@@ -44,7 +44,7 @@ export class AdminTable extends React.Component<AdminTableProps, {}> {
     private buildTableProps(): Object {
         return {
             height: "100%",
-            layout:"fitDataFill",
+            layout: "fitDataFill",
             layoutColumnsOnNewData: true,
             responsiveLayout: "collapse",
             pagination: "local",
@@ -52,7 +52,7 @@ export class AdminTable extends React.Component<AdminTableProps, {}> {
             paginationSizeSelector: PAGE_SIZE_OPTIONS,
             placeholder: "No Data Available",
             selectable: "highlight",
-            autoResize: true,
+            autoResize: true
         };
     }
 
