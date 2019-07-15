@@ -301,9 +301,11 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
                 width: 280,
                 formatter: (row: any) => {
                     const data: any = row.cell._cell.row.getData();
-                    return data.hasOwnProperty("intents")
-                        ? <strong>{data.action}</strong>
-                        : <div style={{ marginLeft: "15px" }}>{data.dataType}</div>;
+                    return data.hasOwnProperty("intents") ? (
+                        <strong>{data.action}</strong>
+                    ) : (
+                        <div style={{ marginLeft: "15px" }}>{data.dataType}</div>
+                    );
                 }
             },
             {

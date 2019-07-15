@@ -10,7 +10,7 @@ import { UserDTO } from "../../../../api/models/UserDTO";
 import { stackApi } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";
 import { userApi, UserQueryCriteria } from "../../../../api/clients/UserAPI";
-import {ColumnTabulator} from "../../../generic-table/GenericTable";
+import { ColumnTabulator } from "../../../generic-table/GenericTable";
 
 interface StackEditUsersProps {
     onUpdate: (update?: any) => void;

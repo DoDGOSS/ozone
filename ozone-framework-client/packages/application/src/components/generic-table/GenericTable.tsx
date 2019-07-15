@@ -8,8 +8,8 @@ import "react-tabulator/css/bootstrap/tabulator_bootstrap4.min.css";
 // @ts-ignore
 import { reactFormatter, ReactTabulator } from "react-tabulator";
 
-import {classNames, isFunction} from "../../utility";
-import {mainStore} from "../../stores/MainStore";
+import { classNames, isFunction } from "../../utility";
+import { mainStore } from "../../stores/MainStore";
 
 interface Props<T> {
     getColumns: () => ColumnTabulator[];
@@ -68,25 +68,6 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         this.searchCaseSensitive = props.searchCaseSensitive ? props.searchCaseSensitive : false;
     }
 
-    private buildTableProps(): Object {
-        const options = {
-            height: "100%",
-            layout:"fitDataFill",
-            layoutColumnsOnNewData: true,
-            responsiveLayout: "collapse",
-            pagination: "local",
-            paginationSize: DEFAULT_PAGE_SIZE,
-            paginationSizeSelector: PAGE_SIZE_OPTIONS,
-            placeholder: "No Data Available",
-            selectable: "highlight",
-            autoResize: true,
-        };
-
-        return this.props.tableProps
-            ? { ...options, ...this.props.tableProps }
-            : options;
-    }
-
     render() {
         return (
             <div ref={(tableDiv) => this.setTableWidth(tableDiv)}>
@@ -103,6 +84,23 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                 </div>
             </div>
         );
+    }
+
+    private buildTableProps(): Object {
+        const options = {
+            height: "100%",
+            layout: "fitDataFill",
+            layoutColumnsOnNewData: true,
+            responsiveLayout: "collapse",
+            pagination: "local",
+            paginationSize: DEFAULT_PAGE_SIZE,
+            paginationSizeSelector: PAGE_SIZE_OPTIONS,
+            placeholder: "No Data Available",
+            selectable: "highlight",
+            autoResize: true
+        };
+
+        return this.props.tableProps ? { ...options, ...this.props.tableProps } : options;
     }
 
     /**
@@ -172,7 +170,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
 
     private columnAccessorMatchesQuery(item: T, query: string, column: ColumnTabulator) {
         if (column.hasOwnProperty("field") && column.field) {
-            let valueInColumnForItem: any = this.getAttributeUsingStringAccessor(item, column.field);
+            const valueInColumnForItem: any = this.getAttributeUsingStringAccessor(item, column.field);
             let safeValueInColumn = "";
             if (valueInColumnForItem !== undefined && valueInColumnForItem !== null) {
                 safeValueInColumn = valueInColumnForItem.toString();
@@ -236,15 +234,12 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                 selectionsAsRows.push(item);
             }
 
-            this.setState({
-                selections: selections,
-                selectionsAsRows: selectionsAsRows
-            });
+            this.setState({ selections, selectionsAsRows });
             this.props.onSelectionChange(this.state.selections);
 
             // select rows based on selection for view.
             this.state.selectionsAsRows.map((row: any) => {
-                let index = row.getIndex();
+                const index = row.getIndex();
                 row.getTable().selectRow(index);
             });
         } else if (this.props.onSelect !== undefined) {
@@ -254,7 +249,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
             this.props.onSelect(newItem);
 
             // select rows based on selection for view.
-            let index = item.getIndex();
+            const index = item.getIndex();
             item.getTable().selectRow(index);
         }
     }
