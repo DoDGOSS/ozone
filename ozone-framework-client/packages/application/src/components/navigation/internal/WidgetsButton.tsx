@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { Button } from "@blueprintjs/core";
 
 import { useBehavior } from "../../../hooks";
-import { Hotkey, useHotkey } from "../../../shared/hotkeys";
+import { Shortcuts, useHotkey } from "../../../shared/hotkeys";
 import { mainStore } from "../../../stores/MainStore";
 
 import { NavbarTooltip } from "./NavbarTooltip";
@@ -18,12 +18,12 @@ const _WidgetsButton: React.FC<WidgetsButtonProps> = ({ isLocked }) => {
         if (!isLocked) mainStore.toggleWidgetToolbar();
     }, [isLocked]);
 
-    useHotkey({ combo: Hotkey.showWidgets, onKeyDown: toggleWidgetToolbar });
+    useHotkey({ combo: Shortcuts.showWidgets, onKeyDown: toggleWidgetToolbar });
 
     return (
         <NavbarTooltip
             title="Widgets"
-            shortcut={Hotkey.showWidgets}
+            shortcut={Shortcuts.showWidgets}
             description="Open or close the Widgets toolbar to add Widgets to your Dashboard."
             disabled={isLocked}
         >

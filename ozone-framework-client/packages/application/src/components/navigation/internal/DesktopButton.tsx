@@ -1,17 +1,17 @@
 import React, { useCallback } from "react";
 import { Button } from "@blueprintjs/core";
 
-import { Hotkey, useHotkey } from "../../../shared/hotkeys";
+import { Shortcuts, useHotkey } from "../../../shared/hotkeys";
 
 import { NavbarTooltip } from "./NavbarTooltip";
 
 const _DesktopButton: React.FC = () => {
     const showDesktop = useCallback(() => null, []);
 
-    useHotkey({ combo: Hotkey.showDesktop, onKeyDown: showDesktop });
+    useHotkey({ combo: Shortcuts.showDesktop, onKeyDown: showDesktop });
 
     return (
-        <NavbarTooltip title="OWF" shortcut={Hotkey.showDesktop} description="Refresh Ozone Widget Framework">
+        <NavbarTooltip title="OWF" shortcut={Shortcuts.showDesktop} description="Refresh Ozone Widget Framework">
             <Button minimal icon="page-layout" intent="primary" onClick={showDesktop} data-element-id="owf-button" />
         </NavbarTooltip>
     );

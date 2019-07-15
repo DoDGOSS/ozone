@@ -35,6 +35,7 @@ const _UserMenu: React.FC<UserMenuProps> = ({ user }) => {
                 text="About"
                 onClick={mainStore.showAboutDialog}
             />
+            <Menu.Item className={styles.menuItem} text="Widget Switcher" onClick={mainStore.showWidgetSwitcher} />
             {isLogoutEnabled && (
                 <>
                     <Menu.Divider />

@@ -5,7 +5,9 @@ import { Alignment, Navbar, NavbarDivider, NavbarGroup, NavbarHeading } from "@b
 
 import { PropsBase } from "../../common";
 import { useBehavior } from "../../hooks";
+import { Shortcuts, useHotkey } from "../../shared/hotkeys";
 import { dashboardStore } from "../../stores/DashboardStore";
+import { mainStore } from "../../stores/MainStore";
 import { classNames } from "../../utility";
 
 import {
@@ -24,6 +26,8 @@ import {
 const _NavigationBar: React.FC<PropsBase> = ({ className }) => {
     const dashboard = useBehavior(dashboardStore.currentDashboard);
     const { isLocked } = useBehavior(dashboard.state);
+
+    useHotkey({ combo: Shortcuts.showSwitcher, onKeyDown: mainStore.showWidgetSwitcher });
 
     return (
         <Navbar className={classNames(styles.navbar, className)}>

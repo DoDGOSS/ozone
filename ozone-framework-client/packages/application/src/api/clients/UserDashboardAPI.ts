@@ -23,6 +23,7 @@ export class UserDashboardAPI {
 
     async createDefaultDashboard(): Promise<Response<DashboardDTO>> {
         return this.createDashboard({
+            backgroundWidgets: [],
             name: "Untitled",
             tree: null,
             panels: {},
@@ -41,6 +42,7 @@ export class UserDashboardAPI {
             isdefault: !isNil(opts.isDefault) ? opts.isDefault : false,
             state: [],
             layoutConfig: dashboardLayoutToJson({
+                backgroundWidgets: [],
                 tree: opts.tree || null,
                 panels: opts.panels || {}
             }),

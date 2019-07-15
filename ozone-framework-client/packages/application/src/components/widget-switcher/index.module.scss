@@ -1,0 +1,68 @@
+@import "../../common";
+
+.dialog {
+    width: auto;
+    padding: 0;
+
+    min-width: 300px;
+}
+
+.tileContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 120px;
+    margin: 0 0.25rem 0 0.25rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+
+    &:hover {
+        background: $hover-color_light;
+    }
+
+    :global(.#{$dark-theme}) & {
+        &:hover {
+            background: $hover-color_dark;
+        }
+    }
+}
+
+.tileButton {
+    border: none;
+    background: none;
+    outline: none;
+}
+
+.tileIcon {
+    width: 64px;
+    height: 64px;
+}
+
+.tileTitle {
+    width:120px;
+    margin-top: 0.25rem;
+    color: $text-color_light;
+    font-weight: 600;
+    text-align: center;
+
+    :global(.#{$dark-theme}) & {
+        color: $text-color_dark;
+    }
+}
+
+.zeroState {
+    font-style: italic;
+    text-align: center;
+    color: lighten($text-color_light, 20%);
+
+    :global(.#{$dark-theme}) & {
+        color: darken($text-color_dark, 20%);
+    }
+}
