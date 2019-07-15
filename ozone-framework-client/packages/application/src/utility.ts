@@ -109,6 +109,10 @@ export function some<T>(collection: T[], predicate: Predicate<T>): boolean {
     return false;
 }
 
+export function hasSameId<T>(a: { id: T }): Predicate<{ id: T }> {
+    return (b: { id: T }) => a.id === b.id;
+}
+
 export function omitIndex<T>(array: T[], index: number): T[] {
     const result: T[] = [];
     for (let i = 0; i < array.length; i++) {
@@ -138,6 +142,25 @@ export function orNull<T extends any>(value: T | null | undefined): T | null {
  */
 export function values<T>(obj: Dictionary<T> | NumericDictionary<T>): T[] {
     return _values(obj);
+}
+
+type Collection<T> = Array<T> | Dictionary<T> | NumericDictionary<T>;
+
+type Iteratee<T, R> = (value: T) => R;
+
+export function flatMap<T, R>(collection: Collection<T>, iteratee: Iteratee<T, R | R[]>): R[] {
+    const array = isArray(collection) ? collection : Object.values(collection);
+
+    const results: R[] = [];
+    for (const value of array) {
+        const mapped = iteratee(value);
+        if (isArray(mapped)) {
+            results.push(...mapped);
+        } else {
+            results.push(mapped);
+        }
+    }
+    return results;
 }
 
 export function isFunction(f: any) {

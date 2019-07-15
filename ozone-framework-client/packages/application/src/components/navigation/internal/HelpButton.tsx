@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@blueprintjs/core";
 
 import { useBehavior } from "../../../hooks";
-import { Hotkey, useHotkey } from "../../../shared/hotkeys";
+import { Shortcuts, useHotkey } from "../../../shared/hotkeys";
 import { mainStore } from "../../../stores/MainStore";
 
 import { NavbarTooltip } from "./NavbarTooltip";
@@ -10,10 +10,10 @@ import { NavbarTooltip } from "./NavbarTooltip";
 const _HelpButton: React.FC = () => {
     const isVisible = useBehavior(mainStore.isHelpDialogVisible);
 
-    useHotkey({ combo: Hotkey.showHelp, onKeyDown: mainStore.showHelpDialog });
+    useHotkey({ combo: Shortcuts.showHelp, onKeyDown: mainStore.showHelpDialog });
 
     return (
-        <NavbarTooltip title="Help" shortcut={Hotkey.showHelp} description="Show the Help window.">
+        <NavbarTooltip title="Help" shortcut={Shortcuts.showHelp} description="Show the Help window.">
             <Button minimal icon="help" active={isVisible} onClick={mainStore.showHelpDialog} />
         </NavbarTooltip>
     );

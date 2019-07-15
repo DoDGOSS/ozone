@@ -2,13 +2,12 @@ import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
 import { Gateway, getGateway } from "../api/interfaces";
-
 import { AuthUserDTO } from "../api/models/AuthUserDTO";
+import { AuthenticationError } from "../api/errors";
+import { env, logoutUrl } from "../environment";
+import { isNil } from "../utility";
 
 import { mainStore } from "./MainStore";
-import { AuthenticationError } from "../api/errors";
-import { isNil } from "../utility";
-import { env, logoutUrl } from "../environment";
 
 export enum AuthStatus {
     PENDING,

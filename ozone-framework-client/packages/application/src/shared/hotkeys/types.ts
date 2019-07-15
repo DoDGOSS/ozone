@@ -19,11 +19,12 @@ export interface HotkeyOpts {
     stopPropagation?: boolean;
 }
 
-export const Hotkey = {
+export const Shortcuts = {
     showDesktop: "alt+shift+o",
     showHelp: "alt+shift+h",
     showStacks: "alt+shift+c",
     showStore: "alt+shift+m",
+    showSwitcher: "alt+shift+q",
     showWidgets: "alt+shift+f",
     toggleTheme: "alt+shift+t"
 } as const;
