@@ -1,7 +1,7 @@
 import React from "react";
-import { useBehavior } from "../../../hooks";
 import { Button, Popover, Position } from "@blueprintjs/core";
 
+import { useBehavior } from "../../../hooks";
 import { authStore } from "../../../stores/AuthStore";
 
 import { NavbarTooltip } from "./NavbarTooltip";
@@ -15,7 +15,7 @@ const _UserMenuButton: React.FC = () => {
         <NavbarTooltip title="User Profile" description="Open the User Profile options window.">
             <Popover
                 minimal
-                content={<UserMenu />}
+                content={<UserMenu user={user} />}
                 position={Position.BOTTOM_RIGHT}
                 modifiers={{ arrow: { enabled: false } }}
             >
