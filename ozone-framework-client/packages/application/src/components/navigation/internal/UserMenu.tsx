@@ -1,19 +1,21 @@
 import styles from "../index.scss";
 
 import React, { useMemo } from "react";
-
 import { Classes, Menu } from "@blueprintjs/core";
+
+import { AuthUserDTO } from "../../../api/models/AuthUserDTO";
+import { env } from "../../../environment";
 import { mainStore } from "../../../stores/MainStore";
 import { authStore } from "../../../stores/AuthStore";
-
 import { classNames } from "../../../utility";
-import { useBehavior } from "../../../hooks";
-import { env } from "../../../environment";
 
-export const UserMenu: React.FC = () => {
-    const logoutOpts = useMemo(() => env().logout, []);
+export interface UserMenuProps {
+    user: AuthUserDTO | null;
+}
 
-    const user = useBehavior(authStore.user);
+const _UserMenu: React.FC<UserMenuProps> = ({ user }) => {
+    const { isEnabled: isLogoutEnabled } = useMemo(() => env().logout, []);
+
     const isAdmin = user && user.isAdmin;
 
     return (
@@ -33,7 +35,7 @@ export const UserMenu: React.FC = () => {
                 text="About"
                 onClick={mainStore.showAboutDialog}
             />
-            {logoutOpts.isEnabled && (
+            {isLogoutEnabled && (
                 <>
                     <Menu.Divider />
                     <Menu.Item
@@ -48,3 +50,5 @@ export const UserMenu: React.FC = () => {
         </Menu>
     );
 };
+
+export const UserMenu = React.memo(_UserMenu);

@@ -212,9 +212,7 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
 
         this.setState({
             showDelete: true,
-            confirmationMessage: `This action will permanently delete <strong>${
-                user.userRealName
-            }</strong> from the dashboard <strong>${currentStack.name}</strong>`,
+            confirmationMessage: `This action will permanently delete <strong>${user.userRealName}</strong> from the dashboard <strong>${currentStack.name}</strong>`,
             manageUser: user
         });
     };

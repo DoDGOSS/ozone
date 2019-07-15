@@ -61,9 +61,7 @@ describe("User Dashboard API", () => {
 
     let newDashboard: DashboardDTO;
 
-    test(`create a default dashboard and stack - ${
-        UserDashboardAPI.prototype.createDefaultDashboard.name
-    }`, async () => {
+    test(`create a default dashboard and stack - ${UserDashboardAPI.prototype.createDefaultDashboard.name}`, async () => {
         const response = await userDashboardApi.createDefaultDashboard();
         logResponse(response);
 
@@ -72,9 +70,7 @@ describe("User Dashboard API", () => {
         newDashboard = response.data;
     });
 
-    test(`get user dashboards (after creating default) - ${
-        UserDashboardAPI.prototype.getOwnDashboards.name
-    }`, async () => {
+    test(`get user dashboards (after creating default) - ${UserDashboardAPI.prototype.getOwnDashboards.name}`, async () => {
         const response = await userDashboardApi.getOwnDashboards();
         logResponse(response);
 
@@ -91,9 +87,7 @@ describe("User Dashboard API", () => {
         expect(response.status).toEqual(200);
     });
 
-    test(`get user dashboards (after deleting stack) - ${
-        UserDashboardAPI.prototype.getOwnDashboards.name
-    }`, async () => {
+    test(`get user dashboards (after deleting stack) - ${UserDashboardAPI.prototype.getOwnDashboards.name}`, async () => {
         const response = await userDashboardApi.getOwnDashboards();
         logResponse(response);
 

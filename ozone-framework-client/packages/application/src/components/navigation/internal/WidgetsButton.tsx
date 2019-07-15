@@ -1,39 +1,41 @@
-import React from "react";
-import { useBehavior } from "../../../hooks";
+import React, { useCallback } from "react";
 import { Button } from "@blueprintjs/core";
 
-import { dashboardStore } from "../../../stores/DashboardStore";
+import { useBehavior } from "../../../hooks";
+import { Hotkey, useHotkey } from "../../../shared/hotkeys";
 import { mainStore } from "../../../stores/MainStore";
 
 import { NavbarTooltip } from "./NavbarTooltip";
 
-const _WidgetsButton: React.FC = () => {
+export interface WidgetsButtonProps {
+    isLocked: boolean;
+}
+
+const _WidgetsButton: React.FC<WidgetsButtonProps> = ({ isLocked }) => {
     const isActive = useBehavior(mainStore.isWidgetToolbarOpen);
 
-    const dashboard = useBehavior(dashboardStore.currentDashboard);
-    const { isLocked } = useBehavior(dashboard.state);
+    const toggleWidgetToolbar = useCallback(() => {
+        if (!isLocked) mainStore.toggleWidgetToolbar();
+    }, [isLocked]);
 
-    const button = (
-        <Button
-            minimal
-            text="Widgets"
-            icon="widget"
-            active={isActive}
-            disabled={isLocked}
-            onClick={mainStore.toggleWidgetToolbar}
-            data-element-id="widgets-button"
-        />
-    );
+    useHotkey({ combo: Hotkey.showWidgets, onKeyDown: toggleWidgetToolbar });
 
-    return isLocked ? (
-        button
-    ) : (
+    return (
         <NavbarTooltip
             title="Widgets"
-            shortcut="alt+shift+f"
+            shortcut={Hotkey.showWidgets}
             description="Open or close the Widgets toolbar to add Widgets to your Dashboard."
+            disabled={isLocked}
         >
-            {button}
+            <Button
+                minimal
+                text="Widgets"
+                icon="widget"
+                active={isActive}
+                disabled={isLocked}
+                onClick={toggleWidgetToolbar}
+                data-element-id="widgets-button"
+            />
         </NavbarTooltip>
     );
 };

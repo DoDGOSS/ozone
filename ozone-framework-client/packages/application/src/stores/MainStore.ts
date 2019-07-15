@@ -15,7 +15,6 @@ export class MainStore {
     private readonly isCreateStackDialogVisible$ = new BehaviorSubject(false);
     private readonly isStackDialogVisible$ = new BehaviorSubject(false);
     private readonly isHelpDialogVisible$ = new BehaviorSubject(false);
-    private readonly isLoginDialogOpen$ = new BehaviorSubject(false);
     private readonly isUserProfileDialogVisible$ = new BehaviorSubject(false);
     private readonly isWidgetToolbarOpen$ = new BehaviorSubject(false);
 
@@ -52,10 +51,6 @@ export class MainStore {
     isCreateStackDialogVisible = () => asBehavior(this.isCreateStackDialogVisible$);
     showCreateStackDialog = () => this.isCreateStackDialogVisible$.next(true);
     hideCreateStackDialog = () => this.isCreateStackDialogVisible$.next(false);
-
-    isLoginDialogOpen = () => asBehavior(this.isLoginDialogOpen$);
-    showLoginDialog = () => this.isLoginDialogOpen$.next(true);
-    hideLoginDialog = () => this.isLoginDialogOpen$.next(false);
 
     isHelpDialogVisible = () => asBehavior(this.isHelpDialogVisible$);
     showHelpDialog = () => this.isHelpDialogVisible$.next(true);
