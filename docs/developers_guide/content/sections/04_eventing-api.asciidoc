@@ -1,4 +1,4 @@
-include::_variables.asciidoc[]
+include::../_variables.asciidoc[]
 
 = Eventing API
 
