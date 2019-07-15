@@ -1,0 +1,65 @@
+include::../_variables.asciidoc[]
+
+[#war-deployment]
+[appendix]
+= Java WAR Deployment
+
+== Walkthrough
+
+*Step 1 - Create the Servlet directory structure*
+
+. Create a project directory. (e.g. `webapp/`). +
++
+Web applications using Java and the Servlet specification follow a layout of directories and files. The root of the hierarchy defines the document root of the Web Application. In this walk-through, the root directory will be the `webapp/` directory.
+
+. Create the `WEB-INF/` directory under the `webapp/` directory. +
++
+All files under the project `webapp/` directory can be served to the client, except for files under the special directory `WEB-INF/`. The `WEB-INF/` directory is not part of the public document tree of the application, and may contain resources required for running the Web application.
+
+. Create the `web.xml` file in the `WEB-INF/` directory, and add the following:
++
+.Example: webapp/WEB-INF/web.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4"
+         xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+         http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+         <display-name>Announcing Clock Widget</display-name>
+</web-app>
+----
+
+
+*Step 2 - Create the Announcing Clock widget*
+
+NOTE: The complete example files are available under the `{path-full}/{path-examples}/` directory.
+
+Create the following files in the `webapp/` directory:
+
+[source,html]
+.AnnouncingClock.html
+----
+include::{relpath-examples}/AnnouncingClock.html[]
+----
+
+[source,javascript]
+.AnnouncingClock.js
+----
+include::{relpath-examples}/AnnouncingClock.js[]
+----
+
+
+*Step 3 - Create a .WAR file*
+
+A `.war` file is a Web application compressed into a single file. While directories and files can be copied directly onto the Web server, it is easier and more common to use a WAR file.
+
+To create the WAR file for the Announcing Clock Widget, open a command prompt and navigate to the previously created `webapp/` directory. Then, run the following command:
+
+    jar cvf announcing-clock.war
+
+
+*Step 4 - Deploy the .WAR file to the server*
+
+The deployment method used depends on the Web application server. For the prepackaged OWF Tomcat server, the process is as simple as copying the WAR file into the `tomcat/webapps/` directory on the Web application server. In the event that a particular application server has different requirements, the appropriate Java application server documentation should be consulted for information on how the WAR file should be deployed.

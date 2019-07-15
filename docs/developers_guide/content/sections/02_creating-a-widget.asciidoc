@@ -1,11 +1,11 @@
-include::_variables.asciidoc[]
+include::../_variables.asciidoc[]
 
 [#creating-a-widget]
 = Creating a Widget
 
 == Overview
 
-OWF widgets are lightweight Web applications wrapped with a metadata definition that provide a description to the framework of how the widget should load. The widget metadata definition contains a number of fields including a _URL_, _Default Name_, _Default Height_ and _Default_ Width.
+OWF widgets are lightweight Web applications wrapped with a metadata definition that provide a description to the framework of how the widget should load. The widget metadata definition contains a number of fields including a _URL_, _Default Name_, _Default Height_ and _Default Width_.
 
 OWF provides a suite of APIs that enable the developer to extend their Web application through the use of inter-widget communication, user preferences and internationalization. Each API is written in JavaScript so that widgets can be built in a large variety of Web technologies.
 
@@ -51,8 +51,7 @@ Using the command line, navigate to the `{path-server}/` directory and run the f
 
 Next, navigate to `{url-server}/AnnouncingClock.html` to view the new Announcing Clock widget.
 
-// TODO: Write section for WAR deployments
-NOTE: For instructions on deploying these examples as a Java `.WAR` to an application container, please see the XXX section.
+NOTE: For instructions on deploying these examples as a Java .WAR to an application container, see <<war-deployment>>.
 
 
 == Additional Considerations
@@ -109,19 +108,3 @@ There are multiple ways that developers can reference the owf-widget.min.js file
 The recommended way to include the owf-widget.min.js file into a widget is to create the script reference dynamically so that it always refers to the copy of owf-widget.min.js on the OWF server where the widget is currently running. The dynamic reference can be generated either server-side or client-side. To generate it server-side, use the "Referer" [sic] HTTP header, which will contain the URL of the main OWF page when the widget is launched. To retrieve the URL of the OWF instance for the widget's client-side code, use the following JavaScript:
 
   JSON.parse(window.name).preferenceLocation.split('/prefs')[0];
-
-
-=== Debug Version of the OWF Bundled JavaScript
-
-// TODO: Update URL of widget API
-
-A debug version of OWF Bundled JavaScript is also provided. Developers can find `owf-widget-debug.js` and `owf-widget-min.js` in tomcat\webapps\owf.war\js-min. The files are not minified and are useful for debugging. The version of OWF Bundled JavaScript may be included from the location below:
-
-  <script type="text/javascript" src="https://servername:port/owf/static/js/owf-widget-debug.js"></script>
-
-TIP: As a best practice, developers should include the `owf-widget-debug.js` file into a widget by dynamically referencing the copy of `owf-widget-debug.js` on the OWF server where the widget is currently running; this helps make the widget less dependent on a specific OWF instance.
-
-
-=== OWF Bundled JavaScript and Dojo
-
-The OWF bundled JavaScript file includes a custom build of the Dojo JavaScript Toolkit. This custom build of Dojo remaps dojo to owfdojo. This allows widget developers to include their own version of Dojo using the default dojo namespace. It is not recommended that developers use owfdojo as it may be removed in a future release.

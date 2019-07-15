@@ -1,4 +1,4 @@
-include::_variables.asciidoc[]
+include::../_variables.asciidoc[]
 
 [#add-a-widget]
 = Adding a Widget to OWF
