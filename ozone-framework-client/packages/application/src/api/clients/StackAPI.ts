@@ -76,6 +76,18 @@ export class StackAPI {
         });
     }
 
+    async restoreStack(data: StackUpdateRequest): Promise<Response<StackUpdateResponse>> {
+        const requestData = qs.stringify({
+            data: JSON.stringify([data])
+        });
+
+        return this.gateway.post(`stack/restore/${data.id}/`, requestData, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        });
+    }
+
     async shareStack(id: number): Promise<Response<StackShareResponse>> {
         return this.gateway.post(`stack/share/${id}`, {
             headers: {
