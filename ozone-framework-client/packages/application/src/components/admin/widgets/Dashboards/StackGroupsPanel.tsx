@@ -77,6 +77,7 @@ export class StackGroupsPanel extends React.Component<StackEditGroupsProps, Stac
             {
                 title: "Actions",
                 width: 90,
+                responsive: 0,
                 formatter: (row: any) => {
                     const data: GroupDTO = row.cell._cell.row.data;
                     return (

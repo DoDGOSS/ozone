@@ -76,6 +76,8 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
             { title: "value", field: "value" },
             {
                 title: "Actions",
+                responsive: 0,
+                width: 180,
                 formatter: (row: any) => {
                     const data: PreferenceDTO = row.cell._cell.row.data;
                     return (

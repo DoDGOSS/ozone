@@ -119,6 +119,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
             {
                 title: "Actions",
                 width: 180,
+                responsive: 0,
                 formatter: (row: any) => {
                     const data: WidgetDTO = row.cell._cell.row.data;
                     return (

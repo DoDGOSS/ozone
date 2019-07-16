@@ -105,6 +105,7 @@ export class UsersWidget extends React.Component<{}, State> {
             {
                 title: "Actions",
                 width: 180,
+                responsive: 0,
                 formatter: (row: any) => {
                     const user: UserDTO = row.cell._cell.row.data;
                     return (

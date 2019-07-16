@@ -47,6 +47,7 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
         {
             title: "Actions",
             width: 90,
+            responsive: 0,
             formatter: (row: any) => {
                 const data: any = row.cell._cell.row.data;
                 return (
