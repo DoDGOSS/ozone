@@ -104,7 +104,7 @@ export const StackDialog: React.FC<{}> = () => {
     const [dashboardToBeEdited, setDashboardToBeEdited] = useState<DashboardDTO | null>(null);
     const [stackToBeEdited, setStackToBeEdited] = useState<StackDTO | null>(null);
     const [dashboards, setDashboards] = useState<DashboardDTO[]>([]);
-    const [currentStack, setCurrentStack] = useState<StackDTO | null>(null);
+    const [currentStack, setCurrentStack] = useState<StackDTO | undefined>(undefined);
     const [stacks, setStacks] = useState<StackDTO[]>([]);
     const [stacksLoading, setStacksLoading] = useState(true);
     const [dashLoading, setDashLoading] = useState(true);
@@ -158,11 +158,15 @@ export const StackDialog: React.FC<{}> = () => {
     };
 
     const restoreStack = async (stack: StackDTO) => {
-        console.log("RESTORE STACK HERE.  Stack is: " + JSON.stringify(stack));
+        if (stack.approved === false) {
+            restoreUnsharedStack();
+        } else {
+            confirmRestoreStack(stack);
+        }
     };
 
     const restoreDashboard = async (dashboard: DashboardDTO) => {
-        if (!dashboard.publishedToStore) {
+        if (dashboard.publishedToStore === false) {
             restoreUnsharedDashboard();
         } else {
             confirmRestoreDashboard(dashboard);
@@ -293,11 +297,47 @@ export const StackDialog: React.FC<{}> = () => {
             onConfirm: () => onRestoreDashboardConfirmed(dashboard)
         });
     };
+
+    const confirmRestoreStack = async (stack: StackDTO) => {
+        showConfirmationDialog({
+            title: "Warning",
+            message: [
+                "You are discarding all changes made to ",
+                { text: stack.name, style: "bold" },
+                " and restoring it's default setting. Press OK to confirm."
+            ],
+            onConfirm: () => onRestoreStackConfirmed(stack)
+        });
+    };
+
+    const restoreUnsharedDashboard = async () => {
+        showInvalidActionDialog({
+            title: "Warning",
+            message: ["Dashboards cannot be restored until they are shared."]
+        });
+    };
+
+    const restoreUnsharedStack = async () => {
+        showInvalidActionDialog({
+            title: "Warning",
+            message: ["Stacks cannot be restored until they are shared."]
+        });
+    };
+
     const onRestoreDashboardConfirmed = async (dashboard: DashboardDTO) => {
         const response = await dashboardApi.restoreDashboard(dashboard);
         if (response.status !== 200) return false;
 
-        await dashboardStore.fetchUserDashboards(dashboard.guid);
+        const set = await dashboardStore.fetchUserDashboards(dashboard.guid);
+        mainStore.hideStackDialog();
+        return true;
+    };
+
+    const onRestoreStackConfirmed = async (stack: StackDTO) => {
+        const response = await stackApi.restoreStack(stack);
+        if (response.status !== 200) return false;
+
+        const set = await dashboardStore.fetchUserDashboards();
         mainStore.hideStackDialog();
         return true;
     };
