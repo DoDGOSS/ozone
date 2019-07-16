@@ -1,7 +1,7 @@
 import * as styles from "../Widgets.scss";
 
 import * as React from "react";
-import { Button, ButtonGroup, InputGroup, Intent } from "@blueprintjs/core";
+import { Button, ButtonGroup, InputGroup, Intent, Position, Toaster } from "@blueprintjs/core";
 
 import { AdminTable } from "../../../generic-table/AdminTable";
 import { StackUsersEditDialog } from "./StackUsersEditDialog";
@@ -28,6 +28,10 @@ export interface StackEditUsersState {
     confirmationMessage: string;
     manageUser: UserDTO | undefined;
 }
+
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
 
 export class StackUsersPanel extends React.Component<StackEditUsersProps, StackEditUsersState> {
     private readonly USERS_COLUMN_DEFINITION = [
@@ -177,7 +181,10 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
 
     private handleAddUserResponse = async (users: Array<UserDTO>) => {
         const response = await stackApi.addStackUsers(this.state.stack.id, users);
-        if (response.status !== 200) {
+        if (response.status === 200) {
+            OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
+        } else {
+            OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
             return;
         }
 

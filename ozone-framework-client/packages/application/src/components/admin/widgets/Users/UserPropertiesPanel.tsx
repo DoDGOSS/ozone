@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { object, string } from "yup";
-import { Button } from "@blueprintjs/core";
+import { Button, Intent, Position, Toaster } from "@blueprintjs/core";
 
 import { FormError, TextField } from "../../../form";
 import { UserCreateRequest, UserDTO, UserUpdateRequest } from "../../../../api/models/UserDTO";
@@ -11,6 +11,10 @@ interface UserPropertiesProps {
     saveUser: (data: UserCreateRequest | UserUpdateRequest) => Promise<boolean>;
     user: UserDTO | undefined;
 }
+
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
 
 export const UserPropertiesPanel: React.FC<UserPropertiesProps> = ({ saveUser, user }) => (
     <Formik
@@ -23,8 +27,12 @@ export const UserPropertiesPanel: React.FC<UserPropertiesProps> = ({ saveUser, u
             const isSuccess = await saveUser(newUser);
             actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
             actions.setSubmitting(false);
-
-            actions.resetForm(newUser);
+            if (isSuccess) {
+                OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
+                actions.resetForm(newUser);
+            } else {
+                OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
+            }
         }}
     >
         {(formik: FormikProps<UserCreateRequest | UserUpdateRequest>) => (
