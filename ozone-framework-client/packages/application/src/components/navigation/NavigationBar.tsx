@@ -111,6 +111,6 @@ const OWFButton: React.FC<OnClick> = ({ onClick }) => (
 
 const HelpButton: React.FC<Active & OnClick> = ({ active, onClick }) => (
     <NavbarTooltip title="Help" shortcut="alt+shift+h" description="Show the Help window.">
-        <Button minimal icon="help" active={active} onClick={onClick} />
+        <Button minimal icon="help" active={active} onClick={onClick} data-element-id="help-button" />
     </NavbarTooltip>
 );
