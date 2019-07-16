@@ -38,7 +38,7 @@ export const StackPropertiesPanel: React.FC<StackEditProps> = ({ saveStack, stac
         }}
     >
         {(formik: FormikProps<StackUpdateRequest>) => (
-            <div data-element-id="dashboard-admin-widget-edit-form">
+            <div data-element-id="stack-admin-widget-edit-form">
                 <Form className={styles.form}>
                     <div className={styles.formBody}>
                         {" "}
@@ -47,7 +47,7 @@ export const StackPropertiesPanel: React.FC<StackEditProps> = ({ saveStack, stac
                         {formik.status && formik.status.error && <FormError message={formik.status.error} />}
                     </div>
 
-                    <div className={styles.buttonBar} data-element-id="dashboard-admin-widget-edit-submit-button">
+                    <div className={styles.buttonBar} data-element-id="stack-admin-widget-edit-submit-button">
                         <Button
                             type="submit"
                             text="Apply"
