@@ -1,4 +1,4 @@
-import { Button, Classes, Dialog, Intent } from "@blueprintjs/core";
+import { Button, Classes, Dialog, Intent, Position, Toaster } from "@blueprintjs/core";
 import * as React from "react";
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 import * as yup from "yup";
@@ -18,6 +18,10 @@ export interface ExportForm {
     filename: string;
 }
 
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
+
 export class ExportDialog extends React.Component<ExportDialogProps, {}> {
     getWidgetExport = async (values: ExportForm, actions: FormikActions<ExportForm>) => {
         try {
@@ -28,6 +32,8 @@ export class ExportDialog extends React.Component<ExportDialogProps, {}> {
                 this.props.onClose();
                 this.props.openExportErrorDialog(this.props.widget);
                 return false;
+            } else {
+                OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Exported!" });
             }
             download(response.data + "", values.filename, response.headers["content-type"]);
             this.props.onClose();

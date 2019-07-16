@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Tab, Tabs } from "@blueprintjs/core";
+import { Intent, Position, Tab, Tabs, Toaster } from "@blueprintjs/core";
 
 import * as styles from "../Widgets.scss";
 import { CancelButton } from "../../../form";
@@ -25,6 +25,10 @@ export interface WidgetSetupProps {
 interface WidgetSetupState {
     widget: WidgetDTO | undefined;
 }
+
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
 
 export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupState> {
     constructor(props: WidgetSetupProps) {
@@ -91,7 +95,12 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
         }
 
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (response.status === 200) {
+            OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
+        } else {
+            OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
+            return false;
+        }
 
         this.setState({
             widget: response.data.data[0]

@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 
-import { Button } from "@blueprintjs/core";
+import { Button, Intent, Position, Toaster } from "@blueprintjs/core";
 
 import { StackDTO, StackUpdateRequest } from "../../api/models/StackDTO";
 
@@ -19,6 +19,10 @@ export interface EditStackFormProps {
     stack: StackDTO;
 }
 
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
+
 export const EditStackForm: React.FC<EditStackFormProps> = ({ onSubmit, stack }) => {
     return (
         <Formik
@@ -30,9 +34,11 @@ export const EditStackForm: React.FC<EditStackFormProps> = ({ onSubmit, stack })
                 actions.setSubmitting(false);
 
                 if (isSuccess) {
+                    OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
                     onSubmit();
                     actions.setStatus(null);
                 } else {
+                    OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
                     actions.setStatus({ error: "An unexpected error has occurred" });
                 }
             }}
