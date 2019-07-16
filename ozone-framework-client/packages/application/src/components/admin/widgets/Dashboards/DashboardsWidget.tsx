@@ -130,6 +130,7 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
             {
                 title: "Actions",
                 width: 300,
+                responsive: 0,
                 formatter: (row: { cell: { _cell: { row: { data: StackDTO } } } }) => {
                     const data: StackDTO = row.cell._cell.row.data;
                     return (

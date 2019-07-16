@@ -120,7 +120,7 @@ export class UsersPanel extends React.Component<Props, State> {
                     [
                         { title: "Full Name", field: "displayName" },
                         { title: "Last Sign In", field: "lastLogin" },
-                        { title: "Actions", width: 90, formatter: this.rowActionButtons }
+                        { title: "Actions", width: 90, responsive: 0, formatter: this.rowActionButtons }
                     ] as ColumnTabulator[]
                 }
             />

@@ -29,7 +29,7 @@ export const WidgetTable: React.FC<WidgetTableProps> = (props) => {
                     { title: "URL", field: "value.url" },
                     { title: "Users", field: "value.totalUsers" },
                     { title: "Groups", field: "value.totalGroups" },
-                    { title: "Actions", width: 90, formatter: WidgetCellRenderer({ onDelete }) }
+                    { title: "Actions", width: 90, responsive: 0, formatter: WidgetCellRenderer({ onDelete }) }
                 ] as ColumnTabulator[]
             }
         ],

@@ -102,6 +102,8 @@ export class GroupsWidget extends React.Component<{}, State> {
             { title: "Stacks", field: "totalStacks" },
             {
                 title: "Actions",
+                responsive: 0,
+                width: 180,
                 formatter: (row: any) => {
                     const data: GroupDTO = row.cell._cell.row.data;
                     return (

@@ -75,6 +75,8 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
             { title: "Users", field: "totalUsers" },
             {
                 title: "Actions",
+                responsive: 0,
+                width: 90,
                 formatter: (row: any) => {
                     const data: StackDTO = row.cell._cell.row.data;
                     return (
