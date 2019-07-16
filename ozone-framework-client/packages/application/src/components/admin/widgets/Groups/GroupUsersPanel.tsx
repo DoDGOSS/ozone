@@ -2,7 +2,7 @@ import * as styles from "../Widgets.scss";
 
 import * as React from "react";
 import { Column } from "react-table";
-import { Button, ButtonGroup } from "@blueprintjs/core";
+import { Button, ButtonGroup, Intent, Position, Toaster } from "@blueprintjs/core";
 
 import { GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton } from "../../../generic-table/TableButtons";
@@ -26,6 +26,10 @@ export interface GroupEditUsersState {
     loading: boolean;
     showAdd: boolean;
 }
+
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
 
 export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupEditUsersState> {
     defaultPageSize: number = 5;
@@ -130,7 +134,12 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
 
         const response = await groupApi.updateGroup(request);
 
-        if (response.status !== 200) return;
+        if (response.status === 200) {
+            OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
+        } else {
+            OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
+            return;
+        }
 
         this.setState({
             showAdd: false,
