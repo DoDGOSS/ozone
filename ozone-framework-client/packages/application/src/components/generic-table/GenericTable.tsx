@@ -47,6 +47,7 @@ export interface ColumnTabulator<D = any> {
     headerSort?: boolean;
     resizable?: boolean;
     frozen?: boolean;
+    responsive?: number;
 }
 
 const DEFAULT_PAGE_SIZE = 6;
@@ -117,6 +118,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
 
             if (col.hasOwnProperty("title") && col.title.toLowerCase() === "actions") {
                 col.headerSort = false;
+                col.responsive = 0;
             }
             return col;
         });

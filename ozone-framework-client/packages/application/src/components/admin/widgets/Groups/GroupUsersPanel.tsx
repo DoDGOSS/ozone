@@ -84,6 +84,7 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
             {
                 title: "Actions",
                 width: 90,
+                responsive: 0,
                 formatter: (row: any) => {
                     const data: UserDTO = row.cell._cell.row.data;
                     return (
