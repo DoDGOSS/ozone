@@ -1,12 +1,14 @@
 import { NightwatchAPI } from "nightwatch";
 
-import { DashboardAdminWidget, GlobalElements, SystemConfigAdminWidget } from "./selectors";
+import { GlobalElements, StackAdminWidget, SystemConfigAdminWidget } from "./selectors";
 
 import { loggedInAs } from "./helpers";
 import { SysConfigAdmin } from "./pages";
 
 const LOGIN_USERNAME: string = "testAdmin1";
 const LOGIN_PASSWORD: string = "password";
+
+// TODO - Write test to set settings back to default
 
 module.exports = {
     "As an Administrator, I can toggle an auditing setting": (browser: NightwatchAPI) => {
@@ -158,7 +160,7 @@ module.exports = {
                     )
                     .click(SystemConfigAdminWidget.TabSelector.TAB_AUDITING)
                     .click(SystemConfigAdminWidget.TabSelector.TAB_BRANDING)
-                    .click(DashboardAdminWidget.CLOSE_DAW_BUTTON);
+                    .click(StackAdminWidget.CLOSE_DAW_BUTTON);
             });
 
         browser.waitForElementVisible(
@@ -205,7 +207,7 @@ module.exports = {
                     )
                     .click(SystemConfigAdminWidget.TabSelector.TAB_AUDITING)
                     .click(SystemConfigAdminWidget.TabSelector.TAB_BRANDING)
-                    .click(DashboardAdminWidget.CLOSE_DAW_BUTTON);
+                    .click(StackAdminWidget.CLOSE_DAW_BUTTON);
             });
 
         browser.waitForElementVisible(GlobalElements.CUSTOM_HEADER, 2000, "[Custom Header] is visible.");
@@ -248,7 +250,7 @@ module.exports = {
                     )
                     .click(SystemConfigAdminWidget.TabSelector.TAB_AUDITING)
                     .click(SystemConfigAdminWidget.TabSelector.TAB_BRANDING)
-                    .click(DashboardAdminWidget.CLOSE_DAW_BUTTON);
+                    .click(StackAdminWidget.CLOSE_DAW_BUTTON);
             });
 
         browser.waitForElementVisible(GlobalElements.CUSTOM_FOOTER, 2000, "[Custom Footer] is visible.");
