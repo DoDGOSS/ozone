@@ -28,7 +28,7 @@ OWF allows an administrator to customize the type of security that will be imple
 
 ==== Example Security Configuration
 
-Included within the OWF bundle `{path-ozone-security}/` is the default `security.xml` Spring configuration file, as well as additional example configurations files.
+Included within the OWF bundle and framework `{path-ozone-security-xml}/` is the default `security.xml` Spring configuration file, also within `{path-ozone-security}/` are additional example configurations files.
 
 These default and example security files are intended ONLY as examples and should NOT be used in a production environment.
 
@@ -48,7 +48,7 @@ Contains the sample certificate-only (X509) security implementation that uses PK
 
 ===== Central Authentication Service (CAS) Security
 
-securty_cas-only.xml::
+security_cas-only.xml::
 Contains the sample CAS security implementation that uses an external authentication service for client authentication.
 
 
