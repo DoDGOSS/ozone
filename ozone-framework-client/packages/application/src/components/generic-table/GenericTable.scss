@@ -34,49 +34,63 @@
   width: calc(100% - 170px);
 }
 
-.tabulator-footer .tabulator-page.active {
-  border-color: #137cbd !important;
-  background-color: #137cbd !important;
-}
-
 .tabulator {
-  font-size: inherit !important;
+  // general
+  font-size: inherit;
   color: $text-color_light;
-}
+  background-color: transparent !important;
 
-.tabulator-row .tabulator-cell {
-  min-height: 60% !important;
-}
+  // placeholder text
+  .tabulator-tableHolder .tabulator-placeholder span {
+    color: $text-color_light;
+  }
 
-.tabulator-row .tabulator-responsive-collapse table {
-  font-size: inherit !important;
-}
+  // collapsed text
+  .tabulator-row .tabulator-responsive-collapse table {
+    font-size: inherit !important;
+  }
 
-.tabulator-header, .tabulator .tabulator-header .tabulator-col {
-  background-color: #fff !important;
+  // active pagination
+  .tabulator-footer .tabulator-page.active {
+    border-color: #137cbd !important;
+    background-color: #137cbd !important;
+  }
 }
 
 .bp3-dark {
-  .tabulator .tabulator-tableHolder .tabulator-placeholder span {
-    color: #fff;
-  }
-
-  .tabulator-header, .tabulator .tabulator-header .tabulator-col {
-    background-color: #3b4d5b !important;
-  }
-
-  .tabulator .tabulator-footer .tabulator-page:disabled {
-    border-color: #293742;
-    background: #40525f;
-    color: #fff;
-  }
-
   .tabulator {
+    // general
     font-size: inherit;
     color: $text-color_dark;
+    background-color: #293742;
 
-    .tabulator-header .tabulator-col.tabulator-sortable:hover {
-      background-color: #3b4f5f;
+    // placeholder text
+    .tabulator-tableHolder .tabulator-placeholder span {
+      color: $text-color_dark;
+    }
+
+    // header
+    .tabulator-header, .tabulator-header .tabulator-col {
+      background-color: #3b4d5b;
+
+      // sortable
+      .tabulator-col.tabulator-sortable:hover {
+        background-color: #3b4f5f;
+      }
+    }
+
+    // pagination
+    .tabulator-footer {
+      .tabulator-page, .tabulator-page[data-page=last] {
+        color: $text-color_dark;
+        border-color: #293742;
+        background: #40525f;
+        &:disabled {
+          color: #56616b !important;
+          border-color: #293742;
+          background: rgba(64, 82, 95, 0.52);
+        }
+      }
     }
   }
 }
