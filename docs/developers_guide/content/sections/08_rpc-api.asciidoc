@@ -6,10 +6,10 @@ include::../_variables.asciidoc[]
 
 The Remote Procedure Call (RPC) API provides a method for direct, or point-to-point, interaction between widgets. This is different from the Eventing API, which allows widgets to globally publish messages or subscribe to a subset of globally published messages from any widget. In contrast, RPC follows a client-server model and the calls cannot be received by any widget other than the intended target. The "server" widget registers a list of functions with OWF which may then be called by "client" widget.  This process is facilitated by a widget proxy object, which exposes the registered functions on the server widget to the client widget.
 
-OWF ships with two example widgets, the Color Server and Color Client, which demonstrate the functionality of the RPC API. In the walkthrough below, simple versions of the Color Server and Color Client widgets will be recreated.
+OWF ships with two example widgets, the Color Server and Color Client, which demonstrate the functionality of the RPC API. In the tutorial below, simple versions of the Color Server and Color Client widgets will be recreated.
 
 
-== Walkthrough
+== Tutorial
 
 *Step 1 - Create the Color Server widget HTML file*
 

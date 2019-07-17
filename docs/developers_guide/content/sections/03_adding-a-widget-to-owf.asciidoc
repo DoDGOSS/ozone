@@ -10,7 +10,7 @@ OWF provides a Widget Manager, located by clicking the Administration link in th
 Due to the fact that a widget definition actually points to the URL of a lightweight Web application, an administrator is not required to update widget definitions unless the location of the widget changes.
 
 
-== Walkthrough
+== Tutorial
 
 [#creating-descriptors]
 === Creating Descriptor Files for Widgets

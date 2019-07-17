@@ -19,10 +19,10 @@ OWF is tested against the following browsers:
 |===
 | Browser | Version(s)
 
-| Internet Explorer | 11
-| Edge | 44
-| Chrome | 74
-| Firefox | 60
+| Internet Explorer | > 11
+| Edge | > 44
+| Chrome | > 74
+| Firefox | > 60
 |===
 
 

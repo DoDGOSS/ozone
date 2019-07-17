@@ -5,7 +5,7 @@
 
 The Launcher API allows widget to send data to another widget. It is possible that one of the widgets sending or receiving the data does not have a user interface. Those widgets can be configured as background widgets (explained in the _OWF Administrator’s Guide_).
 
-This walkthrough will go through the process of using the Launcher API by describing the behavior of the Channel Listener and Channel Shouter widgets. Channel Listener and Channel Shouter are example widgets included with OWF. In the walkthrough below, the Channel Listener and Channel Shouter widgets work together to demonstrate both the Eventing and the Launcher APIs. The widget launching functionality is commented out by default. For this walkthrough, uncomment that section of the code.
+This tutorial will go through the process of using the Launcher API by describing the behavior of the Channel Listener and Channel Shouter widgets. Channel Listener and Channel Shouter are example widgets included with OWF. In the tutorial below, the Channel Listener and Channel Shouter widgets work together to demonstrate both the Eventing and the Launcher APIs. The widget launching functionality is commented out by default. For this tutorial, uncomment that section of the code.
 
 NOTE: An additional Launcher API exercise is available in section 15.1: Overview - Adding the Widget Launcher.
 
@@ -14,7 +14,7 @@ Channel Listener allows the user to subscribe to channels by entering the channe
 To demonstrate the Launcher API, if a user only has a Channel Shouter on their application, any message sent by the Channel Shouter will launch the Channel Listener. Once launched, the Channel Listener will be listening to the same channel and display the messages which get broadcast by the Channel Shouter.
 
 
-== Walkthrough
+== Tutorial
 
 *Step 1 - Import the correct JavaScript Files*
 
@@ -41,7 +41,7 @@ OWF.ready(shoutInit);
 
 **Step 4 - Find the GUID for the widget to be launched **
 
-To launch a widget, the developer must know the widget’s GUID. This walkthrough determines the widget’s GUID by querying the Preferences API using the findWidgets function shown below. This function retrieves a list of all widgets that a user has access to, including widget names and GUIDs. If the name of the widget is known, it is therefore easy to find the appropriate GUID, which can then be saved as a preference. The following code is searching for a widget named Channel Listener.
+To launch a widget, the developer must know the widget’s GUID. This tutorial determines the widget’s GUID by querying the Preferences API using the findWidgets function shown below. This function retrieves a list of all widgets that a user has access to, including widget names and GUIDs. If the name of the widget is known, it is therefore easy to find the appropriate GUID, which can then be saved as a preference. The following code is searching for a widget named Channel Listener.
 
 .ChannelShouter.gsp
 [source,javascript]
@@ -88,7 +88,7 @@ In the code shown below, the widget to be launched is Channel Listener.
 shout = owfdojo.hitch(this, function () {
   var channel = document.getElementById("InputChannel").value;
   var message = document.getElementById("InputMessage").value;
- 
+
   if (channel != null && channel != "") {
 …
     if (scope.guid != null && typeopf scope.guid == "string") {
