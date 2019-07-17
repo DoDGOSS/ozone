@@ -46,8 +46,8 @@ The examples in this guide use a simple web server using Node.js (https://nodejs
 
 Using the command line, navigate to the `{path-server}/` directory and run the following commands:
 
-  node install
-  node start
+  npm install
+  npm start
 
 Next, navigate to `{url-server}/AnnouncingClock.html` to view the new Announcing Clock widget.
 

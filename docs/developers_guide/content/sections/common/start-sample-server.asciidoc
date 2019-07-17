@@ -1,7 +1,7 @@
 Using the command line, navigate to the `{path-server}/` directory and run the following commands:
 
-  node install
-  node start
+  npm install
+  npm start
 
 This will start the sample web server to statically host the widget files at {url-server}/.
 
