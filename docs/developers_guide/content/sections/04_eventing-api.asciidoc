@@ -11,14 +11,14 @@ Widgets have the ability to send and receive data on named channels. All widgets
 There are two main components to the Eventing API. The first component is the supporting infrastructure within OWF that routes messages; however, this should remain mostly transparent to the widget developer. The second component, of more direct interest to developers, is the infrastructure available to each widget, detailed below.
 
 
-== Walkthrough
+== Tutorial
 
-This walkthrough will go through the process of creating a new widget called Second Tracker. The new widget will use the Eventing API to track how many seconds the Announcing Clock widget has been running. The Announcing Clock widget, created in <<creating-a-widget>>, must be updated to broadcast an event using the Eventing API.
+This tutorial will go through the process of creating a new widget called Second Tracker. The new widget will use the Eventing API to track how many seconds the Announcing Clock widget has been running. The Announcing Clock widget, created in <<creating-a-widget>>, must be updated to broadcast an event using the Eventing API.
 
 [NOTE]
 .Example files
 ====
-The source files for this walkthrough are available under the `{path-examples}/` directory.
+The source files for this tutorial are available under the `{path-full}/{path-examples}/` directory.
 
 * `SecondTracker.html`
 * `SecondTracker.js`
@@ -29,7 +29,7 @@ The source files for this walkthrough are available under the `{path-examples}/`
 
 *Step 1 - Create the Second Tracker widget*
 
-Create the following files in the `{path-server-public}/` directory:
+Create the following files in the `{path-full}/{path-server-public}/` directory:
 
 [source,html]
 .SecondTracker.html
