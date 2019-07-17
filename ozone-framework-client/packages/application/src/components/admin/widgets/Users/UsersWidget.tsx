@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, ButtonGroup, Divider } from "@blueprintjs/core";
 
-import { GenericTable } from "../../../generic-table/GenericTable";
+import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
@@ -63,9 +63,9 @@ export class UsersWidget extends React.Component<{}, State> {
                             title={"Users"}
                             items={this.state.users}
                             getColumns={() => this.getTableColumns()}
-                            reactTableProps={{
+                            tableProps={{
                                 loading: this.state.loading,
-                                defaultPageSize: this.defaultPageSize
+                                paginationSize: this.defaultPageSize
                             }}
                         />
                         <div className={styles.buttonBar}>
@@ -93,20 +93,21 @@ export class UsersWidget extends React.Component<{}, State> {
         );
     }
 
-    private getTableColumns(): any[] {
+    private getTableColumns(): ColumnTabulator[] {
         return [
-            { Header: "Name", id: "userRealName", accessor: (u: UserDTO) => u.userRealName },
-            { Header: "Username", id: "username", accessor: (u: UserDTO) => u.username },
-            { Header: "Email", id: "email", accessor: (u: UserDTO) => u.email },
-            { Header: "Groups", id: "totalGroups", accessor: (u: UserDTO) => u.totalGroups },
-            { Header: "Widgets", id: "totalWidgets", accessor: (u: UserDTO) => u.totalWidgets },
-            { Header: "Dashboards", id: "totalDashboards", accessor: (u: UserDTO) => u.totalDashboards },
-            { Header: "Last Login", id: "lastLogin", accessor: (u: UserDTO) => u.lastLogin },
+            { title: "Name", field: "userRealName" },
+            { title: "Username", field: "username" },
+            { title: "Email", field: "email" },
+            { title: "Groups", field: "totalGroups" },
+            { title: "Widgets", field: "totalWidgets" },
+            { title: "Dashboards", field: "totalDashboards" },
+            { title: "Last Login", field: "lastLogin" },
             {
-                Header: "Actions",
-                sortable: false,
-                Cell: (row: { original: UserDTO }) => {
-                    const user: UserDTO = row.original;
+                title: "Actions",
+                width: 180,
+                responsive: 0,
+                formatter: (row: any) => {
+                    const user: UserDTO = row.cell._cell.row.data;
                     return (
                         // TODO - Abstract this to only have to provide onclick function name with styled buttons
                         <ButtonGroup data-role={"user-admin-widget-actions"} data-username={user.username}>
@@ -122,7 +123,7 @@ export class UsersWidget extends React.Component<{}, State> {
                     );
                 }
             }
-        ];
+        ] as ColumnTabulator[];
     }
 
     private showSubSection(subSection: UserWidgetSubSection) {

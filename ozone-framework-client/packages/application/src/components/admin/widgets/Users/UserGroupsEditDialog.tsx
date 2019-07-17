@@ -3,6 +3,7 @@ import * as React from "react";
 import { SelectionDialogProps, TableSelectionDialog } from "../../../table-selection-dialog/TableSelectionDialog";
 import { GroupDTO } from "../../../../api/models/GroupDTO";
 import { groupApi } from "../../../../api/clients/GroupAPI";
+import { ColumnTabulator } from "../../../generic-table/GenericTable";
 
 export class UserGroupsEditDialog extends React.Component<SelectionDialogProps<GroupDTO>> {
     constructor(props: SelectionDialogProps<GroupDTO>) {
@@ -15,12 +16,14 @@ export class UserGroupsEditDialog extends React.Component<SelectionDialogProps<G
                 title="Add User to Group(s)"
                 show={this.props.show}
                 getItems={this.getAllGroups}
-                columns={[
-                    { Header: "Group Name", accessor: "name" },
-                    { Header: "Users", accessor: "totalUsers" },
-                    { Header: "Widgets", accessor: "totalWidgets" },
-                    { Header: "Dashboards", accessor: "totalDashboards" }
-                ]}
+                columns={
+                    [
+                        { title: "Group Name", field: "name" },
+                        { title: "Users", field: "totalUsers" },
+                        { title: "Widgets", field: "totalWidgets" },
+                        { title: "Dashboards", field: "totalDashboards" }
+                    ] as ColumnTabulator[]
+                }
                 onSubmit={this.props.onSubmit}
                 onClose={this.props.onClose}
             />

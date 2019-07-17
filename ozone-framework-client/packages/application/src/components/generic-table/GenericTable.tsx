@@ -1,13 +1,18 @@
 import React from "react";
-import ReactTable, { Column } from "react-table";
 import { InputGroup } from "@blueprintjs/core";
 
 import * as styles from "./GenericTable.scss";
+import "react-tabulator/lib/styles.css";
+import "react-tabulator/css/bootstrap/tabulator_bootstrap4.min.css";
+
+// @ts-ignore
+import { reactFormatter, ReactTabulator } from "react-tabulator";
 
 import { classNames, isFunction } from "../../utility";
+import { mainStore } from "../../stores/MainStore";
 
 interface Props<T> {
-    getColumns: () => Column[];
+    getColumns: () => ColumnTabulator[];
     items: T[];
     title?: string;
     onSelect?: (newItem: T) => void;
@@ -15,15 +20,38 @@ interface Props<T> {
     multiSelection?: boolean;
     customFilter?: (items: T[], query: string, queryMatches: (msg: string, query: string) => boolean) => T[];
     filterable?: boolean;
-    reactTableProps?: any;
+    tableProps?: any;
     classNames?: any;
     searchCaseSensitive?: boolean;
 }
 
 interface State<T> {
     selections: T[];
+    selectionsAsRows: T[];
     query: string;
 }
+
+export interface ColumnTabulator<D = any> {
+    title: string;
+    field?: string;
+    width?: string | number;
+    widthGrow?: number;
+    align?: "left" | "right" | "center";
+    sorter?: string;
+    editor?: boolean;
+    visible?: boolean;
+    formatter?: any;
+    cellClick?: any;
+    headerFilter?: string;
+    headerFilterParams?: Object;
+    headerSort?: boolean;
+    resizable?: boolean;
+    frozen?: boolean;
+    responsive?: number;
+}
+
+const DEFAULT_PAGE_SIZE = 6;
+const PAGE_SIZE_OPTIONS = [5, 10, 20, 25, 50, 100];
 
 export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
     filterable: boolean;
@@ -34,6 +62,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         super(props);
         this.state = {
             selections: [],
+            selectionsAsRows: [],
             query: ""
         };
         this.filterable = !(props.filterable === false);
@@ -45,17 +74,53 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
             <div ref={(tableDiv) => this.setTableWidth(tableDiv)}>
                 {this.filterable && this.getSearchBox()}
                 <div className={styles.table}>
-                    <ReactTable
+                    <ReactTabulator
+                        columns={this.formatColumnNames(this.props.getColumns())}
                         data={this.getItems()}
-                        getTheadThProps={this.removeHideableHeaders}
-                        getTrProps={this.rowsAreClickable() ? this.rowProps : () => ""}
-                        columns={this.getTableLayout()}
-                        pageSizeOptions={this.getReasonablePageSizeOptions()}
-                        {...this.buildReactTableProps()}
+                        rowClick={(ev: any, row: any) => this.selectItem(ev, row)}
+                        options={this.buildTableProps()}
+                        // data-custom-attr="test-custom-attribute"
+                        className={classNames("table-sm table-striped table-borderless", mainStore.getTheme())}
                     />
                 </div>
             </div>
         );
+    }
+
+    private buildTableProps(): Object {
+        const options = {
+            height: "100%",
+            layout: "fitDataFill",
+            layoutColumnsOnNewData: true,
+            responsiveLayout: "collapse",
+            pagination: "local",
+            paginationSize: DEFAULT_PAGE_SIZE,
+            paginationSizeSelector: PAGE_SIZE_OPTIONS,
+            placeholder: "No Data Available",
+            selectable: "highlight",
+            autoResize: true
+        };
+        return this.props.tableProps ? { ...options, ...this.props.tableProps } : options;
+    }
+
+    /**
+     * Format the column to add reactFormatter from Tabulator.
+     * Also, add common params like sorting and align to action field.
+     * @param columns
+     */
+    private formatColumnNames(columns: ColumnTabulator[]): ColumnTabulator[] {
+        return columns.map((col: ColumnTabulator) => {
+            // if formatter is not a built-in tabular module, i.e string. tickCross, color etc.
+            if (col.hasOwnProperty("formatter") && isFunction(col.formatter)) {
+                col.formatter = reactFormatter(<col.formatter />);
+            }
+
+            if (col.hasOwnProperty("title") && col.title.toLowerCase() === "actions") {
+                col.headerSort = false;
+                col.responsive = 0;
+            }
+            return col;
+        });
     }
 
     // Unfinished attempt to allow you to specify column width by percentage, rather than pixel width.
@@ -64,74 +129,6 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         if (tableDiv && tableDiv.clientWidth !== this.tableWidth) {
             this.tableWidth = tableDiv.clientWidth;
         }
-    }
-
-    private buildReactTableProps() {
-        const props: { [key: string]: any } = {};
-
-        props["minRows"] = 5;
-        props["defaultPageSize"] = 5;
-        props["showPagination"] = true;
-        props["className"] = classNames("-striped -highlight");
-
-        if (this.props.reactTableProps) {
-            for (const p in this.props.reactTableProps) {
-                if (this.props.reactTableProps.hasOwnProperty(p)) {
-                    props[p] = this.props.reactTableProps[p];
-                }
-            }
-            if (this.props.reactTableProps.className) {
-                props["className"] = classNames("-striped -highlight", this.props.reactTableProps.className);
-            }
-        }
-        return props;
-    }
-
-    private getReasonablePageSizeOptions(): number[] {
-        const sizeOptions = [5, 10, 20, 25, 50, 100];
-        const numItems = this.getItems().length;
-
-        let i = 0;
-        for (; i < sizeOptions.length; i++) {
-            if (sizeOptions[i] > numItems) {
-                break;
-            }
-        }
-        return sizeOptions.slice(0, Math.floor(i + 1));
-    }
-
-    private rowsAreClickable(): boolean {
-        return isFunction(this.props.onSelect) || isFunction(this.props.onSelectionChange);
-    }
-
-    private getTableLayout() {
-        if (this.props.title) {
-            return [
-                {
-                    Header: this.getTableMainHeader(this.props.title),
-                    columns: this.convertColumnsWithPercentageWidths(this.props.getColumns())
-                }
-            ];
-        } else {
-            return this.props.getColumns();
-        }
-    }
-
-    private convertColumnsWithPercentageWidths(columns: Column[]): Column[] {
-        return columns;
-        // if (this.tableWidth === 0) {
-        //     return columns;
-        // }
-        //
-        // for (const col of columns) {
-        //     if (col.width && (typeof col.width === 'string') && (col.width.includes('%'))) {
-        //         const percentageWidth: number = Number(mystring.replace('%','');)
-        //         if (percentageWidth) {
-        //             // table width is the full div, so account for borders....
-        //             const convertedWidth: number = Math.floor(percentageWidth/100 * (this.tableWidth*0.9));
-        //         }
-        //     }
-        // }
     }
 
     private getItems(): any[] {
@@ -163,28 +160,18 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
     // If there are no results for a filter, the corresponding loop won't happen.
     // The only danger below is if someone creates a `columns` field and fills it not to spec, but that would
     // break anything.
-    private checkColumnsRecursively(item: T, query: string, columns: Column[]): boolean {
+    private checkColumnsRecursively(item: T, query: string, columns: ColumnTabulator[]): boolean {
         for (const col of columns) {
             if (this.columnAccessorMatchesQuery(item, query, col)) {
                 return true;
-            } else if (col.columns && col.columns instanceof Array) {
-                if (this.checkColumnsRecursively(item, query, col.columns)) {
-                    return true;
-                }
             }
         }
         return false;
     }
 
-    private columnAccessorMatchesQuery(item: T, query: string, column: Column) {
-        if (column.accessor) {
-            let valueInColumnForItem: any;
-            if (typeof column.accessor === "function") {
-                valueInColumnForItem = column.accessor(item);
-                // some tables still use string accessors
-            } else if (typeof column.accessor === "string") {
-                valueInColumnForItem = this.getAttributeUsingStringAccessor(item, column.accessor.toString());
-            }
+    private columnAccessorMatchesQuery(item: T, query: string, column: ColumnTabulator) {
+        if (column.hasOwnProperty("field") && column.field) {
+            const valueInColumnForItem: any = this.getAttributeUsingStringAccessor(item, column.field);
             let safeValueInColumn = "";
             if (valueInColumnForItem !== undefined && valueInColumnForItem !== null) {
                 safeValueInColumn = valueInColumnForItem.toString();
@@ -228,69 +215,48 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         }
     }
 
-    private getTableMainHeader(title: string): any {
-        return <div>{title && <AlignedDiv message={title} alignment="left" />}</div>;
-    }
+    private selectItem(e: any, item: any): void {
+        const newItem = item.getData();
 
-    // derived from https://github.com/tannerlinsley/react-table/issues/508#issuecomment-380392755
-    private removeHideableHeaders(state: any, rowInfo: any, column: Column | undefined) {
-        if (column && column.Header === "hideMe") {
-            return { style: { display: "none" } }; // override style
-        }
-        return {};
-    }
-
-    // derived from https://stackoverflow.com/questions/44845372
-    private rowProps = (state: State<T>, rowInfo: any) => {
-        let propsForRow = {};
-        if (rowInfo && rowInfo.row) {
-            propsForRow = {
-                onClick: (e: any) => {
-                    this.selectItem(rowInfo.original);
-                }
-            };
-
-            // Should be able to do a simple compare, since the selected objects were just taken directly from the items list.
-            // So they should be the exact same items.
-            // If we change things to have some items start pre-selected, then we will have to add a comparator function.
-            // Though that'd only need to be used when this component initializes.
-            if (this.state.selections.find((select) => select === rowInfo.original) !== undefined) {
-                propsForRow = {
-                    onClick: (e: any) => {
-                        this.selectItem(rowInfo.original);
-                    },
-                    style: {
-                        background: "#00afec",
-                        color: "white"
-                    }
-                };
-            }
-        }
-        return propsForRow;
-    };
-
-    private selectItem(newItem: T): void {
         if (!this.rowsAreClickable()) {
             return;
         }
+
         // have to re-check here (in addition to check in isFunction) because of typescript
-        if (this.props.multiSelection === true && this.props.onSelectionChange !== undefined) {
+        if (this.props.multiSelection && this.props.onSelectionChange !== undefined) {
             const selections: T[] = this.state.selections;
+            const selectionsAsRows: T[] = this.state.selectionsAsRows;
             const existingItemIndex = this.state.selections.findIndex((select) => select === newItem);
             if (existingItemIndex >= 0) {
                 selections.splice(existingItemIndex, 1);
+                selectionsAsRows.splice(existingItemIndex, 1);
             } else {
                 selections.push(newItem);
+                selectionsAsRows.push(item);
             }
 
-            this.setState({ selections });
+            this.setState({ selections, selectionsAsRows });
             this.props.onSelectionChange(this.state.selections);
+
+            // select rows based on selection for view.
+            this.state.selectionsAsRows.map((row: any) => {
+                const index = row.getIndex();
+                row.getTable().selectRow(index);
+            });
         } else if (this.props.onSelect !== undefined) {
             this.setState({
                 selections: [newItem]
             });
             this.props.onSelect(newItem);
+
+            // select rows based on selection for view.
+            const index = item.getIndex();
+            item.getTable().selectRow(index);
         }
+    }
+
+    private rowsAreClickable(): boolean {
+        return isFunction(this.props.onSelect) || isFunction(this.props.onSelectionChange);
     }
 
     private getSearchBox = () => {
@@ -315,8 +281,3 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         }
     }
 }
-
-const AlignedDiv: React.FC<{ message: React.ReactNode; alignment: "left" | "right" | "center" }> = (props) => {
-    const { alignment, message } = props;
-    return <div style={{ textAlign: alignment }}>{message}</div>;
-};

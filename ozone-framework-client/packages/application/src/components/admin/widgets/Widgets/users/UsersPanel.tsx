@@ -10,7 +10,7 @@ import { User } from "../../../../../models/User";
 import { UserDTO } from "../../../../../api/models/UserDTO";
 import { WidgetDTO } from "../../../../../api/models/WidgetDTO";
 import { userFromJson } from "../../../../../codecs/User.codec";
-import { GenericTable } from "../../../../generic-table/GenericTable";
+import { ColumnTabulator, GenericTable } from "../../../../generic-table/GenericTable";
 import { DeleteButton } from "../../../../generic-table/TableButtons";
 import { UsersDialog } from "./UsersDialog";
 
@@ -116,23 +116,23 @@ export class UsersPanel extends React.Component<Props, State> {
         return (
             <GenericTable
                 items={this.state.widgetUsers}
-                getColumns={() => [
-                    { Header: "Full Name", id: "displayName", accessor: (user: User) => user.displayName },
-                    { Header: "Last Sign In", id: "lastLogin", accessor: (user: User) => user.lastLogin },
-                    { Header: "Actions", Cell: this.rowActionButtons }
-                ]}
+                getColumns={() =>
+                    [
+                        { title: "Full Name", field: "displayName" },
+                        { title: "Last Sign In", field: "lastLogin" },
+                        { title: "Actions", width: 90, responsive: 0, formatter: this.rowActionButtons }
+                    ] as ColumnTabulator[]
+                }
             />
         );
     }
 
-    rowActionButtons = (row: { original: User }) => {
+    rowActionButtons = (row: any) => {
+        const data: User = row.cell._cell.row.data;
         return (
             <div>
                 <ButtonGroup>
-                    <DeleteButton
-                        onClick={() => this.confirmAndDeleteUser(row.original)}
-                        itemName={row.original.displayName}
-                    />
+                    <DeleteButton onClick={() => this.confirmAndDeleteUser(data)} itemName={data.displayName} />
                 </ButtonGroup>
             </div>
         );

@@ -1,9 +1,8 @@
 import * as React from "react";
-import { Column } from "react-table";
 
 import { Button, ButtonGroup, Divider } from "@blueprintjs/core";
 
-import { GenericTable } from "../../../generic-table/GenericTable";
+import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 
@@ -34,6 +33,7 @@ enum GroupWidgetSubSection {
 
 export class GroupsWidget extends React.Component<{}, State> {
     defaultPageSize: number = 5;
+
     constructor(props: any) {
         super(props);
         this.state = {
@@ -62,9 +62,9 @@ export class GroupsWidget extends React.Component<{}, State> {
                         <GenericTable
                             items={this.state.groups}
                             getColumns={() => this.getColumns()}
-                            reactTableProps={{
+                            tableProps={{
                                 loading: this.state.loading,
-                                pageSize: this.defaultPageSize
+                                paginationSize: this.defaultPageSize
                             }}
                         />
                         <div className={styles.buttonBar}>
@@ -94,31 +94,36 @@ export class GroupsWidget extends React.Component<{}, State> {
         );
     }
 
-    private getColumns(): Column[] {
+    private getColumns(): ColumnTabulator[] {
         return [
-            { Header: "Group Name", id: "name", accessor: (group: GroupDTO) => group.name },
-            { Header: "Users", id: "totalUsers", accessor: (group: GroupDTO) => group.totalUsers },
-            { Header: "Widgets", id: "totalWidgets", accessor: (group: GroupDTO) => group.totalWidgets },
-            { Header: "Stacks", id: "totalStacks", accessor: (group: GroupDTO) => group.totalStacks },
+            { title: "Group Name", field: "name" },
+            { title: "Users", field: "totalUsers" },
+            { title: "Widgets", field: "totalWidgets" },
+            { title: "Stacks", field: "totalStacks" },
             {
-                Header: "Actions",
-                Cell: (row: { original: GroupDTO }) => (
-                    <div>
-                        <ButtonGroup>
-                            <EditButton
-                                onClick={() => {
-                                    this.showSubSection(GroupWidgetSubSection.SETUP);
-                                    this.setState({ updatingGroup: row.original });
-                                }}
-                            />
-                            <Divider />
-                            <DeleteButton
-                                disabled={row.original.totalStacks > 0}
-                                onClick={() => this.confirmDeleteGroup(row.original)}
-                            />
-                        </ButtonGroup>
-                    </div>
-                )
+                title: "Actions",
+                responsive: 0,
+                width: 180,
+                formatter: (row: any) => {
+                    const data: GroupDTO = row.cell._cell.row.data;
+                    return (
+                        <div>
+                            <ButtonGroup>
+                                <EditButton
+                                    onClick={() => {
+                                        this.showSubSection(GroupWidgetSubSection.SETUP);
+                                        this.setState({ updatingGroup: data });
+                                    }}
+                                />
+                                <Divider />
+                                <DeleteButton
+                                    disabled={data.totalStacks > 0}
+                                    onClick={() => this.confirmDeleteGroup(data)}
+                                />
+                            </ButtonGroup>
+                        </div>
+                    );
+                }
             }
         ];
     }
