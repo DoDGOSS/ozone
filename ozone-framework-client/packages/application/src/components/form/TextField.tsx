@@ -22,7 +22,7 @@ export interface TextFieldProps {
 
 const _TextField: React.FC<TextFieldProps & FieldProps<any>> = (props) => {
     const errors = props.form.errors[props.field.name];
-    const showError = errors && props.form.touched[props.field.name];
+    const showError = errors;
 
     const labelInfo = useMemo(() => {
         if (props.labelError === true) {
