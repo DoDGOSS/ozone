@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, ButtonGroup, Divider } from "@blueprintjs/core";
+import { Button, ButtonGroup, Divider, Intent, Position, Toaster } from "@blueprintjs/core";
 
 import * as styles from "../Widgets.scss";
 
@@ -26,6 +26,10 @@ export interface UserEditPreferencesState {
     loading: boolean;
     preferenceSettingsDialog: React.ReactNode | undefined;
 }
+
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
 
 export class UserPreferencesPanel extends React.Component<UserEditPreferencesProps, UserEditPreferencesState> {
     defaultPageSize: number = 5;
@@ -138,7 +142,12 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
         }
 
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (response.status === 200) {
+            OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
+        } else {
+            OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
+            return false;
+        }
 
         this.setState({ loading: true });
         this.getPreferences();

@@ -5,13 +5,17 @@ import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { object, string } from "yup";
 
 import { FormError, TextField } from "../../../form";
-import { Button } from "@blueprintjs/core";
+import { Button, Intent, Position, Toaster } from "@blueprintjs/core";
 import { StackUpdateRequest } from "../../../../api/models/StackDTO";
 
 interface StackEditProps {
     saveStack: (data: StackUpdateRequest) => Promise<boolean>;
     stack: any;
 }
+
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
 
 export const StackPropertiesPanel: React.FC<StackEditProps> = ({ saveStack, stack }) => (
     <Formik
@@ -23,7 +27,10 @@ export const StackPropertiesPanel: React.FC<StackEditProps> = ({ saveStack, stac
             actions.setSubmitting(false);
 
             if (isSuccess) {
+                OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
                 actions.resetForm(values);
+            } else {
+                OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
             }
             // TODO broken here, see how other user-admin forms work
             // Also fix inputs to be "" if null, and double check that the description field is supposed to be required, and that the test data should
@@ -31,7 +38,7 @@ export const StackPropertiesPanel: React.FC<StackEditProps> = ({ saveStack, stac
         }}
     >
         {(formik: FormikProps<StackUpdateRequest>) => (
-            <div data-element-id="dashboard-admin-widget-edit-form">
+            <div data-element-id="stack-admin-widget-edit-form">
                 <Form className={styles.form}>
                     <div className={styles.formBody}>
                         {" "}
@@ -40,7 +47,7 @@ export const StackPropertiesPanel: React.FC<StackEditProps> = ({ saveStack, stac
                         {formik.status && formik.status.error && <FormError message={formik.status.error} />}
                     </div>
 
-                    <div className={styles.buttonBar} data-element-id="dashboard-admin-widget-edit-submit-button">
+                    <div className={styles.buttonBar} data-element-id="stack-admin-widget-edit-submit-button">
                         <Button
                             type="submit"
                             text="Apply"

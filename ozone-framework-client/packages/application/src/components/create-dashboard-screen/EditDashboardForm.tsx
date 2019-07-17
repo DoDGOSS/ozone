@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { Form, Formik, FormikActions, FormikProps } from "formik";
 
-import { Button } from "@blueprintjs/core";
+import { Button, Intent, Position, Toaster } from "@blueprintjs/core";
 
 import { DashboardUpdateRequest } from "../../api/models/DashboardDTO";
 
@@ -19,6 +19,10 @@ export interface EditDashboardFormProps {
     onSubmit: () => void;
     dashboard: any;
 }
+
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
 
 export const EditDashboardForm: React.FC<EditDashboardFormProps> = ({ onSubmit, dashboard }) => {
     return (
@@ -38,9 +42,11 @@ export const EditDashboardForm: React.FC<EditDashboardFormProps> = ({ onSubmit, 
                 actions.setSubmitting(false);
 
                 if (isSuccess) {
+                    OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
                     onSubmit();
                     actions.setStatus(null);
                 } else {
+                    OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
                     actions.setStatus({ error: "An unexpected error has occurred" });
                 }
             }}

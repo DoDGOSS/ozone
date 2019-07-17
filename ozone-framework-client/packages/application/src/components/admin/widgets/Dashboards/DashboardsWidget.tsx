@@ -18,7 +18,6 @@ interface StacksWidgetState {
     loading: boolean;
     showTable: boolean;
     showStackSetup: boolean;
-    showAssignToMe: boolean;
     updatingStack: StackDTO | undefined;
 }
 // TODO
@@ -42,7 +41,6 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
             stacks: [],
             loading: true,
             showTable: true,
-            showAssignToMe: false,
             showStackSetup: false,
             updatingStack: undefined
         };
@@ -59,7 +57,7 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
         const showStackSetup = this.state.showStackSetup;
 
         return (
-            <div data-element-id="dashboard-admin-widget-dialog">
+            <div data-element-id="stack-admin-widget-dialog">
                 {showTable && (
                     <div>
                         <GenericTable
@@ -71,16 +69,6 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
                                 paginationSize: this.defaultPageSize
                             }}
                         />
-                        <div className={styles.buttonBar}>
-                            <Button
-                                text="Create"
-                                onClick={() => {
-                                    this.setState({ updatingStack: undefined });
-                                    this.showSubSection(StackWidgetSubSection.SETUP);
-                                }}
-                                data-element-id="create-dashboard-button"
-                            />
-                        </div>
                     </div>
                 )}
 
@@ -88,7 +76,8 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
                     <StackSetup
                         stack={this.state.updatingStack}
                         onUpdate={this.handleUpdate}
-                        onBack={() => {
+                        onBack={async () => {
+                            await this.getStacks();
                             this.showSubSection(StackWidgetSubSection.TABLE);
                         }}
                     />
@@ -129,12 +118,12 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
             { title: "Users", field: "totalUsers" },
             {
                 title: "Actions",
-                width: 300,
+                width: 180,
                 responsive: 0,
                 formatter: (row: { cell: { _cell: { row: { data: StackDTO } } } }) => {
                     const data: StackDTO = row.cell._cell.row.data;
                     return (
-                        <ButtonGroup data-role="dashboard-admin-widget-actions" data-dashboardname={data.name}>
+                        <ButtonGroup data-role="stack-admin-widget-actions" data-dashboardname={data.name}>
                             <EditButton
                                 onClick={() => {
                                     this.setState({ updatingStack: data });
@@ -142,19 +131,10 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
                                 }}
                             />
                             <Divider />
-                            <Button
-                                data-element-id={"dashboard-admin-widget-assign-to-me"}
-                                text="Assign To Me"
-                                intent={Intent.SUCCESS}
-                                icon="following"
-                                small={true}
-                                onClick={() => {
-                                    console.log("Unimplemented: should assign ", data, "to current user (you).");
-                                }}
-                                data-widget-name={data.name}
+                            <DeleteButton
+                                onClick={() => this.confirmDeleteStack(data)}
+                                itemName={data.name}
                             />
-                            <Divider />
-                            <DeleteButton onClick={() => this.confirmDeleteStack(data)} itemName={data.name} />
                         </ButtonGroup>
                     );
                 }
