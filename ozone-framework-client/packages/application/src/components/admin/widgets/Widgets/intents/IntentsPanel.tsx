@@ -2,7 +2,8 @@ import * as React from "react";
 
 import { Button, ButtonGroup, Divider, Intent as bpIntent } from "@blueprintjs/core";
 
-import { GenericTable } from "../../../../generic-table/GenericTable";
+// @ts-ignore
+import { ColumnTabulator, GenericTable } from "../../../../generic-table/GenericTable";
 import { showConfirmationDialog } from "../../../../confirmation-dialog/InPlaceConfirmationDialog";
 
 import { Intent } from "../../../../../models/compat";
@@ -62,53 +63,16 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
                 items={this.state.allIntentGroups}
                 getColumns={() => this.getMainTableColumns()}
                 customFilter={this.filterIntentGroups}
-                reactTableProps={{
-                    expanderDefaults: {
-                        sortable: true,
-                        resizable: true,
-                        filterable: false
-                    },
-                    SubComponent: (rowObject: any) => this.getIntentGroupSubTable(rowObject.original.intents),
-                    defaultPageSize: 20,
-                    minRows: 5,
-                    onExpandedChange: (newExpanded: any, indices: number[], event: any) => {
-                        return this.handleRowExpanded(newExpanded, indices, event);
-                    },
-                    expanded: this.state.expandedRows
+                tableProps={{
+                    data: this.state.allIntentGroups,
+                    dataTree: true,
+                    dataTreeStartExpanded: [true, false],
+                    dataTreeChildField: "intents",
+                    paginationSize: 20,
+                    responsiveLayout: false
                 }}
             />
         );
-    }
-
-    getIntentGroupSubTable(intents: Intent[]) {
-        return (
-            <GenericTable
-                items={intents}
-                getColumns={() => this.getIntentSubTableColumns()}
-                filterable={false}
-                reactTableProps={{
-                    showPagination: false,
-                    minRows: 0
-                }}
-            />
-        );
-    }
-
-    /*
-     * Must be done manually, otherwise sub-areas collapse on filter, sort, and tab-change.
-     */
-    handleRowExpanded(newExpanded: any, indices: number[], event: any): void {
-        // clean newExpanded first. Don't know why it comes with {} instead of true, but it breaks if you keep it like that.
-        for (const row in newExpanded) {
-            if (newExpanded.hasOwnProperty(row)) {
-                if (newExpanded[row] !== false) {
-                    newExpanded[row] = true;
-                }
-            }
-        }
-        this.setState({
-            expandedRows: newExpanded
-        });
     }
 
     getAllGroupsAsExpanded() {
@@ -324,100 +288,88 @@ export class IntentsPanel extends React.Component<IntentsPanelProps, IntentsPane
     getMainTableColumns(): any {
         return [
             {
-                Header: "hideMe",
-                expander: true,
-                width: 35
+                title: "",
+                width: 35,
+                headerSort: false,
+                align: "center"
             },
             {
-                Header: () => <AlignedDiv message="Intent" alignment="left" />,
-                // perhaps add a onClick function that calls the expander, so you can click the row instead of just the arrow.
-                style: {
-                    textAlign: "left"
+                title: "Intent",
+                align: "left",
+                field: "action",
+                headerSort: true,
+                width: 280,
+                formatter: (row: any) => {
+                    const data: any = row.cell._cell.row.getData();
+                    return data.hasOwnProperty("intents") ? (
+                        <strong>{data.action}</strong>
+                    ) : (
+                        <div style={{ marginLeft: "15px" }}>{data.dataType}</div>
+                    );
+                }
+            },
+            {
+                title: "Send",
+                field: "send",
+                headerSort: false,
+                resizable: false,
+                formatter: (row: any) => {
+                    const data: any = row.cell._cell.row.data;
+                    return dotCharacter(data.send);
                 },
-                id: "action",
-                accessor: (intentGroup: IntentGroup) => intentGroup.action
-            },
-            {
-                Header: "Send",
-                id: "send",
-                sortable: false,
-                resizable: false,
+                align: "left",
                 width: this.smallBoolBoxWidth
             },
             {
-                Header: "Receive",
-                id: "receive",
-                sortable: false,
+                title: "Receive",
+                field: "receive",
+                headerSort: false,
                 resizable: false,
+                formatter: (row: any) => {
+                    const data: any = row.cell._cell.row.data;
+                    return dotCharacter(data.receive);
+                },
+                align: "left",
                 width: this.smallBoolBoxWidth
             },
             {
-                Header: "Actions",
-                sortable: false,
-                resizable: false,
-                Cell: () => <div />,
+                title: "",
+                formatter: (row: any) => {
+                    const data: any = row.cell._cell.row.getData();
+                    return !data.hasOwnProperty("intents") ? this.intentButtons(row) : <div />;
+                },
+                align: "center",
+                headerSort: false,
                 width: this.buttonAreaWidth
             }
-        ];
+        ] as ColumnTabulator[];
     }
 
-    getIntentSubTableColumns(): any {
-        return [
-            {
-                Header: "hideMe",
-                id: "dataType",
-                accessor: (intent: Intent) => intent.dataType,
-                style: {
-                    paddingLeft: "4%",
-                    textAlign: "left"
-                }
-            },
-            {
-                Header: "hideMe",
-                id: "send",
-                accessor: (intent: Intent) => dotCharacter(intent.send),
-                width: this.smallBoolBoxWidth,
-                style: {
-                    textAlign: "center"
-                }
-            },
-            {
-                Header: "hideMe",
-                id: "receive",
-                accessor: (intent: Intent) => dotCharacter(intent.receive),
-                width: this.smallBoolBoxWidth,
-                style: {
-                    textAlign: "center"
-                }
-            },
-            { Header: "hideMe", Cell: this.intentButtons, width: this.buttonAreaWidth }
-        ];
-    }
-
-    intentButtons = (row: { original: Intent }) => {
+    intentButtons = (row: any) => {
+        const data: Intent = row.cell._cell.row.data;
         return (
             <div>
                 <ButtonGroup>
                     <Button
                         data-element-id="widget-admin-intent-edit-button"
-                        data-widget-title={row.original.action + " " + row.original.dataType}
+                        data-widget-title={data.action + " " + data.dataType}
                         text="Edit"
                         intent={bpIntent.PRIMARY}
                         icon="edit"
                         small={true}
                         onClick={() => {
-                            this.editIntent(row.original);
+                            this.editIntent(data);
                         }}
                     />
                     <Divider />
                     <Button
                         data-element-id="widget-admin-intent-remove-button"
-                        data-widget-title={row.original.action + " " + row.original.dataType}
+                        data-widget-title={data.action + " " + data.dataType}
                         text={"Remove"}
                         intent={bpIntent.DANGER}
                         icon="trash"
                         small={true}
-                        onClick={() => this.confirmAndDeleteIntent(row.original)}
+                        onClick={() => this.confirmAndDeleteIntent(data)}
                     />
                 </ButtonGroup>
             </div>
@@ -447,5 +399,5 @@ const AlignedDiv: React.FC<{ message: React.ReactNode; alignment: "left" | "righ
 };
 
 function dotCharacter(returnDot: boolean): React.ReactNode {
-    return returnDot ? <span>&#11044;</span> : <span />;
+    return returnDot ? <span style={{ textAlign: "center" }}>&#11044;</span> : <span />;
 }

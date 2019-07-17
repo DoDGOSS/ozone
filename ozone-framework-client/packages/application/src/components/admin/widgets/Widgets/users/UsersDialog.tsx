@@ -5,7 +5,7 @@ import { classNames } from "../../../../../utility";
 
 import { User } from "../../../../../models/User";
 import { mainStore } from "../../../../../stores/MainStore";
-import { GenericTable } from "../../../../generic-table/GenericTable";
+import { ColumnTabulator, GenericTable } from "../../../../generic-table/GenericTable";
 import * as styles from "./UsersDialog.scss";
 
 interface State {
@@ -44,14 +44,12 @@ export class UsersDialog extends React.Component<Props, State> {
                         <GenericTable
                             title="Users"
                             items={this.props.allUsers}
-                            getColumns={() => [
-                                {
-                                    Header: "Full Name",
-                                    id: "displayName",
-                                    accessor: (user: User) => user.displayName
-                                },
-                                { Header: "Last Sign In", id: "lastLogin", accessor: (user: User) => user.lastLogin }
-                            ]}
+                            getColumns={() =>
+                                [
+                                    { title: "Full Name", field: "displayName" },
+                                    { title: "Last Sign In", field: "lastLogin" }
+                                ] as ColumnTabulator[]
+                            }
                             multiSelection={true}
                             onSelectionChange={(selections: User[]) => {
                                 this.setState({

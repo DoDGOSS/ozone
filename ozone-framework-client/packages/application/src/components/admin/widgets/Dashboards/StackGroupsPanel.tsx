@@ -1,15 +1,13 @@
 import * as React from "react";
 import { Button, ButtonGroup, Intent, Position, Toaster } from "@blueprintjs/core";
-import { Column } from "react-table";
 
-import { GenericTable } from "../../../generic-table/GenericTable";
+import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton } from "../../../generic-table/TableButtons";
 
 import { StackGroupsEditDialog } from "./StackGroupsEditDialog";
 import { showConfirmationDialog } from "../../../confirmation-dialog/InPlaceConfirmationDialog";
 import { GroupDTO } from "../../../../api/models/GroupDTO";
 import { stackApi } from "../../../../api/clients/StackAPI";
-import { StackDTO } from "../../../../api/models/StackDTO";
 
 import * as styles from "../Widgets.scss";
 import { Http2ServerRequest } from "http2";
@@ -50,7 +48,7 @@ export class StackGroupsPanel extends React.Component<StackEditGroupsProps, Stac
                 <GenericTable
                     items={this.state.groups}
                     getColumns={() => this.getTableColumns()}
-                    reactTableProps={{
+                    tableProps={{
                         loading: this.state.loading
                     }}
                 />
@@ -75,23 +73,28 @@ export class StackGroupsPanel extends React.Component<StackEditGroupsProps, Stac
         );
     }
 
-    private getTableColumns(): Column[] {
+    private getTableColumns(): ColumnTabulator[] {
         return [
-            { Header: "Group Name", id: "name", accessor: (stack: StackDTO) => stack.name },
-            { Header: "Users", id: "totalUsers", accessor: (stack: StackDTO) => stack.totalUsers },
-            { Header: "Widgets", id: "totalWidgets", accessor: (stack: StackDTO) => stack.totalWidgets },
-            { Header: "Dashboards", id: "totalDashboards", accessor: (stack: StackDTO) => stack.totalDashboards },
+            { title: "Group Name", field: "name" },
+            { title: "Users", field: "totalUsers" },
+            { title: "Widgets", field: "totalWidgets" },
+            { title: "Dashboards", field: "totalDashboards" },
             {
-                Header: "Actions",
-                Cell: (row: { original: GroupDTO }) => (
-                    <div>
-                        <ButtonGroup data-role="stack-admin-widget-group-actions" data-groupname={row.original.name}>
-                            <DeleteButton onClick={() => this.confirmRemoveUser(row.original)} />
-                        </ButtonGroup>
-                    </div>
-                )
+                title: "Actions",
+                width: 90,
+                responsive: 0,
+                formatter: (row: any) => {
+                    const data: GroupDTO = row.cell._cell.row.data;
+                    return (
+                        <div>
+                            <ButtonGroup data-role="stack-admin-widget-group-actions" data-groupname={data.name}>
+                                <DeleteButton onClick={() => this.confirmRemoveUser(data)} />
+                            </ButtonGroup>
+                        </div>
+                    );
+                }
             }
-        ];
+        ] as ColumnTabulator[];
     }
 
     private showAddGroupsDialog() {

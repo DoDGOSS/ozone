@@ -1,10 +1,9 @@
 import * as styles from "../Widgets.scss";
 
 import * as React from "react";
-import { Column } from "react-table";
 import { Button, ButtonGroup, Intent, Position, Toaster } from "@blueprintjs/core";
 
-import { GenericTable } from "../../../generic-table/GenericTable";
+import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton } from "../../../generic-table/TableButtons";
 import { GroupUsersEditDialog } from "./GroupUsersEditDialog";
 
@@ -53,9 +52,9 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
                 <GenericTable
                     items={this.state.users}
                     getColumns={() => this.getTableColumns()}
-                    reactTableProps={{
+                    tableProps={{
                         loading: this.state.loading,
-                        pageSize: this.defaultPageSize
+                        paginationSize: this.defaultPageSize
                     }}
                 />
 
@@ -77,27 +76,29 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
         );
     }
 
-    private getTableColumns(): Column[] {
+    private getTableColumns(): ColumnTabulator[] {
         return [
-            { Header: "Name", accessor: "userRealName" },
-            { Header: "Username", accessor: "username" },
-            { Header: "Email", accessor: "email" },
-            { Header: "Groups", accessor: "totalGroups" },
-            { Header: "Widgets", accessor: "totalWidgets" },
-            { Header: "Dashboards", accessor: "totalDashboards" },
-            { Header: "Last Login", accessor: "lastLogin" },
+            { title: "Name", field: "userRealName" },
+            { title: "Username", field: "username" },
+            { title: "Email", field: "email" },
+            { title: "Groups", field: "totalGroups" },
+            { title: "Widgets", field: "totalWidgets" },
+            { title: "Dashboards", field: "totalDashboards" },
+            { title: "Last Login", field: "lastLogin" },
             {
-                Header: "Actions",
-                Cell: (row: { original: UserDTO }) => (
-                    <ButtonGroup>
-                        <DeleteButton
-                            onClick={() => this.confirmRemoveUser(row.original)}
-                            itemName={row.original.userRealName}
-                        />
-                    </ButtonGroup>
-                )
+                title: "Actions",
+                width: 90,
+                responsive: 0,
+                formatter: (row: any) => {
+                    const data: UserDTO = row.cell._cell.row.data;
+                    return (
+                        <ButtonGroup>
+                            <DeleteButton onClick={() => this.confirmRemoveUser(data)} itemName={data.userRealName} />
+                        </ButtonGroup>
+                    );
+                }
             }
-        ];
+        ] as ColumnTabulator[];
     }
 
     private showAdd() {
