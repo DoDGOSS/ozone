@@ -131,10 +131,7 @@ export class DashboardsWidget extends React.Component<{}, StacksWidgetState> {
                                 }}
                             />
                             <Divider />
-                            <DeleteButton
-                                onClick={() => this.confirmDeleteStack(data)}
-                                itemName={data.name}
-                            />
+                            <DeleteButton onClick={() => this.confirmDeleteStack(data)} itemName={data.name} />
                         </ButtonGroup>
                     );
                 }
