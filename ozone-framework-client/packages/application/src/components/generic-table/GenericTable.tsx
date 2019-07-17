@@ -100,7 +100,6 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
             selectable: "highlight",
             autoResize: true
         };
-
         return this.props.tableProps ? { ...options, ...this.props.tableProps } : options;
     }
 

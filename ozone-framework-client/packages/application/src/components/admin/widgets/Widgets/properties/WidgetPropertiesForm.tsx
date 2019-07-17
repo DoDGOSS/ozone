@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { MenuItem } from "@blueprintjs/core";
+import { Intent, MenuItem, Position, Toaster } from "@blueprintjs/core";
 import { ItemRenderer } from "@blueprintjs/select";
 
 import { Form, Formik, FormikActions, FormikProps } from "formik";
@@ -28,9 +28,21 @@ const renderWidgetType: ItemRenderer<WidgetTypeReference> = (
     return <MenuItem key={widgetType.name} onClick={handleClick} text={widgetType.name} />;
 };
 
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
+
 export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({ widget, onSubmit, widgetTypes }) => {
+    const form = React.useRef<Formik<WidgetCreateRequest>>(null);
+    React.useEffect(() => {
+        if (form.current) {
+            form.current.getFormikActions().validateForm();
+        }
+    });
+
     return (
         <Formik
+            ref={form}
             initialValues={widget}
             validationSchema={WidgetPropertiesSchema}
             onSubmit={async (
@@ -42,6 +54,11 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
 
                 const isSuccess = await onSubmit(values);
                 actions.setStatus(isSuccess ? null : { error: "An unexpected error has occurred" });
+                if (isSuccess) {
+                    OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
+                } else {
+                    OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
+                }
             }}
             enableReinitialize={true}
         >

@@ -1,7 +1,7 @@
 import * as styles from "../Widgets.scss";
 
 import * as React from "react";
-import { Button, ButtonGroup } from "@blueprintjs/core";
+import { Button, ButtonGroup, Intent, Position, Toaster } from "@blueprintjs/core";
 
 import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton } from "../../../generic-table/TableButtons";
@@ -23,6 +23,10 @@ export interface GroupEditStacksState {
     loading: boolean;
     showAdd: boolean;
 }
+
+const OzoneToaster = Toaster.create({
+    position: Position.BOTTOM
+});
 
 export class GroupStacksPanel extends React.Component<GroupEditStacksProps, GroupEditStacksState> {
     defaultPageSize: number = 5;
@@ -69,7 +73,7 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
     private getTableColumns(): ColumnTabulator[] {
         return [
             { title: "Title", field: "name" },
-            { title: "Pages (Dashboards)", field: "totalDashboards" },
+            { title: "Dashboards", field: "totalDashboards" },
             { title: "Widgets", field: "totalWidgets" },
             { title: "Groups", field: "totalGroups" },
             { title: "Users", field: "totalUsers" },
@@ -116,7 +120,12 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
     private addStacks = async (stacks: Array<StackDTO>) => {
         for (const newStack of stacks) {
             const response = await stackApi.addStackGroups(newStack.id, [this.props.group]);
-            if (response.status !== 200) break;
+            if (response.status === 200) {
+                OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
+            } else {
+                OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
+                break;
+            }
         }
 
         this.setState({
