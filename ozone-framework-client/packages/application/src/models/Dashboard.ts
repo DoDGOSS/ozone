@@ -15,7 +15,7 @@ import {
     getPathToCorner
 } from "../features/MosaicDashboard/util/mosaicUtilities";
 import { MosaicDropTargetPosition } from "../shared/dragAndDrop";
-import { flatMap, Predicate, some, values } from "../utility";
+import { byId, flatMap, omitIndex, Predicate, some, values } from "../utility";
 
 import { ExpandoPanel, FitPanel, LayoutType, Panel, PanelState, TabbedPanel } from "./panel";
 import { UserWidget } from "./UserWidget";
@@ -83,19 +83,28 @@ export class Dashboard {
      * Find a Widget instance in any of the Dashboard Panels
      */
     findWidget(instanceId: string): WidgetInstance | undefined {
-        const { panels } = this.state$.value;
+        const { backgroundWidgets, panels } = this.state$.value;
 
-        for (const panelId in panels) {
-            if (panels.hasOwnProperty(panelId)) {
-                const panel: Panel = panels[panelId];
-                const widget = panel.findWidget(instanceId);
-                if (widget !== undefined) {
-                    return widget;
-                }
-            }
+        for (const bg of backgroundWidgets) {
+            if (bg.id === instanceId) return bg;
+        }
+
+        for (const panel of values(panels)) {
+            const widget = panel.findWidget(instanceId);
+            if (widget !== undefined) return widget;
         }
 
         return undefined;
+    }
+
+    findPanelByWidgetInstanceId(instanceId: string): Panel | null {
+        const { panels } = this.state$.value;
+
+        for (const panel of values(panels)) {
+            if (panel.findWidget(instanceId)) return panel;
+        }
+
+        return null;
     }
 
     getWidgets(): WidgetInstance[] {
@@ -176,6 +185,25 @@ export class Dashboard {
         });
 
         return true;
+    }
+
+    closeWidget(instanceId: string): void {
+        const prev = this.state$.value;
+        const { backgroundWidgets } = prev;
+
+        const idx = backgroundWidgets.map(byId).indexOf(instanceId);
+        if (idx >= 0) {
+            this.state$.next({
+                ...prev,
+                backgroundWidgets: omitIndex(backgroundWidgets, idx)
+            });
+            return;
+        }
+
+        const panel = this.findPanelByWidgetInstanceId(instanceId);
+        if (panel) {
+            panel.closeWidget(instanceId);
+        }
     }
 
     addPanel(panel: Panel<PanelState>) {
