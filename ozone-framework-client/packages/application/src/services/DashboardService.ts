@@ -7,7 +7,7 @@ import { UserWidget } from "../models/UserWidget";
 import { WidgetInstance } from "../models/WidgetInstance";
 import { MosaicDropTargetPosition } from "../shared/dragAndDrop";
 import { dashboardStore, DashboardStore } from "../stores/DashboardStore";
-import { hasSameId, isNil, Predicate, values } from "../utility";
+import { hasSameId, isNil, Predicate, some, values } from "../utility";
 
 import { errorStore } from "./ErrorStore";
 import { WidgetLaunchArgs } from "./WidgetLaunchArgs";
@@ -96,9 +96,7 @@ export class DashboardService {
     }
 
     closeWidgetById(instanceId: string): void {
-        const panel = this.findPanelByWidgetInstanceId(instanceId);
-        if (!panel) return;
-        panel.closeWidget(instanceId);
+        this.dashboard.closeWidget(instanceId);
     }
 
     setCollapsed(instanceId: string, isCollapsed: boolean): void {
