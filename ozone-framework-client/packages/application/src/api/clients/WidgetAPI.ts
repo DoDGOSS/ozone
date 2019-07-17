@@ -163,6 +163,19 @@ export class WidgetAPI {
             validate: validateWidgetDeleteResponse
         });
     }
+
+    async getDependentWidgets(id: string): Promise<Response<WidgetCreateResponse>> {
+        const requestData = qs.stringify({
+            ids: id
+        });
+
+        return this.gateway.post("/widgetDefinition/dependents", requestData, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            validate: validateWidgetCreateResponse
+        });
+    }
 }
 
 export const widgetApi = new WidgetAPI();

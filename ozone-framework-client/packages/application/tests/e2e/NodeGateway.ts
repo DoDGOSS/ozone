@@ -42,7 +42,7 @@ export class NodeGateway implements Gateway {
         }
     }
 
-    async logout(): Promise<Response<{}>> {
+    async logout(): Promise<Response<any>> {
         const response = await this.get(`/logout`);
         return response;
     }

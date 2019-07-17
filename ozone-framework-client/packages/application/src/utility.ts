@@ -113,6 +113,10 @@ export function hasSameId<T>(a: { id: T }): Predicate<{ id: T }> {
     return (b: { id: T }) => a.id === b.id;
 }
 
+export function byId<T>(a: { id: T }): T {
+    return a.id;
+}
+
 export function omitIndex<T>(array: T[], index: number): T[] {
     const result: T[] = [];
     for (let i = 0; i < array.length; i++) {

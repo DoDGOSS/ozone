@@ -9,6 +9,7 @@ import { WidgetInstance } from "../../models/WidgetInstance";
 import { backendContextPath, backendUrl, frontendUrl } from "../../environment";
 
 import { SYSTEM_WIDGET_URLS } from "../../stores/system-widgets";
+import { classNames } from "../../utility";
 
 export interface WidgetFrameProps {
     widgetInstance: WidgetInstance;
@@ -48,7 +49,14 @@ const _WidgetFrame: React.FC<WidgetFrameProps> = ({ widgetInstance }) => {
         data: userWidget.launchData
     });
 
-    return <iframe className={styles.widgetFrame} src={url} id={`widget-${widgetInstance.id}`} name={nameJson} />;
+    return (
+        <iframe
+            id={`widget-${widgetInstance.id}`}
+            name={nameJson}
+            className={classNames(styles.widgetFrame, { [styles.background]: widget.isBackground })}
+            src={url}
+        />
+    );
 };
 
 export const WidgetFrame = React.memo(_WidgetFrame);

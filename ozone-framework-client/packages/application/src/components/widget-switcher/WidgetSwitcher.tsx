@@ -8,8 +8,8 @@ import { mainStore } from "../../stores/MainStore";
 import { dashboardStore } from "../../stores/DashboardStore";
 import { WidgetInstance } from "../../models/WidgetInstance";
 import { classNames } from "../../utility";
-
-import { WidgetTile } from "../admin-tools-dialog/WidgetTile";
+import { WidgetTile } from "./WidgetTile";
+import { dashboardService } from "../../services/DashboardService";
 
 export const WidgetSwitcher: React.FC = () => {
     const themeClass = useBehavior(mainStore.themeClass);
@@ -33,10 +33,12 @@ export const WidgetSwitcher: React.FC = () => {
                         {widgets.map((widget) => (
                             <WidgetTile
                                 key={widget.id}
-                                title={widget.userWidget.title}
-                                iconUrl={widget.userWidget.widget.images.largeUrl}
+                                widgetInstance={widget}
                                 onClick={() => {
                                     /* TODO */
+                                }}
+                                onClose={(instanceId: string) => {
+                                    dashboardService.closeWidgetById(instanceId);
                                 }}
                             />
                         ))}
