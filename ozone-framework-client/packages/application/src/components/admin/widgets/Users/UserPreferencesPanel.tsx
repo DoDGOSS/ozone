@@ -3,7 +3,7 @@ import { Button, ButtonGroup, Divider, Intent, Position, Toaster } from "@bluepr
 
 import * as styles from "../Widgets.scss";
 
-import { GenericTable } from "../../../generic-table/GenericTable";
+import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 import { UserDTO } from "../../../../api/models/UserDTO";
 import {
@@ -56,9 +56,9 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
                     title={"Preferences"}
                     items={this.state.preferences}
                     getColumns={() => this.getTableColumns()}
-                    reactTableProps={{
+                    tableProps={{
                         loading: this.state.loading,
-                        defaultPageSize: this.defaultPageSize
+                        paginationSize: this.defaultPageSize
                     }}
                 />
 
@@ -73,22 +73,27 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
         );
     }
 
-    private getTableColumns(): any[] {
+    private getTableColumns(): ColumnTabulator[] {
         return [
-            { Header: "Namespace", accessor: "namespace" },
-            { Header: "Path", accessor: "path" },
-            { Header: "value", accessor: "value" },
+            { title: "Namespace", field: "namespace" },
+            { title: "Path", field: "path" },
+            { title: "value", field: "value" },
             {
-                Header: "Actions",
-                Cell: (row: { original: PreferenceDTO }) => (
-                    <div>
-                        <ButtonGroup>
-                            <EditButton onClick={() => this.showSettingsDialog(row.original)} />
-                            <Divider />
-                            <DeleteButton onClick={() => this.confirmDeletePreference(row.original)} />
-                        </ButtonGroup>
-                    </div>
-                )
+                title: "Actions",
+                responsive: 0,
+                width: 180,
+                formatter: (row: any) => {
+                    const data: PreferenceDTO = row.cell._cell.row.data;
+                    return (
+                        <div>
+                            <ButtonGroup>
+                                <EditButton onClick={() => this.showSettingsDialog(data)} />
+                                <Divider />
+                                <DeleteButton onClick={() => this.confirmDeletePreference(data)} />
+                            </ButtonGroup>
+                        </div>
+                    );
+                }
             }
         ];
     }

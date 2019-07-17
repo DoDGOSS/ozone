@@ -1,10 +1,9 @@
 import * as styles from "../Widgets.scss";
 
 import * as React from "react";
-import { Column } from "react-table";
 import { Button, ButtonGroup, Intent, Position, Toaster } from "@blueprintjs/core";
 
-import { GenericTable } from "../../../generic-table/GenericTable";
+import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton } from "../../../generic-table/TableButtons";
 import { GroupStacksEditDialog } from "./GroupStacksEditDialog";
 
@@ -51,9 +50,9 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
                 <GenericTable
                     items={this.state.stacks}
                     getColumns={() => this.getTableColumns()}
-                    reactTableProps={{
+                    tableProps={{
                         loading: this.state.loading,
-                        pageSize: this.defaultPageSize
+                        paginationSize: this.defaultPageSize
                     }}
                 />
 
@@ -71,23 +70,25 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
         );
     }
 
-    private getTableColumns(): Column[] {
+    private getTableColumns(): ColumnTabulator[] {
         return [
-            { Header: "Title", accessor: "name" },
-            { Header: "Dashboards", accessor: "totalDashboards" },
-            { Header: "Widgets", accessor: "totalWidgets" },
-            { Header: "Groups", accessor: "totalGroups" },
-            { Header: "Users", accessor: "totalUsers" },
+            { title: "Title", field: "name" },
+            { title: "Dashboards", field: "totalDashboards" },
+            { title: "Widgets", field: "totalWidgets" },
+            { title: "Groups", field: "totalGroups" },
+            { title: "Users", field: "totalUsers" },
             {
-                Header: "Actions",
-                Cell: (row: { original: StackDTO }) => (
-                    <ButtonGroup>
-                        <DeleteButton
-                            onClick={() => this.confirmRemoveStack(row.original)}
-                            itemName={row.original.name}
-                        />
-                    </ButtonGroup>
-                )
+                title: "Actions",
+                responsive: 0,
+                width: 90,
+                formatter: (row: any) => {
+                    const data: StackDTO = row.cell._cell.row.data;
+                    return (
+                        <ButtonGroup>
+                            <DeleteButton onClick={() => this.confirmRemoveStack(data)} itemName={data.name} />
+                        </ButtonGroup>
+                    );
+                }
             }
         ];
     }

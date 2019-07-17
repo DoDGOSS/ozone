@@ -3,10 +3,8 @@ import { useMemo } from "react";
 
 import { ButtonGroup } from "@blueprintjs/core";
 
-import { Column, TableCellRenderer } from "react-table";
-
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
-import { GenericTable } from "../../../generic-table/GenericTable";
+import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton } from "../../../generic-table/TableButtons";
 
 export interface WidgetCellActions {
@@ -23,19 +21,18 @@ export const WidgetTable: React.FC<WidgetTableProps> = (props) => {
     const { data, isLoading, onDelete, defaultPageSize } = props;
 
     const columns = useMemo(
-        () =>
-            [
-                {
-                    Header: "Widgets",
-                    columns: [
-                        { Header: "Title", id: "title", accessor: (widget) => widget.value.namespace },
-                        { Header: "URL", id: "url", accessor: (widget) => widget.value.url },
-                        { Header: "Users", id: "users", accessor: (widget) => widget.value.totalUsers },
-                        { Header: "Groups", id: "groups", accessor: (widget) => widget.value.totalGroups },
-                        { Cell: WidgetCellRenderer({ onDelete }) }
-                    ]
-                }
-            ] as Column<WidgetDTO>[],
+        () => [
+            {
+                title: "Widgets",
+                columns: [
+                    { title: "Title", field: "value.namespace" },
+                    { title: "URL", field: "value.url" },
+                    { title: "Users", field: "value.totalUsers" },
+                    { title: "Groups", field: "value.totalGroups" },
+                    { title: "Actions", width: 90, responsive: 0, formatter: WidgetCellRenderer({ onDelete }) }
+                ] as ColumnTabulator[]
+            }
+        ],
         [onDelete]
     );
 
@@ -43,18 +40,21 @@ export const WidgetTable: React.FC<WidgetTableProps> = (props) => {
         <GenericTable
             items={data}
             getColumns={() => columns}
-            reactTableProps={{
+            tableProps={{
                 loading: isLoading,
-                defaultPageSize
+                paginationSize: defaultPageSize
             }}
         />
     );
 };
 
-function WidgetCellRenderer(actions: WidgetCellActions): TableCellRenderer {
-    return (row: { original: WidgetDTO }) => (
-        <ButtonGroup>
-            <DeleteButton onClick={() => actions.onDelete(row.original)} itemName={row.original.value.namespace} />
-        </ButtonGroup>
-    );
+function WidgetCellRenderer(actions: WidgetCellActions) {
+    return (row: any) => {
+        const data: WidgetDTO = row.cell._cell.row.data;
+        return (
+            <ButtonGroup>
+                <DeleteButton onClick={() => actions.onDelete(data)} itemName={data.value.namespace} />
+            </ButtonGroup>
+        );
+    };
 }

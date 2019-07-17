@@ -4,6 +4,7 @@ import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 
 import { SelectionDialogProps, TableSelectionDialog } from "../../../table-selection-dialog/TableSelectionDialog";
+import { ColumnTabulator } from "../../../generic-table/GenericTable";
 
 export class GroupWidgetsEditDialog extends React.Component<SelectionDialogProps<WidgetDTO>> {
     constructor(props: SelectionDialogProps<WidgetDTO>) {
@@ -16,12 +17,14 @@ export class GroupWidgetsEditDialog extends React.Component<SelectionDialogProps
                 title="Add Widget(s) to Group"
                 show={this.props.show}
                 getItems={this.getAllWidgets}
-                columns={[
-                    { Header: "Title", accessor: "value.namespace" },
-                    { Header: "URL", accessor: "value.url" },
-                    { Header: "Users", accessor: "value.totalUsers" },
-                    { Header: "Groups", accessor: "value.totalGroups" }
-                ]}
+                columns={
+                    [
+                        { title: "Title", field: "value.namespace" },
+                        { title: "URL", field: "value.url" },
+                        { title: "Users", field: "value.totalUsers" },
+                        { title: "Groups", field: "value.totalGroups" }
+                    ] as ColumnTabulator[]
+                }
                 onSubmit={this.props.onSubmit}
                 onClose={this.props.onClose}
             />
