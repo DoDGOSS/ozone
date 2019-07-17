@@ -16,16 +16,16 @@ Three key factors to keep in mind when creating a Widget are:
 * OWF is Web-technology agnostic. Widgets can be written in the JavaScript capable technology of the developer’s choice. OWF enabled applications have been built in varied technologies such as JavaScript (React, Dojo), Java (JSPs, GWT, JSF, Groovy, Grails), .NET (ASP.NET, C# .NET), Scripting Languages (PHP, Perl, Ruby on Rails), and Rich UI Frameworks/Plugins (Flex, Silverlight, Google Earth Plugin, Java Applets).
 
 * The location that hosts Widget descriptor files must have Cross-Origin Resource Sharing (CORS) enabled. Usually, the Web app used to create the Widget also serves as the host for the descriptor file. The method used to configure CORS support will vary based on the type of Web app platform used. For backwards compatibility, the format of the descriptor file itself is unchanged. The template is located in etc/widget/descriptor within the OWF bundle.
-This document assumes that the reader has a development background and is familiar with their chosen technology stack. The walkthroughs found throughout this document will focus on building a simple HTML/JavaScript Web application deployed to a Java Application Server.
+This document assumes that the reader has a development background and is familiar with their chosen technology stack. The tutorials found throughout this document will focus on building a simple HTML/JavaScript Web application deployed to a Java Application Server.
 
 
-== Walkthrough
+== Tutorial
 
 *Step 1 - Create the Announcing Clock widget*
 
-NOTE: The complete example files are available under the `{path-examples}/` directory.
+NOTE: The complete example files are available for this tutorial under the `{path-full}/{path-examples}/` directory.
 
-Create the following files in the `{path-server-public}/` directory:
+Create the following files in the `{path-full}/{path-server-public}/` directory:
 
 [source,html]
 .AnnouncingClock.html
@@ -62,7 +62,7 @@ The JavaScript Utility API is provided to allow the developer to determine wheth
 
 NOTE: In some previous versions of OWF, a widget launched outside of OWF would spawn an error in an alert window. Now, widget can be launched and used outside OWF. And while certain features, both specific and critical to OWF, such as the launch of security alert windows, preferences and eventing will not operate outside OWF, the error alert window will not launch, provided the widget URL is NOT appended with “owf=true”. Moreover, APIs can often throw exceptions which can make a widget fail to load.
 
-While originally defined in js\util\widget_utils.js, the interface object now resides within the Ozone.util namespace. The entire namespace has been included in the OWF Widget JS bundles (both debug and min) for convenience.
+While originally defined in `js/util/widget_utils.js` (depreciated), the interface object now resides within the Ozone.util namespace. The entire namespace has been included in the OWF Widget JS bundles (both debug and min) for convenience.
 
 .Utility API Namespaces
 [cols="1m,4"]
@@ -101,10 +101,10 @@ To signal that it is ready, a widget calls `OWF.notifyWidgetReady()` after it is
 
 === OWF Bundled JavaScript
 
-All required OWF JavaScript is minified and bundled into one JavaScript file, found in tomcat\webapps\owf\public\js\owf-widget.min.js. This shields developers from future changes or upgrades to the underlying JavaScript files.
+All required OWF JavaScript is minified and bundled into one JavaScript file, found in `tomcat/webapps/owf/public/js/owf-widget.min.js`. This shields developers from future changes or upgrades to the underlying JavaScript files.
 
-There are multiple ways that developers can reference the owf-widget.min.js file from their widgets. One way is to hard-code a link to the file residing on a specific OWF. This has the disadvantage of tying the widget to a particular OWF instance. Another option is to include a copy of owf-widget.min.js with the widget itself, and to use a relative URL to reference it. This makes the widget independent of any particular OWF instance, but ties the widget to a specific version of the owf-widget.min.js file. If there is a version mismatch between this file and the OWF version where the widget is run, then problems could arise.
+There are multiple ways that developers can reference the `owf-widget.min.js` file from their widgets. One way is to hard-code a link to the file residing on a specific OWF. This has the disadvantage of tying the widget to a particular OWF instance. Another option is to include a copy of `owf-widget.min.js` with the widget itself, and to use a relative URL to reference it. This makes the widget independent of any particular OWF instance, but ties the widget to a specific version of the `owf-widget.min.js` file. If there is a version mismatch between this file and the OWF version where the widget is run, then problems could arise.
 
-The recommended way to include the owf-widget.min.js file into a widget is to create the script reference dynamically so that it always refers to the copy of owf-widget.min.js on the OWF server where the widget is currently running. The dynamic reference can be generated either server-side or client-side. To generate it server-side, use the "Referer" [sic] HTTP header, which will contain the URL of the main OWF page when the widget is launched. To retrieve the URL of the OWF instance for the widget's client-side code, use the following JavaScript:
+The recommended way to include the `owf-widget.min.js` file into a widget is to create the script reference dynamically so that it always refers to the copy of owf-widget.min.js on the OWF server where the widget is currently running. The dynamic reference can be generated either server-side or client-side. To generate it server-side, use the "Referer" [sic] HTTP header, which will contain the URL of the main OWF page when the widget is launched. To retrieve the URL of the OWF instance for the widget's client-side code, use the following JavaScript:
 
   JSON.parse(window.name).preferenceLocation.split('/prefs')[0];

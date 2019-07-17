@@ -25,7 +25,7 @@ _Example:_ The full path of `{path-server}/` would be found at `{path-full}/{pat
 === Example Code
 
 // TODO: Need to package documentation and examples as part of the build; update path to examples.
-All of the code examples listed in this document can be found in the owf.war. When unpacked or unzipped, the bundle will contain a /owf-sample-widgets.zip which contains .zip files of example widgets with source code built in different technology stacks. The examples included in the distribution are detailed in <<example-widgets>>.
+All of the code examples listed in this document can be found in the owf.war. When unpacked or unzipped, the bundle will contain a `/owf-sample-widgets.zip` which contains .zip files of example widgets with source code built in different technology stacks. The examples included in the distribution are detailed in <<example-widgets>>.
 
 
 == Additional Notes
