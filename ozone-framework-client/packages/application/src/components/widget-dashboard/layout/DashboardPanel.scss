@@ -1,5 +1,13 @@
-:local(.dashboardWindow) .mosaic-window-body  {
-    overflow: auto;
+:local(.dashboardWindow) {
+    &.drop-target-hover {
+        iframe {
+            pointer-events: none;
+        }
+    }
+
+    .mosaic-window-body  {
+        overflow: auto;
+    }
 }
 
 :local(.windowTitle).mosaic-window-title {

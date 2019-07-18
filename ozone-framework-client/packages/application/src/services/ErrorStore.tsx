@@ -62,6 +62,19 @@ export class ErrorStore {
             )
         });
     };
+
+    info = (title: string, message: string) => {
+        getToaster().show({
+            icon: "tick-circle",
+            intent: Intent.SUCCESS,
+            message: (
+                <>
+                    <div style={{ fontWeight: "bold" }}>{title}</div>
+                    <div>{message}</div>
+                </>
+            )
+        });
+    };
 }
 
 export const errorStore = new ErrorStore();

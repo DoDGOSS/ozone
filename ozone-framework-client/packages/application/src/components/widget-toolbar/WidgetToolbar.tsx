@@ -65,8 +65,6 @@ const _WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
                         placeholder="Search..."
                         leftIcon="search"
                         round={true}
-                        // TODO - Implement mainstore widget filter
-                        // onChange={handleStringChange(this.mainStore.setWidgetFilter)}
                         value={filter}
                         onChange={handleStringChange(setFilter)}
                         data-element-id="widget-search-field"

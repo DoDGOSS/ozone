@@ -17,6 +17,7 @@ import { OptionsButton } from "../internal/OptionsButton";
 import { DashboardExpandoPanel } from "./DashboardExpandoPanel";
 import { DashboardFitPanel } from "./DashboardFitPanel";
 import { DashboardTabbedPanel } from "./DashboardTabbedPanel";
+import { dashboardService } from "../../../services/DashboardService";
 
 export interface DashboardPanelProps {
     panel: Panel<PanelState>;
@@ -37,7 +38,7 @@ const _DashboardPanel: React.FC<DashboardPanelProps> = ({ panel, path }) => {
         </>
     );
 
-    const setPanelTitle = useCallback((newTitle: string) => panel.setTitle(newTitle), [panelTitle]);
+    const setPanelTitle = useCallback((newTitle: string) => dashboardService.setPanelTitle(panel, newTitle), [panel]);
 
     const titleElement = <EditableText value={panelTitle} disabled={isLocked} onChange={setPanelTitle} />;
 

@@ -246,11 +246,7 @@ module.exports = {
 
         browser
             .click(
-                `${
-                    GroupAdminWidget.UsersGroup.TAB
-                } div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child ${
-                    GlobalElements.STD_DELETE_BUTTON
-                }`
+                `${GroupAdminWidget.UsersGroup.TAB} div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`
             )
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
@@ -270,11 +266,7 @@ module.exports = {
 
         browser
             .click(
-                `${
-                    GroupAdminWidget.UsersGroup.TAB
-                } div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${
-                    GlobalElements.STD_DELETE_BUTTON
-                }`
+                `${GroupAdminWidget.UsersGroup.TAB} div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`
             )
             .pause(250)
             .waitForElementPresent(

@@ -1,15 +1,15 @@
 import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
-import { Dashboard, EMPTY_DASHBOARD } from "../models/Dashboard";
-import { DashboardCreateOpts, userDashboardApi, UserDashboardAPI } from "../api/clients/UserDashboardAPI";
 import { dashboardApi, DashboardAPI } from "../api/clients/DashboardAPI";
+import { DashboardCreateOpts, userDashboardApi, UserDashboardAPI } from "../api/clients/UserDashboardAPI";
 import { dashboardToUpdateRequest, deserializeUserState, UserState } from "../codecs/Dashboard.codec";
 import { CreateDashboardOptions } from "../components/create-dashboard-screen/CreateDashboardForm";
-import { createPresetLayout } from "./default-layouts";
-
-import { isNil, values } from "../utility";
+import { Dashboard, EMPTY_DASHBOARD } from "../models/Dashboard";
 import { UserWidget } from "../models/UserWidget";
+import { isNil, values } from "../utility";
+
+import { createPresetLayout } from "./default-layouts";
 
 const EMPTY_USER_DASHBOARDS_STATE: UserState = {
     dashboards: {},
@@ -78,6 +78,7 @@ export class DashboardStore {
     createDashboard = async (dashboard: CreateDashboardOptions) => {
         const { tree, panels } = await createPresetLayout(dashboard.presetLayoutName, dashboard.copyGuid);
         const opts: DashboardCreateOpts = {
+            backgroundWidgets: [],
             name: dashboard.name,
             tree,
             panels,

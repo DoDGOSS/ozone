@@ -6,6 +6,7 @@ import { Button } from "@blueprintjs/core";
 
 import { TabbedPanel } from "../../../../models/panel";
 import { WidgetInstance } from "../../../../models/WidgetInstance";
+import { dashboardService } from "../../../../services/DashboardService";
 import { dashboardStore } from "../../../../stores/DashboardStore";
 
 export interface WidgetTabTitleProps {
@@ -22,7 +23,7 @@ export const WidgetTabTitle: React.FC<WidgetTabTitleProps> = (props) => {
     const { widgets } = useBehavior(panel.state);
     const controls = useMemo(() => panel.getMoveControls(widget), [widgets]);
 
-    const closeWidget = useCallback(() => panel.closeWidget(widget.id), [panel, widget]);
+    const closeWidget = useCallback(() => dashboardService.closeWidgetById(widget.id), [panel, widget]);
 
     return (
         <div className={styles.tabTitle}>
