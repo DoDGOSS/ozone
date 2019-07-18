@@ -43,6 +43,8 @@ export const WidgetDashboard: React.FC<PropsBase> = (props) => {
         return <Spinner className={styles.loadingSpinner} />;
     }
 
+    document.title = dashboard.name;
+
     return (
         <div className={classNames(styles.dashboard, className, { dragging: isDragging })}>
             {!tree && backgroundImageUrl ? (

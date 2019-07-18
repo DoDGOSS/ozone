@@ -136,9 +136,10 @@ export const StackDialog: React.FC<{}> = () => {
         setCurrentStack(stack);
     };
 
-    const onDashboardEditSubmitted = () => {
+    const onDashboardEditSubmitted = (dashboard: DashboardDTO) => {
         setDashboardEdit(false);
         fetchData();
+        dashboardStore.fetchUserDashboards(dashboard.guid);
         return true;
     };
 
@@ -354,7 +355,10 @@ export const StackDialog: React.FC<{}> = () => {
                     title="Edit Dashboard"
                 >
                     <div data-element-id="EditDashboardDialog" className={Classes.DIALOG_BODY}>
-                        <EditDashboardForm dashboard={currentDashboard} onSubmit={onDashboardEditSubmitted} />
+                        <EditDashboardForm
+                            dashboard={currentDashboard}
+                            onSubmit={() => onDashboardEditSubmitted(currentDashboard)}
+                        />
                     </div>
 
                     <div className={Classes.DIALOG_FOOTER}>
