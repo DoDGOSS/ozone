@@ -5,7 +5,7 @@ include::../_variables.asciidoc[]
 
 == Overview
 
-OWF provides a Widget Manager, located by clicking the Administration link in the drop-down User Menu (you must be an OWF administrator to see the Administration link) and then click Widgets. Administrators can use this manager to create widget descriptor files and add widget definitions to OWF. The manager allows an administrator to complete the widget definition or edit the descriptor URL in the user interface, then OWF maps the widget to users in the system. Once a widget definition has been created and mapped to a user, it will then be added to the user’s Widgets menu or toolbar depending on the widget type.
+OWF provides a Widget Manager, located by clicking the Administration link in the drop-down User Menu (you must be an OWF administrator to see the Administration link) and then click Widgets Administration. Administrators can use this manager to create widget descriptor files and add widget definitions to OWF. The manager allows an administrator to complete the widget definition or edit the descriptor URL in the user interface, then OWF maps the widget to users in the system. Once a widget definition has been created and mapped to a user, it will then be added to the user’s Widgets menu or toolbar depending on the widget type.
 
 Due to the fact that a widget definition actually points to the URL of a lightweight Web application, an administrator is not required to update widget definitions unless the location of the widget changes.
 
@@ -19,13 +19,13 @@ Developers can save the Widget information in the descriptor file and then share
 
 Descriptor URLs offer several benefits. They reduce the risk of typing errors when entering widget data into the OWF interface. They allow for several installations of OWF to easily share widget information via the descriptor file. In addition, descriptor files can contain a universal name which is a developer-generated, custom identifier that can be used to identify the widget across multiple OWF instances.
 
-To support Internet Explorer 10 and higher, the location that hosts Widget descriptor files must be CORS enabled. Usually, the Web app used to create the Widget also serves as the host for the descriptor file. The method used to configure CORS support will vary based on the type of Web app platform used. For backwards compatibility, the format of the descriptor file itself is unchanged. The template is located in etc/widget/descriptor within the OWF bundle.
+To support Internet Explorer 10 and higher, the location that hosts Widget descriptor files must be CORS enabled. Usually, the Web app used to create the Widget also serves as the host for the descriptor file. The method used to configure CORS support will vary based on the type of Web app platform used. For backwards compatibility, the format of the descriptor file itself is unchanged. The template is located in `etc/widget/descriptor` within the OWF bundle.
 
 To create a widget descriptor URL, follow these instructions:
 
 . Sign in to OWF as an administrator.
 
-. Click the Administration link, located on the drop-down User Menu on the toolbar to open the Administration Tools. Select Widgets to open the Widgets Manager.
+. Click the Administration link, located on the drop-down User Menu on the toolbar to open the Administration Tools. Select Widgets Administration to open the Widgets Manager.
 
 . Click Create to open the Widget Editor.
 
