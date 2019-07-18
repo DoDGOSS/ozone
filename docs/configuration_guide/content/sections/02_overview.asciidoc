@@ -28,7 +28,7 @@ OWF allows an administrator to customize the type of security that will be imple
 
 ==== Example Security Configuration
 
-Included within the OWF bundle and framework `{path-ozone-security-xml}/` is the default `security.xml` Spring configuration file, also within `{path-ozone-security}/` are additional example configurations files.
+Included within the OWF bundle and framework `{path-ozone}/` is the default `security.xml` Spring configuration file, also within `{path-ozone-security}/` are additional example configurations files.
 
 These default and example security files are intended ONLY as examples and should NOT be used in a production environment.
 
