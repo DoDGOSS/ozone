@@ -70,6 +70,10 @@ export class Dashboard {
         return this.state$.value.guid;
     }
 
+    get name() {
+        return this.state$.value.name;
+    }
+
     state = () => asBehavior(this.state$);
 
     /**
