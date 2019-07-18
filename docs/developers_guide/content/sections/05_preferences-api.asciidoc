@@ -6,10 +6,10 @@ include::../_variables.asciidoc[]
 
 The Preferences API provides a convenient mechanism for the developer to store user specific data to the OWF database. A user preference is a `string` value that is uniquely mapped to a user, identified by name and namespace combination. The namespace should use a hierarchical naming pattern to avoid naming collision with other widgets. The value can be any string value, including serialized JSON.
 
-In the walkthrough below, a military time checkbox will be added to the Announcing Clock widget developed in <<#creating-a-widget>>. The state of this checkbox, whether it has been checked or not, is stored in a user preference.
+In the tutorial below, a military time checkbox will be added to the Announcing Clock widget developed in <<#creating-a-widget>>. The state of this checkbox, whether it has been checked or not, is stored in a user preference.
 
 
-== Walkthrough
+== Tutorial
 
 *Step 1 - Update the Announcing Clock HTML file*
 
@@ -88,7 +88,7 @@ When the user clicks the checkbox, the `setMilitaryTimePreference` function is c
 
 - The `onSuccess` callback to execute if the user preference is successfully stored in the database. +
 +
-NOTE: Since no action is required under a successful completion in this walkthrough, we are passing a no-op function.
+NOTE: Since no action is required under a successful completion in this tutorial, we are passing a no-op function.
 
 - The `onFailure` callback to execute, `onSetPreferenceFailure`, that will show an error message dialog if a failure occurs.
 
