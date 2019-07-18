@@ -17,6 +17,7 @@ import {
 
 import { ExpandoPanel } from "../../../../models/panel";
 import { WidgetInstance } from "../../../../models/WidgetInstance";
+import { dashboardService } from "../../../../services/DashboardService";
 import { dashboardStore } from "../../../../stores/DashboardStore";
 
 export interface ExpandoHeaderProps {
@@ -37,8 +38,11 @@ const _ExpandoHeader: React.FC<ExpandoHeaderDndProps> = (props) => {
     const moveControls = useMemo(() => panel.getMoveControls(widget), [widgets]);
 
     const collapseIcon = collapsed ? "plus" : "minus";
-    const toggleCollapsed = useCallback(() => panel.setCollapsed(widget.id, !collapsed), [widget, collapsed]);
-    const closeWidget = useCallback(() => panel.closeWidget(widget.id), [panel, widget]);
+    const toggleCollapsed = useCallback(() => dashboardService.setCollapsed(widget.id, !collapsed), [
+        widget,
+        collapsed
+    ]);
+    const closeWidget = useCallback(() => dashboardService.closeWidgetById(widget.id), [panel, widget]);
 
     return connectDragSource(
         <div className={styles.header} draggable={true}>

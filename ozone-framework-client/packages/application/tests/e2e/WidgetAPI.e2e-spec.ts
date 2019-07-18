@@ -49,6 +49,17 @@ describe("Widget API", () => {
         initialWidgets = response.data.data;
     });
 
+    test("getDependentWidgets - GET /widgetDefinition/dependents/", async () => {
+        const response = await widgetApi.getDependentWidgets("782d37fa-b9cc-4af6-a4da-98913aebdf0a");
+        logResponse(response);
+
+        expect(response.status).toEqual(200);
+        expect(response.data).toMatchObject({
+            success: true,
+            data: [{ id: "6bc58b1d-a771-40e7-932b-e3e23044cc85" }]
+        });
+    });
+
     test("getWidgetById - GET /widget/:id/", async () => {
         const response = await widgetApi.getWidgetById(initialWidgets[0].id);
         logResponse(response);

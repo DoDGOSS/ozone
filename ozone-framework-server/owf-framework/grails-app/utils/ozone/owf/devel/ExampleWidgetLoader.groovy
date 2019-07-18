@@ -4,10 +4,12 @@ import grails.compiler.GrailsCompileStatic
 
 import org.hibernate.SessionFactory
 
+import ozone.owf.grails.domain.DomainMapping
 import ozone.owf.grails.domain.Intent
 import ozone.owf.grails.domain.IntentDataType
 import ozone.owf.grails.domain.Person
 import ozone.owf.grails.domain.PersonWidgetDefinition
+import ozone.owf.grails.domain.RelationshipType
 import ozone.owf.grails.domain.WidgetDefinition
 import ozone.owf.grails.domain.WidgetDefinitionIntent
 import ozone.owf.grails.domain.WidgetType
@@ -39,7 +41,19 @@ class ExampleWidgetLoader {
 
         assignWidgetsToAllPersons(widgets)
 
+        createRequiredRelationship(widgets[3], widgets[2])
+
         flushAndClearSession()
+    }
+
+    private createRequiredRelationship(WidgetDefinition src, WidgetDefinition dest) {
+        new DomainMapping([
+                srcId: src.id,
+                srcType: src.TYPE,
+                relationshipType: RelationshipType.requires.toString(),
+                destId: dest.id,
+                destType: dest.TYPE
+        ]).save(failOnError: true)
     }
 
     private static void assignWidgetsToAllPersons(List<WidgetDefinition> widgets) {

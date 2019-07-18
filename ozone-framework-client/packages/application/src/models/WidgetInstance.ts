@@ -1,6 +1,7 @@
 import { UserWidget } from "./UserWidget";
 
 import { uuid } from "../utility";
+import { Widget } from "./Widget";
 
 export interface WidgetInstance {
     readonly id: string;
@@ -15,3 +16,11 @@ export const WidgetInstance = {
         });
     }
 };
+
+export function getWidgetOf(instance: WidgetInstance): Widget {
+    return instance.userWidget.widget;
+}
+
+export function getInstanceWidgetsOf(instances: WidgetInstance[]): Widget[] {
+    return instances.map(getWidgetOf);
+}

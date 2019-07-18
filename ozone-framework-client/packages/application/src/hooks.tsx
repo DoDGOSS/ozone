@@ -1,6 +1,8 @@
 import { BehaviorObservable } from "./observables";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { isEqual } from "lodash";
 
 export function useBehavior<T>(behaviorFactory: () => BehaviorObservable<T>): T {
     const behavior = behaviorFactory();
@@ -17,6 +19,14 @@ export function useBehavior<T>(behaviorFactory: () => BehaviorObservable<T>): T 
     }, [behavior]);
 
     return state;
+}
+
+export function useMemoDeep<T>(value: T): T {
+    const ref = useRef(value);
+    if (!isEqual(ref.current, value)) {
+        ref.current = value;
+    }
+    return ref.current;
 }
 
 export interface Toggleable {

@@ -2,7 +2,7 @@ const path = require("path");
 
 const webpack = require("webpack");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");

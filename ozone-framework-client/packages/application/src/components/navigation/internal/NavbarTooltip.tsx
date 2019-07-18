@@ -6,31 +6,31 @@ import { Position, Tooltip } from "@blueprintjs/core";
 import { TOOLTIP_DELAY_MS } from "../../../constants";
 
 export type NavbarTooltipProps = {
-    title: string;
-    shortcut?: string;
-    description: string;
-
     children?: any;
+    description: string;
+    disabled?: boolean;
+    shortcut?: string;
+    title: string;
 };
 
-export class NavbarTooltip extends React.PureComponent<NavbarTooltipProps> {
-    render() {
-        const { children, title, shortcut, description } = this.props;
+export const NavbarTooltip: React.FC<NavbarTooltipProps> = (props) => {
+    const { children, description, disabled, shortcut, title } = props;
 
-        const content = (
-            <div className={styles.tooltip}>
-                <div className={styles.tooltipHeader}>
-                    <span className={styles.tooltipTitle}>{title}</span>
-                    {shortcut && <span className={styles.tooltipShortcut}>({shortcut})</span>}
-                </div>
-                <div className={styles.tooltipDescription}>{description}</div>
+    if (disabled) return children;
+
+    const content = (
+        <div className={styles.tooltip}>
+            <div className={styles.tooltipHeader}>
+                <span className={styles.tooltipTitle}>{title}</span>
+                {shortcut && <span className={styles.tooltipShortcut}>({shortcut})</span>}
             </div>
-        );
+            <div className={styles.tooltipDescription}>{description}</div>
+        </div>
+    );
 
-        return (
-            <Tooltip position={Position.BOTTOM} hoverOpenDelay={TOOLTIP_DELAY_MS} content={content}>
-                {children}
-            </Tooltip>
-        );
-    }
-}
+    return (
+        <Tooltip position={Position.BOTTOM} hoverOpenDelay={TOOLTIP_DELAY_MS} content={content}>
+            {children}
+        </Tooltip>
+    );
+};

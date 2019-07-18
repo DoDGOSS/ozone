@@ -4,7 +4,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "lib": [
-      "es6",
+      "esnext",
       "dom"
     ],
     "importHelpers": true,
