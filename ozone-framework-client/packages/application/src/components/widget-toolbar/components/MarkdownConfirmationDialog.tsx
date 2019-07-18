@@ -1,39 +1,69 @@
 import React from "react";
+import { Button, Classes, Intent } from "@blueprintjs/core";
+import { confirmAlert } from "react-confirm-alert";
 import ReactMarkdown from "react-markdown";
-import { Button, Classes, Dialog, Intent } from "@blueprintjs/core";
 
-export interface MarkdownConfirmationDialogProps {
-    isOpen: boolean;
+export interface AsyncDialogProps {
     title: string;
     text: string;
+
+    confirmIntent?: Intent;
+    confirmText?: string;
+
+    cancelEnabled?: boolean;
+    cancelIntent?: Intent;
+}
+
+export interface MarkdownConfirmationDialogProps extends AsyncDialogProps {
     onConfirm: () => void;
     onCancel: () => void;
 }
 
-const _MarkdownConfirmationDialog: React.FC<MarkdownConfirmationDialogProps> = (props) => (
-    <Dialog isOpen={props.isOpen} isCloseButtonShown={false} title={props.title} data-element-id="confirmation-dialog">
-        <div className={Classes.DIALOG_BODY}>
-            <ReactMarkdown source={props.text} />
-        </div>
-        <div className={Classes.DIALOG_FOOTER}>
-            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                <Button
-                    text="OK"
-                    onClick={props.onConfirm}
-                    intent={Intent.SUCCESS}
-                    rightIcon="tick"
-                    data-element-id="confirmation-dialog-confirm"
-                />
-                <Button
-                    text="Cancel"
-                    onClick={props.onCancel}
-                    intent={Intent.DANGER}
-                    rightIcon="cross"
-                    data-element-id="confirmation-cancel"
-                />
+const _MarkdownConfirmationDialog: React.FC<MarkdownConfirmationDialogProps> = (props) => {
+    const confirmText = props.confirmText || "OK";
+    const confirmIntent = props.confirmIntent || Intent.SUCCESS;
+    const cancelIntent = props.cancelIntent || Intent.NONE;
+
+    return (
+        <div className={Classes.DIALOG}>
+            <div className={Classes.DIALOG_HEADER}>
+                <h4 className={Classes.HEADING}>{props.title}</h4>
+            </div>
+            <div className={Classes.DIALOG_BODY}>
+                <ReactMarkdown source={props.text} />
+            </div>
+            <div className={Classes.DIALOG_FOOTER}>
+                <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+                    <Button text={confirmText} onClick={props.onConfirm} intent={confirmIntent} rightIcon="tick" />
+                    {props.cancelEnabled !== false && (
+                        <Button text="Cancel" onClick={props.onCancel} intent={cancelIntent} rightIcon="cross" />
+                    )}
+                </div>
             </div>
         </div>
-    </Dialog>
-);
+    );
+};
 
 export const MarkdownConfirmationDialog = React.memo(_MarkdownConfirmationDialog);
+
+export function showMarkdownDialog(props: AsyncDialogProps): Promise<boolean> {
+    return new Promise((resolve) => {
+        confirmAlert({
+            onKeypressEscape: () => resolve(false),
+            onClickOutside: () => resolve(false),
+            customUI: ({ onClose }) => (
+                <MarkdownConfirmationDialog
+                    {...props}
+                    onCancel={() => {
+                        resolve(false);
+                        onClose();
+                    }}
+                    onConfirm={() => {
+                        resolve(true);
+                        onClose();
+                    }}
+                />
+            )
+        });
+    });
+}

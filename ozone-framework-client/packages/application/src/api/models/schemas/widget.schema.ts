@@ -55,7 +55,10 @@ export const WIDGET_PROPERTIES_SCHEMA = {
     additionalProperties: false,
     properties: {
         allRequired: {
-            type: "array"
+            type: "array",
+            items: {
+                type: "string"
+            }
         },
         background: {
             type: "boolean"
@@ -70,7 +73,10 @@ export const WIDGET_PROPERTIES_SCHEMA = {
             type: ["string", "null"]
         },
         directRequired: {
-            type: "array"
+            type: "array",
+            items: {
+                type: "string"
+            }
         },
         headerIcon: {
             type: "string"

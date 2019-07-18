@@ -162,9 +162,7 @@ module.exports = {
         browser
             .setValue(AdminWidget.SEARCH_FIELD, NEW_USER_USERNAME)
             .click(
-                `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${
-                    GlobalElements.STD_EDIT_BUTTON
-                }`
+                `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${GlobalElements.STD_EDIT_BUTTON}`
             );
 
         browser.pause(5000);
@@ -483,9 +481,7 @@ module.exports = {
         browser
             .setValue(AdminWidget.SEARCH_FIELD, NEW_USER_EMAIL)
             .click(
-                `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${
-                    GlobalElements.STD_DELETE_BUTTON
-                }`
+                `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`
             )
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,

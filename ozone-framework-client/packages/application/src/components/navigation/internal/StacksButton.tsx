@@ -1,7 +1,8 @@
 import React from "react";
-import { useBehavior } from "../../../hooks";
 import { Button } from "@blueprintjs/core";
 
+import { useBehavior } from "../../../hooks";
+import { Shortcuts, useHotkey } from "../../../shared/hotkeys";
 import { mainStore } from "../../../stores/MainStore";
 
 import { NavbarTooltip } from "./NavbarTooltip";
@@ -9,10 +10,12 @@ import { NavbarTooltip } from "./NavbarTooltip";
 const _StacksButton: React.FC = () => {
     const isActive = useBehavior(mainStore.isStackDialogVisible);
 
+    useHotkey({ combo: Shortcuts.showStacks, onKeyDown: mainStore.showStackDialog });
+
     return (
         <NavbarTooltip
             title="Stacks"
-            shortcut="alt+shift+c"
+            shortcut={Shortcuts.showStacks}
             description="Open the Stacks window to start or manage your Stacks."
         >
             <Button

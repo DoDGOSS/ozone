@@ -262,6 +262,6 @@ export class MosaicWindow<T extends MosaicKey = string> extends React.PureCompon
     }
 
     render() {
-        return <SourceConnectedInternalMosaicWindow {...this.props as InternalMosaicWindowProps<T>} />;
+        return <SourceConnectedInternalMosaicWindow {...(this.props as InternalMosaicWindowProps<T>)} />;
     }
 }

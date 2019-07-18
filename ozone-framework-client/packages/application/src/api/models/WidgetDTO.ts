@@ -22,8 +22,8 @@ export interface WidgetDTO {
 export const validateWidget = createValidator<WidgetDTO>(WIDGET_SCHEMA);
 
 export interface WidgetPropertiesDTO {
-    allRequired: any[];
-    directRequired: any[];
+    allRequired: string[];
+    directRequired: string[];
     background: boolean;
     definitionVisible: boolean;
     description: string | null;
@@ -52,6 +52,12 @@ export interface WidgetPropertiesDTO {
 }
 
 export interface WidgetGetResponse {
+    success: boolean;
+    results: number;
+    data: WidgetDTO[];
+}
+
+export interface WidgetGetDependentsResponse {
     success: boolean;
     results: number;
     data: WidgetDTO[];

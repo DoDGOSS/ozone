@@ -2,10 +2,8 @@ import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
 
 import { themeApi } from "../api/clients/ThemeAPI";
-
-import { isBlank } from "../utility";
-
 import { DARK_THEME } from "../constants";
+import { isBlank } from "../utility";
 
 export class MainStore {
     private readonly themeClass$ = new BehaviorSubject(DARK_THEME);
@@ -15,8 +13,8 @@ export class MainStore {
     private readonly isCreateStackDialogVisible$ = new BehaviorSubject(false);
     private readonly isStackDialogVisible$ = new BehaviorSubject(false);
     private readonly isHelpDialogVisible$ = new BehaviorSubject(false);
-    private readonly isLoginDialogOpen$ = new BehaviorSubject(false);
     private readonly isUserProfileDialogVisible$ = new BehaviorSubject(false);
+    private readonly isWidgetSwitcherVisible$ = new BehaviorSubject(false);
     private readonly isWidgetToolbarOpen$ = new BehaviorSubject(false);
 
     themeClass = () => asBehavior(this.themeClass$);
@@ -45,6 +43,10 @@ export class MainStore {
     closeWidgetToolbar = () => this.isWidgetToolbarOpen$.next(false);
     toggleWidgetToolbar = () => this.isWidgetToolbarOpen$.next(!this.isWidgetToolbarOpen$.value);
 
+    isWidgetSwitcherVisible = () => asBehavior(this.isWidgetSwitcherVisible$);
+    showWidgetSwitcher = () => this.isWidgetSwitcherVisible$.next(true);
+    hideWidgetSwitcher = () => this.isWidgetSwitcherVisible$.next(false);
+
     isAboutVisible = () => asBehavior(this.isAboutVisible$);
     showAboutDialog = () => this.isAboutVisible$.next(true);
     hideAboutDialog = () => this.isAboutVisible$.next(false);
@@ -52,10 +54,6 @@ export class MainStore {
     isCreateStackDialogVisible = () => asBehavior(this.isCreateStackDialogVisible$);
     showCreateStackDialog = () => this.isCreateStackDialogVisible$.next(true);
     hideCreateStackDialog = () => this.isCreateStackDialogVisible$.next(false);
-
-    isLoginDialogOpen = () => asBehavior(this.isLoginDialogOpen$);
-    showLoginDialog = () => this.isLoginDialogOpen$.next(true);
-    hideLoginDialog = () => this.isLoginDialogOpen$.next(false);
 
     isHelpDialogVisible = () => asBehavior(this.isHelpDialogVisible$);
     showHelpDialog = () => this.isHelpDialogVisible$.next(true);
