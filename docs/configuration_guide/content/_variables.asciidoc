@@ -8,9 +8,8 @@
 :path-ozone: {path-classpath}/ozone/framework
 :path-app-yml: {path-ozone}/{file-app-yml}
 :path-user-props: {path-ozone}/{file-user-props}
-:path-ozone-security: {path-ozone}/security/examples
-:additional-examples: examples
-:path-ozone-security-xml: {path-ozone}
+:path-ozone-security: {path-ozone}/security
+
 
 :version-tomcat: v8.5.23
 
