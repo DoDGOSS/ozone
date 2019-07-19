@@ -37,7 +37,7 @@ export interface PreferenceCreateRequest {
     namespace: string;
     path: string;
     value: string;
-    userId?: string;
+    userId?: number;
 }
 
 export interface PreferenceUpdateRequest extends PreferenceCreateRequest {
@@ -48,5 +48,5 @@ export interface PreferenceDeleteRequest {
     id: number;
     namespace: string;
     path: string;
-    userId?: string;
+    userId?: number;
 }
