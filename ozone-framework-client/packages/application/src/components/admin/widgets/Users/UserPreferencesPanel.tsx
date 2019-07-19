@@ -6,6 +6,8 @@ import * as styles from "../Widgets.scss";
 import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 import { UserDTO } from "../../../../api/models/UserDTO";
+import { User } from "../../../../models/User";
+import { userFromJson } from "../../../../codecs/User.codec";
 import {
     PreferenceCreateRequest,
     PreferenceDeleteRequest,
@@ -25,6 +27,7 @@ export interface UserEditPreferencesState {
     preferences: PreferenceDTO[];
     loading: boolean;
     preferenceSettingsDialog: React.ReactNode | undefined;
+    user: User;
 }
 
 const OzoneToaster = Toaster.create({
@@ -39,12 +42,13 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
         this.state = {
             preferences: [],
             loading: true,
-            preferenceSettingsDialog: undefined
+            preferenceSettingsDialog: undefined,
+            user: userFromJson(this.props.user)
         };
     }
 
     componentDidMount() {
-        this.getPreferences();
+        this.getPreferences(this.state.user.username);
     }
 
     render() {
@@ -121,14 +125,18 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
         );
     }
 
-    private getPreferences = async () => {
+    private getPreferences = async (username: string) => {
         const response = await preferenceApi.getPreferences();
 
         // TODO: Handle failed request
         if (response.status !== 200) return;
 
+        const preferencesForUser = response.data.rows.filter((preference) => {
+            return preference.user.userId === username;
+        });
+
         this.setState({
-            preferences: response.data.rows,
+            preferences: preferencesForUser,
             loading: false
         });
     };
@@ -138,6 +146,7 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
         if ("id" in pref) {
             response = await preferenceApi.updatePreference(pref);
         } else {
+            pref.userId = this.state.user.id;
             response = await preferenceApi.createPreference(pref);
         }
 
@@ -150,7 +159,7 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
         }
 
         this.setState({ loading: true });
-        this.getPreferences();
+        this.getPreferences(this.state.user.username);
     };
 
     private confirmDeletePreference = async (preference: PreferenceDeleteRequest) => {
@@ -174,7 +183,7 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
 
         // TODO: Handle failed request
         if (response.status !== 200) return false;
-        this.getPreferences();
+        this.getPreferences(this.state.user.username);
         return true;
     };
 }
