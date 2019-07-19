@@ -500,5 +500,68 @@ module.exports = {
         browser.expect.element(AdminWidget.USER_ADMIN_WIDGET_DIALOG).text.to.not.contain(NEW_USER_EMAIL);
 
         browser.closeWindow().end();
+    },
+
+    "As an Administrator, When I view preferences for a selected user, I should see preferences that are assigned to that user.": (
+        browser: NightwatchAPI
+    ) => {
+        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+
+        UserAdmin.navigateTo(browser);
+
+        browser.assert.containsText(
+            AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+            "Test Administrator 1",
+            "[User Admin Widget] Displays user information"
+        );
+
+        browser.click(AdminWidget.userTableEditButton("testUser1"));
+
+        browser.waitForElementVisible(AdminWidget.PREFERENCES_TAB, 2000);
+        browser.click(AdminWidget.PREFERENCES_TAB);
+
+        browser.assert.containsText(
+            AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+            "Namespace",
+            "[User Admin Preference table] is visible"
+        );
+
+        browser.click(AdminWidget.USER_ADMIN_CREATE_BUTTON);
+
+        browser.pause(2000);
+
+        browser.assert.containsText(
+            AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+            "Namespace",
+            "[User Admin Create Preference Form] is visible"
+        );
+
+        browser
+            .setValue(AdminWidget.NAMESPACE_FIELD, NEW_USER_PREFERENCE_NAMESPACE)
+            .setValue(AdminWidget.PATH_FIELD, NEW_USER_PREFERENCE_PATH)
+            .setValue(AdminWidget.VALUE_FIELD, NEW_USER_PREFERENCE_VALUE);
+
+        browser.waitForElementVisible(UserAdminWidget.UserPreferences.PREFERENCE_DIALOG, 2000);
+        browser.waitForElementVisible(
+            `${UserAdminWidget.UserPreferences.PREFERENCE_DIALOG} ${AdminWidget.SUBMIT_BUTTON}`,
+            2000
+        );
+        browser.click(`${UserAdminWidget.UserPreferences.PREFERENCE_DIALOG} ${AdminWidget.SUBMIT_BUTTON}`);
+
+        browser.assert.containsText(
+            AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+            "Namespace",
+            "[User Admin Preference table] is visible"
+        );
+
+        browser.assert.containsText(
+            AdminWidget.USER_ADMIN_WIDGET_DIALOG,
+            NEW_USER_PREFERENCE_NAMESPACE,
+            "[User Admin Widget] New User Preference successfully created"
+        );
+
+        browser.expect.element(AdminWidget.USER_ADMIN_WIDGET_DIALOG).text.to.not.contain("owf.admin");
+
+        browser.closeWindow().end();
     }
 };
