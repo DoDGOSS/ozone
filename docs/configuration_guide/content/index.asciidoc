@@ -1,9 +1,12 @@
 = Ozone Configuration Guide
+// Metadata:
 :doctype: book
-:reproducible:
 :author: DOD GOSS
 :revnumber: 8.0.0.0
 :revdate: 2019-07-01
+// Settings:
+:reproducible:
+:experimental:
 :toc: left
 :toclevels: 6
 :sectnums:
@@ -12,14 +15,6 @@
 :xrefstyle: full
 :icons: font
 :icon-set: fas
-ifeval::["{outfilesuffix}" == ".html"]
-:source-highlighter: highlightjs
-endif::[]
-ifeval::["{outfilesuffix}" == ".pdf"]
-:pdf-stylesdir: common/resources
-:pdf-style: ozone-pdf
-:pdf-page-size: Letter
-endif::[]
 
 
 :leveloffset: +1
