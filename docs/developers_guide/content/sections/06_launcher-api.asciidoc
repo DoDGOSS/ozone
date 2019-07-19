@@ -7,8 +7,6 @@ The Launcher API allows widget to send data to another widget. It is possible th
 
 This tutorial will go through the process of using the Launcher API by describing the behavior of the Channel Listener and Channel Shouter widgets. Channel Listener and Channel Shouter are example widgets included with OWF. In the tutorial below, the Channel Listener and Channel Shouter widgets work together to demonstrate both the Eventing and the Launcher APIs. The widget launching functionality is commented out by default. For this tutorial, uncomment that section of the code.
 
-NOTE: An additional Launcher API exercise is available in section 15.1: Overview - Adding the Widget Launcher.
-
 Channel Listener allows the user to subscribe to channels by entering the channel name into a text box and pressing the button on the widget. The widget will then display any messages which are broadcast on the channels to which it is subscribed. Channel Shouter allows the user to publish messages to specific channels by entering both the name of a specific channel as well as the message text into text boxes and pressing the button.
 
 To demonstrate the Launcher API, if a user only has a Channel Shouter on their application, any message sent by the Channel Shouter will launch the Channel Listener. Once launched, the Channel Listener will be listening to the same channel and display the messages which get broadcast by the Channel Shouter.

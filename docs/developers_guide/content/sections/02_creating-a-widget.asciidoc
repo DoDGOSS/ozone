@@ -16,6 +16,7 @@ Three key factors to keep in mind when creating a Widget are:
 * OWF is Web-technology agnostic. Widgets can be written in the JavaScript capable technology of the developer’s choice. OWF enabled applications have been built in varied technologies such as JavaScript (React, Dojo), Java (JSPs, GWT, JSF, Groovy, Grails), .NET (ASP.NET, C# .NET), Scripting Languages (PHP, Perl, Ruby on Rails), and Rich UI Frameworks/Plugins (Flex, Silverlight, Google Earth Plugin, Java Applets).
 
 * The location that hosts Widget descriptor files must have Cross-Origin Resource Sharing (CORS) enabled. Usually, the Web app used to create the Widget also serves as the host for the descriptor file. The method used to configure CORS support will vary based on the type of Web app platform used. For backwards compatibility, the format of the descriptor file itself is unchanged. The template is located in etc/widget/descriptor within the OWF bundle.
+
 This document assumes that the reader has a development background and is familiar with their chosen technology stack. The tutorials found throughout this document will focus on building a simple HTML/JavaScript Web application deployed to a Java Application Server.
 
 
@@ -60,7 +61,7 @@ NOTE: For instructions on deploying these examples as a Java .WAR to an applicat
 
 The JavaScript Utility API is provided to allow the developer to determine whether or not the widget is running inside OWF. This is useful if the widget needs to render differently or has different defaults depending on whether or not it is running internal or external to OWF. For instance, if a widget is supposed to turn on logging when running inside OWF, the developer can use the JavaScript Utility API to determine this.
 
-NOTE: In some previous versions of OWF, a widget launched outside of OWF would spawn an error in an alert window. Now, widget can be launched and used outside OWF. And while certain features, both specific and critical to OWF, such as the launch of security alert windows, preferences and eventing will not operate outside OWF, the error alert window will not launch, provided the widget URL is NOT appended with “owf=true”. Moreover, APIs can often throw exceptions which can make a widget fail to load.
+NOTE: In some previous versions of OWF, a widget launched outside of OWF would spawn an error in an alert window. Now, widget can be launched and used outside OWF. And while certain features, both specific and critical to OWF, such as the launch of security alert windows, preferences and eventing will not operate outside OWF, the error alert window will not launch, provided the widget URL is NOT appended with `owf=true`. Moreover, APIs can often throw exceptions which can make a widget fail to load.
 
 While originally defined in `js/util/widget_utils.js` (depreciated), the interface object now resides within the Ozone.util namespace. The entire namespace has been included in the OWF Widget JS bundles (both debug and min) for convenience.
 
@@ -107,4 +108,7 @@ There are multiple ways that developers can reference the `owf-widget.min.js` fi
 
 The recommended way to include the `owf-widget.min.js` file into a widget is to create the script reference dynamically so that it always refers to the copy of owf-widget.min.js on the OWF server where the widget is currently running. The dynamic reference can be generated either server-side or client-side. To generate it server-side, use the "Referer" [sic] HTTP header, which will contain the URL of the main OWF page when the widget is launched. To retrieve the URL of the OWF instance for the widget's client-side code, use the following JavaScript:
 
-  JSON.parse(window.name).preferenceLocation.split('/prefs')[0];
+[source,javascript]
+----
+JSON.parse(window.name).preferenceLocation.split('/prefs')[0];
+----
