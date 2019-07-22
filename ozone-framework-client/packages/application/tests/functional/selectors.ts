@@ -12,6 +12,8 @@ export namespace MainPage {
 
     export const ABOUT_DIALOG = "div[data-element-id='about-dialog']";
 
+    export const HELP_DIALOG = "div[data-element-id='help-dialog']";
+
     export const HELP_BUTTON = "button[data-element-id='help-button']";
 
     export const HELP_SAMPLE_FILE = ".bp3-tree-node-content-0";
@@ -82,7 +84,7 @@ export namespace StackDialog {
     }
 
     export function getActionButtonsForDashboard(dashboardname: string): string {
-        return `div[data-role="dashboard-actions"][data-name=${dashboardname}]`;
+        return `div[data-role="dashboard-actions"][data-name="${dashboardname}"]`;
     }
 
     export function getAddDashboardButtonForStack(stackname: string): string {
@@ -220,6 +222,7 @@ export namespace StackAdminWidget {
     export const GROUPS_TAB = "div[data-tab-id='dashboard_groups']";
     export const USERS_TAB = "div[data-tab-id='dashboard_users']";
     export const STACK_ADMIN_TEST_DASHBOARD_NAME = "DAW_Test";
+    export const STACK_ADMIN_TEST_DASHBOARD_NAME_DEFAULT = "DAW_Test (default)";
     export const DASHBOARD_DIALOG_CLOSE = "button[aria-label='Close']";
     export const CLOSE_DAW_BUTTON = "button[title='Close Window']";
     export const ROW_BOX = "div[data-element-id='table-selector-dialog'] div[class='rt-tbody']";
