@@ -16,10 +16,6 @@ import {
 import { Stack } from "../models/Stack";
 import { UserWidget } from "../models/UserWidget";
 import { WidgetInstance } from "../models/WidgetInstance";
-<<<<<<< HEAD
-=======
-import { optional, uuid, values } from "../utility";
->>>>>>> 1615b4d... Squashed - OMP integration
 
 import { userWidgetFromJson } from "./UserWidget.codec";
 

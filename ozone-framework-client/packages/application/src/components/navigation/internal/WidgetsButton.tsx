@@ -1,8 +1,5 @@
 import React, { useCallback } from "react";
-<<<<<<< HEAD
-=======
 import { AnchorButton } from "@blueprintjs/core";
->>>>>>> 1615b4d... Squashed - OMP integration
 import { useBehavior } from "../../../hooks";
 import { Button } from "@blueprintjs/core";
 import { Shortcuts, useHotkey } from "../../../shared/hotkeys";
