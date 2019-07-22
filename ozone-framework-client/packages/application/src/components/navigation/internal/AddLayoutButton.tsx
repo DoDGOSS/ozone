@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Menu, MenuItem, Popover, Position } from "@blueprintjs/core";
+import { AnchorButton, Menu, MenuItem, Popover, Position } from "@blueprintjs/core";
 
 import { dashboardService } from "../../../services/DashboardService";
 
@@ -19,15 +19,16 @@ const _AddLayoutMenu: React.FC = () => (
 const AddLayoutMenu = React.memo(_AddLayoutMenu);
 
 export interface AddLayoutButtonProps {
+    isStoreOpen: boolean;
     isLocked: boolean;
 }
 
-const _AddLayoutButton: React.FC<AddLayoutButtonProps> = ({ isLocked }) => {
+const _AddLayoutButton: React.FC<AddLayoutButtonProps> = ({ isLocked, isStoreOpen }) => {
     if (isLocked) return null;
 
     return (
         <Popover position={Position.BOTTOM_RIGHT} minimal={true} content={<AddLayoutMenu />}>
-            <Button minimal icon="add" data-element-id="add-layout" />
+            <AnchorButton minimal icon="add" data-element-id="add-layout" disabled={isStoreOpen} />
         </Popover>
     );
 };

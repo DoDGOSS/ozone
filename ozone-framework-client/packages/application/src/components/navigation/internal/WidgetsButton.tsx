@@ -1,4 +1,8 @@
 import React, { useCallback } from "react";
+<<<<<<< HEAD
+=======
+import { AnchorButton } from "@blueprintjs/core";
+>>>>>>> 1615b4d... Squashed - OMP integration
 import { useBehavior } from "../../../hooks";
 import { Button } from "@blueprintjs/core";
 import { Shortcuts, useHotkey } from "../../../shared/hotkeys";
@@ -9,11 +13,11 @@ import { NavbarTooltip } from "./NavbarTooltip";
 
 export interface WidgetsButtonProps {
     isLocked: boolean;
+    isStoreOpen: boolean;
 }
 
-const _WidgetsButton: React.FC<WidgetsButtonProps> = ({ isLocked }) => {
+const _WidgetsButton: React.FC<WidgetsButtonProps> = ({ isLocked, isStoreOpen }) => {
     const isActive = useBehavior(mainStore.isWidgetToolbarOpen);
-    const storeIsOpen = useBehavior(mainStore.isStoreOpen);
 
     const toggleWidgetToolbar = useCallback(() => {
         if (!isLocked) mainStore.toggleWidgetToolbar();
@@ -28,12 +32,12 @@ const _WidgetsButton: React.FC<WidgetsButtonProps> = ({ isLocked }) => {
             description="Open or close the Widgets toolbar to add Widgets to your Dashboard."
             disabled={isLocked}
         >
-            <Button
+            <AnchorButton
                 minimal
                 text="Widgets"
                 icon="widget"
                 active={isActive}
-                disabled={isLocked || storeIsOpen}
+                disabled={isLocked || isStoreOpen}
                 onClick={toggleWidgetToolbar}
                 data-element-id="widgets-button"
             />
