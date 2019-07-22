@@ -35,8 +35,7 @@ import { UserDashboardDTO } from "../../api/models/UserDashboardDTO";
 
 import { uuid } from "../../utility";
 
-// TODO - iconImageUrl not saving to database - clientAPI
-// TODO - style image
+// TODO - iconImageUrl not saving to database`
 
 const fetchUserDashboardsAndStacks = (
     dispatchDashboardResult: (dashboards: DashboardDTO[]) => void,
@@ -104,7 +103,7 @@ export const StackDialog: React.FC<{}> = () => {
     const [dashboardToBeEdited, setDashboardToBeEdited] = useState<DashboardDTO | null>(null);
     const [stackToBeEdited, setStackToBeEdited] = useState<StackDTO | null>(null);
     const [dashboards, setDashboards] = useState<DashboardDTO[]>([]);
-    const [currentStack, setCurrentStack] = useState<StackDTO | undefined>(undefined);
+    const [currentStack, setCurrentStack] = useState<StackDTO | null>(null);
     const [stacks, setStacks] = useState<StackDTO[]>([]);
     const [stacksLoading, setStacksLoading] = useState(true);
     const [dashLoading, setDashLoading] = useState(true);
@@ -166,7 +165,7 @@ export const StackDialog: React.FC<{}> = () => {
     };
 
     const restoreDashboard = async (dashboard: DashboardDTO) => {
-        if (dashboard.publishedToStore === false) {
+        if (!dashboard.publishedToStore) {
             restoreUnsharedDashboard();
         } else {
             confirmRestoreDashboard(dashboard);
@@ -204,6 +203,7 @@ export const StackDialog: React.FC<{}> = () => {
             onConfirm: () => onDeleteStackConfirmed(stack)
         });
     };
+
     const onDeleteStackConfirmed = async (stack: StackDTO) => {
         let response;
         try {
@@ -230,6 +230,7 @@ export const StackDialog: React.FC<{}> = () => {
             onConfirm: () => onDeleteDashboardConfirmed(dashboard)
         });
     };
+
     const onDeleteDashboardConfirmed = async (dashboard: DashboardDTO) => {
         const response = await dashboardApi.deleteDashboard(dashboard.guid);
         if (response.status !== 200) return false;
@@ -310,20 +311,6 @@ export const StackDialog: React.FC<{}> = () => {
         });
     };
 
-    const restoreUnsharedDashboard = async () => {
-        showInvalidActionDialog({
-            title: "Warning",
-            message: ["Dashboards cannot be restored until they are shared."]
-        });
-    };
-
-    const restoreUnsharedStack = async () => {
-        showInvalidActionDialog({
-            title: "Warning",
-            message: ["Stacks cannot be restored until they are shared."]
-        });
-    };
-
     const onRestoreDashboardConfirmed = async (dashboard: DashboardDTO) => {
         const response = await dashboardApi.restoreDashboard(dashboard);
         if (response.status !== 200) return false;
@@ -349,6 +336,15 @@ export const StackDialog: React.FC<{}> = () => {
             hideCancel: true
         });
     };
+
+    const restoreUnsharedStack = async () => {
+        showConfirmationDialog({
+            title: "Warning",
+            message: ["Stacks cannot be restored until they are shared."],
+            hideCancel: true
+        });
+    };
+
     return (
         <div>
             {!(showDashboardEdit || showStackEdit) && (

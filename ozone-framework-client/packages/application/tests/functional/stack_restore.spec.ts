@@ -20,6 +20,8 @@ module.exports = {
             .click(StackDialog.CREATE_STACK_BUTTON)
             .waitForElementVisible(StackDialog.CreateStack.SUBMIT, 2000, "[Create Stack Submit Button] is visible.");
 
+        browser.pause(1000);
+
         browser.setValue(StackDialog.CreateStack.NAME_FIELD, StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME);
 
         browser.click(StackDialog.CreateStack.SELECT_PREMADE_LAYOUT);
@@ -36,7 +38,12 @@ module.exports = {
         browser
             .click(MainPage.DIALOG_CLOSE)
             .click(MainPage.STACKS_BUTTON)
-            .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
+            .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.")
+            .waitForElementVisible(
+                StackDialog.getAddDashboardButtonForStack(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME),
+                2000,
+                "[Stack Dialog] Add dashboard button is visible"
+            );
 
         browser
             .click(StackDialog.getAddDashboardButtonForStack(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME))
@@ -60,15 +67,16 @@ module.exports = {
             StackDialog.CreateStack.CREATE_DASHBOARD_NAME,
             "[Stack Dialog] Dashboard successfully added."
         );
+
         // restore unshared Dashboard not possible
         browser.waitForElementVisible(
-            StackDialog.getRestoreButtonForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME),
+            StackDialog.getRestoreButtonForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME_DEFAULT),
             2000,
-            "[Dashboard Dialog] restore button is visible."
+            "[Stack Dialog] restore button is visible."
         );
 
         browser
-            .click(StackDialog.getRestoreButtonForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME))
+            .click(StackDialog.getRestoreButtonForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME_DEFAULT))
             .waitForElementVisible(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 2000,
@@ -76,15 +84,33 @@ module.exports = {
             )
             .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
             .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
+        // restore unshared Stack not possible
+        browser.waitForElementVisible(
+            StackDialog.getRestoreButtonForStack(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME),
+            2000,
+            "[Stack Dialog] restore button is visible."
+        );
+
+        browser
+            .click(StackDialog.getRestoreButtonForStack(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME))
+            .waitForElementVisible(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                2000,
+                "[Confirmation Dialog] is visible"
+            )
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
+
         // We need to share the Stack to allow us to add users
         browser.waitForElementVisible(
             StackDialog.getShareButtonForStack(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME),
             2000,
-            "[Dashboard Dialog] share button is visible."
+            "[Stack Dialog] share button is visible."
         );
 
         browser
             .click(StackDialog.getShareButtonForStack(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME))
+            .pause(1000)
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,
@@ -103,7 +129,7 @@ module.exports = {
         browser.waitForElementVisible(
             StackAdminWidget.DASHBOARD_DIALOG_CLOSE,
             2000,
-            "[Dashboard Dialog] is safe to close."
+            "[Stack Dialog] is safe to close."
         );
 
         browser.click(StackAdminWidget.DASHBOARD_DIALOG_CLOSE);
@@ -173,7 +199,7 @@ module.exports = {
 
         browser.closeWindow().end();
     },
-    "As a User, I can restore a shared Dashboard": (browser: NightwatchAPI) => {
+    "As a User, I can restore a shared Stack": (browser: NightwatchAPI) => {
         // Login as testUser
         loggedInAs(browser, "testUser1", "password", "Test User 1");
 
@@ -188,14 +214,15 @@ module.exports = {
         browser.waitForElementVisible(
             StackDialog.getActionButtonsForStack(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME),
             2000,
-            "[Dashboard Dialog] Stack is visible."
+            "[Stack Dialog] Stack is visible."
         );
         browser
+            .waitForElementVisible(StackDialog.STACK_LIST, 2000, "[Stack list] is visible")
             .click(StackDialog.STACK_LIST)
             .waitForElementVisible(
-                StackDialog.getActionButtonsForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME),
+                StackDialog.getActionButtonsForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME_DEFAULT),
                 2000,
-                "[Dashboard Dialog] Dashboards are visible."
+                "[Stack Dialog] Dashboards are visible."
             );
 
         browser.moveToElement(StackDialog.DASHBOARD, 0, 0);
@@ -215,22 +242,80 @@ module.exports = {
 
         browser
             .click(MainPage.STACKS_BUTTON)
-            .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Dashboard Dialog] is visible.");
+            .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
         browser
             .click(StackDialog.STACK_LIST)
             .waitForElementVisible(
-                StackDialog.getActionButtonsForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME),
+                StackDialog.getActionButtonsForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME_DEFAULT),
                 2000,
                 "[Dashboards] are visible."
             );
         browser.waitForElementVisible(
-            StackDialog.getRestoreButtonForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME),
+            StackDialog.getRestoreButtonForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME_DEFAULT),
             2000,
-            "[Dashboard Dialog] restore button is visible."
+            "[Stack Dialog] restore button is visible."
         );
 
         browser
-            .click(StackDialog.getRestoreButtonForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME))
+            .click(StackDialog.getRestoreButtonForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME_DEFAULT))
+            .waitForElementVisible(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                2000,
+                "[Confirmation Dialog] is visible"
+            )
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .waitForElementNotPresent(MainPage.TABBED_PANEL);
+        // Load Stack
+
+        browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
+
+        browser
+            .click(MainPage.STACKS_BUTTON)
+            .waitForElementVisible(StackDialog.CREATE_STACK_BUTTON, 2000, "[Create Stack Button] is visible.");
+
+        browser.waitForElementVisible(
+            StackDialog.getActionButtonsForStack(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME),
+            2000,
+            "[Stack Dialog] Stack is visible."
+        );
+        browser
+            .click(StackDialog.STACK_LIST)
+            .waitForElementVisible(
+                StackDialog.getActionButtonsForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME_DEFAULT),
+                2000,
+                "[Stack Dialog] Dashboards are visible."
+            );
+
+        browser.moveToElement(StackDialog.DASHBOARD, 0, 0);
+        browser.doubleClick();
+        // add widget frames to stacks
+        browser
+            .waitForElementVisible(MainPage.ADD_LAYOUT, 2000, "[Add Panel Button] is visible.")
+            .click(MainPage.ADD_LAYOUT);
+
+        browser
+            .waitForElementVisible(MainPage.TABBED_LAYOUT_BUTTON, 2000, "[Tabbed Layout Button] is visible.")
+            .click(MainPage.TABBED_LAYOUT_BUTTON)
+            .waitForElementVisible(MainPage.TABBED_PANEL, 2000, "[Tabbed Panel] is visible.");
+        // restore stack
+        browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Dashboard Button] is visible.");
+
+        browser
+            .click(MainPage.STACKS_BUTTON)
+            .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
+        browser.waitForElementVisible(
+            StackDialog.getActionButtonsForStack(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME),
+            2000,
+            "[Stacks] are visible."
+        );
+        browser.waitForElementVisible(
+            StackDialog.getRestoreButtonForStack(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME),
+            2000,
+            "[Stack Dialog] restore button is visible."
+        );
+
+        browser
+            .click(StackDialog.getRestoreButtonForStack(StackDialog.CreateStack.CREATE_DASHBOARD_NAME))
             .waitForElementVisible(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 2000,
