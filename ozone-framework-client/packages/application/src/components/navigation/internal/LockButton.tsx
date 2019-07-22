@@ -1,19 +1,21 @@
 import React from "react";
+
 import { useBehavior } from "../../../hooks";
 import { AnchorButton, Button } from "@blueprintjs/core";
 
-import { Dashboard } from "../../../models/Dashboard";
+import { dashboardStore } from "../../../stores/DashboardStore";
 import { mainStore } from "../../../stores/MainStore";
 
+import { Dashboard } from "../../../models/Dashboard";
 import { NavbarTooltip } from "./NavbarTooltip";
 
 export interface LockButtonProps {
     dashboard: Dashboard;
+    isStoreOpen: boolean;
     isLocked: boolean;
 }
 
-const _LockButton: React.FC<LockButtonProps> = ({ dashboard, isLocked }) => {
-    const isStoreOpen = useBehavior(mainStore.isStoreOpen);
+const _LockButton: React.FC<LockButtonProps> = ({ dashboard, isLocked, isStoreOpen }) => {
     const tooltipProps = {
         title: isLocked ? "Unlock Dashboard" : "Lock Dashboard",
         description: isLocked

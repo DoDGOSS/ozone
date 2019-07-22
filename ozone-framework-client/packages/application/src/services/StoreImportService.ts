@@ -159,22 +159,27 @@ class StoreImportService {
             return;
         }
 
+        let firstDashGuid;
+
         for (const dash of stack.getDashboards()) {
             // need to wait to let the backend update between calls.
             // Probs shouldn't have to, but apparently we do.
             await new Promise((resolve) => setTimeout(resolve, 800));
 
             const dashValue = dash.state().value;
-            const dashSaved = this.saveStoreDashboard(dash, stackID, stack.name);
-            // I think don't break here, so if one dashboard doesn't save, the others still can
+            const dashGuid: string | undefined = await this.saveStoreDashboard(dash, stackID, stack.name);
+            if (firstDashGuid === undefined && dashGuid) {
+                firstDashGuid = dashGuid;
+            }
         }
 
-        // it better be
-        if (stack.getDashboards().length > 0) {
-            // switchToStack
-            const response = await dashboardStore.fetchUserDashboards(stack.getDashboards()[0].state().value.guid);
-            mainStore.hideStore();
+        // switchToStack
+        if (firstDashGuid !== undefined) {
+            const response = await dashboardStore.fetchUserDashboards(firstDashGuid);
+        } else {
+            const response = await dashboardStore.fetchUserDashboards("");
         }
+        mainStore.hideStore();
     }
 
     private async saveBasicStackInfo(stackInfo: StackUpdateRequest, saveAsNew: boolean): Promise<number | undefined> {
@@ -212,7 +217,7 @@ class StoreImportService {
         return response.data.data[0].id;
     }
 
-    private async saveStoreDashboard(dash: Dashboard, stackID: number, stackName: string): Promise<boolean> {
+    private async saveStoreDashboard(dash: Dashboard, stackID: number, stackName: string): Promise<string | undefined> {
         try {
             const dashWithStackInfo: DashboardCreateOpts = {
                 name: dash.state().value.name,
@@ -226,13 +231,14 @@ class StoreImportService {
             const response = await userDashboardApi.createDashboard(dashWithStackInfo);
             if (response.status !== 200) {
                 console.log("Could not create dashboard ", dash.state().value.name);
-                return false;
+                return undefined;
             }
+
+            return response.data.guid;
         } catch (e) {
             console.log("Something went wrong in saving dashboard ", dash.state().value.name);
-            return false;
+            return undefined;
         }
-        return true;
     }
 
     private async saveStoreWidget(widget: Widget): Promise<Widget | undefined> {
