@@ -3,6 +3,8 @@ import styles from "./index.scss";
 import React from "react";
 import { useBehavior } from "../../hooks";
 
+import { mainStore } from "../../stores/MainStore";
+
 import { Alignment, Navbar, NavbarDivider, NavbarGroup, NavbarHeading } from "@blueprintjs/core";
 
 import { PropsBase } from "../../common";
