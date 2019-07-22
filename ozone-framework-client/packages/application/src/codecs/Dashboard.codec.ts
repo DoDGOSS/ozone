@@ -16,6 +16,10 @@ import {
 import { Stack } from "../models/Stack";
 import { UserWidget } from "../models/UserWidget";
 import { WidgetInstance } from "../models/WidgetInstance";
+<<<<<<< HEAD
+=======
+import { optional, uuid, values } from "../utility";
+>>>>>>> 1615b4d... Squashed - OMP integration
 
 import { userWidgetFromJson } from "./UserWidget.codec";
 
@@ -111,7 +115,9 @@ class UserStateDeserializer {
             panels[_panel.id] = _panel;
         }
 
-        const backgroundWidgets = layout.backgroundWidgets.map(this.createWidgetInstance);
+        const backgroundWidgets = layout.backgroundWidgets
+            ? layout.backgroundWidgets.map(this.createWidgetInstance)
+            : [];
 
         const props: DashboardProps = {
             backgroundWidgets,
@@ -225,12 +231,7 @@ export function panelToJson(panel: Panel<PanelState>): PanelDTO {
             id: state.id,
             title: state.title,
             type: state.type,
-            widgets: state.widgets
-                .filter((instance) => instance.userWidget !== undefined)
-                .map((instance) => ({
-                    id: instance.id,
-                    userWidgetId: instance.userWidget.id
-                })),
+            widgets: state.widgets.filter((instance) => instance.userWidget !== undefined).map(widgetInstanceToJson),
             activeWidgetId: getActiveWidgetId(state),
             collapsed: isExpandoPanelState(state) ? state.collapsed : undefined
         };

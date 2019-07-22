@@ -24,6 +24,7 @@ import {
 } from "./internal";
 
 const _NavigationBar: React.FC<PropsBase> = ({ className }) => {
+    const isStoreOpen = useBehavior(mainStore.isStoreOpen);
     const dashboard = useBehavior(dashboardStore.currentDashboard);
     const { isLocked } = useBehavior(dashboard.state);
 
@@ -34,7 +35,7 @@ const _NavigationBar: React.FC<PropsBase> = ({ className }) => {
                 <DesktopButton />
 
                 <StacksButton />
-                <WidgetsButton isLocked={isLocked} />
+                <WidgetsButton isLocked={isLocked} isStoreOpen={isStoreOpen} />
             </NavbarGroup>
 
             <NavbarGroup className={styles.group} align={Alignment.CENTER}>
@@ -42,9 +43,9 @@ const _NavigationBar: React.FC<PropsBase> = ({ className }) => {
             </NavbarGroup>
 
             <NavbarGroup className={styles.group} align={Alignment.RIGHT}>
-                <LockButton dashboard={dashboard} isLocked={isLocked} />
-                <SaveDashboardButton />
-                <AddLayoutButton isLocked={isLocked} />
+                <LockButton dashboard={dashboard} isLocked={isLocked} isStoreOpen={isStoreOpen} />
+                <SaveDashboardButton isStoreOpen={isStoreOpen} />
+                <AddLayoutButton isLocked={isLocked} isStoreOpen={isStoreOpen} />
                 <NavbarDivider />
                 <ThemeButton />
                 <HelpButton />

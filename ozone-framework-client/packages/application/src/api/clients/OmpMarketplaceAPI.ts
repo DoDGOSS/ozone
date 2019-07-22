@@ -35,14 +35,13 @@ import { Widget } from "../../models/Widget";
 import { Intent } from "../../models/Intent";
 import { Dashboard } from "../../models/Dashboard";
 import { Stack } from "../../models/Stack";
-import { WidgetInstance } from "../../models/WidgetInstance";
+import { getWidgetOf, WidgetInstance } from "../../models/WidgetInstance";
 // import { Panel } from "../../models/panel/types";
 // import { FitPanel } from "../../models/panel/FitPanel";
 // import { TabbedPanel } from "../../models/panel/TabbedPanel";
 // import { ExpandoPanel } from "../../models/panel/ExpandoPanel";
 
 import { cleanNullableProp, uuid } from "../../utility";
-import { DashboardLayout } from "../../components/widget-dashboard/types";
 
 export class OmpMarketplaceAPI {
     private readonly gateway: Gateway;
@@ -175,6 +174,7 @@ export class OmpMarketplaceAPI {
         const newDash = new Dashboard({
             tree: null,
             panels: {},
+            backgroundWidgets: [],
             description: dashListing.description,
             guid: dashListing.guid,
             // imageUrl?: string;
@@ -189,8 +189,7 @@ export class OmpMarketplaceAPI {
             stackId: stackID,
             user: {
                 username: importingUser.username
-            },
-            backgroundWidgets: dashListing.backgroundWidgets
+            }
         });
 
         // For fitpanel, just check that there's one widget, and call addWidgetSimple.
@@ -207,7 +206,12 @@ export class OmpMarketplaceAPI {
                 );
                 const userWidget = dashboardStore.findUserWidgetByUniversalName(cleanUniversalName);
                 if (userWidget) {
-                    widgetInstances.push(WidgetInstance.create(userWidget));
+                    const widgetInstance = WidgetInstance.create(userWidget);
+                    if (storePanel.xtype === "background") {
+                        newDash.addWidget({ widget: widgetInstance });
+                    } else {
+                        widgetInstances.push(widgetInstance);
+                    }
                 } else {
                     console.log("User widget not found: ", storeWidget);
                 }
@@ -238,6 +242,9 @@ export class OmpMarketplaceAPI {
                         title: storePanel.name,
                         widgets: widgetInstances
                     });
+                    break;
+                default:
+                    // i.e., for the 'background' panel
                     break;
             }
 
@@ -453,6 +460,10 @@ export class OmpMarketplaceAPI {
             const panel = dashboard.panels[panelID].state().value;
             panes.push(this.getPanelInStoreLayoutFormat(dashboard.guid, panel));
         }
+        if (dashboard.backgroundWidgets && dashboard.backgroundWidgets.length > 0) {
+            const backgroundWidgets = dashboard.backgroundWidgets.map((w: WidgetInstance) => getWidgetOf(w));
+            panes.push(this.getBackgroundPanel(backgroundWidgets, dashboard.guid));
+        }
         return {
             name: dashboard.name,
             guid: dashboard.guid,
@@ -488,6 +499,49 @@ export class OmpMarketplaceAPI {
             htmlText: "50%", // ?
             paneType: panel.type,
             defaultSettings: defaultSettings
+        };
+    }
+
+    private getBackgroundPanel(backgroundWidgets: Widget[], dashID: string) {
+        return {
+            xtype: "background",
+            flex: 1,
+            cls: "left",
+            widgets: backgroundWidgets.map((w: Widget) => this.getEmptyBackgroundWidgetLayout(w, dashID)),
+            items: [], // ?
+            htmlText: "50%", // ?
+            paneType: "background",
+            defaultSettings: {}
+        };
+    }
+
+    private getEmptyBackgroundWidgetLayout(widget: Widget, dashID: string): any {
+        return {
+            pinned: false,
+            collapsed: false,
+            widgetGuid: widget.id,
+            columnPos: 0,
+            minimized: false,
+            floatingWidget: false,
+            buttonId: null,
+            universalName: this.getOmpUniqueUniversalName(widget),
+            intentConfig: null,
+            zIndex: 0,
+            height: 0,
+            singleton: widget.isSingleton,
+            maximized: false,
+            active: true,
+            statePosition: 1,
+            dashboardGuid: dashID,
+            buttonOpened: false,
+            paneGuid: uuid(),
+            launchData: null,
+            name: widget.title,
+            x: 0,
+            width: 0,
+            y: 0,
+            region: "none",
+            uniqueId: widget.id + "_background_" + dashID
         };
     }
 
@@ -692,15 +746,3 @@ export class OmpMarketplaceAPI {
         return [cleanID, cleanUniversalName];
     }
 }
-
-/* example for opening a widget from the store
-
-*/
-
-/* example for opening a dashboard from the store
-
-*/
-
-/* example for opening a stack from the store
-
-*/
