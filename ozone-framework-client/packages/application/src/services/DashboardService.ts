@@ -12,7 +12,7 @@ import { MosaicDropTargetPosition } from "../shared/dragAndDrop";
 
 import { dashboardStore, DashboardStore } from "../stores/DashboardStore";
 import { hasSameId, isNil, Predicate, some, uuid, values } from "../utility";
-import { Widget } from "../models/Widget";
+
 import { authService } from "./AuthService";
 import { errorStore } from "./ErrorStore";
 import { WidgetLaunchArgs } from "./WidgetLaunchArgs";

@@ -20,7 +20,6 @@ import { StoreComponent } from "../Store/StoreComponent";
 import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
 import { WidgetSwitcher } from "../widget-switcher/WidgetSwitcher";
 import { WidgetToolbar } from "../widget-toolbar/WidgetToolbar";
-import { StoreComponent } from "../Store/StoreComponent";
 
 export const HomeScreen: React.FC<{}> = () => {
     const isAboutVisible = useBehavior(mainStore.isAboutVisible);
