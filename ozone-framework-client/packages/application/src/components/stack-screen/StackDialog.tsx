@@ -200,8 +200,19 @@ export const StackDialog: React.FC<{}> = () => {
         });
     };
     const onDeleteStackConfirmed = async (stack: StackDTO) => {
-        const response = await stackApi.deleteStackAsAdmin(stack.id);
-        if (response.status !== 200) return false;
+        let response;
+        try {
+            const currentUser = await authService.check();
+            if (currentUser && currentUser.data && currentUser.data.isAdmin) {
+                response = await stackApi.deleteStackAsAdmin(stack.id);
+            } else {
+                response = await stackApi.deleteStackAsUser(stack.id);
+            }
+            if (response && response.status !== 200) return false;
+        } catch (e) {
+            fetchData();
+            return false;
+        }
 
         fetchData();
         return true;
@@ -238,7 +249,10 @@ export const StackDialog: React.FC<{}> = () => {
                 "\n",
                 "If you have access to more than one Store, you will be prompted to choose."
             ],
-            onConfirm: () => storeExportService.uploadStack(stack.id)
+            onConfirm: () => {
+                onShareConfirmed(stack);
+                storeExportService.uploadStack(stack.id);
+            }
         });
     };
 
@@ -255,8 +269,13 @@ export const StackDialog: React.FC<{}> = () => {
     };
 
     const onShareConfirmed = async (stack: StackDTO) => {
-        const response = await stackApi.shareStack(stack.id);
-        if (response.status !== 200) return false;
+        try {
+            const response = await stackApi.shareStack(stack.id);
+            if (response.status !== 200) return false;
+        } catch (e) {
+            fetchData();
+            return false;
+        }
 
         fetchData();
         return true;

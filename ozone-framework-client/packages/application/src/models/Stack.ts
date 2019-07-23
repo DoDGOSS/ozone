@@ -60,6 +60,22 @@ export class Stack extends StackProps {
                     stackWidgets.push(widget);
                 }
             }
+            // background widgets
+            for (const w of dashValue.backgroundWidgets) {
+                if (!w.userWidget) {
+                    // undefined if it used to hold a widget that's since been deleted.
+                    continue;
+                }
+                if (
+                    onlyUnique &&
+                    stackWidgets.find((sw: Widget) => sw.universalName === w.userWidget.widget.universalName) !==
+                        undefined
+                ) {
+                    continue;
+                }
+                const widget = w.userWidget.widget;
+                stackWidgets.push(widget);
+            }
         }
         return stackWidgets;
     }

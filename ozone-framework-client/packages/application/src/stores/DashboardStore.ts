@@ -98,6 +98,7 @@ export class DashboardStore {
         }
         const createdDashboard = createResponse.data;
         await this.fetchUserDashboards(createdDashboard.guid);
+        return createdDashboard;
     };
 
     saveCurrentDashboard = async () => {
