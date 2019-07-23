@@ -200,7 +200,7 @@ export const StackDialog: React.FC<{}> = () => {
         });
     };
     const onDeleteStackConfirmed = async (stack: StackDTO) => {
-        const response = await stackApi.deleteStackAsAdmin(stack.id);
+        const response = await stackApi.deleteStackAsUser(stack.id);
         if (response.status !== 200) return false;
 
         fetchData();
@@ -215,10 +215,27 @@ export const StackDialog: React.FC<{}> = () => {
         });
     };
     const onDeleteDashboardConfirmed = async (dashboard: DashboardDTO) => {
+        console.log(dashboard.guid);
+        console.log((await userDashboardApi.getOwnDashboards()).data.dashboards);
+        console.log((await dashboardApi.getDashboards()).data.data);
         const response = await dashboardApi.deleteDashboard(dashboard.guid);
         if (response.status !== 200) return false;
+        //
+        // console.log((await userDashboardApi.getOwnDashboards()).data.dashboards)
+        // console.log((await dashboardApi.getDashboards()).data.data)
+        // await new Promise((resolve) => setTimeout(resolve, 8000));
+        //
+        // console.log((await userDashboardApi.getOwnDashboards()).data.dashboards)
+        // console.log((await dashboardApi.getDashboards()).data.data)
+        // await new Promise((resolve) => setTimeout(resolve, 3000));
+        //
+        // let userDashboards = (await userDashboardApi.getOwnDashboards()).data.dashboards
+        // let allDashboards = (await dashboardApi.getDashboards()).data.data;
+        // console.log(allDashboards.filter((dashboard) =>
+        //     userDashboards.some((userDashboard) => userDashboard.guid === dashboard.guid)
+        // ))
 
-        fetchData();
+        // fetchData();
         return true;
     };
 
@@ -255,8 +272,13 @@ export const StackDialog: React.FC<{}> = () => {
     };
 
     const onShareConfirmed = async (stack: StackDTO) => {
-        const response = await stackApi.shareStack(stack.id);
-        if (response.status !== 200) return false;
+        try {
+            const response = await stackApi.shareStack(stack.id);
+            if (response.status !== 200) return false;
+        } catch (e) {
+            fetchData();
+            return false;
+        }
 
         fetchData();
         return true;

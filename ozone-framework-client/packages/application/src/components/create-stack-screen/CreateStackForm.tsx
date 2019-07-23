@@ -8,6 +8,7 @@ import { Form, Formik, FormikActions, FormikProps } from "formik";
 import { Button, Intent, Radio, RadioGroup } from "@blueprintjs/core";
 
 import { stackApi } from "../../api/clients/StackAPI";
+import { userDashboardApi } from "../../api/clients/UserDashboardAPI";
 
 import { dashboardStore } from "../../stores/DashboardStore";
 import { StackCreateRequest } from "../../api/models/StackDTO";
@@ -42,33 +43,48 @@ export const CreateStackForm: React.FC<CreateStackFormProps> = ({ onSubmit }) =>
                 description: ""
             }}
             onSubmit={async (stackValues: CreateStackOptions, actions: FormikActions<CreateStackOptions>) => {
-                const stackCreateInfo: StackCreateRequest = {
-                    name: stackValues.name,
-                    imageUrl: stackValues.imageUrl,
-                    approved: false,
-                    stackContext: uuid(),
-                    description: stackValues.description
-                };
-
-                const stackResponse = await stackApi.createStack(stackCreateInfo);
-                if (stackResponse.status !== 200 || !stackResponse.data.data || !(stackResponse.data.data.length > 0)) {
-                    console.log("Could not create stack.");
-                    showToast({
-                        message: "Stack `" + stackCreateInfo.name + "` could not be created.",
-                        intent: Intent.SUCCESS
-                    });
-                    return;
-                }
-                const stackID = stackResponse.data.data[0].id;
-
                 const defaultDashValues = {
                     name: stackValues.name + " (default)",
                     description: "Default dashboard for stack `" + stackValues.name + "`",
                     presetLayoutName: null,
-                    copyGuid: "",
-                    stackId: stackID
+                    copyGuid: ""
                 };
-                const dashResponse = await dashboardStore.createDashboard(defaultDashValues);
+                const newDash = await dashboardStore.createDashboard(defaultDashValues);
+                const userDashboardsResponse = await userDashboardApi.getOwnDashboards();
+                if (userDashboardsResponse.status !== 200 || !userDashboardsResponse.data.dashboards) {
+                    console.log("Could not create stack.");
+                    showToast({
+                        message: "Stack `" + stackValues.name + "` could not be created.",
+                        intent: Intent.SUCCESS
+                    });
+                    return;
+                }
+
+                let newStackID: number | undefined;
+
+                for (const dash of userDashboardsResponse.data.dashboards) {
+                    if (dash.guid === newDash.guid) {
+                        newStackID = dash.stack.id;
+                    }
+                }
+                if (!newStackID) {
+                    return;
+                }
+
+                const newStackInfo: StackUpdateRequest = {
+                    id: newStackID,
+                    name: stackValues.name,
+                    imageUrl: stackValues.imageUrl,
+                    approved: false,
+                    description: stackValues.description
+                };
+
+                const stackResponse = await stackApi.updateStack(newStackInfo);
+
+                if (stackResponse.status !== 200 || !stackResponse.data.data || !(stackResponse.data.data.length > 0)) {
+                    return;
+                }
+
                 onSubmit();
             }}
         >
