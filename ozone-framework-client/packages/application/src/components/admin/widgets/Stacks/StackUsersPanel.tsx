@@ -67,11 +67,11 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
                     />
                 </div>
 
-                <StackUsersEditDialog
+                {/* <StackUsersEditDialog
                     show={this.state.showAdd}
                     onSubmit={this.addUser}
                     onClose={this.closeUsersDialog}
-                />
+                /> */}
             </div>
         );
     }
@@ -146,18 +146,13 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
 
     private getTableColumns() {
         return [
-            {
-                title: "Users",
-                columns: [
-                    { title: "Name", field: "userRealName" },
-                    { title: "Username", field: "username" },
-                    { title: "Email", field: "email" },
-                    { title: "Stacks", field: "totalStacks" },
-                    { title: "Widgets", field: "totalWidgets" },
-                    { title: "Dashboards", field: "totalDashboards" },
-                    { title: "Last Login", field: "lastLogin" }
-                ] as ColumnTabulator[]
-            },
+            { title: "Name", field: "userRealName" },
+            { title: "Username", field: "username" },
+            { title: "Email", field: "email" },
+            { title: "Stacks", field: "totalStacks" },
+            { title: "Widgets", field: "totalWidgets" },
+            { title: "Dashboards", field: "totalDashboards" },
+            { title: "Last Login", field: "lastLogin" },
             {
                 title: "Actions",
                 width: 90,
@@ -176,6 +171,6 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
                     );
                 }
             }
-        ];
+        ] as ColumnTabulator[];
     }
 }

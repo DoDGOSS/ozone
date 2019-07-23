@@ -1,9 +1,13 @@
 import React from "react";
-import { Button } from "@blueprintjs/core";
+import { AnchorButton } from "@blueprintjs/core";
 import { dashboardStore } from "../../../stores/DashboardStore";
 
-const _SaveDashboardButton: React.FC = () => (
-    <Button minimal icon="floppy-disk" onClick={dashboardStore.saveCurrentDashboard} />
+export interface SaveDashboardButtonProps {
+    isStoreOpen: boolean;
+}
+
+const _SaveDashboardButton: React.FC<SaveDashboardButtonProps> = ({ isStoreOpen }) => (
+    <AnchorButton minimal icon="floppy-disk" onClick={dashboardStore.saveCurrentDashboard} disabled={isStoreOpen} />
 );
 
 export const SaveDashboardButton = React.memo(_SaveDashboardButton);

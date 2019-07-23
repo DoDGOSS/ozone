@@ -30,7 +30,7 @@ export const StoreSelectionComponent: React.FC<StoreSelectionComponentProps> = (
         return <div>No Stores have been made available to you.</div>;
     }
     return (
-        <div className={classNames(themeClass, styles.fullCenteredThin)}>
+        <div className={classNames(themeClass, styles.fullCenteredThinAutoHeight)}>
             {props.stores.map((store, index) => (
                 <span key={store.id}>
                     <Button

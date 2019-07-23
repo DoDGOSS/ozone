@@ -15,16 +15,20 @@ import { HelpDialog } from "../help-screen/HelpDialog";
 import { NavigationBar } from "../navigation/NavigationBar";
 import { StackDialog } from "../stack-screen/StackDialog";
 import { UserProfileDialog } from "../user-profile/UserProfileDialog";
+
+import { StoreComponent } from "../Store/StoreComponent";
 import { WidgetDashboard } from "../widget-dashboard/WidgetDashboard";
 import { WidgetSwitcher } from "../widget-switcher/WidgetSwitcher";
 import { WidgetToolbar } from "../widget-toolbar/WidgetToolbar";
-import { StoreComponent } from "../Store/StoreComponent";
 
 export const HomeScreen: React.FC<{}> = () => {
     const isAboutVisible = useBehavior(mainStore.isAboutVisible);
     const isStoreOpen = useBehavior(mainStore.isStoreOpen);
     const storeShouldRefresh = useBehavior(mainStore.storeShouldRefresh);
     const themeClass = useBehavior(mainStore.themeClass);
+
+    useHotkeysService();
+
     useEffect(() => {
         dashboardStore.fetchUserDashboards();
     }, []);

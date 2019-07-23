@@ -1,6 +1,7 @@
-import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
-import { MosaicPath } from "../features/MosaicDashboard/types";
+import { MosaicBranch, MosaicNode, MosaicParent, MosaicPath } from "../features/MosaicDashboard/types";
 import { createDragToUpdates, updateTree } from "../features/MosaicDashboard/util/mosaicUpdates";
+
+import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
 import { AddWidgetOpts, Dashboard, DashboardProps } from "../models/Dashboard";
 import { ExpandoPanel, FitPanel, isExpandoPanel, LayoutType, Panel, PanelState, TabbedPanel } from "../models/panel";
 import { UserWidget } from "../models/UserWidget";
@@ -8,13 +9,11 @@ import { WidgetInstance } from "../models/WidgetInstance";
 import { Widget } from "../models/Widget";
 
 import { MosaicDropTargetPosition } from "../shared/dragAndDrop";
-import { MosaicBranch, MosaicNode, MosaicParent } from "../features/MosaicDashboard/types";
 
 import { dashboardStore, DashboardStore } from "../stores/DashboardStore";
 import { hasSameId, isNil, Predicate, some, uuid, values } from "../utility";
 
 import { authService } from "./AuthService";
-
 import { errorStore } from "./ErrorStore";
 import { WidgetLaunchArgs } from "./WidgetLaunchArgs";
 
