@@ -44,7 +44,7 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
 
     return (
         <Formik
-            key={widget && widget.id ? widget.id : uuid()}
+            key={widget && "id" in widget ? widget["id"] : uuid()}
             ref={form}
             initialValues={getInitValues(widget)}
             validationSchema={WidgetPropertiesSchema}

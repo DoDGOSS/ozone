@@ -80,7 +80,7 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
     getPropertiesPanel() {
         return (
             <WidgetPropertiesPanel
-                key={this.state.widget && this.state.widget.id ? this.state.widget.id : uuid()}
+                key={this.state.widget && "id" in this.state.widget ? this.state.widget["id"] : uuid()}
                 widget={this.state.widget}
                 onSubmit={this.createOrUpdateWidget}
                 widgetTypes={this.props.widgetTypes}
