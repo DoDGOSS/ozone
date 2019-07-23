@@ -1,0 +1,108 @@
+@import "../../common";
+
+.dialog {
+    width: auto;
+    padding: 0;
+
+    min-width: 300px;
+}
+
+.zeroState {
+    font-style: italic;
+    text-align: center;
+    color: lighten($text-color_light, 20%);
+
+    :global(.#{$dark-theme}) & {
+        color: darken($text-color_dark, 20%);
+    }
+}
+
+.tileContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.tile {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 120px;
+    margin: 0 0.25rem 0 0.25rem;
+    padding: 8px;
+    border-radius: 8px;
+
+    &:hover {
+        background: $hover-color_light;
+    }
+
+    :global(.#{$dark-theme}) & {
+        &:hover {
+            background: $hover-color_dark;
+        }
+    }
+}
+
+.tile.background {
+    &:hover {
+        background: unset;
+    }
+
+    :global(.#{$dark-theme}) & {
+        &:hover {
+            background: unset;
+        }
+    }
+}
+
+.tileIcon {
+    width: 64px;
+    height: 64px;
+}
+
+.tileTitle {
+    width:120px;
+    margin-top: 0.25rem;
+    color: $text-color_light;
+    font-weight: 600;
+    text-align: center;
+
+    :global(.#{$dark-theme}) & {
+        color: $text-color_dark;
+    }
+}
+
+.selected {
+    border: 1px solid #000;
+}
+
+.backgroundIndicator {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    min-height: 24px;
+
+    color: #5c7080;
+    :global(.#{$dark-theme}) & {
+        color: #a7b6c2;
+    }
+}
+
+.closeButton {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    min-width: 24px;
+    min-height: 24px;
+    padding: 0;
+}
+
+

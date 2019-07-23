@@ -1,21 +1,18 @@
-import { MosaicBranch, MosaicNode, MosaicParent, MosaicPath } from "../features/MosaicDashboard/types";
-import { createDragToUpdates, updateTree } from "../features/MosaicDashboard/util/mosaicUpdates";
-
 import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
+import { MosaicBranch, MosaicPath } from "../features/MosaicDashboard/types";
+import { createDragToUpdates, updateTree } from "../features/MosaicDashboard/util/mosaicUpdates";
 import { AddWidgetOpts, Dashboard, DashboardProps } from "../models/Dashboard";
 import { ExpandoPanel, FitPanel, isExpandoPanel, LayoutType, Panel, PanelState, TabbedPanel } from "../models/panel";
 import { UserWidget } from "../models/UserWidget";
-import { WidgetInstance } from "../models/WidgetInstance";
 import { Widget } from "../models/Widget";
-
+import { WidgetInstance } from "../models/WidgetInstance";
 import { MosaicDropTargetPosition } from "../shared/dragAndDrop";
-
 import { dashboardStore, DashboardStore } from "../stores/DashboardStore";
-import { hasSameId, isNil, Predicate, some, uuid, values } from "../utility";
+import { hasSameId, isNil, Predicate, values } from "../utility";
 
 import { authService } from "./AuthService";
 import { errorStore } from "./ErrorStore";
-import { WidgetLaunchArgs } from "./WidgetLaunchArgs";
+import { WidgetLaunchArgs } from "./widget-api/WidgetLaunchArgs";
 
 export class DashboardService {
     private readonly store: DashboardStore;
@@ -296,6 +293,7 @@ export function mosaicPathFromCode(code: number): MosaicBranch[] {
     }
     return path;
 }
+
 export function mosaicPositionFromCode(code: number): MosaicDropTargetPosition {
     // remember this is a KD tree, where the way to add a panel is to essentaily split an existing one in half.
     // So the path goes around in a circle, splitting all nodes of one size before going around and splitting all nodes on the next level.

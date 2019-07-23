@@ -130,7 +130,6 @@ export class OmpMarketplaceAPI {
             x: 0,
             y: 0
         };
-        return listing.owfProperties;
     }
 
     //
@@ -399,7 +398,8 @@ export class OmpMarketplaceAPI {
                 let message: string;
 
                 if (response.status === 200) {
-                    (message = response.data.data.msg), (success = true);
+                    message = response.data.data.msg;
+                    success = true;
                 } else {
                     message = response && response.data ? response.data : "Error in pushing store.";
                     success = false;

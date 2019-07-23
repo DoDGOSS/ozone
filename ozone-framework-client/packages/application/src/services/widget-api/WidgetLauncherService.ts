@@ -1,9 +1,9 @@
 import { eventingService, EventingService, parseJson } from "./EventingService";
-import { DashboardService, dashboardService } from "./DashboardService";
-import { errorStore } from "./ErrorStore";
+import { DashboardService, dashboardService } from "../DashboardService";
+import { errorStore } from "../ErrorStore";
 import { expectArgument, RpcMessage } from "./RpcMessage";
 
-import { isNil, isString } from "../utility";
+import { isNil, isString } from "../../utility";
 import { WidgetLaunchArgs } from "./WidgetLaunchArgs";
 
 export interface WidgetLaunchServiceOpts {
