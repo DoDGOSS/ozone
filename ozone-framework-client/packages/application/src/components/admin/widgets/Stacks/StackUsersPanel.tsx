@@ -146,30 +146,31 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
 
     private getTableColumns() {
         return [
-                { title: "Name", field: "userRealName" },
-                { title: "Username", field: "username" },
-                { title: "Email", field: "email" },
-                { title: "Stacks", field: "totalStacks" },
-                { title: "Widgets", field: "totalWidgets" },
-                { title: "Dashboards", field: "totalDashboards" },
-                { title: "Last Login", field: "lastLogin" },
-                { title: "Actions",
-                    width: 90,
-                    responsive: 0,
-                    formatter: (row: any) => {
-                        const data: UserDTO = row.cell._cell.row.data;
-                        return (
-                            <div>
-                                <ButtonGroup data-role="stack-admin-widget-user-actions" data-username={data.username}>
-                                    <DeleteButton
-                                        onClick={() => this.confirmDeleteUser(data)}
-                                        itemName={data.userRealName}
-                                    />
-                                </ButtonGroup>
-                            </div>
-                        );
-                    }
+            { title: "Name", field: "userRealName" },
+            { title: "Username", field: "username" },
+            { title: "Email", field: "email" },
+            { title: "Stacks", field: "totalStacks" },
+            { title: "Widgets", field: "totalWidgets" },
+            { title: "Dashboards", field: "totalDashboards" },
+            { title: "Last Login", field: "lastLogin" },
+            {
+                title: "Actions",
+                width: 90,
+                responsive: 0,
+                formatter: (row: any) => {
+                    const data: UserDTO = row.cell._cell.row.data;
+                    return (
+                        <div>
+                            <ButtonGroup data-role="stack-admin-widget-user-actions" data-username={data.username}>
+                                <DeleteButton
+                                    onClick={() => this.confirmDeleteUser(data)}
+                                    itemName={data.userRealName}
+                                />
+                            </ButtonGroup>
+                        </div>
+                    );
                 }
+            }
         ] as ColumnTabulator[];
     }
 }
