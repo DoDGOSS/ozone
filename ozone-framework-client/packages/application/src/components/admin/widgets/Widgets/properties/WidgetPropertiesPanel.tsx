@@ -87,6 +87,7 @@ export class WidgetPropertiesPanel extends React.Component<WidgetPropertiesPanel
         } else {
             toDisplay = (
                 <WidgetPropertiesForm
+                    key={this.state.widget && this.state.widget.id ? this.state.widget.id : uuid()}
                     widget={this.state.widget}
                     onSubmit={this.props.onSubmit}
                     widgetTypes={this.props.widgetTypes}
