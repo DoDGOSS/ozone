@@ -1,10 +1,10 @@
-import * as React from "react";
-
-import { isArray, values as _values } from "lodash";
-
-import { default as _classNames } from "classnames";
-
+import { isArray } from "lodash";
 import { default as _uuid } from "uuid/v4";
+
+export * from "./collections";
+export * from "./predicates";
+export * from "./react";
+export * from "./selectors";
 
 export function uuid(): string {
     return _uuid();
@@ -72,51 +72,6 @@ export function getIn<T, K extends keyof T, V>(object: T, key: K, guard: TypeGua
     return guard(value) ? value : undefined;
 }
 
-export function handleStringChange(handler: (value: string) => void) {
-    return (event: React.FormEvent<HTMLElement>) => handler((event.target as HTMLInputElement).value);
-}
-
-export function handleSelectChange(handler: (value: string) => void) {
-    return (event: React.FormEvent<Element>) => handler((event.target as HTMLSelectElement).value);
-}
-
-export function classNames(...classes: ClassValue[]): string {
-    return _classNames(classes);
-}
-
-export interface ClassArray extends Array<ClassValue> {}
-
-export type ClassValue = string | number | ClassDictionary | ClassArray | undefined | null | boolean;
-
-export interface ClassDictionary {
-    [id: string]: any;
-}
-
-export type Predicate<T> = (value: T) => boolean;
-
-export function not<T>(predicate: Predicate<T>): Predicate<T> {
-    return (value: T) => !predicate(value);
-}
-
-/**
- * Checks if predicate returns truthy for any element of collection.
- * Iteration is stopped once predicate returns truthy.
- */
-export function some<T>(collection: T[], predicate: Predicate<T>): boolean {
-    for (const item of collection) {
-        if (predicate(item)) return true;
-    }
-    return false;
-}
-
-export function hasSameId<T>(a: { id: T }): Predicate<{ id: T }> {
-    return (b: { id: T }) => a.id === b.id;
-}
-
-export function byId<T>(a: { id: T }): T {
-    return a.id;
-}
-
 export function omitIndex<T>(array: T[], index: number): T[] {
     const result: T[] = [];
     for (let i = 0; i < array.length; i++) {
@@ -140,17 +95,6 @@ export function optional<T extends any>(value: T | null | undefined): T | undefi
 export function orNull<T extends any>(value: T | null | undefined): T | null {
     return isNil(value) ? null : value;
 }
-
-/**
- * Creates an array of the own enumerable property values of object.
- */
-export function values<T>(obj: Dictionary<T> | NumericDictionary<T>): T[] {
-    return _values(obj);
-}
-
-type Collection<T> = Array<T> | Dictionary<T> | NumericDictionary<T>;
-
-type Iteratee<T, R> = (value: T) => R;
 
 export function flatMap<T, R>(collection: Collection<T>, iteratee: Iteratee<T, R | R[]>): R[] {
     const array = isArray(collection) ? collection : Object.values(collection);
