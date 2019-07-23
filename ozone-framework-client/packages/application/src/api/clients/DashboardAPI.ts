@@ -91,6 +91,7 @@ export class DashboardAPI {
 
     async deleteDashboardsInStack(stackID: number): Promise<void> {
         const response = await this.getDashboards();
+        console.log(response.data.data);
         if (response.status === 200 && response.data && response.data.data) {
             for (const dash of response.data.data) {
                 if (!dash.stack || dash.stack.id === stackID) {
@@ -98,6 +99,8 @@ export class DashboardAPI {
                 }
             }
         }
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        console.log((await this.getDashboards()).data.data);
         return;
     }
 }
