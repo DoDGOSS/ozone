@@ -8,7 +8,7 @@ import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { WidgetCreateRequest, WidgetDTO, WidgetUpdateRequest } from "../../../../api/models/WidgetDTO";
 import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 import { IntentsDTO } from "../../../../api/models/IntentDTO";
-import { cleanNullableProp } from "../../../../utility";
+import { cleanNullableProp, uuid } from "../../../../utility";
 
 import { WidgetPropertiesPanel } from "./properties/WidgetPropertiesPanel";
 import { IntentsPanel } from "./intents/IntentsPanel";
@@ -80,6 +80,7 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
     getPropertiesPanel() {
         return (
             <WidgetPropertiesPanel
+                key={this.state.widget && this.state.widget.id ? this.state.widget.id : uuid()}
                 widget={this.state.widget}
                 onSubmit={this.createOrUpdateWidget}
                 widgetTypes={this.props.widgetTypes}
