@@ -49,8 +49,8 @@ To include the Store in the Ozone bundle, do the following:
 
 . Unpack the zipped bundles containing the applications to be included.
 . Navigate to `/tomcat/webapps/` in each unpacked bundle.
-. Copy the appropriate WAR files into the /tomcat/webapps/ directory where Ozone was deployed.
-. Copy the additional applications' configuration files into /tomcat/lib/ where Ozone was deployed. For the Store, the configuration file is application.yml.
+. Copy the appropriate WAR files into the `/tomcat/webapps/` directory where Ozone was deployed.
+. Copy the additional applications' configuration files into `/tomcat/lib/` where Ozone was deployed. For the Store, the configuration file is `application.yml`.
 . Restart the Ozone server.
 
 
