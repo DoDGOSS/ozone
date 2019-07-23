@@ -21,18 +21,14 @@ export const WidgetTable: React.FC<WidgetTableProps> = (props) => {
     const { data, isLoading, onDelete, defaultPageSize } = props;
 
     const columns = useMemo(
-        () => [
-            {
-                title: "Widgets",
-                columns: [
-                    { title: "Title", field: "value.namespace" },
-                    { title: "URL", field: "value.url" },
-                    { title: "Users", field: "value.totalUsers" },
-                    { title: "Groups", field: "value.totalGroups" },
-                    { title: "Actions", width: 90, responsive: 0, formatter: WidgetCellRenderer({ onDelete }) }
-                ] as ColumnTabulator[]
-            }
-        ],
+        () =>
+            [
+                { title: "Title", field: "value.namespace" },
+                { title: "URL", field: "value.url" },
+                { title: "Users", field: "value.totalUsers" },
+                { title: "Groups", field: "value.totalGroups" },
+                { title: "Actions", width: 90, responsive: 0, formatter: WidgetCellRenderer({ onDelete }) }
+            ] as ColumnTabulator[],
         [onDelete]
     );
 

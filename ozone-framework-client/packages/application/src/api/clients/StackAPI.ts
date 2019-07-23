@@ -105,6 +105,8 @@ export class StackAPI {
     }
 
     async deleteStackAsUser(id: number): Promise<Response<StackDeleteUserResponse>> {
+        await dashboardApi.deleteDashboardsInStack(id);
+
         const requestData: any = qs.stringify({
             _method: "DELETE",
             data: JSON.stringify(mapIds(id))

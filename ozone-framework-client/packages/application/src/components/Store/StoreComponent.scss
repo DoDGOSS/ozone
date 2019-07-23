@@ -20,6 +20,12 @@
     width:100%;
 }
 
+:local .fullCenteredThinAutoHeight {
+    width:100%;
+    padding:8px;
+    justify-content:center;
+}
+
 :local .fullCenteredThin {
     height:100%;
     width:100%;

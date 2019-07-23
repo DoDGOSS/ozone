@@ -11,6 +11,8 @@ import { WidgetTypeReference } from "../../../../../api/models/WidgetTypeDTO";
 
 import { CheckBox, FormError, HiddenField, SelectField, SubmitButton, TextField } from "../../../../form";
 
+import { uuid } from "../../../../../utility";
+
 import * as styles from "../../Widgets.scss";
 
 interface WidgetFormProps {
@@ -42,6 +44,7 @@ export const WidgetPropertiesForm: React.FunctionComponent<WidgetFormProps> = ({
 
     return (
         <Formik
+            key={widget && "id" in widget ? widget["id"] : uuid()}
             ref={form}
             initialValues={getInitValues(widget)}
             validationSchema={WidgetPropertiesSchema}
