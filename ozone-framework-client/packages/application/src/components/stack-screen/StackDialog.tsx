@@ -209,8 +209,7 @@ export const StackDialog: React.FC<{}> = () => {
                 response = await stackApi.deleteStackAsUser(stack.id);
             }
             if (response && response.status !== 200) return false;
-        }
-        catch (e) {
+        } catch (e) {
             fetchData();
             return false;
         }
