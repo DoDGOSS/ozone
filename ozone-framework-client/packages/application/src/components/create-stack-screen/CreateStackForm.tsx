@@ -11,7 +11,8 @@ import { stackApi } from "../../api/clients/StackAPI";
 import { userDashboardApi } from "../../api/clients/UserDashboardAPI";
 
 import { dashboardStore } from "../../stores/DashboardStore";
-import { StackCreateRequest } from "../../api/models/StackDTO";
+import { StackUpdateRequest } from "../../api/models/StackDTO";
+import { UserDashboardStackDTO } from "../../api/models/UserDashboardDTO";
 
 import { FormError, SubmitButton, TextField } from "../form";
 
@@ -60,22 +61,23 @@ export const CreateStackForm: React.FC<CreateStackFormProps> = ({ onSubmit }) =>
                     return;
                 }
 
-                let newStackID: number | undefined;
+                let newStack: UserDashboardStackDTO | undefined;
 
                 for (const dash of userDashboardsResponse.data.dashboards) {
                     if (dash.guid === newDash.guid) {
-                        newStackID = dash.stack.id;
+                        newStack = dash.stack;
                     }
                 }
-                if (!newStackID) {
+                if (!newStack) {
                     return;
                 }
 
                 const newStackInfo: StackUpdateRequest = {
-                    id: newStackID,
+                    id: newStack.id,
                     name: stackValues.name,
                     imageUrl: stackValues.imageUrl,
                     approved: false,
+                    stackContext: newStack.stackContext,
                     description: stackValues.description
                 };
 

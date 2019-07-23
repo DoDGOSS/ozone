@@ -215,27 +215,10 @@ export const StackDialog: React.FC<{}> = () => {
         });
     };
     const onDeleteDashboardConfirmed = async (dashboard: DashboardDTO) => {
-        console.log(dashboard.guid);
-        console.log((await userDashboardApi.getOwnDashboards()).data.dashboards);
-        console.log((await dashboardApi.getDashboards()).data.data);
         const response = await dashboardApi.deleteDashboard(dashboard.guid);
         if (response.status !== 200) return false;
-        //
-        // console.log((await userDashboardApi.getOwnDashboards()).data.dashboards)
-        // console.log((await dashboardApi.getDashboards()).data.data)
-        // await new Promise((resolve) => setTimeout(resolve, 8000));
-        //
-        // console.log((await userDashboardApi.getOwnDashboards()).data.dashboards)
-        // console.log((await dashboardApi.getDashboards()).data.data)
-        // await new Promise((resolve) => setTimeout(resolve, 3000));
-        //
-        // let userDashboards = (await userDashboardApi.getOwnDashboards()).data.dashboards
-        // let allDashboards = (await dashboardApi.getDashboards()).data.data;
-        // console.log(allDashboards.filter((dashboard) =>
-        //     userDashboards.some((userDashboard) => userDashboard.guid === dashboard.guid)
-        // ))
 
-        // fetchData();
+        fetchData();
         return true;
     };
 
@@ -255,7 +238,10 @@ export const StackDialog: React.FC<{}> = () => {
                 "\n",
                 "If you have access to more than one Store, you will be prompted to choose."
             ],
-            onConfirm: () => storeExportService.uploadStack(stack.id)
+            onConfirm: () => {
+                onShareConfirmed(stack);
+                storeExportService.uploadStack(stack.id);
+            }
         });
     };
 
