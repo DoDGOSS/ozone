@@ -3,17 +3,17 @@ import { isRegExp, map } from "lodash";
 import { Observable, Subject } from "rxjs";
 import { filter } from "rxjs/operators";
 
-import { WidgetInstance } from "../models/WidgetInstance";
+import { WidgetInstance } from "../../models/WidgetInstance";
 
-import { dashboardStore } from "../stores/DashboardStore";
-import { errorStore } from "./ErrorStore";
+import { dashboardStore } from "../../stores/DashboardStore";
+import { errorStore } from "../ErrorStore";
 
-import { getIn, isBlank, isNil, isString, isStringArray, Predicate } from "../utility";
+import { getIn, isBlank, isNil, isString, isStringArray, Predicate } from "../../utility";
 import { expectArgument, RpcMessage } from "./RpcMessage";
 
 // Enable to log received messages to the developer console
-const ENABLE_DEBUG_MESSAGE_LOGGING = false;
-const ENABLE_DEBUG_VERBOSE_MESSAGE_LOGGING = false;
+const ENABLE_DEBUG_MESSAGE_LOGGING = true;
+const ENABLE_DEBUG_VERBOSE_MESSAGE_LOGGING = true;
 
 interface Widget2 {
     id: string;
@@ -81,15 +81,7 @@ export class EventingService {
         this.call(message.senderId, "__cb", [message.callback, response]);
     }
 
-    private requireWidget(id: string): WidgetClient {
-        const widget = this.widgets[id];
-        if (isNil(widget)) {
-            throw new Error(`widget with id '$id' not registered`);
-        }
-        return widget;
-    }
-
-    private call(widget: WidgetClient | string, service: string, args: any): void {
+    call(widget: WidgetClient | string, service: string, args: any): void {
         const target = typeof widget === "string" ? this.requireWidget(widget) : widget;
 
         const message = formatRpcMessage(service, "..", args);
@@ -97,6 +89,14 @@ export class EventingService {
         const iframeWindow = findWidgetIFrameWindow(target.instanceId);
 
         iframeWindow.postMessage(message, target.origin);
+    }
+
+    private requireWidget(id: string): WidgetClient {
+        const widget = this.widgets[id];
+        if (isNil(widget)) {
+            throw new Error(`widget with id '$id' not registered`);
+        }
+        return widget;
     }
 
     private respond(message: RpcMessage, service: string, args: any): void {

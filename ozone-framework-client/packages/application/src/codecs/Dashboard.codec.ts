@@ -20,10 +20,11 @@ import { WidgetInstance } from "../models/WidgetInstance";
 import { userWidgetFromJson } from "./UserWidget.codec";
 
 import { optional, uuid, values } from "../utility";
+
 export interface UserState {
     dashboards: Dictionary<Dashboard>;
-    stacks: NumericDictionary<Stack>;
-    widgets: NumericDictionary<UserWidget>;
+    stacks: Dictionary<Stack>;
+    widgets: Dictionary<UserWidget>;
 }
 
 export interface WidgetInstanceDTO {
@@ -52,8 +53,8 @@ export function deserializeUserState(dashboards: UserDashboardDTO[], userWidgets
 
 class UserStateDeserializer {
     private dashboards: Dictionary<Dashboard> = {};
-    private stacks: NumericDictionary<Stack> = {};
-    private widgets: NumericDictionary<UserWidget> = {};
+    private stacks: Dictionary<Stack> = {};
+    private widgets: Dictionary<UserWidget> = {};
 
     deserialize(dashboards: UserDashboardDTO[], userWidgets: UserWidgetDTO[]): UserState {
         userWidgets.forEach((userWidget) => this.addWidget(userWidget));

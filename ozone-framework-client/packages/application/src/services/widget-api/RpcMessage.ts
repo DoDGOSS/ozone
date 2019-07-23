@@ -1,4 +1,4 @@
-import { TypeGuard } from "../utility";
+import { TypeGuard } from "../../utility";
 
 export interface RpcMessage {
     service: string;
