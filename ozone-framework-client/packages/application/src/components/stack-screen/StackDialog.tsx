@@ -201,13 +201,19 @@ export const StackDialog: React.FC<{}> = () => {
     };
     const onDeleteStackConfirmed = async (stack: StackDTO) => {
         let response;
-        const currentUser = await authService.check();
-        if (currentUser && currentUser.isAdmin) {
-            response = await stackApi.deleteStackAsAdmin(stack.id);
-        } else {
-            response = await stackApi.deleteStackAsUser(stack.id);
+        try {
+            const currentUser = await authService.check();
+            if (currentUser && currentUser.data && currentUser.data.isAdmin) {
+                response = await stackApi.deleteStackAsAdmin(stack.id);
+            } else {
+                response = await stackApi.deleteStackAsUser(stack.id);
+            }
+            if (response && response.status !== 200) return false;
         }
-        if (response && response.status !== 200) return false;
+        catch (e) {
+            fetchData();
+            return false;
+        }
 
         fetchData();
         return true;
