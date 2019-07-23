@@ -204,8 +204,7 @@ export const StackDialog: React.FC<{}> = () => {
         const currentUser = await authService.check();
         if (currentUser && currentUser.isAdmin) {
             response = await stackApi.deleteStackAsAdmin(stack.id);
-        }
-        else {
+        } else {
             response = await stackApi.deleteStackAsUser(stack.id);
         }
         if (response && response.status !== 200) return false;
