@@ -137,6 +137,11 @@ export class Dashboard {
         this.state$.next({ ...prev, isLocked: false });
     };
 
+    setAsDefault = (isDefault: boolean): void => {
+        const prev = this.state$.value;
+        this.state$.next({ ...prev, isDefault });
+    };
+
     addWidget(opts: AddWidgetOpts): boolean {
         const { widget, title, path, position } = opts;
 
