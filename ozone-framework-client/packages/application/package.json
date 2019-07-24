@@ -48,6 +48,7 @@
     "react-router-dom": "5.0.1",
     "react-tabulator": "^0.9.1",
     "regenerator-runtime": "0.13.2",
+    "resize-observer": "^1.0.0",
     "rxjs": "6.5.2",
     "space-lift": "0.8.7",
     "uuid": "3.3.2",

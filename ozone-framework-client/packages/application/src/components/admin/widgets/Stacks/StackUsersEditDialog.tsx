@@ -19,11 +19,7 @@ export class StackUsersEditDialog extends React.Component<SelectionDialogProps<U
                     [
                         { title: "Name", field: "userRealName" },
                         { title: "UserName", field: "username" },
-                        { title: "Email", field: "email" },
-                        { title: "Stacks", field: "totalStacks" },
-                        { title: "Widgets", field: "totalWidgets" },
-                        { title: "Dashboards", field: "totalDashboards" },
-                        { title: "Last Login", field: "lastLogin" }
+                        { title: "Email", field: "email" }
                     ] as ColumnTabulator[]
                 }
                 onSubmit={this.props.onSubmit}

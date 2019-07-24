@@ -20,11 +20,7 @@ export class GroupUsersEditDialog extends React.Component<SelectionDialogProps<U
                     [
                         { title: "Name", field: "userRealName" },
                         { title: "Username", field: "username" },
-                        { title: "Email", field: "email" },
-                        { title: "Groups", field: "totalGroups" },
-                        { title: "Widgets", field: "totalWidgets" },
-                        { title: "Dashboards", field: "totalDashboards" },
-                        { title: "Last Login", field: "lastLogin" }
+                        { title: "Email", field: "email" }
                     ] as ColumnTabulator[]
                 }
                 onSubmit={this.props.onSubmit}
