@@ -11,7 +11,6 @@ import { groupFromJson } from "../../../../../codecs/Group.codec";
 import { WidgetDTO } from "../../../../../api/models/WidgetDTO";
 import { ColumnTabulator, GenericTable } from "../../../../generic-table/GenericTable";
 import { GroupsDialog } from "./GroupsDialog";
-import { StackDTO } from "../../../../../api/models/StackDTO";
 
 interface State {
     loading: boolean;
@@ -126,11 +125,12 @@ export class GroupsPanel extends React.Component<Props, State> {
                 items={this.state.widgetGroups}
                 getColumns={() =>
                     [
-                        { title: "Name", field: "name", width: 300 },
-                        { title: "Description", field: "description", width: 300 },
+                        { title: "Name", field: "name" },
+                        { title: "Description", field: "description" },
                         {
-                            title: "Remove",
+                            title: "Actions",
                             width: 90,
+                            responsive: 0,
                             formatter: (row: any) => {
                                 const data: Group = row.cell._cell.row.data;
                                 return (
