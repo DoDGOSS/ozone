@@ -12,23 +12,44 @@ import { FormError, TextField } from "../form";
 
 import { stackApi } from "../../api/clients/StackAPI";
 
+import { dashboardApi } from "../../api/clients/DashboardAPI";
+
 import { assetUrl } from "../../environment";
+import { DashboardDTO } from "../../api/models/DashboardDTO";
 
 export interface EditStackFormProps {
     onSubmit: () => void;
     stack: StackDTO;
+    dashboard: DashboardDTO | null;
 }
 
 const OzoneToaster = Toaster.create({
     position: Position.BOTTOM
 });
 
-export const EditStackForm: React.FC<EditStackFormProps> = ({ onSubmit, stack }) => {
+export const EditStackForm: React.FC<EditStackFormProps> = ({ onSubmit, stack, dashboard }) => {
     const initialFormValues = getInitialValues(stack);
     return (
         <Formik
             initialValues={initialFormValues}
             onSubmit={async (values: StackUpdateRequest, actions: FormikActions<StackUpdateRequest>) => {
+                if (stack.name !== values.name && dashboard !== null) {
+                    dashboard.name = values.name + " (default)";
+                    const dashSuccess = [await dashboardApi.updateDashboard(dashboard)];
+                    if (dashSuccess) {
+                        OzoneToaster.show({
+                            intent: Intent.SUCCESS,
+                            message: "Default Dashboard Updated Successfully!"
+                        });
+                        actions.setStatus(null);
+                    } else {
+                        OzoneToaster.show({
+                            intent: Intent.DANGER,
+                            message: "Dashboard Unsuccessful, something went wrong."
+                        });
+                        actions.setStatus({ error: "An unexpected error has occurred" });
+                    }
+                }
                 stack.name = values.name;
                 stack.imageUrl = values.imageUrl;
                 stack.description = values.description;
@@ -36,7 +57,6 @@ export const EditStackForm: React.FC<EditStackFormProps> = ({ onSubmit, stack })
                 const isSuccess = [await stackApi.updateStack(stack)];
 
                 actions.setSubmitting(false);
-
                 if (isSuccess) {
                     OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
                     actions.setStatus(null);
