@@ -10,6 +10,7 @@ import { reactFormatter, ReactTabulator } from "react-tabulator";
 
 import { classNames, isFunction } from "../../utility";
 import { mainStore } from "../../stores/MainStore";
+import { ResizeObserver } from "resize-observer";
 
 interface Props<T> {
     getColumns: () => ColumnTabulator[];
@@ -35,7 +36,9 @@ export interface ColumnTabulator<D = any> {
     title: string;
     field?: string;
     width?: string | number;
+    minWidth?: number;
     widthGrow?: number;
+    widthShrink?: number;
     align?: "left" | "right" | "center";
     sorter?: string;
     editor?: boolean;
@@ -52,11 +55,29 @@ export interface ColumnTabulator<D = any> {
 
 const DEFAULT_PAGE_SIZE = 6;
 const PAGE_SIZE_OPTIONS = [5, 10, 20, 25, 50, 100];
+export const DEFAULT_TABLE_OPTIONS = {
+    height: 300,
+    layout: "fitColumns",
+    layoutColumnsOnNewData: true,
+    responsiveLayout: "collapse",
+    pagination: "local",
+    paginationSize: DEFAULT_PAGE_SIZE,
+    paginationSizeSelector: PAGE_SIZE_OPTIONS,
+    placeholder: "No Records Available",
+    selectable: "highlight",
+    autoResize: true,
+    columnMinWidth: 120
+};
+
+export const isChrome =
+    !!(window as any).chrome && (!!(window as any).chrome.webstore || !!(window as any).chrome.runtime);
 
 export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
+    ro = new ResizeObserver(() => this.tableRedraw(true));
     filterable: boolean;
     searchCaseSensitive: boolean;
     tableWidth: number = 0;
+    tableRef: any;
 
     constructor(props: Props<T>) {
         super(props);
@@ -67,6 +88,29 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         };
         this.filterable = !(props.filterable === false);
         this.searchCaseSensitive = props.searchCaseSensitive ? props.searchCaseSensitive : false;
+        this.tableRef = React.createRef();
+    }
+
+    componentDidMount(): void {
+        if (!isChrome) {
+            this.tableRedraw(true);
+        }
+    }
+
+    componentDidUpdate(): void {
+        if (!isChrome) {
+            this.tableRedraw(true);
+
+            if (this.getElementsByClassName(document.body, "mosaic-window").length > 0) {
+                this.ro.observe(this.getElementsByClassName(document.body, "mosaic-window")[0]);
+            }
+        }
+    }
+
+    componentWillUnmount(): void {
+        if (!isChrome) {
+            this.ro.disconnect();
+        }
     }
 
     render() {
@@ -75,6 +119,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                 {this.filterable && this.getSearchBox()}
                 <div className={styles.table}>
                     <ReactTabulator
+                        ref={this.tableRef}
                         columns={this.formatColumnNames(this.props.getColumns())}
                         data={this.getItems()}
                         rowClick={(ev: any, row: any) => this.selectItem(ev, row)}
@@ -88,18 +133,10 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
     }
 
     private buildTableProps(): Object {
-        const options = {
-            height: "100%",
-            layout: "fitDataFill",
-            layoutColumnsOnNewData: true,
-            responsiveLayout: "collapse",
-            pagination: "local",
-            paginationSize: DEFAULT_PAGE_SIZE,
-            paginationSizeSelector: PAGE_SIZE_OPTIONS,
-            placeholder: "No Data Available",
-            selectable: "highlight",
-            autoResize: true
-        };
+        const options = DEFAULT_TABLE_OPTIONS;
+        if (!isChrome) {
+            delete options.height;
+        }
         return this.props.tableProps ? { ...options, ...this.props.tableProps } : options;
     }
 
@@ -121,6 +158,46 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
             }
             return col;
         });
+    }
+
+    private tableRedraw(dataReLoad = false) {
+        if (!isChrome && this.tableRef.current) {
+            this.tableRef.current.table.redraw(dataReLoad);
+        }
+    }
+
+    /**
+     * Get element by class name.
+     * Compatible with all browsers.
+     *
+     * @param root
+     * @param clss
+     */
+    private getElementsByClassName(root: any, clss: any) {
+        let result: any = [];
+        let els: any = [];
+        let i: any = [];
+
+        if (arguments.length < 2 || !root || !clss || root.nodeType !== 1) {
+            return result;
+        }
+
+        clss = clss + "";
+
+        if (root.getElementsByClassName) {
+            result = root.getElementsByClassName(clss);
+        } else if (root.querySelectorAll) {
+            result = root.querySelectorAll("." + clss);
+        } else {
+            els = root.getElementsByTagName("*");
+            clss = " " + clss + " ";
+            for (i = 0; i < els.length; ++i) {
+                if ((" " + els[i].className + " ").indexOf(clss) !== -1) {
+                    result.push(els[i]);
+                }
+            }
+        }
+        return result;
     }
 
     // Unfinished attempt to allow you to specify column width by percentage, rather than pixel width.
