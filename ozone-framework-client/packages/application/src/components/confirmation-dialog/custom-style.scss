@@ -7,35 +7,36 @@
   pointer-events: all;
 }
 
-table {
-  border-spacing: 3px;
-  width: 100%;
-  border-collapse: collapse;
-}
+.scrollable {
+  height: 320px; // should be sufficient for most everything?
+  overflow: auto;
+  border: solid;
+  border-width: 1px;
+  border-color: gray;
 
-tr {
+  table {
+    border-spacing: 3px;
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  tr {
     border: solid;
     border-width: 1px;
     border-color: lightgray;
-}
+  }
 
-th {
-  text-align: left;
-  font-weight: normal;
-}
-
-.scrollable {
-    height: 320px; // should be sufficient for most everything?
-    overflow: auto;
-    border: solid;
-    border-width: 1px;
-    border-color: gray;
+  th {
+    text-align: left;
+    font-weight: normal;
+  }
 }
 
 :local ::-webkit-scrollbar-thumb {
-    border-radius: 4px;
+  border-radius: 4px;
 }
+
 :local ::-webkit-scrollbar {
-    width: auto !important;
-    background: transparent;
+  width: auto !important;
+  background: transparent;
 }
