@@ -36,6 +36,6 @@ export class UserStacksEditDialog extends React.Component<SelectionDialogProps<S
 
         if (response.status !== 200) return [];
 
-        return response.data.data;
+        return response.data.data.filter((stack) => stack.approved);
     }
 }
