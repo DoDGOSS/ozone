@@ -5,10 +5,10 @@ import { classNames, isFunction } from "../../utility";
 
 import "react-tabulator/lib/styles.css";
 import "react-tabulator/css/bootstrap/tabulator_bootstrap4.min.css";
-
 // @ts-ignore
 import { reactFormatter, ReactTabulator } from "react-tabulator";
-import { ColumnTabulator } from "./GenericTable";
+import { ColumnTabulator, DEFAULT_TABLE_OPTIONS, isChrome } from "./GenericTable";
+import { ResizeObserver } from "resize-observer";
 
 export type AdminTableProps = {
     data: any[];
@@ -18,23 +18,47 @@ export type AdminTableProps = {
     getTrProps?: (state: any, rowInfo: any) => {};
 };
 
-const PAGE_SIZE_OPTIONS = [5, 10, 20, 25, 50, 100];
-
 // Todo
-// Please just use GenericTable.
-
 // Add filter functionality - https://codesandbox.io/s/r74mokr5x4 (react-table-filter implementation)
 // https://react-table.js.org/#/story/custom-filtering
 
-// Make responsive - may not be easily done with this release
-// try new wrapped tabulator if necessary https://github.com/ngduc/react-tabulator#readme
-
 export class AdminTable extends React.Component<AdminTableProps, {}> {
+    ro = new ResizeObserver(() => this.tableRedraw(true));
+    tableRef: any;
+
+    constructor(props: AdminTableProps) {
+        super(props);
+        this.tableRef = React.createRef();
+    }
+
+    componentDidMount(): void {
+        if (!isChrome) {
+            this.tableRedraw(true);
+        }
+    }
+
+    componentDidUpdate(): void {
+        if (!isChrome) {
+            this.tableRedraw(true);
+
+            if (this.getElementsByClassName(document.body, "mosaic-window").length > 0) {
+                this.ro.observe(this.getElementsByClassName(document.body, "mosaic-window")[0]);
+            }
+        }
+    }
+
+    componentWillUnmount(): void {
+        if (!isChrome) {
+            this.ro.disconnect();
+        }
+    }
+
     render() {
         return (
             <ReactTabulator
+                ref={this.tableRef}
                 columns={this.formatColumnNames(this.props.columns)}
-                data={this.props.data}
+                data={this.props.data || []}
                 options={this.buildTableProps()}
                 // data-custom-attr="test-custom-attribute"
                 className={classNames("table-sm table-striped table-borderless", mainStore.getTheme())}
@@ -43,18 +67,11 @@ export class AdminTable extends React.Component<AdminTableProps, {}> {
     }
 
     private buildTableProps(): Object {
-        return {
-            height: "100%",
-            layout: "fitDataFill",
-            layoutColumnsOnNewData: true,
-            responsiveLayout: "collapse",
-            pagination: "local",
-            paginationSize: this.props.pageSize,
-            paginationSizeSelector: PAGE_SIZE_OPTIONS,
-            placeholder: "No Data Available",
-            selectable: "highlight",
-            autoResize: true
-        };
+        const options = DEFAULT_TABLE_OPTIONS;
+        if (!isChrome) {
+            delete options.height;
+        }
+        return options;
     }
 
     /**
@@ -67,19 +84,57 @@ export class AdminTable extends React.Component<AdminTableProps, {}> {
             return [];
         }
 
-        const tabulator = columns.map((col: ColumnTabulator) => {
-            // if formatter is not a built-in tabulator module, i.e string. tickCross, color etc.
+        return columns.map((col: ColumnTabulator) => {
+            // if formatter is not a built-in tabular module, i.e string. tickCross, color etc.
             if (col.hasOwnProperty("formatter") && isFunction(col.formatter)) {
                 col.formatter = reactFormatter(<col.formatter />);
             }
+
             if (col.hasOwnProperty("title") && col.title.toLowerCase() === "actions") {
                 col.headerSort = false;
+                col.responsive = 0;
             }
             return col;
         });
+    }
 
-        // freeze first column in place during horizontal scroll.
-        // tabulator[0].frozen = true;
-        return tabulator;
+    private tableRedraw(dataReLoad = false) {
+        if (!isChrome && this.tableRef.current) {
+            this.tableRef.current.table.redraw(dataReLoad);
+        }
+    }
+
+    /**
+     * Get element by class name.
+     * Compatible with all browsers.
+     *
+     * @param root
+     * @param clss
+     */
+    private getElementsByClassName(root: any, clss: any) {
+        let result: any = [];
+        let els: any = [];
+        let i: any = [];
+
+        if (arguments.length < 2 || !root || !clss || root.nodeType !== 1) {
+            return result;
+        }
+
+        clss = clss + "";
+
+        if (root.getElementsByClassName) {
+            result = root.getElementsByClassName(clss);
+        } else if (root.querySelectorAll) {
+            result = root.querySelectorAll("." + clss);
+        } else {
+            els = root.getElementsByTagName("*");
+            clss = " " + clss + " ";
+            for (i = 0; i < els.length; ++i) {
+                if ((" " + els[i].className + " ").indexOf(clss) !== -1) {
+                    result.push(els[i]);
+                }
+            }
+        }
+        return result;
     }
 }
