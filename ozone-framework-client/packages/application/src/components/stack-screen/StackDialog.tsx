@@ -174,8 +174,9 @@ export const StackDialog: React.FC<{}> = () => {
         setDashboardEdit(true);
     };
 
-    const showEditStackDialog = async (stack: StackDTO) => {
+    const showEditStackDialog = async (stack: StackDTO, dashboard: DashboardDTO) => {
         setStackToBeEdited(stack);
+        setDashboardToBeEdited(dashboard);
         setStackEdit(true);
     };
 
@@ -383,8 +384,16 @@ export const StackDialog: React.FC<{}> = () => {
                                                     itemName="Edit Stack"
                                                     onClick={(event) => {
                                                         // don't let the click activate the tree node
+                                                        const defaultDashboard = dashboards
+                                                            .filter((dashboard) =>
+                                                                dashboard.stack ? dashboard.stack.id === stack.id : null
+                                                            )
+                                                            .filter(
+                                                                (dashboard) =>
+                                                                    dashboard.name === stack.name + " (default)"
+                                                            )[0];
                                                         event.stopPropagation();
-                                                        showEditStackDialog(stack);
+                                                        showEditStackDialog(stack, defaultDashboard);
                                                     }}
                                                 />
                                                 <Divider />
@@ -501,7 +510,11 @@ export const StackDialog: React.FC<{}> = () => {
                     title="Edit Stack"
                 >
                     <div data-element-id="EditStackDialog" className={Classes.DIALOG_BODY}>
-                        <EditStackForm stack={stackToBeEdited} onSubmit={onStackEditSubmitted} />
+                        <EditStackForm
+                            stack={stackToBeEdited}
+                            dashboard={dashboardToBeEdited}
+                            onSubmit={onStackEditSubmitted}
+                        />
                     </div>
 
                     <div className={Classes.DIALOG_FOOTER}>
