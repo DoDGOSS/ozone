@@ -61,9 +61,11 @@ export class DashboardStore {
             response = await this.createDefaultDashboard();
         }
 
+        const defaultDashboard = response.data.dashboards.find((dashboard) => dashboard.isdefault === true);
+
         const newState = deserializeUserState(response.data.dashboards, response.data.widgets);
         this.userDashboards$.next(newState);
-
+        newCurrentDashGuid = newCurrentDashGuid ? newCurrentDashGuid : defaultDashboard ? defaultDashboard.guid : null;
         this.setCurrentDashboard(newState, newCurrentDashGuid);
 
         this.isLoading$.next(false);
@@ -115,7 +117,7 @@ export class DashboardStore {
         }
     };
 
-    private setCurrentDashboard = (newState: UserState, newCurrentGuid: string) => {
+    private setCurrentDashboard = async (newState: UserState, newCurrentGuid: string) => {
         const dashboards = values(newState.dashboards);
 
         const currentDashboard = this.currentDashboard$.value;
@@ -129,13 +131,19 @@ export class DashboardStore {
             return;
         }
 
-        const currentGuid = !isNil(newCurrentGuid) ? newCurrentGuid : currentDashboard.guid;
-        const newCurrentDashboard = dashboards.find((dashboard) => dashboard.guid === currentGuid);
-
-        if (newCurrentDashboard === undefined) {
-            this.currentDashboard$.next(dashboards[0]);
-            return;
+        if (currentDashboard.guid) {
+            currentDashboard.setAsDefault(false);
+            const currentDashboardUpdate = dashboardToUpdateRequest(currentDashboard);
+            await this.dashboardApi.updateDashboard(currentDashboardUpdate);
         }
+
+        const currentGuid = !isNil(newCurrentGuid) ? newCurrentGuid : currentDashboard.guid;
+        let newCurrentDashboard = dashboards.find((dashboard) => dashboard.guid === currentGuid);
+        newCurrentDashboard = newCurrentDashboard === undefined ? dashboards[0] : newCurrentDashboard;
+        newCurrentDashboard.setAsDefault(true);
+
+        const newCurrentDashboardUpdate = dashboardToUpdateRequest(newCurrentDashboard);
+        this.dashboardApi.updateDashboard(newCurrentDashboardUpdate);
 
         this.currentDashboard$.next(newCurrentDashboard);
     };
