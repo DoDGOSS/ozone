@@ -74,7 +74,7 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
                     {formik.status && formik.status.error && <FormError message={formik.status.error} />}
 
                     <div className={styles.form}>
-                        {/* Image url stuff removed because bug on backend I couldn't fix; iconImageUrl is never saved. -Chris */}
+                        {/* Image url stuff removed because bug on backend I couldn't fix; iconImageUrl is never saved.*/}
                         <div className={styles.formField}>
                             <TextField name="name" label="Title" labelInfo="(required)" />
                             {/* <TextField name="iconImageUrl" label="Icon Url" /> */}

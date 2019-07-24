@@ -70,7 +70,8 @@ export const AddStoreDialog: React.FC<StoreDialogProps> = (props: StoreDialogPro
                                         setSelectedTabID("storeDefinition");
                                     }}
                                     closeDialogAndUpdate={closeDialog}
-                                    initialStoreUrl={store ? store.url : ""}
+                                    initialStoreFrontUrl={store ? store.url : ""}
+                                    initialStoreBackUrl={store && store.descriptorUrl ? store.descriptorUrl : ""}
                                 />
                             }
                         />
