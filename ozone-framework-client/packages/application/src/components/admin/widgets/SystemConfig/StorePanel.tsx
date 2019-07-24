@@ -101,7 +101,7 @@ export class StorePanel extends React.Component<{}, StorePanelState> {
                 <div className={styles.storeLabel}>
                     <div>{store.title}</div>
                     <div className={styles.storeIcon}>
-                        <img src={store.images.smallUrl} alt="Store Icon" />
+                        <img src={store.images.smallUrl} alt="Store Icon" width={150} height={150} />
                     </div>
                     <div className={styles.storeButtons}>
                         <div className={""}>
@@ -170,7 +170,6 @@ export class StorePanel extends React.Component<{}, StorePanelState> {
     }
 
     deleteStore(store: Widget) {
-        // may need to remove all users first? I hope not..
         widgetApi.deleteWidget(store.id).then((response) => {
             if (response.status === 200) {
                 this.updateStoreList();
