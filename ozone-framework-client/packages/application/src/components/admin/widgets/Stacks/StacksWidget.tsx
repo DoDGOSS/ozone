@@ -7,7 +7,7 @@ import { StackDTO } from "../../../../api/models/StackDTO";
 
 import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
-import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
+import { CompactDeleteButton, CompactShareButton, DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 
 import { StackSetup } from "./StackSetup";
 
@@ -116,12 +116,19 @@ export class StacksWidget extends React.Component<{}, StacksWidgetState> {
             { title: "Users", field: "totalUsers" },
             {
                 title: "Actions",
-                width: 180,
+                width: 150,
                 responsive: 0,
                 formatter: (row: { cell: { _cell: { row: { data: StackDTO } } } }) => {
                     const data: StackDTO = row.cell._cell.row.data;
                     return (
                         <ButtonGroup data-role="stack-admin-widget-actions" data-dashboardname={data.name}>
+                            <CompactShareButton
+                                onClick={() => {
+                                    this.confirmShare(data);
+                                }}
+                                itemName={"Share this stack with other users"}
+                            />
+                            <Divider />
                             <EditButton
                                 onClick={() => {
                                     this.setState({ updatingStack: data });
@@ -129,12 +136,34 @@ export class StacksWidget extends React.Component<{}, StacksWidgetState> {
                                 }}
                             />
                             <Divider />
-                            <DeleteButton onClick={() => this.confirmDeleteStack(data)} itemName={data.name} />
+                            <CompactDeleteButton onClick={() => this.confirmDeleteStack(data)} itemName={data.name} />
                         </ButtonGroup>
                     );
                 }
             }
         ] as ColumnTabulator[];
+    }
+
+    private async confirmShare(stack: StackDTO) {
+        showConfirmationDialog({
+            title: "Warning",
+            message: [
+                "You are allowing ",
+                { text: stack.name, style: "bold" },
+                " to be shared with other users. Press OK to confirm."
+            ],
+            onConfirm: () => this.onShareConfirmed(stack)
+        });
+    }
+
+    private async onShareConfirmed(stack: StackDTO) {
+        try {
+            const response = await stackApi.shareStack(stack.id);
+            if (response.status !== 200) return false;
+        } catch (e) {
+            return false;
+        }
+        return true;
     }
 
     private confirmDeleteStack = async (stack: StackDTO) => {

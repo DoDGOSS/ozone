@@ -1,16 +1,16 @@
 import React from "react";
+import Measure from "react-measure";
 import { InputGroup } from "@blueprintjs/core";
+
+// @ts-ignore
+import { reactFormatter, ReactTabulator } from "react-tabulator";
 
 import * as styles from "./GenericTable.scss";
 import "react-tabulator/lib/styles.css";
 import "react-tabulator/css/bootstrap/tabulator_bootstrap4.min.css";
 
-// @ts-ignore
-import { reactFormatter, ReactTabulator } from "react-tabulator";
-
-import { classNames, isFunction } from "../../utility";
+import { classNames, isFunction, uuid } from "../../utility";
 import { mainStore } from "../../stores/MainStore";
-import { ResizeObserver } from "resize-observer";
 
 interface Props<T> {
     getColumns: () => ColumnTabulator[];
@@ -30,6 +30,7 @@ interface State<T> {
     selections: T[];
     selectionsAsRows: T[];
     query: string;
+    dimensions: { width: number; height: number };
 }
 
 export interface ColumnTabulator<D = any> {
@@ -69,14 +70,9 @@ export const DEFAULT_TABLE_OPTIONS = {
     columnMinWidth: 120
 };
 
-export const isChrome =
-    !!(window as any).chrome && (!!(window as any).chrome.webstore || !!(window as any).chrome.runtime);
-
 export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
-    ro = new ResizeObserver(() => this.tableRedraw(true));
     filterable: boolean;
     searchCaseSensitive: boolean;
-    tableWidth: number = 0;
     tableRef: any;
 
     constructor(props: Props<T>) {
@@ -84,58 +80,56 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         this.state = {
             selections: [],
             selectionsAsRows: [],
-            query: ""
+            query: "",
+            dimensions: {
+                width: -1,
+                height: -1
+            }
         };
         this.filterable = !(props.filterable === false);
         this.searchCaseSensitive = props.searchCaseSensitive ? props.searchCaseSensitive : false;
         this.tableRef = React.createRef();
     }
 
-    componentDidMount(): void {
-        if (!isChrome) {
-            this.tableRedraw(true);
-        }
-    }
-
-    componentDidUpdate(): void {
-        if (!isChrome) {
-            this.tableRedraw(true);
-
-            if (this.getElementsByClassName(document.body, "mosaic-window").length > 0) {
-                this.ro.observe(this.getElementsByClassName(document.body, "mosaic-window")[0]);
-            }
-        }
-    }
-
-    componentWillUnmount(): void {
-        if (!isChrome) {
-            this.ro.disconnect();
-        }
-    }
+    // shouldComponentUpdate() {
+    //     // update like normal, unless the only change was
+    // }
 
     render() {
         return (
-            <div ref={(tableDiv) => this.setTableWidth(tableDiv)}>
-                {this.filterable && this.getSearchBox()}
-                <div className={styles.table}>
-                    <ReactTabulator
-                        ref={this.tableRef}
-                        columns={this.formatColumnNames(this.props.getColumns())}
-                        data={this.getItems()}
-                        rowClick={(ev: any, row: any) => this.selectItem(ev, row)}
-                        options={this.buildTableProps()}
-                        // data-custom-attr="test-custom-attribute"
-                        className={classNames("table-sm table-striped table-borderless", mainStore.getTheme())}
-                    />
-                </div>
-            </div>
+            <Measure
+                bounds
+                onResize={(contentRect) => {
+                    if (contentRect.bounds && this.state.dimensions.width !== contentRect.bounds.width) {
+                        this.setState({ dimensions: contentRect.bounds });
+                    }
+                }}
+            >
+                {({ measureRef }) => (
+                    <div ref={measureRef}>
+                        {this.filterable && this.getSearchBox()}
+                        <div className={styles.table}>
+                            <ReactTabulator
+                                ref={this.tableRef}
+                                columns={this.formatColumnNames(this.props.getColumns())}
+                                data={this.getItems()}
+                                rowClick={(ev: any, row: any) => this.selectItem(ev, row)}
+                                options={this.buildTableProps(this.state.dimensions.height)}
+                                // data-custom-attr="test-custom-attribute"
+                                className={classNames("table-sm table-striped table-borderless", mainStore.getTheme())}
+                            />
+                        </div>
+                    </div>
+                )}
+            </Measure>
         );
     }
 
-    private buildTableProps(): Object {
+    private buildTableProps(containerHeight?: number): Object {
         const options = DEFAULT_TABLE_OPTIONS;
-        if (!isChrome) {
-            delete options.height;
+
+        if (containerHeight) {
+            options.height = Math.floor(containerHeight * 0.6);
         }
         return this.props.tableProps ? { ...options, ...this.props.tableProps } : options;
     }
@@ -158,12 +152,6 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
             }
             return col;
         });
-    }
-
-    private tableRedraw(dataReLoad = false) {
-        if (!isChrome && this.tableRef.current) {
-            this.tableRef.current.table.redraw(dataReLoad);
-        }
     }
 
     /**
@@ -198,14 +186,6 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
             }
         }
         return result;
-    }
-
-    // Unfinished attempt to allow you to specify column width by percentage, rather than pixel width.
-    // No idea why they didn't build in percentage widths in the first place.
-    private setTableWidth(tableDiv: any): void {
-        if (tableDiv && tableDiv.clientWidth !== this.tableWidth) {
-            this.tableWidth = tableDiv.clientWidth;
-        }
     }
 
     private getItems(): any[] {
