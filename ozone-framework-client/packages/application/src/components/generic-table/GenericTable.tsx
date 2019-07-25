@@ -91,10 +91,6 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         this.tableRef = React.createRef();
     }
 
-    // shouldComponentUpdate() {
-    //     // update like normal, unless the only change was
-    // }
-
     render() {
         return (
             <Measure

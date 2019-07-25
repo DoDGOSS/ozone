@@ -32,6 +32,7 @@ enum StackWidgetSubSection {
 
 export class StacksWidget extends React.Component<{}, StacksWidgetState> {
     defaultPageSize: number = 5;
+    _isMounted: boolean = false;
 
     constructor(props: any) {
         super(props);
@@ -47,7 +48,12 @@ export class StacksWidget extends React.Component<{}, StacksWidgetState> {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.getStacks();
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     render() {
@@ -96,6 +102,10 @@ export class StacksWidget extends React.Component<{}, StacksWidgetState> {
 
         // TODO: Handle failed request
         if (response.status !== 200) return;
+
+        if (!this._isMounted) {
+            return;
+        }
 
         this.setState({
             stacks: response.data.data,

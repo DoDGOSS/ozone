@@ -63,22 +63,20 @@ export const CreateStackForm: React.FC<CreateStackFormProps> = ({ onSubmit }) =>
                     description: stackValues.description
                 };
 
-                const defaultDashValues: CreateDashboardOptions = {
-                    name: stackValues.name + " (default)",
-                    description: "Default dashboard for stack `" + stackValues.name + "`",
+                const defaultDashLayout: { presetLayoutName: string | null; copyGuid: string | null } = {
                     presetLayoutName: null,
                     copyGuid: ""
                 };
 
                 if (selectedLayoutInputSource === "copy") {
-                    defaultDashValues.presetLayoutName = selectedCopyLayoutGuid + " (copy)";
-                    defaultDashValues.copyGuid = selectedCopyLayoutGuid;
+                    defaultDashLayout.presetLayoutName = selectedCopyLayoutGuid + " (copy)";
+                    defaultDashLayout.copyGuid = selectedCopyLayoutGuid;
                 } else if (selectedLayoutInputSource === "premade") {
-                    defaultDashValues.presetLayoutName = selectedPresetLayout;
-                    defaultDashValues.copyGuid = "";
+                    defaultDashLayout.presetLayoutName = selectedPresetLayout;
+                    defaultDashLayout.copyGuid = "";
                 }
 
-                const stackCreationSuccess = await dashboardStore.createNewStack(newStackInfo, defaultDashValues);
+                const stackCreationSuccess = await dashboardStore.createNewStack(newStackInfo, defaultDashLayout);
 
                 if (!stackCreationSuccess) {
                     return;
