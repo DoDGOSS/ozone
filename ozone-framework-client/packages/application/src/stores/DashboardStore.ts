@@ -81,10 +81,14 @@ export class DashboardStore {
     };
 
     createDefaultDashboard = async () => {
-        const createResponse = await this.userDashboardApi.createDefaultDashboard();
-        if (createResponse.status !== 200) {
-            throw new Error("Failed to create default dashboard");
-        }
+        const defStack: StackCreateRequest = {
+            name: "Untitled",
+            imageUrl: "",
+            approved: false,
+            stackContext: "",
+            description: "Automatically-generated stack"
+        };
+        this.createNewStack(defStack);
 
         const refetchResponse = await this.userDashboardApi.getOwnDashboards();
         if (refetchResponse.status !== 200) {
@@ -114,9 +118,16 @@ export class DashboardStore {
 
     async createNewStack(
         stackRequest: StackCreateRequest,
-        defaultDashOptions: CreateDashboardOptions
+        defaultDashLayoutOptions?: { presetLayoutName: string | null; copyGuid: string | null }
     ): Promise<Boolean> {
-        const newDash = await dashboardStore.createDashboard(defaultDashOptions);
+        const defaultDashOptions: CreateDashboardOptions = {
+            name: stackRequest.name + " (default)",
+            description: "Default dashboard for stack `" + stackRequest.name + "`",
+            presetLayoutName: defaultDashLayoutOptions ? defaultDashLayoutOptions.presetLayoutName : null,
+            copyGuid: defaultDashLayoutOptions ? defaultDashLayoutOptions.copyGuid : null
+        };
+
+        const newDash = await this.createDashboard(defaultDashOptions);
         const userDashboardsResponse = await userDashboardApi.getOwnDashboards();
         if (userDashboardsResponse.status !== 200 || !userDashboardsResponse.data.dashboards) {
             console.log("Could not create stack.");

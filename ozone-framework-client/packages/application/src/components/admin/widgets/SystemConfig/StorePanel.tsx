@@ -34,6 +34,7 @@ interface StorePanelState {
 }
 
 export class StorePanel extends React.Component<{}, StorePanelState> {
+    _isMounted: boolean = false;
     constructor(props: {}) {
         super(props);
         this.state = {
@@ -45,6 +46,7 @@ export class StorePanel extends React.Component<{}, StorePanelState> {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.updateStoreList();
     }
 
@@ -148,6 +150,9 @@ export class StorePanel extends React.Component<{}, StorePanelState> {
 
     updateStoreList() {
         storeMetaAPI.getStores().then((storeWidgets) => {
+            if (!this._isMounted) {
+                return;
+            }
             if (this.state.stores && storeWidgets.length === this.state.stores.length) {
                 for (const knownStore of this.state.stores) {
                     if (!storeWidgets.find((updatedStore) => knownStore.id === updatedStore.id)) {
@@ -177,5 +182,9 @@ export class StorePanel extends React.Component<{}, StorePanelState> {
             }
             console.log("Error in deleting the store. Check network logs.");
         });
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 }
