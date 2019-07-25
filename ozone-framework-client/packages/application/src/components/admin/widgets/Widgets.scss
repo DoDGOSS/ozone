@@ -60,9 +60,11 @@
 
   // placeholder
   .tabulator-tableHolder {
-    .tabulator-placeholder {
+    .tabulator-table {
       height: 300px;
+    }
 
+    .tabulator-placeholder {
       span {
         border: 0.5px solid #f5f8fa !important;
         border-radius: 5px;
