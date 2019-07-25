@@ -8,3 +8,8 @@ export class IntentProps {
 }
 
 export class Intent extends IntentProps {}
+
+export interface IntentInstance {
+    action: string;
+    dataType: string;
+}

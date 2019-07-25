@@ -13,8 +13,9 @@ import "./index.scss";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import { eventingService } from "../../services/EventingService";
-import { WidgetLauncherService } from "../../services/WidgetLauncherService";
+import { eventingService } from "../../services/widget-api/EventingService";
+import { WidgetLauncherService } from "../../services/widget-api/WidgetLauncherService";
+import { IntentsService } from "../../services/widget-api/IntentsService";
 
 import { MainPage } from "./MainPage";
 
@@ -24,5 +25,6 @@ setDefaultEnvironment();
 
 eventingService.init();
 new WidgetLauncherService().init();
+new IntentsService().init();
 
 ReactDOM.render(<MainPage />, document.getElementById("root") as HTMLElement);
