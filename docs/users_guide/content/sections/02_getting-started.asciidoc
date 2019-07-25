@@ -1,0 +1,82 @@
+:experimental:
+ifndef::imagesdir[]
+:imagesdir: ../images/
+endif::[]
+
+= Getting Started
+
+This section provides a brief overview of the main features and functions in the Store. You can find more details about each topic in later sections, use this section to obtain a basic understanding of the software.
+
+== Use OWF and the Store
+
+When the Store is used inside OWF the product is called OZONE. Both products can be used independently. The following section explains how each product functions. When used together, use the Store button on the OWF Toolbar to toggle between them.
+
+=== OWF Overview
+
+A framework that allows information from different agencies and servers to communicate inside a browser window without sending information back to the respective servers.
+
+.OWF at a Glance
+image::owf-overview.png[]
+
+
+== Product Components
+
+=== OWF Banner
+
+From the OWF Toolbar, users can open widgets and dashboards, connect to a Store (if configured), adjust settings and open Online Help. The OWF drop-down User Menu, located on the right, contains options for the profile information, sign-out and About OWF window.
+
+.OWF Banner
+image::owf-banner.png[]
+
+
+==== Toolbar
+
+.OWF Toolbar
+image::owf-toolbar.png[]
+
+The following buttons are found on the toolbar:
+
+image:stacks-button.png[] -- Stacks::
+Opens the Stacks Menu used to find, start and manage stacks. Use the menu to get details about a stacks and dashboards, discover new dashboards in the Store and access the Dashboard Builder. For more information Stacks Menu, see section Stacks Menu.
+
+image:widgets-button.png[] -- Widgets::
+ The Widgets window displays all available widgets. Use this feature to start or add widgets to a dashboard. For more information see section Widget Menu.
+
+image:store-button.png[] -- Store::
+Connects the user to a Store or Stores. When launched, a user can search from an assortment of available listings and add any of those listings to their Widgets Menu see section Dashboards Menu. See the Store User's Guide for more details about finding listings in the Store.
++
+NOTE: The Store button will only appear in the toolbar if it has been configured by a system administrator.
+
+image:help-button.png[] -- Online Help::
+Repository of instructional guides and video tutorials.
+
+image:save-button.png[] -- Save::
+Saves the current state of the dashboard and all it's contained widgets.
+
+image:add-panel-button.png[] -- New Widget Panel::
+Allows the user to add an empty widget panel that can be fit, tabbed accordion or portal
+
+image:toggle-theme-button.png[] -- Theme::
+Allows the user to change between themes
+
+*Drop-down User Menu*
+
+.OWF Drop-down User Menu Options
+image::user-menu.png[]
+
+Access the drop-down User Menu by clicking on the username in the upper-right of the page. The following elements reside in the OWF User Menu:
+
+Profile::
+User identification including the username, full name, e-mail and list of groups of which the user is a member.
+
+Administration::
+Allows for the addition of administration widgets that manage the widgets, dashboards, users, groups and system configuration.
+
+About::
+Displays customizable information about the product.
+
+Sign Out::
+Used to sign out of the framework in accordance with the security protocols that were used for the initial sign-in.
++
+NOTE: This feature is configurable by an administrator and may not appear on some versions of OWF.
+

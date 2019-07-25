@@ -1,0 +1,53 @@
+include::../_variables.asciidoc[]
+
+[#introduction]
+= Introduction
+
+== Objectives
+
+The purpose of this guide is to explain how to create a simple widget or integrate an existing widget into the Ozone Widget Framework (OWF).
+
+
+== Document Scope
+
+This guide is written for software developers who want to change an existing application into an OWF-compatible widget(s) or understand the APIs available to them for building widgets.
+
+
+== Usage
+
+=== File References
+
+All directory and file paths in this guide are relative to the `{path-full}/` directory.
+
+_Example:_ The full path of `{path-server}/` would be found at `{path-full}/{path-server}/`.
+
+
+=== Example Code
+
+// TODO: Need to package documentation and examples as part of the build; update path to examples.
+All of the code examples listed in this document can be found in the owf.war. When unpacked or unzipped, the bundle will contain a `/ozone-framework-server/owf-framework/sample-widgets` which contains .zip files of example widgets with source code built in different technology stacks. The examples included in the distribution are detailed in <<example-widgets>>.
+
+
+== Additional Notes
+
+=== Terminology Changes
+
+Previous versions of the Ozone documentation used the terms "App Component" and "Applications" (or "Apps").
+
+To maintain a consistent nomenclature across the documentation and code base, these terms are being deprecated in favor of the original terms "Widget" and "Dashboard".
+
+=== Warnings
+
+The following APIs are not currently supported by OWF v8:
+
+* Logging API
+* State API
+* Chrome API
+* Drag & Drop API
+
+Additionally, some of the APIs in this document are out-of-date or in the process of being updated or deprecated.
+
+If you run into problems or inconsistencies, please refer to the source code or contact the OZONE Development Team.
+
+
+include::../../../common/related-documents.asciidoc[leveloffset=+1]

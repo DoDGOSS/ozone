@@ -1,16 +1,16 @@
 module.exports = {
 
     presets: [
+        [require("@babel/preset-react").default],
+        [require("@babel/preset-typescript").default],
         [require("@babel/preset-env").default, {
-            corejs: "3",
+            corejs: 3,
             modules: false,
             useBuiltIns: "entry",
             targets: {
-                browsers: ["last 2 versions", "ie >= 11"]
+                browsers: ["last 2 years", "not dead", "ie 11"]
             }
-        }],
-        [require("@babel/preset-typescript").default],
-        [require("@babel/preset-react").default]
+        }]
     ],
 
     plugins: [

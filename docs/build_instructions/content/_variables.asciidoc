@@ -1,0 +1,8 @@
+:version-ozone: 8.0.0.0
+:version-tomcat: 8.5.23
+:version-jdk: 1.8
+:version-groovy: 2.4.12
+:version-gradle: 4.2.1
+:version-grails: 3.3.2
+:version-node: 10.16.0
+:version-npm: 6.9.0

@@ -1,0 +1,191 @@
+= Launcher API
+
+
+== Overview
+
+The Launcher API allows widget to send data to another widget. It is possible that one of the widgets sending or receiving the data does not have a user interface. Those widgets can be configured as background widgets (explained in the _OWF Administrator’s Guide_).
+
+This tutorial will go through the process of using the Launcher API by describing the behavior of the Channel Listener and Channel Shouter widgets. Channel Listener and Channel Shouter are example widgets included with OWF. In the tutorial below, the Channel Listener and Channel Shouter widgets work together to demonstrate both the Eventing and the Launcher APIs. The widget launching functionality is commented out by default. For this tutorial, uncomment that section of the code.
+
+Channel Listener allows the user to subscribe to channels by entering the channel name into a text box and pressing the button on the widget. The widget will then display any messages which are broadcast on the channels to which it is subscribed. Channel Shouter allows the user to publish messages to specific channels by entering both the name of a specific channel as well as the message text into text boxes and pressing the button.
+
+To demonstrate the Launcher API, if a user only has a Channel Shouter on their application, any message sent by the Channel Shouter will launch the Channel Listener. Once launched, the Channel Listener will be listening to the same channel and display the messages which get broadcast by the Channel Shouter.
+
+
+== Tutorial
+
+*Step 1 - Import the correct JavaScript Files*
+
+The example `ChannelListener.gsp` and `ChannelShouter.gsp` files use the maximum JavaScript import list.
+
+The minimum required include list needed to use the Launcher API is described in the <<required-includes>> section.
+
+
+*Step 2 - Uncomment the Launcher API functionality*
+
+The Launcher API functionality is commented out by default. To use the sample, include the code in `ChannelShouter.gsp`.
+
+
+*Step 3 - Wrap the JavaScript that requires the Launcher API in the OWF.ready function*
+
+The Launcher API requires the use of Eventing. See `ChannelShouter.gsp` for example:
+
+.Example
+[source,javascript]
+----
+OWF.ready(shoutInit);
+----
+
+
+**Step 4 - Find the GUID for the widget to be launched **
+
+To launch a widget, the developer must know the widget’s GUID. This tutorial determines the widget’s GUID by querying the Preferences API using the findWidgets function shown below. This function retrieves a list of all widgets that a user has access to, including widget names and GUIDs. If the name of the widget is known, it is therefore easy to find the appropriate GUID, which can then be saved as a preference. The following code is searching for a widget named Channel Listener.
+
+.ChannelShouter.gsp
+[source,javascript]
+----
+…
+var scope = this;
+shoutInit = owfdojo.hitch(this, function() {
+  OWF.Preferences.findWidgets({
+    searchParams: {
+      widgetName: "Channel Listener"
+    },
+    onSuccess: function(result) {
+      scope.guid = result[0].id;
+    },
+    onFailure: function(err) { /* No op */ }
+  });
+});
+…
+----
+
+For additional ways to find the widget's GUID, see the below section Alternative Ways to Find a Widgets’s GUID.
+
+
+*Step 5 - Launch the widget*
+
+To launch the widget, use the `launch` function on the OWF.Launcher object that was created as a result of `OWF.ready`. The `launch` function takes a configuration object which has four attributes:
+
+`guid`:: a `string` containing the unique ID of the widget to be opened.
+
+`launchOnlyIfClosed`:: a `boolean` flag which decides if a new widget should always be opened (`false`), or if the widget is already present to restore it (`true`).
+
+`title`:: a `string` that will replace the widget’s title when launched.
+
+`data`:: a `string` representing an initial set of data to be sent only if a new widget is opened. +
+The data which is going to be sent must be passed as a string. In the example below, the data to be sent is a JavaScript object with two attributes – channel and message. Next, this object must be converted into a JSON string. This is accomplished by using the `OWF.Util.toString` utility function.
++
+NOTE: If the widget to be launched is already in an OWF application, the data value will not be sent.
+
+In the code shown below, the widget to be launched is Channel Listener.
+
+.Example
+[source,javascript]
+----
+shout = owfdojo.hitch(this, function () {
+  var channel = document.getElementById("InputChannel").value;
+  var message = document.getElementById("InputMessage").value;
+
+  if (channel != null && channel != "") {
+…
+    if (scope.guid != null && typeopf scope.guid == "string") {
+      var data = {
+        channel: channel,
+        message: message
+      };
+      var dataString = OWF.Util.toString(data);
+      OWF.Launcher.launch({
+         guid: scope.guid,
+         launchOnlyIfClosed: true,
+         title: "Channel Listener Launched",
+         data: dataString
+      }, function(response) {
+…
+    }
+  }
+}
+----
+
+
+*Step 6 - Retrieve the initial data inside the launched widget*
+
+Once a widget has been launched, the widget may need to retrieve the initial set of data from the previous step. This is accomplished by using the `OWF.Launcher.getLaunchData()` function. This function will return the initial data from the previous step. In the `ChannelListenerPanel.js` code sample below, the data retrieved is a JSON string. This string is then parsed into a JavaScript object by using the `OWF.Util.parseJson` function. In `ChannelListenerPanel.js` the initial data sent is a channel to start listening on (`data.channel`), and an initial message to display on that channel (`data.message`).
+
+.Example
+[source,html]
+----
+…
+  render: function() {
+    var launchConfig = OWF.Launcher.getLaunchData();
+    if (launchConfig != null) {
+      var data = OWF.Util.parseJson(launchConfig);
+      if (data != null) {
+        scope.subscribeToChannel(data.channel);
+        scope.addToGrid(null,data.message,data.channel);
+      }
+    }
+  },
+…
+----
+
+
+== Additional Considerations
+
+[#find-a-widget]
+=== Alternative Ways to Find a Widget GUID
+
+==== Storing a Widget GUID as a Preference
+
+An alternative way to determine which widget to launch is to store the GUID as a preference in the database using the Preferences API. The OWF Administration tools can be used to find the GUID of any widget. For the Channel Shouter/Channel Listener example, Channel Listener’s GUID can be found by editing the Channel Listener widget using the Widget Editor. This will bring up a dialog that displays the GUID. The GUID should be saved under a newly created preference. The widget can then retrieve that GUID and used accordingly.
+
+.Example
+[source,javascript]
+----
+OWF.Preferences.getUserPreference({
+    namespace: "owf.widget.ChannelShouter",
+    name: "guid_to_launch",
+    onSuccess: function(result) {
+        const guid = result.value;
+        // Do something with guid...
+    },
+    onFailure: function(err) { /* No op */ }
+});
+----
+
+
+==== Find a Widget by its Universal Name
+
+Another way to determine which widget to launch is to search using its _universal name_. This can be done by querying the Preferences API using the `getWidget` function and including the `universalName` field in the parameters. This retrieves the specified widget’s configuration details, including its GUID.
+
+.Example
+[source,javascript]
+----
+OWF.Preferences.getWidget({
+    universalName: "org.owfwebsite.owf.examples.NYSE",
+    onSuccess: function(result) {
+        const guid = result.value;
+        // Do something with guid...
+    },
+    onFailure: function(err) { /* No op */ }
+});
+----
+
+NOTE: A widget’s _universal name_ is defined in its descriptor file. See <<creating-descriptors>> for details on descriptor files.
+
+
+=== Using Regular Expression to Change a Widget Title
+
+The `launchWidget` function also accepts a `titleRegex` property.  This property will be used as a replacement regular expression to alter the title. This allows the current widget title to be changed in complex ways. The example below appends text to the widget’s title when it is launched.
+
+.Example
+[source,javascript]
+----
+OWF.Launcher.launch({
+  guid: someGuidVariable,
+  title: "$1 - (Launched)",  // $1 represents the existing title
+  titleRegex: /(.*)/,        // Matches and captures all text in the existing title
+  launchOnlyIfClosed: false,
+  data: someDataString
+}, onLaunchFailure);
+----

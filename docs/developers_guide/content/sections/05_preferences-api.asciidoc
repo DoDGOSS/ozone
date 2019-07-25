@@ -1,0 +1,224 @@
+include::../_variables.asciidoc[]
+
+= Preferences API
+
+== Overview
+
+The Preferences API provides a convenient mechanism for the developer to store user specific data to the OWF database. A user preference is a `string` value that is uniquely mapped to a user, identified by name and namespace combination. The namespace should use a hierarchical naming pattern to avoid naming collision with other widgets. The value can be any string value, including serialized JSON.
+
+In the tutorial below, a military time checkbox will be added to the Announcing Clock widget developed in <<#creating-a-widget>>. The state of this checkbox, whether it has been checked or not, is stored in a user preference.
+
+
+== Tutorial
+
+*Step 1 - Update the Announcing Clock HTML file*
+
+Replace the code in the `AnnouncingClock.html` file with the following:
+
+[source,html]
+.AnnouncingClock.html
+----
+include::{relpath-examples}/AnnouncingClock_Preferences.html[tags=**]
+----
+
+Notice that the following `<script>` tags have been added:
+
+[source,html,indent=0]
+----
+include::{relpath-examples}/AnnouncingClock_Preferences.html[tag=api]
+----
+
+An `<input>` checkbox element has been added. Note the `onClick` event listener, which calls the method to save the preference when the user toggles the checkbox.
+
+[source,html]
+----
+include::{relpath-examples}/AnnouncingClock_Preferences.html[tag=checkbox,indent=0]
+----
+
+
+*Step 2 - Update the Announcing Clock JavaScript file*
+
+Replace the initial code in the `AnnouncingClock.js` file with the following:
+
+[source,javascript]
+.AnnouncingClock.js
+----
+include::{relpath-examples}/AnnouncingClock_Preferences.js[tag=start]
+----
+
+Since the widget is using the Eventing API, it must first wait until OWF has connected and the APIs are ready to use. This initial code waits for the page to be loaded, using the standard `DOMContentLoaded` event. Once the page is ready, the `OWF.ready` function is given a callback to execute when the widget is connected and ready.
+
+
+*Step 3 - Retrieve the Military Time preference*
+
+Add the following functions to the `AnnouncingClock.js` file:
+
+[source,javascript]
+----
+include::{relpath-examples}/AnnouncingClock_Preferences.js[tag=fetch]
+----
+
+The `getPreference` function will asynchronously fetch the user's `com.mycompany.AnnouncingClock.militaryTime` preference.
+
+After successfully retrieving the user preference, the `onSuccess` callback is called, passing the resulting preference object to the specified `onGetPreferenceSuccess` function. This uses the preference value to update the global `militaryTime` setting and update the checkbox.
+
+TIP: The returned preference `value` is always a `string` and must be handled accordingly.
+
+If a failure occurs, the `onFailure` callback will be called, passing an error message and status code to the new `onGetPreferenceFailure` function.
+
+If the preference does not exist, a failure status code of `404` (Not Found), will be returned. This is a likely occurrence, as the user may not have saved their preference yet.
+
+
+*Step 4 - Update the Military Time preference*
+
+Add the following functions to the `AnnouncingClock.js` file:
+
+[source,javascript]
+----
+include::{relpath-examples}/AnnouncingClock_Preferences.js[tag=save]
+----
+
+When the user clicks the checkbox, the `setMilitaryTimePreference` function is called. The `OWF.Preferences.setUserPreference` API method is used to asynchronously create or update the preference with the following values:
+
+- A `namespace` of `com.mycompany.AnnouncingClock`.
+
+- A `name` of `militaryTime`.
+
+- A `value` of either `true` or `false`, depending on whether or not the military time checkbox is checked.
+
+- The `onSuccess` callback to execute if the user preference is successfully stored in the database. +
++
+NOTE: Since no action is required under a successful completion in this tutorial, we are passing a no-op function.
+
+- The `onFailure` callback to execute, `onSetPreferenceFailure`, that will show an error message dialog if a failure occurs.
+
+
+*Step 5 - Update the display to accommodate the Military Time preference*
+
+Replace the `updateClock` function in the `AnnouncingClock.js` with the following:
+
+[source,javascript]
+----
+include::{relpath-examples}/AnnouncingClock_Preferences.js[tag=display]
+----
+
+The current time will now be displayed in either regular or military time, depending on the state of the military time checkbox.
+
+
+*Step 6 - Start the web server*
+
+include::common/start-sample-server.asciidoc[]
+
+
+*Step 7 - Add the Announcing Clock widget to OWF*
+
+To test the added Preferences API functionality, the widget must be run from within OWF. Add the modified Announcing Clock widget to OWF via the OWF Admin page. For details on how to do this, see <<add-a-widget>>.
+
+
+== Preferences API Reference
+
+The Preferences API comprises the following:
+
+[source,javascript]
+----
+getUserPreference({
+  namespace: "namespace",
+  name: "name",
+  onSuccess: onSuccessCallback,
+  onFailure: onFailureCallback
+});
+----
+
+[source,javascript]
+----
+setUserPreference({
+  namespace: "namespace",
+  name: "name",
+  value: "value",
+  onSuccess: onSuccessCallback,
+  onFailure: onFailureCallback
+});
+----
+
+[source,javascript]
+----
+deleteUserPreference({
+  namespace: "namespace",
+  name: "name",
+  onSuccess: onSuccessCallback,
+  onFailure: onFailureCallback
+});
+----
+
+Each of these methods communicates with the server asynchronously and therefore requires the use of callback functions to provide the results of the requested operation.
+
+For all three methods, the `onSuccess` callback should be a callback function that accepts one argument, a JSON object of the following structure:
+
+[source,javascript]
+----
+{
+  value: "true",
+  path: "militaryTime",
+  user: {
+    userId: "testAdmin1"
+  },
+  namespace: "com.mycompany.AnnouncingClock"
+}
+----
+
+In `getUserPreference`, this is the preference retrieved. In `setUserPreference`, this is the preference that has been created. And in `deleteUserPreference`, this is the preference that was deleted.
+
+If a preference is not found in a call to `getUserPreference`, a different JSON object is returned to the `onSuccess` function, which looks like this:
+
+[source,javascript]
+----
+{
+  preference: null,
+  success: true
+}
+----
+
+If an error occurs, such as a `500` (Internal Server Error), the `onFailure` callback is executed. It is passes two arguments, as follows:
+
+[source,javascript]
+----
+function onFailure(errorMessage, statusCode) {
+  alert("Error (" + statusCode + "): " + errorMessage);
+}
+----
+
+The `errorMessage` argument is a `string` describing the error, while `errorCode` is a `number` code indicating the HTTP error code returned by the server.
+
+
+== Additional Considerations
+
+=== Preference Naming Conventions
+
+In order to avoid name collisions with user preferences defined by other widgets, always use a hierarchical naming pattern with the levels of the hierarchy separated by a dot (`.`). To form a unique namespace, prefix the internet domain name, reversing the component order. For example, if developing a widget for a company with the domain name of `mycompany.com` then the namespace prefix would be `com.mycompany`. From that point, organizational naming conventions can be applied to the rest of the namespace.
+
+
+=== Payload Conventions: JSON Encoding
+
+To store several pieces of information, multiple user preferences can be created. As an alternative, they can be aggregated into one logical object, converted into a JSON string, and stored into one user preference. For example, consider storing a user’s first, middle and last name. Using the first option would require the use of the following three user preferences:
+
+----
+com.mycompany.widget.firstName
+com.mycompany.widget.middleName
+com.mycompany.widget.lastName
+----
+
+Using the second option would require just one user preference using the following JSON string:
+
+[source,json]
+----
+{
+  "firstName": "John",
+  "middleName": "Quincy",
+  "lastName": "Adams"
+}
+----
+
+Sending JSON objects with the data directly embedded is an approach that leads to considerably more flexible code. This process allows for the adding of additional data without having to re-code widgets that may not have been updated to communicate with the most current version of the broadcasting widget.
+
+
+include::common/data-uri-convention.asciidoc[leveloffset=+2]

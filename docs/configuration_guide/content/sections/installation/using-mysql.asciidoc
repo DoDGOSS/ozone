@@ -1,0 +1,178 @@
+include::../../_variables.asciidoc[]
+
+= Using MySQL
+
+. Create a schema within MySQL for use with OWF. It is recommended that there be a dedicated schema for OWF to avoid database object name collisions. The OWF team recommends using UTF-8 encoding.
+
+. Create a MySQL user with full access to the OWF schema created above.
+
+. OWF does not provide a JDBC driver for MySQL. Obtain the appropriate JDBC driver and place it into the Web server's classpath. For example, if running Tomcat, the driver can be placed in the `{path-classpath}/` directory.
+
+. Open the `{path-app-yml}` file and modify the `environments.production.dataSource` section using the values that are appropriate for the OWF environment.
++
+[source,yaml]
+.Example: application.yml
+----
+dataSource:
+    pooled: true
+    dbCreate: "none"
+    driverClassName: "com.mysql.jdbc.Driver"
+    url: "jdbc:mysql://myhost.somewhere.org/owf"
+    username: "owf_user"
+    password: "owf_password"
+    dialect: "org.hibernate.dialect.MySQL5InnoDBDialect"
+    properties:
+        minEvictableIdleTimeMillis: 180000
+        timeBetweenEvictionRunsMillis: 180000
+        numTestsPerEvictionRun: 3
+        testOnBorrow: true
+        testWhileIdle: true
+        testOnReturn: true
+        validationQuery: "SELECT 1"
+----
++
+In the example above, a MySQL database user named `owf_user` with a password of `owf_password` is used, for a database named `owf`. The dialect `org.hibernate.dialect.MySQL5InnoDBDialect` will use the InnoDB engine which is recommended for interactive web apps and explicitly used as the engine on OWF create and upgrade scripts.
+
+. To create the schema, run the `/dbscripts/mysql/MySqlCreate.sql` script, prior to starting OWF.
+
+[discrete]
+===== Notes:
+
+* If manually creating the database objects, be sure to modify the SQL script (mentioned above) with the appropriate schema name.
++
+.Example
+----
+use owf;
+----
+
+* If running a production environment, no additional steps are necessary. However, if sample widgets are to be installed, `MySqlPrefsUpdate_v7.14.0.sql` must be run prior to logging in. Logging in between the execution of these scripts can cause system failure.
+
+* Old versions of the SQL scripts are included under `/database/archive`. These are included for convenience for people upgrading from older versions of OWF.
+
+
+== Configuring MySQL JDBC to use SSL
+
+By default MySQL communicates over an unencrypted connection - however, in most cases, it can be configured to use SSL. This is somewhat implementation specific.
+
+NOTE: This capability completely depends on how the MySQL binaries were compiled, packaged, etc.
+
+The following procedure covers how to configure an SSL capable MySQL server to work with an OWF bundle. The starting point for the server implementation used in this example is:
+
+* Operating System: CentOS 6.4, 64 bit minimal installation (no updates were applied)
+* MySQL Server v5.1.69 (achieved by installing the "mysql-server" package with yum)
+
+This procedure was developed from the MySQL 5.1 documentation, specifically the following sections:
+
+* Using SSL for Secure Connections – http://dev.mysql.com/doc/refman/5.1/en/ssl-connections.html
+* Connector/J (JDBC) Reference – http://dev.mysql.com/doc/refman/5.1/en/connector-j-reference.html
+
+This procedure relies on self-signed certificates. It is for testing and demonstration purposes only. The following three sections explain the configuration steps:
+
+
+=== Creating MySQL Certificates
+
+The following steps guide a developer through creating the CA and Server certificates for a MySQL server:
+
+
+[discrete]
+===== Step 1: Create the CA key and certificate
+
+From a shell prompt on a MySQL server, type the following commands:
+
+----
+openssl genrsa 2048 > ca-key.pem
+
+openssl req -new -x509 -nodes -days 365 -key ca-key.pem -out cacert.pem
+----
+
+NOTE: After the second command, the system prompts the developer to provide basic identity information. For the purpose of this demonstration, it is not important what information the developer provides here. However, it will be necessary to provide the same information in the next step.
+
+
+[discrete]
+===== Step 2: Create the server certificate
+
+From a shell prompt on your MySQL server, type the following commands. After the first command, the developer will again be prompted to provide identity information. The developer must provide the same information that they provided in Step 1. However, when prompted for the Common Name, provide the MySQL server's hostname (e.g. mysql.mydomain.com).
+
+----
+openssl req -newkey rsa:2048 -days 365 -nodes -keyout server-key.pem -out server-req.pem
+
+openssl rsa -in server-key.pem -out server-key.pem
+
+openssl x509 -req -in server-req.pem -days 365 -CA cacert.pem -CAkey ca-key.pem -set_serial 01 -out server-cert.pem
+----
+
+
+[discrete]
+===== Step 3: Consolidate the output from the previous steps
+
+Copy the following files (produced in the preceding two steps) to a location where at a minimum the MySQL user has read access. In this example, it is `/etc/ssl/certs/`:
+
+* `cacert.pem`
+* `server-key.pem`
+* `server-cert.pem`
+
+
+=== Configure MySQL
+
+[discrete]
+===== Step 1: Edit my.cnf
+
+Edit the MySQL configuration file. For this example, the file is located at `/etc/my.cnf`. Add the lines shown in bold to the `[mysqld]` section of the file.
+
+----
+ssl-ca=/etc/ssl/certs/cacert.pem
+ssl-cert=/etc/ssl/certs/server-cert.pem
+ssl-key=/etc/ssl/certs/server-key.pem
+----
+
+
+[discrete]
+===== Step 2: Restart MySQL
+
+Run the following command (or its equivalent) to restart the MySQL server:
+
+----
+sudo service mysqld restart
+----
+
+
+[discrete]
+===== Step 3: Create the MySQL franchise store schema
+
+At a minimum, create the schema and assign permissions as you would normally, following the steps in section Adding Users/Roles/Groups. This will leave the choice of using an encrypted connection up to the connecting client. To enforce the use of SSL from the database server side, add `REQUIRE SSL` to the end of the grant statement where user permissions to the Franchise Store schema are assigned.
+
+.Example
+----
+GRANT ALL ON franchise.* TO 'franchise'@'storehost.mydomain.com' IDENTIFIED BY 'franchise' REQUIRE SSL;
+----
+
+
+=== Configure the Franchise Store Bundle
+
+[discrete]
+===== Step 1: Modify application.yml
+
+Add `useSSL=true` to the `environments.production.dataSource.url` configuration. This can also be enforced from the client side with the `requireSSL` option.
+
+.Example
+----
+dataSource:
+    url: "jdbc:mysql://192.168.56.11/franchise?useSSL=true&requireSSL=true&trustCertificateKeyStoreUrl=file://$/{System.properties['javax.net.ssl.trustStore']}&trustCertificateKeyStorePassword=changeit"""
+----
+
+
+[discrete]
+===== Step 2: Modify the application trust store
+
+Add the CA certificate, created above (`cacert.pem`) to the application's trust store. In the case of the franchise bundle, the trust store is a file called `keystore.jks` found in the `/tomcat/certs/` folder. Do this with the following command (assuming you have the JDK installed and `JAVA_HOME/bin` on your PATH, if they aren't there, add them first).
+
+----
+keytool -import -alias mysqlCAcert -file cacert.pem -keystore keystore.jks
+----
+
+[discrete]
+===== Step 3: Start the Application
+
+----
+./start.sh
+----
