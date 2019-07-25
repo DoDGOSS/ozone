@@ -10,6 +10,7 @@ import { UserWidget } from "../models/UserWidget";
 import { isNil, values } from "../utility";
 
 import { createPresetLayout } from "./default-layouts";
+import _ from "lodash";
 
 const EMPTY_USER_DASHBOARDS_STATE: UserState = {
     dashboards: {},
@@ -114,6 +115,31 @@ export class DashboardStore {
 
         if (response.status !== 200) {
             throw new Error("Failed to save user dashboard");
+        }
+    };
+
+    saveCurrentDashboardIfChanged = async () => {
+        if (this.isLoading$.value) return;
+
+        const currentDashboard = this.currentDashboard$.value;
+
+        const response = await this.userDashboardApi.getOwnDashboards();
+        if (response.status !== 200) {
+            throw new Error("Failed to fetch user dashboards");
+        }
+
+        const usersSavedState = deserializeUserState(response.data.dashboards, response.data.widgets);
+        const savedDashboard = values(usersSavedState.dashboards).find(
+            (dashboard) => dashboard.guid === currentDashboard.guid
+        );
+
+        const dashboardsAreEqual =
+            savedDashboard && _.isEqual(currentDashboard.state().value, savedDashboard.state().value);
+
+        if (dashboardsAreEqual) {
+            return;
+        } else {
+            this.saveCurrentDashboard();
         }
     };
 
