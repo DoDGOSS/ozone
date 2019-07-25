@@ -87,7 +87,7 @@ class StoreExportService {
                 console.log("Error, no stores to recieve stack");
                 return;
             } else if (stores.length === 1) {
-                this.checkStoreAndUploadStack(stack, stores[0].url);
+                this.checkStoreAndUploadStack(stack, stores[0]);
             } else {
                 showStoreSelectionDialog({
                     stores: stores,

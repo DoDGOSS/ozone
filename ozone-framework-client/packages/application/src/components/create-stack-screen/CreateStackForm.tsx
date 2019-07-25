@@ -9,7 +9,7 @@ import { stackApi } from "../../api/clients/StackAPI";
 import { userDashboardApi } from "../../api/clients/UserDashboardAPI";
 
 import { dashboardStore } from "../../stores/DashboardStore";
-import { StackUpdateRequest } from "../../api/models/StackDTO";
+import { StackCreateRequest } from "../../api/models/StackDTO";
 import { UserDashboardStackDTO } from "../../api/models/UserDashboardDTO";
 
 import { CreateDashboardOptions } from "../create-dashboard-screen/CreateDashboardForm";
@@ -55,6 +55,14 @@ export const CreateStackForm: React.FC<CreateStackFormProps> = ({ onSubmit }) =>
                 description: ""
             }}
             onSubmit={async (stackValues: CreateStackOptions, actions: FormikActions<CreateStackOptions>) => {
+                const newStackInfo: StackCreateRequest = {
+                    name: stackValues.name,
+                    imageUrl: stackValues.imageUrl,
+                    approved: false,
+                    stackContext: "",
+                    description: stackValues.description
+                };
+
                 const defaultDashValues: CreateDashboardOptions = {
                     name: stackValues.name + " (default)",
                     description: "Default dashboard for stack `" + stackValues.name + "`",
@@ -70,40 +78,9 @@ export const CreateStackForm: React.FC<CreateStackFormProps> = ({ onSubmit }) =>
                     defaultDashValues.copyGuid = "";
                 }
 
-                const newDash = await dashboardStore.createDashboard(defaultDashValues);
-                const userDashboardsResponse = await userDashboardApi.getOwnDashboards();
-                if (userDashboardsResponse.status !== 200 || !userDashboardsResponse.data.dashboards) {
-                    console.log("Could not create stack.");
-                    showToast({
-                        message: "Stack `" + stackValues.name + "` could not be created.",
-                        intent: Intent.SUCCESS
-                    });
-                    return;
-                }
+                const stackCreationSuccess = await dashboardStore.createNewStack(newStackInfo, defaultDashValues);
 
-                let newStack: UserDashboardStackDTO | undefined;
-
-                for (const dash of userDashboardsResponse.data.dashboards) {
-                    if (dash.guid === newDash.guid) {
-                        newStack = dash.stack;
-                    }
-                }
-                if (!newStack) {
-                    return;
-                }
-
-                const newStackInfo: StackUpdateRequest = {
-                    id: newStack.id,
-                    name: stackValues.name,
-                    imageUrl: stackValues.imageUrl,
-                    approved: false,
-                    stackContext: newStack.stackContext,
-                    description: stackValues.description
-                };
-
-                const stackResponse = await stackApi.updateStack(newStackInfo);
-
-                if (stackResponse.status !== 200 || !stackResponse.data.data || !(stackResponse.data.data.length > 0)) {
+                if (!stackCreationSuccess) {
                     return;
                 }
 
