@@ -554,10 +554,7 @@ export const StackDialog: React.FC<{}> = () => {
                     title="Edit Stack"
                 >
                     <div data-element-id="EditStackDialog" className={Classes.DIALOG_BODY}>
-                        <EditStackForm
-                            stack={stackToBeEdited}
-                            onSubmit={onStackEditSubmitted}
-                        />
+                        <EditStackForm stack={stackToBeEdited} onSubmit={onStackEditSubmitted} />
                     </div>
 
                     <div className={Classes.DIALOG_FOOTER}>
