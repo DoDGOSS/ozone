@@ -42,14 +42,15 @@ export const GetStorePanel: React.FC<GetStorePanelProps> = (props: GetStorePanel
         <div>
             <div>
                 <div style={{ width: "100%" }}>
-                    <RadioGroup
+                    {/* Re-enable this to allow creation of AML stores. */}
+                    {/* <RadioGroup
                         label="Type of store."
                         selectedValue={storeType}
                         onChange={handleStringChange(setStoreType)}
                     >
                         <Radio label="OMP Marketplace" value={StoreType.OMP} />
                         <Radio label="AML AppsMall" value={StoreType.AML} />
-                    </RadioGroup>
+                    </RadioGroup> */}
 
                     <div className="growing-left">
                         {storeType === StoreType.OMP && (
@@ -89,7 +90,6 @@ export const GetStorePanel: React.FC<GetStorePanelProps> = (props: GetStorePanel
 
             <div className={Classes.DIALOG_FOOTER}>
                 <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                    {/* <div className="button-fixed-right"> */}
                     <Button
                         disabled={storeFrontUrl === "" || (storeType === StoreType.AML && storeBackUrl === "")}
                         onClick={() => {
@@ -108,7 +108,6 @@ export const GetStorePanel: React.FC<GetStorePanelProps> = (props: GetStorePanel
                         data-element-id="add-store-button"
                         intent={Intent.NONE}
                     />
-                    {/* </div> */}
                     <Button
                         onClick={props.closeDialogAndUpdate}
                         data-element-id="close-store-button"

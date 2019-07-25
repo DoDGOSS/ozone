@@ -103,7 +103,7 @@ export class StorePanel extends React.Component<{}, StorePanelState> {
                 <div className={styles.storeLabel}>
                     <div>{store.title}</div>
                     <div className={styles.storeIcon}>
-                        <img src={store.images.smallUrl} alt="Store Icon" width={150} height={150} />
+                        <img src={store.images.smallUrl} alt="Store Icon" width={120} height={120} />
                     </div>
                     <div className={styles.storeButtons}>
                         <div className={""}>
