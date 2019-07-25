@@ -1,0 +1,67 @@
+[glossary]
+= Glossary
+
+[glossary]
+
+Accordion (layout)::
+    Display widgets in equal, horizontal panes that do not scroll (each individual widget may scroll using its own scroll bar).
+
+Affiliated Store::
+    A store that another organization uses for their system. When a local store is connected to an affiliated store, users in the local store can search for and add listings from the affiliated store (assuming the user has proper authentication for the affiliated store).
+
+App::
+    Deprecated term for a dashboard.
+
+App Component::
+    Deprecated term for a widget.
+
+Dashboard::
+    An organized collection of widgets with a customizable layout.
+
+Filters::
+    A feature used to reduce the number of search results by type or category.
+
+Fit (layout)::
+    Allows a user to place a single widget on the screen.
+
+Help::
+    Repository of instructional guides and video tutorials.
+
+Intent::
+    Instructions for carrying out a widget's intentions.
+
+Listing::
+    Any software dashboard or widget that a user enters into the Store is called a "Listing." Listings can be a various types of Web content.
+
+Marketplace::
+    A searchable catalog of shared listings of widgets and dashboards (also referred to as the Store).
+
+OWF::
+    Abbreviation for Ozone Widget Framework.
+
+Portal (layout)::
+    A column-oriented layout that organizes widgets of varying heights. Each new widget loads above the first one on the screen. The user drags a dividing bar to specify widget’s height. The widgets and the Ozone window scroll.
+
+Required Listings::
+    An association between Listings. _Example: if Listing A needs Listing B to function, Listing B is a Required Listing._
+
+Stack::
+    A collection of Dashboards (pages). Allows administrators and users to group Dashboards into folder-like collections that allow for easy transition from one to another.
+
+Store::
+    Commonly used term for the Ozone Marketplace.
+
+Tabbed (layout)::
+    Display one widget per screen, with tabs the top of the screen to switch from one widget to another.
+
+Toolbar::
+    The navigation bar at the top of the application. It links to a user’s stacks, widgets, the Store, online Help and options from the drop-down User Menu.
+
+User::
+    A person signed into the Ozone application, usually referring to a person without administrative privileges.
+
+Widget::
+    A light-weight, single-purpose Web application that offers a summary or limited view of a larger Web application and may be configured by the user and displayed within a Dashboard.
+
+Widget Menu::
+    The Widgets Menu displays all available widgets. Use this feature to start or add widgets to a dashboard.

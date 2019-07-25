@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Second Tracker</title>
+
+    <link type="text/css" rel="stylesheet" href="./css/widget.css">
+
+    <script type="application/javascript" src="./owf-widget.js"></script>
+    <script type="application/javascript" src="./SecondTracker.js"></script>
+    <script type="application/javascript">
+        // If not set, defaults to /<context>/js/eventing/rpc_relay.uncompressed.html
+        // OWF.relayFile = "/owf-sample-html/js/eventing/rpc_relay.uncompressed.html";
+    </script>
+</head>
+<body>
+    <div class="widgetContents">
+        <div class="panel-header">
+            Second Tracker
+        </div>
+
+        <div class="panel-body">
+            <table class="messagePanel">
+                <tr>
+                    <td width="50%">Current Time:</td>
+                    <td><span id="currentTime"></span></td>
+                </tr>
+                <tr>
+                    <td width="50%">Connection Uptime (s):</td>
+                    <td><span id="minutesOnline">0</span></td>
+                </tr>
+                <tr>
+                    <td width="50%"> Received on channel:</td>
+                    <td><span id="channelName"></span></td>
+                </tr>
+            </table>
+
+            <div id="tracker-error-panel" class="error-panel">
+                <span id="error"></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+== Introduction
+
+=== Objectives
+
+The purpose of this guide is to explain how to use the Ozone Widget Framework (OWF). This is including, but not limited to, the use of application components, full applications and their configuration settings. This guide provides an introduction to the Ozone Widget Framework (OWF). OWF consists of an environment and a set of tools used for discovering, organizing and displaying Web applications in a single browser window. The guide explains how to use OWF, set up an OWF environment on a user's local machine and navigate OWF security.
+
+=== Document Scope
+
+This guide is not an exhaustive reference. It is intended for users, developers and administrators seeking a quick introduction on how to deploy, start and use OWF. For information about specific areas, see the relevant documentation included with the OWF bundle.
+
+In this document, the terms Store and Marketplace are used interchangeably. Both applications share features described in this guide and both may be configured to OWF.
+
+The OWF Bundle ships with Tomcat v8.5.23 which requires JDK 1.7 or higher. If running OWF with a web server other than Tomcat, please see that Web server's documentation for requirements.
+
+
+include::../../../common/related-documents.asciidoc[leveloffset=+2]

@@ -1,0 +1,250 @@
+:experimental:
+ifndef::imagesdir[]
+:imagesdir: ../images/
+endif::[]
+
+= Dashboards
+
+A dashboard is a screen where you can organize your tools. To include multiple layouts on one dashboard, use the Dashboard Builder (see <<create-dashboard>>).
+
+Each time a saved dashboard loads, the screen and widget layout will maintain the same look as the last time you accessed the dashboard. Dashboards and their respective configurations are limitless; you can and probably will have a variety of different dashboards, all of which render and function independently.
+
+You'll receive dashboards in one of the following ways:
+
+* Create your own
+
+* Add one from the Store
+
+* Assigned by an administrator
+
+* Assigned to a group that has access to the dashboard
+
+Group assigned dashboards provide identical dashboards for each member of a group. Each group member can customize their instance of a pre-configured dashboard. If you change your copy of an dashboard that someone else owns, you can restore it to its default states.
+
+
+== Dashboard Overview
+
+Dashboards are individual layouts associated with a stack. Dashboards can be created, added, restored and deleted by the user. Users can customize dashboards to include user preferred layouts and widgets.
+
+.Differentiating Dashboards from Stacks
+image::dashboard-overview.png[]
+
+Stacks can have multiple dashboards. Use the feature to compile resources and make similar things easy to access. Stacks and their associated dashboards appear in the Stacks menu.
+
+Consider using dashboards to divide a stack into specific sub-tasks. For example, the Disaster Recovery stack has dashboards filled with useful tools related to disaster recovery. A user who needs this stack to do their job might need the data from the following dashboards:
+
+* Fire and Rescue Units
+
+* Water and Food Supplies and Distribution Centers
+
+* Traffic and Road Monitoring Services
+
+To save time searching for individual dashboards, a user can create one stack that contains dashboards with related or useful tools. This provides an access point for all of your tools relating to a task.
+
+You'll receive stacks with dashboards one of the following ways:
+
+* Create your own
+
+* Add it from the Store
+
+* Receive it through administrator assignment
+
+You can *Restore*, *Edit* and *Delete* your personal copies of a dashboard. For more information on managing stacks and dashboards, see <<edit-dashboard>>
+
+* An administrator can assign a dashboard to you. If you customize the layout and add or remove associated widgets, those changes will only affect your dashboard (Everyone else in the system won't see the changes. If you want to share your changes, see <<share-dashboard>>.
+
+* If you add a copy of a dashboard from the Store and then its owner updates it and pushed the updated dashboard to the Store, you'll automatically receive the change(s).
++
+NOTE: Sync between OWF and the Store must be enabled.
+
+* Restoring a dashboard returns it to its current default state. If the dashboard owner updated the dashboard after it was added to your instance of Ozone, the restored version may look different than the one that you originally received.
+
+
+== Stacks Menu
+
+The Stacks Menu lists all of the user's stacks. From the Stacks Menu, users can start a dashboard, create new ones or search for dashboards in the Store. Dashboards can be shared, restored, edited or deleted through the manager buttons in the Dashboards Menu.
+
+To open the Stacks menu, click btn:[Stacks] in the OWF Toolbar.
+
+.Stacks Menu
+image::stacks-menu.png[]
+
+The Stacks Menu contains the following features:
+
+image:expand-button.png[] -- Expand::
+Is used to display additional dashboards that exist for a stack if a stack consists of more than just the default dashboard.
+
+image:share-button.png[] -- Share::
+Marks the given stack as shared.
+
+image:create-button.png[] -- Create New::
+Enables the user to create a new dashboard for a given stack.
+
+
+[#start-dashboard]
+=== Start Stacks and Dashboards
+
+To open a stack:
+
+. Click the btn:[Stacks] button in the toolbar to open the Stacks Menu.
+
+. Double-click a stack, if it has only one dashboard, it will automatically start the default dashboard.
+
+. If the stack has more than one dashboard, then clicking the stack's icon will open a display of all the stack's dashboards. Click a dashboard to automatically start a dashboard.
+
+.A Stack with three dashboards
+image::stack-dashboards.png[]
+
+
+=== Dashboard Buttons in Stacks Dialog
+
+You'll probably use the Stacks Menu most frequently to start dashboards, as described in Start Dashboards. However, you can access a number of other useful features for managing dashboards from the Stacks Dialog.
+
+.Dashboard Buttons on Stacks Dialog
+image::dashboard-buttons.png[]
+
+Dashboard Information Window::
+The window that displays the dashboard's description and the following features that are described in detail in the following sections:
+
+. Restore -- to current default state, see <<restore-dashboard>>
+
+. Edit -- see <<edit-dashboard>>
+
+. Delete -- see <<delete-dashboard>>
+
+
+=== Add a Dashboard to a Stack
+
+All stacks created in OWF start as one dashboard stacks. The Add a Dashboard feature allows users to add another layout which can contain the same widgets in a different layout or different widgets. This gives you a means to associate tools without trying to cram them all on one screen. The following section explains how to add dashboards to an existing stack:
+
+To add a dashboard to a stack:
+
+. Click the btn:[Stacks] button (image:stacks-button.png[]) on the toolbar to open the Stacks Menu.
+
+. Click the btn:[Add] button (image:create-button.png[]) next to the stack that you would like to add a dashboard to.  A dialog will open.
+
+. Give the dashboard a title _(required)_, icon URL _(optional)_ and a description _(optional)_ and choose a layout.
++
+NOTE: If you choose a custom layout, see <<create-dashboard>>.
+
+. When finished, click btn:[OK]. To add widgets to the dashboard, you have to start them on the dashboard (see <<start-dashboard>>).
+
+When the Stacks Menu is reopened, the dashboard will appear in a list below the parent dashboard's icon. To access this list, click once on the parent dashboard.
+
+
+[#share-dashboard]
+=== Push/Share Dashboards
+
+Dashboards are frameworks that allow information from different places to communicate in a customizable environment. Good dashboards will bring together the tools you need to accomplish a task. They'll be arranged in a way that makes them easy to use and understand. If you make something that does this, you can share it with other users in one of two ways depending on the way your system is configured:
+
+
+[#publish-dashboard]
+==== Push Dashboards to the Store
+
+The Push to Store feature sends dashboard data from OWF to a connected Store. The data is sent as a JSON file and contains the following dashboard information:
+
+* Stack and Dashboard title, icon and description
+
+* Dashboard layout data
+
+* Widget definition(s)
+
+In order to push to the Store, OWF must be connected to a Store and the user must be the owner of the dashboard. If the user is not the owner, the btn:[Push to Store] button will not appear as one of the Dashboard Manager Tools because users can only push dashboards to the Store that they own.
+
+To push a dashboard to the Store:
+
+. Click the btn:[Stacks] button (image:stacks-button.png[]) on the toolbar to open the Stacks Menu.
+
+. Click the btn:[Share] button (image:share-button.png[]). This action sends the dashboard data to the Store.
++
+NOTE: If OWF is connected to more than one store, the user must click on the Store where they intend to send the dashboard.
++
+If the Stack is successfully added to the Store, the screen will switch to the Stack's listing page in the Store and the following messages will appear:
++
+`You successfully added a Stack to this store`
++
+NOTE: If an error occurs, ask an administrator to check its widgets' URLs first. The Store requires that widgets use fully qualified URLs. +
+_Example:_ `\https://myserver.com:8443/owf/path-to-widget/widget.html`).
+
+. Click the Submit button to send the Stack listing and any of its required widget listings to a Store administrator for approval.
+
+.. After a Store administrator approves the dashboard, it will be available in search results for Store users.
+
+.. For more information about editing the dashboard in the store, see <<edit-dashboard>>
+
+NOTE: Administrators can change ownership using the Dashboard Editor. For more information, see the _Ozone Administrators Guide_.
+
+NOTE: To use this feature, sync with the Store must be enabled. This should be enabled by default. If it is not, see instructions in the _Ozone Configuration Guide_.
+
+
+[#restore-dashboard]
+=== Restore a Stack or Dashboard
+
+A user can receive an dashboard through administrator assignment or through the Store. Once added, the user can modify their personal copy of the dashboard in OWF. The Restore feature reverses these changes and returns the dashboard to the current default state. If the dashboard's owner made changes after the user received the dashboard, then the restored version of the dashboard will differ from the one that originally appeared in the user's Dashboard Menu.
+If a user restores a stack with multiple dashboards, then all of the dashboards in the stack are restored. Dashboards in a stack can be individually restored.
+
+To restore a stack or a dashboard to its current default state:
+
+. Click the btn:[Stacks] button (image:stacks-button.png[]) on the toolbar to open the Stacks Menu.
+
+. Click the btn:[Restore] button (image:restore-button.png[]).
+
+. The stack and all associated dashboards will return to its current default state.
+
+
+[#edit-dashboard]
+=== Edit Stack or Dashboard
+
+The edit dashboard feature allows users to change a dashboard's title, icon and description. Layouts are only editable for dashboards in a stack; single stack layouts are not editable. If a single stack added a dashboard, then the layout for either stack (the original and the added dashboard) are editable.
+
+To edit a stack:
+
+. Click the btn:[Stacks] button (image:stacks-button.png[]) on the toolbar to open the Stacks Menu.
+
+. Click the btn:[Edit] button (image:edit-button.png[]).
+
+. A Dialog window will open:
+
+.. Update the Title, icon URL or description
+
+. Click btn:[OK]. If editing a dashboard, this will load the Dashboard Builder. See section <<create-dashboard>> for instructions.
+
+. Make changes to the dashboard's layout, then click the Save button.
+
+Changes made to a stack or dashboard only affect the user's personal copy of the stack or dashboard. If the user is the dashboard's owner and makes changes to the stack or its dashboards, then the next time they push the stack to the Store the changes are sent to the Store. Users who have this dashboard will see these changes applied to their personal copies of the stack and dashboards.
+
+NOTE: An error message will appear if the user attempts to save the dashboard with an unauthorized layout assignment. An example of an unauthorized layout assignment is if the user has a Tabbed layout pane with multiple widgets and then attempts to assign a Fit layout to that pane. The multiple widgets cannot fit into one Fit pane and the user will receive an error when attempting to Save the layout.
+
+
+[#rename-dashboard]
+=== Rename a Dashboard
+
+To rename an dashboard:
+
+. Click the btn:[Stacks] button (image:stacks-button.png[]) on the toolbar to open the Stacks Menu.
+
+. Expand the Stack containing the dashboard to rename using the btn:[Expand] button (image:expand-button.png[]).
+
+. Click the btn:[Edit] button (image:edit-button.png[]) next to the dashboard you wish to rename.
+
+. This opens the Dashboard editing dialog. Modify the Title field and click btn:[OK].
+
+
+[#delete-dashboard]
+=== Delete a Dashboard
+
+To delete a stack or a dashboard:
+
+. Click the btn:[Stacks] button (image:stacks-button.png[]) on the toolbar to open the Stacks Menu.
+
+. Expand the Stack containing the dashboard to delete using the btn:[Expand] button (image:expand-button.png[]).
+
+. Click the btn:[Delete] button (image:delete-button.png[]) next to the dashboard you wish to delete.
+
+. A warning message will appear.
+
+. Click btn:[OK] to confirm the deletion.
+
+If the stack is used by only the owner, the stack will be deleted from the system along with all associated dashboard. If the stack has more than one user (i.e. other OWF users received this stack through the Store) the user deleting the stack is deleted from the list of the stack's users and the stack remains in the OWF system.
+
+If the stack owner deletes a dashboard, other users of this stack will not be affected by this change until the owner pushes the stack to the Store. When a stack with deleted dashboards is pushed to the Store, all the stack's users will see the dashboards disappear from their copies of the stack.

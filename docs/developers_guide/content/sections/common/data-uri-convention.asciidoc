@@ -1,0 +1,23 @@
+= Payload Conventions: RESTful Data URIs
+
+While simple strings and JSON objects will work well for many use cases, there are two situations in which widget developers can run into issues:
+
+. The information that is being sent has potential security concerns.
+
+. The size of information to be passed is large (such as a data set with hundreds of rows). Sending large quantities of information across the client browser can cause memory and performance issues.
+
+The solution in both cases is to send a reference to the information rather than the information itself. The standardized best practice for sending said information is to send a REST URI encoded as a JSON object that contains the correct way to look up this information. The JSON object would then be parsed by the receiving widget and acted upon appropriately.
+
+Currently, the standardized JSON object has only one field, dataURI. Later versions of this standard may contain additional fields. Adhering to this standard will ensure that other OWF-compliant widgets will be able to communicate effectively.
+
+[source,json]
+.Sample JSON object containing a REST data URI
+----
+{
+   "dataURI": "https://server/restful/path/to/object"
+}
+----
+
+For a widget to make information available to other OWF widgets by exposing a REST API, it is important to guarantee that REST information will be accessible via cross-domain through AJAX calls. By default, many browsers will prevent such a call from succeeding and therefore developers must take explicit steps to make their application function correctly.
+
+The recommended approach is to use the Cross-Origin Resource Sharing (CORS) standard, which allows the browser and the server to cooperate in a way which safely allows cross-origin calls to succeed. See the official CORS specification for details: http://www.w3.org/TR/cors/.

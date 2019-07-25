@@ -1,0 +1,127 @@
+:experimental:
+ifndef::imagesdir[]
+:imagesdir: ../images/
+endif::[]
+
+= Widgets
+
+== Definitions
+
+Widget::
+A widget is a lightweight, single-purpose app that offers a summary or limited view of a larger dashboard. In OWF, a widget is a global description for a piece of Web content that can be configured by the user and displayed within a dashboard.
+
+Singleton Widget::
+Singleton widgets allow only one instance of the widget to open in a dashboard. (Users can open multiple instances of regular widgets on each dashboard.) If a Singleton widget is open on a dashboard and a user tries to open another instance of the widget, the open instance will move to the forefront of the screen. Administrators may make a widget a Singleton for numerous reasons. For example, preventing users from opening multiple instances per dashboard may reduce confusion, increase performance (if the widget uses a substantial amount of memory), or address another need.
+
+Background Widget::
+Background widgets run but do not appear on a user's dashboard. They often serve as caching and logging tools that do not have a user interface. Background widgets can be obtained from a Store server or configured by an OWF administrator. Most users will not be aware that Background widgets are running in their instance of OWF. However, Background widgets will appear on the Widget Switcher. Closing them may interrupt data transfer from other widgets. Use the Widget Switcher to close Background widgets. After selecting a Background widget, a warning message will appear. To close the widget, select OK. If the Background widget is visible (an administrator has not hidden it from the Widgets menu), a user can restart it by dragging it from the Widget menu to a dashboard.
++
+NOTE: Background widgets do not appear on the Ozone dashboard. These widgets will often interact with other widgets and can be used for caching and logging.
+
+Required Widgets::
+In the Store, listings can designate that specific listings are required by other listings. For example, the Store Tracking listing may require the Compass Listing. This is how the relationship works when you add those listings to your Ozone as widgets:
+
+* When you add Store Tracking to your Ozone, you will also add Compass.
+
+* If you delete Store Tracking, you'll keep Compass.
+
+* If you delete Compass, Store Tracking will delete too.
+
+You must create the "required relationships" in the Store. Ozone supports the relationships but it does not have a means to create them.
+
+
+== Widget Menu
+
+Users access their widgets from the Widgets Menu by clicking the btn:[Widgets] button (image:widgets-button.png[]) in the toolbar. Once open, the Widgets Menu appears as a sidebar.
+
+.Widgets Sidebar
+image::widgets-sidebar.png[]
+
+The widgets sidebar contains the following features:
+
+image:search-field.png[] -- Search::
+Type a widget title to search for it. This search is not case sensitive.
+
+image:sort-button.png[] -- Sort::
+Sort alphabetically (ascending/descending).
+
+image:close-button.png[] -- Close::
+Exits the Widget window.
+
+The Widgets Menu displays the widgets's title and icon. Hovering over a widget will show a btn:[Delete] button to remove this widget from the sidebar. Clicking the btn:[Delete} button will delete the widgets from the user's OWF and it is no longer displayed in the Widgets menu. For more information on deleting widgets, see <<delete-widget>>.
+
+.Hovering over a Widget
+image::widget-hover.png[]
+
+
+=== Search for Widgets
+
+Ozone provides a search feature allowing users to search for widgets in the Widgets sidebar. Located in the upper-right portion, this field filters the list of widgets by title. Users can search the widgets title; the search feature is case insensitive. The Widgets Menu will refresh and display all widgets that meet the search criteria.
+
+
+=== Sort in the Widget Menu
+
+To sort widgets in the Widgets Menu:
+
+. Open the Widgets Menu by clicking the btn:[Widgets] button (image:widgets-button.png[]) on the toolbar.
+
+. Click the sort buttons to sort the widgets in ascending or descending order.
+
+
+[#start-widget]
+== Start Widgets
+
+Widget will automatically start when you add them to a dashboard or start a dashboard where the widget was already added. Thus, you must add widgets to a dashboard to start them. To do that:
+
+. Click the btn:[Stacks] button (image:stacks-button.png[]) on the toolbar to open the Dashboards Menu. Select the dashboard where the widget will run.
+
+. Next, click the btn:[Widgets] button (image:widgets-button.png[]) on the toolbar to open the Widget Menu.
+
+. Double click to start or drag widgets from the menu into the dashboard. The widgets will start in the highlighted dashboard pane.
+
+. Repeat steps 2 and 3 to add more widgets to the dashboard.
+
+
+=== Intents: Widgets that use them
+
+When a widget sends an intent request, a pop up window appears displaying all of the open widgets that can receive the requested intent action and data for an intended purpose (graphing, displaying, etc.).
+
+// TODO: Intent Widget selection image
+
+Select a widget to accept the requested intent:
+
+* Click one of the widgets displayed on the window
+
+_OR_
+
+* Click the widget link to send the information to a widget that is not open on the screen.
+
+
+NOTE: Checking the btn:[Remember this decision] box will allow the selected widgets to automatically open the requesting widget's data. This function will continue until the user breaks the connection by closing either the sending widget or the receiving widget.
+
+After a user selects a receiving widget, the intent data is automatically sent to and processed by the receiving widget. To place the widget on the Dashboard, click or drag it from the menu into the dashboard. Once the receiving widget is in place and open in the dashboard, it will receive the sending widgets intent request.
+
+
+[#delete-widget]
+== Delete Widgets
+
+Users can remove any directly assigned widgets  from their instance of OWF. This action will not delete the widget from OWF, it only deletes the widget for that user. Only administrators can delete widgets from the system.
+
+To delete a widget from a user's instance of OWF:
+
+. Click the btn:[Widgets] button (image:widgets-button.png[]) on the toolbar to open the Widget Menu.
+
+. Hover over the selected widget, and click the btn:[Delete] trash can icon: +
+image:widget-hover.png[]
+
+. Click btn:[OK] on the warning pop-up. +
+image:delete-warning.png[]]
+
+NOTE: Users cannot delete widgets that have been given to them through a group assignment.
+
+
+=== Deleting Required Widgets
+
+Like any other widget, required widgets can be deleted from the Widgets Menu. If a user deletes a required widget, any widgets that require the deleted widget will automatically be deleted after the system displays a warning notification. Other widgets that are related to the dependent widgets will remain. For example, Jane's Tool Set widget requires the Search Filtering Tool, the Chat Client and the Traffic Monitoring widgets. If the Search Filtering widget is deleted, the Jane's Tool Set widget will also be deleted.
+
+// TODO: Delete required widget warning image

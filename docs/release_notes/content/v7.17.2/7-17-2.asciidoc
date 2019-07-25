@@ -1,0 +1,22 @@
+= v7.17.2
+
+== Installation Information
+
+Directions on how to install OZONE Widget Framework are found in the Configuration Guide for OWF.
+
+
+== Upgrade Information
+
+This release does not include database changes. To upgrade from the previous version, follow the upgrade instructions in the OWF and Store Configuration Guides’ Appendices.
+
+
+== Change Log
+
+:leveloffset: +2
+
+include::7-17-2-1_changelog.asciidoc[]
+
+include::7-17-2-0_changelog.asciidoc[]
+
+:leveloffset: -2
+
