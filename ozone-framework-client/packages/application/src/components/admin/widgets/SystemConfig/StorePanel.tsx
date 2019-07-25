@@ -34,6 +34,7 @@ interface StorePanelState {
 }
 
 export class StorePanel extends React.Component<{}, StorePanelState> {
+    _isMounted: boolean = false;
     constructor(props: {}) {
         super(props);
         this.state = {
@@ -45,6 +46,7 @@ export class StorePanel extends React.Component<{}, StorePanelState> {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.updateStoreList();
     }
 
@@ -101,7 +103,7 @@ export class StorePanel extends React.Component<{}, StorePanelState> {
                 <div className={styles.storeLabel}>
                     <div>{store.title}</div>
                     <div className={styles.storeIcon}>
-                        <img src={store.images.smallUrl} alt="Store Icon" />
+                        <img src={store.images.smallUrl} alt="Store Icon" width={120} height={120} />
                     </div>
                     <div className={styles.storeButtons}>
                         <div className={""}>
@@ -148,6 +150,9 @@ export class StorePanel extends React.Component<{}, StorePanelState> {
 
     updateStoreList() {
         storeMetaAPI.getStores().then((storeWidgets) => {
+            if (!this._isMounted) {
+                return;
+            }
             if (this.state.stores && storeWidgets.length === this.state.stores.length) {
                 for (const knownStore of this.state.stores) {
                     if (!storeWidgets.find((updatedStore) => knownStore.id === updatedStore.id)) {
@@ -170,7 +175,6 @@ export class StorePanel extends React.Component<{}, StorePanelState> {
     }
 
     deleteStore(store: Widget) {
-        // may need to remove all users first? I hope not..
         widgetApi.deleteWidget(store.id).then((response) => {
             if (response.status === 200) {
                 this.updateStoreList();
@@ -178,5 +182,9 @@ export class StorePanel extends React.Component<{}, StorePanelState> {
             }
             console.log("Error in deleting the store. Check network logs.");
         });
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 }

@@ -42,12 +42,14 @@ const _UserWidgetItem: React.FC<UserWidgetItemProps> = ({ userWidget }) => {
 
     return (
         <div className={styles.tile} onMouseEnter={deleteButton.show} onMouseLeave={deleteButton.hide}>
-            <UserWidgetTile
-                userWidgetId={userWidget.id}
-                title={widget.title}
-                iconUrl={assetUrl(widget.images.smallUrl)}
-                onClick={addWidget}
-            />
+            <div style={{ width: "100%" }}>
+                <UserWidgetTile
+                    userWidgetId={userWidget.id}
+                    title={widget.title}
+                    iconUrl={assetUrl(widget.images.smallUrl)}
+                    onClick={addWidget}
+                />
+            </div>
             <DeleteWidgetButton
                 isVisible={deleteButton.isVisible}
                 isGroupWidget={userWidget.isGroupWidget}

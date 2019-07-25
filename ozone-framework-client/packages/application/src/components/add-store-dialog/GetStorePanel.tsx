@@ -3,7 +3,7 @@ import { useBehavior } from "../../hooks";
 
 import { values } from "lodash";
 
-import { Button, Classes, Dialog, InputGroup, Intent, Spinner, Tab, Tabs } from "@blueprintjs/core";
+import { Button, Classes, Dialog, InputGroup, Intent, Radio, RadioGroup, Spinner, Tab, Tabs } from "@blueprintjs/core";
 
 import { Widget } from "../../models/Widget";
 
@@ -12,51 +12,75 @@ import { storeMetaService } from "../../services/StoreMetaService";
 
 import { mainStore } from "../../stores/MainStore";
 
-import { classNames, some } from "../../utility";
+import { classNames, handleStringChange, some } from "../../utility";
 
 import styles from "./index.scss";
 
 export interface GetStorePanelProps {
     setStore: (newStore: Widget) => void;
     closeDialogAndUpdate: () => void;
-    initialStoreUrl: string;
+    initialStoreFrontUrl: string;
+    initialStoreBackUrl: string;
 }
 
+const StoreType = {
+    OMP: "omp",
+    AML: "aml"
+};
+
 export const GetStorePanel: React.FC<GetStorePanelProps> = (props: GetStorePanelProps) => {
-    const [storeUrl, setStoreUrl] = useState("");
+    const [storeFrontUrl, setStoreFrontUrl] = useState("");
+    const [storeBackUrl, setStoreBackUrl] = useState("");
     const [storeMessage, setStoreMessage] = useState("");
+    const [storeType, setStoreType] = useState(StoreType.OMP);
+
     useEffect(() => {
-        setStoreUrl(getInitialUrl(props.initialStoreUrl));
-    }, [props.initialStoreUrl]);
+        setStoreFrontUrl(getInitialUrl(props.initialStoreFrontUrl));
+        setStoreBackUrl(getInitialUrl(props.initialStoreBackUrl));
+    }, [props.initialStoreFrontUrl, props.initialStoreBackUrl]);
     return (
         <div>
             <div>
                 <div style={{ width: "100%" }}>
-                    <div className="button-fixed-right">
-                        <Button
-                            disabled={storeUrl === ""}
-                            onClick={() => {
-                                storeMetaAPI.importStore(storeUrl, (storeWidget: Widget | undefined) => {
-                                    if (storeWidget) {
-                                        props.setStore(storeWidget);
-                                    } else {
-                                        setStoreMessage("No store found at given URL.");
-                                    }
-                                });
-                            }}
-                            icon="arrow-right"
-                            data-element-id="add-store-button"
-                            intent={Intent.NONE}
-                        />
-                    </div>
+                    {/* Re-enable this to allow creation of AML stores. */}
+                    {/* <RadioGroup
+                        label="Type of store."
+                        selectedValue={storeType}
+                        onChange={handleStringChange(setStoreType)}
+                    >
+                        <Radio label="OMP Marketplace" value={StoreType.OMP} />
+                        <Radio label="AML AppsMall" value={StoreType.AML} />
+                    </RadioGroup> */}
+
                     <div className="growing-left">
-                        <InputGroup
-                            value={storeUrl}
-                            placeholder="The URL of the store"
-                            onChange={(event: any) => {
-                                setStoreUrl(event.target.value);
-                            }}
-                        />
+                        {storeType === StoreType.OMP && (
+                            <InputGroup
+                                value={storeFrontUrl}
+                                placeholder="The URL of the store"
+                                onChange={(event: any) => {
+                                    setStoreFrontUrl(event.target.value);
+                                    setStoreBackUrl("");
+                                }}
+                            />
+                        )}
+                        {storeType === StoreType.AML && (
+                            <div>
+                                <InputGroup
+                                    value={storeFrontUrl}
+                                    placeholder="The URL for the store's frontend"
+                                    onChange={(event: any) => {
+                                        setStoreFrontUrl(event.target.value);
+                                    }}
+                                />
+                                <InputGroup
+                                    value={storeBackUrl}
+                                    placeholder="The URL for the store's backend"
+                                    onChange={(event: any) => {
+                                        setStoreBackUrl(event.target.value);
+                                    }}
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -66,6 +90,24 @@ export const GetStorePanel: React.FC<GetStorePanelProps> = (props: GetStorePanel
 
             <div className={Classes.DIALOG_FOOTER}>
                 <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+                    <Button
+                        disabled={storeFrontUrl === "" || (storeType === StoreType.AML && storeBackUrl === "")}
+                        onClick={() => {
+                            storeMetaAPI.importStore(
+                                storeFrontUrl + "_~_" + storeBackUrl,
+                                (storeWidget: Widget | undefined) => {
+                                    if (storeWidget) {
+                                        props.setStore(storeWidget);
+                                    } else {
+                                        setStoreMessage("No store found at given URL.");
+                                    }
+                                }
+                            );
+                        }}
+                        icon="arrow-right"
+                        data-element-id="add-store-button"
+                        intent={Intent.NONE}
+                    />
                     <Button
                         onClick={props.closeDialogAndUpdate}
                         data-element-id="close-store-button"

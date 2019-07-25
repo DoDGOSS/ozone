@@ -87,11 +87,11 @@ class StoreExportService {
                 console.log("Error, no stores to recieve stack");
                 return;
             } else if (stores.length === 1) {
-                this.checkStoreAndUploadStack(stack, stores[0].url);
+                this.checkStoreAndUploadStack(stack, stores[0]);
             } else {
                 showStoreSelectionDialog({
                     stores: stores,
-                    onConfirm: (store: Widget) => this.checkStoreAndUploadStack(stack, store.url),
+                    onConfirm: (store: Widget) => this.checkStoreAndUploadStack(stack, store),
                     onCancel: () => {
                         return;
                     }
@@ -100,15 +100,17 @@ class StoreExportService {
         });
     }
 
-    private checkStoreAndUploadStack(stack: Stack, storeUrl: string): Promise<Widget | undefined> {
+    private checkStoreAndUploadStack(stack: Stack, store: Widget): Promise<Widget | undefined> {
+        const storeUrlPackage = storeMetaService.getStoreUrlPackage(store);
+
         // check that the store is available
-        return storeMetaAPI.importStore(storeMetaService.cleanStoreUrl(storeUrl), (store: Widget) => {
-            return this.uploadStackToStore(store, stack);
+        return storeMetaAPI.importStore(storeUrlPackage, (checkedStore: Widget) => {
+            return this.uploadStackToStore(checkedStore, stack);
         });
     }
 
     private uploadStackToStore(store: Widget, stack: Stack): void {
-        const marketplaceAPI: MarketplaceAPI | undefined = storeMetaService.getStoreApi(store.universalName, store.url);
+        const marketplaceAPI: MarketplaceAPI | undefined = storeMetaService.getStoreApi(store);
         if (!marketplaceAPI) {
             return;
         }

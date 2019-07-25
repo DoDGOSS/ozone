@@ -25,13 +25,26 @@ export class StoreMetaAPI {
         });
     }
 
-    async importStore(storeUrl: string, callbackOnCompletion: (store: Widget) => any): Promise<Widget | undefined> {
+    async importStore(
+        storeUrlPackage: string,
+        callbackOnCompletion: (store: Widget) => any
+    ): Promise<Widget | undefined> {
         let store: Widget | undefined;
+        if (!storeUrlPackage.includes("_~_")) {
+            return undefined;
+        }
 
-        store = await this.tryConnectingAsOmpStore(storeUrl, callbackOnCompletion);
+        const storeUrlPieces = storeUrlPackage.split("_~_");
+        console.log(storeUrlPieces);
+        const storeFrontUrl = storeUrlPieces[0];
+        const storeBackUrl = storeUrlPieces.length > 1 ? storeUrlPieces[1] : "";
 
-        if (!store) {
-            store = await this.tryConnectingAsAmlStore(storeUrl, callbackOnCompletion);
+        console.log(storeUrlPackage, storeFrontUrl, storeBackUrl);
+
+        if (storeBackUrl !== "") {
+            store = await this.tryConnectingAsAmlStore(storeFrontUrl, storeBackUrl, callbackOnCompletion);
+        } else {
+            store = await this.tryConnectingAsOmpStore(storeFrontUrl, callbackOnCompletion);
         }
 
         if (!store) {
@@ -41,10 +54,11 @@ export class StoreMetaAPI {
     }
 
     private async tryConnectingAsAmlStore(
-        storeUrl: string,
+        storeFrontUrl: string,
+        storeBackUrl: string,
         callbackOnCompletion: (store: Widget) => any
     ): Promise<Widget | undefined> {
-        const gateway = new OzoneGateway(storeUrl);
+        const gateway = new OzoneGateway(storeBackUrl);
         let maybeAMLstoreData: any | undefined;
         try {
             maybeAMLstoreData = await gateway.get(`api/metadata`);
@@ -52,9 +66,12 @@ export class StoreMetaAPI {
             console.log(e);
         }
         if (maybeAMLstoreData) {
-            // console.log(maybeAMLstoreData);
-            // buildAmlStore
-            const store = await this.buildAmlStore(storeUrl, maybeAMLstoreData, callbackOnCompletion);
+            const store = await this.buildAmlStore(
+                storeFrontUrl,
+                storeBackUrl,
+                maybeAMLstoreData,
+                callbackOnCompletion
+            );
 
             if (store) {
                 callbackOnCompletion(store);
@@ -65,21 +82,30 @@ export class StoreMetaAPI {
     }
 
     private async buildAmlStore(
-        storeUrl: string,
+        storeFrontUrl: string,
+        storeBackUrl: string,
         maybeAMLstoreData: { data: string },
         callbackOnCompletion: (store: Widget) => any
     ): Promise<Widget | undefined> {
+        console.log(storeFrontUrl);
+        console.log(storeBackUrl);
         console.log(maybeAMLstoreData);
 
-        // return this.createAmlStoreWidget(maybeAMLstoreData);
-        return undefined;
+        const store = await this.createAmlStoreWidget(storeFrontUrl, storeBackUrl, maybeAMLstoreData);
+        console.log(store);
+
+        return store;
     }
 
-    private async createAmlStoreWidget(amlStoreData: any): Promise<Widget> {
+    private async createAmlStoreWidget(
+        storeFrontUrl: string,
+        storeBackUrl: string,
+        amlStoreData: any
+    ): Promise<Widget> {
         return new Widget({
             id: "",
-            descriptorUrl: amlStoreData.widgetUrl + "/api/metadata",
-            universalName: "store:aml:" + amlStoreData.widgetUrl + "_" + uuid(),
+            descriptorUrl: storeBackUrl,
+            universalName: "store:aml:" + storeFrontUrl + "_" + uuid(),
             images: {
                 smallUrl: "", // probably make this some default icon
                 largeUrl: ""
@@ -98,7 +124,7 @@ export class StoreMetaAPI {
             isSingleton: true,
             isVisible: true,
             title: "",
-            url: amlStoreData.widgetUrl,
+            url: storeFrontUrl,
             types: [await widgetTypeApi.getWidgetType("marketplace")],
             width: 400, // remember, this is ignored
             height: 400 //   ||
@@ -169,7 +195,7 @@ export class StoreMetaAPI {
                 send: [],
                 receive: []
             },
-            isBackground: ompStoreData.background,
+            isBackground: false,
             isDefinitionVisible: true, // is this what we want?
             isMaximized: false,
             isMinimized: false,

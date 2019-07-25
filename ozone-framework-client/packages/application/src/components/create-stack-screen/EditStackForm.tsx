@@ -11,7 +11,7 @@ import { StackDTO, StackUpdateRequest } from "../../api/models/StackDTO";
 import { FormError, TextField } from "../form";
 
 import { stackApi } from "../../api/clients/StackAPI";
-
+import { userDashboardApi } from "../../api/clients/UserDashboardAPI";
 import { dashboardApi } from "../../api/clients/DashboardAPI";
 
 import { assetUrl } from "../../environment";
@@ -20,36 +20,47 @@ import { DashboardDTO } from "../../api/models/DashboardDTO";
 export interface EditStackFormProps {
     onSubmit: () => void;
     stack: StackDTO;
-    dashboard: DashboardDTO | null;
 }
 
 const OzoneToaster = Toaster.create({
     position: Position.BOTTOM
 });
 
-export const EditStackForm: React.FC<EditStackFormProps> = ({ onSubmit, stack, dashboard }) => {
+export const EditStackForm: React.FC<EditStackFormProps> = ({ onSubmit, stack }) => {
     const initialFormValues = getInitialValues(stack);
     return (
         <Formik
             initialValues={initialFormValues}
             onSubmit={async (values: StackUpdateRequest, actions: FormikActions<StackUpdateRequest>) => {
-                if (stack.name !== values.name && dashboard !== null) {
-                    dashboard.name = values.name + " (default)";
-                    const dashSuccess = [await dashboardApi.updateDashboard(dashboard)];
-                    if (dashSuccess) {
-                        OzoneToaster.show({
-                            intent: Intent.SUCCESS,
-                            message: "Default Dashboard Updated Successfully!"
-                        });
-                        actions.setStatus(null);
-                    } else {
-                        OzoneToaster.show({
-                            intent: Intent.DANGER,
-                            message: "Dashboard Unsuccessful, something went wrong."
-                        });
-                        actions.setStatus({ error: "An unexpected error has occurred" });
+                let defaultDashboard;
+                let dashSuccess = false;
+
+                const userDashboardsResponse = await userDashboardApi.getOwnDashboards();
+                if (userDashboardsResponse.status === 200 && userDashboardsResponse.data.dashboards !== undefined) {
+                    for (const dash of userDashboardsResponse.data.dashboards) {
+                        if (!dash.stack) {
+                            continue;
+                        }
+                        if (dash.stack.stackContext === stack.stackContext && dash.name === stack.name + " (default)") {
+                            defaultDashboard = dash;
+                        }
+                    }
+                    if (stack.name !== values.name && defaultDashboard !== undefined) {
+                        const updatedDash = {
+                            guid: defaultDashboard.guid,
+                            name: values.name + " (default)"
+                        };
+                        dashSuccess = (await dashboardApi.updateDashboard(updatedDash)).status === 200;
+                        if (!dashSuccess) {
+                            OzoneToaster.show({
+                                intent: Intent.DANGER,
+                                message: "Could not rename default dashboard."
+                            });
+                            actions.setStatus({ error: "An unexpected error has occurred" });
+                        }
                     }
                 }
+
                 stack.name = values.name;
                 stack.imageUrl = values.imageUrl;
                 stack.description = values.description;
