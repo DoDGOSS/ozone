@@ -33,6 +33,7 @@ enum UserWidgetSubSection {
 
 export class UsersWidget extends React.Component<{}, State> {
     defaultPageSize: number = 5;
+    _isMounted: boolean = false;
 
     constructor(props: any) {
         super(props);
@@ -48,7 +49,12 @@ export class UsersWidget extends React.Component<{}, State> {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.getUsers();
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     render() {
@@ -142,6 +148,10 @@ export class UsersWidget extends React.Component<{}, State> {
 
         // TODO: Handle failed request
         if (response.status !== 200) return;
+
+        if (!this._isMounted) {
+            return;
+        }
 
         this.setState({
             users: response.data.data,

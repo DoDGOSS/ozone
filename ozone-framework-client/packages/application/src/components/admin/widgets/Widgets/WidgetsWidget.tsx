@@ -42,6 +42,7 @@ enum WidgetWidgetSubSection {
 
 export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
     defaultPageSize: number = 15;
+    _isMounted: boolean = false;
     constructor(props: any) {
         super(props);
 
@@ -58,6 +59,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.getWidgets();
         this.getWidgetTypes();
     }
@@ -107,6 +109,10 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
                 )}
             </div>
         );
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     private columns = () => {
@@ -176,6 +182,9 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
         // TODO: Handle failed request
         if (response.status !== 200) return;
 
+        if (!this._isMounted) {
+            return;
+        }
         this.setState({
             widgets: response.data.data,
             loading: false
@@ -188,6 +197,9 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
         // TODO: Handle failed request
         if (response.status !== 200) return;
 
+        if (!this._isMounted) {
+            return;
+        }
         this.setState({
             widgetTypes: response.data.data
         });
