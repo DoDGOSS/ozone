@@ -14,7 +14,13 @@ const _HelpButton: React.FC = () => {
 
     return (
         <NavbarTooltip title="Help" shortcut={Shortcuts.showHelp} description="Show the Help window.">
-            <Button minimal icon="help" active={isVisible} onClick={mainStore.showHelpDialog} />
+            <Button
+                minimal
+                icon="help"
+                active={isVisible}
+                onClick={mainStore.showHelpDialog}
+                data-element-id="help-button"
+            />
         </NavbarTooltip>
     );
 };
