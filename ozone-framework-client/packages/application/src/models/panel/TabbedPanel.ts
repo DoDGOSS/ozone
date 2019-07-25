@@ -70,10 +70,12 @@ export class TabbedPanel extends AbstractPanel<TabbedPanelState> {
 
         const widget = prev.widgets.find((w) => w.id === instanceId) || null;
 
-        this.state$.next({
-            ...prev,
-            activeWidget: widget
-        });
+        if (widget) {
+            this.state$.next({
+                ...prev,
+                activeWidget: widget
+            });
+        }
     }
 
     getMoveControls(instance: WidgetInstance) {
