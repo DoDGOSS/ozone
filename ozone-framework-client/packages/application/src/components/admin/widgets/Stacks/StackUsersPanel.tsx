@@ -67,11 +67,13 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
                     />
                 </div>
 
-                {/* <StackUsersEditDialog
-                    show={this.state.showAdd}
-                    onSubmit={this.addUser}
-                    onClose={this.closeUsersDialog}
-                /> */}
+                {
+                    <StackUsersEditDialog
+                        show={this.state.showAdd}
+                        onSubmit={this.addUser}
+                        onClose={this.closeUsersDialog}
+                    />
+                }
             </div>
         );
     }
