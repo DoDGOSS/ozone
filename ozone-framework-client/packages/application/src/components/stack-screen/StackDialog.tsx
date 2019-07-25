@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useBehavior, useStateAsyncInit } from "../../hooks";
+import { useBehavior } from "../../hooks";
 
 import { Button, ButtonGroup, Classes, Dialog, Divider, Intent, ITreeNode, Spinner } from "@blueprintjs/core";
 
@@ -34,11 +34,12 @@ import { userDashboardApi } from "../../api/clients/UserDashboardAPI";
 import { UserDashboardDTO } from "../../api/models/UserDashboardDTO";
 
 import { uuid } from "../../utility";
+import { AuthUserDTO } from "../../api/models/AuthUserDTO";
 
-// TODO - iconImageUrl not saving to database - clientAPI
-// TODO - style image
+// TODO - iconImageUrl not saving to database`
 
 const fetchUserDashboardsAndStacks = (
+    dispatchCurrentUserResult: (currentUser: AuthUserDTO) => void,
     dispatchDashboardResult: (dashboards: DashboardDTO[]) => void,
     dispatchStackResult: (stacks: StackDTO[]) => void,
     dispatchDashboardState: (dashLoading: boolean) => void,
@@ -60,6 +61,8 @@ const fetchUserDashboardsAndStacks = (
         });
 
         authService.check().then(async (currentUser) => {
+            dispatchCurrentUserResult(currentUser.data);
+
             const allUserGroupsResponse = await groupApi.getGroups({ user_id: currentUser.data.id });
             if (allUserGroupsResponse.status !== 200) return;
             const allUserGroups = allUserGroupsResponse.data.data;
@@ -108,6 +111,7 @@ export const StackDialog: React.FC<{}> = () => {
     const [stacks, setStacks] = useState<StackDTO[]>([]);
     const [stacksLoading, setStacksLoading] = useState(true);
     const [dashLoading, setDashLoading] = useState(true);
+    const [currentUser, setCurrentUser] = useState<AuthUserDTO | null>(null);
 
     useEffect(() => {
         if (isVisible) {
@@ -122,7 +126,7 @@ export const StackDialog: React.FC<{}> = () => {
     function fetchData() {
         setStacksLoading(true);
         setDashLoading(true);
-        fetchUserDashboardsAndStacks(setDashboards, setStacks, setDashLoading, setStacksLoading);
+        fetchUserDashboardsAndStacks(setCurrentUser, setDashboards, setStacks, setDashLoading, setStacksLoading);
     }
 
     function getCurrentDash() {
@@ -158,7 +162,11 @@ export const StackDialog: React.FC<{}> = () => {
     };
 
     const restoreStack = async (stack: StackDTO) => {
-        console.log("RESTORE STACK HERE.  Stack is: " + JSON.stringify(stack));
+        if (stack.approved === false) {
+            restoreUnsharedStack();
+        } else {
+            confirmRestoreStack(stack);
+        }
     };
 
     const restoreDashboard = async (dashboard: DashboardDTO) => {
@@ -200,11 +208,11 @@ export const StackDialog: React.FC<{}> = () => {
             onConfirm: () => onDeleteStackConfirmed(stack)
         });
     };
+
     const onDeleteStackConfirmed = async (stack: StackDTO) => {
         let response;
         try {
-            const currentUser = await authService.check();
-            if (currentUser && currentUser.data && currentUser.data.isAdmin) {
+            if (currentUser && currentUser.isAdmin) {
                 response = await stackApi.deleteStackAsAdmin(stack.id);
             } else {
                 response = await stackApi.deleteStackAsUser(stack.id);
@@ -226,6 +234,7 @@ export const StackDialog: React.FC<{}> = () => {
             onConfirm: () => onDeleteDashboardConfirmed(dashboard)
         });
     };
+
     const onDeleteDashboardConfirmed = async (dashboard: DashboardDTO) => {
         const response = await dashboardApi.deleteDashboard(dashboard.guid);
         if (response.status !== 200) return false;
@@ -293,11 +302,33 @@ export const StackDialog: React.FC<{}> = () => {
             onConfirm: () => onRestoreDashboardConfirmed(dashboard)
         });
     };
+
+    const confirmRestoreStack = async (stack: StackDTO) => {
+        showConfirmationDialog({
+            title: "Warning",
+            message: [
+                "You are discarding all changes made to ",
+                { text: stack.name, style: "bold" },
+                " and restoring it's default setting. Press OK to confirm."
+            ],
+            onConfirm: () => onRestoreStackConfirmed(stack)
+        });
+    };
+
     const onRestoreDashboardConfirmed = async (dashboard: DashboardDTO) => {
         const response = await dashboardApi.restoreDashboard(dashboard);
         if (response.status !== 200) return false;
 
-        await dashboardStore.fetchUserDashboards(dashboard.guid);
+        const set = await dashboardStore.fetchUserDashboards(dashboard.guid);
+        mainStore.hideStackDialog();
+        return true;
+    };
+
+    const onRestoreStackConfirmed = async (stack: StackDTO) => {
+        const response = await stackApi.restoreStack(stack);
+        if (response.status !== 200) return false;
+
+        const set = await dashboardStore.fetchUserDashboards();
         mainStore.hideStackDialog();
         return true;
     };
@@ -309,6 +340,19 @@ export const StackDialog: React.FC<{}> = () => {
             hideCancel: true
         });
     };
+
+    const restoreUnsharedStack = async () => {
+        showConfirmationDialog({
+            title: "Warning",
+            message: ["Stacks cannot be restored until they are shared."],
+            hideCancel: true
+        });
+    };
+
+    const currentUserOwnsStack = (stack: StackDTO) => {
+        return stack.owner && currentUser && stack.owner.username === currentUser.username;
+    };
+
     return (
         <div>
             {!(showDashboardEdit || showStackEdit) && (
@@ -381,7 +425,14 @@ export const StackDialog: React.FC<{}> = () => {
                                                 />
                                                 <Divider />
                                                 <CompactEditButton
-                                                    itemName="Edit Stack"
+                                                    itemName={
+                                                        currentUserOwnsStack(stack)
+                                                            ? "Edit Stack"
+                                                            : "Only Editable by Stack Owner: " +
+                                                              (stack.owner && stack.owner.username
+                                                                  ? stack.owner!.username
+                                                                  : "Undefined")
+                                                    }
                                                     onClick={(event) => {
                                                         // don't let the click activate the tree node
                                                         const defaultDashboard = dashboards
@@ -395,6 +446,7 @@ export const StackDialog: React.FC<{}> = () => {
                                                         event.stopPropagation();
                                                         showEditStackDialog(stack, defaultDashboard);
                                                     }}
+                                                    disabled={!currentUserOwnsStack(stack)}
                                                 />
                                                 <Divider />
                                                 <CompactDeleteButton
