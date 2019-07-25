@@ -1,0 +1,475 @@
+:experimental:
+ifndef::imagesdir[]
+:imagesdir: ../images/
+endif::[]
+
+= Creating and Editing User Content
+
+Creating and editing users, groups, stacks and widgets is explained in this section. This includes adding groups/stacks/widgets to user profiles through the User Editor. OWF also allows administrators to add users to groups/stacks/widgets through the Users tab on the respective Editors. These examples are described in <<add-widget-to-user>> and <<add-user-to-widget>>.
+
+
+== Users
+
+.User Administration widget
+image::user-admin-widget.png[]
+
+=== Create a User
+
+Administrators have the ability to create new user profiles, edit existing user information and add groups/stacks/widgets to user profiles.
+
+To create a new user profile:
+
+. Click the btn:[Administration] link in the drop-down User Menu.
+
+. Choose the btn:[Users] button to open the User Manager.
+
+. Click on the btn:[Create] button, opening the User Create Form.
+
+. Enter the user's information. Mandatory fields (User Name and Full Name) are denoted with a  red asterisk. More information about these fields is found in Table 3: Edit Button and Editor Widget Fields.
+
+. When complete, click btn:[Apply]. This will save the user and activate the additional tabs in the User Manager.
+
+. To add groups, stacks or widgets to a user account, proceed to the instructions in <<add-widget-to-user>> or <<add-user-to-widget>>.
+
+NOTE: Administrators do not create or maintain user passwords in the OWF interface. Security and authentication are addressed in the OWF Configuration Guide.
+
+
+[#add-widget-to-user]
+=== Add a Widget to a User
+
+The following instructions describe how to add Widgets to a user account using the Widgets tab found in the User Manager. Administrators can follow this basic formula to add groups, stacks and widgets to user profiles via the Groups, Stacks and Widgets tabs in the User Editor.
+
+To add widgets to a user's account:
+
+. Click the btn:[Administration] link in the drop-down User Menu.
+
+. Click the btn:[Users] button to open the User Manager.
+
+. From the manager, select a User. Then, click btn:[Edit] to open the User Edit Form.
+
+. Click the btn:[Widgets tab] at the top of the editor. Widgets that are already associated with the user will display in the window.
+
+. To add widgets, click the btn:[Add] button. A modal window will display all widgets available to that user. Select a widget, then, click the btn:[OK] button. The widget is automatically added to the list of widgets on the user's Widget tab.
+
+
+[#add-user-to-widget]
+=== Add a User to a Widget
+
+Another way to give users access to widgets is to add users to the widgets's profile via the Widget Editor. Again, administrators can use this general procedure to add users to groups and stacks through the Users tabs in the respective editors. When completed, close the editor window and the data will be updated automatically to the user profile.
+
+To add users to widget profiles:
+
+. Click the btn:[Administration] link in the drop-down User Menu.
+
+. Click the btn:[Widgets] button to open the Widget Manager.
+
+. From the manager, select a widget. Then, click the btn:[Edit] button.
+
+. Click the btn:[Users tab] at the top of the editor. Users that are already associated with the widget will display in the window.
+
+. To add users, click the btn:[Add] button. A modal window will display all users available to that widget. Select a user, then, click the btn:[OK] button. The user is automatically added to the list of users on the widgets's Users tab and the widget is available to the user's instance of OWF.
+
+
+=== Edit a User
+
+To edit existing user content:
+
+. Click the btn:[Administration] link in the drop-down User Menu.
+
+. Click the btn:[Users] button to open the User Manager.
+
+. From the manager, select a user account to update and click the btn:[Edit] button.
+
+. Update data on the Properties tab and click btn:[Apply].
+
+This procedure is also used when editing the properties of groups, stacks and widgets. To edit the content, click the btn:[Administration] link in the drop-down User Menu and click on the respective manager and click btn:[Edit] to open up the editor. Make changes in the Properties tab and click btn:[Apply].
+
+
+=== Edit User Preferences
+
+[#fig_preferences-tab]
+.User Administration widget -- Preferences tab
+image::user-admin-widget_preferences-tab.png[]
+
+Widgets use preferences to store data. Preference date includes the widget's location on the screen, instructions to open it, etc. A preference value can be created and saved at any time by a running widget. Once that preference is saved to the database, it will appear on the Preferences tab in the User Manager. The Preferences tab serves as a table of known preferences. From the tab, administrators can view, create, edit and delete preferences. However, from the Preferences tab, the administrator cannot configure a widget to use a preference. Widgets will only use the preference they are programmed to use defined via the Preference API.
+
+If a widget is configured to use preferences, they can be used to define component states, interaction, etc. For example, the `guid_to_launch` preference is an example of a preference used by the Administration Managers to know which Editor to launch. Other Widgets could use this same preference as an eventing tool. For example, administrators can use this preference to make a Tracking widget open a Map widget. As seen in <<fig_preferences-tab>>, the `guid_to_launch` preference causes the User Manager to open a copy of the Widget Manager .
+
+The Preferences tab includes the following fields:
+
+Preference Name::
+The preference name, along with the Namespace, make up the "key" for the preference item. The Preference Name is the name of the preference as dictated by the widget or OWF. If the widget uses preferences, OWF will add the preference name to the table on the Preference tab whenever the action that is associated with the preference is performed.
+
+Namespace::
+The namespace is the other half of the preference's unique identifier. Generally, these identifiers will describe general functionality for a widget or set of widgets. Namespace/Preference Name pairs are unique for each user.
+
+Value::
+Stored inside of the preference, values house the data that the preference uses. An example could be the actual widget GUID value that the preference will use to open a widget. This is a string value but developers can use JSON or REST URIs as the preference value.
+
+.Edit Preference dialog
+image::edit-user-preference-dialog.png[]
+
+
+== Stacks
+
+=== Create a Stack
+
+Creating a stack is not an exclusive administrator function. Stacks are created by users and administrators using the Stacks Menu.
+
+To create a new stack:
+
+. Click the btn:[Stacks] button in the toolbar to open the Stacks Menu.
+
+. Click btn:[Create New] at the bottom of the screen to open the "Create New" window.
+
+. Give the stack:
+
+.. A title (required)
++
+NOTE: The stack cannot be saved without a title.
+
+.. An image URL (optional) that appears in the Stacks window
+
+.. A description (optional)
+
+. Choose a layout for the stacks. Click the radio button beside the selected layout method. Layout options include:
+
+.. Choose a template – Choose one of twelve premade layouts.
+
+.. Copy the layout of an existing Stack– Clicking this causes a drop-down menu to appear below the selection title. Choose a stack from this menu. The new stack will adopt the layout of the selected stack. However, it will not copy the widgets associated with that layout.
+
+.. Create a new layout – Opens the Dashboard Builder allowing the user to create a new layout. More information on creating a new layout is found in the OWF User's Guide.
+
+. Click btn:[OK]. The stack will automatically start unless you selected "Create a new layout," if that is the case instructions for the Dashboard Builder are found in the OWF User's Guide.
+
+. To add widgets to the Dashboard, click the btn:[Widget] button on the OZONE Toolbar and select widgets by clicking them. If the Dashboard has more than one pane, click the pane where the widget will start.
+
+The next time the Stack menu is opened, it will contain this stack. This stack belongs to the user who created it.
+
+* When OWF is connected to a Store, administrators cannot share the stack with other OWF users until the stack is shared with the Store. To do this, open Stacks and click btn:[Push to Store].
+
+* When OWF is not connected to a Store, assign the stack to OWF users and groups using the instructions in <<edit-a-stack>>.
+
+* If an administrator deletes an stack, the user will retain a copy of the stack and the dashboards and widgets included in the dashboard. However, they will lose the ability to restore it.
+
+* If an administrator changed the stack and its contents after it was added to a user's instance of OWF, the current state of the stack may be different than the one that originally appeared on the user's Stack window.
+
+NOTE: Creating a new stack, in effect, creates a one-page application. The stack and the single dashboard share the same title, description and icon. The layout assigned to this stack applies to the single dashboard rather than the stack. Users can add additional dashboards, and therefore additional layouts, to this stack. When more than one dashboard is added to a stack, the user has the ability to change the single dashboard's properties. Also each dashboard is edited independent from other dashboards or the parent Stack.
+
+
+[#edit-a-stack]
+=== Edit a Stack
+
+Only shared stacks or stacks added to the Store and Approved in the Store can be assigned to individual users or groups from the Stacks Manager. That means that a user willingly made available a copy of their stacks for administrators to distribute to other users. For that reason, administrators have limited editing ability for Stacks. They cannot edit the Stack's properties (name, layout, etc.) or Widgets from the Stack Manager. Those edits must occur in the actual Stack, for instructions see the _Ozone User's Guide_. From the Stack Manager, administrators can add or remove users and groups as described below:
+
+. Click the btn:[Administration] link in the drop-down User Menu.
+
+. Click btn:[Stacks] to open the Stack Manager.
+
+. From the manager, select a Stack and click btn:[Edit].
+
+. From the Stack Edit Form, you'll see:
+
+.. A list of the Stack's Widgets will appear for informational purposes only. To add Widgets, open the actual Stack and add widget from the Widget Menu.
+
+.. Groups associated with the Stack.
+
+.. Users associated with the Stack.
+
+. To add a group, click the btn:[Group tab] and then click the btn:[Add] button. A modal window will display all available groups. Select a group, then, click the btn:[OK] button. The Stack is automatically added to the group members' Stacks Menu.
+
+. To add a user, click the btn:[User tab] and then click the btn:[Add] button. A modal window will display all available users. Select a user, then, click the btn:[OK] button. The Stack is automatically added to the user's Stacks Menu.
+
+In order to assign users and groups to a stack that was retrieved from the Store, two actions must occur:
+
+* *The stack must be approved in the Store.* If the stack has not been approved in the Store, the administrator will receive a warning message when they attempt to assign the stack to a user or group.
+
+* *The Store synchronization feature must be enabled and configured to connect OWF to the Store.* For more information on enabling this feature, see the _Ozone Configuration Guide_.
+
+If OWF is not connected to a Store, the owner of the stack must first allow the administrator to share the stack with other users. To do this, the stack owner (who can be an OWF user without administrative privileges) must click the stack's btn:[Share] button. Instructions are provided in the _Ozone User's Guide_.
+
+NOTE: When OWF is not connected to a Store, OWF does not require the synchronization feature to assign applications to users and groups.
+
+
+=== Assign a Stack to Me
+
+In the Stack Manager, when an administrator selects a Stack and clicks btn:[Assign To Me], the system reassigns ownership of the stack to the person that clicked the button. This feature was included because a stack must have an owner in order to be shared with the Store. Only an owner can push a stack to the Store. If its owner is removed from the system, the btn:[Assign To Me] button allows an administrator to claim ownership of the stack. If an administrator reassigns ownership, all users in the system will retain their copies of the Stack.
+
+
+== Widgets
+
+=== Create a Widget
+
+Administrators can create, edit, delete, import and export widgets. There are two ways to create a widget: importing widget data with a descriptor URL or manually entering widget data. Imported widget data is editable through the Widget Editor (see <<edit-a-widget>>).
+
+To create a widget, the administrator must complete several mandatory fields in the Widget Manager. For example, the WidgetType field is useful for separating widgets on a user's toolbar. Only "Standard" type widgets will appear in the Widgets Menu. "Administration" widgets will appear when the btn:[Administration] link is clicked in the drop-down User Menu. Widgets set to type "Store" will appear under the Store button on the toolbar. "Metric" type widgets will appear when the btn:[Metric] link is clicked in the drop-down User Menu. Setting a widget to "fullscreen" in OWF does nothing to the widget. This field is used by the Store to send Web apps to OWF as separate stacks.
+
+To create a widget:
+
+. Click the btn:[Administration] link in the drop-down User Menu.
+
+. Click the btn:[Widgets] button to open the Widget Manager.
+
+. From the manager, click the btn:[Create] button.
+
+. From here, there are two ways to create widgets:
+
+.. *Import a descriptor URL* -- Enter a descriptor URL and click Load. For more information about descriptor URLs see section <<descriptor-urls>>.
+
+.. *Manually enter data* -- If a descriptor URL is not available, click the btn:[Don't have a descriptor URL?] link and complete the required fields on the Properties tab. Remember that the widget type will dictate the location of the widget.
+
+. Click btn:[Apply]. This will unlock the Users, Groups and Intents tabs on the Widget Manager. Select each tab and click the btn:[Add] button to add users, groups and intents to the widget. Information about adding Intents to a widget is in section <<create-intent>>.
+
+. Refresh OWF. The new Widget will appear under the respective toolbar button for users to whom the widget has been assigned.
+
+
+[#edit-a-widget]
+=== Edit a Widget
+
+To edit existing widget content:
+
+. Click the btn:[Administration] link in the drop-down User Menu.
+
+. Select btn:[Widgets] to open the Widget Manager.
+
+. From the manager, select a widget and click btn:[Edit].
+
+. Edit the widget data on the Properties tab and click btn:[Apply].
+
+Users and groups assigned to the widget will receive the widget data changes automatically.
+
+
+== Widget Intents
+
+[#create-intent]
+=== Create a Widget Intent
+
+Widget intents are the instructions for carrying out an widget's intentions. Intents comprise an Action (graph, view, edit, etc.), a Data Type (html, text, image, etc.) and a Send/Receive request. For intents to function in OWF, a developer has to code the actual function into a widget, see the _Ozone Developer's Guide_ for instructions.
+
+Widgets coded with identical Action and Data Types can communicate with each other. For example, the New York Stock Exchange (NYSE) widget sends an intent to graph (Action) daily stock data (Data Type). The Stock Chart widget, configured and coded to receive the same intent Action and Data Type, is able to receive this request and graphs the data. The intents mechanism allows the user to select which of the available widgets will receive the intent. This binding capability enables the two widgets to enhance each other's functionality. Administrators can add, edit and delete widgets intents, however, a developer or someone with experience using intents is more likely to perform these tasks.
+
+NOTE: Find instructions about using intents in the _Ozone User's Guide_ and instructions about creating intents in the _Ozone Developer's Guide_.
+
+The Store ships with several default intents Actions and Data Types. It will NOT function as expected until a developer establishes a relationship between the intent and the widget as described in the OWF Developer's Guide. The default intents from the Store serve as metadata used as placeholders for OWF developers to create consistent intents. After a developer establishes that relationship, the following instructions will allow administrators to add intents to a widget:
+
+. Click the btn:[Administration] link in the drop-down User Menu.
+
+. Select btn:[Widgets] to open the Widget Manager.
+
+. From the manager, select a widget and click btn:[Edit].
+
+. Click the btn:[Intents tab]. Click btn:[Create] to open the Create Intent window.
+
+. Complete the fields, required fields are marked with an asterisk.
+
+.. *Action* -- The Action field is the instruction the intent will make (ex. graph or view).
+
+.. *Data Type* -- The Data Type field indicates the data that the intent is passing from widget to widget (ex. text/html).
+
+.. *Send/Receive* -- This tells the widget to send or receive the widget intent.
+
+. Click btn:[OK]. The intent has been added to the widget and will be displayed in the Intents tab in the widget manager.
+
+NOTE: It is recommended that Widgets, which use Intents, provide a Descriptor file containing the Intents configurations instead of relying on administrators following the above procedure.
+
+
+=== Edit a Widget Intent
+
+It is recommended that a developer, or an individual experienced with using intents, edits the widget intents.
+
+To edit widget intents:
+
+. Click the btn:[Administration] link in the drop-down User Menu.
+
+. Select btn:[Widgets] to open the Widget Manager.
+
+. From the manager, select a Widget and click btn:[Edit].
+
+. Click the btn:[Intents tab], select an intent and click btn:[Edit].
+
+. Once changes have been made, click btn:[OK]. OWF will automatically update the widget data.
+
+. Close the Widget Manager.
+
+Users assigned to this widget will see the changes automatically.
+
+
+=== Delete a Widget Intent
+
+To delete widget intents:
+
+. Click the btn:[Administration] link in the drop-down User Menu.
+
+. Select btn:[Widgets] to open the Widget Manager.
+
+. From the manager, select a widget and click btn:[Edit].
+
+. Click the btn:[Intents tab], select an intent and click btn:[Delete].
+
+. Click btn:[OK] on the warning to delete the intent.
+
+
+== Widget Descriptors
+
+[#descriptor-urls]
+=== Widget Descriptor URLs
+
+Descriptor URLs allow an administrator to create widgets without entering the widget's information manually. The administrator simply enters a URL and the widget's information is automatically retrieved from a descriptor file from a Web-accessible location. Widgets created with a descriptor URL are editable in the Widget Manager.
+
+Descriptor URLs:
+
+* Reduce the risk of typing errors when entering widget data.
+
+* Allow several installations of OWF to easily share widget information.
+
+* Allow widget developers to specify important configuration information such as Universal Names and Intents.
+
+
+== Edit a Widget Descriptor
+
+Administrators can update and edit the widget descriptor data within the OWF interface. Updating the widget descriptor data retrieves the latest data in the widget's descriptor file which is saved in a Web-accessible location. Changes made to the widget prior to the update are lost once the update is performed.
+
+To update the widget descriptor data:
+
+. Click the btn:[Administration] link in the drop-down User Menu.
+
+. Select btn:[Widgets] to open the Widget Manager.
+
+. From the manager, select a widget and click btn:[Edit].
+
+. Click btn:[Load]. The Widget manager will automatically refresh and display the most recent widget descriptor data.
+
+. Click btn:[Apply].
+
+Administrators can edit their copy of the widget descriptor data by following the steps outlined in section Editing Existing Widget Content. Descriptor data changes are shareable after the administrator exports the widget and saves the descriptor file in a Web-accessible location. Individuals who already have access to this widget will have to update their copy of the widget's descriptor data in order to see the widget changes in their OWF instance.
+
+
+== Export a Widget Descriptor
+
+Administrators can export and save widget data as a descriptor file. An administrator needs to host the widget descriptor file in a Web-accessible location to make the file shareable with other administrators that have access to this location. This process is intended to provide a means for administrators from different OWF instances to add or receive identical widgets.
+
+To export a widget:
+
+. Click the btn:[Administration] link in the drop-down User Menu.
+
+. Select btn:[Widgets] to open the Widgets.
+
+. Select the widget to export. Click the arrow on the right of the split btn:[Edit] button and choose btn:[Export].
+
+. Enter a Filename that describes the widget, this will become the title of the HTML descriptor file and then click btn:[OK].
++
+NOTE: If the widget was created by a descriptor file, the Filename field will be prepopulated with the descriptor file name.
+
+. Save the widget descriptor HTML file on a Web-accessible server.
+
+
+== Groups
+
+=== Create a Group
+
+Groups allow administrators to easily add or remove stacks and widgets to and from multiple OWF user. For example, by putting 10 employees into a group, the administrator can add one stack to the group, rather than having to individually add the stack to 10 employees. The following serves as a walk through for documentation purposes only.
+
+To create groups in OWF and to add users to that group:
+
+. Click the btn:[Administration] link in the drop-down User Menu.
+
+. Click the btn:[Groups] button to open the Groups Manager.
+
+. From the manager, click the btn:[Create] button. This will open the Group Editor.
+
+. Fill in the appropriate data on the Properties tab. Once the btn:[Apply] button is clicked, the other tabs on the Group Editor will become active. Note the following:
+
+.. If the display name field is populated, that is the name which will appear in all administrator panels. The only way for the primary name field to appear is to leave the display name field blank.
+
+.. If an administrator checks the automatic box in the User Management field, the following will happen:
+
+... The name of the group will not be editable.
+
+... The users tab will remain grayed out as users can only be added via external sources, such as a security plug-ins.
+
+. Add users to the group by selecting the btn:[Users tab], clicking the btn:[Add] button and selecting users from the grid.
+
+. The Stacks and Widgets tabs behave the same way and can be used to populate groups accordingly.
+
+
+=== Add a Widget to a Group
+
+The group dashboard and group widget functions allow administrators to quickly and easily give a group of users access to several widgets at one time. Widgets can be added to a group and any user added to the group automatically receives access to the group widgets.
+
+When a user is part of a group, for example Group A, the user's Widgets Menu will display the widgets assigned to Group A in the main section of the Widgets Menu. Only an administrator can make changes to widgets that are part of a group. Users cannot edit or delete the group or the widgets in it.
+
+To add widgets to a group:
+
+. Click the btn:[Administration] link in the drop-down User Menu.
+
+. Select btn:[Groups] to open the Groups Manager.
+
+. From the manager, select an existing group and click btn:[Edit].
+
+. The Group Editor will open. Select the btn:[Widgets tab].
+
+. Click btn:[Add] and select widgets to assign to the group. Click btn:[OK].
+
+. Close the Group Editor.
+
+
+== Store (Marketplace)
+
+[#connect-store]
+=== Connecting to the Store
+
+The Store, similar to a commercial application store, operates as a thin-client registry of applications and services. Administrators can provide users with access to multiple Stores as described in section Store.
+
+// TODO: Screenshot of Store Configuration / Connection Wizard
+
+To connect OWF to a Store:
+
+. Open the OWF drop-down User Menu and click btn:[Administration].
+
+. This opens the Administration Manager. Click btn:[Configuration] to open the Configuration Console.
+
+. From the left-hand panel, click btn:[Store].
+
+. Click the btn:[Add Store] button.
+
+. This opens the Store Configuration window. Enter the Store's URL and then, click btn:[Next]. OWF will use the URL and automatically gather Store details.
+
+. The Review or Edit page appears. Review or Edit the Store details:
+
+.. Review the icon used to identify the Store to users in OWF.
+
+.. Add a name that will identity the Store to users in OWF.
+
+.. Click btn:[Save].
+
+The btn:[Store] button will appear on the OZONE Toolbar for all OZONE users.
+
+NOTE: If the Store button does not appear in the toolbar, refresh your browser window.
+
+Once a Store is configured, users can enter the Store to search, discover and add available listings including other OZONE Dashboards and Widgets. Information on how to use the Store is covered in the _Store User's Guide_.
+
+
+=== Edit a Store
+
+To edit a Store entry, repeat steps one through three from the previous section (<<connect-store>>) to return to the Store configuration page.
+
+To edit a Store, hover over the Store name and click the pencil icon that appears to the right. This opens the Edit Store window, which is populated with the Store's current information. Make changes to the fields, and then click btn:[Save].
+
+
+=== Required Listings
+
+A Store listing can require other Store listings. For example, if a user requests widget A and it requires widget B, the user automatically requests widgets A and B. This relationship is further explained in the _Ozone User's Guide_.
+
+When a widget, that requires other widgets, is added from the Store, the user will receive the widget along with all other widgets that it needs.
+
+In the Widgets Manager, an administrator has two ways to identify that a Store widget requires other Store widgets:
+
+* The details section of the listing will display: `Requires Widget: true`
+
+* Its requirements will appear below the details
+
+Both identifiers are highlighted in the following example:
+
+// TODO: Screenshot
+
+Required listings can only be added in the Store. For more information about adding or removing required listings, see the _Ozone Store User's Guide_.

@@ -1,0 +1,343 @@
+:experimental:
+ifndef::imagesdir[]
+:imagesdir: ../images/
+endif::[]
+
+= Administration Tools
+
+[#admin-menu]
+== Administration Menu
+
+The User Menu is a drop-down feature located on the right-side of the OWF toolbar. All users have access to certain OWF Options described in the *OWF User's Guide* (User Profile, About and Sign Out). OWF administrators have access to the Administration OWF Option. Clicking btn:[Administration] opens the Administrator Tools.
+
+.Drop-down User Menu -- Administration
+image::admin-menu.png[]
+
+Administration Tools allow an administrator to manage stacks, widgets, users, groups and system configurations using the Stacks, Widgets, Users, Groups and Configuration managers respectively. Information on common buttons and functions found in the Stacks, Widgets, Users and Groups managers is in <<admin-managers>>. The Configuration manager allows administrators to change select OWF configuration settings from within the user interface. More information on the System Configuration manager is in <<system-config>>.
+
+.Administration Tools
+image::admin-tools.png[]
+
+
+[#admin-managers]
+== Administration Management Widgets (Managers)
+
+The administration management widgets (managers) are used to create, edit and delete users, groups, stacks and widgets as well as configure system-wide information. While each manager has specific fields that relate to the manager's specific purpose, some of the functions operate identically. For example, the search feature in the User Manager functions exactly like the search feature in the Stack Manager. Accordingly, search is explained only once in this section. Also, this document no longer contains definitions regarding basic information that general users should understand. If a topic can be easily defined by Google, it has been removed from this guide. The following section offers a general overview of the administrative managers and their use.
+
+
+=== Manager Panels
+
+.Users Admin Widget -- Panel view
+image::user-admin-widget.png[]
+
+The users, stacks, widgets and group managers open to similar panel views. The panel view described in this section applies to all four managers. The panel view:
+
+* Allows the user to create, edit, delete or view an entry.
+
+* Displays the number of users/groups/stacks/widgets associated with the specific entry.
++
+NOTE: When viewing the widget count, only the widgets that are assigned directly to a user appear in the overall count. Widgets associated by groups will NOT appear in the widget count.
+
+* Offers a view of the first 50 results in alphabetical order. Additional results can be viewed using the pagination as described in <<manager-pagination>> To reduce the number of displayed results: Use the search bar, described in <<manager-search>>.
+
+
+==== Manager Buttons
+
+Administrators use the managers to create and delete users, groups and widgets. Differences between the managers are referenced in sub-bullets.
+
+Create button -- image:create-button.png[]::
+
+Opens the manager's editor. From the editor, an administrator can create a new user/group/widget (depending on which editor the administrator opens) and assign related data to the new entry.
+
+* When creating a new entry, only the Properties tab will be active until the administrator saves the user/group/widget via the Apply button.
+
+* Administrators cannot create a Stack using the Stack Manager and editor. From Stack Manager, administrators can only edit and delete Stacks using the Stacks Manager. To create a dashboard, open Stacks from the toolbar.
+
+Delete button -- image:delete-button.png[]::
+
+Deletes selected entries. Some user/group/stacks/widget rules apply:
+
+* Deleting a *group* does not delete the users or widgets assigned to the group. It only deletes the _pairing_ of users with widgets in the group.
+
+* Deleting a *stack* removes it from the users and groups. Dashboards and widgets associated with the stack will also be deleted.
+
+* Deleting an *widget* removes it from a user's Widget's Menu as well as the groups and stacks to which it was assigned.
+
+
+Edit button -- image:edit-button.png[]::
+
+Opens the editor for the item, allowing the administrator to edit the user / group / stack / widget.
+
+
+==== Manager Editors
+
+NOTE: If an administrator starts a manager in a fit pane, its editor will open in the first available empty pane. If not panes are available, it will "float" on top of the application. Additional application layout information is found in the _Ozone User's Guide_.
+
+.User Editor -- Widgets tab
+image::user-admin-widget_widgets-tab.png[]
+
+From the editor, administrators can create, edit and delete data assigned to users / group / stacks / widgets. The following table alphabetically lists editable fields found in the managers and editors. Split Edit button features, located in the managers, are also listed. The last column of the table describes the location of each field.
+
+.Editor Fields
+[cols="1s,1,4a"]
+|===
+| Field | Editor | Purpose
+
+| Activate / Deactivate
+| Groups -- Properties tab
+| Users in active groups have full access to their group-assigned widgets. Users in a deactivated group will not have access to any of the widgets which are assigned to them via the deactivated group. When a group becomes deactivated it will appear gray.
+
+NOTE: If a user is in Group A and Group B and each group has Widget 1 assigned to it, the user will still have access to Widget 1 if Group A is deactivated and Group B is activated. Additionally, if the user has Widget access outside of a group's distribution, the user will not lose access to the Widget, even if they lose group access.
+
+| Widget Type
+| Widgets -- Properties tab
+| A drop-down menu that determines where the widget may be launched.
+
+* Only standard widgets appear in the Widget Menu.
+
+* Administration widgets will appear under the Administration link available in the drop-down User Menu.
+
+* Widgets set to type "Store" will appear under the Store button on the toolbar.
+
+* Metric Widgets are accessible through the Metrics link in the drop-down User Menu.
+
+* Setting an widget to "fullscreen" in OWF does nothing to the widget. This field is used by the Store to send Web Apps to OWF as separate applications.
+
+NOTE: Instructions explaining how to associate OWF with a Metrics Service are found in the _Ozone Configuration Guide_.
+
+| Assign to Me
+| Dashboards
+| This button allows an administrator to claim ownership of a dashboard. Only an application owner can share a dashboard with the Store or with other users if there is no Store. If the application owner is removed from the system, the application owner defaults to "System".
+
+| Background
+| Widgets -- Properties tab
+| Some widgets do not have user interfaces. These widgets are often used to cache or log data on behalf of other widgets. If a widget is set to run in the background, it will not appear in the application. Users can close background widgets by using the Widget Switcher (activated with kbd:[Alt + Shift + Q]).
+
+| Container Icon URL
+| Widgets -- Properties tab
+| Defines the location of the icon which appears in widget chrome at 16x16 pixels.
+
+| Display Name
+| Groups -- Properties tab
+| The group name which will appear in grids and tables throughout administrator views.
+
+| GUID
+| _All_ -- Properties tab
+| A unique 32-character alphanumeric code for a particular named widget. If "Widget A" is launched 5 times, all 5 widgets will share the same GUID property.
+
+| Height
+| Widgets -- Properties tab
+| Defines the launch height of the widget in pixels. Up and down arrows to the right of the field can be used to modify the overall height. Only desktop panes are affected by this property.
+
+| Intents
+| Widgets -- Intents tab
+| Widget intents build on OWF's publish/subscribe functionality by allowing users to choose the widget that will receive its data. Intents explain the intention for the widget. This binding capability enables two widgets to enhance each other's functionality.
+
+| Medium Icon URL
+| Widgets -- Properties tab
+| Defines the URL of the icon which appears in the Widgets Menu, provided the "visible" menu flag (mentioned below) is checked.
+
+| Mobile Ready
+| Widgets -- Properties tab
+| Suggests that a listing can run on a mobile device. This setting only applies to MONO instances. MONO is a mobile project using the Store and OWF. If OWF is running in a MONO instance, only Mobile Ready listings will appear.
+
+| Remove
+| _All_
+| Separates the selected user/group/dashboard/widget from the selected entry. This does not delete the user/group/dashboard/widget from the system. It only removes the assignment to the selected entry.
+
+| Singleton
+| Widgets -- Properties tab
+| Designates whether an widget can only have one instance opened per application page.
+
+| Small Icon URL
+| Widgets -- Properties tab
+| Defines the location of the icon which appears as a favicon in the corner of the widget when it is minimized, provided the "visible" menu flag (mentioned below) is checked.
+
+| Universal Name
+| Widgets -- Properties tab
+| A value that can be used as a widget's global identifier across all instances of OWF. This differs from a widget GUID which is unique to a specific installation. The Universal Name should be decided by a Widget's creator.
+
+| URL
+| Widgets -- Properties tab
+| Defines the URL of the Widget web application. This is a required field.
+
+| User Management
+| Groups -- Properties tab
+| Defines whether or not the group is an automatic group, being populated and maintained by external sources. This value cannot be modified once the group has been created.
+
+| Version
+| Widgets -- Properties tab
+| Displays the version number of the Widget. This is completely user-driven and is for informational purposes.
+
+| Visible
+| Widgets -- Properties tab
+| Dictates whether a listing will show in a user's Widget Menu. This cannot be overridden by the user.
+
+| Width
+| Widgets -- Properties tab
+| Defines the launch width of the widget in pixels. Up and down arrows to the right of the field can be used to modify the overall width. Only Desktop panes are affected by this property.
+|===
+
+
+[#manager-search]
+==== Manager Search
+
+.Manager -- Search input field
+image::search-field.png[]
+
+The search field in each manager reduces the entries displayed in the panel to entries containing the specific word or characters entered in the search bar. The search will filter the results as text is entered into the search bar. Clear the entered text to clear the filter entered in the search bar.
+
+TIP: This is a full-text search and it is NOT case-sensitive.
+
+
+[#manager-pagination]
+==== Manager Pagination
+
+.Manager -- Pagination toolbar
+image::pagination-tool.png[]
+
+
+[#system-config]
+== System Configuration
+
+Administrators have the ability to change OWF configurations quickly and without the need to restart the system. Using the System Configuration, change settings for auditing records, user accounts management, customizing certain branding features, and configuring store associations through the user interface. Use the following instructions to locate the Configuration console:
+
+. Open the Administration Tools (see <<#admin-menu>>).
+
+. Select btn:[System Configuration] to open the System Configuration Console.
+
+.System Configuration Console
+image::system-config-widget.png[,800]
+
+The System Configuration Console has four sections accessible to administrators: Auditing, User Account Settings, Branding, and Store. The following sections describe each option:
+
+=== Auditing
+
+The Auditing configuration allows administrators to activate Common Event Format (CEF) logging and specify aspects of this logging feature. To access this setting, click btn:[Auditing] on the left-hand navigation of the System Configuration Console. Each Auditing option is described below:
+
+Common Event Format (CEF) Auditing::
+Disabled by default, this records user actions such as sign in/out and database modifications (create, edit, delete, search, import and export). Click btn:[ON] to enable.
++
+NOTE: For more information about CEF Auditing, see the OWF Configuration Guide.
+
+Object Access Auditing::
+Disabled by default, this records CEF audit logs for all database reads. This includes most user actions such as viewing an application, clicking a button, etc. Click btn:[ON] to enable.
+
+Relocate CEF Logs::
+Disabled by default, this feature allows the system to relocate the CEF logs from their original location to a different location. Click btn:[ON] to enable.
+
+CEF Log Source Location::
+The directory location where the CEF logs are generated. The default location is the Tomcat directory: `/usr/share/tomcat/`
+
+CEF Log Destination Location::
+The directory location where the CEF logs will be relocated if the "Relocated CEF Logs" option is enabled.
++
+NOTE: Developers may need to grant permission for the application container to write to this location.
+
+Application Security Level::
+The security level of the CEF logs.
+
+
+=== Branding
+
+The Branding Configuration setting allows administrators to customize the appearance of the OWF background as well as the appearance and content of the OWF header and footer. This feature is accessible by click btn:[Branding] from the left-side navigation of the System Configuration Console. Each Branding option is described below:
+
+Free Text Message::
+This text displays anywhere a user can enter text.
+
+Custom Background URL::
+File name (including extension and location) for the background image that will display on the OWF home screen. For example: `\https://example.com/image/yourLogo.png`
+
+Custom Header URL::
+File name (including extension and location in the system) for a custom header that appears above the OWF toolbar; the URL must be valid for it to appear.
+
+Custom Header Height::
+Height of the custom header . Must be greater than zero and less than 150 pixels.
+
+Custom Footer URL::
+File name (including extension and location in the system) for the custom footer that appears above the bottom of the OWF webtop; the URL must be valid for it to appear. If it is not, a black box displays in its place.
+
+Custom Footer Height::
+Height of the custom footer. Must be greater than zero and less than 150 pixels.
+
+Custom Header/Footer CSS Imports::
+URL(s) of CSS files needed by the custom header and footer. Each location must be separated by a comma (`,`).
+
+Custom Header/Footer JavaScript Imports::
+URL(s) of JavaScript files needed by the custom header and footer. Each location must be separated by a comma (`,`).
+
+
+==== Implementing a Custom Banner
+
+OWF is bundled with a custom header/footer plugin that provides the necessary functionality to display custom banners at the top and bottom of each page. To use this custom plugin:
+
+. Sign in to the application as an administrator.
+
+. From the drop-down User Menu, click btn:[Administration], then click btn:[System Configuration].
+
+. Click btn:[Branding] from the left-navigation panel.
+
+. Enter the following data in the corresponding fields:
+
+.. Custom Header URL
+
+.. Add a custom header height.
+
+.. Custom Footer URL
+
+.. Add a custom footer height.
+
+.. Path to Custom Header/Footer CSS Imports
+
+
+=== User Account Settings
+
+The User Account Settings configuration allows administrators to modify global user account settings. Specifically, these settings control the number of active OWF sessions allowed per user and sets the parameters needed to disable a user account. Access these configurations by clicking btn:[User Account Settings] from the left panel of the System Configuration Console Each User Account Setting is explained below:
+
+Disable Inactive Accounts::
+A toggle switch to enable user accounts to be disabled after a period of inactivity.
+
+Set Inactivity Period::
+Click on the text field and type in the number of days that need to elapse since a user last signed in before the account is disabled.
+
+When a user's account is disabled:
+
+* Application ownership for the disabled account transitions to "System" so that any application the disabled user created will not be removed from the instance of OWF.
+
+* The disabled user's "last sign in" will be removed. Also removed are the user's preferences and any references to that user.
+
+* If a user signs in after their account is disabled, any of their previous application components, preferences, etc. will not be recoverable.
+
+NOTE: The Disable Inactive Accounts only removes user data within the OWF application. It does not affect the user's ability to log back into the application. Authentication decisions are handled by the customizable OWF Security Plugin. See the _Ozone Configuration Guide_ for more details.
+
+Session Control::
+When set to ON, it allows the administrator to set a maximum number of concurrent, active OWF sessions a user can have.
+
+Maximum OWF Sessions per User::
+The maximum number of active OWF sessions a single user is permitted to have at one time.
+
+If the Session Control function is turned on and the user exceeds the number of maximum open OWF sessions, the oldest session will be disabled. For example, if the maximum number of active OWF sessions is three and a user opens up four sessions of OWF, the first session the user opened will no longer be active.
+
+
+=== Store
+
+The Store configuration provides an easy-to-use wizard to walk administrators through the process of connecting OWF to a Store. Admins can connect their OWF to one or more Stores. A new Store connection will not replace existing Stores connections. Instead, when users click the btn:[Store] button in the OZONE Toolbar, a prompt appears asking them to select from multiple Stores. Access the Store configuration by clicking Store from the left-side navigation panel on the Configuration console. Each option is described below:
+
+Add Store -- image:add-store-button.png[]::
+The first button that appears on the Store configuration page. Click this button to start the wizard and add a Store.
+
+Store URL::
+Enter the location for the Store that will be connected to OZONE. This URL is used by OWF to gather details about the Store including name and icon.
+
+* *Name* -- Name that identifies the Store to users in OWF.
+
+* *Icon* -- Image that identifies the Store to users in OWF.
+
+Edit Store -- image:edit-store-button.png[]::
+Appears on the right of a Store icon when hovering over an added Store entry on the Store configuration page. Click it to change the Store's URL, icon or name.
+
+Delete store -- image:delete-store-button.png[]::
+When hovering over a Store entry, a trashcan icon appears to the right of the selection. Click this to delete the Store connection.
+After a Store has been configured, administrators can edit, add or delete Store settings from the Store configuration page.
+
+Instructions for connecting OWF to a Store are found in <<connect-store>>.

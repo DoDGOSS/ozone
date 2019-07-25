@@ -1,0 +1,34 @@
+= Ozone Administrators's Guide
+// Metadata:
+:doctype: book
+:author: DOD GOSS
+:revnumber: 8.0.0.0
+:revdate: 2019-07-01
+// Settings:
+:reproducible:
+:experimental:
+:toc: left
+:toclevels: 6
+:sectnums:
+:sectnumlevels: 6
+:chapter-label:
+:xrefstyle: full
+:icons: font
+:icon-set: fas
+:imagesdir: images/
+
+
+:leveloffset: +1
+
+include::sections/01_introduction.asciidoc[]
+
+include::sections/02_admin-tools.asciidoc[]
+
+include::sections/03_default-content.asciidoc[]
+
+include::sections/04_user-content.asciidoc[]
+
+include::../../common/glossary.asciidoc[]
+
+:leveloffset: -1
+

@@ -1,0 +1,118 @@
+include::../_variables.asciidoc[]
+
+= Remote Procedure Call (RPC) API
+
+== Overview
+
+The Remote Procedure Call (RPC) API provides a method for direct, or point-to-point, interaction between widgets. This is different from the Eventing API, which allows widgets to globally publish messages or subscribe to a subset of globally published messages from any widget. In contrast, RPC follows a client-server model and the calls cannot be received by any widget other than the intended target. The "server" widget registers a list of functions with OWF which may then be called by "client" widget.  This process is facilitated by a widget proxy object, which exposes the registered functions on the server widget to the client widget.
+
+OWF ships with two example widgets, the Color Server and Color Client, which demonstrate the functionality of the RPC API. In the tutorial below, simple versions of the Color Server and Color Client widgets will be recreated.
+
+
+== Tutorial
+
+*Step 1 - Create the Color Server widget HTML file*
+
+Create the `ColorServer.html` file and add the following code:
+
+[source,html]
+.ColorServer.html
+----
+include::{relpath-examples}/ColorServer.html[tags=**]
+----
+
+*Step 2 - Register the Color Server RPC functions*
+
+Create the `ColorServer.js` file and add the following code:
+
+[source,html]
+.ColorServer.js
+----
+include::{relpath-examples}/ColorServer.js[tags=start]
+----
+
+The initial code waits for the page to load using the standard `DOMContentLoaded` event. Once the page is ready, the `OWF.ready` API method is used to wait for the widget to connect to the framework. When the widget is ready, the `start` callback function is executed.
+
+The `start` function uses the `OWF.RPC.registerFunctions` API method to register a list of functions which will be made available to other widgets.
+
+
+*Step 3 - Add the Color Server functionality*
+
+Add the following code into the `ColorServer.js` file:
+
+[source,html]
+.ColorServer.js
+----
+include::{relpath-examples}/ColorServer.js[tags=functions]
+----
+
+The `getColors` function returns a list of supported colors.
+
+The `changeColor` function updates the background color of the widget, using the color `string` argument.
+
+Using the `OWF.RPC.registerFunctions` API method described in the previous step, these functions will now be available for the Color Client to call.
+
+
+*Step 4 - Create the Color Client widget HTML file*
+
+Create the `ColorClient.html` file and add the following code:
+
+[source,html]
+.ColorClient.html
+----
+include::{relpath-examples}/ColorClient.html[tags=**]
+----
+
+
+*Step 5 - Find the widget proxy*
+
+Create the `ColorClient.js` file and add the following code:
+
+[source,javascript]
+.ColorClient.js
+----
+include::{relpath-examples}/ColorClient.js[tags=proxy]
+----
+
+In order to call the registered RPC functions on the Color Server, the `OWF.RPC.getWidgetProxy` API method is be used to get a widget proxy instance. Since the widget ID is required, `OWF.getOpenedWidgets` is used to get the list of open widgets which is then searched using the below helper functions to find the Color Server.
+
+Add the following code for the `findWidgetIdByName` and `setError` helper functions:
+
+[source,javascript]
+.ColorClient.js
+----
+include::{relpath-examples}/ColorClient.js[tags=find]
+----
+
+
+*Step 5 - Call the Color Server RPC functions*
+
+Add the following code into the `ColorClient.js` file:
+
+[source,javascript]
+.ColorClient.js
+----
+include::{relpath-examples}/ColorClient.js[tags=colors]
+----
+
+Using the previously created `getColorServerProxy` function, the two registered functions are called to get the list of colors and to set a new selected color.
+
+TIP: This example code purposely does not save the widget proxy between calls. If the widget is closed or otherwise becomes unavailable, the proxy would become invalid. Finding the widget and proxy "on-demand" ensures that the target widget is available to receive the RPC calls.
+
+Finally, add the following to update the combo box with the new color options:
+
+[source,javascript]
+.ColorClient.js
+----
+include::{relpath-examples}/ColorClient.js[tags=update]
+----
+
+
+*Step 6 - Start the web server*
+
+include::common/start-sample-server.asciidoc[]
+
+
+*Step 7 - Add the Color Server and Color Client widgets to OWF*
+
+To test the RPC API functionality, the widgets must be run from within OWF. Add the new Color Server and modified Color Client widgets to OWF via the OWF Admin page. For details on how to do this, see <<add-a-widget>>.
