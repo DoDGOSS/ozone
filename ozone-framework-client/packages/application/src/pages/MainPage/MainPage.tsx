@@ -42,17 +42,17 @@ export const MainPage: React.FC<{}> = () => {
     }, [authStatus]);
 
     // Timer for auto-saving Dashboards
-    // useEffect(() => {
-    //     if (authStatus !== AuthStatus.LOGGED_IN) return;
-    //
-    //     const autoSaveSetting = asInteger(env().autoSaveInterval, DEFAULT_AUTO_SAVE_INTERVAL);
-    //     const autoSaveInterval = clampMinimum(autoSaveSetting, MINIMUM_AUTO_SAVE_INTERVAL);
-    //
-    //     const timer = window.setInterval(dashboardStore.saveCurrentDashboard, autoSaveInterval);
-    //     return () => {
-    //         if (!isNil(timer)) window.clearInterval(timer);
-    //     };
-    // }, [authStatus]);
+    useEffect(() => {
+        if (authStatus !== AuthStatus.LOGGED_IN) return;
+
+        const autoSaveSetting = asInteger(env().autoSaveInterval, DEFAULT_AUTO_SAVE_INTERVAL);
+        const autoSaveInterval = clampMinimum(autoSaveSetting, MINIMUM_AUTO_SAVE_INTERVAL);
+
+        const timer = window.setInterval(dashboardStore.saveCurrentDashboardIfChanged, autoSaveInterval);
+        return () => {
+            if (!isNil(timer)) window.clearInterval(timer);
+        };
+    }, [authStatus]);
 
     return (
         <DragDropContextProvider backend={HTML5Backend}>
