@@ -68,24 +68,32 @@ class StoreMetaService {
         }
     }
 
-    getStoreApi(universalName: string, storeUrl: string): MarketplaceAPI | undefined {
-        const type = this.getStoreType(universalName);
-        if (type === "omp") {
-            return new OmpMarketplaceAPI(this.cleanStoreUrl(storeUrl));
-        } else if (type === "aml") {
-            return new AmlMarketplaceAPI(this.cleanStoreUrl(storeUrl));
+    getStoreApi(store: Widget): MarketplaceAPI | undefined {
+        const type = this.getStoreType(store);
+        if (type === "omp" && store.url !== "") {
+            return new OmpMarketplaceAPI(this.cleanStoreUrl(store.url)); // omp has front and back at same url
+        } else if (type === "aml" && store.descriptorUrl && store.descriptorUrl !== "") {
+            return new AmlMarketplaceAPI(this.cleanStoreUrl(store.descriptorUrl)); // aml has separate front and back. We need the back
         }
-        console.log("Tags missing on widget identifier; couldn't use as a store.");
+        console.log("Tags or URLs missing on store widget; couldn't use as a store.");
         return undefined;
     }
 
-    private getStoreType(universalName: string): string {
-        const storeID = universalName.slice(10); // cut off `store:___:`
+    getStoreUrlPackage(store: Widget): string {
+        const storeType = this.getStoreType(store);
+        const frontendUrl = store.url;
+        const potentialBackendUrl =
+            storeType === "aml" && store.descriptorUrl && store.descriptorUrl !== "" ? store.descriptorUrl : "";
+        return this.cleanStoreUrl(frontendUrl) + "_~_" + this.cleanStoreUrl(potentialBackendUrl);
+    }
 
-        if (universalName.startsWith("store:omp:")) {
+    private getStoreType(store: Widget): string {
+        const storeID = store.universalName.slice(10); // cut off `store:___:`
+
+        if (store.universalName.startsWith("store:omp:")) {
             return "omp";
         }
-        if (universalName.startsWith("store:aml:")) {
+        if (store.universalName.startsWith("store:aml:")) {
             return "aml";
         } else {
             return "";

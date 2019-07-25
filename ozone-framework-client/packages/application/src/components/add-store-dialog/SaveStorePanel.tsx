@@ -29,7 +29,7 @@ export const SaveStorePanel: React.FC<SaveStorePanelProps> = (props: SaveStorePa
     const [updateKey, setUpdateKey] = useState(Date.now());
 
     const [title, setTitle] = useState(store.title);
-    const [smallUrl, setSmallUrl] = useState(store.images.smallUrl);
+    const [iconUrl, setIconUrl] = useState(store.images.smallUrl);
     const [loading, setLoading] = useState(false);
     const [subscriptionsShouldCancel, setSubscriptionsShouldCancel] = useState(false);
     const [description, setDescription] = useState(store.description);
@@ -39,7 +39,7 @@ export const SaveStorePanel: React.FC<SaveStorePanelProps> = (props: SaveStorePa
         setLoading(true);
         cleanDefaultOmpIconUrl(store.images.smallUrl).then((cleanedUrl: string) => {
             if (!subscriptionsShouldCancel) {
-                setSmallUrl(cleanedUrl);
+                setIconUrl(cleanedUrl);
                 setLoading(false);
             }
         });
@@ -65,13 +65,13 @@ export const SaveStorePanel: React.FC<SaveStorePanelProps> = (props: SaveStorePa
                 }}
             />
             <br />
-            <StoreIcon url={smallUrl} />
+            <StoreIcon url={iconUrl} />
             Icon URL
             <InputGroup
                 placeholder="set new icon url"
-                value={smallUrl}
+                value={iconUrl}
                 onChange={(event: any) => {
-                    setSmallUrl(event.target.value);
+                    setIconUrl(event.target.value);
                 }}
             />
             <br />
@@ -100,8 +100,12 @@ export const SaveStorePanel: React.FC<SaveStorePanelProps> = (props: SaveStorePa
                         disabled={title === ""}
                         onClick={() => {
                             store.title = title;
-                            store.images.smallUrl = smallUrl;
-                            store.images.largeUrl = smallUrl;
+                            let icon = iconUrl;
+                            if (icon === "") {
+                                icon = "images/store-cart.png";
+                            }
+                            store.images.smallUrl = icon;
+                            store.images.largeUrl = icon;
                             store.description = description;
                             storeMetaService.saveOrUpdateStore(store).then((response: any) => {
                                 if (response.status === 200) {

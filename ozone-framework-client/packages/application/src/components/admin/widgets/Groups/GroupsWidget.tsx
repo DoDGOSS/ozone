@@ -32,6 +32,7 @@ enum GroupWidgetSubSection {
 }
 
 export class GroupsWidget extends React.Component<{}, State> {
+    _isMounted: boolean = false;
     defaultPageSize: number = 5;
 
     constructor(props: any) {
@@ -48,7 +49,12 @@ export class GroupsWidget extends React.Component<{}, State> {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         this.getGroups();
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     render() {
@@ -140,6 +146,10 @@ export class GroupsWidget extends React.Component<{}, State> {
 
         // TODO: Handle failed request
         if (response.status !== 200) return;
+
+        if (!this._isMounted) {
+            return;
+        }
 
         this.setState({
             groups: response.data.data,
