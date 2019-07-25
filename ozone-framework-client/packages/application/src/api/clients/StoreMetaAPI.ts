@@ -26,20 +26,20 @@ export class StoreMetaAPI {
     }
 
     async importStore(
-        splitStoreUrl: string,
+        storeUrlPackage: string,
         callbackOnCompletion: (store: Widget) => any
     ): Promise<Widget | undefined> {
         let store: Widget | undefined;
-        if (!splitStoreUrl.includes("_~_")) {
+        if (!storeUrlPackage.includes("_~_")) {
             return undefined;
         }
 
-        const storeUrlPieces = splitStoreUrl.split("_~_");
+        const storeUrlPieces = storeUrlPackage.split("_~_");
         console.log(storeUrlPieces);
         const storeFrontUrl = storeUrlPieces[0];
         const storeBackUrl = storeUrlPieces.length > 1 ? storeUrlPieces[1] : "";
 
-        console.log(splitStoreUrl, storeFrontUrl, storeBackUrl);
+        console.log(storeUrlPackage, storeFrontUrl, storeBackUrl);
 
         if (storeBackUrl !== "") {
             store = await this.tryConnectingAsAmlStore(storeFrontUrl, storeBackUrl, callbackOnCompletion);

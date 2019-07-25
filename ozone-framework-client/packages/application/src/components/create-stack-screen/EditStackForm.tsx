@@ -20,7 +20,6 @@ import { DashboardDTO } from "../../api/models/DashboardDTO";
 export interface EditStackFormProps {
     onSubmit: () => void;
     stack: StackDTO;
-    dashboard: DashboardDTO | null;
 }
 
 const OzoneToaster = Toaster.create({
@@ -33,19 +32,24 @@ export const EditStackForm: React.FC<EditStackFormProps> = ({ onSubmit, stack, d
         <Formik
             initialValues={initialFormValues}
             onSubmit={async (values: StackUpdateRequest, actions: FormikActions<StackUpdateRequest>) => {
-                if (stack.name !== values.name && dashboard !== null) {
-                    dashboard.name = values.name + " (default)";
-                    const dashSuccess = [await dashboardApi.updateDashboard(dashboard)];
-                    if (dashSuccess) {
-                        OzoneToaster.show({
-                            intent: Intent.SUCCESS,
-                            message: "Default Dashboard Updated Successfully!"
-                        });
-                        actions.setStatus(null);
-                    } else {
+
+                let defaultDashboard;
+                for (const dash of userDashboardsResponse.data.dashboards) {
+                    if (dash.stack.stackContext === stack.stackContext && dashboard.name === stack.name + " (default)") {
+                        defaultDashboard = dash;
+                    }
+                }
+
+                if (stack.name !== values.name && defaultDashboard !== undefined) {
+                    const updatedDash = {
+                        guid: defaultDashboard.guid,
+                        name: values.name + " (default)"
+                    }
+                    const dashSuccess = [await dashboardApi.updateDashboard(updatedDash)];
+                    if ( !dashSuccess) {
                         OzoneToaster.show({
                             intent: Intent.DANGER,
-                            message: "Dashboard Unsuccessful, something went wrong."
+                            message: "Could not rename default dashboard."
                         });
                         actions.setStatus({ error: "An unexpected error has occurred" });
                     }

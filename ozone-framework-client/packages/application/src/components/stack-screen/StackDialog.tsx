@@ -146,7 +146,7 @@ export const StackDialog: React.FC<{}> = () => {
 
         const hasDefaultDashboard: boolean = dashboards
             .filter((dashboard) => (dashboard.stack ? dashboard.stack.id === stack.id : false))
-            .some((dashboard) => dashboard.name === stack.name + " (default)");
+            .some((dashboard) => dashboard.name === stack.name || dashboard.name === stack.name + " (default)");
 
         return numOfDashboards > 1 || (!hasDefaultDashboard && numOfDashboards > 0);
     }
@@ -182,9 +182,8 @@ export const StackDialog: React.FC<{}> = () => {
         setDashboardEdit(true);
     };
 
-    const showEditStackDialog = async (stack: StackDTO, dashboard: DashboardDTO) => {
+    const showEditStackDialog = async (stack: StackDTO) => {
         setStackToBeEdited(stack);
-        setDashboardToBeEdited(dashboard);
         setStackEdit(true);
     };
 
@@ -260,8 +259,12 @@ export const StackDialog: React.FC<{}> = () => {
                 "If you have access to more than one Store, you will be prompted to choose."
             ],
             onConfirm: () => {
-                onShareConfirmed(stack);
                 storeExportService.uploadStack(stack.id);
+                try {
+                    onShareConfirmed(stack);
+                } catch (e) {
+                    console.log("Error in sharing stack");
+                }
             }
         });
     };
@@ -284,6 +287,7 @@ export const StackDialog: React.FC<{}> = () => {
             if (response.status !== 200) return false;
         } catch (e) {
             fetchData();
+            console.log("Error in sharing stack");
             return false;
         }
 
@@ -377,88 +381,74 @@ export const StackDialog: React.FC<{}> = () => {
                                             notOnlyDefaultDashboardInStack(stack) &&
                                             (currentStack ? currentStack.id === stack.id : false),
                                         secondaryLabel: (
-                                            <ButtonGroup
-                                                data-element-id={"stack-actions"}
-                                                data-role={"stack-actions"}
-                                                data-name={stack.name}
-                                            >
-                                                <Divider />
-                                                <CompactAddButton
-                                                    itemName="Add New Dashboard"
-                                                    onClick={(event) => {
-                                                        // don't let the click activate the tree node
-                                                        event.stopPropagation();
-                                                        addNewDashboardToStack(stack);
-                                                    }}
-                                                />
-                                                <Divider />
-                                                <CompactShareButton
-                                                    itemName={
-                                                        // sorry about the nesting
-                                                        firstDash === undefined
-                                                            ? "Can't " +
-                                                              (storeConnected ? "push" : "share") +
-                                                              " an empty stack."
-                                                            : storeConnected
-                                                            ? "Push Stack To Store"
-                                                            : "Share Stack"
-                                                        // stack.approved // TODO? fix approval. Ignore for now.
-                                                        // ? "Share Stack"
-                                                        // : "Only Approved Stacks Can Be Shared"
-                                                    }
-                                                    // disabled={!stack.approved && !storeConnected} // This don't work.
-                                                    onClick={(event) => {
-                                                        // don't let the click activate the tree node
-                                                        event.stopPropagation();
-                                                        shareOrPush(stack);
-                                                    }}
-                                                    disabled={firstDash === undefined}
-                                                />
-                                                <Divider />
-                                                <CompactRestoreButton
-                                                    itemName="Restore Stack"
-                                                    onClick={(event) => {
-                                                        // don't let the click activate the tree node
-                                                        event.stopPropagation();
-                                                        restoreStack(stack);
-                                                    }}
-                                                />
-                                                <Divider />
-                                                <CompactEditButton
-                                                    itemName={
-                                                        currentUserOwnsStack(stack)
-                                                            ? "Edit Stack"
-                                                            : "Only Editable by Stack Owner: " +
-                                                              (stack.owner && stack.owner.username
-                                                                  ? stack.owner!.username
-                                                                  : "Undefined")
-                                                    }
-                                                    onClick={(event) => {
-                                                        // don't let the click activate the tree node
-                                                        const defaultDashboard = dashboards
-                                                            .filter((dashboard) =>
-                                                                dashboard.stack ? dashboard.stack.id === stack.id : null
-                                                            )
-                                                            .filter(
-                                                                (dashboard) =>
-                                                                    dashboard.name === stack.name + " (default)"
-                                                            )[0];
-                                                        event.stopPropagation();
-                                                        showEditStackDialog(stack, defaultDashboard);
-                                                    }}
-                                                    disabled={!currentUserOwnsStack(stack)}
-                                                />
-                                                <Divider />
-                                                <CompactDeleteButton
-                                                    itemName="Delete Stack"
-                                                    onClick={(event) => {
-                                                        // don't let the click activate the tree node
-                                                        event.stopPropagation();
-                                                        confirmStackDelete(stack);
-                                                    }}
-                                                />
-                                                <Divider />
-                                            </ButtonGroup>
+                                            <div onClick={(event) => event.stopPropagation()}>
+                                                <ButtonGroup
+                                                    data-element-id={"stack-actions"}
+                                                    data-role={"stack-actions"}
+                                                    data-name={stack.name}
+                                                >
+                                                    <Divider />
+                                                    <CompactAddButton
+                                                        itemName="Add New Dashboard"
+                                                        onClick={(event) => {
+                                                            // don't let the click activate the tree node
+                                                            event.stopPropagation();
+                                                            addNewDashboardToStack(stack);
+                                                        }}
+                                                    />
+                                                    <Divider />
+                                                    <CompactShareButton
+                                                        itemName={
+                                                            // sorry about the nesting
+                                                            firstDash === undefined
+                                                                ? "Can't " +
+                                                                  (storeConnected ? "push" : "share") +
+                                                                  " an empty stack."
+                                                                : storeConnected
+                                                                ? "Push Stack To Store"
+                                                                : "Share Stack"
+                                                            // stack.approved // TODO? fix approval. Ignore for now.
+                                                            // ? "Share Stack"
+                                                            // : "Only Approved Stacks Can Be Shared"
+                                                        }
+                                                        // disabled={!stack.approved && !storeConnected} // This don't work.
+                                                        onClick={(event) => {
+                                                            // don't let the click activate the tree node
+                                                            event.stopPropagation();
+                                                            shareOrPush(stack);
+                                                        }}
+                                                        disabled={firstDash === undefined}
+                                                    />
+                                                    <Divider />
+                                                    <CompactRestoreButton
+                                                        itemName="Restore Stack"
+                                                        onClick={(event) => {
+                                                            // don't let the click activate the tree node
+                                                            event.stopPropagation();
+                                                            restoreStack(stack);
+                                                        }}
+                                                    />
+                                                    <Divider />
+                                                    <CompactEditButton
+                                                        itemName="Edit Stack"
+                                                        onClick={(event) => {
+                                                            // don't let the click activate the tree node
+                                                            event.stopPropagation();
+                                                            showEditStackDialog(stack);
+                                                        }}
+                                                    />
+                                                    <Divider />
+                                                    <CompactDeleteButton
+                                                        itemName="Delete Stack"
+                                                        onClick={(event) => {
+                                                            // don't let the click activate the tree node
+                                                            event.stopPropagation();
+                                                            confirmStackDelete(stack);
+                                                        }}
+                                                    />
+                                                    <Divider />
+                                                </ButtonGroup>
+                                            </div>
                                         ),
                                         childNodes: dashboards
                                             .filter((dashboard) =>
@@ -473,40 +463,42 @@ export const StackDialog: React.FC<{}> = () => {
                                                     label: dashboard.name,
                                                     icon: "control",
                                                     secondaryLabel: (
-                                                        <ButtonGroup
-                                                            data-element-id={"dashboard-actions"}
-                                                            data-role={"dashboard-actions"}
-                                                            data-name={dashboard.name}
-                                                        >
-                                                            <Divider />
-                                                            <CompactRestoreButton
-                                                                itemName="Restore Dashboard"
-                                                                onClick={(event) => {
-                                                                    // don't let the click activate the tree node
-                                                                    event.stopPropagation();
-                                                                    restoreDashboard(dashboard);
-                                                                }}
-                                                            />
-                                                            <Divider />
-                                                            <CompactEditButton
-                                                                itemName="Edit Dashboard"
-                                                                onClick={(event) => {
-                                                                    // don't let the click activate the tree node
-                                                                    event.stopPropagation();
-                                                                    showEditDashboardDialog(dashboard);
-                                                                }}
-                                                            />
-                                                            <Divider />
-                                                            <CompactDeleteButton
-                                                                itemName="Delete Dashboard"
-                                                                onClick={(event) => {
-                                                                    // don't let the click activate the tree node
-                                                                    event.stopPropagation();
-                                                                    confirmDashboardDelete(dashboard);
-                                                                }}
-                                                            />
-                                                            <Divider />
-                                                        </ButtonGroup>
+                                                        <div onClick={(event) => event.stopPropagation()}>
+                                                            <ButtonGroup
+                                                                data-element-id={"dashboard-actions"}
+                                                                data-role={"dashboard-actions"}
+                                                                data-name={dashboard.name}
+                                                            >
+                                                                <Divider />
+                                                                <CompactRestoreButton
+                                                                    itemName="Restore Dashboard"
+                                                                    onClick={(event) => {
+                                                                        // don't let the click activate the tree node
+                                                                        event.stopPropagation();
+                                                                        restoreDashboard(dashboard);
+                                                                    }}
+                                                                />
+                                                                <Divider />
+                                                                <CompactEditButton
+                                                                    itemName="Edit Dashboard"
+                                                                    onClick={(event) => {
+                                                                        // don't let the click activate the tree node
+                                                                        event.stopPropagation();
+                                                                        showEditDashboardDialog(dashboard);
+                                                                    }}
+                                                                />
+                                                                <Divider />
+                                                                <CompactDeleteButton
+                                                                    itemName="Delete Dashboard"
+                                                                    onClick={(event) => {
+                                                                        // don't let the click activate the tree node
+                                                                        event.stopPropagation();
+                                                                        confirmDashboardDelete(dashboard);
+                                                                    }}
+                                                                />
+                                                                <Divider />
+                                                            </ButtonGroup>
+                                                        </div>
                                                     )
                                                 };
                                                 return dashNode;
@@ -564,7 +556,6 @@ export const StackDialog: React.FC<{}> = () => {
                     <div data-element-id="EditStackDialog" className={Classes.DIALOG_BODY}>
                         <EditStackForm
                             stack={stackToBeEdited}
-                            dashboard={dashboardToBeEdited}
                             onSubmit={onStackEditSubmitted}
                         />
                     </div>
