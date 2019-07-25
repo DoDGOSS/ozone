@@ -53,7 +53,7 @@ export interface InfractingItemUrl {
 
 class StoreImportService {
     async importListing(store: Widget, listing: any): Promise<void> {
-        const marketplaceAPI: MarketplaceAPI | undefined = storeMetaService.getStoreApi(store.universalName, store.url);
+        const marketplaceAPI: MarketplaceAPI | undefined = storeMetaService.getStoreApi(store);
         if (!marketplaceAPI) {
             return;
         }
@@ -113,10 +113,12 @@ class StoreImportService {
             }
         }
 
+        console.log(stackExists);
         const stackID: number | undefined = await this.saveBasicStackInfo(basicStackInfo, !stackExists);
         if (!stackID) {
             return;
         }
+        console.log("Here");
 
         // need all widgets to exist before creating dashboards in storeListingAsStack()
         const stackWidgets = await marketplaceAPI.getAllUniqueWidgetsFromStackListing(listing);
