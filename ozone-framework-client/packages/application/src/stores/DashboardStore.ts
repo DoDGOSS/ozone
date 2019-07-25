@@ -1,14 +1,22 @@
 import { BehaviorSubject } from "rxjs";
-import { asBehavior } from "../observables";
+import { Intent } from "@blueprintjs/core";
 
-import { dashboardApi, DashboardAPI } from "../api/clients/DashboardAPI";
-import { DashboardCreateOpts, userDashboardApi, UserDashboardAPI } from "../api/clients/UserDashboardAPI";
-import { dashboardToUpdateRequest, deserializeUserState, UserState } from "../codecs/Dashboard.codec";
-import { CreateDashboardOptions } from "../components/create-dashboard-screen/CreateDashboardForm";
-import { Dashboard, EMPTY_DASHBOARD } from "../models/Dashboard";
-import { UserWidget } from "../models/UserWidget";
+import { asBehavior } from "../observables";
+import { showToast } from "../components/toaster/Toaster";
 import { isNil, values } from "../utility";
 
+import { DashboardCreateOpts, userDashboardApi, UserDashboardAPI } from "../api/clients/UserDashboardAPI";
+import { dashboardApi, DashboardAPI } from "../api/clients/DashboardAPI";
+import { stackApi } from "../api/clients/StackAPI";
+
+import { Dashboard, EMPTY_DASHBOARD } from "../models/Dashboard";
+import { UserWidget } from "../models/UserWidget";
+import { StackCreateRequest, StackUpdateRequest } from "../api/models/StackDTO";
+import { UserDashboardStackDTO } from "../api/models/UserDashboardDTO";
+
+import { dashboardToUpdateRequest, deserializeUserState, UserState } from "../codecs/Dashboard.codec";
+
+import { CreateDashboardOptions } from "../components/create-dashboard-screen/CreateDashboardForm";
 import { createPresetLayout } from "./default-layouts";
 import _ from "lodash";
 
@@ -73,10 +81,14 @@ export class DashboardStore {
     };
 
     createDefaultDashboard = async () => {
-        const createResponse = await this.userDashboardApi.createDefaultDashboard();
-        if (createResponse.status !== 200) {
-            throw new Error("Failed to create default dashboard");
-        }
+        const defStack: StackCreateRequest = {
+            name: "Untitled",
+            imageUrl: "",
+            approved: false,
+            stackContext: "",
+            description: "Automatically-generated stack"
+        };
+        this.createNewStack(defStack);
 
         const refetchResponse = await this.userDashboardApi.getOwnDashboards();
         if (refetchResponse.status !== 200) {
@@ -103,6 +115,53 @@ export class DashboardStore {
         await this.fetchUserDashboards(createdDashboard.guid);
         return createdDashboard;
     };
+
+    async createNewStack(
+        stackRequest: StackCreateRequest,
+        defaultDashLayoutOptions?: { presetLayoutName: string | null; copyGuid: string | null }
+    ): Promise<Boolean> {
+        const defaultDashOptions: CreateDashboardOptions = {
+            name: stackRequest.name + " (default)",
+            description: "Default dashboard for stack `" + stackRequest.name + "`",
+            presetLayoutName: defaultDashLayoutOptions ? defaultDashLayoutOptions.presetLayoutName : null,
+            copyGuid: defaultDashLayoutOptions ? defaultDashLayoutOptions.copyGuid : null
+        };
+
+        const newDash = await this.createDashboard(defaultDashOptions);
+        const userDashboardsResponse = await userDashboardApi.getOwnDashboards();
+        if (userDashboardsResponse.status !== 200 || !userDashboardsResponse.data.dashboards) {
+            console.log("Could not create stack.");
+            showToast({
+                message: "Stack `" + stackRequest.name + "` could not be created.",
+                intent: Intent.DANGER
+            });
+            return false;
+        }
+
+        let newStack: UserDashboardStackDTO | undefined;
+
+        for (const dash of userDashboardsResponse.data.dashboards) {
+            if (dash.guid === newDash.guid) {
+                newStack = dash.stack;
+            }
+        }
+        if (!newStack) {
+            return false;
+        }
+        const stackUpdateRequest: StackUpdateRequest = {
+            ...stackRequest,
+            id: newStack.id,
+            stackContext: newStack.stackContext
+        };
+        console.log(stackUpdateRequest);
+
+        const stackResponse = await stackApi.updateStack(stackUpdateRequest);
+
+        if (stackResponse.status !== 200 || !stackResponse.data.data || !(stackResponse.data.data.length > 0)) {
+            return false;
+        }
+        return true;
+    }
 
     saveCurrentDashboard = async () => {
         if (this.isLoading$.value) return;

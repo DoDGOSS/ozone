@@ -1,5 +1,3 @@
-import * as styles from "./index.scss";
-
 import * as React from "react";
 import { useState } from "react";
 
@@ -11,8 +9,13 @@ import { stackApi } from "../../api/clients/StackAPI";
 import { userDashboardApi } from "../../api/clients/UserDashboardAPI";
 
 import { dashboardStore } from "../../stores/DashboardStore";
-import { StackUpdateRequest } from "../../api/models/StackDTO";
+import { StackCreateRequest } from "../../api/models/StackDTO";
 import { UserDashboardStackDTO } from "../../api/models/UserDashboardDTO";
+
+import { CreateDashboardOptions } from "../create-dashboard-screen/CreateDashboardForm";
+
+import { PremadeLayouts } from "../create-dashboard-screen/PremadeLayouts";
+import { DashboardSelect } from "../create-dashboard-screen/DashboardSelect";
 
 import { FormError, SubmitButton, TextField } from "../form";
 
@@ -21,6 +24,8 @@ import { handleSelectChange, handleStringChange, uuid } from "../../utility";
 import { assetUrl } from "../../environment";
 
 import { showToast } from "../toaster/Toaster";
+
+import * as styles from "./index.scss";
 
 export interface CreateStackFormProps {
     onSubmit: () => void;
@@ -33,8 +38,14 @@ export interface CreateStackOptions {
 }
 
 export const CreateStackForm: React.FC<CreateStackFormProps> = ({ onSubmit }) => {
-    // const [defaultDashOptsVisible, setDefaultDashOptsVisible] = useState(false);
-    // const [initialDashOptionsSet, markInitialDashOptionsAsSet] = useState(false);
+    const [selectedLayoutInputSource, setSelectedLayoutInputSource] = useState("");
+    const handleLayoutInputRadioChange = handleStringChange(setSelectedLayoutInputSource);
+
+    const [selectedPresetLayout, setPresetLayout] = useState<string | null>(null);
+    const handlePresetLayoutChange = handleStringChange(setPresetLayout);
+
+    const [selectedCopyLayoutGuid, setCopyLayoutGuid] = useState("");
+    const handleCopyLayoutChange = handleSelectChange(setCopyLayoutGuid);
 
     return (
         <Formik
@@ -44,46 +55,30 @@ export const CreateStackForm: React.FC<CreateStackFormProps> = ({ onSubmit }) =>
                 description: ""
             }}
             onSubmit={async (stackValues: CreateStackOptions, actions: FormikActions<CreateStackOptions>) => {
-                const defaultDashValues = {
-                    name: stackValues.name + " (default)",
-                    description: "Default dashboard for stack `" + stackValues.name + "`",
-                    presetLayoutName: null,
-                    copyGuid: ""
-                };
-                const newDash = await dashboardStore.createDashboard(defaultDashValues);
-                const userDashboardsResponse = await userDashboardApi.getOwnDashboards();
-                if (userDashboardsResponse.status !== 200 || !userDashboardsResponse.data.dashboards) {
-                    console.log("Could not create stack.");
-                    showToast({
-                        message: "Stack `" + stackValues.name + "` could not be created.",
-                        intent: Intent.SUCCESS
-                    });
-                    return;
-                }
-
-                let newStack: UserDashboardStackDTO | undefined;
-
-                for (const dash of userDashboardsResponse.data.dashboards) {
-                    if (dash.guid === newDash.guid) {
-                        newStack = dash.stack;
-                    }
-                }
-                if (!newStack) {
-                    return;
-                }
-
-                const newStackInfo: StackUpdateRequest = {
-                    id: newStack.id,
+                const newStackInfo: StackCreateRequest = {
                     name: stackValues.name,
                     imageUrl: stackValues.imageUrl,
                     approved: false,
-                    stackContext: newStack.stackContext,
+                    stackContext: "",
                     description: stackValues.description
                 };
 
-                const stackResponse = await stackApi.updateStack(newStackInfo);
+                const defaultDashLayout: { presetLayoutName: string | null; copyGuid: string | null } = {
+                    presetLayoutName: null,
+                    copyGuid: ""
+                };
 
-                if (stackResponse.status !== 200 || !stackResponse.data.data || !(stackResponse.data.data.length > 0)) {
+                if (selectedLayoutInputSource === "copy") {
+                    defaultDashLayout.presetLayoutName = selectedCopyLayoutGuid + " (copy)";
+                    defaultDashLayout.copyGuid = selectedCopyLayoutGuid;
+                } else if (selectedLayoutInputSource === "premade") {
+                    defaultDashLayout.presetLayoutName = selectedPresetLayout;
+                    defaultDashLayout.copyGuid = "";
+                }
+
+                const stackCreationSuccess = await dashboardStore.createNewStack(newStackInfo, defaultDashLayout);
+
+                if (!stackCreationSuccess) {
                     return;
                 }
 
@@ -104,15 +99,18 @@ export const CreateStackForm: React.FC<CreateStackFormProps> = ({ onSubmit }) =>
                             <TextField name="description" label="Description" />
                         </div>
                     </div>
-                    {/* May implement later, but for now just make everything with a default dashboard. */}
-                    {/* {defaultDashOptsVisible && !initialDashOptionsSet && (
-                        <EditDashboardForm onsubmit={() => {markInitialDashOptionsAsSet(true)}}/>)
-                    }
 
-                    <Button
-                        onClick={setDefaultDashOptsVisible(!defaultDashOptsVisible)}
-                        text={defaultDashOptsVisible ? "Use default dashboard settings" : "Set initial dashboard options"}
-                    /> */}
+                    <RadioGroup onChange={handleLayoutInputRadioChange} selectedValue={selectedLayoutInputSource}>
+                        <Radio label="Use the default layout for the initial dashboard" value="" />
+                        <Radio label="Choose a pre-set layout" value="premade" />
+                        {selectedLayoutInputSource === "premade" && (
+                            <PremadeLayouts selectedValue={selectedPresetLayout} onChange={handlePresetLayoutChange} />
+                        )}
+                        <Radio label="Copy the layout of an existing dashboard" value="copy" />
+                        {selectedLayoutInputSource === "copy" && (
+                            <DashboardSelect selectedValue={selectedCopyLayoutGuid} onChange={handleCopyLayoutChange} />
+                        )}
+                    </RadioGroup>
 
                     <SubmitButton />
                 </Form>
