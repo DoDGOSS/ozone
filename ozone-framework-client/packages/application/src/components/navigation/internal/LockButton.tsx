@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useBehavior } from "../../../hooks";
-import { AnchorButton, Button } from "@blueprintjs/core";
+import { AnchorButton } from "@blueprintjs/core";
 
 import { dashboardStore } from "../../../stores/DashboardStore";
 import { mainStore } from "../../../stores/MainStore";

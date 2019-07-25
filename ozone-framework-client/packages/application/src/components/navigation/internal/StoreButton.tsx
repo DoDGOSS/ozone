@@ -1,7 +1,8 @@
 import React, { useCallback } from "react";
 import { Button } from "@blueprintjs/core";
 
-import { Shortcuts, useHotkey } from "../../../shared/hotkeys";
+import { useHotkey } from "../../../hooks";
+import { Shortcuts } from "../../../shared/hotkeys";
 
 import { mainStore } from "../../../stores/MainStore";
 import { NavbarTooltip } from "./NavbarTooltip";

@@ -4,12 +4,13 @@ import React, { useMemo } from "react";
 import { Classes, Dialog } from "@blueprintjs/core";
 
 import { useBehavior } from "../../hooks";
-import { mainStore } from "../../stores/MainStore";
-import { dashboardStore } from "../../stores/DashboardStore";
 import { WidgetInstance } from "../../models/WidgetInstance";
-import { classNames } from "../../utility";
-import { WidgetTile } from "./WidgetTile";
+import { mainStore } from "../../stores/MainStore";
 import { dashboardService } from "../../services/DashboardService";
+import { dashboardStore } from "../../stores/DashboardStore";
+import { classNames } from "../../utility";
+
+import { WidgetInstanceTile } from "../widget-tile";
 
 export const WidgetSwitcher: React.FC = () => {
     const themeClass = useBehavior(mainStore.themeClass);
@@ -31,7 +32,7 @@ export const WidgetSwitcher: React.FC = () => {
                 ) : (
                     <div className={styles.tileContainer}>
                         {widgets.map((widget) => (
-                            <WidgetTile
+                            <WidgetInstanceTile
                                 key={widget.id}
                                 widgetInstance={widget}
                                 onClick={() => {
