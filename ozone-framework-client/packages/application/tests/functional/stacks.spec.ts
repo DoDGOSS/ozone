@@ -288,5 +288,41 @@ module.exports = {
         browser.expect.element(StackDialog.STACK_DIALOG).text.to.not.contain(StackDialog.CreateStack.EDIT_STACK_NAME);
 
         browser.closeWindow().end();
+    },
+
+    // document title changes
+    "As a user, the browser's tab title should reflect the name of the current dashboard": (browser: NightwatchAPI) => {
+        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+
+        browser.getTitle(function(title) {
+            if (title) this.assert.equal(title, "Untitled", "[Browser Title] is Untitled");
+        });
+
+        browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
+
+        browser
+            .click(MainPage.STACKS_BUTTON)
+            .waitForElementVisible(StackDialog.CREATE_STACK_BUTTON, 2000, "[Create Stack Button] is visible.");
+
+        browser
+            .click(StackDialog.CREATE_STACK_BUTTON)
+            .waitForElementVisible(StackDialog.CreateStack.SUBMIT, 2000, "[Create Stack Submit Button] is visible.");
+
+        browser.setValue(StackDialog.CreateStack.NAME_FIELD, StackDialog.CreateStack.CREATE_STACK_NAME);
+
+        browser
+            .click(StackDialog.CreateStack.SUBMIT)
+            .waitForElementNotPresent(StackDialog.CreateStack.SUBMIT, 1000, "[Create Stack Dialog] is closed.");
+
+        browser.getTitle(function(title) {
+            if (title)
+                this.assert.equal(
+                    title,
+                    StackDialog.CreateStack.CREATE_STACK_NAME,
+                    `[Browser Title] is Untitled ${StackDialog.CreateStack.CREATE_STACK_NAME}`
+                );
+        });
+
+        browser.closeWindow().end();
     }
 };
