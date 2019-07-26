@@ -288,8 +288,13 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                 selectionsAsRows.push(item);
             }
 
+            // the data in tables get refreshed after we setState
+            // so we loose the index, update the page after state
+            // is changed.
+            const page = item.getTable().getPage();
             this.setState({ selections, selectionsAsRows });
             this.props.onSelectionChange(this.state.selections);
+            item.getTable().setPage(page);
 
             // select rows based on selection for view.
             this.state.selectionsAsRows.map((row: any) => {
