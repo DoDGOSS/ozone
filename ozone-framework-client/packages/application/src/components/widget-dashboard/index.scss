@@ -6,7 +6,7 @@
   height: 100%;
   display: flex;
 
-  &.dragging iframe {
+  &.-dragging iframe {
     pointer-events: none;
   }
 }

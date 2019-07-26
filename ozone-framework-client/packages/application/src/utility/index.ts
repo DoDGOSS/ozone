@@ -147,3 +147,11 @@ export function asInteger(value: unknown, defaultValue: number = 0): number {
 export function clampMinimum(num: number, minimum: number): number {
     return num >= minimum ? num : minimum;
 }
+
+export interface Boxed<T> {
+    value: T | undefined;
+}
+
+export function boxed<T>(value?: T): Boxed<T> {
+    return { value };
+}
