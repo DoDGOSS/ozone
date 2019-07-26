@@ -1,0 +1,23 @@
+= Ozone Software Version Description (SVD)
+// Metadata:
+:doctype: book
+:author: DOD GOSS
+:revnumber: 8.0.0.0
+:revdate: 2019-07-01
+// Settings:
+:reproducible:
+:experimental:
+:toc: left
+:toclevels: 6
+:sectnums:
+:sectnumlevels: 6
+:chapter-label:
+:xrefstyle: full
+:icons: font
+:icon-set: fas
+:imagesdir: images/
+
+
+include::sections/01_server.asciidoc[]
+
+include::sections/02_client.asciidoc[]
