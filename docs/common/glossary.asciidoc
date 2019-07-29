@@ -10,7 +10,7 @@ Affiliated Store::
     A store that another organization uses for their system. When a local store is connected to an affiliated store, users in the local store can search for and add listings from the affiliated store (assuming the user has proper authentication for the affiliated store).
 
 App::
-    Deprecated term for a dashboard.
+    Deprecated term for a Stack.
 
 App Component::
     Deprecated term for a widget.
@@ -38,6 +38,9 @@ Marketplace::
 
 OWF::
     Abbreviation for Ozone Widget Framework.
+
+Pages::
+    Deprecated term for a dashboard.
 
 Portal (layout)::
     A column-oriented layout that organizes widgets of varying heights. Each new widget loads above the first one on the screen. The user drags a dividing bar to specify widget’s height. The widgets and the Ozone window scroll.
