@@ -8,8 +8,14 @@ import {
     DropTargetMonitor
 } from "react-dnd";
 import { defer } from "lodash";
+import { BehaviorSubject } from "rxjs";
 
 import { MosaicPath } from "../features/MosaicDashboard/types";
+import { asBehavior } from "../observables";
+import { Boxed, boxed } from "../utility";
+
+const _isDragging$ = new BehaviorSubject(false);
+export const isDragging$ = () => asBehavior(_isDragging$);
 
 export const MosaicDragType = {
     WINDOW: "MosaicWindow"
@@ -22,7 +28,7 @@ export interface DragSourceProps {
 
 export interface DragItem {
     dragData?: DragData;
-    deferTimerId?: number;
+    deferTimerId: Boxed<number | undefined>;
 }
 
 export type DragData = WindowDragData | WidgetDragData | InstanceDragData;
@@ -98,7 +104,7 @@ export function setSaveSnapshotCallback(callback: () => void): void {
 
 export function beginWidgetDrag<P>(callback: BeginDragCallback<P>): BeginDragSpec<DragItem, P> {
     return (props: P, monitor: DragSourceMonitor, component: any): DragItem => {
-        let deferTimerId: number | undefined;
+        const deferTimerId = boxed<number>();
 
         if (saveSnapshot) saveSnapshot();
 
@@ -107,12 +113,14 @@ export function beginWidgetDrag<P>(callback: BeginDragCallback<P>): BeginDragSpe
             monitor,
             component,
             defer: (deferredCallback: () => void) => {
-                if (deferTimerId !== undefined) {
+                if (deferTimerId.value !== undefined) {
                     throw new Error("defer may only be called once");
                 }
-                deferTimerId = defer(deferredCallback);
+                deferTimerId.value = defer(deferredCallback);
             }
         });
+
+        _isDragging$.next(true);
 
         return {
             dragData: data,
@@ -126,9 +134,11 @@ export function endWidgetDrag<P>(callback: EndDragCallback<P>): EndDragSpec<P> {
         const item = monitor.getItem() as DragItem;
         const { dragData, deferTimerId } = item;
 
-        if (deferTimerId !== undefined) {
-            window.clearTimeout(deferTimerId);
+        if (deferTimerId.value !== undefined) {
+            window.clearTimeout(deferTimerId.value);
         }
+
+        _isDragging$.next(false);
 
         const dropData = (monitor.getDropResult() || {}) as DropData;
         callback({
