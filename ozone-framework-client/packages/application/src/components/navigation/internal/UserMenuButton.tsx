@@ -12,14 +12,14 @@ const _UserMenuButton: React.FC = () => {
     const user = useBehavior(authStore.user);
     const displayName = user ? user.userRealName : "Unknown User";
 
-    return (
-        <NavbarTooltip title="User Profile" description="Open the User Profile options window.">
-            <Popover
-                minimal
-                content={<UserMenu user={user} />}
-                position={Position.BOTTOM_RIGHT}
-                modifiers={{ arrow: { enabled: false } }}
-            >
+return (
+        <Popover
+            minimal
+            content={<UserMenu user={user}/>}
+            position={Position.BOTTOM_RIGHT}
+            modifiers={{arrow: {enabled: false}}}
+        >
+            <NavbarTooltip title="User Profile" description="Open the User Profile options window.">
                 <Button
                     minimal
                     text={displayName}
@@ -27,8 +27,8 @@ const _UserMenuButton: React.FC = () => {
                     data-element-id="user-menu-button"
                     onClick={mainStore.hideStore}
                 />
-            </Popover>
-        </NavbarTooltip>
+            </NavbarTooltip>
+        </Popover>
     );
 };
 
