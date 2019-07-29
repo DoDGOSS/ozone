@@ -1,0 +1,241 @@
+== Ozone Framework Client
+
+.Client -- Runtime Dependencies
+[cols="2,1a,1,4"]
+|===
+| Dependency | Version | License | Purpose
+
+| @blueprintjs/core
+| 3.17.1
+| Apache-2.0
+| User Interface (UI) framework and component library for React
+// https://github.com/palantir/blueprint/
+// https://www.npmjs.com/package/@blueprintjs/core
+
+| @blueprintjs/datetime
+| 3.11.0
+| Apache-2.0
+| Blueprint.js components for date & time
+// https://github.com/palantir/blueprint/
+// https://www.npmjs.com/package/@blueprintjs/datetime
+
+| @blueprintjs/icons
+| 3.9.1
+| Apache-2.0
+| Blueprint.js components for icons & glyphs
+// https://github.com/palantir/blueprint/
+// https://www.npmjs.com/package/@blueprintjs/icons
+
+| @blueprintjs/select
+| 3.9.0
+| Apache-2.0
+| Blueprint.js components for advanced search and selection
+// https://github.com/palantir/blueprint/
+// https://www.npmjs.com/package/@blueprintjs/select
+
+| @blueprintjs/table
+| 3.6.0
+| Apache-2.0
+| Blueprint.js components for tables and data grids
+// https://github.com/palantir/blueprint/
+// https://www.npmjs.com/package/@blueprintjs/table
+
+| @blueprintjs/timezone
+| 3.4.0
+| Apache-2.0
+| Blueprint.js component for timezone selection
+// https://github.com/palantir/blueprint/
+// https://www.npmjs.com/package/@blueprintjs/timezone
+
+| ajv
+| 6.10.2
+| MIT
+| JSON Schema validation
+// https://github.com/epoberezkin/ajv
+// https://www.npmjs.com/package/ajv
+
+| axios
+| 0.19.0
+| MIT
+| HTTP client
+// https://github.com/axios/axios
+// https://www.npmjs.com/package/axios
+
+| classnames
+| 2.2.6
+| MIT
+| Utility for joining HTML/CSS class names
+// https://github.com/JedWatson/classnames
+// https://www.npmjs.com/package/classnames
+
+| core-js
+| 3.1.4
+| MIT
+| Polyfills for modern ECMAScript features
+// https://github.com/zloirock/core-js
+// https://www.npmjs.com/package/core-js
+
+| downloadjs
+| 1.4.7
+| MIT
+| Utility to download a file
+// https://github.com/rndme/download
+// https://www.npmjs.com/package/downloadjs
+
+| formik
+| 1.5.8
+| MIT
+| Form handling and validation for React
+// https://github.com/jaredpalmer/formik
+// https://www.npmjs.com/package/formik
+
+| immer
+| 3.1.3
+| MIT
+| Utility for modifying immutable state trees
+// https://github.com/immerjs/immer
+// https://www.npmjs.com/package/immer
+
+| immutability-helper
+| 2.4.0
+| MIT
+| Utility for modifying immutable state _(used by Mosaic library)_
+// https://github.com/kolodny/immutability-helper
+// https://www.npmjs.com/package/immutability-helper
+
+| lodash
+| 4.17.14
+| MIT
+| General-purpose utility library
+// https://github.com/lodash/lodash
+// https://www.npmjs.com/package/lodash
+
+| prop-types
+| 15.7.2
+| MIT
+| Runtime type checking for React
+// https://github.com/facebook/prop-types
+// https://www.npmjs.com/package/prop-types
+
+| qs
+| 6.7.0
+| BSD-3-Clause
+| Utility for parsing & processing URL query strings
+// https://github.com/ljharb/qs
+// https://www.npmjs.com/package/qs
+
+| react
+| 16.8.6
+| MIT
+| User interface library / framework
+// https://github.com/facebook/react
+// https://www.npmjs.com/package/react
+
+| react-confirm-alert
+| 2.4.1
+| MIT
+| UI component for confirmation dialogs
+// https://github.com/GA-MO/react-confirm-alert
+// https://www.npmjs.com/package/react-confirm-alert
+
+| react-dnd
+| 7.4.5
+| MIT
+| Drag & Drop library
+// https://github.com/react-dnd/react-dnd
+// https://www.npmjs.com/package/react-dnd
+
+| react-dnd-html5-backend
+| 7.4.4
+| MIT
+| Drag & Drop library for HTML5 support
+// https://github.com/react-dnd/react-dnd
+// https://www.npmjs.com/package/react-dnd-html5-backend
+
+| react-dom
+| 16.8.6
+| MIT
+| React Document Object Model (DOM) renderer
+// https://github.com/facebook/react
+// https://www.npmjs.com/package/react-dom
+
+| react-markdown
+| 4.1.0
+| MIT
+| React component for rendering Markdown text
+// https://github.com/rexxars/react-markdown
+// https://www.npmjs.com/package/react-markdown
+
+| react-measure
+| 2.3.0
+| MIT
+| React component to compute element dimensions and detect resize events
+// https://github.com/souporserious/react-measure
+// https://www.npmjs.com/package/react-measure
+
+| react-mosaic
+| 2.1.0^†^
+| Apache-2.0
+| React component for tiling window layouts
+// https://github.com/nomcopter/react-mosaic
+// https://www.npmjs.com/package/react-mosaic-component
+
+| react-router
+| 5.0.1
+| MIT
+| React library for dynamic page routing
+// https://github.com/ReactTraining/react-router
+// https://www.npmjs.com/package/react-router
+
+| react-router-dom
+| 5.0.1
+| MIT
+| DOM bindings for `react-router` library
+// https://github.com/ReactTraining/react-router
+// https://www.npmjs.com/package/react-router-dom
+
+| react-tabulator
+| 0.9.1
+| MIT
+| React component for advanced tables
+// https://github.com/ngduc/react-tabulator
+// https://www.npmjs.com/package/react-tabulator
+
+| regenerator-runtime
+| 0.13.2
+| MIT
+| Runtime support for transformed generator and async functions
+// https://github.com/facebook/regenerator/
+// https://www.npmjs.com/package/regenerator-runtime
+
+| rxjs
+| 6.5.2
+| Apache-2.0
+| Reactive programming & observables library
+// https://github.com/reactivex/rxjs
+// https://www.npmjs.com/package/rxjs
+
+| space-lift
+| 0.8.7
+| MIT
+| General-purpose utility library
+// https://github.com/AlexGalays/spacelift
+// https://www.npmjs.com/package/space-lift
+
+| uuid
+| 3.3.2
+| MIT
+| Generate Universally Unique Identifiers (UUID)
+// https://github.com/kelektiv/node-uuid
+// https://www.npmjs.com/package/uuid
+
+| yup
+| 0.27.0
+| MIT
+| Object schema validation
+// https://github.com/jquense/yup
+// https://www.npmjs.com/package/yup
+
+|===
+
+^†^ Forked at this version. The modified source files are included within the Ozone repository, and have been customized to enable support for required features such as Drag & Drop.
