@@ -1,15 +1,15 @@
 import { Subscription } from "rxjs";
 
 import { UserState } from "../codecs/Dashboard.codec";
-import { PanelId, WidgetInstanceId } from "../models/types";
 import { Dashboard, DashboardProps } from "../models/Dashboard";
+import { Panel, PanelState } from "../models/panel";
+import { PanelId, WidgetInstanceId } from "../models/types";
 import { WidgetInstance } from "../models/WidgetInstance";
 import { byId, includes, integerKeys, mapValues, sortedKeys, values } from "../utility";
 
-import { DesktopState, toDashboardRef, toPanelRef, toUserWidgetRef, toWidgetInstanceRef } from "./immutable-model";
-import { ImmerStore } from "./ImmerStore";
 import { dashboardStore } from "./DashboardStore";
-import { Panel, PanelState } from "../models/panel";
+import { ImmerStore } from "./ImmerStore";
+import { DesktopState, toDashboardRef, toPanelRef, toUserWidgetRef, toWidgetInstanceRef } from "./immutable-model";
 
 const defaultState: DesktopState = {
     isLoading: true,
@@ -85,6 +85,7 @@ export class DesktopStore extends ImmerStore<DesktopState> {
     private updateCurrentDashboardState(nextDashboard: DashboardProps): void {
         this.next((desktop) => {
             const dashboard = desktop.dashboards[nextDashboard.guid];
+            if (!dashboard) return;
 
             const prevPanelIds = dashboard.panelIds;
             const nextPanelIds = values(nextDashboard.panels)
@@ -117,6 +118,7 @@ export class DesktopStore extends ImmerStore<DesktopState> {
     private updatePanelState(nextPanel: PanelState): void {
         this.next((desktop) => {
             const panel = desktop.panels[nextPanel.id];
+            if (!panel) return;
 
             const prevInstanceIds = panel.widgetInstanceIds;
             const nextInstanceIds = nextPanel.widgets.map(byId).sort();
