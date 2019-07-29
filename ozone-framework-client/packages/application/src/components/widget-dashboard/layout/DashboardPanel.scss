@@ -1,10 +1,4 @@
 :local(.dashboardWindow) {
-    &.drop-target-hover {
-        iframe {
-            pointer-events: none;
-        }
-    }
-
     .mosaic-window-body  {
         overflow: auto;
     }
