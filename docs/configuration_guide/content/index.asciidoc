@@ -33,7 +33,9 @@ include::sections/06_configuration.asciidoc[]
 
 include::sections/07_logging.asciidoc[]
 
-include::sections/08_deployment.asciidoc[]
+include::sections/08_upgrading.asciidoc[]
+
+include::sections/09_deployment.asciidoc[]
 
 include::appendices/apdx-a_custom-security.asciidoc[]
 
