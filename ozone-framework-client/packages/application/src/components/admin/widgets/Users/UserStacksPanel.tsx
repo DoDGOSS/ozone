@@ -72,7 +72,7 @@ export class UserStacksPanel extends React.Component<UserEditStacksProps, UserEd
     private getTableColumns(): ColumnTabulator[] {
         return [
             { title: "Title", field: "name" },
-            { title: "Pages (Dashboards)", field: "totalDashboards" },
+            { title: "Dashboards", field: "totalDashboards" },
             { title: "Widgets", field: "totalWidgets" },
             { title: "Groups", field: "totalGroups" },
             { title: "Users", field: "totalUsers" },
