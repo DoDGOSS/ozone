@@ -19,7 +19,7 @@ export class UserStacksEditDialog extends React.Component<SelectionDialogProps<S
                 columns={
                     [
                         { title: "Title", field: "name" },
-                        { title: "Pages (Dashboards)", field: "totalDashboards" },
+                        { title: "Dashboards", field: "totalDashboards" },
                         { title: "Widgets", field: "totalWidgets" },
                         { title: "Groups", field: "totalGroups" },
                         { title: "Users", field: "totalUsers" }
