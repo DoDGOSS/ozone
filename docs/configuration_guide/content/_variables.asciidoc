@@ -10,7 +10,7 @@
 :path-user-props: {path-ozone}/{file-user-props}
 :path-ozone-security: {path-ozone}/security
 
-
+:version-ozone: OWF v8.0.0.0
 :version-tomcat: v8.5.23
 
 :url-github: https://github.com/ozoneplatform/
