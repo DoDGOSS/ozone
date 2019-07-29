@@ -38,6 +38,7 @@
 
 :local(.layoutIcon) {
   cursor: pointer;
+  pointer-events: none;
 
   width: 59px;
   height: 45px;
