@@ -15,7 +15,7 @@ const _StoreButton: React.FC = () => {
     useHotkey({ combo: Shortcuts.showStore, onKeyDown: toggleStore });
 
     return (
-        <NavbarTooltip title="AppsMall Center" shortcut={Shortcuts.showStore} description="Open AppsMall">
+        <NavbarTooltip title="Marketplace" shortcut={Shortcuts.showStore} description="Open Marketplace">
             <Button minimal icon="shopping-cart" onClick={toggleStore} data-element-id="store-button" />
         </NavbarTooltip>
     );
