@@ -1,22 +1,21 @@
 import * as styles from "./index.scss";
 
 import React, { useCallback, useState } from "react";
-import { useBehavior } from "../../hooks";
-
 import { Spinner } from "@blueprintjs/core";
 
 import { PropsBase } from "../../common";
-
+import { useBehavior } from "../../hooks";
 import { dashboardService } from "../../services/DashboardService";
+import { isDragging$ } from "../../shared/dragAndDrop";
 import { dashboardStore } from "../../stores/DashboardStore";
 import { mainStore } from "../../stores/MainStore";
-
-import { DashboardLayout, DashboardNode, DashboardPath } from "./types";
-import { DashboardPanel } from "./layout/DashboardPanel";
-
-import { classNames } from "../../utility";
 import { systemConfigStore } from "../../stores/SystemConfigStore";
+import { classNames } from "../../utility";
+
 import { BackgroundImage } from "../branding/BackgroundImage";
+
+import { DashboardPanel } from "./layout/DashboardPanel";
+import { DashboardLayout, DashboardNode, DashboardPath } from "./types";
 import { WidgetFrame } from "./WidgetFrame";
 
 export const WidgetDashboard: React.FC<PropsBase> = (props) => {
@@ -28,15 +27,17 @@ export const WidgetDashboard: React.FC<PropsBase> = (props) => {
     const dashboard = useBehavior(dashboardStore.currentDashboard);
     const { backgroundWidgets, tree, panels } = useBehavior(dashboard.state);
     const backgroundImageUrl = useBehavior(systemConfigStore.backgroundImageUrl);
-    const [isDragging, setIsDragging] = useState(false);
+
+    const [isResizing, setIsResizing] = useState(false);
+    const isDragging = useBehavior(isDragging$);
 
     const onChange = useCallback((currentNode: DashboardNode | null) => {
-        setIsDragging(true);
+        setIsResizing(true);
         dashboardService.setLayoutFast(currentNode);
     }, []);
 
     const onRelease = useCallback((currentNode: DashboardNode | null) => {
-        setIsDragging(false);
+        setIsResizing(false);
         dashboardService.setLayout(currentNode);
     }, []);
 
@@ -48,7 +49,7 @@ export const WidgetDashboard: React.FC<PropsBase> = (props) => {
 
     return (
         <>
-            <div className={classNames(styles.dashboard, className, { dragging: isDragging })}>
+            <div className={classNames(styles.dashboard, className, { "-dragging": isResizing || isDragging })}>
                 {!tree && backgroundImageUrl ? (
                     <BackgroundImage imgUrl={backgroundImageUrl} />
                 ) : (
