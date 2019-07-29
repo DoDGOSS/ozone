@@ -7,37 +7,6 @@ Fork the code for this repository. Make your changes and submit a pull request. 
 
 The OZONE Widget Framework (OWF) is a framework that allows data from different servers to communicate inside a browser window without sending information back to the respective servers. This unique capability allows the OWF web portal to offer decentralized data manipulation. It includes a secure, in-browser, pub-sub eventing system which allows widgets from different domains to share information. The combination of decentralized content and in-browser messaging makes OWF particularly suited for large distributed enterprises with legacy stovepipes that need to combine capability. Use it to quickly link applications and make composite tools.
 
- 
-## Screenshots
-
-![My Apps Menu](https://github.com/ozoneplatform/owf-omp-docs/blob/master/Images/MyAppsMenu.png)
-
-**My Apps Menu**
-
-All of a user's applications appear on this menu. 
-
-![Desktop Layout](https://github.com/ozoneplatform/owf-omp-docs/blob/master/Images/DesktopDashboard.png)
-
-**Desktop Layout**
-
-This is a desktop layout. Users can move widgets to useful locations on the screen. 
-
-![Tabbed Layout](https://github.com/ozoneplatform/owf-omp-docs/blob/master/Images/TabbedLayout.png)
-
-**Tabbed Layout**
-
-Tabbed layouts allow widgets to open on separate tabs. 
-
-Using the App Builder, users can design dashboards that incorporate multiple layouts. You see desktop and tabbed layout examples above. You can also incorporate accordion, portal and fit-pane layouts into each dashboard.
-
-
-## Technology components
-For OWF Version 7.16.0, the front-end user interface uses JavaScript, and the back-end uses Grails.  User preferences are stored in a relational database - anything supported by Hibernate.  Authentication of users is a modular function provided by Spring Security.  
- 
- 
-## Browser Support
-Numbered releases are tested on IE7, IE9, Firefox 17 and Chrome 33. 
- 
 ## Copyrights
 > Software (c) 2015 [Next Century Corporation](http://www.nextcentury.com/ "Next Century")
 
