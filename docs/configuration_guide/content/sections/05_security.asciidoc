@@ -37,7 +37,7 @@ It is expected that each organization using OWF will examine its security guidel
 
 The OWF Bundle is configured to run by default on `localhost` with a predefined set of users.
 
-When using the default Tomcat bundle, externalized configuration files should be placed in the `{path-ozone}/` folder.  If using an application server other than Tomcat, copy the override files into the directory that will include them in the classpath for that specific application server.
+When using the default Tomcat bundle, externalized configuration files should be placed in the `{path-ozone}/` directory.  If using an application server other than Tomcat, copy the override files into the directory that will include them in the classpath for that specific application server.
 
 WARNING: The sample security modules are included as examples and should NOT be used in a production environment. For more information, please refer to the OWF Security section.
 

@@ -164,7 +164,7 @@ dataSource:
 [discrete]
 ===== Step 2: Modify the application trust store
 
-Add the CA certificate, created above (`cacert.pem`) to the application's trust store. In the case of the franchise bundle, the trust store is a file called `keystore.jks` found in the `/tomcat/certs/` folder. Do this with the following command (assuming you have the JDK installed and `JAVA_HOME/bin` on your PATH, if they aren't there, add them first).
+Add the CA certificate, created above (`cacert.pem`) to the application's trust store. In the case of the franchise bundle, the trust store is a file called `keystore.jks` found in the `/tomcat/certs/` directory. Do this with the following command (assuming you have the JDK installed and `JAVA_HOME/bin` on your PATH, if they aren't there, add them first).
 
 ----
 keytool -import -alias mysqlCAcert -file cacert.pem -keystore keystore.jks
