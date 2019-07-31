@@ -1,5 +1,4 @@
 :experimental:
-include::../_variables.asciidoc[]
 ifndef::imagesdir[]
 :imagesdir: ../images/
 endif::[]
