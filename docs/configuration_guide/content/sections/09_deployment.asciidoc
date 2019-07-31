@@ -86,7 +86,7 @@ keytool -export -file servername.crt -keystore servername.jks -alias servername
 keytool -import -alias servername –keystore mytruststore.jks -file servername.crt
 ----
 
-. Modify the JVM Parameters that are used to start the web application server in order to use the new truststore shown above. If a Tomcat server is being used, the parameters can be found in the setenv.bat (or .sh, depending on the operating system in use) script found within the /tomcat/bin/ folder inside of the unpacked owf-bundle-8.0.0.0.zip. If an application server other than Tomcat is being used, the parameters will need to be added to the JVM parameters which are loaded when the application server is started. +
+. Modify the JVM Parameters that are used to start the web application server in order to use the new truststore shown above. If a Tomcat server is being used, the parameters can be found in the setenv.bat (or .sh, depending on the operating system in use) script found within the /tomcat/bin/ directory inside of the unpacked owf-bundle-8.0.0.0.zip. If an application server other than Tomcat is being used, the parameters will need to be added to the JVM parameters which are loaded when the application server is started. +
 +
 .Custom JVM Parameters
 [cols="m,m,"]

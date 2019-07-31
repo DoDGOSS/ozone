@@ -10,7 +10,7 @@ The Ozone Widget Framework (OWF) is a set of tools, generally delivered in the O
 
 == Dependencies
 
-The OWF Bundle is shipped with Tomcat {version-tomcat} and requires Java 8 or higher. If running OWF with a Web server other than Tomcat, see that Web server's documentation for any additional requirements.
+The OWF Bundle is shipped with Tomcat v{version-tomcat} and requires Java 8 or higher. If running OWF with a Web server other than Tomcat, see that Web server's documentation for any additional requirements.
 
 
 == Components
@@ -18,7 +18,7 @@ The OWF Bundle is shipped with Tomcat {version-tomcat} and requires Java 8 or hi
 === Ozone Widget Framework (OWF) Web Application
 
 owf.war::
-This file, located in the `{path-webapps}/` folder, contains the components which make up the OWF application. Whether a user logs in and accesses the framework, or an administrator logs in to modify preferences, the `owf.war` is the application that launches those pages to the browser.
+This file, located in the `{path-webapps}/` directory, contains the components which make up the OWF application. Whether a user logs in and accesses the framework, or an administrator logs in to modify preferences, the `owf.war` is the application that launches those pages to the browser.
 
 
 === Pluggable Security
@@ -66,6 +66,6 @@ A set of example widgets are provided with the system in order to demonstrate th
 
 The example widgets are enabled by default, and run embedded within the main application inside the `owf.war` file.
 
-In previous OWF releases, an additional set of sample widgets utilizing various web technologies and frameworks was provided in the `owf-sample-widgets.zip` file. Due to the declining prevalence of these technologies, this file is no longer being distributed with the bundle. However, the sources for these sample widgets are still available within the `owf-framework` repository, located under the `/sample-widgets/` folder.
+In previous OWF releases, an additional set of sample widgets utilizing various web technologies and frameworks was provided in the `owf-sample-widgets.zip` file. Due to the declining prevalence of these technologies, this file is no longer being distributed with the bundle. However, the sources for these sample widgets are still available within the `owf-framework` repository, located under the `/sample-widgets/` directory.
 
 The OWF Developer's Guide includes specific examples and guides regarding the developing widgets and utilizing the widget APIs.

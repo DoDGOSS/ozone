@@ -1,8 +1,9 @@
 include::../_variables.asciidoc[]
 
+[#configuration]
 = Configuration
 
-OWF offers a variety of custom configuration options in the externalized `{file-app-yml}` configuration file, located in the bundle in the `{path-ozone}/` folder. Once changes are made, restart the system to apply the changes.
+OWF offers a variety of custom configuration options in the externalized `{file-app-yml}` configuration file, located in the bundle in the `{path-ozone}/` directory. Once changes are made, restart the system to apply the changes.
 
 The default settings provided in the `{file-app-yml}` file are intended for use in a local, non-production environment. For production deployment to a non-local environment or to use an external database, this file must be configured with the appropriate settings, which are explained the following sections.
 
