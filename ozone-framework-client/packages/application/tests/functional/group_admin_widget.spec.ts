@@ -1,6 +1,6 @@
 import { NightwatchAPI, NightwatchCallbackResult } from "nightwatch";
 
-import { GlobalElements, GroupAdminWidget } from "./selectors";
+import { GlobalElements, GroupAdminWidget, MainPage, StackDialog } from "./selectors";
 
 import { loggedInAs } from "./helpers";
 import { GroupAdmin } from "./pages";
@@ -15,42 +15,12 @@ const NEW_GROUP_DESCRIPTION: string = "New Group Description";
 
 const SEARCH_WIDGET: string = "Color";
 const ADDED_WIDGETS = ["Color Client", "Color Server"];
-const DEFAULT_STACK = "Untitled";
+const DEFAULT_STACK = "Untitled (default)";
 
 const DEFAULT_USER_EMAILS = ["testAdmin1@ozone.test", "testUser1@ozone.test"];
 
 function openEditSectionForGroup(browser: NightwatchAPI, userDisplayName: string, section?: string) {
-    let relevant_row: number = 0;
-
-    browser.elements(
-        "css selector",
-        `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup'] div[role='row'] > div:first-child`,
-        (elements: NightwatchCallbackResult) => {
-            elements.value.forEach((element: any, i: number) => {
-                browser.elementIdText(element.ELEMENT, (result) => {
-                    if (result.value === userDisplayName) {
-                        relevant_row = i;
-                        browser.getAttribute(
-                            `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                1}) div[role='row'] > div:last-child ${GlobalElements.STD_EDIT_BUTTON}`,
-                            "disabled",
-                            function(isDisabled) {
-                                this.assert.equal(
-                                    isDisabled.value,
-                                    null,
-                                    "[Group Admin Widget] created group can be edited"
-                                );
-                            }
-                        );
-                    }
-                });
-            });
-        }
-    );
-    browser.click(
-        `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
-            1}) div[role='row'] > div:last-child ${GlobalElements.STD_EDIT_BUTTON}`
-    );
+    browser.click(`${GroupAdminWidget.Main.DIALOG} div[role='grid'] div[role='row'] ${GlobalElements.STD_EDIT_BUTTON}`);
 
     if (section) {
         return browser.click(section);
@@ -71,11 +41,10 @@ module.exports = {
 
         GroupAdmin.navigateTo(browser);
 
-        browser.assert.containsText(
-            GroupAdminWidget.Main.DIALOG,
-            "OWF Administrators",
-            "[User Group Widget] Displays group information"
-        );
+        browser.expect
+            .element(GroupAdminWidget.Main.DIALOG)
+            .text.to.contain("OWF Administrators")
+            .before(30 * 1000);
 
         browser.closeWindow().end();
     },
@@ -205,8 +174,8 @@ module.exports = {
             );
 
         browser
-            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup']:nth-child(1)`)
-            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup']:nth-child(2)`)
+            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='row']:nth-child(1)`)
+            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='row']:nth-child(2)`)
             .click(GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON)
             .waitForElementNotPresent(
                 GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
@@ -227,7 +196,7 @@ module.exports = {
         browser.closeWindow().end();
     },
 
-    "As an Administrator, I can add remove a user from a group": (browser: NightwatchAPI) => {
+    "As an Administrator, I can remove a user from a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
 
         GroupAdmin.navigateTo(browser);
@@ -246,7 +215,7 @@ module.exports = {
 
         browser
             .click(
-                `${GroupAdminWidget.UsersGroup.TAB} div[role='rowgroup']:nth-child(2) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`
+                `${GroupAdminWidget.UsersGroup.TAB} div[role='row']:nth-child(1) div ${GlobalElements.STD_DELETE_BUTTON}`
             )
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
@@ -263,12 +232,12 @@ module.exports = {
                 1000,
                 "[Confirmation Dialog] is not present"
             );
+        browser.pause(500);
 
         browser
             .click(
-                `${GroupAdminWidget.UsersGroup.TAB} div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`
+                `${GroupAdminWidget.UsersGroup.TAB} div[role='row']:nth-child(1) div ${GlobalElements.STD_DELETE_BUTTON}`
             )
-            .pause(250)
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 1000,
@@ -276,6 +245,7 @@ module.exports = {
                 undefined,
                 "[Confirmation Dialog] is present"
             )
+            .pause(250)
             .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
             .pause(500)
             .waitForElementNotPresent(
@@ -283,6 +253,7 @@ module.exports = {
                 1000,
                 "[Confirmation Dialog] is not present"
             );
+        browser.pause(500);
 
         DEFAULT_USER_EMAILS.forEach((email: string) => {
             browser.expect.element(GroupAdminWidget.UsersGroup.TAB).text.to.not.contain(email);
@@ -319,8 +290,8 @@ module.exports = {
         browser
             .setValue(GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD, SEARCH_WIDGET)
             .pause(1000)
-            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup']:nth-child(1)`)
-            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup']:nth-child(2)`)
+            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='row']:nth-child(1) > div`)
+            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='row']:nth-child(2) > div`)
             .click(GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON)
             .waitForElementNotPresent(
                 GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
@@ -390,6 +361,24 @@ module.exports = {
     "As an Administrator, I can add a stack to a group": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
 
+        // share a stack
+        browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
+        browser
+            .click(MainPage.STACKS_BUTTON)
+            .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
+        browser
+            .pause(1000)
+            .click(StackDialog.getShareButtonForStack(DEFAULT_STACK))
+            .waitForElementPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                1000,
+                undefined,
+                undefined,
+                "[Confirmation Dialog] is present."
+            )
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .click(MainPage.DIALOG_CLOSE);
+
         GroupAdmin.navigateTo(browser);
 
         browser.expect.element(GroupAdminWidget.Main.DIALOG).text.to.contain(NEW_GROUP_MODIFIED_NAME);
@@ -411,7 +400,7 @@ module.exports = {
         browser
             .setValue(GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD, DEFAULT_STACK)
             .pause(1000)
-            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup']:nth-child(1)`)
+            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='row']:nth-child(1)`)
             .click(GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON)
             .waitForElementNotPresent(
                 GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
@@ -471,17 +460,18 @@ module.exports = {
 
         browser.elements(
             "css selector",
-            `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup'] div[role='row'] > div:first-child`,
+            `${GroupAdminWidget.Main.DIALOG} div[role='row'] > div:nth-child(1)`,
             (elements: NightwatchCallbackResult) => {
                 let relevant_row: number = 0;
 
                 elements.value.forEach((element: any, i: number) => {
-                    browser.elementIdText(element.ELEMENT, (result) => {
+                    browser.elementIdText(element[Object.keys(element)[0]], (result) => {
                         if (result.value === NEW_GROUP_MODIFIED_NAME) {
                             relevant_row = i;
                             browser.getAttribute(
-                                `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                    1}) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`,
+                                `${GroupAdminWidget.Main.DIALOG} div[role='row']:nth-child(${i + 1}) div ${
+                                    GlobalElements.STD_DELETE_BUTTON
+                                }`,
                                 "disabled",
                                 function(modifiedResult) {
                                     this.assert.equal(
@@ -493,8 +483,9 @@ module.exports = {
                             );
                         } else if ((result.value as string).trim().length > 0) {
                             browser.getAttribute(
-                                `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                    1}) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`,
+                                `${GroupAdminWidget.Main.DIALOG} div[role='row']:nth-child(${i + 1}) div ${
+                                    GlobalElements.STD_DELETE_BUTTON
+                                }`,
                                 "disabled",
                                 function(modifiedResult) {
                                     this.assert.equal(
@@ -510,8 +501,9 @@ module.exports = {
 
                 browser
                     .click(
-                        `${GroupAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
-                            1}) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`
+                        `${GroupAdminWidget.Main.DIALOG} div[role='row']:nth-child(${relevant_row + 1}) div ${
+                            GlobalElements.STD_DELETE_BUTTON
+                        }`
                     )
                     .pause(250)
                     .waitForElementPresent(

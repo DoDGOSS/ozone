@@ -22,6 +22,7 @@ const _WidgetTile: React.FC<WidgetTileProps> = (props) => {
         <div
             className={classNames(styles.tile, { [styles.background]: isBackground, [styles.selected]: isSelected })}
             onClick={onClick}
+            data-element-id={title}
         >
             {isBackground && (
                 <Icon icon="eye-off" className={styles.backgroundIndicator} htmlTitle="Background Widget" />

@@ -1,9 +1,8 @@
 import { NightwatchAPI } from "nightwatch";
 
-import { AdminWidget, GlobalElements, UserAdminWidget } from "./selectors";
+import { AdminWidget, GlobalElements, UserAdminWidget, MainPage, StackDialog } from "./selectors";
 
 import { loggedInAs } from "./helpers";
-import { NightwatchCallbackResult } from "./nightwatch";
 import { UserAdmin } from "./pages";
 
 const LOGIN_USERNAME: string = "testAdmin1";
@@ -25,36 +24,8 @@ const NEW_USER_PREFERENCE_VALUE = "myTestPreference";
 const DEFAULT_STACK = "Untitled";
 
 function openEditSectionForUser(browser: NightwatchAPI, userDisplayName: string, section?: string) {
-    let relevant_row: number = 0;
-
-    browser.elements(
-        "css selector",
-        `${UserAdminWidget.Main.DIALOG} div[role='rowgroup'] div[role='row'] > div:first-child`,
-        (elements: NightwatchCallbackResult) => {
-            elements.value.forEach((element: any, i: number) => {
-                browser.elementIdText(element.ELEMENT, (result) => {
-                    if (result.value === userDisplayName) {
-                        relevant_row = i;
-                        browser.getAttribute(
-                            `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${i +
-                                1}) div[role='row'] > div:last-child ${GlobalElements.STD_EDIT_BUTTON}`,
-                            "disabled",
-                            function(isDisabled) {
-                                this.assert.equal(
-                                    isDisabled.value,
-                                    null,
-                                    "[User Admin Widget] created user can be edited"
-                                );
-                            }
-                        );
-                    }
-                });
-            });
-        }
-    );
     browser.click(
-        `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(${relevant_row +
-            1}) div[role='row'] > div:last-child ${GlobalElements.STD_EDIT_BUTTON}`
+        `${UserAdminWidget.Main.DIALOG} div[data-role='user-admin-widget-actions'][data-username='${userDisplayName}'] ${GlobalElements.STD_EDIT_BUTTON}`
     );
 
     if (section) {
@@ -162,10 +133,9 @@ module.exports = {
         browser
             .setValue(AdminWidget.SEARCH_FIELD, NEW_USER_USERNAME)
             .click(
-                `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${GlobalElements.STD_EDIT_BUTTON}`
-            );
-
-        browser.pause(5000);
+                `${UserAdminWidget.Main.DIALOG} div[data-role='user-admin-widget-actions'][data-username='${NEW_USER_USERNAME}'] ${GlobalElements.STD_EDIT_BUTTON}`
+            )
+            .waitForElementNotPresent("div.bp3-spinner");
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
@@ -234,8 +204,8 @@ module.exports = {
         browser
             .setValue(GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD, SEARCH_WIDGET)
             .pause(1000)
-            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup']:nth-child(1)`)
-            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup']:nth-child(2)`)
+            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='row']:nth-child(1) > div`)
+            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='row']:nth-child(2) > div`)
             .click(GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON)
             .waitForElementNotPresent(
                 GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
@@ -395,6 +365,25 @@ module.exports = {
     "As an Administrator, I can add a stack to a user": (browser: NightwatchAPI) => {
         loggedInAs(browser, LOGIN_USERNAME, LOGIN_PASSWORD, "Test Administrator 1");
 
+        //share the stack
+        browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
+        browser
+            .click(MainPage.STACKS_BUTTON)
+            .waitForElementNotPresent("div.bp3-spinner")
+            .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
+
+        browser
+            .click(StackDialog.getShareButtonForStack(DEFAULT_STACK))
+            .waitForElementPresent(
+                GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
+                5000,
+                undefined,
+                undefined,
+                "[Confirmation Dialog] is present."
+            )
+            .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .click(MainPage.DIALOG_CLOSE);
+
         UserAdmin.navigateTo(browser);
 
         browser.expect.element(UserAdminWidget.Main.DIALOG).text.to.contain(USER_ADD_WIDGET);
@@ -416,7 +405,7 @@ module.exports = {
         browser
             .setValue(GlobalElements.GENERIC_TABLE_ADD_SEARCH_FIELD, DEFAULT_STACK)
             .pause(1000)
-            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='rowgroup']:nth-child(1)`)
+            .click(`${GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG} div[role='row']:nth-child(1)`)
             .click(GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON)
             .waitForElementNotPresent(
                 GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG_OK_BUTTON,
@@ -481,7 +470,7 @@ module.exports = {
         browser
             .setValue(AdminWidget.SEARCH_FIELD, NEW_USER_EMAIL)
             .click(
-                `${UserAdminWidget.Main.DIALOG} div[role='rowgroup']:nth-child(1) div[role='row'] > div:last-child ${GlobalElements.STD_DELETE_BUTTON}`
+                `${UserAdminWidget.Main.DIALOG} div[data-role='user-admin-widget-actions'][data-username='${NEW_USER_USERNAME}'] ${GlobalElements.STD_DELETE_BUTTON}`
             )
             .waitForElementPresent(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
