@@ -33,7 +33,7 @@ export interface CreateDashboardOptions {
 }
 
 export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubmit, stackId }) => {
-    const [selectedValue, setValue] = useState("");
+    const [selectedValue, setValue] = useState("new");
     const handleRadioChange = handleStringChange(setValue);
 
     const [selectedPresetLayout, setPresetLayout] = useState<string | null>(null);
@@ -82,15 +82,15 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
                         </div>
                     </div>
                     <RadioGroup onChange={handleRadioChange} selectedValue={selectedValue}>
+                        <Radio label="Create new layout" value="new" />
                         <Radio label="Choose a premade layout" value="premade" />
                         {selectedValue === "premade" && (
                             <PremadeLayouts selectedValue={selectedPresetLayout} onChange={handlePresetLayoutChange} />
                         )}
-                        <Radio label="Copy the layout of an existing page" value="copy" />
+                        <Radio label="Copy the layout of an existing dashboard" value="copy" />
                         {selectedValue === "copy" && (
                             <DashboardSelect selectedValue={selectedCopyLayout} onChange={handleCopyLayoutChange} />
                         )}
-                        <Radio label="Create a new layout" value="new" />
                     </RadioGroup>
 
                     <SubmitButton />
