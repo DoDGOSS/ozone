@@ -7,11 +7,11 @@ task extractCustomTomcat(type: Sync, group: 'bundle') {
     into "$tomcatBundleStaging"
 }
 
-task copyDatabaseDrivers(type: Copy, group: 'bundle') {
+task copyTomcatCustomizations(type: Copy, group: 'bundle') {
     dependsOn(extractCustomTomcat)
 
-    from configurations.drivers
-    into file("$tomcatBundleStaging/drivers")
+    from fileTree("bundle-resources/tomcat")
+    into file("$tomcatBundleStaging/tomcat")
 }
 
 task copyFrameworkConfigurations(type: Copy, group: 'bundle') {
@@ -27,6 +27,20 @@ task copyFrameworkSpringConfigurations(type: Copy, group: 'bundle') {
     from fileTree("src/main/resources/ozone/framework")
 
     into file("$tomcatBundleStaging/tomcat/lib/ozone/framework")
+}
+
+task copyCertificates(type: Copy, group: 'build') {
+    dependsOn(extractCustomTomcat)
+
+    from fileTree("certs")
+    into file("$tomcatBundleStaging/tomcat/certs")
+}
+
+task copyDatabaseDrivers(type: Copy, group: 'bundle') {
+    dependsOn(extractCustomTomcat)
+
+    from configurations.drivers
+    into file("$tomcatBundleStaging/drivers")
 }
 
 task copyFrameworkWar(type: Copy, group: 'bundle') {
@@ -57,8 +71,10 @@ task copyJbossModule(type: Zip, group: 'build') {
 }
 
 task bundle(type: Zip, group: 'build') {
-    dependsOn(copyFrameworkConfigurations,
+    dependsOn(copyTomcatCustomizations,
+              copyFrameworkConfigurations,
               copyFrameworkSpringConfigurations,
+              copyCertificates,
               copyDatabaseDrivers,
               copyFrameworkWar,
               copyDatabaseScripts,
