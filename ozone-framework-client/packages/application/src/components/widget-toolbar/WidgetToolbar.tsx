@@ -26,6 +26,7 @@ const _WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
     const userWidgets = useMemo(() => {
         let _userWidgets = values(userDashboards.widgets)
             .filter((w) => w.widget.isVisible)
+            // Remove marketplaces
             .filter(
                 (w) => !(w.widget.types && w.widget.types.length === 1 && w.widget.types[0].name === "marketplace")
             );

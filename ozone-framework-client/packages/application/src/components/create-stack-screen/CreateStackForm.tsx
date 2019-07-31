@@ -101,7 +101,7 @@ export const CreateStackForm: React.FC<CreateStackFormProps> = ({ onSubmit }) =>
                     </div>
 
                     <RadioGroup onChange={handleLayoutInputRadioChange} selectedValue={selectedLayoutInputSource}>
-                        <Radio label="Use the default layout for the initial dashboard" value="" />
+                        <Radio label="Create a new layout for the initial dashboard" value="" />
                         <Radio label="Choose a pre-set layout" value="premade" />
                         {selectedLayoutInputSource === "premade" && (
                             <PremadeLayouts selectedValue={selectedPresetLayout} onChange={handlePresetLayoutChange} />
