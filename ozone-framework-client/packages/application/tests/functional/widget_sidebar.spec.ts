@@ -55,12 +55,12 @@ module.exports = {
             .click(MainPage.WIDGETS_BUTTON)
             .waitForElementVisible(MainPage.WIDGETS_DIALOG, 1500, "[Widget Sidebar] is visible.");
 
-        browser.getText(`${MainPage.WIDGETS_DIALOG} ul > li:nth-child(1) > div > div:nth-child(1) > span`, (result) => {
+        browser.getText(`${MainPage.WIDGETS_DIALOG} ul > li:nth-child(1) > div`, (result) => {
             const widgetNameToDelete = result.value;
             log("We will be deleting the Widget identified as: " + widgetNameToDelete);
 
             browser
-                .moveToElement(`${MainPage.WIDGETS_DIALOG} ul > li:nth-child(1) > div > div:nth-child(1) > span`, 0, 0)
+                .moveToElement(`${MainPage.WIDGETS_DIALOG} ul > li:nth-child(1) > div`, 0, 0)
                 .click(`${MainPage.WIDGETS_DIALOG} ul > li:nth-child(1) > div ${MainPage.WIDGET_DELETE_BUTTON}`)
                 .waitForElementVisible(
                     GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
@@ -75,6 +75,10 @@ module.exports = {
                     1500,
                     "[Confirmation Dialog] is not visible."
                 );
+
+            browser
+                .click(MainPage.WIDGETS_BUTTON)
+                .waitForElementVisible(MainPage.WIDGETS_DIALOG, 1500, "[Widget Sidebar] is visible.");
 
             browser.expect.element(MainPage.WIDGETS_DIALOG).text.to.not.contain(widgetNameToDelete);
         });
@@ -89,12 +93,12 @@ module.exports = {
             .click(MainPage.WIDGETS_BUTTON)
             .waitForElementVisible(MainPage.WIDGETS_DIALOG, 1500, "[Widget Sidebar] is visible.");
 
-        browser.getText(`${MainPage.WIDGETS_DIALOG} ul > li:nth-child(1) > div > div:nth-child(1) > span`, (result) => {
+        browser.getText(`${MainPage.WIDGETS_DIALOG} ul > li:nth-child(1) > div`, (result) => {
             const widgetNameToDelete = result.value;
             log("We will be deleting the Widget identified as: " + widgetNameToDelete);
 
             browser
-                .moveToElement(`${MainPage.WIDGETS_DIALOG} ul > li:nth-child(1) > div > div:nth-child(1) > span`, 0, 0)
+                .moveToElement(`${MainPage.WIDGETS_DIALOG} ul > li:nth-child(1) > div`, 0, 0)
                 .click(`${MainPage.WIDGETS_DIALOG} ul > li:nth-child(1) > div ${MainPage.WIDGET_DELETE_BUTTON}`)
                 .waitForElementVisible(
                     GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
@@ -109,6 +113,10 @@ module.exports = {
                     1500,
                     "[Confirmation Dialog] is not visible."
                 );
+
+            browser
+                .click(MainPage.WIDGETS_BUTTON)
+                .waitForElementVisible(MainPage.WIDGETS_DIALOG, 1500, "[Widget Sidebar] is visible.");
 
             browser.expect.element(MainPage.WIDGETS_DIALOG).text.to.not.contain(widgetNameToDelete);
         });
