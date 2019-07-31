@@ -15,12 +15,17 @@ For OWF Version 8.0.0.0, the front-end user interface uses Typescript (React), a
 * Node.js (version >= 10.10.0+) -- https://nodejs.org/
 * NPM (version >= 6.4.0) -- https://npmjs.com/
 
-
 ## Browser Support
 Internet Explorer: > 11
+
 Microsoft Edge: > 44
+
 Chrome: > 74
+
 Firefox: > 60
+
+### Additional documentation
+Located in `ozone-documentation/` directory
 
 ### Getting Started
 
@@ -47,11 +52,14 @@ from the client project directory (`ozone-framework-client/`)
 
 from the server project directory (`ozone-framework-server/owf-framework`)
 
-. Option 1 - View Build Instructions (`owf-framework/docs/OWF Build Instructions`)
-. Option 2 - Run via docker (`./redeploy-ozone`)
-.. This script will deploy the frontend and backend
-. Visit http://localhost:8080/owf
- 
+* Option 1 - View Build Instructions (`ozone-documentation/Ozone Build Instructions`)
+* Option 2 - Deploy Frontend/Backend via Docker (`./redeploy-ozone`)
+* Visit configured url (e.g. http://localhost:8080/owf)
+
+
+### Find any bugs?
+Please create an issue on Github!
+
 ## Copyrights
 > Software (c) 2015 [Next Century Corporation](http://www.nextcentury.com/ "Next Century")
 
