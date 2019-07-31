@@ -61,6 +61,7 @@ module.exports = {
         browser
             .click(StackDialog.CreateStack.SUBMIT)
             .waitForElementNotPresent(StackDialog.CreateStack.SUBMIT, 1000, "[Create Stack Dialog] is closed.");
+        browser.click("save-dashboard");
 
         browser.refresh();
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");

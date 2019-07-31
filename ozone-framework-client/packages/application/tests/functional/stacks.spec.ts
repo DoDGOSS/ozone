@@ -295,7 +295,12 @@ module.exports = {
         loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
 
         browser.getTitle(function(title) {
-            if (title) this.assert.equal(title, "Untitled", "[Browser Title] is Untitled");
+            if (title)
+                this.assert.notEqual(
+                    title,
+                    StackDialog.CreateStack.CREATE_STACK_NAME,
+                    `[Browser Title] is not ${StackDialog.CreateStack.CREATE_STACK_NAME}`
+                );
         });
 
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");

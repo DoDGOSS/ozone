@@ -60,7 +60,7 @@ export namespace MainPage {
 
     export const DIALOG_CLOSE = "button[aria-label='Close']";
 
-    export const ADD_LAYOUT = "button[data-element-id='add-layout']";
+    export const ADD_LAYOUT = "a[data-element-id='add-layout']";
 
     export const TABBED_LAYOUT_BUTTON = "a[data-element-id='tabbed-panel']";
 
@@ -80,7 +80,7 @@ export namespace StackDialog {
     export const DASHBOARD = "li[class='bp3-tree-node']:nth-of-type(1)";
 
     export function getActionButtonsForStack(stackname: string): string {
-        return `div[data-role="stack-actions"][data-name=${stackname}]`;
+        return `div[data-role="stack-actions"][data-name="${stackname}"]`;
     }
 
     export function getActionButtonsForDashboard(dashboardname: string): string {
@@ -225,7 +225,7 @@ export namespace StackAdminWidget {
     export const STACK_ADMIN_TEST_DASHBOARD_NAME_DEFAULT = "DAW_Test (default)";
     export const DASHBOARD_DIALOG_CLOSE = "button[aria-label='Close']";
     export const CLOSE_DAW_BUTTON = "button[title='Close Window']";
-    export const ROW_BOX = "div[data-element-id='table-selector-dialog'] div[class='rt-tbody']";
+    export const ROW_BOX = "div[data-element-id='table-selector-dialog'] div[class='tabulator-table']";
     export const FIRST_ROW = `${ROW_BOX} > div:nth-child(1) div`;
     export const SECOND_ROW = `${ROW_BOX} > div:nth-child(2) div`;
     export const BACK_BUTTON = "span[data-element-id='stack-admin-widget-edit-back-button']";
@@ -523,4 +523,6 @@ export namespace GlobalElements {
     export const CUSTOM_CSS = "link[id='custom-added-css']";
 
     export const CUSTOM_JS = "script[id='custom-added-js']";
+
+    export const SPINNER = "div.bp3-spinner";
 }

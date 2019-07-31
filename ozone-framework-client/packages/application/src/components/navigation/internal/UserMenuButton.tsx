@@ -12,12 +12,12 @@ const _UserMenuButton: React.FC = () => {
     const user = useBehavior(authStore.user);
     const displayName = user ? user.userRealName : "Unknown User";
 
-return (
+    return (
         <Popover
             minimal
-            content={<UserMenu user={user}/>}
+            content={<UserMenu user={user} />}
             position={Position.BOTTOM_RIGHT}
-            modifiers={{arrow: {enabled: false}}}
+            modifiers={{ arrow: { enabled: false } }}
         >
             <NavbarTooltip title="User Profile" description="Open the User Profile options window.">
                 <Button
