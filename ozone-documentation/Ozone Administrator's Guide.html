@@ -1,0 +1,2244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<meta name="author" content="DOD GOSS">
+<title>Ozone Administrators&#8217;s Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment @import statement to use as custom stylesheet */
+/*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
+article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+a{background:none}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+abbr[title]{border-bottom:1px dotted}
+b,strong{font-weight:bold}
+dfn{font-style:italic}
+hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,*::before,*::after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:0}
+p{font-family:inherit;font-weight:400;font-size:1em;line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
+ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
+ul.square{list-style-type:square}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-bottom:1px dotted #ddd;cursor:help}
+abbr{text-transform:none}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
+blockquote cite::before{content:"\2014 \0020"}
+blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+:not(pre)>code.nobreak{word-wrap:normal}
+:not(pre)>code.nowrap{white-space:nowrap}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre>code{display:block}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:100%;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:rgba(255,255,255,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details>summary:first-of-type{cursor:pointer;display:list-item;outline:none;margin-bottom:.75em}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:inherit}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6)}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
+.exampleblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child{margin-bottom:0}
+.sidebarblock{border-style:solid;border-width:1px;border-color:#dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;-webkit-border-radius:4px;border-radius:4px}
+.sidebarblock>:first-child{margin-top:0}
+.sidebarblock>:last-child{margin-bottom:0}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos{border-right:1px solid currentColor;opacity:.35;padding-right:.5em}
+pre.pygments .lineno{border-right:1px solid currentColor;opacity:.35;display:inline-block;margin-right:.75em}
+pre.pygments .lineno::before{content:"";margin-right:-.125em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
+table.tableblock{max-width:100%;border-collapse:separate}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
+table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
+table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0}
+table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
+table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
+table.frame-all{border-width:1px}
+table.frame-sides{border-width:0 1px}
+table.frame-topbot,table.frame-ends{border-width:1px 0}
+table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd),table.stripes-even tr:nth-of-type(even),table.stripes-hover tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
+ul.inline{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+.gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
+.gist .file-data>table td.line-data{width:99%}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,span.alt{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media print,amzn-kf8{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>Ozone Administrators&#8217;s Guide</h1>
+<div class="details">
+<span id="author" class="author">DOD GOSS</span><br>
+<span id="revnumber">version 8.0.0.0,</span>
+<span id="revdate">2019-07-01</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="#_objectives">1.1. Objectives</a></li>
+<li><a href="#_document_scope">1.2. Document Scope</a></li>
+<li><a href="#_owf_purpose">1.3. OWF Purpose</a></li>
+<li><a href="#_related_documents">1.4. Related Documents</a></li>
+</ul>
+</li>
+<li><a href="#_administration_tools">2. Administration Tools</a>
+<ul class="sectlevel2">
+<li><a href="#admin-menu">2.1. Administration Menu</a></li>
+<li><a href="#admin-managers">2.2. Administration Management Widgets (Managers)</a>
+<ul class="sectlevel3">
+<li><a href="#_manager_panels">2.2.1. Manager Panels</a>
+<ul class="sectlevel4">
+<li><a href="#_manager_buttons">2.2.1.1. Manager Buttons</a></li>
+<li><a href="#_manager_editors">2.2.1.2. Manager Editors</a></li>
+<li><a href="#manager-search">2.2.1.3. Manager Search</a></li>
+<li><a href="#manager-pagination">2.2.1.4. Manager Pagination</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#system-config">2.3. System Configuration</a>
+<ul class="sectlevel3">
+<li><a href="#_auditing">2.3.1. Auditing</a></li>
+<li><a href="#_branding">2.3.2. Branding</a>
+<ul class="sectlevel4">
+<li><a href="#_implementing_a_custom_banner">2.3.2.1. Implementing a Custom Banner</a></li>
+</ul>
+</li>
+<li><a href="#_user_account_settings">2.3.3. User Account Settings</a></li>
+<li><a href="#_store">2.3.4. Store</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_default_content">3. Default Content</a></li>
+<li><a href="#_creating_and_editing_user_content">4. Creating and Editing User Content</a>
+<ul class="sectlevel2">
+<li><a href="#_users">4.1. Users</a>
+<ul class="sectlevel3">
+<li><a href="#_create_a_user">4.1.1. Create a User</a></li>
+<li><a href="#add-widget-to-user">4.1.2. Add a Widget to a User</a></li>
+<li><a href="#add-user-to-widget">4.1.3. Add a User to a Widget</a></li>
+<li><a href="#_edit_a_user">4.1.4. Edit a User</a></li>
+<li><a href="#_edit_user_preferences">4.1.5. Edit User Preferences</a></li>
+</ul>
+</li>
+<li><a href="#_stacks">4.2. Stacks</a>
+<ul class="sectlevel3">
+<li><a href="#_create_a_stack">4.2.1. Create a Stack</a></li>
+<li><a href="#edit-a-stack">4.2.2. Edit a Stack</a></li>
+<li><a href="#_assign_a_stack_to_me">4.2.3. Assign a Stack to Me</a></li>
+</ul>
+</li>
+<li><a href="#_widgets">4.3. Widgets</a>
+<ul class="sectlevel3">
+<li><a href="#_create_a_widget">4.3.1. Create a Widget</a></li>
+<li><a href="#edit-a-widget">4.3.2. Edit a Widget</a></li>
+</ul>
+</li>
+<li><a href="#_widget_intents">4.4. Widget Intents</a>
+<ul class="sectlevel3">
+<li><a href="#create-intent">4.4.1. Create a Widget Intent</a></li>
+<li><a href="#_edit_a_widget_intent">4.4.2. Edit a Widget Intent</a></li>
+<li><a href="#_delete_a_widget_intent">4.4.3. Delete a Widget Intent</a></li>
+</ul>
+</li>
+<li><a href="#_widget_descriptors">4.5. Widget Descriptors</a>
+<ul class="sectlevel3">
+<li><a href="#descriptor-urls">4.5.1. Widget Descriptor URLs</a></li>
+</ul>
+</li>
+<li><a href="#_edit_a_widget_descriptor">4.6. Edit a Widget Descriptor</a></li>
+<li><a href="#_export_a_widget_descriptor">4.7. Export a Widget Descriptor</a></li>
+<li><a href="#_groups">4.8. Groups</a>
+<ul class="sectlevel3">
+<li><a href="#_create_a_group">4.8.1. Create a Group</a></li>
+<li><a href="#_add_a_widget_to_a_group">4.8.2. Add a Widget to a Group</a></li>
+</ul>
+</li>
+<li><a href="#_store_marketplace">4.9. Store (Marketplace)</a>
+<ul class="sectlevel3">
+<li><a href="#connect-store">4.9.1. Connecting to the Store</a></li>
+<li><a href="#_edit_a_store">4.9.2. Edit a Store</a></li>
+<li><a href="#_required_listings">4.9.3. Required Listings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_glossary">Glossary</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_introduction">1. Introduction</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_objectives">1.1. Objectives</h3>
+<div class="paragraph">
+<p>This guide covers topics relevant to administering the OZONE Widget Framework.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_document_scope">1.2. Document Scope</h3>
+<div class="paragraph">
+<p>This guide is intended for administrators of an OWF instance. An administrator is, for the purpose of this guide, defined as someone who maintains the OWF application and handles user and application component settings. In this document, the term "Store" refers to OZONE Marketplace (OMP). Both applications share features described in this guide and both may be configured to OWF.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_owf_purpose">1.3. OWF Purpose</h3>
+<div class="paragraph">
+<p>OWF is a set of tools, generally delivered in the OWF Bundle. When deployed, OWF is used for organizing and displaying Widgets in a single browser window known as an OZONE Application.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_related_documents">1.4. Related Documents</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Related Documents</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Document</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Quick Start Guide</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Walkthrough of basic OWF functions such as using widgets; unpacking the OWF bundle; setting up a local instance of OWF; installing security certificates; truststore and keystore configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>User&#8217;s Guide</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Understanding the OWF user interface; adding, deleting, modifying widgets and using intents; accessing and using the Store;using dashboards; creating, deleting, adding, switching, modifying dashboard pages; defining accessibility features such as high-contrast themes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Administrator&#8217;s Guide</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Understanding administrative tools: adding, deleting, and editing users, groups, widgets, and dashboards; creating default content for users, groups and group dashboards.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Configuration Guide</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overview of basic architecture and security; OWF installation instructions; instructions for modifying default settings; database set up and logging guidance; framework and theme customization instructions; OWF upgrade instructions; directions for adding and deleting help content.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_administration_tools">2. Administration Tools</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="admin-menu">2.1. Administration Menu</h3>
+<div class="paragraph">
+<p>The User Menu is a drop-down feature located on the right-side of the OWF toolbar. All users have access to certain OWF Options described in the <strong>OWF User&#8217;s Guide</strong> (User Profile, About and Sign Out). OWF administrators have access to the Administration OWF Option. Clicking <b class="button">Administration</b> opens the Administrator Tools.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/admin-menu.png" alt="admin menu">
+</div>
+<div class="title">Figure 1. Drop-down User Menu&#8201;&#8212;&#8201;Administration</div>
+</div>
+<div class="paragraph">
+<p>Administration Tools allow an administrator to manage stacks, widgets, users, groups and system configurations using the Stacks, Widgets, Users, Groups and Configuration managers respectively. Information on common buttons and functions found in the Stacks, Widgets, Users and Groups managers is in <a href="#admin-managers">Section 2.2, &#8220;Administration Management Widgets (Managers)&#8221;</a>. The Configuration manager allows administrators to change select OWF configuration settings from within the user interface. More information on the System Configuration manager is in <a href="#system-config">Section 2.3, &#8220;System Configuration&#8221;</a>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/admin-tools.png" alt="admin tools">
+</div>
+<div class="title">Figure 2. Administration Tools</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="admin-managers">2.2. Administration Management Widgets (Managers)</h3>
+<div class="paragraph">
+<p>The administration management widgets (managers) are used to create, edit and delete users, groups, stacks and widgets as well as configure system-wide information. While each manager has specific fields that relate to the manager&#8217;s specific purpose, some of the functions operate identically. For example, the search feature in the User Manager functions exactly like the search feature in the Stack Manager. Accordingly, search is explained only once in this section. Also, this document no longer contains definitions regarding basic information that general users should understand. If a topic can be easily defined by Google, it has been removed from this guide. The following section offers a general overview of the administrative managers and their use.</p>
+</div>
+<div class="sect3">
+<h4 id="_manager_panels">2.2.1. Manager Panels</h4>
+<div class="imageblock">
+<div class="content">
+<img src="images/user-admin-widget.png" alt="user admin widget">
+</div>
+<div class="title">Figure 3. Users Admin Widget&#8201;&#8212;&#8201;Panel view</div>
+</div>
+<div class="paragraph">
+<p>The users, stacks, widgets and group managers open to similar panel views. The panel view described in this section applies to all four managers. The panel view:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Allows the user to create, edit, delete or view an entry.</p>
+</li>
+<li>
+<p>Displays the number of users/groups/stacks/widgets associated with the specific entry.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When viewing the widget count, only the widgets that are assigned directly to a user appear in the overall count. Widgets associated by groups will NOT appear in the widget count.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Offers a view of the first 50 results in alphabetical order. Additional results can be viewed using the pagination as described in <a href="#manager-pagination">Section 2.2.1.4, &#8220;Manager Pagination&#8221;</a> To reduce the number of displayed results: Use the search bar, described in <a href="#manager-search">Section 2.2.1.3, &#8220;Manager Search&#8221;</a>.</p>
+</li>
+</ul>
+</div>
+<div class="sect4">
+<h5 id="_manager_buttons">2.2.1.1. Manager Buttons</h5>
+<div class="paragraph">
+<p>Administrators use the managers to create and delete users, groups and widgets. Differences between the managers are referenced in sub-bullets.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Create button&#8201;&#8212;&#8201;<span class="image"><img src="images/create-button.png" alt="create button"></span></dt>
+<dd>
+<p>Opens the manager&#8217;s editor. From the editor, an administrator can create a new user/group/widget (depending on which editor the administrator opens) and assign related data to the new entry.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>When creating a new entry, only the Properties tab will be active until the administrator saves the user/group/widget via the Apply button.</p>
+</li>
+<li>
+<p>Administrators cannot create a Stack using the Stack Manager and editor. From Stack Manager, administrators can only edit and delete Stacks using the Stacks Manager. To create a dashboard, open Stacks from the toolbar.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Delete button&#8201;&#8212;&#8201;<span class="image"><img src="images/delete-button.png" alt="delete button"></span></dt>
+<dd>
+<p>Deletes selected entries. Some user/group/stacks/widget rules apply:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Deleting a <strong>group</strong> does not delete the users or widgets assigned to the group. It only deletes the <em>pairing</em> of users with widgets in the group.</p>
+</li>
+<li>
+<p>Deleting a <strong>stack</strong> removes it from the users and groups. Dashboards and widgets associated with the stack will also be deleted.</p>
+</li>
+<li>
+<p>Deleting an <strong>widget</strong> removes it from a user&#8217;s Widget&#8217;s Menu as well as the groups and stacks to which it was assigned.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Edit button&#8201;&#8212;&#8201;<span class="image"><img src="images/edit-button.png" alt="edit button"></span></dt>
+<dd>
+<p>Opens the editor for the item, allowing the administrator to edit the user / group / stack / widget.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_manager_editors">2.2.1.2. Manager Editors</h5>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If an administrator starts a manager in a fit pane, its editor will open in the first available empty pane. If not panes are available, it will "float" on top of the application. Additional application layout information is found in the <em>Ozone User&#8217;s Guide</em>.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/user-admin-widget_widgets-tab.png" alt="user admin widget widgets tab">
+</div>
+<div class="title">Figure 4. User Editor&#8201;&#8212;&#8201;Widgets tab</div>
+</div>
+<div class="paragraph">
+<p>From the editor, administrators can create, edit and delete data assigned to users / group / stacks / widgets. The following table alphabetically lists editable fields found in the managers and editors. Split Edit button features, located in the managers, are also listed. The last column of the table describes the location of each field.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Editor Fields</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 66.6668%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Field</th>
+<th class="tableblock halign-left valign-top">Editor</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Activate / Deactivate</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groups&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Users in active groups have full access to their group-assigned widgets. Users in a deactivated group will not have access to any of the widgets which are assigned to them via the deactivated group. When a group becomes deactivated it will appear gray.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If a user is in Group A and Group B and each group has Widget 1 assigned to it, the user will still have access to Widget 1 if Group A is deactivated and Group B is activated. Additionally, if the user has Widget access outside of a group&#8217;s distribution, the user will not lose access to the Widget, even if they lose group access.
+</td>
+</tr>
+</table>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Widget Type</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widgets&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A drop-down menu that determines where the widget may be launched.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Only standard widgets appear in the Widget Menu.</p>
+</li>
+<li>
+<p>Administration widgets will appear under the Administration link available in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Widgets set to type "Store" will appear under the Store button on the toolbar.</p>
+</li>
+<li>
+<p>Metric Widgets are accessible through the Metrics link in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Setting an widget to "fullscreen" in OWF does nothing to the widget. This field is used by the Store to send Web Apps to OWF as separate applications.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Instructions explaining how to associate OWF with a Metrics Service are found in the <em>Ozone Configuration Guide</em>.
+</td>
+</tr>
+</table>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Assign to Me</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dashboards</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>This button allows an administrator to claim ownership of a dashboard. Only an application owner can share a dashboard with the Store or with other users if there is no Store. If the application owner is removed from the system, the application owner defaults to "System".</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Background</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widgets&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Some widgets do not have user interfaces. These widgets are often used to cache or log data on behalf of other widgets. If a widget is set to run in the background, it will not appear in the application. Users can close background widgets by using the Widget Switcher (activated with <span class="keyseq"><kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>Q</kbd></span>).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Container Icon URL</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widgets&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Defines the location of the icon which appears in widget chrome at 16x16 pixels.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Display Name</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groups&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The group name which will appear in grids and tables throughout administrator views.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>GUID</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>All</em>&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A unique 32-character alphanumeric code for a particular named widget. If "Widget A" is launched 5 times, all 5 widgets will share the same GUID property.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Height</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widgets&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Defines the launch height of the widget in pixels. Up and down arrows to the right of the field can be used to modify the overall height. Only desktop panes are affected by this property.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Intents</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widgets&#8201;&#8212;&#8201;Intents tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Widget intents build on OWF&#8217;s publish/subscribe functionality by allowing users to choose the widget that will receive its data. Intents explain the intention for the widget. This binding capability enables two widgets to enhance each other&#8217;s functionality.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Medium Icon URL</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widgets&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Defines the URL of the icon which appears in the Widgets Menu, provided the "visible" menu flag (mentioned below) is checked.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Mobile Ready</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widgets&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Suggests that a listing can run on a mobile device. This setting only applies to MONO instances. MONO is a mobile project using the Store and OWF. If OWF is running in a MONO instance, only Mobile Ready listings will appear.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Remove</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>All</em></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Separates the selected user/group/dashboard/widget from the selected entry. This does not delete the user/group/dashboard/widget from the system. It only removes the assignment to the selected entry.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Singleton</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widgets&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Designates whether an widget can only have one instance opened per application page.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Small Icon URL</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widgets&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Defines the location of the icon which appears as a favicon in the corner of the widget when it is minimized, provided the "visible" menu flag (mentioned below) is checked.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Universal Name</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widgets&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A value that can be used as a widget&#8217;s global identifier across all instances of OWF. This differs from a widget GUID which is unique to a specific installation. The Universal Name should be decided by a Widget&#8217;s creator.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>URL</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widgets&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Defines the URL of the Widget web application. This is a required field.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>User Management</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groups&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Defines whether or not the group is an automatic group, being populated and maintained by external sources. This value cannot be modified once the group has been created.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Version</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widgets&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Displays the version number of the Widget. This is completely user-driven and is for informational purposes.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Visible</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widgets&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Dictates whether a listing will show in a user&#8217;s Widget Menu. This cannot be overridden by the user.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Width</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Widgets&#8201;&#8212;&#8201;Properties tab</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Defines the launch width of the widget in pixels. Up and down arrows to the right of the field can be used to modify the overall width. Only Desktop panes are affected by this property.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="manager-search">2.2.1.3. Manager Search</h5>
+<div class="imageblock">
+<div class="content">
+<img src="images/search-field.png" alt="search field">
+</div>
+<div class="title">Figure 5. Manager&#8201;&#8212;&#8201;Search input field</div>
+</div>
+<div class="paragraph">
+<p>The search field in each manager reduces the entries displayed in the panel to entries containing the specific word or characters entered in the search bar. The search will filter the results as text is entered into the search bar. Clear the entered text to clear the filter entered in the search bar.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+This is a full-text search and it is NOT case-sensitive.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="manager-pagination">2.2.1.4. Manager Pagination</h5>
+<div class="imageblock">
+<div class="content">
+<img src="images/pagination-tool.png" alt="pagination tool">
+</div>
+<div class="title">Figure 6. Manager&#8201;&#8212;&#8201;Pagination toolbar</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="system-config">2.3. System Configuration</h3>
+<div class="paragraph">
+<p>Administrators have the ability to change OWF configurations quickly and without the need to restart the system. Using the System Configuration, change settings for auditing records, user accounts management, customizing certain branding features, and configuring store associations through the user interface. Use the following instructions to locate the Configuration console:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open the Administration Tools (see <a href="#admin-menu">Section 2.1, &#8220;Administration Menu&#8221;</a>).</p>
+</li>
+<li>
+<p>Select <b class="button">System Configuration</b> to open the System Configuration Console.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/system-config-widget.png" alt="system config widget" width="800">
+</div>
+<div class="title">Figure 7. System Configuration Console</div>
+</div>
+<div class="paragraph">
+<p>The System Configuration Console has four sections accessible to administrators: Auditing, User Account Settings, Branding, and Store. The following sections describe each option:</p>
+</div>
+<div class="sect3">
+<h4 id="_auditing">2.3.1. Auditing</h4>
+<div class="paragraph">
+<p>The Auditing configuration allows administrators to activate Common Event Format (CEF) logging and specify aspects of this logging feature. To access this setting, click <b class="button">Auditing</b> on the left-hand navigation of the System Configuration Console. Each Auditing option is described below:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Common Event Format (CEF) Auditing</dt>
+<dd>
+<p>Disabled by default, this records user actions such as sign in/out and database modifications (create, edit, delete, search, import and export). Click <b class="button">ON</b> to enable.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For more information about CEF Auditing, see the OWF Configuration Guide.
+</td>
+</tr>
+</table>
+</div>
+</dd>
+<dt class="hdlist1">Object Access Auditing</dt>
+<dd>
+<p>Disabled by default, this records CEF audit logs for all database reads. This includes most user actions such as viewing an application, clicking a button, etc. Click <b class="button">ON</b> to enable.</p>
+</dd>
+<dt class="hdlist1">Relocate CEF Logs</dt>
+<dd>
+<p>Disabled by default, this feature allows the system to relocate the CEF logs from their original location to a different location. Click <b class="button">ON</b> to enable.</p>
+</dd>
+<dt class="hdlist1">CEF Log Source Location</dt>
+<dd>
+<p>The directory location where the CEF logs are generated. The default location is the Tomcat directory: <code>/usr/share/tomcat/</code></p>
+</dd>
+<dt class="hdlist1">CEF Log Destination Location</dt>
+<dd>
+<p>The directory location where the CEF logs will be relocated if the "Relocated CEF Logs" option is enabled.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Developers may need to grant permission for the application container to write to this location.
+</td>
+</tr>
+</table>
+</div>
+</dd>
+<dt class="hdlist1">Application Security Level</dt>
+<dd>
+<p>The security level of the CEF logs.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_branding">2.3.2. Branding</h4>
+<div class="paragraph">
+<p>The Branding Configuration setting allows administrators to customize the appearance of the OWF background as well as the appearance and content of the OWF header and footer. This feature is accessible by click <b class="button">Branding</b> from the left-side navigation of the System Configuration Console. Each Branding option is described below:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Free Text Message</dt>
+<dd>
+<p>This text displays anywhere a user can enter text.</p>
+</dd>
+<dt class="hdlist1">Custom Background URL</dt>
+<dd>
+<p>File name (including extension and location) for the background image that will display on the OWF home screen. For example: <code>https://example.com/image/yourLogo.png</code></p>
+</dd>
+<dt class="hdlist1">Custom Header URL</dt>
+<dd>
+<p>File name (including extension and location in the system) for a custom header that appears above the OWF toolbar; the URL must be valid for it to appear.</p>
+</dd>
+<dt class="hdlist1">Custom Header Height</dt>
+<dd>
+<p>Height of the custom header . Must be greater than zero and less than 150 pixels.</p>
+</dd>
+<dt class="hdlist1">Custom Footer URL</dt>
+<dd>
+<p>File name (including extension and location in the system) for the custom footer that appears above the bottom of the OWF webtop; the URL must be valid for it to appear. If it is not, a black box displays in its place.</p>
+</dd>
+<dt class="hdlist1">Custom Footer Height</dt>
+<dd>
+<p>Height of the custom footer. Must be greater than zero and less than 150 pixels.</p>
+</dd>
+<dt class="hdlist1">Custom Header/Footer CSS Imports</dt>
+<dd>
+<p>URL(s) of CSS files needed by the custom header and footer. Each location must be separated by a comma (<code>,</code>).</p>
+</dd>
+<dt class="hdlist1">Custom Header/Footer JavaScript Imports</dt>
+<dd>
+<p>URL(s) of JavaScript files needed by the custom header and footer. Each location must be separated by a comma (<code>,</code>).</p>
+</dd>
+</dl>
+</div>
+<div class="sect4">
+<h5 id="_implementing_a_custom_banner">2.3.2.1. Implementing a Custom Banner</h5>
+<div class="paragraph">
+<p>OWF is bundled with a custom header/footer plugin that provides the necessary functionality to display custom banners at the top and bottom of each page. To use this custom plugin:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Sign in to the application as an administrator.</p>
+</li>
+<li>
+<p>From the drop-down User Menu, click <b class="button">Administration</b>, then click <b class="button">System Configuration</b>.</p>
+</li>
+<li>
+<p>Click <b class="button">Branding</b> from the left-navigation panel.</p>
+</li>
+<li>
+<p>Enter the following data in the corresponding fields:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Custom Header URL</p>
+</li>
+<li>
+<p>Add a custom header height.</p>
+</li>
+<li>
+<p>Custom Footer URL</p>
+</li>
+<li>
+<p>Add a custom footer height.</p>
+</li>
+<li>
+<p>Path to Custom Header/Footer CSS Imports</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_user_account_settings">2.3.3. User Account Settings</h4>
+<div class="paragraph">
+<p>The User Account Settings configuration allows administrators to modify global user account settings. Specifically, these settings control the number of active OWF sessions allowed per user and sets the parameters needed to disable a user account. Access these configurations by clicking <b class="button">User Account Settings</b> from the left panel of the System Configuration Console Each User Account Setting is explained below:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Disable Inactive Accounts</dt>
+<dd>
+<p>A toggle switch to enable user accounts to be disabled after a period of inactivity.</p>
+</dd>
+<dt class="hdlist1">Set Inactivity Period</dt>
+<dd>
+<p>Click on the text field and type in the number of days that need to elapse since a user last signed in before the account is disabled.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>When a user&#8217;s account is disabled:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Application ownership for the disabled account transitions to "System" so that any application the disabled user created will not be removed from the instance of OWF.</p>
+</li>
+<li>
+<p>The disabled user&#8217;s "last sign in" will be removed. Also removed are the user&#8217;s preferences and any references to that user.</p>
+</li>
+<li>
+<p>If a user signs in after their account is disabled, any of their previous application components, preferences, etc. will not be recoverable.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The Disable Inactive Accounts only removes user data within the OWF application. It does not affect the user&#8217;s ability to log back into the application. Authentication decisions are handled by the customizable OWF Security Plugin. See the <em>Ozone Configuration Guide</em> for more details.
+</td>
+</tr>
+</table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Session Control</dt>
+<dd>
+<p>When set to ON, it allows the administrator to set a maximum number of concurrent, active OWF sessions a user can have.</p>
+</dd>
+<dt class="hdlist1">Maximum OWF Sessions per User</dt>
+<dd>
+<p>The maximum number of active OWF sessions a single user is permitted to have at one time.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>If the Session Control function is turned on and the user exceeds the number of maximum open OWF sessions, the oldest session will be disabled. For example, if the maximum number of active OWF sessions is three and a user opens up four sessions of OWF, the first session the user opened will no longer be active.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_store">2.3.4. Store</h4>
+<div class="paragraph">
+<p>The Store configuration provides an easy-to-use wizard to walk administrators through the process of connecting OWF to a Store. Admins can connect their OWF to one or more Stores. A new Store connection will not replace existing Stores connections. Instead, when users click the <b class="button">Store</b> button in the OZONE Toolbar, a prompt appears asking them to select from multiple Stores. Access the Store configuration by clicking Store from the left-side navigation panel on the Configuration console. Each option is described below:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Add Store&#8201;&#8212;&#8201;<span class="image"><img src="images/add-store-button.png" alt="add store button"></span></dt>
+<dd>
+<p>The first button that appears on the Store configuration page. Click this button to start the wizard and add a Store.</p>
+</dd>
+<dt class="hdlist1">Store URL</dt>
+<dd>
+<p>Enter the location for the Store that will be connected to OZONE. This URL is used by OWF to gather details about the Store including name and icon.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Name</strong>&#8201;&#8212;&#8201;Name that identifies the Store to users in OWF.</p>
+</li>
+<li>
+<p><strong>Icon</strong>&#8201;&#8212;&#8201;Image that identifies the Store to users in OWF.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Edit Store&#8201;&#8212;&#8201;<span class="image"><img src="images/edit-store-button.png" alt="edit store button"></span></dt>
+<dd>
+<p>Appears on the right of a Store icon when hovering over an added Store entry on the Store configuration page. Click it to change the Store&#8217;s URL, icon or name.</p>
+</dd>
+<dt class="hdlist1">Delete store&#8201;&#8212;&#8201;<span class="image"><img src="images/delete-store-button.png" alt="delete store button"></span></dt>
+<dd>
+<p>When hovering over a Store entry, a trashcan icon appears to the right of the selection. Click this to delete the Store connection.
+After a Store has been configured, administrators can edit, add or delete Store settings from the Store configuration page.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Instructions for connecting OWF to a Store are found in <a href="#connect-store">Section 4.9.1, &#8220;Connecting to the Store&#8221;</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_default_content">3. Default Content</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OWF ships with a default user profile and default user groups. Administrators can use the default profile and default group to add dashboards and widgets to a user or several users' instance of OWF.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/group-admin-widget.png" alt="group admin widget">
+</div>
+<div class="title">Figure 8. Group Manager&#8201;&#8212;&#8201;Default groups</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">OWF Users</dt>
+<dd>
+<p>A default group that ships with OWF. Every user is automatically assigned to it.</p>
+<div class="paragraph">
+<p>Like an OWF group, Dashboards and Widgets assigned to OWF Users are available to all users in the group. Since all users are automatically members of the OWF Users group, this group can be used to assign Dashboards and Widgets to all users.</p>
+</div>
+</dd>
+<dt class="hdlist1">OWF Administrators</dt>
+<dd>
+<p>A default group that ships with OWF. Every administrator is assigned to this group.</p>
+<div class="paragraph">
+<p>Like any OWF group, Dashboards and Widgets assigned to OWF Administrators are available to all group members. Since all administrators are automatically members of this group, it can be used to assign Dashboards and Widgets to all administrators. Users cannot be assigned to this group and administrators cannot delete the default Editors and Managers populating this group.</p>
+</div>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <strong>OWF Administrators</strong> and <strong>OWF Users</strong> groups cannot be deleted, renamed or deactivated. In the event that either group is single-selected in the Groups manager, the Delete button will be grayed out. If either (or both) groups are selected along with other manual groups, the <b class="button">Delete</b> button will be active. However, upon clicking <b class="button">Delete</b>, only the manual groups will be removed from the system. Additionally, the Users tab in the Group Editor is disabled for these groups. Any user with access to OWF will receive <strong>OWF Users</strong> group resources. Any user reported to have an administrative role by the underlying security system will receive OWF Administrators group resources. If these groups are removed from the OWF database, restarting the OWF server will recreate them with no custom dashboards or widgets.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creating_and_editing_user_content">4. Creating and Editing User Content</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Creating and editing users, groups, stacks and widgets is explained in this section. This includes adding groups/stacks/widgets to user profiles through the User Editor. OWF also allows administrators to add users to groups/stacks/widgets through the Users tab on the respective Editors. These examples are described in <a href="#add-widget-to-user">Section 4.1.2, &#8220;Add a Widget to a User&#8221;</a> and <a href="#add-user-to-widget">Section 4.1.3, &#8220;Add a User to a Widget&#8221;</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="_users">4.1. Users</h3>
+<div class="imageblock">
+<div class="content">
+<img src="images/user-admin-widget.png" alt="user admin widget">
+</div>
+<div class="title">Figure 9. User Administration widget</div>
+</div>
+<div class="sect3">
+<h4 id="_create_a_user">4.1.1. Create a User</h4>
+<div class="paragraph">
+<p>Administrators have the ability to create new user profiles, edit existing user information and add groups/stacks/widgets to user profiles.</p>
+</div>
+<div class="paragraph">
+<p>To create a new user profile:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <b class="button">Administration</b> link in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Choose the <b class="button">Users</b> button to open the User Manager.</p>
+</li>
+<li>
+<p>Click on the <b class="button">Create</b> button, opening the User Create Form.</p>
+</li>
+<li>
+<p>Enter the user&#8217;s information. Mandatory fields (User Name and Full Name) are denoted with a  red asterisk. More information about these fields is found in Table 3: Edit Button and Editor Widget Fields.</p>
+</li>
+<li>
+<p>When complete, click <b class="button">Apply</b>. This will save the user and activate the additional tabs in the User Manager.</p>
+</li>
+<li>
+<p>To add groups, stacks or widgets to a user account, proceed to the instructions in <a href="#add-widget-to-user">Section 4.1.2, &#8220;Add a Widget to a User&#8221;</a> or <a href="#add-user-to-widget">Section 4.1.3, &#8220;Add a User to a Widget&#8221;</a>.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Administrators do not create or maintain user passwords in the OWF interface. Security and authentication are addressed in the OWF Configuration Guide.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="add-widget-to-user">4.1.2. Add a Widget to a User</h4>
+<div class="paragraph">
+<p>The following instructions describe how to add Widgets to a user account using the Widgets tab found in the User Manager. Administrators can follow this basic formula to add groups, stacks and widgets to user profiles via the Groups, Stacks and Widgets tabs in the User Editor.</p>
+</div>
+<div class="paragraph">
+<p>To add widgets to a user&#8217;s account:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <b class="button">Administration</b> link in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Click the <b class="button">Users</b> button to open the User Manager.</p>
+</li>
+<li>
+<p>From the manager, select a User. Then, click <b class="button">Edit</b> to open the User Edit Form.</p>
+</li>
+<li>
+<p>Click the <b class="button">Widgets tab</b> at the top of the editor. Widgets that are already associated with the user will display in the window.</p>
+</li>
+<li>
+<p>To add widgets, click the <b class="button">Add</b> button. A modal window will display all widgets available to that user. Select a widget, then, click the <b class="button">OK</b> button. The widget is automatically added to the list of widgets on the user&#8217;s Widget tab.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="add-user-to-widget">4.1.3. Add a User to a Widget</h4>
+<div class="paragraph">
+<p>Another way to give users access to widgets is to add users to the widgets&#8217;s profile via the Widget Editor. Again, administrators can use this general procedure to add users to groups and stacks through the Users tabs in the respective editors. When completed, close the editor window and the data will be updated automatically to the user profile.</p>
+</div>
+<div class="paragraph">
+<p>To add users to widget profiles:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <b class="button">Administration</b> link in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Click the <b class="button">Widgets</b> button to open the Widget Manager.</p>
+</li>
+<li>
+<p>From the manager, select a widget. Then, click the <b class="button">Edit</b> button.</p>
+</li>
+<li>
+<p>Click the <b class="button">Users tab</b> at the top of the editor. Users that are already associated with the widget will display in the window.</p>
+</li>
+<li>
+<p>To add users, click the <b class="button">Add</b> button. A modal window will display all users available to that widget. Select a user, then, click the <b class="button">OK</b> button. The user is automatically added to the list of users on the widgets&#8217;s Users tab and the widget is available to the user&#8217;s instance of OWF.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_edit_a_user">4.1.4. Edit a User</h4>
+<div class="paragraph">
+<p>To edit existing user content:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <b class="button">Administration</b> link in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Click the <b class="button">Users</b> button to open the User Manager.</p>
+</li>
+<li>
+<p>From the manager, select a user account to update and click the <b class="button">Edit</b> button.</p>
+</li>
+<li>
+<p>Update data on the Properties tab and click <b class="button">Apply</b>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This procedure is also used when editing the properties of groups, stacks and widgets. To edit the content, click the <b class="button">Administration</b> link in the drop-down User Menu and click on the respective manager and click <b class="button">Edit</b> to open up the editor. Make changes in the Properties tab and click <b class="button">Apply</b>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_edit_user_preferences">4.1.5. Edit User Preferences</h4>
+<div id="fig_preferences-tab" class="imageblock">
+<div class="content">
+<img src="images/user-admin-widget_preferences-tab.png" alt="user admin widget preferences tab">
+</div>
+<div class="title">Figure 10. User Administration widget&#8201;&#8212;&#8201;Preferences tab</div>
+</div>
+<div class="paragraph">
+<p>Widgets use preferences to store data. Preference date includes the widget&#8217;s location on the screen, instructions to open it, etc. A preference value can be created and saved at any time by a running widget. Once that preference is saved to the database, it will appear on the Preferences tab in the User Manager. The Preferences tab serves as a table of known preferences. From the tab, administrators can view, create, edit and delete preferences. However, from the Preferences tab, the administrator cannot configure a widget to use a preference. Widgets will only use the preference they are programmed to use defined via the Preference API.</p>
+</div>
+<div class="paragraph">
+<p>If a widget is configured to use preferences, they can be used to define component states, interaction, etc. For example, the <code>guid_to_launch</code> preference is an example of a preference used by the Administration Managers to know which Editor to launch. Other Widgets could use this same preference as an eventing tool. For example, administrators can use this preference to make a Tracking widget open a Map widget. As seen in <a href="#fig_preferences-tab">Figure 10, &#8220;User Administration widget&#8201;&#8212;&#8201;Preferences tab&#8221;</a>, the <code>guid_to_launch</code> preference causes the User Manager to open a copy of the Widget Manager .</p>
+</div>
+<div class="paragraph">
+<p>The Preferences tab includes the following fields:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Preference Name</dt>
+<dd>
+<p>The preference name, along with the Namespace, make up the "key" for the preference item. The Preference Name is the name of the preference as dictated by the widget or OWF. If the widget uses preferences, OWF will add the preference name to the table on the Preference tab whenever the action that is associated with the preference is performed.</p>
+</dd>
+<dt class="hdlist1">Namespace</dt>
+<dd>
+<p>The namespace is the other half of the preference&#8217;s unique identifier. Generally, these identifiers will describe general functionality for a widget or set of widgets. Namespace/Preference Name pairs are unique for each user.</p>
+</dd>
+<dt class="hdlist1">Value</dt>
+<dd>
+<p>Stored inside of the preference, values house the data that the preference uses. An example could be the actual widget GUID value that the preference will use to open a widget. This is a string value but developers can use JSON or REST URIs as the preference value.</p>
+</dd>
+</dl>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/edit-user-preference-dialog.png" alt="edit user preference dialog">
+</div>
+<div class="title">Figure 11. Edit Preference dialog</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_stacks">4.2. Stacks</h3>
+<div class="sect3">
+<h4 id="_create_a_stack">4.2.1. Create a Stack</h4>
+<div class="paragraph">
+<p>Creating a stack is not an exclusive administrator function. Stacks are created by users and administrators using the Stacks Menu.</p>
+</div>
+<div class="paragraph">
+<p>To create a new stack:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <b class="button">Stacks</b> button in the toolbar to open the Stacks Menu.</p>
+</li>
+<li>
+<p>Click <b class="button">Create New</b> at the bottom of the screen to open the "Create New" window.</p>
+</li>
+<li>
+<p>Give the stack:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>A title (required)</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The stack cannot be saved without a title.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>An image URL (optional) that appears in the Stacks window</p>
+</li>
+<li>
+<p>A description (optional)</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Choose a layout for the stacks. Click the radio button beside the selected layout method. Layout options include:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Choose a template – Choose one of twelve premade layouts.</p>
+</li>
+<li>
+<p>Copy the layout of an existing Stack– Clicking this causes a drop-down menu to appear below the selection title. Choose a stack from this menu. The new stack will adopt the layout of the selected stack. However, it will not copy the widgets associated with that layout.</p>
+</li>
+<li>
+<p>Create a new layout – Opens the Dashboard Builder allowing the user to create a new layout. More information on creating a new layout is found in the OWF User&#8217;s Guide.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Click <b class="button">OK</b>. The stack will automatically start unless you selected "Create a new layout," if that is the case instructions for the Dashboard Builder are found in the OWF User&#8217;s Guide.</p>
+</li>
+<li>
+<p>To add widgets to the Dashboard, click the <b class="button">Widget</b> button on the OZONE Toolbar and select widgets by clicking them. If the Dashboard has more than one pane, click the pane where the widget will start.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The next time the Stack menu is opened, it will contain this stack. This stack belongs to the user who created it.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>When OWF is connected to a Store, administrators cannot share the stack with other OWF users until the stack is shared with the Store. To do this, open Stacks and click <b class="button">Push to Store</b>.</p>
+</li>
+<li>
+<p>When OWF is not connected to a Store, assign the stack to OWF users and groups using the instructions in <a href="#edit-a-stack">Section 4.2.2, &#8220;Edit a Stack&#8221;</a>.</p>
+</li>
+<li>
+<p>If an administrator deletes an stack, the user will retain a copy of the stack and the dashboards and widgets included in the dashboard. However, they will lose the ability to restore it.</p>
+</li>
+<li>
+<p>If an administrator changed the stack and its contents after it was added to a user&#8217;s instance of OWF, the current state of the stack may be different than the one that originally appeared on the user&#8217;s Stack window.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Creating a new stack, in effect, creates a one-page application. The stack and the single dashboard share the same title, description and icon. The layout assigned to this stack applies to the single dashboard rather than the stack. Users can add additional dashboards, and therefore additional layouts, to this stack. When more than one dashboard is added to a stack, the user has the ability to change the single dashboard&#8217;s properties. Also each dashboard is edited independent from other dashboards or the parent Stack.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="edit-a-stack">4.2.2. Edit a Stack</h4>
+<div class="paragraph">
+<p>Only shared stacks or stacks added to the Store and Approved in the Store can be assigned to individual users or groups from the Stacks Manager. That means that a user willingly made available a copy of their stacks for administrators to distribute to other users. For that reason, administrators have limited editing ability for Stacks. They cannot edit the Stack&#8217;s properties (name, layout, etc.) or Widgets from the Stack Manager. Those edits must occur in the actual Stack, for instructions see the <em>Ozone User&#8217;s Guide</em>. From the Stack Manager, administrators can add or remove users and groups as described below:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <b class="button">Administration</b> link in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Click <b class="button">Stacks</b> to open the Stack Manager.</p>
+</li>
+<li>
+<p>From the manager, select a Stack and click <b class="button">Edit</b>.</p>
+</li>
+<li>
+<p>From the Stack Edit Form, you&#8217;ll see:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>A list of the Stack&#8217;s Widgets will appear for informational purposes only. To add Widgets, open the actual Stack and add widget from the Widget Menu.</p>
+</li>
+<li>
+<p>Groups associated with the Stack.</p>
+</li>
+<li>
+<p>Users associated with the Stack.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>To add a group, click the <b class="button">Group tab</b> and then click the <b class="button">Add</b> button. A modal window will display all available groups. Select a group, then, click the <b class="button">OK</b> button. The Stack is automatically added to the group members' Stacks Menu.</p>
+</li>
+<li>
+<p>To add a user, click the <b class="button">User tab</b> and then click the <b class="button">Add</b> button. A modal window will display all available users. Select a user, then, click the <b class="button">OK</b> button. The Stack is automatically added to the user&#8217;s Stacks Menu.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>In order to assign users and groups to a stack that was retrieved from the Store, two actions must occur:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>The stack must be approved in the Store.</strong> If the stack has not been approved in the Store, the administrator will receive a warning message when they attempt to assign the stack to a user or group.</p>
+</li>
+<li>
+<p><strong>The Store synchronization feature must be enabled and configured to connect OWF to the Store.</strong> For more information on enabling this feature, see the <em>Ozone Configuration Guide</em>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If OWF is not connected to a Store, the owner of the stack must first allow the administrator to share the stack with other users. To do this, the stack owner (who can be an OWF user without administrative privileges) must click the stack&#8217;s <b class="button">Share</b> button. Instructions are provided in the <em>Ozone User&#8217;s Guide</em>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When OWF is not connected to a Store, OWF does not require the synchronization feature to assign applications to users and groups.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_assign_a_stack_to_me">4.2.3. Assign a Stack to Me</h4>
+<div class="paragraph">
+<p>In the Stack Manager, when an administrator selects a Stack and clicks <b class="button">Assign To Me</b>, the system reassigns ownership of the stack to the person that clicked the button. This feature was included because a stack must have an owner in order to be shared with the Store. Only an owner can push a stack to the Store. If its owner is removed from the system, the <b class="button">Assign To Me</b> button allows an administrator to claim ownership of the stack. If an administrator reassigns ownership, all users in the system will retain their copies of the Stack.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_widgets">4.3. Widgets</h3>
+<div class="sect3">
+<h4 id="_create_a_widget">4.3.1. Create a Widget</h4>
+<div class="paragraph">
+<p>Administrators can create, edit, delete, import and export widgets. There are two ways to create a widget: importing widget data with a descriptor URL or manually entering widget data. Imported widget data is editable through the Widget Editor (see <a href="#edit-a-widget">Section 4.3.2, &#8220;Edit a Widget&#8221;</a>).</p>
+</div>
+<div class="paragraph">
+<p>To create a widget, the administrator must complete several mandatory fields in the Widget Manager. For example, the WidgetType field is useful for separating widgets on a user&#8217;s toolbar. Only "Standard" type widgets will appear in the Widgets Menu. "Administration" widgets will appear when the <b class="button">Administration</b> link is clicked in the drop-down User Menu. Widgets set to type "Store" will appear under the Store button on the toolbar. "Metric" type widgets will appear when the <b class="button">Metric</b> link is clicked in the drop-down User Menu. Setting a widget to "fullscreen" in OWF does nothing to the widget. This field is used by the Store to send Web apps to OWF as separate stacks.</p>
+</div>
+<div class="paragraph">
+<p>To create a widget:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <b class="button">Administration</b> link in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Click the <b class="button">Widgets</b> button to open the Widget Manager.</p>
+</li>
+<li>
+<p>From the manager, click the <b class="button">Create</b> button.</p>
+</li>
+<li>
+<p>From here, there are two ways to create widgets:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><strong>Import a descriptor URL</strong>&#8201;&#8212;&#8201;Enter a descriptor URL and click Load. For more information about descriptor URLs see section <a href="#descriptor-urls">Section 4.5.1, &#8220;Widget Descriptor URLs&#8221;</a>.</p>
+</li>
+<li>
+<p><strong>Manually enter data</strong>&#8201;&#8212;&#8201;If a descriptor URL is not available, click the <b class="button">Don&#8217;t have a descriptor URL?</b> link and complete the required fields on the Properties tab. Remember that the widget type will dictate the location of the widget.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Click <b class="button">Apply</b>. This will unlock the Users, Groups and Intents tabs on the Widget Manager. Select each tab and click the <b class="button">Add</b> button to add users, groups and intents to the widget. Information about adding Intents to a widget is in section <a href="#create-intent">Section 4.4.1, &#8220;Create a Widget Intent&#8221;</a>.</p>
+</li>
+<li>
+<p>Refresh OWF. The new Widget will appear under the respective toolbar button for users to whom the widget has been assigned.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="edit-a-widget">4.3.2. Edit a Widget</h4>
+<div class="paragraph">
+<p>To edit existing widget content:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <b class="button">Administration</b> link in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Select <b class="button">Widgets</b> to open the Widget Manager.</p>
+</li>
+<li>
+<p>From the manager, select a widget and click <b class="button">Edit</b>.</p>
+</li>
+<li>
+<p>Edit the widget data on the Properties tab and click <b class="button">Apply</b>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Users and groups assigned to the widget will receive the widget data changes automatically.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_widget_intents">4.4. Widget Intents</h3>
+<div class="sect3">
+<h4 id="create-intent">4.4.1. Create a Widget Intent</h4>
+<div class="paragraph">
+<p>Widget intents are the instructions for carrying out an widget&#8217;s intentions. Intents comprise an Action (graph, view, edit, etc.), a Data Type (html, text, image, etc.) and a Send/Receive request. For intents to function in OWF, a developer has to code the actual function into a widget, see the <em>Ozone Developer&#8217;s Guide</em> for instructions.</p>
+</div>
+<div class="paragraph">
+<p>Widgets coded with identical Action and Data Types can communicate with each other. For example, the New York Stock Exchange (NYSE) widget sends an intent to graph (Action) daily stock data (Data Type). The Stock Chart widget, configured and coded to receive the same intent Action and Data Type, is able to receive this request and graphs the data. The intents mechanism allows the user to select which of the available widgets will receive the intent. This binding capability enables the two widgets to enhance each other&#8217;s functionality. Administrators can add, edit and delete widgets intents, however, a developer or someone with experience using intents is more likely to perform these tasks.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Find instructions about using intents in the <em>Ozone User&#8217;s Guide</em> and instructions about creating intents in the <em>Ozone Developer&#8217;s Guide</em>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The Store ships with several default intents Actions and Data Types. It will NOT function as expected until a developer establishes a relationship between the intent and the widget as described in the OWF Developer&#8217;s Guide. The default intents from the Store serve as metadata used as placeholders for OWF developers to create consistent intents. After a developer establishes that relationship, the following instructions will allow administrators to add intents to a widget:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <b class="button">Administration</b> link in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Select <b class="button">Widgets</b> to open the Widget Manager.</p>
+</li>
+<li>
+<p>From the manager, select a widget and click <b class="button">Edit</b>.</p>
+</li>
+<li>
+<p>Click the <b class="button">Intents tab</b>. Click <b class="button">Create</b> to open the Create Intent window.</p>
+</li>
+<li>
+<p>Complete the fields, required fields are marked with an asterisk.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><strong>Action</strong>&#8201;&#8212;&#8201;The Action field is the instruction the intent will make (ex. graph or view).</p>
+</li>
+<li>
+<p><strong>Data Type</strong>&#8201;&#8212;&#8201;The Data Type field indicates the data that the intent is passing from widget to widget (ex. text/html).</p>
+</li>
+<li>
+<p><strong>Send/Receive</strong>&#8201;&#8212;&#8201;This tells the widget to send or receive the widget intent.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Click <b class="button">OK</b>. The intent has been added to the widget and will be displayed in the Intents tab in the widget manager.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+It is recommended that Widgets, which use Intents, provide a Descriptor file containing the Intents configurations instead of relying on administrators following the above procedure.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_edit_a_widget_intent">4.4.2. Edit a Widget Intent</h4>
+<div class="paragraph">
+<p>It is recommended that a developer, or an individual experienced with using intents, edits the widget intents.</p>
+</div>
+<div class="paragraph">
+<p>To edit widget intents:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <b class="button">Administration</b> link in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Select <b class="button">Widgets</b> to open the Widget Manager.</p>
+</li>
+<li>
+<p>From the manager, select a Widget and click <b class="button">Edit</b>.</p>
+</li>
+<li>
+<p>Click the <b class="button">Intents tab</b>, select an intent and click <b class="button">Edit</b>.</p>
+</li>
+<li>
+<p>Once changes have been made, click <b class="button">OK</b>. OWF will automatically update the widget data.</p>
+</li>
+<li>
+<p>Close the Widget Manager.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Users assigned to this widget will see the changes automatically.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_delete_a_widget_intent">4.4.3. Delete a Widget Intent</h4>
+<div class="paragraph">
+<p>To delete widget intents:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <b class="button">Administration</b> link in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Select <b class="button">Widgets</b> to open the Widget Manager.</p>
+</li>
+<li>
+<p>From the manager, select a widget and click <b class="button">Edit</b>.</p>
+</li>
+<li>
+<p>Click the <b class="button">Intents tab</b>, select an intent and click <b class="button">Delete</b>.</p>
+</li>
+<li>
+<p>Click <b class="button">OK</b> on the warning to delete the intent.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_widget_descriptors">4.5. Widget Descriptors</h3>
+<div class="sect3">
+<h4 id="descriptor-urls">4.5.1. Widget Descriptor URLs</h4>
+<div class="paragraph">
+<p>Descriptor URLs allow an administrator to create widgets without entering the widget&#8217;s information manually. The administrator simply enters a URL and the widget&#8217;s information is automatically retrieved from a descriptor file from a Web-accessible location. Widgets created with a descriptor URL are editable in the Widget Manager.</p>
+</div>
+<div class="paragraph">
+<p>Descriptor URLs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Reduce the risk of typing errors when entering widget data.</p>
+</li>
+<li>
+<p>Allow several installations of OWF to easily share widget information.</p>
+</li>
+<li>
+<p>Allow widget developers to specify important configuration information such as Universal Names and Intents.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_edit_a_widget_descriptor">4.6. Edit a Widget Descriptor</h3>
+<div class="paragraph">
+<p>Administrators can update and edit the widget descriptor data within the OWF interface. Updating the widget descriptor data retrieves the latest data in the widget&#8217;s descriptor file which is saved in a Web-accessible location. Changes made to the widget prior to the update are lost once the update is performed.</p>
+</div>
+<div class="paragraph">
+<p>To update the widget descriptor data:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <b class="button">Administration</b> link in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Select <b class="button">Widgets</b> to open the Widget Manager.</p>
+</li>
+<li>
+<p>From the manager, select a widget and click <b class="button">Edit</b>.</p>
+</li>
+<li>
+<p>Click <b class="button">Load</b>. The Widget manager will automatically refresh and display the most recent widget descriptor data.</p>
+</li>
+<li>
+<p>Click <b class="button">Apply</b>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Administrators can edit their copy of the widget descriptor data by following the steps outlined in section Editing Existing Widget Content. Descriptor data changes are shareable after the administrator exports the widget and saves the descriptor file in a Web-accessible location. Individuals who already have access to this widget will have to update their copy of the widget&#8217;s descriptor data in order to see the widget changes in their OWF instance.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_export_a_widget_descriptor">4.7. Export a Widget Descriptor</h3>
+<div class="paragraph">
+<p>Administrators can export and save widget data as a descriptor file. An administrator needs to host the widget descriptor file in a Web-accessible location to make the file shareable with other administrators that have access to this location. This process is intended to provide a means for administrators from different OWF instances to add or receive identical widgets.</p>
+</div>
+<div class="paragraph">
+<p>To export a widget:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <b class="button">Administration</b> link in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Select <b class="button">Widgets</b> to open the Widgets.</p>
+</li>
+<li>
+<p>Select the widget to export. Click the arrow on the right of the split <b class="button">Edit</b> button and choose <b class="button">Export</b>.</p>
+</li>
+<li>
+<p>Enter a Filename that describes the widget, this will become the title of the HTML descriptor file and then click <b class="button">OK</b>.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If the widget was created by a descriptor file, the Filename field will be prepopulated with the descriptor file name.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Save the widget descriptor HTML file on a Web-accessible server.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_groups">4.8. Groups</h3>
+<div class="sect3">
+<h4 id="_create_a_group">4.8.1. Create a Group</h4>
+<div class="paragraph">
+<p>Groups allow administrators to easily add or remove stacks and widgets to and from multiple OWF user. For example, by putting 10 employees into a group, the administrator can add one stack to the group, rather than having to individually add the stack to 10 employees. The following serves as a walk through for documentation purposes only.</p>
+</div>
+<div class="paragraph">
+<p>To create groups in OWF and to add users to that group:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <b class="button">Administration</b> link in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Click the <b class="button">Groups</b> button to open the Groups Manager.</p>
+</li>
+<li>
+<p>From the manager, click the <b class="button">Create</b> button. This will open the Group Editor.</p>
+</li>
+<li>
+<p>Fill in the appropriate data on the Properties tab. Once the <b class="button">Apply</b> button is clicked, the other tabs on the Group Editor will become active. Note the following:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>If the display name field is populated, that is the name which will appear in all administrator panels. The only way for the primary name field to appear is to leave the display name field blank.</p>
+</li>
+<li>
+<p>If an administrator checks the automatic box in the User Management field, the following will happen:</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>The name of the group will not be editable.</p>
+</li>
+<li>
+<p>The users tab will remain grayed out as users can only be added via external sources, such as a security plug-ins.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Add users to the group by selecting the <b class="button">Users tab</b>, clicking the <b class="button">Add</b> button and selecting users from the grid.</p>
+</li>
+<li>
+<p>The Stacks and Widgets tabs behave the same way and can be used to populate groups accordingly.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_add_a_widget_to_a_group">4.8.2. Add a Widget to a Group</h4>
+<div class="paragraph">
+<p>The group dashboard and group widget functions allow administrators to quickly and easily give a group of users access to several widgets at one time. Widgets can be added to a group and any user added to the group automatically receives access to the group widgets.</p>
+</div>
+<div class="paragraph">
+<p>When a user is part of a group, for example Group A, the user&#8217;s Widgets Menu will display the widgets assigned to Group A in the main section of the Widgets Menu. Only an administrator can make changes to widgets that are part of a group. Users cannot edit or delete the group or the widgets in it.</p>
+</div>
+<div class="paragraph">
+<p>To add widgets to a group:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click the <b class="button">Administration</b> link in the drop-down User Menu.</p>
+</li>
+<li>
+<p>Select <b class="button">Groups</b> to open the Groups Manager.</p>
+</li>
+<li>
+<p>From the manager, select an existing group and click <b class="button">Edit</b>.</p>
+</li>
+<li>
+<p>The Group Editor will open. Select the <b class="button">Widgets tab</b>.</p>
+</li>
+<li>
+<p>Click <b class="button">Add</b> and select widgets to assign to the group. Click <b class="button">OK</b>.</p>
+</li>
+<li>
+<p>Close the Group Editor.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_store_marketplace">4.9. Store (Marketplace)</h3>
+<div class="sect3">
+<h4 id="connect-store">4.9.1. Connecting to the Store</h4>
+<div class="paragraph">
+<p>The Store, similar to a commercial application store, operates as a thin-client registry of applications and services. Administrators can provide users with access to multiple Stores as described in section Store.</p>
+</div>
+<div class="paragraph">
+<p>To connect OWF to a Store:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open the OWF drop-down User Menu and click <b class="button">Administration</b>.</p>
+</li>
+<li>
+<p>This opens the Administration Manager. Click <b class="button">Configuration</b> to open the Configuration Console.</p>
+</li>
+<li>
+<p>From the left-hand panel, click <b class="button">Store</b>.</p>
+</li>
+<li>
+<p>Click the <b class="button">Add Store</b> button.</p>
+</li>
+<li>
+<p>This opens the Store Configuration window. Enter the Store&#8217;s URL and then, click <b class="button">Next</b>. OWF will use the URL and automatically gather Store details.</p>
+</li>
+<li>
+<p>The Review or Edit page appears. Review or Edit the Store details:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Review the icon used to identify the Store to users in OWF.</p>
+</li>
+<li>
+<p>Add a name that will identity the Store to users in OWF.</p>
+</li>
+<li>
+<p>Click <b class="button">Save</b>.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The <b class="button">Store</b> button will appear on the OZONE Toolbar for all OZONE users.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If the Store button does not appear in the toolbar, refresh your browser window.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Once a Store is configured, users can enter the Store to search, discover and add available listings including other OZONE Dashboards and Widgets. Information on how to use the Store is covered in the <em>Store User&#8217;s Guide</em>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_edit_a_store">4.9.2. Edit a Store</h4>
+<div class="paragraph">
+<p>To edit a Store entry, repeat steps one through three from the previous section (<a href="#connect-store">Section 4.9.1, &#8220;Connecting to the Store&#8221;</a>) to return to the Store configuration page.</p>
+</div>
+<div class="paragraph">
+<p>To edit a Store, hover over the Store name and click the pencil icon that appears to the right. This opens the Edit Store window, which is populated with the Store&#8217;s current information. Make changes to the fields, and then click <b class="button">Save</b>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_required_listings">4.9.3. Required Listings</h4>
+<div class="paragraph">
+<p>A Store listing can require other Store listings. For example, if a user requests widget A and it requires widget B, the user automatically requests widgets A and B. This relationship is further explained in the <em>Ozone User&#8217;s Guide</em>.</p>
+</div>
+<div class="paragraph">
+<p>When a widget, that requires other widgets, is added from the Store, the user will receive the widget along with all other widgets that it needs.</p>
+</div>
+<div class="paragraph">
+<p>In the Widgets Manager, an administrator has two ways to identify that a Store widget requires other Store widgets:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The details section of the listing will display: <code>Requires Widget: true</code></p>
+</li>
+<li>
+<p>Its requirements will appear below the details</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Both identifiers are highlighted in the following example:</p>
+</div>
+<div class="paragraph">
+<p>Required listings can only be added in the Store. For more information about adding or removing required listings, see the <em>Ozone Store User&#8217;s Guide</em>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_glossary">Glossary</h2>
+<div class="sectionbody">
+<div class="dlist glossary">
+<dl>
+<dt>Accordion (layout)</dt>
+<dd>
+<p>Display widgets in equal, horizontal panes that do not scroll (each individual widget may scroll using its own scroll bar).</p>
+</dd>
+<dt>Affiliated Store</dt>
+<dd>
+<p>A store that another organization uses for their system. When a local store is connected to an affiliated store, users in the local store can search for and add listings from the affiliated store (assuming the user has proper authentication for the affiliated store).</p>
+</dd>
+<dt>App</dt>
+<dd>
+<p>Deprecated term for a Stack.</p>
+</dd>
+<dt>App Component</dt>
+<dd>
+<p>Deprecated term for a widget.</p>
+</dd>
+<dt>Dashboard</dt>
+<dd>
+<p>An organized collection of widgets with a customizable layout.</p>
+</dd>
+<dt>Filters</dt>
+<dd>
+<p>A feature used to reduce the number of search results by type or category.</p>
+</dd>
+<dt>Fit (layout)</dt>
+<dd>
+<p>Allows a user to place a single widget on the screen.</p>
+</dd>
+<dt>Help</dt>
+<dd>
+<p>Repository of instructional guides and video tutorials.</p>
+</dd>
+<dt>Intent</dt>
+<dd>
+<p>Instructions for carrying out a widget&#8217;s intentions.</p>
+</dd>
+<dt>Listing</dt>
+<dd>
+<p>Any software dashboard or widget that a user enters into the Store is called a "Listing." Listings can be a various types of Web content.</p>
+</dd>
+<dt>Marketplace</dt>
+<dd>
+<p>A searchable catalog of shared listings of widgets and dashboards (also referred to as the Store).</p>
+</dd>
+<dt>OWF</dt>
+<dd>
+<p>Abbreviation for Ozone Widget Framework.</p>
+</dd>
+<dt>Pages</dt>
+<dd>
+<p>Deprecated term for a dashboard.</p>
+</dd>
+<dt>Portal (layout)</dt>
+<dd>
+<p>A column-oriented layout that organizes widgets of varying heights. Each new widget loads above the first one on the screen. The user drags a dividing bar to specify widget’s height. The widgets and the Ozone window scroll.</p>
+</dd>
+<dt>Required Listings</dt>
+<dd>
+<p>An association between Listings. <em>Example: if Listing A needs Listing B to function, Listing B is a Required Listing.</em></p>
+</dd>
+<dt>Stack</dt>
+<dd>
+<p>A collection of Dashboards (pages). Allows administrators and users to group Dashboards into folder-like collections that allow for easy transition from one to another.</p>
+</dd>
+<dt>Store</dt>
+<dd>
+<p>Commonly used term for the Ozone Marketplace.</p>
+</dd>
+<dt>Tabbed (layout)</dt>
+<dd>
+<p>Display one widget per screen, with tabs the top of the screen to switch from one widget to another.</p>
+</dd>
+<dt>Toolbar</dt>
+<dd>
+<p>The navigation bar at the top of the application. It links to a user’s stacks, widgets, the Store, online Help and options from the drop-down User Menu.</p>
+</dd>
+<dt>User</dt>
+<dd>
+<p>A person signed into the Ozone application, usually referring to a person without administrative privileges.</p>
+</dd>
+<dt>Widget</dt>
+<dd>
+<p>A light-weight, single-purpose Web application that offers a summary or limited view of a larger Web application and may be configured by the user and displayed within a Dashboard.</p>
+</dd>
+<dt>Widget Menu</dt>
+<dd>
+<p>The Widgets Menu displays all available widgets. Use this feature to start or add widgets to a dashboard.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 8.0.0.0<br>
+</div>
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+<script>hljs.initHighlighting()</script>
+</body>
+</html>
