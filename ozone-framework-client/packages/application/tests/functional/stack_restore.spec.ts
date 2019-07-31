@@ -30,7 +30,7 @@ module.exports = {
 
         browser
             .click(StackDialog.CreateStack.SUBMIT)
-            .waitForElementNotPresent(StackDialog.CreateStack.SUBMIT, 1000, "[Create Stack Dialog] is closed.");
+            .waitForElementNotPresent(StackDialog.CreateStack.SUBMIT, 2000, "[Create Stack Dialog] is closed.");
 
         // Create a Dashboard
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
@@ -83,6 +83,7 @@ module.exports = {
                 "[Confirmation Dialog] is visible"
             )
             .click(GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON)
+            .waitForElementNotPresent(GlobalElements.SPINNER)
             .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
         // restore unshared Stack not possible
         browser.waitForElementVisible(
@@ -159,7 +160,7 @@ module.exports = {
             this.assert.equal(result.value, null, "[Stack Admin Widget Users Tab] add button is enabled.");
         });
 
-        browser.click(StackAdminWidget.ADD_USER_BUTTON);
+        browser.click(StackAdminWidget.ADD_USER_BUTTON).waitForElementNotPresent(GlobalElements.SPINNER);
 
         browser.waitForElementVisible(
             GlobalElements.GENERIC_TABLE_SELECTOR_DIALOG,
@@ -209,7 +210,8 @@ module.exports = {
 
         browser
             .click(MainPage.STACKS_BUTTON)
-            .waitForElementVisible(StackDialog.CREATE_STACK_BUTTON, 2000, "[Create Stack Button] is visible.");
+            .waitForElementVisible(StackDialog.CREATE_STACK_BUTTON, 2000, "[Create Stack Button] is visible.")
+            .waitForElementNotPresent(GlobalElements.SPINNER);
 
         browser.waitForElementVisible(
             StackDialog.getActionButtonsForStack(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME),
@@ -218,7 +220,6 @@ module.exports = {
         );
         browser
             .waitForElementVisible(StackDialog.STACK_LIST, 2000, "[Stack list] is visible")
-            .click(StackDialog.STACK_LIST)
             .waitForElementVisible(
                 StackDialog.getActionButtonsForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME_DEFAULT),
                 2000,
@@ -243,13 +244,11 @@ module.exports = {
         browser
             .click(MainPage.STACKS_BUTTON)
             .waitForElementVisible(StackDialog.STACK_DIALOG, 2000, "[Stack Dialog] is visible.");
-        browser
-            .click(StackDialog.STACK_LIST)
-            .waitForElementVisible(
-                StackDialog.getActionButtonsForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME_DEFAULT),
-                2000,
-                "[Dashboards] are visible."
-            );
+        browser.waitForElementVisible(
+            StackDialog.getActionButtonsForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME_DEFAULT),
+            2000,
+            "[Dashboards] are visible."
+        );
         browser.waitForElementVisible(
             StackDialog.getRestoreButtonForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME_DEFAULT),
             2000,
@@ -278,13 +277,11 @@ module.exports = {
             2000,
             "[Stack Dialog] Stack is visible."
         );
-        browser
-            .click(StackDialog.STACK_LIST)
-            .waitForElementVisible(
-                StackDialog.getActionButtonsForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME_DEFAULT),
-                2000,
-                "[Stack Dialog] Dashboards are visible."
-            );
+        browser.waitForElementVisible(
+            StackDialog.getActionButtonsForDashboard(StackAdminWidget.STACK_ADMIN_TEST_DASHBOARD_NAME_DEFAULT),
+            2000,
+            "[Stack Dialog] Dashboards are visible."
+        );
 
         browser.moveToElement(StackDialog.DASHBOARD, 0, 0);
         browser.doubleClick();
@@ -315,7 +312,7 @@ module.exports = {
         );
 
         browser
-            .click(StackDialog.getRestoreButtonForStack(StackDialog.CreateStack.CREATE_DASHBOARD_NAME))
+            .click(StackDialog.getRestoreButtonForDashboard(StackDialog.CreateStack.CREATE_DASHBOARD_NAME))
             .waitForElementVisible(
                 GlobalElements.CONFIRMATION_DIALOG_CONFIRM_BUTTON,
                 2000,

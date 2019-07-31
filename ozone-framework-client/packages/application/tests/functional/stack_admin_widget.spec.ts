@@ -32,7 +32,7 @@ module.exports = {
 
         browser
             .click(StackDialog.CreateStack.SUBMIT)
-            .waitForElementNotPresent(StackDialog.CreateStack.SUBMIT, 1000, "[Create Stack Dialog] is closed")
+            .waitForElementNotPresent(StackDialog.CreateStack.SUBMIT, 2000, "[Create Stack Dialog] is closed")
             .click(MainPage.DIALOG_CLOSE);
 
         // NEXT we open admin dashboard widget, and try to add a group (add button should be disabled)
@@ -237,7 +237,7 @@ module.exports = {
 
         browser
             .click(StackDialog.CreateStack.SUBMIT)
-            .waitForElementNotPresent(StackDialog.CreateStack.SUBMIT, 1000, "[Create Stack Dialog] is closed.")
+            .waitForElementNotPresent(StackDialog.CreateStack.SUBMIT, 2000, "[Create Stack Dialog] is closed.")
             .click(MainPage.DIALOG_CLOSE);
 
         // NEXT we open admin dashboard widget, and try to add a user (add button should be disabled)

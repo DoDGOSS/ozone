@@ -34,7 +34,13 @@ const _MarkdownConfirmationDialog: React.FC<MarkdownConfirmationDialogProps> = (
             </div>
             <div className={Classes.DIALOG_FOOTER}>
                 <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                    <Button text={confirmText} onClick={props.onConfirm} intent={confirmIntent} rightIcon="tick" />
+                    <Button
+                        text={confirmText}
+                        onClick={props.onConfirm}
+                        intent={confirmIntent}
+                        rightIcon="tick"
+                        data-element-id="confirmation-dialog-confirm"
+                    />
                     {props.cancelEnabled !== false && (
                         <Button text="Cancel" onClick={props.onCancel} intent={cancelIntent} rightIcon="cross" />
                     )}

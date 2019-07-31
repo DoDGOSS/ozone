@@ -7,7 +7,13 @@ export interface SaveDashboardButtonProps {
 }
 
 const _SaveDashboardButton: React.FC<SaveDashboardButtonProps> = ({ isStoreOpen }) => (
-    <AnchorButton minimal icon="floppy-disk" onClick={dashboardStore.saveCurrentDashboard} disabled={isStoreOpen} />
+    <AnchorButton
+        data-element-id="save-dashboard"
+        minimal
+        icon="floppy-disk"
+        onClick={dashboardStore.saveCurrentDashboard}
+        disabled={isStoreOpen}
+    />
 );
 
 export const SaveDashboardButton = React.memo(_SaveDashboardButton);
