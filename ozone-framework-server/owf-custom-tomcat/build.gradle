@@ -15,7 +15,7 @@ buildscript {
 
 
 group 'org.ozoneplatform'
-version '1.2.3-0'
+version '1.2.3-1'
 
 
 apply plugin: 'java'
@@ -71,13 +71,6 @@ task renameTomcatFolder(type: Delete, group: 'bundle') {
     delete("$stagingDir/apache-tomcat-${tomcatVersion}")
 }
 
-task copyTomcatConfiguration(type: Copy, group: 'bundle') {
-    dependsOn(renameTomcatFolder)
-
-    from fileTree("$projectDir/custom")
-    into file(tomcatStagingDir)
-}
-
 task deleteTomcatExampleWebapps(type: Delete, group: 'bundle') {
     dependsOn(renameTomcatFolder)
 
@@ -89,7 +82,7 @@ task deleteTomcatExampleWebapps(type: Delete, group: 'bundle') {
 }
 
 task buildCustomTomcatZip(type: Zip, group: 'bundle') {
-    dependsOn(copyTomcatConfiguration, deleteTomcatExampleWebapps)
+    dependsOn(deleteTomcatExampleWebapps)
     from file(stagingDir)
 
     archiveName "custom-tomcat.zip"

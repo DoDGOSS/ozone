@@ -76,7 +76,7 @@ dependencies {
     compile group: 'org.ozoneplatform', name: 'owf-security', version: '4.0.4-0'
     compile group: 'org.ozoneplatform', name: 'owf-messaging', version: '1.19.1-0'
 
-    customTomcat(group: 'org.ozoneplatform', name: 'owf-custom-tomcat', version: '1.2.3-0') {
+    customTomcat(group: 'org.ozoneplatform', name: 'owf-custom-tomcat', version: '1.2.3-1') {
         artifact {
             name = 'owf-custom-tomcat'
             type = 'zip'
