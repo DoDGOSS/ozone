@@ -7,7 +7,7 @@
 | dbCreate
 | Whether the database schema is created and/or updated when the server is started.
 
-TIP: Use the appropriate database creation script in the dbscript folder before running OWF if set this option is set to `none`.
+TIP: Use the appropriate database creation script in the dbscript directory before running OWF if set this option is set to `none`.
 | `none` / `create` / `update`
 
 | username

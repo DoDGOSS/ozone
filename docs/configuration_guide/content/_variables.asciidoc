@@ -3,6 +3,7 @@
 :file-user-props: users.properties
 
 :path-tomcat: /tomcat
+:path-tomcat-certs: {path-tomcat}/certs
 :path-classpath: {path-tomcat}/lib
 :path-webapps: {path-tomcat}/webapps
 :path-ozone: {path-classpath}/ozone/framework
@@ -10,7 +11,7 @@
 :path-user-props: {path-ozone}/{file-user-props}
 :path-ozone-security: {path-ozone}/security
 
-
-:version-tomcat: v8.5.23
+:version-ozone: 8.0.0.0
+:version-tomcat: 8.5.23
 
 :url-github: https://github.com/ozoneplatform/
