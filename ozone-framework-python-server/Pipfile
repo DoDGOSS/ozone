@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+requests = "*"
+uuid = "==1.30"
+djangorestframework = "==3.9.4"
+drf-extensions = "==0.5.0"
+django-filter = "==2.1.0"
+pycodestyle = "==2.5.0"
+"autopep8" = "==1.4.4"
+Django = "==2.2.1"
+Markdown = "==3.1.1"
+sphinx = "*"
+sphinx-rtd-theme = "*"
+django-rest-swagger = "*"
+"psycopg2" = "==2.8.2"
+guzzle-sphinx-theme = "*"
+
+[requires]
+python_version = "3.7.4"

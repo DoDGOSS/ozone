@@ -1,0 +1,34 @@
+[
+    {
+        "pk": 1,
+        "model": "stacks.stack",
+        "fields": {
+            "version": 1,
+            "stack_context": "test_stack_context",
+            "unique_widget_count": 0,
+            "name": "test_stack",
+            "approved": false,
+            "image_url": "",
+            "descriptor_url": "",
+            "description": "",
+            "owner": null,
+            "default_group": 2
+        }
+    },
+      {
+          "pk": 2,
+          "model": "stacks.stack",
+          "fields": {
+              "version": 1,
+              "stack_context": "test_stack_context_2",
+              "unique_widget_count": 0,
+              "name": "test_stack_2",
+              "approved": false,
+              "image_url": "",
+              "descriptor_url": "",
+              "description": "",
+              "owner": null,
+              "default_group": 3
+          }
+      }
+]

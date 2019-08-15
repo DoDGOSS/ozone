@@ -1,0 +1,1 @@
+[{"model": "roles.role", "pk": 1, "fields": {"version": 1, "authority": "ADMIN", "description": "admin role"}}]

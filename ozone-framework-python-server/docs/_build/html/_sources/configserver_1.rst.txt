@@ -1,0 +1,19 @@
+############
+Config
+############
+
+
+
+Django settings will be handled with the settings flag or set an env var:
+
+
+.. code-block:: bash
+
+    python manage.py runserver --settings=config.settings.local
+
+
+
+
+
+
+
