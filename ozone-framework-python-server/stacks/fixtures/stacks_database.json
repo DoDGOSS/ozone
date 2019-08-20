@@ -1,0 +1,1 @@
+[{"model": "stacks.stack", "pk": 1, "fields": {"version": 1, "name": "Test Stack 1", "description": "Description", "stack_context": "Stack Context", "image_url": "https://url1.com", "descriptor_url": "Description for url of the stack", "unique_widget_count": 0, "owner": 1, "approved": false, "default_group": 1}}]

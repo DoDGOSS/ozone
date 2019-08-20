@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>OWF-OZONE Server’s V2 dev docs! &#8212; Server Docs 2.x documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Config" href="configserver.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="owf-ozone-server-s-v2-dev-docs">
+<h1>OWF-OZONE Server’s V2 dev docs!<a class="headerlink" href="#owf-ozone-server-s-v2-dev-docs" title="Permalink to this headline">¶</a></h1>
+<a class="reference internal image-reference" href="_images/tenor.gif"><img alt="_images/tenor.gif" src="_images/tenor.gif" style="width: 500px; height: 400px;" /></a>
+<p>…. Django Is So Fun …</p>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="configserver.html">Config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authentication.html">Authentications &amp; Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Learning &amp; Quick Reference &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Logs</a></li>
+</ul>
+</div>
+<hr class="docutils" />
+<p>In this will be documentation for the OWF Ozone REST APIs, development, configuration and change logs. The documentation
+for this REST service will come with a direct, hands-on approach of development.</p>
+<p>As you explore the existing API endpoints, you’ll learn about developing the endpoints, parameters, data types, authentication, and more.
+The idea is that rather than learning about these concepts independent of any context, you learn them by immersing yourself in the
+user interface provided by Swagger Docs that allow you to interact with each endpoint after initial authentication.</p>
+<p>By following simple patterns described int the development documentation, no code should look surprising and should be very
+understandable to every developer.  While some custom logic may be at play within some of the files, the majority of the code
+should be common ground while using the framework as much as possible.</p>
+<hr class="docutils" />
+<div class="section" id="getting-started">
+<h2>Getting started:<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>First choose your method of getting up and running, either Docker or Python(3.7).</p>
+<p><strong>Docker / Docker Compose</strong> at
+<a class="reference external" href="https://docs.docker.com/install/">docs.docker.com</a></p>
+<p>With the docker installation you will want to get comfortable with the commands and terminology associated with docker.</p>
+<p>From the command line run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker-compose up
+</pre></div>
+</div>
+<p>Then go to <a class="reference external" href="http://localhost:8000">http://localhost:8000</a> to see the application up and running</p>
+<hr class="docutils" />
+<p><strong>Python</strong> at
+<a class="reference external" href="https://www.python.org/downloads/">python.org</a></p>
+<p>With a python install you will want to use <a class="reference external" href="https://github.com/pypa/pipenv">pipenv</a> ito manage all the packages we will be
+installing for development.</p>
+<p>From the command line run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pipenv install
+python manage.py migrate <span class="o">&amp;&amp;</span> python manage.py runserver
+</pre></div>
+</div>
+<p>Then go to <a class="reference external" href="http://localhost:8000">http://localhost:8000</a> to see the application up and running</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Server Docs</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="configserver.html">Config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authentication.html">Authentications &amp; Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Learning &amp; Quick Reference &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Logs</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="configserver.html" title="next chapter">Config</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, GOSS.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

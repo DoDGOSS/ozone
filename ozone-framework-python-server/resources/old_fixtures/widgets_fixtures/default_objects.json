@@ -1,0 +1,24 @@
+[
+    {
+        "pk": 1,
+        "model": "widgets.widgetdefinition",
+        "fields": {
+            "version": 1,
+            "width": 0,
+            "image_url_medium": "http://widget.com/testwidget_medium.png",
+            "singleton": false,
+            "universal_name": "test_widget",
+            "display_name": "Test Widget",
+            "widget_guid": "25c85af7-6a2d-45c4-bbd5-5a58abd9e5e3",
+            "mobile_ready": false,
+            "widget_version": "",
+            "height": 0,
+            "background": false,
+            "widget_url": "http://widget.com/testwidget",
+            "image_url_small": "http://widget.com/testwidget_small.png",
+            "descriptor_url": "",
+            "description": "",
+            "visible": false
+        }
+    }
+]
