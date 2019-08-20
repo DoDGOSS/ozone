@@ -1,0 +1,371 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Development &#8212; Server Docs 2.x documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Authentications &amp; Permissions" href="authentication.html" />
+    <link rel="prev" title="Config" href="configserver.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="development">
+<h1>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h1>
+<p>Bellow are examples for each part of the Django REST framework based project.</p>
+<p>The sections are <a class="reference internal" href="#models"><span class="std std-ref">Models - models.py</span></a>, <a class="reference internal" href="#views"><span class="std std-ref">View - views.py</span></a>, <a class="reference internal" href="#serializers"><span class="std std-ref">Serializers - serializers.py</span></a>, <a class="reference internal" href="#urls"><span class="std std-ref">URLS - urls.py</span></a>, <a class="reference internal" href="#admin"><span class="std std-ref">Admin - admin.py</span></a>, <a class="reference internal" href="#apps"><span class="std std-ref">App - apps.py</span></a>, <a class="reference internal" href="#fixtures"><span class="std std-ref">Data - fixtures Folder</span></a> &amp; <a class="reference internal" href="#project-structure"><span class="std std-ref">Structure</span></a></p>
+<hr class="docutils" />
+<div class="section" id="structure">
+<span id="project-structure"></span><h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/structure.png" src="_images/structure.png" />
+<p>This structure will reduce merge conflicts and give the project a separation of concerns regarding each application.</p>
+<p>If a new app is added to the project we will need to add it to the settings file connected to the app config within (<cite>your_new_app/app.py</cite>):</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+<span class="s1">&#39;django.contrib.admin&#39;</span><span class="p">,</span>
+<span class="s1">&#39;django.contrib.auth&#39;</span><span class="p">,</span>
+<span class="s1">&#39;django.contrib.contenttypes&#39;</span><span class="p">,</span>
+<span class="s1">&#39;django.contrib.sessions&#39;</span><span class="p">,</span>
+<span class="s1">&#39;django.contrib.messages&#39;</span><span class="p">,</span>
+<span class="s1">&#39;django.contrib.staticfiles&#39;</span><span class="p">,</span>
+
+<span class="c1"># 3rd party apps</span>
+<span class="s1">&#39;rest_framework&#39;</span><span class="p">,</span>
+<span class="s1">&#39;rest_framework_swagger&#39;</span><span class="p">,</span>
+<span class="s1">&#39;django_filters&#39;</span><span class="p">,</span>
+
+<span class="c1"># owf apps</span>
+<span class="s1">&#39;domain_mappings.apps.DomainMappingsConfig&#39;</span><span class="p">,</span>
+<span class="s1">&#39;intents.apps.IntentsConfig&#39;</span><span class="p">,</span>
+<span class="s1">&#39;owf_groups.apps.OWFGroupsConfig&#39;</span><span class="p">,</span>
+<span class="s1">&#39;people.apps.PeopleConfig&#39;</span><span class="p">,</span>
+<span class="s1">&#39;roles.apps.RolesConfig&#39;</span><span class="p">,</span>
+<span class="s1">&#39;stacks.apps.StacksConfig&#39;</span><span class="p">,</span>
+<span class="s1">&#39;widgets.apps.WidgetsConfig&#39;</span><span class="p">,</span>
+<span class="s1">&#39;dashboards.apps.DashboardsConfig&#39;</span><span class="p">,</span>
+<span class="s1">&#39;preferences.apps.PreferencesConfig&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>By extending the application to the app config within <cite>your_new_app/app.py</cite> we ensure that no other folders in the project are mistaken by Django for applications.</p>
+<hr class="docutils" />
+</div>
+<div class="section" id="models-models-py">
+<span id="models"></span><h2>Models - models.py<a class="headerlink" href="#models-models-py" title="Permalink to this headline">¶</a></h2>
+<p>Models are the formulation and design of the database, this will also be a place where we can make methods to call properties
+of the data that would otherwise require additional code elsewhere in the project.</p>
+<p>So for example if we were to have a model that extends the Abstract base user with permissions and timestamp data:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+ <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">AbstractUser</span>
+
+
+
+ <span class="k">class</span> <span class="nc">TimestampedModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+ <span class="n">created_at</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+ <span class="n">updated_at</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+ <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+     <span class="n">abstract</span> <span class="o">=</span> <span class="bp">True</span>
+
+
+<span class="k">class</span> <span class="nc">CustomUser</span><span class="p">(</span><span class="n">TimestampedModel</span><span class="p">,</span> <span class="n">AbstractUser</span><span class="p">):</span>
+ <span class="n">ROLE_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
+     <span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span> <span class="s1">&#39;Admin&#39;</span><span class="p">),</span>
+     <span class="p">(</span><span class="s1">&#39;employee&#39;</span><span class="p">,</span> <span class="s1">&#39;Employee&#39;</span><span class="p">),</span>
+ <span class="p">)</span>
+
+ <span class="n">email</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+ <span class="n">first_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+ <span class="n">last_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+
+ <span class="k">def</span> <span class="nf">get_first_and_last_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+ <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"> What this method is doing is allowing the developer to access data quickly without</span>
+<span class="sd"> writing the query later in the code base over and over again.</span>
+
+<span class="sd"> &quot;&quot;&quot;</span>
+     <span class="k">return</span> <span class="n">f</span><span class="s1">&#39;{self.first_name} {self.last_name}&#39;</span>
+</pre></div>
+</div>
+<p>The methodology of working with the models should follow the <strong>“Fat Model”</strong> methodology allowing for less code to be written throughout the application
+as well as more readable views where the code can very restrictive and error prone.</p>
+<p>After creation (running the migrations) the only modifications should be the methods associated to the data model otherwise
+data can become corrupted.</p>
+<hr class="docutils" />
+</div>
+<div class="section" id="view-views-py">
+<span id="views"></span><h2>View - views.py<a class="headerlink" href="#view-views-py" title="Permalink to this headline">¶</a></h2>
+<p>The django-filter library includes a DjangoFilterBackend class which supports highly customizable field filtering for REST framework.</p>
+<p><cite>viewsets</cite> -</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django_filters.rest_framework</span> <span class="kn">import</span> <span class="n">DjangoFilterBackend</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">viewsets</span>
+<span class="kn">from</span> <span class="nn">rest_framework.permissions</span> <span class="kn">import</span> <span class="n">IsAuthenticated</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Preference</span>
+<span class="kn">from</span> <span class="nn">.serializer</span> <span class="kn">import</span> <span class="n">PreferenceSerializer</span>
+
+
+<span class="k">class</span> <span class="nc">PreferenceUserViewSet</span><span class="p">(</span><span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
+
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Preference</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">PreferenceSerializer</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticated</span><span class="p">,)</span>
+    <span class="n">filter_backends</span> <span class="o">=</span> <span class="p">[</span><span class="n">DjangoFilterBackend</span><span class="p">]</span>
+    <span class="n">filterset_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;namespace&#39;</span><span class="p">,</span> <span class="s1">&#39;path&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="http://localhost:8000/api/v2/preferences/?namespace=test&amp;path=del">http://localhost:8000/api/v2/preferences/?namespace=test&amp;path=del</a></p>
+<p>This is only used if the permissions change per action.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Instantiates and returns the list of permissions that this view requires.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;list&#39;</span><span class="p">:</span>
+        <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">IsAuthenticated</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">IsAdmin</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">permission</span><span class="p">()</span> <span class="k">for</span> <span class="n">permission</span> <span class="ow">in</span> <span class="n">permission_classes</span><span class="p">]</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</div>
+<div class="section" id="serializers-serializers-py">
+<span id="serializers"></span><h2>Serializers - serializers.py<a class="headerlink" href="#serializers-serializers-py" title="Permalink to this headline">¶</a></h2>
+<p>Data validation should not be handled in the view it should be handled in the serializer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">serializers</span>
+
+    <span class="k">class</span> <span class="nc">EventSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">Serializer</span><span class="p">):</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">()</span>
+        <span class="n">finish</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Check that start is before finish.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;finish&#39;</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">serializers</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;finish must occur after start&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">data</span>
+</pre></div>
+</div>
+<p>Above is an abstract serializer for serialization no associated with models.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">UserSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+
+ <span class="c1">#  Validation is taking place in the serializer as well as the models.py</span>
+
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">ProfileSerializer</span><span class="p">()</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">User</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="s1">&#39;profile&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">validated_data</span><span class="p">):</span>
+        <span class="n">profile_data</span> <span class="o">=</span> <span class="n">validated_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;profile&#39;</span><span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">**</span><span class="n">validated_data</span><span class="p">)</span>
+        <span class="n">Profile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="o">**</span><span class="n">profile_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">user</span>
+</pre></div>
+</div>
+<p>Methods of the serializers can be found:</p>
+<p><a class="reference external" href="https://www.django-rest-framework.org/api-guide/serializers/">https://www.django-rest-framework.org/api-guide/serializers/</a></p>
+<p>Custom methods can be added to the validators with:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">multiple_of_ten</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">serializers</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s1">&#39;Not a multiple of ten&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Record</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">Serializer</span><span class="p">):</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="n">IntegerField</span><span class="p">(</span><span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">multiple_of_ten</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>All serializers can take these built in methods</p>
+<p><em>.data</em> - Returns the outgoing primitive representation.
+<em>.is_valid()</em> - Deserializes and validates incoming data.
+<em>.validated_data</em> - Returns the validated incoming data.
+<em>.errors</em> - Returns any errors during validation.
+<em>.save()</em> - Persists the validated data into an object instance.
+There are four methods that can be overridden, depending on what functionality you want the serializer class to support:</p>
+<p><em>.to_representation()</em> - Override this to support serialization, for read operations.
+<em>.to_internal_value()</em> - Override this to support deserialization, for write operations.
+<em>.create() and .update()</em> - Override either or both of these to support saving instances.</p>
+<p>The methodology of working with the serializers should follow the <strong>“Fat Serializer”</strong> methodology allowing for less code to be written throughout the application
+as well as more readable views where the code can very restrictive and error prone.</p>
+<hr class="docutils" />
+</div>
+<div class="section" id="urls-urls-py">
+<span id="urls"></span><h2>URLS - urls.py<a class="headerlink" href="#urls-urls-py" title="Permalink to this headline">¶</a></h2>
+<p>The URLS file should be using the new version of Django URLS syntax so the use of regular expressions will be very limited or
+not even needed at this point.  Using things like “ViewSets” provided through DRF (Django Rest Framework) we can make use of a singular URL
+to complete all actions.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.views</span> <span class="k">import</span> <span class="n">PreferenceUserViewSet</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="k">import</span> <span class="n">routers</span>
+
+<span class="n">router</span> <span class="o">=</span> <span class="n">routers</span><span class="o">.</span><span class="n">SimpleRouter</span><span class="p">()</span>
+
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;preferences&#39;</span><span class="p">,</span> <span class="n">PreferenceUserViewSet</span><span class="p">,</span> <span class="n">base_name</span><span class="o">=</span><span class="s1">&#39;user_preferences&#39;</span><span class="p">)</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+
+<span class="p">]</span>
+<span class="n">urlpatterns</span> <span class="o">+=</span> <span class="n">router</span><span class="o">.</span><span class="n">urls</span>
+</pre></div>
+</div>
+<p>This is depicted in the Swagger docs at the root URL.  <strong>Just be sure to use the session login at the top right of the screen</strong>.</p>
+<a class="reference internal image-reference" href="_images/swagger.png"><img alt="_images/swagger.png" src="_images/swagger.png" style="width: 500px; height: 400px;" /></a>
+<p>If you are making a one off URL for a specific action that falls out of the scope of the <strong>ViewSet</strong>, its best to use the path provided by Django
+that will not make you use a regular expression.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.urls</span> <span class="k">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="nn">people.views</span> <span class="k">import</span> <span class="n">PersonDetailView</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;me/whoami&#39;</span><span class="p">,</span> <span class="n">PersonDetailView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;person-detail&#39;</span><span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</div>
+<div class="section" id="admin-admin-py">
+<span id="admin"></span><h2>Admin - admin.py<a class="headerlink" href="#admin-admin-py" title="Permalink to this headline">¶</a></h2>
+<p>The admin is very simple and is good for creating data that can be later loaded to the application for other developers to reference so that
+we are all working with the same dataset allowing everyone to be on the same thought process.  This data can be also referenced in the tests
+at a later point.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">admin</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="k">import</span> <span class="n">Preference</span>
+
+
+<span class="k">class</span> <span class="nc">PreferencesAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="s1">&#39;namespace&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;user_id&#39;</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="s1">&#39;user_id&#39;</span><span class="p">,)</span>
+    <span class="n">verbose_name</span> <span class="o">=</span> <span class="s1">&#39;Preference&#39;</span>
+    <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s1">&#39;Preferences&#39;</span>
+
+
+<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Preference</span><span class="p">,</span> <span class="n">PreferencesAdmin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="code bash docutils literal notranslate"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">dumpdata</span></code></p>
+<p>Also see <a class="reference internal" href="#fixtures"><span class="std std-ref">Data - fixtures Folder</span></a></p>
+<hr class="docutils" />
+</div>
+<div class="section" id="app-apps-py">
+<span id="apps"></span><h2>App - apps.py<a class="headerlink" href="#app-apps-py" title="Permalink to this headline">¶</a></h2>
+<p>Install the application to the project with this config that comes with each app within the project. See  <a class="reference internal" href="#project-structure"><span class="std std-ref">Structure</span></a></p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.apps</span> <span class="k">import</span> <span class="n">AppConfig</span>
+
+
+<span class="k">class</span> <span class="nc">PreferencesConfig</span><span class="p">(</span><span class="n">AppConfig</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;preferences&#39;</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</div>
+<div class="section" id="data-fixtures-folder">
+<span id="fixtures"></span><h2>Data - fixtures Folder<a class="headerlink" href="#data-fixtures-folder" title="Permalink to this headline">¶</a></h2>
+<p>Data that can be pre-loaded for project helps everyone to understand how to work with the existing API, it is simple and easy
+to create this data.</p>
+<a class="reference internal image-reference" href="_images/fixtures.png"><img alt="_images/fixtures.png" src="_images/fixtures.png" style="width: 100px; height: 200px;" /></a>
+<p>The data can be loaded with the command <code class="code bash docutils literal notranslate"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">loaddata</span> <span class="pre">path_to_the_data</span></code>, existing data can be loaded with
+the command make <code class="code bash docutils literal notranslate"><span class="pre">make</span> <span class="pre">populate</span></code>.</p>
+<p>When adding a fixture of data to the project <strong>please</strong> add it to the <code class="code bash docutils literal notranslate"><span class="pre">Makefile</span></code> / <code class="code bash docutils literal notranslate"><span class="pre">make.bat</span></code>.</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="nf">populate</span><span class="o">:</span>             <span class="c">## adds data to the database from fixtures</span>
+        python manage.py loaddata dashboards/fixtures/default_objects.json people/fixtures/default_users.json  owf_groups/fixtures/default_objects.json preferences/fixtures/default_data.json loaddata stacks/fixtures/default_objects.json
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Server Docs</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="configserver.html">Config</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authentication.html">Authentications &amp; Permissions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Learning &amp; Quick Reference &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Logs</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="configserver.html" title="previous chapter">Config</a></li>
+      <li>Next: <a href="authentication.html" title="next chapter">Authentications &amp; Permissions</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, GOSS.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/development.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
