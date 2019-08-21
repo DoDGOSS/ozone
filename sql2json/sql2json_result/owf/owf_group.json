@@ -1,0 +1,30 @@
+[
+  [
+    [
+      {
+        "stack_id": null,
+        "display_name": "OWF Administrators",
+        "email": null,
+        "description": "OWF Administrators",
+        "name": "OWF Administrators",
+        "automatic": true,
+        "version": 1,
+        "status": "active",
+        "stack_default": false,
+        "id": 23
+      },
+      {
+        "stack_id": null,
+        "display_name": "OWF Users",
+        "email": null,
+        "description": "OWF Users",
+        "name": "OWF Users",
+        "automatic": true,
+        "version": 1,
+        "status": "active",
+        "stack_default": false,
+        "id": 24
+      }
+    ]
+  ]
+]
