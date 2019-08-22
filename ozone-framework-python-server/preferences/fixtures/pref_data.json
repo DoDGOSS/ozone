@@ -1,1 +1,1 @@
-[{"model": "preferences.preference", "pk": 3, "fields": {"version": 1, "value": "a9bf8e71-692d-44e3-a465-5337ce5e725e", "path": "guide_to_launch", "user": 1, "namespace": "owf.admin.UserEditCopy"}}]
+[{"model": "preferences.preference", "pk": 1, "fields": {"version": 1, "value": "a9bf8e71-692d-44e3-a465-5337ce5e725e", "path": "guide_to_launch", "user": 1, "namespace": "owf.admin.UserEditCopy"}}]
