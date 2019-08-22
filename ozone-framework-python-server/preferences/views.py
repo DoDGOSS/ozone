@@ -11,13 +11,14 @@ class PreferenceUserViewSet(viewsets.ModelViewSet):
     serializer_class = PreferenceSerializer
     permission_classes = (IsAuthenticated,)
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['namespace', 'path']
+    filterset_fields = ['namespace', 'path', 'user']
 
 
-class PreferenceAdminViewSet(viewsets.ModelViewSet):
-
+class UserHasPreferenceUserViewSet(viewsets.ModelViewSet):
     queryset = Preference.objects.all()
     serializer_class = PreferenceSerializer
-    permission_classes = (IsAdminUser,)
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['namespace', 'path', 'user']
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return self.queryset \
+            .filter(user=self.request.user.id)
