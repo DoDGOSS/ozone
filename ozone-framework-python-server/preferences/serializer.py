@@ -15,6 +15,7 @@ class PreferenceSerializer(serializers.ModelSerializer):
             'namespace',
             'path',
             'value',
+            'version'
         )
 
     def to_representation(self, instance):
