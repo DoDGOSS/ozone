@@ -13,7 +13,7 @@ payload = {
             "isdefault": False,
             "dashboard_position": 1,
             "altered_by_admin": False,
-            "guid": "ef8b5d6f-4b16-4743-9a57-31683c94100100",
+            "guid": "ef8b5d6f-4b16-4743-9a57-31683c94100100-testing",
             "name": "test_dashboard",
             "description": "testdash1",
             "created_date": "2019-08-13T18:22:05Z",
@@ -40,7 +40,7 @@ class DashboardsBasicTesting(TestCase):
         url = reverse('dashboard-list')
         request = requests.get(url)
         self.assertEqual(request.status_code, 200)
-        self.assertEqual(Dashboard.objects.count(), 2)
+        self.assertEqual(Dashboard.objects.count(), 4)
         requests.logout()
         # Anon User
         url = reverse('dashboard-list')
@@ -60,14 +60,14 @@ class DashboardsBasicTesting(TestCase):
         url = reverse('dashboard-list')
         request = requests.post(url, payload, format='json')
         self.assertEqual(request.status_code, 201)
-        self.assertEqual(Dashboard.objects.count(), 3)
+        self.assertEqual(Dashboard.objects.count(), 5)
         # admin
         requests.login(email='admin@goss.com', password='password')
         url = reverse('dashboard-list')
         payload['guid'] = 'ef8b5d6f-4b16-4743-9a57-31683c94xxxxxxxtest'
         request = requests.post(url, payload, format='json')
         self.assertEqual(request.status_code, 201)
-        self.assertEqual(Dashboard.objects.count(), 4)
+        self.assertEqual(Dashboard.objects.count(), 6)
         requests.logout()
         # Replicate item in DB expect fail
         requests.login(email='admin@goss.com', password='password')
@@ -75,7 +75,7 @@ class DashboardsBasicTesting(TestCase):
         payload['guid'] = 'ef8b5d6f-4b16-4743-9a57-31683c94xxxxxxxtest'
         request = requests.post(url, payload, format='json')
         self.assertEqual(request.status_code, 400)
-        self.assertEqual(Dashboard.objects.count(), 4)
+        self.assertEqual(Dashboard.objects.count(), 6)
         requests.logout()
 
 

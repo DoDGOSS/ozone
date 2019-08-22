@@ -17,42 +17,18 @@ payload_1 = {
     "user": 1,
 }
 
-payload_2 = {
-    "id": 2,
-    "version": 1,
-    "value": 'set testing value 2',
-    "path": '12w4d-wehrdfe-wefefw49-ewfee33',
-    "namespace": 'namespace-test-2',
-    "user": 2,
-}
 
-
-class TestingPersonBaseUrl(TestCase):
+class TestingPrefAdmin(TestCase):
     fixtures = ['people_data.json',
                 'stacks_database.json',
                 'dashboard_database.json',
                 'groups_database.json',
                 'pref_data.json']
 
-    def test_post_person(self):
-        requests.login(email='regular-user@goss.com', password='password')
-        url = reverse('user_preferences-list')
-        data = requests.post(url, payload_1, format="json")
-        self.assertEqual(data.status_code, 201)
-        self.assertEqual(Preference.objects.count(), 2)
-        requests.logout()
-
-    def test_get_person(self):
-        requests.login(email='regular-user@goss.com', password='password')
-        url = reverse('user_preferences-list')
-        data = requests.get(url)
-        self.assertEqual(data.status_code, 200)
-        requests.logout()
-
     def test_post_admin(self):
         requests.login(email='admin@goss.com', password='password')
         url = reverse('user_preferences-list')
-        data = requests.post(url, payload_2, format="json")
+        data = requests.post(url, payload_1, format="json")
         self.assertEqual(data.status_code, 201)
         self.assertEqual(Preference.objects.count(), 2)
         requests.logout()
