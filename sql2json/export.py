@@ -1,4 +1,4 @@
-from psycopg2.extras import RealDictCursor
+# from psycopg2.extras import RealDictCursor
 from datetime import date, datetime
 import psycopg2
 import json
