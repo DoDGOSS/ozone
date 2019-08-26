@@ -38,3 +38,14 @@ You can auto fix the errors by logging into the container and running the `autop
 docker-compose exec web bash
 make pep8 file=YOUR_FILE
 ```
+
+
+### Test Data
+
+Login with test data after `python manage.py loaddata resources/fixtures/all_data.json `
+
+| Users | Passwords |
+|---|---|
+| admin@goss.com | password |
+| regular-user@goss.com | password |
+

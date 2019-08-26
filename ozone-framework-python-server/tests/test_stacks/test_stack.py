@@ -6,7 +6,7 @@ requests = APIClient()
 
 
 class TestingPersonBaseUrl(TestCase):
-    fixtures = ['people_data.json', 'stacks_database.json', 'dashboard_database.json', 'groups_database.json']
+    fixtures = ['people_data.json', 'stacks_data.json', 'dashboard_data.json', 'groups_data.json']
 
     def test_get_person(self):
         requests.login(email='admin@goss.com', password='password')
