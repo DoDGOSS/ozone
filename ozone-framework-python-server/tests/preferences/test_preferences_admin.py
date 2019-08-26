@@ -20,9 +20,9 @@ payload_1 = {
 
 class TestingPrefAdmin(TestCase):
     fixtures = ['people_data.json',
-                'stacks_database.json',
-                'dashboard_database.json',
-                'groups_database.json',
+                'stacks_data.json',
+                'dashboard_data.json',
+                'groups_data.json',
                 'pref_data.json']
 
     def test_post_admin(self):

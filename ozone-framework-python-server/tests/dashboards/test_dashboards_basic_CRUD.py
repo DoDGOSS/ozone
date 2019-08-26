@@ -32,7 +32,7 @@ payload = {
 
 
 class DashboardsBasicTesting(TestCase):
-    fixtures = ['dashboard_database.json', 'people_data.json', 'stacks_database.json', 'groups_database.json']
+    fixtures = ['dashboard_data.json', 'people_data.json', 'stacks_data.json', 'groups_data.json']
 
     def test_get_action(self):
         # admin user

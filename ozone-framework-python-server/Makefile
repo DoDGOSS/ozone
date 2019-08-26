@@ -26,11 +26,21 @@ serve:             ## make serve to serve docs
 dev:             ## make dev to create a dev settings file
 	@touch owf_framework/dev_settings.py
 
-populate:             ## adds data to the database from fixtures
-	python manage.py loaddata dashboards/fixtures/default_objects.json && echo dashboards && python manage.py loaddata people/fixtures/default_users.json && echo people && \
-	python manage.py loaddata owf_groups/fixtures/default_objects.json && echo groups && python manage.py loaddata preferences/fixtures/default_data.json && echo preferences && \
-	python manage.py loaddata stacks/fixtures/default_objects.json && echo stacks && python manage.py loaddata widgets/fixtures/default_objects.json && echo widgets
-
+populate:        ## populate db
+	@python manage.py loaddata people/fixtures/people_data.json && \
+	echo people && \
+	python manage.py loaddata owf_groups/fixtures/groups_data.json && \
+	echo groups && \
+	python manage.py loaddata preferences/fixtures/pref_data.json && \
+	echo preferences && \
+	python manage.py loaddata stacks/fixtures/stacks_data.json && \
+	echo stacks && \
+	python manage.py loaddata dashboards/fixtures/dashboard_data.json && \
+	echo dashboards && \
+	python manage.py loaddata roles/fixtures/roles_data.json && \
+	echo roles && \
+	python manage.py loaddata widgets/fixtures/widget_data.json && \
+	echo widgets
 
 pep8:             ## make pep8 to change the file to best pep8 format before commit
 	@autopep8 --max-line-length=120 --in-place --aggressive $(file)

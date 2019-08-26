@@ -19,8 +19,7 @@ done
 
 # Load fixture data
 echo "Load fixture data"
-python manage.py loaddata default_users
-python manage.py loaddata default_objects
+python manage.py loaddata resources/fixtures/all_data.json
 
 # Start server
 echo "Starting server"
