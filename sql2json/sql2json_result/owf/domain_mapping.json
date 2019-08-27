@@ -1,0 +1,51 @@
+[
+  [
+    [
+      {
+        "src_type": "group",
+        "version": 0,
+        "dest_type": "widget_definition",
+        "relationship_type": "owns",
+        "src_id": 23,
+        "dest_id": 37,
+        "id": 42
+      },
+      {
+        "src_type": "group",
+        "version": 0,
+        "dest_type": "widget_definition",
+        "relationship_type": "owns",
+        "src_id": 23,
+        "dest_id": 38,
+        "id": 43
+      },
+      {
+        "src_type": "group",
+        "version": 0,
+        "dest_type": "widget_definition",
+        "relationship_type": "owns",
+        "src_id": 23,
+        "dest_id": 39,
+        "id": 44
+      },
+      {
+        "src_type": "group",
+        "version": 0,
+        "dest_type": "widget_definition",
+        "relationship_type": "owns",
+        "src_id": 23,
+        "dest_id": 40,
+        "id": 45
+      },
+      {
+        "src_type": "group",
+        "version": 0,
+        "dest_type": "widget_definition",
+        "relationship_type": "owns",
+        "src_id": 23,
+        "dest_id": 41,
+        "id": 46
+      }
+    ]
+  ]
+]
