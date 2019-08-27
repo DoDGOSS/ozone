@@ -3,7 +3,7 @@ from django.db import models
 
 class Intent(models.Model):
     id = models.BigAutoField(primary_key=True)
-    version = models.BigIntegerField()
+    version = models.BigIntegerField(default=0)
     action = models.CharField(unique=True, max_length=255)
 
     def __str__(self):
@@ -16,7 +16,7 @@ class Intent(models.Model):
 
 class IntentDataType(models.Model):
     id = models.BigAutoField(primary_key=True)
-    version = models.BigIntegerField()
+    version = models.BigIntegerField(default=0)
     data_type = models.CharField(max_length=255)
 
     def __str__(self):
@@ -29,8 +29,8 @@ class IntentDataType(models.Model):
 
 class IntentDataTypes(models.Model):
     id = models.BigAutoField(primary_key=True)
-    intent_data_type = models.ForeignKey(IntentDataType, models.DO_NOTHING)
-    intent = models.ForeignKey(Intent, models.DO_NOTHING)
+    intent_data_type = models.ForeignKey(IntentDataType, on_delete=models.CASCADE)
+    intent = models.ForeignKey(Intent, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'data type = {self.intent_data_type.data_type} & intent = {self.intent.action}'

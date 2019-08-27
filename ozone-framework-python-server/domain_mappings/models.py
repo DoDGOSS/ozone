@@ -3,7 +3,7 @@ from django.db import models
 
 class DomainMapping(models.Model):
     id = models.BigAutoField(primary_key=True)
-    version = models.BigIntegerField()
+    version = models.BigIntegerField(default=0)
     src_id = models.BigIntegerField()
     src_type = models.CharField(max_length=255)
     relationship_type = models.CharField(max_length=8, blank=True, null=True)
