@@ -1,12 +1,12 @@
 from django.db import models
 
-
+# TODO - update on_delete
 class ApplicationConfiguration(models.Model):
     id = models.BigAutoField(primary_key=True)
-    version = models.BigIntegerField()
-    created_by = models.ForeignKey('Person', models.DO_NOTHING, blank=True, null=True)
+    version = models.BigIntegerField(default=0)
+    created_by = models.ForeignKey('Person', on_delete=models.DO_NOTHING, blank=True, null=True)
     created_date = models.DateField(blank=True, null=True)
-    edited_by = models.ForeignKey('Person', models.DO_NOTHING, blank=True, null=True)
+    edited_by = models.ForeignKey('Person', on_delete=models.DO_NOTHING, blank=True, null=True)
     edited_date = models.DateField(blank=True, null=True)
     code = models.CharField(unique=True, max_length=250)
     value = models.CharField(max_length=2000, blank=True, null=True)
@@ -67,13 +67,14 @@ class Requestmap(models.Model):
         db_table = 'requestmap'
 
 
+# TODO - update on_delete
 class TagLinks(models.Model):
     id = models.BigAutoField(primary_key=True)
     version = models.BigIntegerField()
     pos = models.BigIntegerField(blank=True, null=True)
     visible = models.BooleanField(blank=True, null=True)
     tag_ref = models.BigIntegerField()
-    tag = models.ForeignKey('Tags', models.DO_NOTHING)
+    tag = models.ForeignKey('Tags', on_delete=models.DO_NOTHING)
     type = models.CharField(max_length=255)
     editable = models.BooleanField(blank=True, null=True)
 
