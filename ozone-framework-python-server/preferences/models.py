@@ -5,10 +5,10 @@ from people.models import Person
 
 class Preference(models.Model):
     id = models.BigAutoField(primary_key=True)
-    version = models.BigIntegerField()
+    version = models.BigIntegerField(default=0)
     value = models.TextField()
     path = models.CharField(max_length=200)
-    user = models.ForeignKey(Person, models.DO_NOTHING)
+    user = models.ForeignKey(Person, on_delete=models.CASCADE)
     namespace = models.CharField(max_length=200)
 
     def __str__(self):
