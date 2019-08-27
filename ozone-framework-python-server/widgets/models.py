@@ -4,11 +4,11 @@ from intents.models import Intent, IntentDataType, IntentDataTypes
 
 class WidgetDefIntent(models.Model):
     id = models.BigAutoField(primary_key=True)
-    version = models.BigIntegerField()
+    version = models.BigIntegerField(default=0)
     receive = models.BooleanField()
     send = models.BooleanField()
-    intent = models.ForeignKey(Intent, models.DO_NOTHING)
-    widget_definition = models.ForeignKey('WidgetDefinition', models.DO_NOTHING)
+    intent = models.ForeignKey(Intent, on_delete=models.CASCADE)
+    widget_definition = models.ForeignKey('WidgetDefinition', on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.intent.action} & {self.widget_definition.description}'
@@ -20,8 +20,8 @@ class WidgetDefIntent(models.Model):
 
 class WidgetDefIntentDataTypes(models.Model):
     id = models.BigAutoField(primary_key=True)
-    intent_data_type = models.ForeignKey(IntentDataType, models.DO_NOTHING)
-    widget_definition_intent = models.ForeignKey(WidgetDefIntent, models.DO_NOTHING)
+    intent_data_type = models.ForeignKey(IntentDataType, on_delete=models.CASCADE)
+    widget_definition_intent = models.ForeignKey(WidgetDefIntent, on_delete=models.CASCADE)
 
     class Meta:
         managed = True
@@ -57,8 +57,8 @@ class WidgetDefinition(models.Model):
 
 class WidgetDefinitionWidgetTypes(models.Model):
     id = models.BigAutoField(primary_key=True)
-    widget_definition = models.OneToOneField(WidgetDefinition, models.DO_NOTHING)
-    widget_type = models.ForeignKey('WidgetType', models.DO_NOTHING)
+    widget_definition = models.OneToOneField(WidgetDefinition, on_delete=models.CASCADE)
+    widget_type = models.ForeignKey('WidgetType', on_delete=models.CASCADE)
 
     class Meta:
         managed = True

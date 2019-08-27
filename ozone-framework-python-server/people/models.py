@@ -42,7 +42,7 @@ class MyUserManager(BaseUserManager):
 
 class Person(AbstractBaseUser):
     id = models.BigAutoField(primary_key=True)
-    version = models.BigIntegerField(default=1)
+    version = models.BigIntegerField(default=0)
     enabled = models.BooleanField(default=True)
     user_real_name = models.CharField(max_length=200)
     username = models.CharField(unique=True, max_length=200)
@@ -105,10 +105,10 @@ class PersonRole(models.Model):
 class PersonWidgetDefinition(models.Model):
     id = models.BigAutoField(primary_key=True)
     version = models.BigIntegerField()
-    person = models.ForeignKey(Person, models.DO_NOTHING)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
     visible = models.BooleanField()
     pwd_position = models.IntegerField()
-    widget_definition = models.ForeignKey('widgets.WidgetDefinition', models.DO_NOTHING)
+    widget_definition = models.ForeignKey('widgets.WidgetDefinition', on_delete=models.CASCADE)
     group_widget = models.BooleanField(blank=True, null=True)
     favorite = models.BooleanField(blank=True, null=True)
     display_name = models.CharField(max_length=256, blank=True, null=True)
