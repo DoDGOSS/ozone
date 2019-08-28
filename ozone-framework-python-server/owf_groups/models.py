@@ -2,14 +2,17 @@ from django.db import models
 from enum import Enum
 from people.models import Person
 
+
 class GroupStatus(Enum):
-    Active = 'active'
-    Inactive = 'inactive'
+    active = 'active'
+    inactive = 'inactive'
+
 
 class OwfGroup(models.Model):
     id = models.BigAutoField(primary_key=True)
     version = models.BigIntegerField(default=0)
-    status = models.CharField(default=GroupStatus.Active, max_length=8, choices=[(tag, tag.value) for tag in GroupStatus])
+    status = models.CharField(default=GroupStatus.active, max_length=8,
+                              choices=[(tag.value, tag.name) for tag in GroupStatus])
     email = models.CharField(max_length=255, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
     name = models.CharField(max_length=200)
