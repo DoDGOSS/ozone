@@ -8,7 +8,7 @@ class OWFGroupViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows owf groups to be viewed or edited.
     """
-    queryset = OwfGroup.objects.all()
+    queryset = OwfGroup.objects.filter(stack_default=False)
     serializer_class = OWFGroupBaseSerializer
     permission_classes = (IsAdminUser,)
 
