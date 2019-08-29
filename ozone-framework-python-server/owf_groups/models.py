@@ -15,13 +15,20 @@ class OwfGroup(models.Model):
                               choices=[(tag.value, tag.name) for tag in GroupStatus])
     email = models.CharField(max_length=255, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
-    name = models.CharField(max_length=200)
-    automatic = models.BooleanField()
+    name = models.CharField(max_length=200, unique=True)
+    automatic = models.BooleanField(default=True)
     display_name = models.CharField(max_length=200, blank=True, null=True)
     stack_default = models.BooleanField(default=False, blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if self.display_name is None:
+            self.display_name = self.name
+            super(OwfGroup, self).save(*args, **kwargs)
+        else:
+            super(OwfGroup, self).save(*args, **kwargs)
 
     class Meta:
         managed = True
