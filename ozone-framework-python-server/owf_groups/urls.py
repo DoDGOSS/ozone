@@ -3,8 +3,8 @@ from rest_framework import routers
 
 
 router = routers.SimpleRouter()
-router.register(r'groups', OWFGroupPeopleViewSet)
-router.register(r'groups-people', OWFGroupViewSet)
+router.register(r'admin/groups', OWFGroupViewSet)
+router.register(r'groups-people', OWFGroupPeopleViewSet)
 
 
 urlpatterns = [
