@@ -4,10 +4,14 @@ services:
 
   db:
     image: postgres
-    ports:
-      - "5432:5432"
     environment:
       POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    depends_on:
+      - pgadmin
 
   web:
     build: .
@@ -19,3 +23,29 @@ services:
       - "8000:8000"
     depends_on:
       - db
+
+  # Postgres Admin Interface
+  # http://localhost:5555
+  # How to connect to New Postgres server
+  # Add new server
+  # Required Fields
+  ## General
+  ### Name: Postgres Django
+  ## Connection
+  ### Host      db
+  ### Port      5432
+  ### Username  postgres
+  ### Password  postgres
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@goss.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "5555:80"
+    networks:
+      - postgres
+
+networks:
+  postgres:
+    driver: bridge
