@@ -5,7 +5,7 @@ from rest_framework import routers
 
 router = routers.SimpleRouter()
 
-router.register(r'widgets', WidgetDefinitionViewSet, base_name='widgets')
+router.register(r'admin/widgets', WidgetDefinitionViewSet, base_name='widgets')
 
 urlpatterns = [
 
