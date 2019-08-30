@@ -15,6 +15,7 @@ class StackSerializer(serializers.ModelSerializer):
 
         return newStack
 
+
 class StackIdSerializer(serializers.Serializer):
     stack = serializers.PrimaryKeyRelatedField(many=False, read_only=False, queryset=Stack.objects.all())
 
