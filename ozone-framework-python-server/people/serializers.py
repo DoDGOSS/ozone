@@ -6,5 +6,3 @@ class PersonBaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         exclude = ('password', )
-
-

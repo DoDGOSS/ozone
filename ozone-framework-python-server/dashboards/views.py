@@ -35,5 +35,3 @@ class DashboardNestViewSet(viewsets.ModelViewSet):
             return GeneralDashboardSerializer
         else:
             return DashBoardSerializer
-
-

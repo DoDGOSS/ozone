@@ -1,7 +1,8 @@
 from django.urls import path
+from rest_framework import routers
 from .views import PreferenceUserViewSet, UserHasPreferenceUserViewSet
 from.administration.views import PreferenceAdminViewSet
-from rest_framework import routers
+
 
 router = routers.SimpleRouter()
 
