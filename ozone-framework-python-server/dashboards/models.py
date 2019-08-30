@@ -5,9 +5,9 @@ from django.db import models
 class Dashboard(models.Model):
     id = models.BigAutoField(primary_key=True)
     version = models.BigIntegerField(default=0)
-    isdefault = models.BooleanField(default=False)
-    dashboard_position = models.IntegerField(default=0)
-    altered_by_admin = models.BooleanField(default=False)
+    isdefault = models.BooleanField(blank=True, default=False)
+    dashboard_position = models.IntegerField(blank=True)
+    altered_by_admin = models.BooleanField(blank=True, default=False)
     guid = models.CharField(unique=True, max_length=255)
     name = models.CharField(max_length=200)
     user = models.ForeignKey('people.Person', on_delete=models.CASCADE, blank=True, null=True, related_name='dashboard_user')
