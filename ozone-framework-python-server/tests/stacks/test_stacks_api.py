@@ -15,7 +15,7 @@ class StacksApiTests(TestCase):
 
     def test_user_can_create_stack(self):
         requests.login(email='admin@goss.com', password='password')
-        url = reverse('stack-list')
+        url = reverse('stacks-list')
         response = requests.post(url, createStackPayload)
         userId = 1  # coming from the fixture that creates default users
 
