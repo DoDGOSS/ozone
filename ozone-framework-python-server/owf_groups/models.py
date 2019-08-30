@@ -20,6 +20,8 @@ class OwfGroup(models.Model):
     display_name = models.CharField(max_length=200, blank=True, null=True)
     stack_default = models.BooleanField(default=False, blank=True, null=True)
 
+    people = models.ManyToManyField(Person, through='OwfGroupPeople')
+
     def __str__(self):
         return self.name
 

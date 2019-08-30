@@ -6,7 +6,13 @@ class StackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stack
         exclude = ('default_group', )
+        read_only_fields = ('version', 'stack_context', 'owner')
 
+    def create(self, validated_data):
+        request = self.context.get("request")
+        newStack = Stack.create(request.user, validated_data)
+
+        return newStack
 
 class StackIdSerializer(serializers.Serializer):
     stack = serializers.PrimaryKeyRelatedField(many=False, read_only=False, queryset=Stack.objects.all())
