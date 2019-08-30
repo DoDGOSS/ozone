@@ -7,6 +7,7 @@ class StackSerializer(serializers.ModelSerializer):
         model = Stack
         exclude = ('default_group', )
         read_only_fields = ('version', 'stack_context', 'owner')
+        extra_kwargs = {'name': {'required': True}}
 
     def create(self, validated_data):
         request = self.context.get("request")
