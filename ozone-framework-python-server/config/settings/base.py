@@ -110,6 +110,7 @@ DATABASES = {
         'PASSWORD': 'postgres',
         'HOST': 'localhost',
         'PORT': 5432,
+        'ATOMIC_REQUESTS': True, # wraps each web request in a transaction. So if anything fails, it will rollback automatically.
     }
 }
 # Password validation
