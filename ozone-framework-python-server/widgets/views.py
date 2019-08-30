@@ -20,7 +20,3 @@ class WidgetTypesViewSet(viewsets.ModelViewSet):
     queryset = WidgetType.objects.all()
     serializer_class = WidgetTypeSerializer
     permission_classes = (IsAdminUser,)
-
-
-
-

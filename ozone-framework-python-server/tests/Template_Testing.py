@@ -18,7 +18,8 @@ developing your endpoints.
     * Complex serialization if statements.
     * Authorization & Permissions.
 
-These tests should only hold 1 - 2 classes and should be short in code length about 100 - 150 lines excluding the imports.
+These tests should only hold 1 - 2 classes
+and should be short in code length about 100 - 150 lines excluding the imports.
 """
 # Import the resting API client for requests.
 from rest_framework.test import APIClient

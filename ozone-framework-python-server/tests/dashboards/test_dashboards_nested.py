@@ -18,7 +18,8 @@ payload = {
             "description": "testdash1",
             "created_date": "2019-08-13T18:22:05Z",
             "edited_date": "2019-08-13T18:22:10Z",
-            "layout_config": "\"{\r\n        \\\"backgroundWidgets\\\":[\r\n\r\n        ],\r\n        \\\"panels\\\":[\r\n\r\n        ],\r\n        \\\"tree\\\":null\r\n      }\"",
+            "layout_config": "\"{\r\n        \\\"backgroundWidgets\\\":[\r\n\r\n        ],\r\n        "
+                             "\\\"panels\\\":[\r\n\r\n        ],\r\n        \\\"tree\\\":null\r\n      }\"",
             "locked": False,
             "type": "None",
             "icon_image_url": "None",
@@ -77,8 +78,3 @@ class NestedDashboardsBasicTesting(TestCase):
         self.assertEqual(request.status_code, 400)
         self.assertEqual(Dashboard.objects.count(), 6)
         requests.logout()
-
-
-
-
-

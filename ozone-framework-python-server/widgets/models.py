@@ -78,4 +78,3 @@ class WidgetType(models.Model):
     class Meta:
         managed = True
         db_table = 'widget_type'
-
