@@ -5,22 +5,22 @@ from django.test import TestCase
 requests = APIClient()
 
 payload = {
-"version": 1,
-            "visible": True,
-            "image_url_medium": "https://emoji.slack-edge.com/T045BEDPN/fistbump/7592b191dc43cce2.gif",
-            "image_url_small": "https://emoji.slack-edge.com/T045BEDPN/fistbump/7592b191dc43cce2.gif",
-            "singleton": False,
-            "width": 200,
-            "widget_version": "1",
-            "height": 200,
-            "widget_url": "https://emoji.slack-edge.com/T045BEDPN/fistbump/7592b191dc43cce2.gif",
-            "widget_guid": "25c85af7-6a2d-45c4-bbd5-5a58abd9e5e3TEST",
-            "display_name": "Test Widget 2",
-            "background": False,
-            "universal_name": "test_widget2",
-            "descriptor_url": "Description for url",
-            "description": "Description",
-            "mobile_ready": False
+    "version": 1,
+    "visible": True,
+    "image_url_medium": "https://emoji.slack-edge.com/T045BEDPN/fistbump/7592b191dc43cce2.gif",
+    "image_url_small": "https://emoji.slack-edge.com/T045BEDPN/fistbump/7592b191dc43cce2.gif",
+    "singleton": False,
+    "width": 200,
+    "widget_version": "1",
+    "height": 200,
+    "widget_url": "https://emoji.slack-edge.com/T045BEDPN/fistbump/7592b191dc43cce2.gif",
+    "widget_guid": "25c85af7-6a2d-45c4-bbd5-5a58abd9e5e3TEST",
+    "display_name": "Test Widget 2",
+    "background": False,
+    "universal_name": "test_widget2",
+    "descriptor_url": "Description for url",
+    "description": "Description",
+    "mobile_ready": False
 }
 
 

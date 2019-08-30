@@ -14,4 +14,3 @@ class WidgetTypeAdmin(admin.ModelAdmin):
 
 admin.site.register(WidgetDefinition, WidgetDefinitionAdmin)
 admin.site.register(WidgetType, WidgetTypeAdmin)
-

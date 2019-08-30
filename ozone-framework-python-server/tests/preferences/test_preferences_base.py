@@ -6,7 +6,6 @@ from preferences.models import Preference
 
 requests = APIClient()
 
-
 payload_1 = {
     "id": 1,
     "version": 1,
@@ -58,6 +57,3 @@ class TestingPrefBaseUrl(TestCase):
         data = requests.get(url)
         self.assertEqual(data.status_code, 200)
         requests.logout()
-
-
-

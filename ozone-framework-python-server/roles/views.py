@@ -8,6 +8,6 @@ class RolesViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows dashboards to be viewed or edited.
     """
-    queryset =Role.objects.all()
+    queryset = Role.objects.all()
     serializer_class = RoleSerializer
     permission_classes = (IsAdminUser,)

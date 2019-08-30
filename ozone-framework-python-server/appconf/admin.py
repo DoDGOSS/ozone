@@ -8,4 +8,3 @@ class AppConfAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ApplicationConfiguration, AppConfAdmin)
-

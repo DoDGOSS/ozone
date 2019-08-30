@@ -40,6 +40,3 @@ class TestingWidgetType(TestCase):
         self.assertEqual(db_details.display_name, widget_type_obj.data['display_name'])
         self.assertEqual(db_details.name, widget_type_obj.data['name'])
         self.assertEqual(db_details.id, widget_type_obj.data['id'])
-
-
-
