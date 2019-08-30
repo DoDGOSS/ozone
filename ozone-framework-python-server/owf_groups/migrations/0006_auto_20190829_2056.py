@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('owf_groups', '0004_auto_20190828_1829'),
+        ('owf_groups', '0005_auto_20190828_1829'),
     ]
 
     operations = [
