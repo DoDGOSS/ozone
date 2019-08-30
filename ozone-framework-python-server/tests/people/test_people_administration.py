@@ -79,4 +79,3 @@ class TestingPersonBaseUrl(TestCase):
         self.assertEqual(sanity_check.status_code, 200)
         self.assertEqual(sanity_check.data['username'], 'Regular-User')
         requests.logout()
-

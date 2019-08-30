@@ -16,4 +16,3 @@ class PersonDetailView(APIView):
         user = Person.objects.get(email=request.user.email)
         serializer = PersonBaseSerializer(user)
         return Response(serializer.data)
-

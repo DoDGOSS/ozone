@@ -20,7 +20,3 @@ class OWFGroupPeopleViewSet(viewsets.ModelViewSet):
     queryset = OwfGroupPeople.objects.all()
     serializer_class = OWFGroupPeopleSerializer
     permission_classes = (IsAdminUser,)
-
-
-
-

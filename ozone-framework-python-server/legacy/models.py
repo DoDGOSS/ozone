@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # TODO - update on_delete
 class ApplicationConfiguration(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -91,4 +92,3 @@ class Tags(models.Model):
     class Meta:
         managed = False
         db_table = 'tags'
-
