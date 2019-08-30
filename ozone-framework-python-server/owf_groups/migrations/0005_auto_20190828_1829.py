@@ -7,7 +7,7 @@ import owf_groups.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('owf_groups', '0003_auto_20190828_1516'),
+        ('owf_groups', '0004_auto_20190828_1429'),
     ]
 
     operations = [
