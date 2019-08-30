@@ -1,6 +1,7 @@
 from django.db import models
 from enum import Enum
 
+
 class RelationshipType(Enum):
     owns = 'owns'
     requires = 'requires'
