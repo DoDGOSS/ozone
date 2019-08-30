@@ -34,5 +34,6 @@ urlpatterns = [
         path('api/v2/', include('roles.urls')),
         path('api/v2/', include('stacks.urls')),
         path('api/v2/', include('widgets.urls')),
+        path('api/v2/', include('appconf.urls')),
         path('system-version', SystemVersionView.as_view(), name='system-version-url'),
     ]

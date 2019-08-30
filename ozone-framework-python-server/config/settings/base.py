@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'stacks.apps.StacksConfig',
     'widgets.apps.WidgetsConfig',
     'dashboards.apps.DashboardsConfig',
-    'preferences.apps.PreferencesConfig'
+    'preferences.apps.PreferencesConfig',
+    'appconf.apps.AppconfConfig'
 
 ]
 
