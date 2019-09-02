@@ -1,7 +1,7 @@
 import styles from "../index.scss";
 
 import React, { useCallback } from "react";
-import { Intent } from "@blueprintjs/core";
+import { Intent, Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 
 import { assetUrl } from "../../../environment";
 import { useToggleable } from "../../../hooks";
@@ -43,12 +43,24 @@ const _UserWidgetItem: React.FC<UserWidgetItemProps> = ({ userWidget }) => {
     return (
         <div className={styles.tile} onMouseEnter={deleteButton.show} onMouseLeave={deleteButton.hide}>
             <div style={{ width: "100%" }}>
-                <UserWidgetTile
-                    userWidgetId={userWidget.id}
-                    title={widget.title}
-                    iconUrl={assetUrl(widget.images.smallUrl)}
-                    onClick={addWidget}
-                />
+                <Popover
+                    interactionKind={PopoverInteractionKind.HOVER_TARGET_ONLY}
+                    position={Position.RIGHT}
+                    modifiers={{ arrow: { enabled: false }, offset: { enabled: true, offset:'0,-100% + 285'}, preventOverflow: {enabled: true, padding:5}, keepTogether: {enabled: true}}}
+                    content={
+                        <div id="popoverdiv" className={styles.popoverdiv}>
+                            <p>Version: {widget.version}</p>
+                            <p>Description: {widget.description}</p>
+                        </div>
+                    }
+                >
+                    <UserWidgetTile
+                        userWidgetId={userWidget.id}
+                        title={widget.title}
+                        iconUrl={assetUrl(widget.images.smallUrl)}
+                        onClick={addWidget}
+                    />
+                </Popover>
             </div>
             <DeleteWidgetButton
                 isVisible={deleteButton.isVisible}
