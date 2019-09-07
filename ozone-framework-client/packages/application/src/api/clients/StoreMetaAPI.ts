@@ -173,7 +173,10 @@ export class StoreMetaAPI {
             return undefined;
         }
         // get the json part of the hacky-html-wrapped-json-bundle.
-        const jsonString = htmlJunk.split("var json = ")[1].split("\n")[0].replace(/[']/g, "");
+        const jsonString = htmlJunk
+            .split("var json = ")[1]
+            .split("\n")[0]
+            .replace(/[']/g, "");
         const storeJsonReponse = JSON.parse(jsonString);
         if (storeJsonReponse.status === 200) {
             return this.createOMPStoreWidget(storeJsonReponse.data);
