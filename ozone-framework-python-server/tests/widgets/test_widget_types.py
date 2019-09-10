@@ -20,7 +20,7 @@ class TestingWidgetType(TestCase):
         data = requests.get(self.url_list)
         self.assertEqual(data.status_code, 200)
         requests.logout()
-        requests.login(email='regular-user@goss.com', password='password')
+        requests.login(email='user@goss.com', password='password')
         data = requests.get(self.url_list)
         self.assertEqual(data.status_code, 403)
         requests.logout()

@@ -1,5 +1,6 @@
 from django.db import models
 from enum import Enum
+from django_enum_choices.fields import EnumChoiceField
 from people.models import Person
 
 
@@ -11,8 +12,7 @@ class GroupStatus(Enum):
 class OwfGroup(models.Model):
     id = models.BigAutoField(primary_key=True)
     version = models.BigIntegerField(default=0)
-    status = models.CharField(default=GroupStatus.active, max_length=8,
-                              choices=[(tag.value, tag.name) for tag in GroupStatus])
+    status = EnumChoiceField(GroupStatus, default=GroupStatus.active, max_length=8)
     email = models.CharField(max_length=255, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
     name = models.CharField(max_length=200, unique=True)
@@ -20,7 +20,7 @@ class OwfGroup(models.Model):
     display_name = models.CharField(max_length=200, blank=True, null=True)
     stack_default = models.BooleanField(default=False, blank=True, null=True)
 
-    people = models.ManyToManyField(Person, through='OwfGroupPeople')
+    people = models.ManyToManyField(Person, through='OwfGroupPeople', related_name='groups')
 
     def __str__(self):
         return self.name

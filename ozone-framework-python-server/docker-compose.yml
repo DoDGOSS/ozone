@@ -21,6 +21,8 @@ services:
       - .:/code
     ports:
       - "8000:8000"
+    networks:
+      - postgres
     depends_on:
       - db
 
