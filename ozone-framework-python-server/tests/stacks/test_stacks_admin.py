@@ -87,7 +87,7 @@ class TestingStackAdmin(TestCase):
         requests.logout()
 
     def test_auth_admin_only(self):
-        requests.login(email='regular-user@goss.com', password='password')
+        requests.login(email='user@goss.com', password='password')
         url = reverse('admin_stacks-list')
         filter_url = f'{url}?user=2'
         response = requests.get(filter_url, format="json")

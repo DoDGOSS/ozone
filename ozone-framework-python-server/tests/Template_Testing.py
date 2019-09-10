@@ -43,7 +43,7 @@ class TemplateForTesting(TestCase):  # Change the class name to a name depicting
         # log out of the system for the admin user
         requests.logout()
         # login to the auth system for the regular user
-        requests.login(email='regular-user@goss.com', password='password')
+        requests.login(email='user@goss.com', password='password')
         self.assertEqual(1, 1)
         # Assertion of equality for each user.
         # log out of the system for the regular user

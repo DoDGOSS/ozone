@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .models import Dashboard
-from .serializers import GeneralDashboardSerializer, DashBoardSerializer
+from .serializers import DashboardBaseSerializer, DashBoardSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 
 
@@ -10,7 +10,7 @@ class DashboardViewSet(viewsets.ModelViewSet):
     API endpoint that allows dashboards to be viewed or edited.
     """
     queryset = Dashboard.objects.all()
-    serializer_class = GeneralDashboardSerializer
+    serializer_class = DashboardBaseSerializer
     permission_classes = (IsAuthenticated,)
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['guid', ]
@@ -28,10 +28,10 @@ class DashboardNestViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'create':
-            return GeneralDashboardSerializer
+            return DashboardBaseSerializer
         if self.action == 'update':
-            return GeneralDashboardSerializer
+            return DashboardBaseSerializer
         if self.action == 'partial_update':
-            return GeneralDashboardSerializer
+            return DashboardBaseSerializer
         else:
             return DashBoardSerializer

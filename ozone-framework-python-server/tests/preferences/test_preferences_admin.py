@@ -51,7 +51,7 @@ class TestingPrefAdmin(TestCase):
         requests.logout()
 
     def test_auth_admin_url(self):
-        requests.login(email='regular-user@goss.com', password='password')
+        requests.login(email='user@goss.com', password='password')
         url = reverse('admin_preferences-list')
         filter_url = f'{url}?user=2'
         response = requests.get(filter_url, format="json")
