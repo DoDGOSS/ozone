@@ -1,13 +1,11 @@
-from rest_framework.test import APIClient
 from django.test import TestCase
 from people.models import Person
-from domain_mappings.models import RelationshipType, DomainMapping
+from domain_mappings.models import RelationshipType, MappingType, DomainMapping
 from dashboards.models import Dashboard
 from stacks.models import Stack
 
-requests = APIClient()
 
-createStackPayload = {
+create_stack_payload = {
     'name': 'test stack 1',
     'description': 'test description 1'
 }
@@ -17,49 +15,51 @@ class StacksModelTests(TestCase):
     fixtures = ['people_data.json']
 
     def test_user_can_create_stack(self):
-        user = Person.objects.get(pk=1)  # coming from the fixture that creates default users
-        createdStackId = Stack.create(user, createStackPayload).id
+        # Regular user
+        user = Person.objects.get(pk=2)
+        created_stack_id = Stack.create(user, create_stack_payload).id
 
-        createdStack = Stack.objects.get(pk=createdStackId)
+        created_stack = Stack.objects.get(pk=created_stack_id)
+        self.assertTrue(created_stack.stack_context)
 
         # check that default group got created and assigned to the stack
-        defaultStackGroup = createdStack.default_group
-        self.assertIsNotNone(defaultStackGroup)
-        self.assertEqual(defaultStackGroup.stack_default, True)
-        self.assertEqual(defaultStackGroup.automatic, False)
+        default_stack_group = created_stack.default_group
+        self.assertIsNotNone(default_stack_group)
+        self.assertEqual(default_stack_group.stack_default, True)
+        self.assertEqual(default_stack_group.automatic, False)
 
         # check that the requesting user got added to the default group
-        self.assertIsNotNone(defaultStackGroup.people.get(pk=user.id))
+        self.assertIsNotNone(default_stack_group.people.get(pk=user.id))
 
         # check that the owner of the stack is the user
-        self.assertEqual(createdStack.owner.id, user.id)
+        self.assertEqual(created_stack.owner.id, user.id)
 
         # check that a group dashboard got created
-        groupDashboard = Dashboard.objects.get(stack=createdStackId, user=None)
-        self.assertIsNotNone(groupDashboard)
-        self.assertEqual(groupDashboard.name, createdStack.name)
+        group_dashboard = Dashboard.objects.get(stack=created_stack_id, user=None)
+        self.assertIsNotNone(group_dashboard)
+        self.assertEqual(group_dashboard.name, created_stack.name)
 
         # check that a personal dashboard got created
-        personalDashboard = Dashboard.objects.get(stack=createdStackId, user=user.id)
-        self.assertIsNotNone(personalDashboard)
-        self.assertEqual(personalDashboard.name, groupDashboard.name)
+        user_dashboard = Dashboard.objects.get(stack=created_stack_id, user=user.id)
+        self.assertIsNotNone(user_dashboard)
+        self.assertEqual(user_dashboard.name, group_dashboard.name)
 
         # check that the default group owns dashboard domain mapping get created
-        groupDashDomainMapping = DomainMapping.objects.get(
-            src_id=defaultStackGroup.id,
-            src_type=type(defaultStackGroup).__name__,
-            relationship_type=RelationshipType.owns.name,
-            dest_id=groupDashboard.id,
-            dest_type=type(groupDashboard).__name__
+        group_dashboard_domain_mapping = DomainMapping.objects.get(
+            src_id=default_stack_group.id,
+            src_type=MappingType.group,
+            relationship_type=RelationshipType.owns,
+            dest_id=group_dashboard.id,
+            dest_type=MappingType.dashboard
         )
-        self.assertIsNotNone(groupDashDomainMapping)
+        self.assertIsNotNone(group_dashboard_domain_mapping)
 
         # check that the personal dash is a cloneOf group dash domain mapping get created
-        personalDashDomainMapping = DomainMapping.objects.get(
-            src_id=personalDashboard.id,
-            src_type=type(personalDashboard).__name__,
-            relationship_type=RelationshipType.cloneOf.name,
-            dest_id=groupDashboard.id,
-            dest_type=type(groupDashboard).__name__
+        user_dashboard_domain_mapping = DomainMapping.objects.get(
+            src_id=user_dashboard.id,
+            src_type=MappingType.dashboard,
+            relationship_type=RelationshipType.cloneOf,
+            dest_id=group_dashboard.id,
+            dest_type=MappingType.dashboard
         )
-        self.assertIsNotNone(personalDashDomainMapping)
+        self.assertIsNotNone(user_dashboard_domain_mapping)

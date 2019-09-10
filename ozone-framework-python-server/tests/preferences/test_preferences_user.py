@@ -24,7 +24,7 @@ class TestingPrefUser(TestCase):
                 'pref_data.json']
 
     def test_get_person(self):
-        requests.login(email='regular-user@goss.com', password='password')
+        requests.login(email='user@goss.com', password='password')
         url = reverse('user_preferences-list')
         response = requests.get(url)
         data = json.loads(response.content)

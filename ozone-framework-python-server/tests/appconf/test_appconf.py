@@ -32,7 +32,7 @@ class TestingPersonBaseUrl(TestCase):
         data = requests.get(url)
         self.assertEqual(data.status_code, 200)
         requests.logout()
-        requests.login(email='regular-user@goss.com', password='password')
+        requests.login(email='user@goss.com', password='password')
         url = reverse('applicationconfiguration-list')
         data = requests.get(url)
         self.assertEqual(data.status_code, 403)

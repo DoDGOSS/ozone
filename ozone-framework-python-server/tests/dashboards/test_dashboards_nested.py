@@ -4,7 +4,6 @@ from django.test import TestCase
 from django.conf import settings
 from dashboards.models import Dashboard
 
-
 requests = APIClient()
 
 payload = {
@@ -49,7 +48,7 @@ class NestedDashboardsBasicTesting(TestCase):
         self.assertEqual(request.status_code, 401)
         requests.logout()
         # Regular User
-        requests.login(email='regular-user@goss.com', password='password')
+        requests.login(email='user@goss.com', password='password')
         url = reverse('nested-dashboard-list')
         request = requests.get(url)
         self.assertEqual(request.status_code, 200)
@@ -57,7 +56,7 @@ class NestedDashboardsBasicTesting(TestCase):
 
     def test_dashboard_guid(self):
         # regular user
-        requests.login(email='regular-user@goss.com', password='password')
+        requests.login(email='user@goss.com', password='password')
         url = reverse('nested-dashboard-list')
         request = requests.post(url, payload, format='json')
         self.assertEqual(request.status_code, 201)

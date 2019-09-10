@@ -14,7 +14,7 @@ class SimpleSystemVersionTest(TestCase):
         request = requests.get('/system-version')
         self.assertEqual(request.status_code, 200)
         requests.logout()
-        requests.login(email='regular-user@goss.com', password='password')
+        requests.login(email='user@goss.com', password='password')
         request = requests.get('/system-version')
         self.assertEqual(request.status_code, 200)
         requests.logout()

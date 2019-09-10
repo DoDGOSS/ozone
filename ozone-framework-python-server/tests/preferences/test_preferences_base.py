@@ -33,7 +33,7 @@ class TestingPrefBaseUrl(TestCase):
                 'pref_data.json']
 
     def test_post_person(self):
-        requests.login(email='regular-user@goss.com', password='password')
+        requests.login(email='user@goss.com', password='password')
         url = reverse('base_preferences-list')
         data = requests.post(url, payload_1, format="json")
         self.assertEqual(data.status_code, 201)
@@ -47,7 +47,7 @@ class TestingPrefBaseUrl(TestCase):
         requests.logout()
 
     def test_get_person(self):
-        requests.login(email='regular-user@goss.com', password='password')
+        requests.login(email='user@goss.com', password='password')
         url = reverse('base_preferences-list')
         data = requests.get(url)
         self.assertEqual(data.status_code, 200)
