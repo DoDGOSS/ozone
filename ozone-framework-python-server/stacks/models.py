@@ -2,9 +2,9 @@ import datetime
 import uuid
 from django.utils import timezone
 from django.db import models
-from owf_groups.models import OwfGroup
+from owf_groups.models import OwfGroup, GroupStatus
 from people.models import Person
-from domain_mappings.models import RelationshipType, DomainMapping
+from domain_mappings.models import RelationshipType, MappingType, DomainMapping
 from dashboards.models import Dashboard
 
 
@@ -13,7 +13,7 @@ class Stack(models.Model):
     version = models.BigIntegerField(default=0, blank=True)
     name = models.CharField(max_length=256)
     description = models.CharField(max_length=4000, blank=True, null=True)
-    stack_context = models.CharField(unique=True, max_length=200, blank=True)
+    stack_context = models.CharField(unique=True, max_length=200, blank=True, default=uuid.uuid4)
     image_url = models.CharField(max_length=2083, blank=True, null=True)
     descriptor_url = models.CharField(max_length=2083, blank=True, null=True)
     unique_widget_count = models.BigIntegerField(default=0, blank=True, null=True)
@@ -29,61 +29,57 @@ class Stack(models.Model):
 
     @classmethod
     def create(cls, user, kwargs):
-        defaultGroup = OwfGroup.objects.create(
-            version=0,
+        default_group = OwfGroup.objects.create(
             name=str(uuid.uuid4()),
             stack_default=True,
             automatic=False,
-            status='active')
+            status=GroupStatus.active)
 
-        newStack = cls.objects.create(
-            version=0,
-            default_group=defaultGroup,
+        new_stack = cls.objects.create(
+            default_group=default_group,
             owner=user,
             **kwargs)
 
         # TODO: move the logic for creating a default group to a manager
-        defaultGroup.people.add(user)
+        default_group.people.add(user)
 
-        newDashboardLayoutConfig = (kwargs['layout_config'] if hasattr(kwargs, "layout_config") else "")
+        new_dashboard_layout_config = (kwargs['layout_config'] if hasattr(kwargs, "layout_config") else "")
 
         # TODO: move logic to create a default group dashboard to a manager
-        newGroupDashboard = Dashboard.objects.create(
-            layout_config=newDashboardLayoutConfig,
-            dashboard_position=0,
-            guid=str(uuid.uuid4()),
+        new_group_dashboard = Dashboard.objects.create(
+            layout_config=new_dashboard_layout_config,
             isdefault=False,
-            stack=newStack,
-            name=newStack.name,
-            created_date=timezone.now())
+            stack=new_stack,
+            name=new_stack.name,
+            created_date=timezone.now()
+        )
 
         # TODO: move the logic of creating new domain mapping to a manager
-        newGroupDashDomainMapping = DomainMapping.objects.create(
-            src_id=defaultGroup.id,
-            src_type=type(defaultGroup).__name__,
-            relationship_type=RelationshipType.owns.name,
-            dest_id=newGroupDashboard.id,
-            dest_type=type(newGroupDashboard).__name__)
+        new_group_dashboard_domain_mapping = DomainMapping.objects.create(
+            src_id=default_group.id,
+            src_type=MappingType.group,
+            relationship_type=RelationshipType.owns,
+            dest_id=new_group_dashboard.id,
+            dest_type=MappingType.dashboard)
 
-        # TODO: move logic of creating new personal dashboard to a manager
-        newPersonalDashboard = Dashboard.objects.create(
-            layout_config=newDashboardLayoutConfig,
-            dashboard_position=0,
-            guid=str(uuid.uuid4()),
-            stack=newStack,
-            name=newStack.name,
+        # TODO: move logic of creating new user dashboard to a manager
+        new_user_dashboard = Dashboard.objects.create(
+            layout_config=new_dashboard_layout_config,
+            stack=new_stack,
+            name=new_stack.name,
             user=user,
-            created_date=timezone.now())
+            created_date=timezone.now()
+        )
 
         # TODO: move logic of creating dashboard clone domain mapping to a manager
-        newPersonalDashDomainMapping = DomainMapping.objects.create(
-            src_id=newPersonalDashboard.id,
-            src_type=type(newPersonalDashboard).__name__,
-            relationship_type=RelationshipType.cloneOf.name,
-            dest_id=newGroupDashboard.id,
-            dest_type=type(newGroupDashboard).__name__)
+        new_user_dashboard_domain_mapping = DomainMapping.objects.create(
+            src_id=new_user_dashboard.id,
+            src_type=MappingType.dashboard,
+            relationship_type=RelationshipType.cloneOf,
+            dest_id=new_group_dashboard.id,
+            dest_type=MappingType.dashboard)
 
-        return newStack
+        return new_stack
 
     class Meta:
         managed = True

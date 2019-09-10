@@ -47,5 +47,5 @@ Login with test data after `python manage.py loaddata resources/fixtures/all_dat
 | Users | Passwords |
 |---|---|
 | admin@goss.com | password |
-| regular-user@goss.com | password |
+| user@goss.com | password |
 

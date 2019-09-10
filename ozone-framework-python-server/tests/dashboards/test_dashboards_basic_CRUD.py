@@ -1,7 +1,6 @@
 from django.urls import reverse
 from rest_framework.test import APIClient
 from django.test import TestCase
-from django.conf import settings
 from dashboards.models import Dashboard
 
 requests = APIClient()
@@ -48,7 +47,7 @@ class DashboardsBasicTesting(TestCase):
         self.assertEqual(request.status_code, 401)
         requests.logout()
         # Regular User
-        requests.login(email='regular-user@goss.com', password='password')
+        requests.login(email='user@goss.com', password='password')
         url = reverse('dashboard-list')
         request = requests.get(url)
         self.assertEqual(request.status_code, 200)
@@ -56,7 +55,7 @@ class DashboardsBasicTesting(TestCase):
 
     def test_dashboard_post(self):
         # regular user
-        requests.login(email='regular-user@goss.com', password='password')
+        requests.login(email='user@goss.com', password='password')
         url = reverse('dashboard-list')
         request = requests.post(url, payload, format='json')
         self.assertEqual(request.status_code, 201)
