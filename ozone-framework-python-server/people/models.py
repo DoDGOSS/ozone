@@ -108,23 +108,54 @@ class PersonRole(models.Model):
         db_table = 'person_role'
 
 
+class PersonWidgetDefinitionManager(models.Manager):
+    def create(self, **obj_data):
+        person = obj_data.pop('person')
+        widget_definition = obj_data.pop('widget_definition')
+
+        obj, created = super().get_or_create(
+            person=person,
+            widget_definition=widget_definition,
+            defaults=obj_data,
+        )
+
+        # save a query and check user_widget
+        if not created and obj.user_widget is not True:
+            obj.user_widget = True
+            obj.save(update_fields=['user_widget', ])
+
+        return obj
+
+
 class PersonWidgetDefinition(models.Model):
     id = models.BigAutoField(primary_key=True)
-    version = models.BigIntegerField()
+    version = models.BigIntegerField(default=0, blank=True)
     person = models.ForeignKey(Person, on_delete=models.CASCADE)
-    visible = models.BooleanField()
-    pwd_position = models.IntegerField()
+    visible = models.BooleanField(default=True)
+    pwd_position = models.IntegerField(blank=True, null=True)
     widget_definition = models.ForeignKey('widgets.WidgetDefinition', on_delete=models.CASCADE)
-    group_widget = models.BooleanField(blank=True, null=True)
+    group_widget = models.BooleanField(blank=True, null=True, default=False)
     favorite = models.BooleanField(blank=True, null=True)
     display_name = models.CharField(max_length=256, blank=True, null=True)
     disabled = models.BooleanField(blank=True, null=True)
-    user_widget = models.BooleanField(blank=True, null=True)
+    user_widget = models.BooleanField(blank=True, null=True, default=False)
+
+    objects = PersonWidgetDefinitionManager()
 
     def __str__(self):
         return self.display_name
 
+    def delete(self, *args, **kwargs):
+        if self.group_widget:
+            self.user_widget = False
+            self.save(update_fields=['user_widget', ])
+            return self
+        else:
+            return super(PersonWidgetDefinition, self).delete(*args, **kwargs)
+
     class Meta:
         managed = True
         db_table = 'person_widget_definition'
-        unique_together = (('person', 'widget_definition'),)
+        constraints = [
+            models.UniqueConstraint(fields=['person', 'widget_definition'], name='unique_person_widget_definition')
+        ]
