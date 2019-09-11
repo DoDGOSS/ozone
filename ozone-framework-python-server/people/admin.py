@@ -79,9 +79,16 @@ class PersonAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 
+class PersonWidgetDefinitionAdmin(admin.ModelAdmin):
+    list_display = ('display_name', 'widget_definition', 'person', 'version')
+    search_fields = ('display_name', 'widget_definition', 'person', 'version')
+
+
 # Now register the new UserAdmin...
 # admin.site.register(Person, PersonAdmin)
 admin.site.register(Person, PersonAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)
+
+admin.site.register(PersonWidgetDefinition, PersonWidgetDefinitionAdmin)
