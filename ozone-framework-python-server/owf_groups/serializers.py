@@ -19,3 +19,7 @@ class OWFGroupPeopleSerializer(EnumChoiceModelSerializerMixin, serializers.Model
     class Meta:
         model = OwfGroupPeople
         fields = "__all__"
+        extra_kwargs = {
+            'group': {'required': True},
+            'person': {'required': True}
+        }

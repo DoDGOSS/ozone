@@ -16,6 +16,4 @@ class OWFGroupPeopleAdmin(admin.ModelAdmin):
 
 
 admin.site.register(OwfGroupPeople, OWFGroupPeopleAdmin)
-
-
 admin.site.register(OwfGroup, OWFGroupAdmin)

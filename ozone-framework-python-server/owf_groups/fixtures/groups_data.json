@@ -1,1 +1,46 @@
-[{"model": "owf_groups.owfgroup", "pk": 1, "fields": {"version": 1, "status": "active", "email": "admin@geocent.com", "description": "Description for test group", "name": "Test Group", "automatic": false, "display_name": "Test Group", "stack_default": false}}, {"model": "owf_groups.owfgrouppeople", "pk": 1, "fields": {"group": 1, "person": 1}}, {"model": "owf_groups.owfgrouppeople", "pk": 2, "fields": {"group": 1, "person": 2}}]
+[
+  {
+    "model": "owf_groups.owfgroup",
+    "pk": 1,
+    "fields": {
+      "version": 1,
+      "status": "active",
+      "email": "admin@geocent.com",
+      "description": "Description for test group",
+      "name": "Test Group",
+      "automatic": false,
+      "display_name": "Test Group",
+      "stack_default": false
+    }
+  },
+  {
+    "model": "owf_groups.owfgroup",
+    "pk": 2,
+    "fields": {
+      "version": 1,
+      "status": "active",
+      "email": "admin@geocent.com",
+      "description": "Description for test group 2",
+      "name": "Test Group 2",
+      "automatic": false,
+      "display_name": "Test Group",
+      "stack_default": false
+    }
+  },
+  {
+    "model": "owf_groups.owfgrouppeople",
+    "pk": 1,
+    "fields": {
+      "group": 1,
+      "person": 1
+    }
+  },
+  {
+    "model": "owf_groups.owfgrouppeople",
+    "pk": 2,
+    "fields": {
+      "group": 1,
+      "person": 2
+    }
+  }
+]

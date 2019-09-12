@@ -1,7 +1,8 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Stack
 from .serializers import StackSerializer
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 
 class StackViewSet(viewsets.ModelViewSet):
@@ -11,3 +12,11 @@ class StackViewSet(viewsets.ModelViewSet):
     queryset = Stack.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = StackSerializer
+
+
+class StackAdminViewSet(viewsets.ModelViewSet):
+    queryset = Stack.objects.all()
+    serializer_class = StackSerializer
+    permission_classes = (IsAdminUser,)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name', ]
