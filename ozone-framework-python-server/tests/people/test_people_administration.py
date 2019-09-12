@@ -77,5 +77,5 @@ class TestingPersonBaseUrl(TestCase):
         check_new_pw = reverse('user-detail')
         sanity_check = requests.get(check_new_pw)
         self.assertEqual(sanity_check.status_code, 200)
-        self.assertEqual(sanity_check.data['username'], 'Regular-User')
+        self.assertEqual(sanity_check.data['username'], 'user')
         requests.logout()
