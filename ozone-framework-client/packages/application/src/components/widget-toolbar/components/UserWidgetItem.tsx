@@ -46,7 +46,12 @@ const _UserWidgetItem: React.FC<UserWidgetItemProps> = ({ userWidget }) => {
                 <Popover
                     interactionKind={PopoverInteractionKind.HOVER_TARGET_ONLY}
                     position={Position.RIGHT}
-                    modifiers={{ arrow: { enabled: false }, offset: { enabled: true, offset:'0,-100% + 285'}, preventOverflow: {enabled: true, padding:5}, keepTogether: {enabled: true}}}
+                    modifiers={{
+                        arrow: { enabled: false },
+                        offset: { enabled: true, offset: "0,-100% + 285" },
+                        preventOverflow: { enabled: true, padding: 5 },
+                        keepTogether: { enabled: true }
+                    }}
                     content={
                         <div id="popoverdiv" className={styles.popoverdiv}>
                             <p>Version: {widget.version}</p>

@@ -35,6 +35,9 @@ import { UserDashboardDTO } from "../../api/models/UserDashboardDTO";
 
 import { uuid } from "../../utility";
 import { AuthUserDTO } from "../../api/models/AuthUserDTO";
+import { Widget } from "../../models/Widget";
+import { showToast } from "../toaster/Toaster";
+import { showStoreSelectionDialog } from "../confirmation-dialog/showStoreSelectionDialog";
 
 // TODO - iconImageUrl not saving to database`
 
@@ -89,18 +92,24 @@ const fetchUserDashboardsAndStacks = (
     });
 };
 
-const checkForStores = async () => {
-    return storeMetaAPI.getStores().then((stores) => stores.length > 0);
+// const checkForStores = async () => {
+//     return storeMetaAPI.getStores().then((stores) => stores.length > 0);
+// };
+
+const fetchStores = async (
+    dispatchStoresResult: (stores: Widget[]) => void,
+    dispatchStoreConnectedResult: (storeConnected: boolean) => void
+) => {
+    const retrievedStores: Widget[] = await storeMetaAPI.getStores();
+    dispatchStoresResult(retrievedStores);
+    dispatchStoreConnectedResult(retrievedStores.length > 0);
 };
 
 export const StackDialog: React.FC<{}> = () => {
     const themeClass = useBehavior(mainStore.themeClass);
     const isVisible = useBehavior(mainStore.isStackDialogVisible);
-
-    // I think this is essentially a useBehavior, but don't got time to figure out how to do it that way
     const [storeConnected, setStoreConnected] = useState(false);
-    checkForStores().then(setStoreConnected);
-
+    const [stores, setStores] = useState<Widget[] | null>(null);
     const [showDashboardEdit, setDashboardEdit] = useState(false);
     const [showStackEdit, setStackEdit] = useState(false);
     const [showAddDashboard, setAddDashboard] = useState(false);
@@ -127,6 +136,7 @@ export const StackDialog: React.FC<{}> = () => {
         setStacksLoading(true);
         setDashLoading(true);
         fetchUserDashboardsAndStacks(setCurrentUser, setDashboards, setStacks, setDashLoading, setStacksLoading);
+        fetchStores(setStores, setStoreConnected);
     }
 
     function getCurrentDash() {
@@ -251,22 +261,35 @@ export const StackDialog: React.FC<{}> = () => {
     };
 
     const confirmPush = async (stack: StackDTO) => {
-        showConfirmationDialog({
-            title: "Push stack to store",
-            message: [
-                "You are uploading this Stack to a Store.",
-                "\n",
-                "If you have access to more than one Store, you will be prompted to choose."
-            ],
-            onConfirm: () => {
-                storeExportService.uploadStack(stack.id);
-                try {
-                    onShareConfirmed(stack);
-                } catch (e) {
-                    console.log("Error in sharing stack");
+        if (stores != null) {
+            showStoreSelectionDialog({
+                stores: stores,
+                onConfirm: (store: Widget) => {
+                    storeExportService.uploadStack(stack.id, store);
+                    try {
+                        onShareConfirmed(stack);
+                    } catch (e) {
+                        showToast({
+                            message: "Error Pushing Stack to Store!",
+                            intent: Intent.DANGER
+                        });
+                        return;
+                    }
+                },
+                onCancel: () => {
+                    return;
                 }
-            }
-        });
+            });
+        } else {
+            showToast({
+                message: "No Stores Connected!",
+                intent: Intent.DANGER
+            });
+
+            return new Promise(() => {
+                return;
+            });
+        }
     };
 
     const confirmShare = async (stack: StackDTO) => {
@@ -323,7 +346,6 @@ export const StackDialog: React.FC<{}> = () => {
         const response = await dashboardApi.restoreDashboard(dashboard);
         if (response.status !== 200) return false;
 
-        const set = await dashboardStore.fetchUserDashboards(dashboard.guid);
         mainStore.hideStackDialog();
         return true;
     };
@@ -332,7 +354,6 @@ export const StackDialog: React.FC<{}> = () => {
         const response = await stackApi.restoreStack(stack);
         if (response.status !== 200) return false;
 
-        const set = await dashboardStore.fetchUserDashboards();
         mainStore.hideStackDialog();
         return true;
     };
@@ -351,10 +372,6 @@ export const StackDialog: React.FC<{}> = () => {
             message: ["Stacks cannot be restored until they are shared."],
             hideCancel: true
         });
-    };
-
-    const currentUserOwnsStack = (stack: StackDTO) => {
-        return stack.owner && currentUser && stack.owner.username === currentUser.username;
     };
 
     return (
