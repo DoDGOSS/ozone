@@ -2,7 +2,6 @@ import uuid
 import json
 from django.db import models
 from django.utils import timezone
-from owf_groups.models import OwfGroup
 from domain_mappings.models import RelationshipType, MappingType, DomainMapping
 
 

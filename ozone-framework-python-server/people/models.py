@@ -45,7 +45,7 @@ class Person(AbstractBaseUser):
     version = models.BigIntegerField(default=0)
     enabled = models.BooleanField(default=True)
     user_real_name = models.CharField(max_length=200)
-    username = models.CharField(unique=True, max_length=200)
+    username = models.CharField(unique=True, max_length=200, blank=False)
     last_login = models.DateTimeField(default=datetime.now, blank=True)
     email_show = models.BooleanField(default=True)
     email = models.EmailField(
