@@ -27,6 +27,21 @@ class Stack(models.Model):
     def __str__(self):
         return self.name
 
+    def add_dashboard(self, user, kwargs):
+        # TODO: once we establish the layout config, add logic to regenerate the layout config
+        new_group_dashboard = Dashboard.objects.create(
+            stack=self,
+            **kwargs)
+        DomainMapping.create_group_dashboard_mapping(self.default_group, new_group_dashboard)
+
+        new_user_dashboard = Dashboard.objects.create(
+            stack=self,
+            user=user,
+            **kwargs)
+        DomainMapping.create_user_dashboard_mapping(new_user_dashboard, new_group_dashboard)
+
+        return new_user_dashboard
+
     @classmethod
     def create(cls, user, kwargs):
         default_group = OwfGroup.objects.create(

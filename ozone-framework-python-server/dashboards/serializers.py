@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Dashboard
 from people.serializers import PersonBaseSerializer
 from stacks.serializers import StackBaseSerializer
+from stacks.models import Stack
 
 
 class DashBoardSerializer(serializers.ModelSerializer):
@@ -19,3 +20,9 @@ class DashboardBaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dashboard
         fields = '__all__'
+
+    def create(self, validated_data):
+        request = self.context.get("request")
+        new_user_dashboard = stack.add_dashboard(request.user, validated_data)
+
+        return new_user_dashboard

@@ -1,6 +1,6 @@
 from django.test import TestCase
 from people.models import Person
-from domain_mappings.models import DomainMapping
+from domain_mappings.models import RelationshipType, MappingType, DomainMapping
 from dashboards.models import Dashboard
 from stacks.models import Stack, StackGroups
 from owf_groups.models import OwfGroup
@@ -33,83 +33,126 @@ class DashboardsModelTests(TestCase):
         group2.people.add(self.regular_user)
 
         # create stack
-        stack = Stack.create(self.admin_user, create_stack_payload)
-        stack2 = Stack.create(self.admin_user, create_stack_payload2)
+        self.stack = Stack.create(self.admin_user, create_stack_payload)
+        self.stack2 = Stack.create(self.admin_user, create_stack_payload2)
 
         # create 2 dashboards under the stack and their domain mappings
-        # TODO: refactor to use a function to create and add a dashboard to a stack, when available
-        self.group1Dash1 = Dashboard.objects.create(name="group1dash1", stack=stack)
-        self.userGroup1Dash1 = Dashboard.objects.create(name="usergroup1dash1", user=self.regular_user, stack=stack)
-        self.group1Dash1DomainMapping = DomainMapping.create_group_dashboard_mapping(group1, self.group1Dash1)
-        self.userGroup1Dash1DomainMapping = DomainMapping.create_user_dashboard_mapping(
-            self.userGroup1Dash1,
-            self.group1Dash1
+        # TODO: refactor to use a function to create and add a dashboard to a stack, when function becomes available
+        self.group1_dash1 = Dashboard.objects.create(name="group1_dash1", stack=self.stack)
+        self.usergroup1_dash1 = Dashboard.objects.create(
+            name="usergroup1_dash1", user=self.regular_user, stack=self.stack
+        )
+        self.group1_dash1_domain_mapping = DomainMapping.create_group_dashboard_mapping(group1, self.group1_dash1)
+        self.usergroup1_dash1_domain_mapping = DomainMapping.create_user_dashboard_mapping(
+            self.usergroup1_dash1,
+            self.group1_dash1
         )
 
-        self.group1Dash2 = Dashboard.objects.create(name="group1dash2", stack=stack)
-        self.userGroup1Dash2 = Dashboard.objects.create(name="usergroup1dash2", user=self.regular_user, stack=stack)
-        self.group1Dash2DomainMapping = DomainMapping.create_group_dashboard_mapping(group1, self.group1Dash2)
-        self.userGroup1Dash2DomainMapping = DomainMapping.create_user_dashboard_mapping(
-            self.userGroup1Dash2,
-            self.group1Dash2
+        self.group1_dash2 = Dashboard.objects.create(name="group1_dash2", stack=self.stack)
+        self.usergroup1_dash2 = Dashboard.objects.create(
+            name="usergroup1_dash2", user=self.regular_user, stack=self.stack
+        )
+        self.group1_dash2_domain_mapping = DomainMapping.create_group_dashboard_mapping(group1, self.group1_dash2)
+        self.usergroup1_dash2_domain_mapping = DomainMapping.create_user_dashboard_mapping(
+            self.usergroup1_dash2,
+            self.group1_dash2
         )
 
-        self.group2Dash1 = Dashboard.objects.create(name="group2dash1", stack=stack2)
-        self.userGroup2Dash1 = Dashboard.objects.create(name="usergroup2dash1", user=self.regular_user, stack=stack2)
-        self.group2Dash1DomainMapping = DomainMapping.create_group_dashboard_mapping(group2, self.group2Dash1)
-        self.userGroup2Dash1DomainMapping = DomainMapping.create_user_dashboard_mapping(
-            self.userGroup2Dash1,
-            self.group2Dash1
+        self.group2_dash1 = Dashboard.objects.create(name="group2_dash1", stack=self.stack2)
+        self.usergroup2_dash1 = Dashboard.objects.create(
+            name="usergroup2_dash1", user=self.regular_user, stack=self.stack2
+        )
+        self.group2_dash1_domain_mapping = DomainMapping.create_group_dashboard_mapping(group2, self.group2_dash1)
+        self.usergroup2_dash1_domain_mapping = DomainMapping.create_user_dashboard_mapping(
+            self.usergroup2_dash1,
+            self.group2_dash1
         )
 
         # add group to stack - StackGroup
-        StackGroups.objects.create(group=group1, stack=stack)
-        StackGroups.objects.create(group=group2, stack=stack2)
+        StackGroups.objects.create(group=group1, stack=self.stack)
+        StackGroups.objects.create(group=group2, stack=self.stack2)
 
     def test_purge_user_dashboards_for_group_deletes_user_dashboards_for_specified_group(self):
         group = OwfGroup.objects.filter(name="group1").first()
         Dashboard.purge_user_dashboards_for_group(self.regular_user, group)
 
         # check that both group dashboard and mappings didn't get deleted
-        self.assertIsNotNone(Dashboard.objects.filter(pk=self.group1Dash1.id).first())
-        self.assertIsNotNone(DomainMapping.objects.filter(pk=self.group1Dash1DomainMapping.id).first())
-        self.assertIsNotNone(Dashboard.objects.filter(pk=self.group1Dash2.id).first())
-        self.assertIsNotNone(DomainMapping.objects.filter(pk=self.group1Dash2DomainMapping.id).first())
+        self.assertIsNotNone(Dashboard.objects.filter(pk=self.group1_dash1.id).first())
+        self.assertIsNotNone(DomainMapping.objects.filter(pk=self.group1_dash1_domain_mapping.id).first())
+        self.assertIsNotNone(Dashboard.objects.filter(pk=self.group1_dash2.id).first())
+        self.assertIsNotNone(DomainMapping.objects.filter(pk=self.group1_dash2_domain_mapping.id).first())
         # check that user dashboard and mappings got deleted for both dashboards
-        self.assertIsNone(Dashboard.objects.filter(pk=self.userGroup1Dash1.id).first())
+        self.assertIsNone(Dashboard.objects.filter(pk=self.usergroup1_dash1.id).first())
         self.assertIsNone(
-            DomainMapping.objects.filter(pk=self.userGroup1Dash1DomainMapping.id).first().refresh_from_db()
+            DomainMapping.objects.filter(pk=self.usergroup1_dash1_domain_mapping.id).first().refresh_from_db()
         )
-        self.assertIsNone(Dashboard.objects.filter(pk=self.userGroup1Dash2.id).first())
+        self.assertIsNone(Dashboard.objects.filter(pk=self.usergroup1_dash2.id).first())
         self.assertIsNone(
-            DomainMapping.objects.filter(pk=self.userGroup1Dash2DomainMapping.id).first().refresh_from_db()
+            DomainMapping.objects.filter(pk=self.usergroup1_dash2_domain_mapping.id).first().refresh_from_db()
         )
 
         # check that none of the other dashboards and mappings were affected
-        self.assertIsNotNone(Dashboard.objects.filter(pk=self.group2Dash1.id).first())
-        self.assertIsNotNone(Dashboard.objects.filter(pk=self.userGroup2Dash1.id).first())
-        self.assertIsNotNone(DomainMapping.objects.filter(pk=self.group2Dash1DomainMapping.id).first())
-        self.assertIsNotNone(DomainMapping.objects.filter(pk=self.userGroup2Dash1DomainMapping.id).first())
+        self.assertIsNotNone(Dashboard.objects.filter(pk=self.group2_dash1.id).first())
+        self.assertIsNotNone(Dashboard.objects.filter(pk=self.usergroup2_dash1.id).first())
+        self.assertIsNotNone(DomainMapping.objects.filter(pk=self.group2_dash1_domain_mapping.id).first())
+        self.assertIsNotNone(DomainMapping.objects.filter(pk=self.usergroup2_dash1_domain_mapping.id).first())
 
     def test_purge_all_user_dashboards_deletes_all_user_dashboards(self):
         Dashboard.purge_all_user_dashboards(self.regular_user)
         # check that group dashboard and mappings didn't get deleted
-        self.assertIsNotNone(Dashboard.objects.filter(pk=self.group1Dash1.id).first())
-        self.assertIsNotNone(DomainMapping.objects.filter(pk=self.group1Dash1DomainMapping.id).first())
-        self.assertIsNotNone(Dashboard.objects.filter(pk=self.group1Dash2.id).first())
-        self.assertIsNotNone(DomainMapping.objects.filter(pk=self.group1Dash2DomainMapping.id).first())
-        self.assertIsNotNone(Dashboard.objects.filter(pk=self.group2Dash1.id).first())
-        self.assertIsNotNone(DomainMapping.objects.filter(pk=self.group2Dash1DomainMapping.id).first())
+        self.assertIsNotNone(Dashboard.objects.filter(pk=self.group1_dash1.id).first())
+        self.assertIsNotNone(DomainMapping.objects.filter(pk=self.group1_dash1_domain_mapping.id).first())
+        self.assertIsNotNone(Dashboard.objects.filter(pk=self.group1_dash2.id).first())
+        self.assertIsNotNone(DomainMapping.objects.filter(pk=self.group1_dash2_domain_mapping.id).first())
+        self.assertIsNotNone(Dashboard.objects.filter(pk=self.group2_dash1.id).first())
+        self.assertIsNotNone(DomainMapping.objects.filter(pk=self.group2_dash1_domain_mapping.id).first())
         # check that user dashboard and mappings got deleted
-        self.assertIsNone(Dashboard.objects.filter(pk=self.userGroup1Dash1.id).first())
+        self.assertIsNone(Dashboard.objects.filter(pk=self.usergroup1_dash1.id).first())
         self.assertIsNone(
-            DomainMapping.objects.filter(pk=self.userGroup1Dash1DomainMapping.id).first().refresh_from_db()
+            DomainMapping.objects.filter(pk=self.usergroup1_dash1_domain_mapping.id).first().refresh_from_db()
         )
-        self.assertIsNone(Dashboard.objects.filter(pk=self.userGroup1Dash2.id).first())
+        self.assertIsNone(Dashboard.objects.filter(pk=self.usergroup1_dash2.id).first())
         self.assertIsNone(
-            DomainMapping.objects.filter(pk=self.userGroup1Dash2DomainMapping.id).first().refresh_from_db()
+            DomainMapping.objects.filter(pk=self.usergroup1_dash2_domain_mapping.id).first().refresh_from_db()
         )
-        self.assertIsNone(Dashboard.objects.filter(pk=self.userGroup2Dash1.id).first())
+        self.assertIsNone(Dashboard.objects.filter(pk=self.usergroup2_dash1.id).first())
         self.assertIsNone(
-            DomainMapping.objects.filter(pk=self.userGroup2Dash1DomainMapping.id).first().refresh_from_db()
+            DomainMapping.objects.filter(pk=self.usergroup2_dash1_domain_mapping.id).first().refresh_from_db()
         )
+
+    def test_add_new_dashboard_to_stack(self):
+        create_dashboard_params = {
+            'name': 'test dash 2',
+            'description': 'test description',
+            'locked': True,
+            'type': '',
+            'layout_config': ''
+        }
+        stack = Stack.objects.get(pk=self.stack2.id)
+        stack.add_dashboard(self.regular_user, create_dashboard_params)
+
+        group_dashboard = Dashboard.objects.get(stack=stack, name=create_dashboard_params['name'], user=None)
+        self.assertIsNotNone(group_dashboard)
+
+        group_dashboard_domain_mapping = DomainMapping.objects.get(
+            src_id=stack.default_group.id,
+            src_type=MappingType.group,
+            relationship_type=RelationshipType.owns,
+            dest_id=group_dashboard.id,
+            dest_type=MappingType.dashboard
+        )
+        self.assertIsNotNone(group_dashboard_domain_mapping)
+
+        user_dashboard = Dashboard.objects.get(
+            stack=stack, name=create_dashboard_params['name'], user=self.regular_user
+        )
+        self.assertIsNotNone(user_dashboard)
+
+        userDashboardDomainMapping = DomainMapping.objects.get(
+            src_id=user_dashboard.id,
+            src_type=MappingType.dashboard,
+            relationship_type=RelationshipType.cloneOf,
+            dest_id=group_dashboard.id,
+            dest_type=MappingType.dashboard
+        )
+        self.assertIsNotNone(userDashboardDomainMapping)

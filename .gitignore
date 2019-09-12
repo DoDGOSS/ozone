@@ -6,3 +6,4 @@
 __pycache__
 *.pyc
 /.vscode/
+ozone-framework-python-server/pep8-results.txt
