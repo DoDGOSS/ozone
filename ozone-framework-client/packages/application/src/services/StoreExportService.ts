@@ -1,49 +1,18 @@
 import { Intent } from "@blueprintjs/core";
 
-import { MosaicPath } from "../features/MosaicDashboard/types";
-
-import { DashboardNode, DashboardPath } from "../components/widget-dashboard/types";
-
-import { ExpandoPanel, FitPanel, LayoutType, Panel, PanelState, TabbedPanel } from "../models/panel";
-
 import { Widget } from "../models/Widget";
-import { AddWidgetOpts, Dashboard, DashboardProps } from "../models/Dashboard";
 import { Stack } from "../models/Stack";
-import { WidgetType } from "../models/WidgetType";
 
-import { UserWidget } from "../models/UserWidget";
-import { dashboardService } from "./DashboardService";
-import { authService } from "./AuthService";
 import { storeMetaService } from "./StoreMetaService";
-
-import { dashboardToCreateRequest, dashboardToUpdateRequest } from "../codecs/Dashboard.codec";
-import { widgetFromJson } from "../codecs/Widget.codec";
-
-import { widgetApi } from "../api/clients/WidgetAPI";
-import { widgetTypeApi } from "../api/clients/WidgetTypeAPI";
-import { dashboardApi } from "../api/clients/DashboardAPI";
-import { DashboardCreateOpts, userDashboardApi } from "../api/clients/UserDashboardAPI";
-import { stackApi } from "../api/clients/StackAPI";
-
-import { WidgetDTO } from "../api/models/WidgetDTO";
-import { DashboardDTO } from "../api/models/DashboardDTO";
-import { StackCreateRequest, StackDTO, StackUpdateRequest } from "../api/models/StackDTO";
-import { WidgetTypeDTO } from "../api/models/WidgetTypeDTO";
 
 import { storeMetaAPI } from "../api/clients/StoreMetaAPI";
 import { MarketplaceAPI } from "../api/clients/MarketplaceAPI";
-import { AmlMarketplaceAPI } from "../api/clients/AmlMarketplaceAPI";
-import { OmpMarketplaceAPI } from "../api/clients/OmpMarketplaceAPI";
 
 import { mainStore } from "../stores/MainStore";
 import { dashboardStore } from "../stores/DashboardStore";
 
 import { showToast } from "../components/toaster/Toaster";
-import { showConfirmationDialog } from "../components/confirmation-dialog/showConfirmationDialog";
-import { showStoreSelectionDialog } from "../components/confirmation-dialog/showStoreSelectionDialog";
 import { showUrlCheckDialog } from "../components/confirmation-dialog/showUrlCheckDialog";
-
-import { isNil, Predicate, uuid, values } from "../utility";
 
 export interface InfractingItemUrl {
     type: "stack" | "dashboard" | "widget";
@@ -52,7 +21,7 @@ export interface InfractingItemUrl {
 }
 
 class StoreExportService {
-    async uploadStack(stackID: number): Promise<void> {
+    async uploadStack(stackID: number, store: Widget): Promise<void> {
         // Taking input of stackID instead of actual stack means they'll need to save any changes before
         // pushing their current stack, else those changes won't get pushed.
         // Do that automatically, or show notification.
@@ -79,25 +48,13 @@ class StoreExportService {
         // check that all urls are fully-qualified.
         // Stores are remote, and so can't use local urls.
         if (!this.stackUrlsValid(stack)) {
-            return;
+            console.log("Attempted to push a Stack with invalid URLs.");
+            return new Promise(() => {
+                return;
+            });
         }
 
-        return storeMetaAPI.getStores().then((stores: Widget[]) => {
-            if (stores.length < 1) {
-                console.log("Error, no stores to recieve stack");
-                return;
-            } else if (stores.length === 1) {
-                this.checkStoreAndUploadStack(stack, stores[0]);
-            } else {
-                showStoreSelectionDialog({
-                    stores: stores,
-                    onConfirm: (store: Widget) => this.checkStoreAndUploadStack(stack, store),
-                    onCancel: () => {
-                        return;
-                    }
-                });
-            }
-        });
+        this.checkStoreAndUploadStack(stack, store);
     }
 
     private checkStoreAndUploadStack(stack: Stack, store: Widget): Promise<Widget | undefined> {
