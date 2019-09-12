@@ -1,6 +1,6 @@
-from .views import StackViewSet
 from rest_framework import routers
-from stacks.administration.views import StackAdminViewSet
+from .views import StackViewSet, StackAdminViewSet
+
 
 router = routers.SimpleRouter()
 

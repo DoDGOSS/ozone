@@ -16,9 +16,9 @@ class StackSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         request = self.context.get("request")
-        newStack = Stack.create(request.user, validated_data)
+        new_stack = Stack.create(request.user, validated_data)
 
-        return newStack
+        return new_stack
 
 
 class StackBaseSerializer(serializers.ModelSerializer):
