@@ -46,3 +46,12 @@ populate:        ## populate db
 
 pep8:             ## make pep8 to change the file to best pep8 format before commit
 	@autopep8 --max-line-length=120 --in-place --aggressive $(file)
+
+dbDown:
+	@psql -c "DROP DATABASE postgres"
+
+dbUp:
+	@psql -c "CREATE DATABASE postgres"
+
+resetDB:
+	psql -c "DROP DATABASE postgres" && psql -c "CREATE DATABASE postgres" && python manage.py migrate && make populate

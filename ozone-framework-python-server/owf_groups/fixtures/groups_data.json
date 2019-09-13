@@ -1,7 +1,35 @@
 [
-  {
+    {
     "model": "owf_groups.owfgroup",
     "pk": 1,
+    "fields": {
+      "version": 1,
+      "status": "active",
+      "email": "admin@geocent.com",
+      "description": "Description for OWF Users",
+      "name": "OWF Users",
+      "automatic": false,
+      "display_name": "OWF Users",
+      "stack_default": false
+    }
+  },
+  {
+    "model": "owf_groups.owfgroup",
+    "pk": 2,
+    "fields": {
+      "version": 1,
+      "status": "active",
+      "email": "admin@geocent.com",
+      "description": "Description for OWF Administrators",
+      "name": "OWF Administrators",
+      "automatic": false,
+      "display_name": "OWF Administrators",
+      "stack_default": false
+    }
+  },
+  {
+    "model": "owf_groups.owfgroup",
+    "pk": 3,
     "fields": {
       "version": 1,
       "status": "active",
@@ -15,7 +43,7 @@
   },
   {
     "model": "owf_groups.owfgroup",
-    "pk": 2,
+    "pk": 4,
     "fields": {
       "version": 1,
       "status": "active",
@@ -29,7 +57,7 @@
   },
   {
     "model": "owf_groups.owfgroup",
-    "pk": 3,
+    "pk": 5,
     "fields": {
       "version": 1,
       "status": "active",
