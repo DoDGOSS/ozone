@@ -23,7 +23,7 @@ payload = {
 
 
 class TestingPersonBaseUrl(TestCase):
-    fixtures = ['people_data.json']
+    fixtures = ['people_data.json', 'groups_data.json']
 
     def test_access_users_url(self):
         requests.login(email='admin@goss.com', password='password')

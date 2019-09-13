@@ -5,9 +5,29 @@ from django.db import models
 from roles.models import Role
 from widgets.models import WidgetDefinition
 from datetime import datetime
+from django.conf import settings
+from django.apps import apps
 
 
 class MyUserManager(BaseUserManager):
+    def default_person_group_manager_util(self, username):
+        groups_people = apps.get_model('owf_groups', 'OwfGroupPeople')
+        groups = apps.get_model('owf_groups', 'OwfGroup')
+        settings_group = settings.DEFAULT_USER_GROUP
+        person = Person.objects.get(username=username)
+        group = groups.objects.get(name=settings_group)
+        inject = groups_people(group_id=group.id, person_id=person.id)
+        return inject.save(using=self._db)
+
+    def admin_person_group_manager_util(self, username):
+        groups_people = apps.get_model('owf_groups', 'OwfGroupPeople')
+        groups = apps.get_model('owf_groups', 'OwfGroup')
+        settings_group = settings.DEFAULT_ADMIN_GROUP
+        person = Person.objects.get(username=username)
+        group = groups.objects.get(name=settings_group)
+        inject = groups_people(group_id=group.id, person_id=person.id)
+        return inject.save(using=self._db)
+
     def create_user(self, email, username, password=None):
         """
         Creates and saves a User with the given email, username
@@ -23,6 +43,7 @@ class MyUserManager(BaseUserManager):
 
         user.set_password(password)
         user.save(using=self._db)
+        self.default_person_group_manager_util(username)
         return user
 
     def create_superuser(self, email, username, password):
@@ -37,6 +58,7 @@ class MyUserManager(BaseUserManager):
         )
         user.is_admin = True
         user.save(using=self._db)
+        self.admin_person_group_manager_util(username)
         return user
 
 
