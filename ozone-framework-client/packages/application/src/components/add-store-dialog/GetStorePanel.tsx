@@ -24,7 +24,6 @@ export interface GetStorePanelProps {
 }
 
 const StoreType = {
-    OMP: "omp",
     AML: "aml"
 };
 
@@ -32,57 +31,32 @@ export const GetStorePanel: React.FC<GetStorePanelProps> = (props: GetStorePanel
     const [storeFrontUrl, setStoreFrontUrl] = useState("");
     const [storeBackUrl, setStoreBackUrl] = useState("");
     const [storeMessage, setStoreMessage] = useState("");
-    const [storeType, setStoreType] = useState(StoreType.OMP);
+    const [storeType, setStoreType] = useState(StoreType.AML);
 
     useEffect(() => {
         setStoreFrontUrl(getInitialUrl(props.initialStoreFrontUrl));
         setStoreBackUrl(getInitialUrl(props.initialStoreBackUrl));
     }, [props.initialStoreFrontUrl, props.initialStoreBackUrl]);
     return (
-        <div>
-            <div>
-                <div style={{ width: "100%" }}>
-                    {/* Re-enable this to allow creation of AML stores. */}
-                    {/* <RadioGroup
-                        label="Type of store."
-                        selectedValue={storeType}
-                        onChange={handleStringChange(setStoreType)}
-                    >
-                        <Radio label="OMP Marketplace" value={StoreType.OMP} />
-                        <Radio label="AML AppsMall" value={StoreType.AML} />
-                    </RadioGroup> */}
 
-                    <div className="growing-left">
-                        {storeType === StoreType.OMP && (
-                            <InputGroup
-                                value={storeFrontUrl}
-                                placeholder="The URL of the store"
-                                onChange={(event: any) => {
-                                    setStoreFrontUrl(event.target.value);
-                                    setStoreBackUrl("");
-                                }}
-                            />
-                        )}
-                        {storeType === StoreType.AML && (
-                            <div>
-                                <InputGroup
-                                    value={storeFrontUrl}
-                                    placeholder="The URL for the store's frontend"
-                                    onChange={(event: any) => {
-                                        setStoreFrontUrl(event.target.value);
-                                    }}
-                                />
-                                <InputGroup
-                                    value={storeBackUrl}
-                                    placeholder="The URL for the store's backend"
-                                    onChange={(event: any) => {
-                                        setStoreBackUrl(event.target.value);
-                                    }}
-                                />
-                            </div>
-                        )}
-                    </div>
-                </div>
+        <div style={{ width: "100%" }}>
+            <div className="growing-left">
+                <div>
+                    <InputGroup
+                        value={storeFrontUrl}
+                        placeholder="The URL for the store's frontend"
+                        onChange={(event: any) => {
+                        setStoreFrontUrl(event.target.value);
+                        }}
+                    />
+                    <InputGroup
+                        value={storeBackUrl}
+                        placeholder="The URL for the store's backend"
+                        onChange={(event: any) => {
+                        setStoreBackUrl(event.target.value);
+                        }}
+                    />
+                </div>            
             </div>
 
             <br />
@@ -91,10 +65,10 @@ export const GetStorePanel: React.FC<GetStorePanelProps> = (props: GetStorePanel
             <div className={Classes.DIALOG_FOOTER}>
                 <div className={Classes.DIALOG_FOOTER_ACTIONS}>
                     <Button
-                        disabled={storeFrontUrl === "" || (storeType === StoreType.AML && storeBackUrl === "")}
+                        disabled={storeFrontUrl === "" || storeBackUrl === ""}
                         onClick={() => {
                             storeMetaAPI.importStore(
-                                storeFrontUrl + "_~_" + storeBackUrl,
+                                storeFrontUrl, storeBackUrl,
                                 (storeWidget: Widget | undefined) => {
                                     if (storeWidget) {
                                         props.setStore(storeWidget);

@@ -37,7 +37,7 @@ export const SaveStorePanel: React.FC<SaveStorePanelProps> = (props: SaveStorePa
 
     useEffect(() => {
         setLoading(true);
-        cleanDefaultOmpIconUrl(store.images.smallUrl).then((cleanedUrl: string) => {
+        cleanDefaultIconUrl(store.images.smallUrl).then((cleanedUrl: string) => {
             if (!subscriptionsShouldCancel) {
                 setIconUrl(cleanedUrl);
                 setLoading(false);
@@ -155,8 +155,9 @@ const StoreIcon: React.FC<{ url: string }> = memo(({ url }) => {
     );
 });
 
-async function cleanDefaultOmpIconUrl(iconUrl: string): Promise<string> {
-    // omp seems to always return something like `STORE_URL/public//static/images/...`
+async function cleanDefaultIconUrl(iconUrl: string): Promise<string> {
+    // TODO: Find and make use of AML's default icon if such a thing exists.
+    // old marketplace seemed to always return something like `STORE_URL/public//static/images/...`
     // when the image exists at `STORE_URL/static/images/...`
     // If and only if that is the case, change it automatically.
     const imEx = await imageExists(iconUrl);
