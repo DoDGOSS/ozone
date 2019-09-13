@@ -186,3 +186,7 @@ LOGGING = {
         },
     },
 }
+
+
+DEFAULT_USER_GROUP = 'OWF Users'
+DEFAULT_ADMIN_GROUP = 'OWF Administrators'
