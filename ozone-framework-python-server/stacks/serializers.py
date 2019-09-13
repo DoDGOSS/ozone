@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Stack
-from owf_groups.serializers import OWFGroupSerializer
+from django_enum_choices.serializers import EnumChoiceModelSerializerMixin
+from .models import Stack, StackGroups
 from people.serializers import PersonBaseSerializer
 
 
@@ -24,4 +24,10 @@ class StackSerializer(serializers.ModelSerializer):
 class StackBaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stack
+        fields = '__all__'
+
+
+class StackGroupsSerializer(EnumChoiceModelSerializerMixin, serializers.ModelSerializer):
+    class Meta:
+        model = StackGroups
         fields = '__all__'

@@ -93,3 +93,40 @@ class StacksAdminApiTests(TestCase):
 
         self.assertEqual(response.status_code, 403)
         requests.logout()
+
+
+create_stack_group_payload = {
+    "group": 3,
+    "stack": 1,
+}
+
+
+class StackGroupsApiTests(TestCase):
+    fixtures = ['stacks_data.json', 'groups_data.json', 'people_data.json']
+
+    def test_admin_list_stack_groups(self):
+        requests.login(email='admin@goss.com', password='password')
+        url = reverse('admin_stacks-groups-list')
+        response = requests.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['count'], 2)
+        requests.logout()
+
+    def test_admin_add_group_to_stack(self):
+        requests.login(email='admin@goss.com', password='password')
+        url = reverse('admin_stacks-groups-list')
+        response = requests.post(url, create_stack_group_payload)
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['group'], create_stack_group_payload['group'])
+        self.assertEqual(response.data['stack'], create_stack_group_payload['stack'])
+        requests.logout()
+
+    def test_admin_auth_only_stack_groups(self):
+        requests.login(email='user@goss.com', password='password')
+        url = reverse('admin_stacks-groups-list')
+        response = requests.get(url)
+
+        self.assertEqual(response.status_code, 403)
+        requests.logout()
