@@ -29,8 +29,8 @@ class DashboardsModelTests(TestCase):
         group2 = OwfGroup.objects.create(name="group2")
 
         # add user to group - GroupPeople
-        group1.people.add(self.regular_user)
-        group2.people.add(self.regular_user)
+        group1.add_user(self.regular_user)
+        group2.add_user(self.regular_user)
 
         # create stack
         self.stack = Stack.create(self.admin_user, create_stack_payload)

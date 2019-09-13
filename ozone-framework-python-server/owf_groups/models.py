@@ -46,6 +46,7 @@ class OwfGroup(models.Model):
 
 
 class OwfGroupPeopleManager(models.Manager):
+
     def create(self, **obj_data):
         try:
             group = obj_data.pop('group')
@@ -56,9 +57,7 @@ class OwfGroupPeopleManager(models.Manager):
             )
 
             # Set requires_sync for user being added to group
-            person = Person.objects.get(id=person.id)
-            person.requires_sync = True
-            person.save()
+            Person.objects.filter(id=person.id).update(requires_sync=True)
 
             return new_group_people
 
