@@ -28,6 +28,20 @@
     }
   },
   {
+    "model": "owf_groups.owfgroup",
+    "pk": 3,
+    "fields": {
+      "version": 1,
+      "status": "active",
+      "email": "admin@geocent.com",
+      "description": "Description for test group 3",
+      "name": "Test Group 3",
+      "automatic": false,
+      "display_name": "Test Group",
+      "stack_default": false
+    }
+  },
+  {
     "model": "owf_groups.owfgrouppeople",
     "pk": 1,
     "fields": {

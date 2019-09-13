@@ -1,6 +1,6 @@
 import uuid
 from django.utils import timezone
-from django.db import models
+from django.db import models, IntegrityError
 from owf_groups.models import OwfGroup, GroupStatus
 from people.models import Person
 from domain_mappings.models import RelationshipType, MappingType, DomainMapping
@@ -95,15 +95,46 @@ class Stack(models.Model):
 
         return new_stack
 
+    def add_group(self, group):
+        payload = {
+            'group': group,
+            'stack': self
+        }
+        new_stack_group = StackGroups.objects.create(**payload)
+
+        return new_stack_group
+
     class Meta:
         managed = True
         db_table = 'stack'
+
+
+class StackGroupsManager(models.Manager):
+
+    def create(self, **obj_data):
+        try:
+            stack = obj_data.pop('stack')
+            group = obj_data.pop('group')
+            new_stack_group = super().create(
+                stack=stack,
+                group=group
+            )
+
+            # Set requires_sync for all users in group added to stack
+            group.people.all().update(requires_sync=True)
+
+            return new_stack_group
+
+        except IntegrityError:
+            print("Relationship already exists")
 
 
 class StackGroups(models.Model):
     id = models.BigAutoField(primary_key=True)
     group = models.ForeignKey(OwfGroup, on_delete=models.CASCADE)
     stack = models.ForeignKey(Stack, on_delete=models.CASCADE)
+
+    objects = StackGroupsManager()
 
     def __str__(self):
         return f'{self.group.name} for stack name {self.stack.name}'

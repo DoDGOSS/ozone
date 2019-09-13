@@ -8,15 +8,15 @@ payload = {
     'version': 1,
     'status': 'active',
     'email': 'admin@goss.com',
-    'description': 'Description for test group 3',
-    'name': 'Test Group 3',
+    'description': 'Description for test group 4',
+    'name': 'Test Group 4',
     'automatic': False,
-    'display_name': 'Test Group 3',
+    'display_name': 'Test Group 4',
     'stack_default': False
 }
 
 
-class TestingGroups(TestCase):
+class GroupsAdminApiTests(TestCase):
     fixtures = ['people_data.json', 'groups_data.json']
 
     def test_admin_create_group(self):
@@ -33,7 +33,7 @@ class TestingGroups(TestCase):
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertGreaterEqual(response.data['count'], 2)
+        self.assertGreaterEqual(response.data['count'], 3)
         requests.logout()
 
     def test_admin_read_one_group(self):
@@ -96,7 +96,7 @@ create_group_people_payload = {
 }
 
 
-class TestingGroupPeople(TestCase):
+class GroupsPeopleApiTests(TestCase):
     fixtures = ['people_data.json', 'groups_data.json']
 
     def test_admin_list_groups_people(self):
