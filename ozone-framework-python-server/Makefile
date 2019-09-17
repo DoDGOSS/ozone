@@ -42,7 +42,9 @@ populate:        ## populate db
 	python manage.py loaddata widgets/fixtures/widget_data.json && \
 	echo widgets && \
 	python manage.py loaddata appconf/fixtures/appconf_data.json && \
-	echo appconf
+	echo appconf && \
+	python manage.py loaddata domain_mappings/fixtures/domain_mapping_data.json && \
+	echo domain_mappings
 
 pep8:             ## make pep8 to change the file to best pep8 format before commit
 	@autopep8 --max-line-length=120 --in-place --aggressive $(file)
