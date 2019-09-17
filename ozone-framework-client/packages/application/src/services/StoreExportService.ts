@@ -101,10 +101,10 @@ class StoreExportService {
     }
 
     private checkStoreAndUploadStack(stack: Stack, store: Widget): Promise<Widget | undefined> {
-        const storeUrlPackage = storeMetaService.getStoreUrlPackage(store);
-
+        const frontendUrl = store.url;
+        const backendUrl = store.descriptorUrl;
         // check that the store is available
-        return storeMetaAPI.importStore(storeUrlPackage, (checkedStore: Widget) => {
+        return storeMetaAPI.importStore(frontendUrl,backendUrl, (checkedStore: Widget) => {
             return this.uploadStackToStore(checkedStore, stack);
         });
     }
