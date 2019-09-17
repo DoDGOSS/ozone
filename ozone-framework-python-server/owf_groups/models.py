@@ -2,6 +2,8 @@ from django.db import models, IntegrityError
 from enum import Enum
 from django_enum_choices.fields import EnumChoiceField
 from people.models import Person
+from domain_mappings.models import DomainMapping
+from widgets.models import WidgetDefinition
 
 
 class GroupStatus(Enum):
@@ -39,6 +41,24 @@ class OwfGroup(models.Model):
         new_group_people = OwfGroupPeople.objects.create(**payload)
 
         return new_group_people
+
+    def add_widget(self, widget):
+        if not isinstance(widget, WidgetDefinition):
+            widget = WidgetDefinition.objects.get(pk=widget)
+
+        # based on the role update people to re-sync.
+        self.people.update(requires_sync=True)
+
+        return DomainMapping.create_group_widget_mapping(widget, self)
+
+    def remove_widget(self, widget):
+        if not isinstance(widget, WidgetDefinition):
+            widget = WidgetDefinition.objects.get(pk=widget)
+
+        # based on the role update people to re-sync.
+        self.people.update(requires_sync=True)
+
+        return DomainMapping.delete_group_widget_mapping(widget, self)
 
     class Meta:
         managed = True

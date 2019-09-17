@@ -53,6 +53,26 @@ class DomainMapping(models.Model):
             dest_type=MappingType.dashboard
         )
 
+    @classmethod
+    def create_group_widget_mapping(cls, widget, group):
+        return cls.objects.get_or_create(
+            src_id=group.id,
+            src_type=MappingType.group,
+            relationship_type=RelationshipType.owns,
+            dest_id=widget.id,
+            dest_type=MappingType.widget
+        )
+
+    @classmethod
+    def delete_group_widget_mapping(cls, widget, group):
+        return cls.objects.filter(
+            src_id=group.id,
+            src_type=MappingType.group,
+            relationship_type=RelationshipType.owns,
+            dest_id=widget.id,
+            dest_type=MappingType.widget
+        ).delete()
+
     class Meta:
         managed = True
         db_table = 'domain_mapping'
