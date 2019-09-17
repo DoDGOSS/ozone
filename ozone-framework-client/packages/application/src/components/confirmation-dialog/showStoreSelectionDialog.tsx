@@ -19,7 +19,7 @@ interface ShowStoreSelectionDialogProps {
 }
 
 /**
- * Used only in storeMetaService, because it doesn't have any frame to render in, so I either need to
+ * Used only in StackDialog, because it doesn't have any frame to render in, so I either need to
  * create this stand-alone dialog, or add yet more things to the mainstore and homescreen.
  *
  */
@@ -32,7 +32,7 @@ export const showStoreSelectionDialog = (props: ShowStoreSelectionDialogProps) =
                 <div className={classNames(Classes.DIALOG, mainStore.themeClass().value)}>
                     <div className={Classes.DIALOG_HEADER}>Select a Store</div>
                     <div className={Classes.DIALOG_BODY}>
-                        <div>You have more than one store. Select which store to push this stack to.</div>
+                        <div>Please select which store you would like to push the Stack to:</div>
                         <StoreSelectionComponent
                             stores={props.stores}
                             onSelect={(store: Widget) => {
