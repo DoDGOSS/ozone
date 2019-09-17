@@ -1,4 +1,6 @@
-from .views import OWFGroupPeopleViewSet, OWFGroupViewSet
+from django.urls import path
+
+from .views import OWFGroupPeopleViewSet, OWFGroupViewSet, OWFGroupDomainMapping
 from rest_framework import routers
 
 
@@ -8,5 +10,6 @@ router.register(r'admin/groups-people', OWFGroupPeopleViewSet, base_name='admin_
 
 
 urlpatterns = [
+    path('group-widgets/', OWFGroupDomainMapping.as_view(), name='group-widgets'),
 ]
 urlpatterns += router.urls

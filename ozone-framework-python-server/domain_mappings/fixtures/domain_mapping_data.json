@@ -1,0 +1,1 @@
+[{"model": "domain_mappings.domainmapping", "pk": 1, "fields": {"version": 0, "src_id": 2, "src_type": "group", "relationship_type": "owns", "dest_id": 1, "dest_type": "widget_definition"}}, {"model": "domain_mappings.domainmapping", "pk": 2, "fields": {"version": 0, "src_id": 1, "src_type": "group", "relationship_type": "owns", "dest_id": 1, "dest_type": "widget_definition"}}]
