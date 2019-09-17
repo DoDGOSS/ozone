@@ -11,8 +11,9 @@ class RelationshipType(Enum):
 
 
 class MappingType(Enum):
-    dashboard = 'Dashboard'
-    group = 'OwfGroup'
+    dashboard = 'dashboard'
+    group = 'group'
+    widget = 'widget_definition'
 
 
 class DomainMapping(models.Model):
