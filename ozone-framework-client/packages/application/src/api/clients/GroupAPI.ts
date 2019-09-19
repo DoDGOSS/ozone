@@ -30,6 +30,8 @@ export class GroupAPI {
         this.gateway = gateway || getGateway();
     }
 
+    // TODO - Add admin groups people endpoint
+
     getGroups(criteria?: GroupQueryCriteria): Promise<Response<GroupGetResponse>> {
         return this.gateway.get("group/", {
             params: getOptionParams(criteria),

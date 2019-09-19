@@ -108,6 +108,38 @@ class GroupsPeopleApiTests(TestCase):
         self.assertEqual(response.data['count'], 2)
         requests.logout()
 
+    def test_admin_filter_by_user_group_people(self):
+        requests.login(email='admin@goss.com', password='password')
+        url = reverse('admin_groups-people-list')
+        filter_url = f'{url}?person=1'
+        response = requests.get(filter_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['count'], 1)
+
+        # Non existing group_people entry
+        filter_url = f'{url}?person=3'
+        response_fail = requests.get(filter_url)
+
+        self.assertEqual(response_fail.status_code, 400)
+        requests.logout()
+
+    def test_admin_filter_by_group_group_people(self):
+        requests.login(email='admin@goss.com', password='password')
+        url = reverse('admin_groups-people-list')
+        filter_url = f'{url}?group=1'
+        response = requests.get(filter_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['count'], 2)
+
+        # Non existing group_people entry
+        filter_url = f'{url}?group=6'
+        response_fail = requests.get(filter_url)
+
+        self.assertEqual(response_fail.status_code, 400)
+        requests.logout()
+
     def test_admin_add_user_to_group(self):
         requests.login(email='admin@goss.com', password='password')
         url = reverse('admin_groups-people-list')
