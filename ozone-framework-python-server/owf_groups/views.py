@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.utils.translation import ugettext_lazy as _
 from .models import OwfGroup, OwfGroupPeople
-from .serializers import OWFGroupBaseSerializer, OWFGroupPeopleSerializer
+from .serializers import OWFGroupBaseSerializer, OWFGroupPeopleBaseSerializer, OWFGroupPeopleSerializer
 from rest_framework.response import Response
 from domain_mappings.models import DomainMapping, RelationshipType, MappingType
 from widgets.models import WidgetDefinition
@@ -28,10 +28,16 @@ class OWFGroupPeopleViewSet(viewsets.ModelViewSet):
     API endpoint that allows owf groups to be viewed or edited.
     """
     queryset = OwfGroupPeople.objects.all()
-    serializer_class = OWFGroupPeopleSerializer
     permission_classes = (IsAdminUser,)
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['group', 'person']
+
+    # TODO - May need to update this to include DELETE
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return OWFGroupPeopleBaseSerializer
+        else:
+            return OWFGroupPeopleSerializer
 
 
 class OWFGroupWidgetViewSet(APIView):

@@ -83,5 +83,4 @@ class StacksModelTests(TestCase):
         self.assertEqual(instance.group, self.group)
 
         # Assure all users in group requires_sync is set to True
-        for user in self.group.people.all():
-            self.assertTrue(user.requires_sync)
+        self.assertTrue(all(self.group.people.values_list('requires_sync', flat=True)), True)

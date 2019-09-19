@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from people.serializers import PersonBaseSerializer
 from .models import OwfGroup, OwfGroupPeople
 from django_enum_choices.serializers import EnumChoiceModelSerializerMixin
 
@@ -15,11 +16,16 @@ class OWFGroupBaseSerializer(EnumChoiceModelSerializerMixin, serializers.ModelSe
         fields = "__all__"
 
 
-class OWFGroupPeopleSerializer(EnumChoiceModelSerializerMixin, serializers.ModelSerializer):
+class OWFGroupPeopleBaseSerializer(EnumChoiceModelSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = OwfGroupPeople
         fields = "__all__"
-        extra_kwargs = {
-            'group': {'required': True},
-            'person': {'required': True}
-        }
+
+
+class OWFGroupPeopleSerializer(serializers.ModelSerializer):
+    person = PersonBaseSerializer()
+    group = OWFGroupSerializer()
+
+    class Meta:
+        model = OwfGroupPeople
+        fields = "__all__"
