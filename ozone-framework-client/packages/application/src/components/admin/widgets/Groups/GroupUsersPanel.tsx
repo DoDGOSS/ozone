@@ -107,6 +107,7 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
         });
     }
 
+    // TODO - Refactor this when we refactor Client APIs
     private getUsers = async () => {
         const currentGroup: GroupDTO = this.props.group;
 
@@ -125,6 +126,7 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
         });
     };
 
+    // TODO - Refactor this when we refactor Client APIs
     private addUsers = async (users: Array<UserDTO>) => {
         const request: GroupUpdateRequest = {
             id: this.props.group.id,
@@ -171,6 +173,7 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
         });
     };
 
+    // TODO - Refactor this when we refactor Client APIs
     private async removeUser(user: UserDTO): Promise<boolean> {
         const request: GroupUpdateRequest = {
             id: this.props.group.id,
