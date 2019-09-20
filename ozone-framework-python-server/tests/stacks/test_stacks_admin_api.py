@@ -2,6 +2,8 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from django.test import TestCase
 
+from stacks.models import StackGroups
+
 requests = APIClient()
 
 payload = {
@@ -101,8 +103,15 @@ create_stack_group_payload = {
 }
 
 
-class StackGroupsApiTests(TestCase):
-    fixtures = ['stacks_data.json', 'groups_data.json', 'people_data.json']
+class StacksGroupsAdminApiTests(TestCase):
+
+    fixtures = ['people_data.json',
+                'stacks_data.json',
+                'dashboard_data.json',
+                'groups_data.json']
+
+    stack_id_test_pass = 1
+    stack_id_test_fail = 9
 
     def test_admin_list_stack_groups(self):
         requests.login(email='admin@goss.com', password='password')
@@ -129,4 +138,38 @@ class StackGroupsApiTests(TestCase):
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 403)
+        requests.logout()
+
+    def test_admin_filter_by_group_stack_groups(self):
+        requests.login(email='admin@goss.com', password='password')
+        url = reverse('admin_stacks-groups-list')
+        filter_url = f'{url}?group={self.stack_id_test_pass}'
+        response = requests.get(filter_url)
+        data_stack_groups = StackGroups.objects.filter(group=self.stack_id_test_pass).count()
+
+        self.assertEqual(response.data['count'], data_stack_groups)
+        self.assertEqual(response.status_code, 200)
+
+        filter_url_fails = f'{url}?group={self.stack_id_test_fail}'
+        response_no_exist = requests.get(filter_url_fails)
+
+        self.assertEqual(response_no_exist.status_code, 400)
+
+        requests.logout()
+
+    def test_admin_filter_by_stack_stack_groups(self):
+        requests.login(email='admin@goss.com', password='password')
+        url = reverse('admin_stacks-groups-list')
+        filter_url = f'{url}?stack={self.stack_id_test_pass}'
+        response = requests.get(filter_url)
+        data_stack_groups = StackGroups.objects.filter(stack=self.stack_id_test_pass).count()
+
+        self.assertEqual(response.data['count'], data_stack_groups)
+        self.assertEqual(response.status_code, 200)
+
+        filter_url_fails = f'{url}?stack={self.stack_id_test_fail}'
+        response_no_exist = requests.get(filter_url_fails)
+
+        self.assertEqual(response_no_exist.status_code, 400)
+
         requests.logout()
