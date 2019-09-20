@@ -34,18 +34,20 @@ class WidgetDefinition(models.Model):
     visible = models.BooleanField()
     image_url_medium = models.CharField(max_length=2083)
     image_url_small = models.CharField(max_length=2083)
-    singleton = models.BooleanField()
+    singleton = models.BooleanField(default=False)
     width = models.IntegerField()
     widget_version = models.CharField(max_length=2083, blank=True, null=True)
     height = models.IntegerField()
     widget_url = models.CharField(max_length=2083)
     widget_guid = models.CharField(unique=True, max_length=255)
-    display_name = models.CharField(max_length=256)
-    background = models.BooleanField(blank=True, null=True)
-    universal_name = models.CharField(max_length=255, blank=True, null=True)
+    display_name = models.CharField(max_length=256, blank=True)
+    background = models.BooleanField(blank=True, default=False)
+    universal_name = models.CharField(max_length=255, blank=True, null=True, unique=True)
     descriptor_url = models.CharField(max_length=2083, blank=True, null=True)
     description = models.CharField(max_length=4000, blank=True, null=True)
-    mobile_ready = models.BooleanField()
+    mobile_ready = models.BooleanField(default=False)
+
+    types = models.ManyToManyField('WidgetType', through='WidgetDefinitionWidgetTypes', related_name='widgets')
 
     def __str__(self):
         return self.display_name
