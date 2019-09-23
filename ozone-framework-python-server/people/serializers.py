@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from widgets.serializers import WidgetDefinitionSerializer
 from .models import Person, PersonWidgetDefinition
 
 
@@ -14,7 +15,20 @@ class PersonThinSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email')
 
 
+class PersonWidgetDefinitionBaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PersonWidgetDefinition
+        fields = '__all__'
+        extra_kwargs = {
+            'person': {'required': True},
+            'widget_definition': {'required': True}
+        }
+
+
 class PersonWidgetDefinitionSerializer(serializers.ModelSerializer):
+    person = PersonBaseSerializer()
+    widget_definition = WidgetDefinitionSerializer()
+
     class Meta:
         model = PersonWidgetDefinition
         fields = '__all__'

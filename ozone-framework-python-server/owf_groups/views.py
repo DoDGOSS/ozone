@@ -25,7 +25,7 @@ class OWFGroupViewSet(viewsets.ModelViewSet):
 
 class OWFGroupPeopleViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows owf groups to be viewed or edited.
+    w
     """
     queryset = OwfGroupPeople.objects.all()
     permission_classes = (IsAdminUser,)
