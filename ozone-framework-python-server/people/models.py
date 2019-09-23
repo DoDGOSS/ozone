@@ -165,7 +165,7 @@ class PersonWidgetDefinition(models.Model):
     objects = PersonWidgetDefinitionManager()
 
     def __str__(self):
-        return self.display_name
+        return f'person  = {self.person.username} & widget =  {self.widget_definition.display_name}'
 
     def delete(self, *args, **kwargs):
         if self.group_widget:
