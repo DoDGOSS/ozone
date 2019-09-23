@@ -5,8 +5,8 @@ from .views import PersonDetailView, PersonWidgetDefinitionViewSet
 
 
 router = routers.SimpleRouter()
-router.register(r'admin/user', AdministrationOfUserAPIView)
-router.register(r'admin/user-widgets', PersonWidgetDefinitionViewSet, base_name='admin_user-widgets')
+router.register(r'admin/users', AdministrationOfUserAPIView)
+router.register(r'admin/users-widgets', PersonWidgetDefinitionViewSet, base_name='admin_users-widgets')
 
 urlpatterns = [
     path('me/whoami', PersonDetailView.as_view(), name='user-detail'),
