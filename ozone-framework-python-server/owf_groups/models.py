@@ -64,6 +64,13 @@ class OwfGroup(models.Model):
         managed = True
         db_table = 'owf_group'
 
+    def remove_user(self, user):
+        payload = {
+            'person': user,
+            'group': self
+        }
+        OwfGroupPeople.objects.destroy(**payload)
+
 
 class OwfGroupPeopleManager(models.Manager):
 
@@ -83,6 +90,17 @@ class OwfGroupPeopleManager(models.Manager):
 
         except IntegrityError:
             print("Relationship already exists")
+
+    def destroy(self, **obj_data):
+        group = obj_data.pop('group')
+        person = obj_data.pop('person')
+
+        group.people.remove(person)
+        person.purge_dashboards_for_group(group)
+        person.purge_widgets_for_group(group)
+
+        person.required_sync = True
+        person.save()
 
 
 class OwfGroupPeople(models.Model):

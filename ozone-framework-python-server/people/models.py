@@ -2,11 +2,12 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 from django.db import models
-from roles.models import Role
-from widgets.models import WidgetDefinition
 from datetime import datetime
 from django.conf import settings
 from django.apps import apps
+from dashboards.models import Dashboard
+from domain_mappings.models import MappingType, RelationshipType, DomainMapping
+from widgets.models import WidgetDefinition
 
 
 class MyUserManager(BaseUserManager):
@@ -89,6 +90,68 @@ class Person(AbstractBaseUser):
 
     def __str__(self):
         return f'{self.username} @ {self.email}'
+
+    def purge_all_dashboards(self):
+        user_dashboards = Dashboard.objects.filter(user=self)
+        user_dashboard_mappings = DomainMapping.objects.filter(
+            src_id__in=list(user_dashboards.values_list("id", flat=True)),
+            src_type=MappingType.dashboard,
+            relationship_type=RelationshipType.cloneOf,
+            dest_type=MappingType.dashboard
+        )
+        user_dashboards.delete()
+        user_dashboard_mappings.delete()
+
+    def purge_dashboards_for_group(self, group):
+        group_dashboard_mappings = DomainMapping.objects.filter(
+            src_id=group.id,
+            src_type=MappingType.group,
+            relationship_type=RelationshipType.owns,
+            dest_type=MappingType.dashboard
+        )
+        group_dashboard_clone_mappings = DomainMapping.objects.filter(
+            src_type=MappingType.dashboard,
+            relationship_type=RelationshipType.cloneOf,
+            dest_type=MappingType.dashboard,
+            dest_id__in=list(group_dashboard_mappings.values_list("dest_id", flat=True))
+        )
+        user_dashboards_for_group = Dashboard.objects.filter(
+            pk__in=list(group_dashboard_clone_mappings.values_list("src_id", flat=True)),
+            user=self
+        )
+        user_dashboard_mappings = DomainMapping.objects.filter(
+            src_id__in=list(user_dashboards_for_group.values_list("id", flat=True)),
+            src_type=MappingType.dashboard,
+            relationship_type=RelationshipType.cloneOf,
+            dest_type=MappingType.dashboard
+        )
+        user_dashboards_for_group.delete()
+        user_dashboard_mappings.delete()
+
+    def purge_widgets_for_group(self, group):
+        group_widget_mappings = DomainMapping.objects.filter(
+            src_id=group.id,
+            src_type=MappingType.group,
+            relationship_type=RelationshipType.owns,
+            dest_type=MappingType.widget
+        )
+        group_widget_ids = list(group_widget_mappings.values_list('dest_id', flat=True))
+
+        user_widgets_assigned_through_group = PersonWidgetDefinition.objects.filter(
+            person=self,
+            user_widget=False,
+            widget_definition__in=group_widget_ids
+        )
+        user_widgets_assigned_through_group.delete()
+
+        user_widgets = PersonWidgetDefinition.objects.filter(
+            person=self,
+            user_widget=True,
+            widget_definition__in=group_widget_ids
+        )
+        for user_widget in user_widgets:
+            user_widget.group_widget = False
+            user_widget.save()
 
     def has_perm(self, perm, obj=None):
         """
