@@ -12,6 +12,6 @@ class DashboardViewSet(viewsets.ModelViewSet):
     """
     queryset = Dashboard.objects.all()
     serializer_class = DashboardBaseSerializer
-    permission_classes = [IsAuthenticated & IsStackOwner]
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['guid', ]
