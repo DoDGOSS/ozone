@@ -33,39 +33,6 @@ class Dashboard(models.Model):
     def __str__(self):
         return self.name
 
-    @staticmethod
-    def purge_all_user_dashboards(user):
-        for group in user.groups.all():
-            Dashboard.purge_user_dashboards_for_group(user, group)
-
-    @staticmethod
-    def purge_user_dashboards_for_group(user, group):
-        group_dashboard_mappings = DomainMapping.objects.filter(
-            src_id=group.id,
-            src_type=MappingType.group,
-            relationship_type=RelationshipType.owns,
-            dest_type=MappingType.dashboard
-        )
-        group_dashboard_clone_mappings = DomainMapping.objects.filter(
-            src_type=MappingType.dashboard,
-            relationship_type=RelationshipType.cloneOf,
-            dest_type=MappingType.dashboard,
-            dest_id__in=group_dashboard_mappings.values("dest_id")
-        )
-        user_dashboards = Dashboard.objects.filter(
-            pk__in=group_dashboard_clone_mappings.values("src_id"),
-            user=user
-        )
-        user_dashboard_mappings = DomainMapping.objects.filter(
-            src_id__in=user_dashboards.values("id"),
-            src_type=MappingType.dashboard,
-            relationship_type=RelationshipType.cloneOf,
-            dest_type=MappingType.dashboard
-        )
-
-        user_dashboards.delete()
-        user_dashboard_mappings.delete()
-
     class Meta:
         managed = True
         db_table = 'dashboard'
