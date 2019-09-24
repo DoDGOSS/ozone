@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from intents.models import Intent, IntentDataType, IntentDataTypes
 
@@ -30,7 +31,7 @@ class WidgetDefIntentDataTypes(models.Model):
 
 class WidgetDefinition(models.Model):
     id = models.BigAutoField(primary_key=True)
-    version = models.BigIntegerField()
+    version = models.BigIntegerField(default=0)
     visible = models.BooleanField()
     image_url_medium = models.CharField(max_length=2083)
     image_url_small = models.CharField(max_length=2083)
@@ -39,7 +40,7 @@ class WidgetDefinition(models.Model):
     widget_version = models.CharField(max_length=2083, blank=True, null=True)
     height = models.IntegerField()
     widget_url = models.CharField(max_length=2083)
-    widget_guid = models.CharField(unique=True, max_length=255)
+    widget_guid = models.CharField(unique=True, max_length=255, default=uuid.uuid4)
     display_name = models.CharField(max_length=256, blank=True)
     background = models.BooleanField(blank=True, default=False)
     universal_name = models.CharField(max_length=255, blank=True, null=True, unique=True)
