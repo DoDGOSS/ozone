@@ -35,16 +35,6 @@ class StoreExportService {
             });
         }
 
-        if (!(await storeMetaAPI.storeHasCorrectListings(store.descriptorUrl!))) {
-            showToast({
-                message: "The Store is not properly configured for Ozone.",
-                intent: Intent.DANGER
-            });
-            return new Promise(() => {
-                return;
-            });
-        }
-
         if (stack.getWidgets().length === 0) {
             showToast({
                 message: "Cannot push a stack with no widgets",
@@ -57,12 +47,12 @@ class StoreExportService {
 
         // check that all urls are fully-qualified.
         // Stores are remote, and so can't use local urls.
-        if (!this.stackUrlsValid(stack)) {
-            console.log("Attempted to push a Stack with invalid URLs.");
-            return new Promise(() => {
-                return;
-            });
-        }
+        // if (!this.stackUrlsValid(stack)) {
+        //     console.log("Attempted to push a Stack with invalid URLs.");
+        //     return new Promise(() => {
+        //         return;
+        //     });
+        // }
 
         this.checkStoreAndUploadStack(stack, store);
     }
@@ -81,28 +71,27 @@ class StoreExportService {
         }
     }
 
-    private uploadStackToStore(store: Widget, stack: Stack): void {
+    private async uploadStackToStore(store: Widget, stack: Stack): Promise<void> {
         const marketplaceAPI: MarketplaceAPI | undefined = storeMetaService.getStoreApi(store);
         if (!marketplaceAPI) {
             return;
         }
 
-        marketplaceAPI.uploadStack(stack).then((response: { success: boolean; message: string }) => {
-            if (response.success === true) {
-                showToast({
-                    message: response.message,
-                    intent: Intent.SUCCESS
-                });
-                mainStore.refreshStore();
-                mainStore.showStore();
-                mainStore.hideStackDialog();
-            } else {
-                showToast({
-                    message: response.message,
-                    intent: Intent.DANGER
-                });
-            }
-        });
+        const uploadResponse: { success: boolean; message: string } = await marketplaceAPI.uploadStack(stack);
+        if (uploadResponse.success) {
+            showToast({
+                message: uploadResponse.message,
+                intent: Intent.SUCCESS
+            });
+            mainStore.refreshStore();
+            mainStore.showStore();
+            mainStore.hideStackDialog();
+        } else {
+            showToast({
+                message: uploadResponse.message,
+                intent: Intent.DANGER
+            });
+        }
     }
 
     private stackUrlsValid(stack: Stack): boolean {
