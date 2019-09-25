@@ -6,6 +6,7 @@ import { widgetApi } from "../api/clients/WidgetAPI";
 
 import { MarketplaceAPI } from "../api/clients/MarketplaceAPI";
 import { AmlMarketplaceAPI } from "../api/clients/AmlMarketplaceAPI";
+import { AMLListing } from "../models/AMLListing";
 
 export interface InfractingItemUrl {
     type: "stack" | "dashboard" | "widget";
@@ -14,6 +15,15 @@ export interface InfractingItemUrl {
 }
 
 class StoreMetaService {
+    launch_url: string;
+    version_name: string;
+    unique_name: string;
+    description_short: string;
+    is_enabled: boolean;
+    is_deleted: boolean;
+    security_marking: string;
+    is_private: boolean;
+    required_listings: AMLListing[];
     async saveOrUpdateStore(store: Widget): Promise<any> {
         if (store.id === undefined || store.id === "") {
             return widgetApi.createWidget(await widgetCreateRequestFromWidget(store));

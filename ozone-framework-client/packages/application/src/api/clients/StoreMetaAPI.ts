@@ -6,7 +6,7 @@ import { widgetTypeApi } from "./WidgetTypeAPI";
 import { widgetFromJson } from "../../codecs/Widget.codec";
 
 import { uuid } from "../../utility";
-import { isNil} from "lodash"
+import { isNil } from "lodash";
 
 export class StoreMetaAPI {
     async getStores(): Promise<Widget[]> {
@@ -51,7 +51,7 @@ export class StoreMetaAPI {
     }
 
     async storeHasCorrectListings(storeBackUrl: string): Promise<boolean> {
-        if (await this.findMissingListings(storeBackUrl)) {
+        if ((await this.findMissingListings(storeBackUrl)).length > 0) {
             return false;
         } else {
             return true;
@@ -72,11 +72,11 @@ export class StoreMetaAPI {
         }
         const values = JSON.stringify(listingData.data);
 
-        const testArray: Array<string> = neededListingTypes
+        const missingListings: Array<string> = neededListingTypes
             .map((listingItem) => (!values.includes(listingItem) ? listingItem : ""))
             .filter((listingItem) => listingItem !== "");
 
-        return testArray;
+        return missingListings;
     }
 
     private async addMissingListingsToStore(storeBackUrl: string, missingListings: string[]): Promise<boolean> {
@@ -84,20 +84,22 @@ export class StoreMetaAPI {
 
         const gateway = new OzoneGateway(storeBackUrl);
 
-        if(isNil(missingListings)) {
+        if (isNil(missingListings)) {
             console.log("WARN: No new listingTypes to add to AML Store."); // Should never be hit.
             return runningResponse;
         } else {
-            missingListings.map((listingItem)=>{
-                const requestData=`{"title":"`+listingItem+`"}`;
+            missingListings.map((listingItem) => {
+                const requestData = `{"title":"` + listingItem + `"}`;
                 let response: any;
                 try {
-                    response = gateway.post(`api/listingtype/`, requestData, { headers: {"Content-Type" : "application/json" }});
+                    response = gateway.post(`api/listingtype/`, requestData, {
+                        headers: { "Content-Type": "application/json" }
+                    });
                 } catch (e) {
                     console.log(e);
                 }
                 runningResponse = runningResponse && isNil(response);
-            })
+            });
         }
         return runningResponse;
     }

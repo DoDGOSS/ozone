@@ -1,17 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { InputGroup, Switch, Tab, Tabs } from "@blueprintjs/core";
-import { groupBy, isNil, keys, mapValues } from "lodash";
+import React from "react";
 import { Button, Intent } from "@blueprintjs/core";
-
-import { useBehavior } from "../../../../hooks";
-
-import { systemConfigStore } from "../../../../stores/SystemConfigStore";
-import { ConfigDTO } from "../../../../api/models/ConfigDTO";
 
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { storeMetaAPI } from "../../../../api/clients/StoreMetaAPI";
 
-import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { Widget } from "../../../../models/Widget";
 
 import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
@@ -20,7 +12,6 @@ import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
 import { AddStoreDialog } from "../../../add-store-dialog/AddStoreDialog";
 
 import { classNames, uuid } from "../../../../utility";
-import { mainStore } from "../../../../stores/MainStore";
 
 import * as sysConfigStyles from "./SystemConfigWidget.scss";
 
@@ -75,7 +66,7 @@ export class StorePanel extends React.Component<{}, StorePanelState> {
                     </div>
                 </div>
                 <br />
-                <div>{this.state.stores.map((store, index) => this.getStoreElement(store))}</div>
+                <div>{this.state.stores.map((store) => this.getStoreElement(store))}</div>
                 <AddStoreDialog
                     key={this.state.addDialogKey}
                     dialogOpen={this.state.storeDialogOpen}
