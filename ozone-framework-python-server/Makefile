@@ -49,6 +49,9 @@ populate:        ## populate db
 pep8:             ## make pep8 to change the file to best pep8 format before commit
 	@autopep8 --max-line-length=120 --in-place --aggressive $(file)
 
+checkPEP:
+	@pycodestyle --max-line-length=120 --show-source --show-pep8 --count --exclude="*/migrations" . > pep8-results.txt
+
 dbDown:
 	@psql -c "DROP DATABASE postgres"
 
@@ -56,4 +59,7 @@ dbUp:
 	@psql -c "CREATE DATABASE postgres"
 
 resetDB:
-	psql -c "DROP DATABASE postgres" && psql -c "CREATE DATABASE postgres" && python manage.py migrate && make populate
+	psql -c "DROP DATABASE postgres" && psql -c "CREATE DATABASE postgres" && \
+	python manage.py makemigrations && \
+	python manage.py migrate && make populate \
+	&& echo "DB reset"

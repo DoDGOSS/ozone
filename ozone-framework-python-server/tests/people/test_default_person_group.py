@@ -25,7 +25,7 @@ payload = {
 }
 
 
-class TestingPersonBaseUrl(TestCase):
+class TestingPersonGroupCreation(TestCase):
     fixtures = ['people_data.json', 'groups_data.json']
 
     def test_that_the_groups_exist(self):
