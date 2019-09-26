@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from django.test import TestCase
 from people.models import Person
-from owf_groups.models import OwfGroup
+from owf_groups.models import OwfGroup, OwfGroupPeople
 
 requests = APIClient()
 
@@ -20,16 +20,20 @@ class GroupsApiTests(TestCase):
 
     def test_admin_can_remove_user_from_group(self):
         requests.login(email='admin@goss.com', password='password')
-        url = reverse('admin_groups-people-list')
-        response = requests.delete(url, {'user': self.regular_user.id, 'group': self.group.id})
+        group_people = OwfGroupPeople.objects.get(person=self.regular_user, group=self.group)
+        url = reverse('admin_groups-people-detail', args=(group_people.id,))
 
-        self.assertEqual(response.status_code, 405)
+        response = requests.delete(url)
+
+        self.assertEqual(response.status_code, 204)
         requests.logout()
 
     def test_nonadmin_cannot_remove_user_from_group(self):
         requests.login(email='user@goss.com', password='password')
-        url = reverse('admin_groups-people-list')
-        response = requests.delete(url, {'user': self.regular_user.id, 'group': self.group.id})
+        group_people = OwfGroupPeople.objects.get(person=self.regular_user, group=self.group)
+        url = reverse('admin_groups-people-detail', args=(group_people.id,))
+
+        response = requests.delete(url)
 
         self.assertEqual(response.status_code, 403)
         requests.logout()
