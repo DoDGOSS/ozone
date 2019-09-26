@@ -2,11 +2,13 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 from django.db import models
-from datetime import datetime
+from django.utils import timezone
 from django.conf import settings
 from django.apps import apps
 from dashboards.models import Dashboard
 from domain_mappings.models import MappingType, RelationshipType, DomainMapping
+from widgets.models import WidgetDefinition
+from django.dispatch import receiver
 
 
 class MyUserManager(BaseUserManager):
@@ -68,16 +70,16 @@ class Person(AbstractBaseUser):
     enabled = models.BooleanField(default=True)
     user_real_name = models.CharField(max_length=200)
     username = models.CharField(unique=True, max_length=200, blank=False)
-    last_login = models.DateTimeField(default=datetime.now, blank=True)
+    last_login = models.DateTimeField(default=timezone.now, blank=True)
     email_show = models.BooleanField(default=True)
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
         unique=True,
     )
-    prev_login = models.DateTimeField(default=datetime.now, blank=True)
+    prev_login = models.DateTimeField(default=timezone.now, blank=True)
     description = models.CharField(max_length=255, blank=True)
-    last_notification = models.DateTimeField(default=datetime.now, blank=True)
+    last_notification = models.DateTimeField(default=timezone.now, blank=True)
     requires_sync = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -183,6 +185,11 @@ class Person(AbstractBaseUser):
     class Meta:
         managed = True
         db_table = 'person'
+
+
+@receiver(models.signals.pre_delete, sender=Person)
+def clean_mapping_of_user(sender, instance, *args, **kwargs):
+    instance.purge_all_dashboards()
 
 
 class PersonRole(models.Model):
