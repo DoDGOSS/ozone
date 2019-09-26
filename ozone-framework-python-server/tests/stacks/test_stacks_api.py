@@ -25,3 +25,5 @@ class StacksApiTests(TestCase):
         self.assertEqual(response.data['description'], create_stack_payload['description'])
         self.assertTrue(response.data['stack_context'])
         self.assertEqual(response.data['owner']['id'], user_id)
+
+        requests.logout()
