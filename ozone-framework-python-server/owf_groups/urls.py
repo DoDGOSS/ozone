@@ -8,6 +8,6 @@ router.register(r'admin/groups', OWFGroupViewSet, base_name='admin_groups')
 router.register(r'admin/groups-people', OWFGroupPeopleViewSet, base_name='admin_groups-people')
 
 urlpatterns = [
-    path('group-widgets/', OWFGroupWidgetViewSet.as_view(), name='group_widgets'),
+    path('admin/groups-widgets/', OWFGroupWidgetViewSet.as_view(), name='admin_groups-widgets'),
 ]
 urlpatterns += router.urls

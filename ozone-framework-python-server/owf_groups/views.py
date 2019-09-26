@@ -25,7 +25,7 @@ class OWFGroupViewSet(viewsets.ModelViewSet):
 
 class OWFGroupPeopleViewSet(viewsets.ModelViewSet):
     """
-    w
+    API endpoint that allows group people to be viewed or edited.
     """
     queryset = OwfGroupPeople.objects.all()
     permission_classes = (IsAdminUser,)
@@ -60,6 +60,7 @@ class OWFGroupWidgetViewSet(APIView):
 
         elif group_id is not None and widget_id is None:
             # specific group
+            # TODO - May want to consider moving this to the model
             if OwfGroup.objects.filter(id=group_id).exists():
                 group_widgets_domain_mappings = DomainMapping.objects.filter(
                     relationship_type=RelationshipType.owns,
@@ -80,6 +81,7 @@ class OWFGroupWidgetViewSet(APIView):
 
         elif widget_id is not None and group_id is None:
             # specific widget
+            # TODO - May want to consider moving this to the model
             if DomainMapping.objects.filter(dest_id=widget_id).exists():
                 get_widget_from_domain_mapping = DomainMapping.objects.filter(
                     relationship_type=RelationshipType.owns,

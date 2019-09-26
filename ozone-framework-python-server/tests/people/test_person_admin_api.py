@@ -1,6 +1,8 @@
 from django.urls import reverse
 from rest_framework.test import APIClient
 from django.test import TestCase
+from people.models import Person
+from stacks.models import Stack
 
 requests = APIClient()
 
@@ -169,4 +171,47 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
 
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.data['detail'].code, 'permission_denied')
+        requests.logout()
+
+
+create_stack_payload = {
+    'name': 'test stack 1',
+    'description': 'test description 1'
+}
+
+create_stack_payload2 = {
+    'name': 'test stack 2',
+    'description': 'test description 2'
+}
+
+
+class PersonStacksAdminApiTests(TestCase):
+    fixtures = ['people_data.json']
+
+    def setUp(self):
+        self.admin_user = Person.objects.get(pk=1)
+
+        # create stacks
+        stack = Stack.create(self.admin_user, create_stack_payload)
+        stack2 = Stack.create(self.admin_user, create_stack_payload2)
+
+    def test_admin_filter_by_user_users_stacks(self):
+        # Get all stacks directly assigned to user
+        requests.login(email='admin@goss.com', password='password')
+        url = reverse('admin_users-stacks')
+        filter_url = f'{url}?person={self.admin_user.id}'
+        response = requests.get(filter_url)
+
+        stacks = response.data['stacks']
+
+        self.assertEqual(len(stacks), 2)
+        self.assertEqual(response.status_code, 200)
+
+    def test_admin_auth_only_groups_people(self):
+        requests.login(email='user@goss.com', password='password')
+        url = reverse('admin_users-stacks')
+        filter_url = f'{url}?person=1'
+        response = requests.get(filter_url)
+
+        self.assertEqual(response.status_code, 403)
         requests.logout()
