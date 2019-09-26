@@ -7,7 +7,6 @@ from django.conf import settings
 from django.apps import apps
 from dashboards.models import Dashboard
 from domain_mappings.models import MappingType, RelationshipType, DomainMapping
-from widgets.models import WidgetDefinition
 
 
 class MyUserManager(BaseUserManager):
@@ -152,6 +151,12 @@ class Person(AbstractBaseUser):
         for user_widget in user_widgets:
             user_widget.group_widget = False
             user_widget.save()
+
+    def get_directly_assigned_stacks(self):
+        from stacks.models import Stack
+        stack_groups = self.groups.filter(stack_default=True)
+
+        return Stack.objects.filter(default_group__in=list(stack_groups.values_list(flat=True)))
 
     def has_perm(self, perm, obj=None):
         """
