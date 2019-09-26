@@ -169,3 +169,7 @@ class PersonModelTests(TestCase):
         self.assertFalse(
             DomainMapping.objects.filter(pk=self.user_dash1_for_group2_domain_mapping.id).exists()
         )
+
+    def test_get_stacks_for_user(self):
+        stacks = Person.get_directly_assigned_stacks(self.admin_user).count()
+        self.assertGreaterEqual(stacks, 2)

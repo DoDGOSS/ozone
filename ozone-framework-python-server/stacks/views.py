@@ -9,6 +9,7 @@ class StackViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows stacks to be viewed or edited.
     """
+    # TODO - Should we filter this or return all as legacy did
     queryset = Stack.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = StackSerializer
