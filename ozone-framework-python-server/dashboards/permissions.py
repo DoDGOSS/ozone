@@ -4,7 +4,7 @@ from stacks.models import Stack
 
 class IsStackOwner(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.method != "POST":
+        if request.method != "POST" or view.action == "share":
             return True
 
         stack_id = request.data['stack']
