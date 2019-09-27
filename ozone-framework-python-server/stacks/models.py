@@ -1,10 +1,12 @@
+import json
 import uuid
 from django.utils import timezone
 from django.db import models, IntegrityError
 from owf_groups.models import OwfGroup, GroupStatus
-from people.models import Person
+from people.models import Person, PersonWidgetDefinition
 from domain_mappings.models import RelationshipType, MappingType, DomainMapping
 from dashboards.models import Dashboard
+from widgets.models import WidgetDefinition
 
 
 class Stack(models.Model):
@@ -39,7 +41,47 @@ class Stack(models.Model):
             **kwargs)
         DomainMapping.create_user_dashboard_mapping(new_user_dashboard, new_group_dashboard)
 
-        return new_user_dashboard
+        return new_group_dashboard, new_user_dashboard
+
+    def share(self):
+        hasMarketplace = WidgetDefinition.objects.filter(types__name='marketplace')
+        if(not hasMarketplace):
+            self.approved = True
+            self.save()
+
+        group_dashboard_mappings = DomainMapping.objects.get_group_dashboard_mappings(self.default_group.id)
+
+        for group_dashboard_mapping in group_dashboard_mappings:
+            group_dashboard = Dashboard.objects.get(pk=group_dashboard_mapping.dest_id)
+            cloned_dashboard_mappings = DomainMapping.objects.get_dashboard_clone_mappings(group_dashboard.id)
+            cloned_dashboard_ids = list(cloned_dashboard_mappings.values_list("src_id", flat=True))
+            owner_dashboard = Dashboard.objects.get(pk__in=cloned_dashboard_ids, user=self.owner)
+
+            if(owner_dashboard.marked_for_deletion):
+                cloned_dashboards = Dashboard.objects.filter(pk__in=cloned_dashboard_ids)
+
+                # cloned_dashboards will include the owner's dashboard
+                cloned_dashboards.delete()
+                cloned_dashboard_mappings.delete()
+                group_dashboard.delete()
+                group_dashboard_mapping.delete()
+
+            else:
+                group_dashboard.name = owner_dashboard.name
+                group_dashboard.description = owner_dashboard.description
+                group_dashboard.type = owner_dashboard.type
+                group_dashboard.locked = owner_dashboard.locked
+                group_dashboard.dashboard_position = owner_dashboard.dashboard_position
+                group_dashboard.layout_config = owner_dashboard.layout_config
+
+                owner_dashboard.published_to_store = True
+                owner_dashboard.save()
+                group_dashboard.published_to_store = True
+                group_dashboard.save()
+
+            widgets_to_add_to_stack = group_dashboard.get_widgets()
+            for widget in widgets_to_add_to_stack:
+                self.default_group.add_widget(widget)
 
     @classmethod
     def create(cls, user, kwargs):

@@ -25,6 +25,6 @@ class DashboardBaseSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         stack = validated_data['stack']
         del validated_data['stack']
-        new_user_dashboard = stack.add_dashboard(request.user, validated_data)
+        _, new_user_dashboard = stack.add_dashboard(request.user, validated_data)
 
         return new_user_dashboard

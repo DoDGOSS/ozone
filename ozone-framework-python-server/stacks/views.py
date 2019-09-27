@@ -1,8 +1,11 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Stack, StackGroups
 from .serializers import StackSerializer, StackGroupsSerializer, StackGroupsSerializerList
+from dashboards.permissions import IsStackOwner
 
 
 class StackViewSet(viewsets.ModelViewSet):
@@ -13,6 +16,13 @@ class StackViewSet(viewsets.ModelViewSet):
     queryset = Stack.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = StackSerializer
+
+    @action(methods=['post'], detail=True, permission_classes=(IsAuthenticated, IsStackOwner))
+    def share(self, request, pk=None):
+        stack = Stack.objects.get(pk=pk)
+        stack.share()
+
+        return Response(status=status.HTTP_200_OK)
 
 
 class StackAdminViewSet(viewsets.ModelViewSet):
