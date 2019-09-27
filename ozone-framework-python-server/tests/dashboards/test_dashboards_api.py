@@ -36,7 +36,7 @@ class DashboardsApiTests(TestCase):
 
         self.assertEqual(response.status_code, 201)
 
-    def test_add_dashboard__for_nonowner_user__should_fail(self):
+    def test_nonowner_of_stack_cannot_add_dashboard(self):
         stack = Stack.create(self.admin_user, self.create_stack_payload)
         self.create_dashboard_payload['stack'] = stack.id
 
@@ -45,24 +45,24 @@ class DashboardsApiTests(TestCase):
         response = requests.post(url, self.create_dashboard_payload)
         self.assertEqual(response.status_code, 403)
 
-    def test_delete_dashboard_as_stack_owner(self):
+    def test_owner_of_stack_can_delete_dashboard(self):
         stack = Stack.create(self.regular_user, self.create_stack_payload)
-        dashboard = stack.add_dashboard(self.regular_user, self.create_dashboard_payload)
+        group_dashboard, user_dashboard = stack.add_dashboard(self.regular_user, self.create_dashboard_payload)
 
         requests.login(email='user@goss.com', password='password')
-        url = reverse('dashboards-detail', args=(f'{dashboard.id}',))
+        url = reverse('dashboards-detail', args=(f'{user_dashboard.id}',))
         response = requests.delete(url)
-        dashboard.refresh_from_db()
+        user_dashboard.refresh_from_db()
 
         self.assertEqual(response.status_code, 204)
-        self.assertTrue(dashboard.marked_for_deletion)
+        self.assertTrue(user_dashboard.marked_for_deletion)
 
-    def test_delete_dashboard_as_stack_nonowner(self):
+    def test_nonowner_of_stack_cannot_delete_dashboard(self):
         stack = Stack.create(self.admin_user, self.create_stack_payload)
-        dashboard = stack.add_dashboard(self.regular_user, self.create_dashboard_payload)
+        group_dashboard, user_dashboard = stack.add_dashboard(self.regular_user, self.create_dashboard_payload)
 
         requests.login(email='user@goss.com', password='password')
-        url = reverse('dashboards-detail', args=(f'{dashboard.id}',))
+        url = reverse('dashboards-detail', args=(f'{user_dashboard.id}',))
         response = requests.delete(url)
 
         self.assertEqual(response.status_code, 403)

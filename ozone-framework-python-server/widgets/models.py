@@ -29,6 +29,20 @@ class WidgetDefIntentDataTypes(models.Model):
         db_table = 'widget_def_intent_data_types'
 
 
+class WidgetType(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    version = models.BigIntegerField()
+    name = models.CharField(max_length=255)
+    display_name = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        managed = True
+        db_table = 'widget_type'
+
+
 class WidgetDefinition(models.Model):
     id = models.BigAutoField(primary_key=True)
     version = models.BigIntegerField(default=0)
@@ -42,8 +56,8 @@ class WidgetDefinition(models.Model):
     widget_url = models.CharField(max_length=2083)
     widget_guid = models.CharField(unique=True, max_length=255, default=uuid.uuid4)
     display_name = models.CharField(max_length=256, blank=True)
-    background = models.BooleanField(blank=True, default=False)
-    universal_name = models.CharField(max_length=255, blank=True, null=True, unique=True)
+    background = models.BooleanField(blank=True, null=True)
+    universal_name = models.CharField(unique=True, max_length=255, blank=True, null=True)
     descriptor_url = models.CharField(max_length=2083, blank=True, null=True)
     description = models.CharField(max_length=4000, blank=True, null=True)
     mobile_ready = models.BooleanField(default=False)
@@ -67,17 +81,3 @@ class WidgetDefinitionWidgetTypes(models.Model):
         managed = True
         db_table = 'widget_definition_widget_types'
         unique_together = (('widget_definition', 'widget_type'),)
-
-
-class WidgetType(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    version = models.BigIntegerField()
-    name = models.CharField(max_length=255)
-    display_name = models.CharField(max_length=256)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        managed = True
-        db_table = 'widget_type'

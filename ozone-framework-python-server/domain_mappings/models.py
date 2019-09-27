@@ -16,6 +16,24 @@ class MappingType(Enum):
     widget = 'widget_definition'
 
 
+class DomainMappingsManager(models.Manager):
+    def get_group_dashboard_mappings(self, group_id):
+        return self.filter(
+            src_id=group_id,
+            src_type=MappingType.group,
+            relationship_type=RelationshipType.owns,
+            dest_type=MappingType.dashboard
+        )
+
+    def get_dashboard_clone_mappings(self, dashboard_id):
+        return self.filter(
+            src_type=MappingType.dashboard,
+            relationship_type=RelationshipType.cloneOf,
+            dest_type=MappingType.dashboard,
+            dest_id=dashboard_id
+        )
+
+
 class DomainMapping(models.Model):
     id = models.BigAutoField(primary_key=True)
     version = models.BigIntegerField(default=0)
@@ -30,28 +48,32 @@ class DomainMapping(models.Model):
     dest_id = models.BigIntegerField()
     dest_type = EnumChoiceField(MappingType, max_length=255)
 
+    objects = DomainMappingsManager()
+
     def __str__(self):
         return f'{self.src_type}:{self.src_id} {self.relationship_type} {self.dest_type}:{self.dest_id}'
 
     @classmethod
     def create_group_dashboard_mapping(cls, group, groupDashboard):
-        return cls.objects.create(
+        existing_mapping, created_mapping = cls.objects.get_or_create(
             src_id=group.id,
             src_type=MappingType.group,
             relationship_type=RelationshipType.owns,
             dest_id=groupDashboard.id,
             dest_type=MappingType.dashboard
         )
+        return existing_mapping or created_mapping
 
     @classmethod
     def create_user_dashboard_mapping(cls, userDashboard, groupDashboard):
-        return cls.objects.create(
+        existing_mapping, created_mapping = cls.objects.get_or_create(
             src_id=userDashboard.id,
             src_type=MappingType.dashboard,
             relationship_type=RelationshipType.cloneOf,
             dest_id=groupDashboard.id,
             dest_type=MappingType.dashboard
         )
+        return existing_mapping or created_mapping
 
     @classmethod
     def create_group_widget_mapping(cls, widget, group):
