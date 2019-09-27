@@ -1,6 +1,6 @@
 import styles from "../index.scss";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { Intent, Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 
 import { assetUrl } from "../../../environment";
@@ -15,11 +15,22 @@ import { showMarkdownDialog } from "./MarkdownConfirmationDialog";
 import { UserWidgetTile } from "./UserWidgetTile";
 
 export interface UserWidgetItemProps {
-    userWidget: UserWidget;
+    userWidget: UserWidget,
+    widgetToolBarRef: React.RefObject<HTMLDivElement>;
 }
 
-const _UserWidgetItem: React.FC<UserWidgetItemProps> = ({ userWidget }) => {
+const _UserWidgetItem: React.FC<UserWidgetItemProps> = ({ userWidget, widgetToolBarRef }) => {
     const deleteButton = useToggleable(false);
+    const [widgetToolBarMaxWidth, setWidgetToolBarMaxWidth] = useState(300);
+
+    function handleOnMouseEnter() {
+        deleteButton.show();
+        if(widgetToolBarRef && widgetToolBarRef.current) 
+        { 
+            setWidgetToolBarMaxWidth(widgetToolBarRef.current.clientWidth);
+        }
+
+    }
 
     const onDelete = useCallback(() => {
         userWidgetService
@@ -41,14 +52,14 @@ const _UserWidgetItem: React.FC<UserWidgetItemProps> = ({ userWidget }) => {
     const widget = userWidget.widget;
 
     return (
-        <div className={styles.tile} onMouseEnter={deleteButton.show} onMouseLeave={deleteButton.hide}>
+        <div className={styles.tile} onMouseEnter={handleOnMouseEnter} onMouseLeave={deleteButton.hide}>
             <div style={{ width: "100%" }}>
                 <Popover
                     interactionKind={PopoverInteractionKind.HOVER_TARGET_ONLY}
                     position={Position.RIGHT}
                     modifiers={{
                         arrow: { enabled: false },
-                        offset: { enabled: true, offset: "0,-100% + 285" },
+                        offset: { enabled: true, offset: "0,-100% + " + widgetToolBarMaxWidth + " - 20" },
                         preventOverflow: { enabled: true, padding: 5 },
                         keepTogether: { enabled: true }
                     }}
