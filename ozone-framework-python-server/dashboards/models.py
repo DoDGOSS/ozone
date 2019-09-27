@@ -33,6 +33,25 @@ class Dashboard(models.Model):
     def __str__(self):
         return self.name
 
+    def get_widgets(self):
+        from people.models import PersonWidgetDefinition
+        try:
+            layout_config = json.loads(self.layout_config)
+        except ValueError as e:
+            return []
+
+        widgets = []
+        for background_widget in layout_config["backgroundWidgets"]:
+            user_widget = PersonWidgetDefinition.objects.get(pk=background_widget["userWidgetId"])
+            widgets.append(user_widget.widget_definition)
+
+        for panel in layout_config["panels"]:
+            for user_widget in panel["widgets"]:
+                user_widget = PersonWidgetDefinition.objects.get(pk=user_widget["userWidgetId"])
+                widgets.append(user_widget.widget_definition)
+
+        return widgets
+
     class Meta:
         managed = True
         db_table = 'dashboard'
