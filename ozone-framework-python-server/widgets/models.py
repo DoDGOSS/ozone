@@ -43,6 +43,65 @@ class WidgetType(models.Model):
         db_table = 'widget_type'
 
 
+class WidgetDefinitionManager(models.Manager):
+    def amend_intent(self, item):
+        _intents = []
+        _data_types = []
+
+        # create intent
+        intent, created = Intent.objects.get_or_create(action=item['action'])
+        _intents.append((intent, created))
+
+        # create intent data type
+        for value in item['dataTypes']:
+            data_type, created = IntentDataType.objects.get_or_create(data_type=value)
+            _data_types.append((data_type, created))
+
+            # IntentDataTypes Relation
+            intent.types.add(data_type)
+
+        return _intents, _data_types
+
+    def handle_intents(self, obj, intents):
+        # reset intents for a widget
+        obj.widgetdefintent_set.all().delete()
+
+        for key, items in intents.items():
+            for item in items:
+                # create or update intents
+                intents, data_types = self.amend_intent(item)
+
+                # create relations for WidgetDefIntent
+                _wdi_list = []
+                _keys_map = {"send": "receive", "receive": "send"}
+
+                for intent, _ in intents:
+                    params = {
+                        str(key): True,
+                        str(_keys_map[key]): False,
+                        'intent': intent,
+                    }
+                    wdi, _ = obj.widgetdefintent_set.get_or_create(**params)
+                    _wdi_list.append(wdi)
+
+                # create relations for WidgetDefIntentDataTypes
+                for wdi in _wdi_list:
+                    for data_type, _ in data_types:
+                        data = {
+                            'widget_definition_intent': wdi
+                        }
+                        data_type.widgetdefintentdatatypes_set.get_or_create(**data)
+
+    def create(self, **kwargs):
+        intents = kwargs.pop('intents', {})
+        obj = super().create(**kwargs)
+
+        if intents:
+            self.handle_intents(obj, intents)
+
+        return obj
+
+
 class WidgetDefinition(models.Model):
     id = models.BigAutoField(primary_key=True)
     version = models.BigIntegerField(default=0)
@@ -61,8 +120,9 @@ class WidgetDefinition(models.Model):
     descriptor_url = models.CharField(max_length=2083, blank=True, null=True)
     description = models.CharField(max_length=4000, blank=True, null=True)
     mobile_ready = models.BooleanField(default=False)
-
     types = models.ManyToManyField('WidgetType', through='WidgetDefinitionWidgetTypes', related_name='widgets')
+
+    objects = WidgetDefinitionManager()
 
     def __str__(self):
         return self.display_name

@@ -6,6 +6,8 @@ class Intent(models.Model):
     version = models.BigIntegerField(default=0)
     action = models.CharField(unique=True, max_length=255)
 
+    types = models.ManyToManyField('IntentDataType', through='IntentDataTypes', related_name='intents')
+
     def __str__(self):
         return self.action
 
