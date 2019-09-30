@@ -3,6 +3,8 @@ from .models import WidgetDefinition, WidgetDefinitionWidgetTypes, WidgetDefInte
 
 
 class WidgetDefinitionSerializer(serializers.ModelSerializer):
+    intents = serializers.JSONField(initial=dict, required=False)
+
     class Meta:
         model = WidgetDefinition
         fields = '__all__'
