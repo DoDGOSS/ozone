@@ -6,6 +6,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import Stack, StackGroups
 from .serializers import StackSerializer, StackGroupsSerializer, StackGroupsSerializerList
 from dashboards.permissions import IsStackOwner
+from dashboards.models import Dashboard
+from domain_mappings.models import DomainMapping, MappingType
 
 
 class StackViewSet(viewsets.ModelViewSet):
@@ -31,6 +33,14 @@ class StackAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser,)
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name', ]
+
+    def perform_destroy(self, stack):
+        all_stack_dashboards = Dashboard.objects.filter(stack=stack)
+        all_stack_dashboard_ids = list(all_stack_dashboards.values_list("id", flat=True))
+        DomainMapping.objects.filter(src_id__in=all_stack_dashboard_ids, src_type=MappingType.dashboard).delete()
+        DomainMapping.objects.filter(dest_id__in=all_stack_dashboard_ids, dest_type=MappingType.dashboard).delete()
+        stack.default_group.delete()
+        stack.delete()
 
 
 class StackGroupsViewSet(viewsets.ModelViewSet):
