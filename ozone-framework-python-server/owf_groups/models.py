@@ -1,9 +1,11 @@
 from django.dispatch import receiver
 from django.db import models, IntegrityError
+from django.dispatch import receiver
 from enum import Enum
 from django_enum_choices.fields import EnumChoiceField
 from people.models import Person
-from domain_mappings.models import DomainMapping
+from dashboards.models import Dashboard
+from domain_mappings.models import DomainMapping, MappingType
 from widgets.models import WidgetDefinition
 
 
@@ -68,6 +70,19 @@ class OwfGroup(models.Model):
     def remove_user(self, user):
         group_people = OwfGroupPeople.objects.get(person=user, group=self)
         group_people.delete()
+
+
+@receiver(models.signals.pre_delete, sender=OwfGroup)
+def clean_group_mappings(sender, instance, *args, **kwargs):
+    for user in instance.people.all():
+        user.purge_dashboards_for_group(instance)
+        user.purge_widgets_for_group(instance)
+        user.requires_sync = True
+        user.save()
+
+    Dashboard.objects.get_dashboards_for_group(instance).delete()
+    DomainMapping.objects.filter(src_id=instance.id, src_type=MappingType.group).delete()
+    DomainMapping.objects.filter(dest_id=instance.id, dest_type=MappingType.group).delete()
 
 
 class OwfGroupPeopleManager(models.Manager):
