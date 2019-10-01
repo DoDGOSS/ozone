@@ -31,7 +31,7 @@ class Dashboard(models.Model):
     marked_for_deletion = models.BooleanField(default=False, blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return f'{self.name} for user: {self.user.id}'
 
     def get_widgets(self):
         from people.models import PersonWidgetDefinition

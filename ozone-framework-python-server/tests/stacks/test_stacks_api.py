@@ -1,15 +1,12 @@
 from django.urls import reverse
-from rest_framework.test import APIClient
 from django.test import TestCase
 from stacks.models import Stack
 from people.models import Person
+from rest_framework.test import APIClient
+from dashboards.models import Dashboard
+from domain_mappings.models import DomainMapping, MappingType
 
 requests = APIClient()
-
-create_stack_payload = {
-    'name': 'test stack 1',
-    'description': 'test description 1'
-}
 
 
 class StacksApiTests(TestCase):
@@ -18,12 +15,29 @@ class StacksApiTests(TestCase):
     def tearDown(self):
         requests.logout()
 
+    def setUp(self):
+        self.admin_user = Person.objects.get(pk=1)
+        self.regular_user = Person.objects.get(pk=2)
+
+        self.stack = Stack.create(self.regular_user, {
+            'name': 'test stack 1',
+            'description': 'test description 1'
+        })
+
+    def tearDown(self):
+        requests.logout()
+
     def test_user_can_create_stack(self):
         requests.login(email='user@goss.com', password='password')
         url = reverse('stacks-list')
+        create_stack_payload = {
+            'name': 'test stack 2',
+            'description': 'testing user can create a stack'
+        }
         response = requests.post(url, create_stack_payload)
         user_id = 2  # coming from the fixture that creates default users
 
+        self.assertEqual(response.status_code, 201)
         self.assertTrue(response.data['id'])
         self.assertTrue(response.data['default_group'])
         self.assertEqual(response.data['name'], create_stack_payload['name'])
@@ -54,3 +68,26 @@ class StacksApiTests(TestCase):
         response = requests.post(url)
 
         self.assertEqual(response.status_code, 401)
+
+    def test_admin_can_delete_stack(self):
+        dashboard_ids_for_stack = list(Dashboard.objects.filter(stack=self.stack).values_list("id", flat=True))
+        stack_default_group_id = self.stack.default_group.id
+        requests.login(email='admin@goss.com', password='password')
+        url = reverse('admin_stacks-detail', args=(f'{self.stack.id}',))
+        response = requests.delete(url)
+
+        self.assertEqual(response.status_code, 204)
+
+        # check that all dashboards associated with the stack are deleted
+        self.assertFalse(Dashboard.objects.filter(stack=self.stack).exists())
+        # check that all domain mappings for dashboards associated with the stack are deleted
+        self.assertFalse(DomainMapping.objects.filter(
+            src_id__in=dashboard_ids_for_stack,
+            src_type=MappingType.dashboard)
+        )
+        self.assertFalse(DomainMapping.objects.filter(
+            dest_id__in=dashboard_ids_for_stack,
+            dest_type=MappingType.dashboard)
+        )
+        # check that all domain mappings for widgets assigned to the stack are deleted
+        self.assertFalse(DomainMapping.objects.filter(src_id=stack_default_group_id, src_type=MappingType.group))
