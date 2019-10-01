@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from django.test import TestCase
 
-from stacks.models import StackGroups
+from stacks.models import StackGroups, Stack
 
 requests = APIClient()
 
@@ -15,7 +15,6 @@ payload = {
     "descriptor_url": None,
     "unique_widget_count": 0,
     "approved": True,
-    "owner": 1
 }
 
 
@@ -96,6 +95,37 @@ class StacksAdminApiTests(TestCase):
         self.assertEqual(response.status_code, 403)
         requests.logout()
 
+    def test_admin_switch_owner_of_a_stack(self):
+        requests.login(email='admin@goss.com', password='password')
+
+        # delete our requesting admin from the default group to validate further.
+        Stack.objects.get(pk=1).default_group.people.remove(1)
+        self.assertFalse(Stack.objects.get(pk=1).default_group.people.filter(id=1).exists())
+
+        # owner from fixtures is 2
+        url = reverse('admin_stacks-detail', args='1')
+        response = requests.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['owner']['id'], 2)
+
+        # switch the owner to requesting admin, ie 1
+        url = reverse('admin_stacks-assign-to-me', args='1')
+        response = requests.patch(url, payload, format="json")
+
+        self.assertEqual(response.status_code, 204)
+
+        # read the owner again by visiting detail page
+        url = reverse('admin_stacks-detail', args='1')
+        response = requests.get(url)
+
+        self.assertEqual(response.data['owner']['id'], 1)
+
+        # make sure requesting admin was added to its default group.
+        self.assertTrue(Stack.objects.get(pk=1).default_group.people.filter(pk=1).exists())
+
+        requests.logout()
+
 
 create_stack_group_payload = {
     "group": 3,
@@ -104,7 +134,6 @@ create_stack_group_payload = {
 
 
 class StacksGroupsAdminApiTests(TestCase):
-
     fixtures = ['people_data.json',
                 'stacks_data.json',
                 'dashboard_data.json',
