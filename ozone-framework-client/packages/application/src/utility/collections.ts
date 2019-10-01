@@ -1,3 +1,5 @@
+import { isNil } from "lodash";
+
 /**
  * Returns a new array with the value appended to the end.
  */
@@ -60,5 +62,23 @@ export function mapValues<T, U>(obj: Dictionary<T>, iteratee: Iteratee<T, U>): D
     for (const key of Object.keys(obj)) {
         result[key] = iteratee(obj[key]);
     }
+    return result;
+}
+
+/**
+ * Truncates a string to a given value and adds ellipses or whatever else you want to the end.
+ */
+export function stringTruncate(stringToChop: string, length: number, endString?: string) {
+    let result: string = stringToChop;
+
+    if (isNil(endString)) {
+        console.log("Truncating with null endString!");
+        endString = "...";
+    }
+
+    if (stringToChop.length > length) {
+        result = stringToChop.substring(0, length - endString.length) + endString;
+    }
+
     return result;
 }

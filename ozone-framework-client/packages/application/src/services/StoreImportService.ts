@@ -3,7 +3,6 @@ import { Intent } from "@blueprintjs/core";
 import { Widget } from "../models/Widget";
 import { Dashboard } from "../models/Dashboard";
 
-import { dashboardService } from "./DashboardService";
 import { authService } from "./AuthService";
 import { storeMetaService } from "./StoreMetaService";
 
@@ -18,9 +17,12 @@ import { StackCreateRequest, StackUpdateRequest } from "../api/models/StackDTO";
 import { MarketplaceAPI } from "../api/clients/MarketplaceAPI";
 
 import { mainStore } from "../stores/MainStore";
-import { dashboardStore } from "../stores/DashboardStore";
 
 import { showToast } from "../components/toaster/Toaster";
+import { AuthUserDTO } from "../api/models/AuthUserDTO";
+import { dashboardStore } from "../stores/DashboardStore";
+import { isNil } from "../utility";
+import { dashboardService } from "./DashboardService";
 
 export interface InfractingItemUrl {
     type: "stack" | "dashboard" | "widget";
@@ -30,49 +32,110 @@ export interface InfractingItemUrl {
 
 class StoreImportService {
     async importListing(store: Widget, listing: any): Promise<void> {
-        const marketplaceAPI: MarketplaceAPI | undefined = storeMetaService.getStoreApi(store);
-        if (!marketplaceAPI) {
+        const importingUser: AuthUserDTO = (await authService.check()).data;
+        if (!importingUser || !importingUser.isAdmin) {
+            showToast({
+                message: "ERROR: Please ask an Ozone Administrator to import " + listing.title + " from " + store.title,
+                intent: Intent.DANGER
+            });
             return;
         }
 
-        const listingType: "widget" | "dash" | "stack" | undefined = marketplaceAPI.getListingType(listing);
+        const marketplaceAPI: MarketplaceAPI | undefined = storeMetaService.getStoreApi(store);
+        if (!marketplaceAPI) {
+            showToast({
+                message: "Error: Could not access API for " + store.title,
+                intent: Intent.DANGER
+            });
+            return;
+        }
 
-        if (listingType === "widget") {
-            this.importWidget(marketplaceAPI, listing);
-        } else if (listingType === "dash") {
+        const listingType: string | undefined = marketplaceAPI.getListingType(listing);
+
+        if (listingType === "Widget" || listingType === "widget") {
+            this.importWidget(marketplaceAPI, listing, true);
+        } else if (listingType === "Dashboard" || listingType === "dashboard" || listingType === "dash") {
             // TODO: IMPLEMENT dashboards for AML, something like:
             // const dashboard = marketplaceAPI.storeListingAsDashboard(listing);
             // something.saveContainedWidgets
             // something.saveDash with stack as current stack, and current widgets.?
-        } else if (listingType === "stack") {
-            this.importStack(marketplaceAPI, listing);
+        } else if (listingType === "Web Application" || listingType === "Stack" || listingType === "stack") {
+            this.importStack(marketplaceAPI, listing, importingUser);
         } else {
+            showToast({
+                message: "Error: Unknown Widget Type for Import!",
+                intent: Intent.SUCCESS
+            });
             console.log("Unknown item from import:", listing);
         }
     }
 
-    private async importWidget(marketplaceAPI: MarketplaceAPI, listing: any): Promise<void> {
-        const widget: Widget | undefined = await marketplaceAPI.storeListingAsWidget(listing);
-        if (!widget) {
+    private async importWidget(
+        marketplaceAPI: MarketplaceAPI,
+        listing: any,
+        isSingleWidgetImport?: boolean
+    ): Promise<void> {
+        if (!marketplaceAPI.storeListingHasNecessaryFields(listing)) {
+            console.log("Error: The Store Listing '" + listing.title + "' is missing some required fields for import.");
+            showToast({
+                message: "Error: The Store Listing '" + listing.title + "' is missing some required fields for import.",
+                intent: Intent.DANGER
+            });
             return;
         }
+
+        const widget = marketplaceAPI.storeListingAsWidget(listing);
+        if (!widget) {
+            console.log(
+                "Warning: The widget '" +
+                    listing.title +
+                    "' already exists in Ozone and is already at the latest version. Nothing was imported."
+            );
+            showToast({
+                message:
+                    "The widget '" +
+                    listing.title +
+                    "' already exists in Ozone and is already at the latest version. Nothing was imported.",
+                intent: Intent.WARNING
+            });
+            return;
+        }
+
         const savedWidget = await this.saveStoreWidget(widget);
         if (!savedWidget) {
+            console.log("Error: Widget '" + listing.title + "' could NOT be imported.");
+            showToast({
+                message: "Error: Widget '" + listing.title + "' could NOT be imported.",
+                intent: Intent.DANGER
+            });
             return;
         }
-        dashboardService.addWidgetSimple(savedWidget); // adds to current dash
 
         showToast({
-            message: "Widget `" + savedWidget.title + "` has been imported.",
+            message: "Widget '" + savedWidget.title + "' has been imported.",
             intent: Intent.SUCCESS
         });
+
+        // Open the Widget Admin page if this is a single widget import so we can possibly update the newly added widget.
+        if (isSingleWidgetImport) {
+            const widgetAdminWidget = dashboardStore.findUserWidgetByUniversalName(
+                "org.ozoneplatform.owf.admin.WidgetAdmin"
+            );
+            if (!isNil(widgetAdminWidget) && !dashboardService.isWidgetAlreadyAdded({ widget: widgetAdminWidget })) {
+                dashboardService.addWidget({ widget: widgetAdminWidget });
+            } else {
+                console.log("Attempted to open the Widget Admin Widget, but failed.");
+            }
+        }
     }
 
-    private async importStack(marketplaceAPI: MarketplaceAPI, listing: any): Promise<void> {
-        const importingUser = (await authService.check()).data;
-
+    private async importStack(marketplaceAPI: MarketplaceAPI, listing: any, importingUser: AuthUserDTO): Promise<void> {
         const basicStackInfo: StackUpdateRequest | undefined = marketplaceAPI.listingAsSimpleNewStack(listing);
         if (!basicStackInfo) {
+            showToast({
+                message: "Error: Stack '" + listing.title + "' could NOT be imported.",
+                intent: Intent.DANGER
+            });
             console.log("Couldn't get basic info.");
             return;
         }
@@ -111,7 +174,7 @@ class StoreImportService {
             const giveWidgetToCurrentUserResponse = await widgetApi.addWidgetUsers(savedWidget.id, importingUser.id);
 
             if (giveWidgetToCurrentUserResponse.status !== 200) {
-                console.log("Could not give current user access to widget `", widget.universalName, "`");
+                console.log("Could not give current user access to widget '", widget.universalName, "'");
             }
             savedWidgets += 1;
         }
@@ -226,9 +289,9 @@ class StoreImportService {
             }
 
             if (widget.id && widget.id !== "") {
-                response = await widgetApi.updateWidget(await widgetUpdateRequestFromWidget(widget));
+                response = await widgetApi.updateWidget(widgetUpdateRequestFromWidget(widget));
             } else {
-                response = await widgetApi.createWidget(await widgetCreateRequestFromWidget(widget));
+                response = await widgetApi.createWidget(widgetCreateRequestFromWidget(widget));
             }
             return widgetFromJson(response.data.data[0]);
         } catch (e) {
@@ -236,6 +299,7 @@ class StoreImportService {
                 message: typeof e.response.data === "string" ? e.response.data : "Error in importing widget.",
                 intent: Intent.DANGER
             });
+            console.log("Widget could not be imported because of an error.");
             return undefined;
         }
     }

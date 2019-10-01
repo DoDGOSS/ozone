@@ -8,7 +8,7 @@ import { StackUpdateRequest } from "../models/StackDTO";
 export abstract class MarketplaceAPI {
     // abstract getWidget(widgetId: string): Widget; // may need this and others to implement sync.
 
-    abstract getListingType(listing: any): "widget" | "dash" | "stack" | undefined;
+    abstract getListingType(listing: any): string | undefined;
 
     abstract storeListingAsDashboard(stackID: number, dashListing: any): Promise<Dashboard | undefined>;
 
@@ -20,5 +20,7 @@ export abstract class MarketplaceAPI {
 
     abstract uploadStack(stack: Stack): Promise<{ success: boolean; message: string }>;
 
-    abstract storeListingAsWidget(listing: any): Promise<Widget | undefined>;
+    abstract storeListingAsWidget(listing: any): Widget | undefined;
+
+    abstract storeListingHasNecessaryFields(listing: any): boolean;
 }
