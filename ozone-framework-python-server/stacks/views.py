@@ -8,6 +8,8 @@ from .serializers import StackSerializer, StackGroupsSerializer, StackGroupsSeri
 from dashboards.permissions import IsStackOwner
 from dashboards.models import Dashboard
 from domain_mappings.models import DomainMapping, MappingType
+from owf_groups.models import OwfGroup, GroupStatus
+import uuid
 
 
 class StackViewSet(viewsets.ModelViewSet):
@@ -24,7 +26,7 @@ class StackViewSet(viewsets.ModelViewSet):
         stack = Stack.objects.get(pk=pk)
         stack.share()
 
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class StackAdminViewSet(viewsets.ModelViewSet):
@@ -33,6 +35,15 @@ class StackAdminViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser,)
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name', ]
+
+    @action(methods=['patch'], detail=True, permission_classes=(IsAdminUser,))
+    def assign_to_me(self, request, pk=None):
+        stack = self.get_object()
+        stack.owner = request.user
+        stack.default_group.people.add(request.user)
+        stack.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def perform_destroy(self, stack):
         all_stack_dashboards = Dashboard.objects.filter(stack=stack)
