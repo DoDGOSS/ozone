@@ -12,12 +12,14 @@ import { StackUpdateRequest } from "../models/StackDTO";
 import { AMLListingDTO } from "../models/AMLStoreDTO";
 import { AMLListing } from "../../models/AMLListing";
 import { isNil } from "lodash";
+import { stringTruncate } from "../../utility/collections";
+import { dashboardStore } from "../../stores/DashboardStore";
 
 export class AmlMarketplaceAPI implements MarketplaceAPI {
     private readonly gateway: Gateway;
 
     constructor(storeUrl: string) {
-        this.gateway = new OzoneGateway(storeUrl); // may have to create a new gateway? Not sure how authentication is going to work out
+        this.gateway = new OzoneGateway(storeUrl);
     }
 
     storeListingAsDashboard(stackID: number, dashListing: any): Promise<Dashboard | undefined> {
@@ -36,12 +38,51 @@ export class AmlMarketplaceAPI implements MarketplaceAPI {
         return new Promise(() => []);
     }
 
-    storeListingAsWidget(listing: AMLListingDTO): Promise<Widget | undefined> {
-        return new Promise(() => undefined);
+    storeListingAsWidget(listing: any): Widget | undefined {
+        const baseWidget = this.findListingInOzone(listing);
+
+        if (baseWidget && baseWidget.version && parseInt(baseWidget.version, 10) >= parseInt(listing.versionName, 10)) {
+            return undefined;
+        } else {
+            return new Widget({
+                // TODO: Once the backend rewrite is completed, the description field should no longer be limited to 255 chars
+                description: stringTruncate(listing.description, 255),
+                descriptorUrl: baseWidget ? baseWidget.descriptorUrl : undefined,
+                height: baseWidget ? baseWidget.height : 200,
+                id: baseWidget ? baseWidget.id : "",
+                images: {
+                    smallUrl: listing.icon.url,
+                    largeUrl: listing.bannerIcon.url
+                },
+                intents: {
+                    send: baseWidget ? baseWidget.intents.send : [],
+                    receive: baseWidget ? baseWidget.intents.receive : []
+                },
+                isBackground: baseWidget ? baseWidget.isBackground : false,
+                isDefinitionVisible: baseWidget ? baseWidget.isDefinitionVisible : true,
+                isMaximized: baseWidget ? baseWidget.isMaximized : false,
+                isMinimized: baseWidget ? baseWidget.isMinimized : false,
+                isMobileReady: baseWidget ? baseWidget.isMobileReady : false,
+                isSingleton: baseWidget ? baseWidget.isSingleton : false,
+                isVisible: baseWidget ? baseWidget.isVisible : true,
+                title: listing.title,
+                types: baseWidget ? baseWidget.types : [],
+                universalName: listing.uniqueName,
+                url: listing.launchUrl,
+                version: listing.versionName,
+                width: baseWidget ? baseWidget.width : 200,
+                x: baseWidget ? baseWidget.x : 0,
+                y: baseWidget ? baseWidget.y : 0
+            });
+        }
     }
 
-    getListingType(listing: AMLListingDTO): "widget" | "dash" | "stack" | undefined {
-        return undefined;
+    getListingType(listing: any): string | undefined {
+        if (listing && listing.listingType) {
+            return listing.listingType;
+        } else {
+            return undefined;
+        }
     }
 
     async uploadStack(stack: Stack): Promise<{ success: boolean; message: string }> {
@@ -68,6 +109,29 @@ export class AmlMarketplaceAPI implements MarketplaceAPI {
         }
     }
 
+    storeListingHasNecessaryFields(listing: any): boolean {
+        let result = true;
+        result =
+            result &&
+            !isNil(listing) &&
+            !isNil(listing.description) &&
+            !isNil(listing.uniqueName) &&
+            !isNil(listing.launchUrl) &&
+            !isNil(listing.title) &&
+            !isNil(listing.versionName) &&
+            !isNil(listing.icon) &&
+            !isNil(listing.icon.url) &&
+            !isNil(listing.bannerIcon) &&
+            !isNil(listing.bannerIcon.url);
+        return result;
+    }
+
+    private findListingInOzone(listing: any): Widget | undefined {
+        const existingUserWidget = dashboardStore.findUserWidgetByUniversalName(listing.uniqueName);
+        const existingWidget = existingUserWidget ? existingUserWidget.widget : undefined;
+        return existingWidget;
+    }
+
     private async findListingInStore(listing: AMLListing): Promise<any | undefined | null> {
         let response: any;
         try {
@@ -91,7 +155,7 @@ export class AmlMarketplaceAPI implements MarketplaceAPI {
 
     private async uploadNewListing(listing: AMLListing): Promise<{ success: boolean; message: string }> {
         const requestData = JSON.stringify(listing);
-        console.log("ATTEMPTING TO UPLOAD WIDGET AS A NEW LISTING TO AML STORE: " + requestData);
+
         let response: any;
         try {
             response = await this.gateway.post(`api/listing/`, requestData, {
@@ -100,8 +164,6 @@ export class AmlMarketplaceAPI implements MarketplaceAPI {
         } catch (e) {
             console.log(e);
         }
-
-        console.log("ENTIRE RESPONSE: " + JSON.stringify(response));
 
         let responseMessage: string = response.statusText;
         const responseSuccess: boolean = response.status === 200;

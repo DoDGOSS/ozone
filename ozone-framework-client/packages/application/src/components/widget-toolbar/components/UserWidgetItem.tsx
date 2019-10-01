@@ -15,7 +15,7 @@ import { showMarkdownDialog } from "./MarkdownConfirmationDialog";
 import { UserWidgetTile } from "./UserWidgetTile";
 
 export interface UserWidgetItemProps {
-    userWidget: UserWidget,
+    userWidget: UserWidget;
     widgetToolBarRef: React.RefObject<HTMLDivElement>;
 }
 
@@ -25,11 +25,9 @@ const _UserWidgetItem: React.FC<UserWidgetItemProps> = ({ userWidget, widgetTool
 
     function handleOnMouseEnter() {
         deleteButton.show();
-        if(widgetToolBarRef && widgetToolBarRef.current) 
-        { 
+        if (widgetToolBarRef && widgetToolBarRef.current) {
             setWidgetToolBarMaxWidth(widgetToolBarRef.current.clientWidth);
         }
-
     }
 
     const onDelete = useCallback(() => {

@@ -15,7 +15,7 @@ import { SortButton, SortOrder, UserWidgetItem } from "./components";
 import { classNames, handleStringChange, isBlank } from "../../utility";
 
 const _WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
-    const widgetToolBarRef:React.RefObject<HTMLDivElement> = React.createRef();
+    const widgetToolBarRef: React.RefObject<HTMLDivElement> = React.createRef();
     const isOpen = useBehavior(mainStore.isWidgetToolbarOpen);
     const themeClass = useBehavior(mainStore.themeClass);
 
@@ -64,7 +64,11 @@ const _WidgetToolbar: React.FC<PropsBase> = ({ className }) => {
             onClose={mainStore.closeWidgetToolbar}
             className={Classes.OVERLAY_SCROLL_CONTAINER}
         >
-            <div className={classNames(styles.toolbar, className, themeClass)} data-element-id="widgets-dialog" ref={widgetToolBarRef}>
+            <div
+                className={classNames(styles.toolbar, className, themeClass)}
+                data-element-id="widgets-dialog"
+                ref={widgetToolBarRef}
+            >
                 <h3 className={styles.toolbarTitle}>Widgets</h3>
                 <div className={styles.toolbarMenu}>
                     <InputGroup

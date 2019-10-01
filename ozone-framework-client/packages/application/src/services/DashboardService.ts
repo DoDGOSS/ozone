@@ -84,6 +84,12 @@ export class DashboardService {
         return isSuccess;
     }
 
+    isWidgetAlreadyAdded(opts: AddWidgetOpts): boolean {
+        const dashboard = this.dashboard;
+        const { widget } = getUserWidget(opts.widget);
+        return dashboard.containsWidget(hasSameId(widget));
+    }
+
     async addWidgetSimple(
         widget: Widget,
         destDashboard?: Dashboard,
