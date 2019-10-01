@@ -1,5 +1,5 @@
-from django.db import models
 from enum import Enum
+from django.db import models
 from django_enum_choices.fields import EnumChoiceField
 
 

@@ -3,7 +3,7 @@ from .models import Dashboard
 
 
 class DashboardAdmin(admin.ModelAdmin):
-    list_display = ('guid', 'name', 'description')
+    list_display = ('id', 'guid', 'name', 'description')
     search_fields = ('name',)
 
 
