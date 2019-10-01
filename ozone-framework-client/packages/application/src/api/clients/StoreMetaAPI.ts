@@ -37,14 +37,18 @@ export class StoreMetaAPI {
         // If the store does not have the proper listings for Ozone to interact when the store is added, attempt to add them.
         const missingListings = await this.findMissingListings(storeBackUrl);
         if (store && missingListings && missingListings.length > 0) {
-            console.log("Need to add missing listing types.");
+            // We would need to add the missing listing types.
+            // console.log("Need to add missing listing types.");
             if (this.addMissingListingsToStore(storeBackUrl, missingListings)) {
-                console.log("Successfully Added Necessary Listing Types to AML Store.");
+                // Positive result means we have added the listing types we needed.
+                // console.log("Successfully Added Necessary Listing Types to AML Store.");
             } else {
-                console.log("Failed to add necessary listing types to AML store.");
+                // Negative result indicates there was a problem of some kind adding the listing types.
+                // console.log("Failed to add necessary listing types to AML store.");
             }
         } else {
-            console.log("Store has all of the correct listing types.");
+            // The store already has all of the listing types needed for Ozone.
+            // console.log("Store has all of the correct listing types.");
         }
 
         return store;

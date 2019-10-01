@@ -33,7 +33,9 @@ export class AMLListingProps {
     is_deleted: boolean;
     security_marking: string;
     is_private?: boolean;
-    required_listings?: AMLListing[];
+    usage_requirements: string;
+    system_requirements: string;
+    required_listings?: any;
 
     constructor(props: PropertiesOf<AMLListingProps>) {
         Object.assign(this, props);

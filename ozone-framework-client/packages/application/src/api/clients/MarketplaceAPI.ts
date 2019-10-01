@@ -1,9 +1,8 @@
-import * as qs from "qs";
-
 import { Widget } from "../../models/Widget";
 import { Dashboard } from "../../models/Dashboard";
 import { Stack } from "../../models/Stack";
 import { StackUpdateRequest } from "../models/StackDTO";
+import { Intent } from "@blueprintjs/core";
 
 export abstract class MarketplaceAPI {
     // abstract getWidget(widgetId: string): Widget; // may need this and others to implement sync.
@@ -18,7 +17,7 @@ export abstract class MarketplaceAPI {
 
     abstract getAllUniqueWidgetsFromStackListing(listing: any): Promise<Widget[]>;
 
-    abstract uploadStack(stack: Stack): Promise<{ success: boolean; message: string }>;
+    abstract uploadStack(stack: Stack): Promise<{ intent: Intent; message: string }>;
 
     abstract storeListingAsWidget(listing: any): Widget | undefined;
 

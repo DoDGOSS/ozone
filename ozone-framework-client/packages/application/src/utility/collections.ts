@@ -72,7 +72,6 @@ export function stringTruncate(stringToChop: string, length: number, endString?:
     let result: string = stringToChop;
 
     if (isNil(endString)) {
-        console.log("Truncating with null endString!");
         endString = "...";
     }
 
