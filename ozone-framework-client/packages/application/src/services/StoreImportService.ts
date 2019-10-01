@@ -1,8 +1,5 @@
 import { Intent } from "@blueprintjs/core";
 
-
-
-
 import { Widget } from "../models/Widget";
 import { Dashboard } from "../models/Dashboard";
 
@@ -24,7 +21,6 @@ import { mainStore } from "../stores/MainStore";
 import { dashboardStore } from "../stores/DashboardStore";
 
 import { showToast } from "../components/toaster/Toaster";
-
 
 export interface InfractingItemUrl {
     type: "stack" | "dashboard" | "widget";

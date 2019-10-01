@@ -1,20 +1,11 @@
-
-
-
-
 import { Widget } from "../models/Widget";
-
 
 import { widgetCreateRequestFromWidget, widgetUpdateRequestFromWidget } from "../codecs/Widget.codec";
 
 import { widgetApi } from "../api/clients/WidgetAPI";
 
-
 import { MarketplaceAPI } from "../api/clients/MarketplaceAPI";
 import { AmlMarketplaceAPI } from "../api/clients/AmlMarketplaceAPI";
-
-
-
 
 export interface InfractingItemUrl {
     type: "stack" | "dashboard" | "widget";

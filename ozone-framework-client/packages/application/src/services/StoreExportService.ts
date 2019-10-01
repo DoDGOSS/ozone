@@ -35,6 +35,16 @@ class StoreExportService {
             });
         }
 
+        if (!(await storeMetaAPI.storeHasCorrectListings(store.descriptorUrl!))) {
+            showToast({
+                message: "The Store is not properly configured for Ozone.",
+                intent: Intent.DANGER
+            });
+            return new Promise(() => {
+                return;
+            });
+        }
+
         if (stack.getWidgets().length === 0) {
             showToast({
                 message: "Cannot push a stack with no widgets",
@@ -61,9 +71,14 @@ class StoreExportService {
         const frontendUrl = store.url;
         const backendUrl = store.descriptorUrl;
         // check that the store is available
-        return storeMetaAPI.importStore(frontendUrl,backendUrl, (checkedStore: Widget) => {
-            return this.uploadStackToStore(checkedStore, stack);
-        });
+        if (backendUrl) {
+            return storeMetaAPI.importStore(frontendUrl, backendUrl, (checkedStore: Widget) => {
+                return this.uploadStackToStore(checkedStore, stack);
+            });
+        } else {
+            console.log("ERROR: AML Store not configured properly.");
+            return new Promise(() => undefined);
+        }
     }
 
     private uploadStackToStore(store: Widget, stack: Stack): void {

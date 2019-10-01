@@ -38,7 +38,6 @@ export const GetStorePanel: React.FC<GetStorePanelProps> = (props: GetStorePanel
         setStoreBackUrl(getInitialUrl(props.initialStoreBackUrl));
     }, [props.initialStoreFrontUrl, props.initialStoreBackUrl]);
     return (
-
         <div style={{ width: "100%" }}>
             <div className="growing-left">
                 <div>
@@ -46,17 +45,17 @@ export const GetStorePanel: React.FC<GetStorePanelProps> = (props: GetStorePanel
                         value={storeFrontUrl}
                         placeholder="The URL for the store's frontend"
                         onChange={(event: any) => {
-                        setStoreFrontUrl(event.target.value);
+                            setStoreFrontUrl(event.target.value);
                         }}
                     />
                     <InputGroup
                         value={storeBackUrl}
                         placeholder="The URL for the store's backend"
                         onChange={(event: any) => {
-                        setStoreBackUrl(event.target.value);
+                            setStoreBackUrl(event.target.value);
                         }}
                     />
-                </div>            
+                </div>
             </div>
 
             <br />
@@ -67,16 +66,13 @@ export const GetStorePanel: React.FC<GetStorePanelProps> = (props: GetStorePanel
                     <Button
                         disabled={storeFrontUrl === "" || storeBackUrl === ""}
                         onClick={() => {
-                            storeMetaAPI.importStore(
-                                storeFrontUrl, storeBackUrl,
-                                (storeWidget: Widget | undefined) => {
-                                    if (storeWidget) {
-                                        props.setStore(storeWidget);
-                                    } else {
-                                        setStoreMessage("No store found at given URL.");
-                                    }
+                            storeMetaAPI.importStore(storeFrontUrl, storeBackUrl, (storeWidget: Widget | undefined) => {
+                                if (storeWidget) {
+                                    props.setStore(storeWidget);
+                                } else {
+                                    setStoreMessage("No store found at given URL.");
                                 }
-                            );
+                            });
                         }}
                         icon="arrow-right"
                         data-element-id="add-store-button"

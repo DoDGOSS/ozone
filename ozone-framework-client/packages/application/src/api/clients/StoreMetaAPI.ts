@@ -1,5 +1,3 @@
-import * as qs from "qs";
-
 import { OzoneGateway } from "../../services/OzoneGateway";
 
 import { Widget } from "../../models/Widget";
@@ -7,10 +5,8 @@ import { widgetApi } from "./WidgetAPI";
 import { widgetTypeApi } from "./WidgetTypeAPI";
 import { widgetFromJson } from "../../codecs/Widget.codec";
 
-import { showConfirmationDialog } from "../../components/confirmation-dialog/showConfirmationDialog";
-
-import { errorStore } from "../../services/ErrorStore";
 import { uuid } from "../../utility";
+import { isNil} from "lodash"
 
 export class StoreMetaAPI {
     async getStores(): Promise<Widget[]> {
@@ -27,7 +23,7 @@ export class StoreMetaAPI {
 
     async importStore(
         storeFrontUrl: string,
-        storeBackUrl: string | undefined,
+        storeBackUrl: string,
         callbackOnCompletion: (store: Widget) => any
     ): Promise<Widget | undefined> {
         let store: Widget | undefined;
@@ -37,7 +33,73 @@ export class StoreMetaAPI {
         } else {
             console.log("Error. Store Url not valid.");
         }
+
+        // If the store does not have the proper listings for Ozone to interact when the store is added, attempt to add them.
+        const missingListings = await this.findMissingListings(storeBackUrl);
+        if (store && missingListings && missingListings.length > 0) {
+            console.log("Need to add missing listing types.");
+            if (this.addMissingListingsToStore(storeBackUrl, missingListings)) {
+                console.log("Successfully Added Necessary Listing Types to AML Store.");
+            } else {
+                console.log("Failed to add necessary listing types to AML store.");
+            }
+        } else {
+            console.log("Store has all of the correct listing types.");
+        }
+
         return store;
+    }
+
+    async storeHasCorrectListings(storeBackUrl: string): Promise<boolean> {
+        if (await this.findMissingListings(storeBackUrl)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private async findMissingListings(storeBackUrl: string): Promise<Array<string>> {
+        const gateway = new OzoneGateway(storeBackUrl);
+
+        // We need the AML store to know about Widget, Dashboard, and Web Application (Stack)
+        const neededListingTypes = ["Widget", "Dashboard", "Web Application"];
+
+        let listingData: any | undefined;
+        try {
+            listingData = await gateway.get(`api/listingtype/`);
+        } catch (e) {
+            console.log(e);
+        }
+        const values = JSON.stringify(listingData.data);
+
+        const testArray: Array<string> = neededListingTypes
+            .map((listingItem) => (!values.includes(listingItem) ? listingItem : ""))
+            .filter((listingItem) => listingItem !== "");
+
+        return testArray;
+    }
+
+    private async addMissingListingsToStore(storeBackUrl: string, missingListings: string[]): Promise<boolean> {
+        let runningResponse: boolean = true;
+
+        const gateway = new OzoneGateway(storeBackUrl);
+
+        if(isNil(missingListings)) {
+            console.log("WARN: No new listingTypes to add to AML Store."); // Should never be hit.
+            return runningResponse;
+        } else {
+            missingListings.map((listingItem)=>{
+                const requestData=`{"title":"`+listingItem+`"}`;
+                let response: any;
+                try {
+                    response = gateway.post(`api/listingtype/`, requestData, { headers: {"Content-Type" : "application/json" }});
+                } catch (e) {
+                    console.log(e);
+                }
+                runningResponse = runningResponse && isNil(response);
+            })
+        }
+        return runningResponse;
     }
 
     private async tryConnectingAsAmlStore(
@@ -48,17 +110,12 @@ export class StoreMetaAPI {
         const gateway = new OzoneGateway(storeBackUrl);
         let maybeAMLstoreData: any | undefined;
         try {
-            maybeAMLstoreData = await gateway.get(`api/metadata`);
+            maybeAMLstoreData = await gateway.get(`api/metadata/`);
         } catch (e) {
             console.log(e);
         }
         if (maybeAMLstoreData) {
-            const store = await this.buildAmlStore(
-                storeFrontUrl,
-                storeBackUrl,
-                maybeAMLstoreData,
-                callbackOnCompletion
-            );
+            const store = await this.buildAmlStore(storeFrontUrl, storeBackUrl, maybeAMLstoreData);
 
             if (store) {
                 callbackOnCompletion(store);
@@ -71,24 +128,19 @@ export class StoreMetaAPI {
     private async buildAmlStore(
         storeFrontUrl: string,
         storeBackUrl: string,
-        maybeAMLstoreData: { data: string },
-        callbackOnCompletion: (store: Widget) => any
+        maybeAMLstoreData: { data: string }
     ): Promise<Widget | undefined> {
         console.log(storeFrontUrl);
         console.log(storeBackUrl);
         console.log(maybeAMLstoreData);
 
-        const store = await this.createAmlStoreWidget(storeFrontUrl, storeBackUrl, maybeAMLstoreData);
+        const store = await this.createAmlStoreWidget(storeFrontUrl, storeBackUrl);
         console.log(store);
 
         return store;
     }
 
-    private async createAmlStoreWidget(
-        storeFrontUrl: string,
-        storeBackUrl: string,
-        amlStoreData: any
-    ): Promise<Widget> {
+    private async createAmlStoreWidget(storeFrontUrl: string, storeBackUrl: string): Promise<Widget> {
         return new Widget({
             id: "",
             descriptorUrl: storeBackUrl,
@@ -117,7 +169,6 @@ export class StoreMetaAPI {
             height: 400 //   ||
         });
     }
-
 }
 
 export const storeMetaAPI = new StoreMetaAPI();
