@@ -1,10 +1,6 @@
-import React, { useState } from "react";
-import { createPortal } from "react-dom";
-import { AnchorButton, Button, ButtonGroup, Divider, Intent, Label, Spinner } from "@blueprintjs/core";
+import React from "react";
+import { AnchorButton, ButtonGroup, Divider, Intent, Spinner } from "@blueprintjs/core";
 
-import { showConfirmationDialog } from "../confirmation-dialog/showConfirmationDialog";
-
-import { MarketplaceAPI } from "../../api/clients/MarketplaceAPI";
 import { storeMetaAPI } from "../../api/clients/StoreMetaAPI";
 import { storeMetaService } from "../../services/StoreMetaService";
 import { storeImportService } from "../../services/StoreImportService";

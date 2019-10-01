@@ -26,9 +26,9 @@ class StoreMetaService {
     required_listings: AMLListing[];
     async saveOrUpdateStore(store: Widget): Promise<any> {
         if (store.id === undefined || store.id === "") {
-            return widgetApi.createWidget(await widgetCreateRequestFromWidget(store));
+            return widgetApi.createWidget(widgetCreateRequestFromWidget(store));
         } else {
-            return widgetApi.updateWidget(await widgetUpdateRequestFromWidget(store));
+            return widgetApi.updateWidget(widgetUpdateRequestFromWidget(store));
         }
     }
 

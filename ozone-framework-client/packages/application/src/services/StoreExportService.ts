@@ -47,12 +47,12 @@ class StoreExportService {
 
         // check that all urls are fully-qualified.
         // Stores are remote, and so can't use local urls.
-        // if (!this.stackUrlsValid(stack)) {
-        //     console.log("Attempted to push a Stack with invalid URLs.");
-        //     return new Promise(() => {
-        //         return;
-        //     });
-        // }
+        if (!this.stackUrlsValid(stack)) {
+            console.log("Attempted to push a Stack with invalid URLs.");
+            return new Promise(() => {
+                return;
+            });
+        }
 
         this.checkStoreAndUploadStack(stack, store);
     }
@@ -77,20 +77,16 @@ class StoreExportService {
             return;
         }
 
-        const uploadResponse: { success: boolean; message: string } = await marketplaceAPI.uploadStack(stack);
-        if (uploadResponse.success) {
-            showToast({
-                message: uploadResponse.message,
-                intent: Intent.SUCCESS
-            });
+        const uploadResponse: { intent: Intent; message: string } = await marketplaceAPI.uploadStack(stack);
+        showToast({
+            message: uploadResponse.message,
+            intent: uploadResponse.intent
+        });
+
+        if (uploadResponse.intent === Intent.SUCCESS) {
             mainStore.refreshStore();
             mainStore.showStore();
             mainStore.hideStackDialog();
-        } else {
-            showToast({
-                message: uploadResponse.message,
-                intent: Intent.DANGER
-            });
         }
     }
 

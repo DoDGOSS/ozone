@@ -77,6 +77,10 @@ export class Dashboard {
         return this.state$.value.name;
     }
 
+    get description() {
+        return this.state$.value.description;
+    }
+
     state = () => asBehavior(this.state$);
 
     /**
