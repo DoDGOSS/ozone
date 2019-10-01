@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from dashboards.models import Dashboard
 from domain_mappings.models import DomainMapping, MappingType, RelationshipType
 from owf_groups.models import OwfGroup, OwfGroupPeople
@@ -12,7 +12,7 @@ create_stack_payload = {
 }
 
 
-class GroupsModelTests(TestCase):
+class GroupsModelTests(TransactionTestCase):
     fixtures = ['people_data.json', 'groups_data.json']
 
     def setUp(self):
@@ -24,6 +24,8 @@ class GroupsModelTests(TestCase):
         self.group1.people.add(self.regular_user)
 
         stack = Stack.create(self.admin_user, create_stack_payload)
+        # add group to stack - StackGroup
+        StackGroups.objects.create(group=self.group1, stack=stack)
 
         # TODO: refactor to use a function to create and add a dashboard to a stack, when available
         self.group1_dash1 = Dashboard.objects.create(name="group1_dash1", stack=stack)
@@ -35,9 +37,6 @@ class GroupsModelTests(TestCase):
             self.user_dash1_for_group1,
             self.group1_dash1
         )
-
-        # add group to stack - StackGroup
-        StackGroups.objects.create(group=self.group1, stack=stack)
 
         # add widgets
         # create widget
@@ -142,9 +141,6 @@ class GroupsModelTests(TestCase):
         self.assertFalse(PersonWidgetDefinition.objects.filter(
             pk=self.user_widget_assignment_through_group.id).exists()
         )
-        self.assertTrue(PersonWidgetDefinition.objects.filter(
-            pk=self.user_widget_assignment_through_group_and_direct.id).exists()
-        )
         self.assertTrue(PersonWidgetDefinition.objects.filter(pk=self.user_widget_assignment_direct.id).exists())
         self.assertTrue(PersonWidgetDefinition.objects.filter(
             pk=self.user_widget_assignment_through_group_and_direct.id,
@@ -152,6 +148,32 @@ class GroupsModelTests(TestCase):
             group_widget=False).exists()
         )
         self.assertTrue(PersonWidgetDefinition.objects.filter(pk=self.user_widget_assignment_direct.id).exists())
+
+    def test_delete_group(self):
+        group = OwfGroup.objects.get(pk=self.group1.id)
+        group.delete()
+
+        # check that group-user relationships are deleted
+        self.assertFalse(OwfGroupPeople.objects.filter(group=self.group1).exists())
+        self.assertFalse(StackGroups.objects.filter(group=self.group1).exists())
+
+        # check that the user's group related widgets, dashboards, and domain mappings are deleted
+        self.assertFalse(Dashboard.objects.filter(pk=self.user_dash1_for_group1.id).exists())
+        self.assertFalse(DomainMapping.objects.filter(pk=self.user_dash1_for_group_domain_mapping.id).exists())
+        self.assertFalse(PersonWidgetDefinition.objects.filter(
+            pk=self.user_widget_assignment_through_group.id).exists()
+        )
+        self.assertTrue(PersonWidgetDefinition.objects.filter(pk=self.user_widget_assignment_direct.id).exists())
+        self.assertTrue(PersonWidgetDefinition.objects.filter(
+            pk=self.user_widget_assignment_through_group_and_direct.id,
+            user_widget=True,
+            group_widget=False).exists()
+        )
+        # check that group mappings and dashboards are deleted
+        self.assertFalse(Dashboard.objects.filter(pk=self.group1_dash1.id).exists())
+        self.assertFalse(DomainMapping.objects.filter(pk=self.group1_dash1_domain_mapping.id).exists())
+
+        self.assertTrue(Person.objects.filter(pk=self.regular_user.id, requires_sync=True).exists())
 
 
 class GroupWidgetModelTests(TestCase):

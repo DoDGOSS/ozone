@@ -5,6 +5,17 @@ from django.utils import timezone
 from domain_mappings.models import RelationshipType, MappingType, DomainMapping
 
 
+class DashboardsManager(models.Manager):
+    def get_dashboards_for_group(self, group):
+        group_dashboard_domain_mapping_ids = DomainMapping.objects.filter(
+            src_id=group.id,
+            src_type=MappingType.group,
+            relationship_type=RelationshipType.owns,
+            dest_type=MappingType.dashboard
+        ).values_list("dest_id", flat=True)
+        return self.filter(pk__in=group_dashboard_domain_mapping_ids)
+
+
 class Dashboard(models.Model):
     id = models.BigAutoField(primary_key=True)
     version = models.BigIntegerField(default=0)
@@ -29,6 +40,8 @@ class Dashboard(models.Model):
     icon_image_url = models.CharField(max_length=2083, blank=True, null=True)
     published_to_store = models.BooleanField(default=False, blank=True, null=True)
     marked_for_deletion = models.BooleanField(default=False, blank=True, null=True)
+
+    objects = DashboardsManager()
 
     def __str__(self):
         return f'{self.name} for user: {self.user.id}'
