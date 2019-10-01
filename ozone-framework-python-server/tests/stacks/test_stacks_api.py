@@ -55,7 +55,7 @@ class StacksApiTests(TestCase):
         url = reverse('stacks-share', args=f'{stack.id}')
         response = requests.post(url)
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
 
     def test_nonowner_of_stack_cannot_share_stack(self):
         regular_user = Person.objects.get(pk=2)
