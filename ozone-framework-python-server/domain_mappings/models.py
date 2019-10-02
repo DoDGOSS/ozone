@@ -1,3 +1,5 @@
+import time
+from django.db import models
 from enum import Enum
 from django.db import models
 from django_enum_choices.fields import EnumChoiceField
@@ -52,6 +54,11 @@ class DomainMapping(models.Model):
 
     def __str__(self):
         return f'{self.src_type}:{self.src_id} {self.relationship_type} {self.dest_type}:{self.dest_id}'
+
+    def save(self, *args, **kwargs):
+        # Version saver for incrementing as time
+        self.version = int(time.time())
+        super(DomainMapping, self).save(*args, **kwargs)
 
     @classmethod
     def create_group_dashboard_mapping(cls, group, groupDashboard):

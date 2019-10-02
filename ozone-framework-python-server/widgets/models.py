@@ -1,3 +1,4 @@
+import time
 import uuid
 from django.db import models
 from intents.models import Intent, IntentDataType, IntentDataTypes
@@ -13,6 +14,11 @@ class WidgetDefIntent(models.Model):
 
     def __str__(self):
         return f'{self.intent.action} & {self.widget_definition.description}'
+
+    def save(self, *args, **kwargs):
+        # Version saver for incrementing as time
+        self.version = int(time.time())
+        super(WidgetDefIntent, self).save(*args, **kwargs)
 
     class Meta:
         managed = True
@@ -37,6 +43,11 @@ class WidgetType(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        # Version saver for incrementing as time
+        self.version = int(time.time())
+        super(WidgetType, self).save(*args, **kwargs)
 
     class Meta:
         managed = True
@@ -126,6 +137,11 @@ class WidgetDefinition(models.Model):
 
     def __str__(self):
         return self.display_name
+
+    def save(self, *args, **kwargs):
+        # Version saver for incrementing as time
+        self.version = int(time.time())
+        super(WidgetDefinition, self).save(*args, **kwargs)
 
     class Meta:
         managed = True

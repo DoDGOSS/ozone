@@ -1,3 +1,4 @@
+import time
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
@@ -91,6 +92,11 @@ class Person(AbstractBaseUser):
 
     def __str__(self):
         return f'{self.username} @ {self.email}'
+
+    def save(self, *args, **kwargs):
+        # Version saver for incrementing as time
+        self.version = int(time.time())
+        super(Person, self).save(*args, **kwargs)
 
     def purge_all_dashboards(self):
         user_dashboards = Dashboard.objects.filter(user=self)
@@ -241,6 +247,11 @@ class PersonWidgetDefinition(models.Model):
 
     def __str__(self):
         return f'person  = {self.person.username} & widget =  {self.widget_definition.display_name}'
+
+    def save(self, *args, **kwargs):
+        # Version saver for incrementing as time
+        self.version = int(time.time())
+        super(PersonWidgetDefinition, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         if self.group_widget:
