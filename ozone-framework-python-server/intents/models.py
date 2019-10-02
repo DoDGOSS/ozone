@@ -1,3 +1,4 @@
+import time
 from django.db import models
 
 
@@ -11,6 +12,11 @@ class Intent(models.Model):
     def __str__(self):
         return self.action
 
+    def save(self, *args, **kwargs):
+        # Version saver for incrementing as time
+        self.version = int(time.time())
+        super(Intent, self).save(*args, **kwargs)
+
     class Meta:
         managed = True
         db_table = 'intent'
@@ -23,6 +29,11 @@ class IntentDataType(models.Model):
 
     def __str__(self):
         return self.data_type
+
+    def save(self, *args, **kwargs):
+        # Version saver for incrementing as time
+        self.version = int(time.time())
+        super(IntentDataType, self).save(*args, **kwargs)
 
     class Meta:
         managed = True

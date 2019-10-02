@@ -1,3 +1,4 @@
+import time
 from django.dispatch import receiver
 from django.db import models, IntegrityError
 from django.dispatch import receiver
@@ -32,8 +33,10 @@ class OwfGroup(models.Model):
     def save(self, *args, **kwargs):
         if self.display_name is None:
             self.display_name = self.name
+            self.version = int(time.time())
             super(OwfGroup, self).save(*args, **kwargs)
         else:
+            self.version = int(time.time())
             super(OwfGroup, self).save(*args, **kwargs)
 
     def add_user(self, user):
