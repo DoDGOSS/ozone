@@ -1,3 +1,4 @@
+import time
 import json
 import uuid
 from django.utils import timezone
@@ -27,6 +28,11 @@ class Stack(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        # Version saver for incrementing as time
+        self.version = int(time.time())
+        super(Stack, self).save(*args, **kwargs)
 
     def add_dashboard(self, user, kwargs):
         # TODO: once we establish the layout config, add logic to regenerate the layout config

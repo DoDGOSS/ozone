@@ -1,3 +1,4 @@
+import time
 import uuid
 import json
 from django.db import models
@@ -45,6 +46,11 @@ class Dashboard(models.Model):
 
     def __str__(self):
         return f'{self.name} for user: {self.user.id}'
+
+    def save(self, *args, **kwargs):
+        # Version saver for incrementing as time
+        self.version = int(time.time())
+        super(Dashboard, self).save(*args, **kwargs)
 
     def get_widgets(self):
         from people.models import PersonWidgetDefinition

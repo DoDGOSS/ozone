@@ -20,8 +20,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
                 ('version', models.BigIntegerField(default=0)),
-                ('created_date', models.DateField(blank=True, default=django.utils.timezone.now, null=True)),
-                ('edited_date', models.DateField(blank=True, default=django.utils.timezone.now, null=True)),
+                ('created_date', models.DateField(blank=True, default=django.utils.timezone.localdate, null=True)),
+                ('edited_date', models.DateField(blank=True, default=django.utils.timezone.localdate, null=True)),
                 ('code', models.CharField(max_length=250, unique=True)),
                 ('value', models.CharField(blank=True, max_length=2000, null=True)),
                 ('title', models.CharField(max_length=250)),
