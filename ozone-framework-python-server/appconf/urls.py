@@ -3,7 +3,7 @@ from rest_framework import routers
 
 
 router = routers.SimpleRouter()
-router.register(r'admin/appconf', AppConfViewSet)
+router.register(r'admin/application-configuration', AppConfViewSet)
 
 
 urlpatterns = [
