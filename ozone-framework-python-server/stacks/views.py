@@ -28,6 +28,10 @@ class StackViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def perform_destroy(self, instance):
+        # removing user from group will clean up the dashboards and widgets
+        instance.default_group.remove_user(self.request.user)
+
 
 class StackAdminViewSet(viewsets.ModelViewSet):
     queryset = Stack.objects.all()
