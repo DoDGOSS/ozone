@@ -5,6 +5,7 @@ from people.models import Person
 from rest_framework.test import APIClient
 from dashboards.models import Dashboard
 from domain_mappings.models import DomainMapping, MappingType
+from owf_groups.models import OwfGroupPeople
 
 requests = APIClient()
 
@@ -91,3 +92,13 @@ class StacksApiTests(TestCase):
         )
         # check that all domain mappings for widgets assigned to the stack are deleted
         self.assertFalse(DomainMapping.objects.filter(src_id=stack_default_group_id, src_type=MappingType.group))
+
+    def test_nonadmin_can_delete_stack(self):
+        requests.login(email='user@goss.com', password='password')
+        url = reverse('stacks-detail', args=(f'{self.stack.id}',))
+        reponse = requests.delete(url)
+
+        self.assertFalse(OwfGroupPeople.objects.filter(
+            group=self.stack.default_group,
+            person=self.regular_user).exists()
+        )
