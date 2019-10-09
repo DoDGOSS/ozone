@@ -1,0 +1,29 @@
+[{
+    "model": "owf_groups.owfgroup",
+    "pk": 3,
+    "fields": {
+      "version": 1,
+      "status": "active",
+      "email": "admin@geocent.com",
+      "description": "Description for test group",
+      "name": "Test Group",
+      "automatic": false,
+      "display_name": "Test Group",
+      "stack_default": false
+    }
+  },
+  {
+    "model": "owf_groups.owfgroup",
+    "pk": 4,
+    "fields": {
+      "version": 1,
+      "status": "active",
+      "email": "admin@geocent.com",
+      "description": "Description for test group 2",
+      "name": "Test Group 2",
+      "automatic": false,
+      "display_name": "Test Group 2",
+      "stack_default": false
+    }
+  }
+]
