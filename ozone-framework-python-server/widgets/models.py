@@ -1,6 +1,8 @@
 import time
 import uuid
 from django.db import models
+from django.dispatch import receiver
+from domain_mappings.models import DomainMapping, MappingType
 from intents.models import Intent, IntentDataType, IntentDataTypes
 
 
@@ -146,6 +148,18 @@ class WidgetDefinition(models.Model):
     class Meta:
         managed = True
         db_table = 'widget_definition'
+
+
+@receiver(models.signals.pre_delete, sender=WidgetDefinition)
+def cleanup(sender, instance, *args, **kwargs):
+    from people.models import Person, PersonWidgetDefinition
+    DomainMapping.objects.filter(src_id=instance.id, src_type=MappingType.widget)
+    DomainMapping.objects.filter(dest_id=instance.id, dest_type=MappingType.widget)
+
+    users_assigned_to_widget = PersonWidgetDefinition.objects.filter(
+        widget_definition=instance
+    ).values("person")
+    Person.objects.filter(pk__in=users_assigned_to_widget).update(requires_sync=True)
 
 
 class WidgetDefinitionWidgetTypes(models.Model):
