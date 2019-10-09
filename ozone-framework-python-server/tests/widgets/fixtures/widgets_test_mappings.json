@@ -1,0 +1,57 @@
+[{
+        "model": "people.personwidgetdefinition",
+        "pk": 1,
+        "fields": {
+            "version": 1,
+            "person": 1,
+            "visible": true,
+            "pwd_position": 0,
+            "widget_definition": 1,
+            "group_widget": true,
+            "favorite": true,
+            "display_name": "Widget 1 for admin",
+            "disabled": false,
+            "user_widget": true
+        }
+    },
+    {
+        "model": "people.personwidgetdefinition",
+        "pk": 2,
+        "fields": {
+            "version": 1,
+            "person": 2,
+            "visible": true,
+            "pwd_position": 0,
+            "widget_definition": 1,
+            "group_widget": true,
+            "favorite": true,
+            "display_name": "Widget 1 for user",
+            "disabled": true,
+            "user_widget": false
+        }
+    },
+    {
+        "model": "domain_mappings.domainmapping",
+        "pk": 1,
+        "fields": {
+            "version": 0,
+            "src_id": 3,
+            "src_type": "group",
+            "relationship_type": "owns",
+            "dest_id": 1,
+            "dest_type": "widget_definition"
+        }
+    },
+    {
+        "model": "domain_mappings.domainmapping",
+        "pk": 1,
+        "fields": {
+            "version": 0,
+            "src_id": 4,
+            "src_type": "group",
+            "relationship_type": "owns",
+            "dest_id": 1,
+            "dest_type": "widget_definition"
+        }
+    }
+]

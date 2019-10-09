@@ -1,6 +1,8 @@
 import uuid
 from django.test import TestCase
 
+from domain_mappings.models import DomainMapping
+from people.models import Person, PersonWidgetDefinition
 from widgets.models import WidgetDefinition, WidgetDefIntent, WidgetDefIntentDataTypes
 from intents.models import IntentDataTypes
 
@@ -57,7 +59,13 @@ payload = {
 
 
 class WidgetModelTests(TestCase):
-    fixtures = ['people_data.json', 'widget_data.json']
+    fixtures = [
+        'tests/people/fixtures/default_test_people.json',
+        'tests/owf_groups/fixtures/default_test_groups.json',
+        'tests/owf_groups/fixtures/group_people_mappings.json',
+        'tests/widgets/fixtures/default_test_widgets.json',
+        'tests/widgets/fixtures/widgets_test_mappings.json'
+    ]
 
     def test_create(self):
         # create - new item does not exists yet.
@@ -87,3 +95,13 @@ class WidgetModelTests(TestCase):
 
         self.assertNotIn('type-1', intent_receive.filter(intent__action='another').values_list(
             'widgetdefintentdatatypes__intent_data_type__data_type', flat=True))
+
+    def test_delete_widget(self):
+        widget = WidgetDefinition.objects.get(pk=1)
+        widget.delete()
+
+        self.assertFalse(DomainMapping.objects.filter(pk=3).exists())
+        self.assertFalse(DomainMapping.objects.filter(pk=4).exists())
+
+        self.assertTrue(Person.objects.filter(pk=1, requires_sync=True).exists())
+        self.assertTrue(Person.objects.filter(pk=2, requires_sync=True).exists())

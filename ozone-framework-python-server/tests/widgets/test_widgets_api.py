@@ -35,14 +35,15 @@ payload = {
 class TestingWidgetsApi(TestCase):
     fixtures = ['people_data.json', 'widget_data.json']
 
+    def tearDown(self):
+        requests.logout()
+
     def test_admin_authenticated_access(self):
         requests.login(email='admin@goss.com', password='password')
         url = reverse('widgets-list')
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 200)
-
-        requests.logout()
 
     def test_user_authenticated_access(self):
         requests.login(email='user@goss.com', password='password')
@@ -51,17 +52,12 @@ class TestingWidgetsApi(TestCase):
 
         self.assertEqual(response.status_code, 403)
 
-        requests.logout()
-
     def test_admin_create_a_widget(self):
         requests.login(email='admin@goss.com', password='password')
         url = reverse('widgets-list')
         response = requests.post(url, payload, format='json')
 
         self.assertEqual(response.status_code, 201)
-
-        requests.logout()
-        return response.data
 
     def test_admin_update_a_widget(self):
         requests.login(email='admin@goss.com', password='password')
@@ -84,8 +80,6 @@ class TestingWidgetsApi(TestCase):
         self.assertEqual(response.data['intents']['receive'][0]['action'],
                          payload['intents']['receive'][0]['action'])
 
-        requests.logout()
-
     def test_admin_update_a_widget_via_universal_name(self):
         requests.login(email='admin@goss.com', password='password')
 
@@ -97,4 +91,17 @@ class TestingWidgetsApi(TestCase):
         self.assertEqual(response.data['id'], 1)
         self.assertEqual(response.data['universal_name'], 'test_widget_x')
 
-        requests.logout()
+    def test_admin_delete_widget(self):
+        requests.login(email='admin@goss.com', password='password')
+        url = reverse('widgets-detail', kwargs={'pk': 1})
+        response = requests.delete(url)
+
+        self.assertEquals(response.status_code, 204)
+
+    def test_nonadmin_delete_widget(self):
+        requests.login(email='user@goss.com', password='password')
+
+        url = reverse('widgets-detail', kwargs={'pk': 1})
+        response = requests.delete(url)
+
+        self.assertEqual(response.status_code, 403)
