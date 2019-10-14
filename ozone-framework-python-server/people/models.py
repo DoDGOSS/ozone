@@ -3,6 +3,7 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.conf import settings
 from django.apps import apps
@@ -166,6 +167,116 @@ class Person(AbstractBaseUser):
 
         return Stack.objects.filter(default_group__in=list(stack_groups.values_list(flat=True)))
 
+    def get_active_widgets(self):
+        # Get all widgets that are directly assigned to user or assigned by active groups
+        from owf_groups.models import GroupStatus
+
+        active_group_ids = list(self.groups.filter(status=GroupStatus.active).values_list("id", flat=True))
+
+        directly_assigned_widget_ids = PersonWidgetDefinition.objects.filter(
+            person=self, group_widget=False, user_widget=True).values_list("id", flat=True)
+
+        active_group_widget_ids = DomainMapping.objects.filter(
+            relationship_type=RelationshipType.owns,
+            src_id__in=active_group_ids,
+            src_type=MappingType.group,
+            dest_type=MappingType.widget
+        ).values_list("dest_id", flat=True)
+
+        active_widgets = WidgetDefinition.objects.filter(
+            Q(id__in=directly_assigned_widget_ids) | Q(id__in=active_group_widget_ids)
+        )
+
+        return active_widgets
+
+    def sync_widgets(self):
+        group_ids = list(self.groups.values_list("id", flat=True))
+        group_widget_ids = DomainMapping.objects.filter(
+            src_id__in=group_ids,
+            src_type=MappingType.group,
+            relationship_type=RelationshipType.owns,
+            dest_type=MappingType.widget
+        ).values_list("dest_id", flat=True)
+        group_widgets = list(WidgetDefinition.objects.filter(pk__in=group_widget_ids))
+        user_widgets = list(PersonWidgetDefinition.objects.filter(person=self))
+
+        for user_widget in user_widgets:
+            group_does_not_own_widget = user_widget.widget_definition not in group_widgets
+            user_does_not_own_widget = not user_widget.user_widget
+
+            if group_does_not_own_widget and user_does_not_own_widget:
+                user_widget.group_widget = False
+                user_widget.delete()
+            elif group_does_not_own_widget and user_widget.user_widget:
+                user_widget.group_widget = False
+                user_widget.save()
+
+        # Get group_widgets that don't exist in user_widgets
+        for group_widget in group_widgets:
+            pwd, is_new = PersonWidgetDefinition.objects.get_or_create(person=self, widget_definition=group_widget)
+            pwd.group_widget = True
+            if is_new:
+                pwd.visible = True
+                pwd.favorite = False
+                pwd.user_widget = False
+            pwd.save()
+
+    def sync_dashboards(self):
+        from stacks.models import StackGroups, Stack
+        from domain_mappings.models import DomainMapping
+        import uuid
+
+        group_ids = list(self.groups.values_list("id", flat=True))
+
+        # Default groups that this user is in, represents user's direct assignment to stacks
+        default_group_ids = Stack.objects.filter(default_group_id__in=group_ids).values_list("default_group_id", flat=True)
+
+        # Get default groups from groups assigned to stacks
+        stacks_assigned_through_group = StackGroups.objects.filter(group_id__in=group_ids).values_list("stack", flat=True)
+        default_group_ids_from_stack_groups_assignment = Stack.objects.filter(pk__in=stacks_assigned_through_group)\
+            .values_list("default_group_id", flat=True)
+
+        # List of all default groups from stacks assigned to user and remove any duplicates
+        default_group_ids_for_stacks = list(default_group_ids.union(default_group_ids_from_stack_groups_assignment))
+
+        group_dashboard_ids = DomainMapping.objects.filter(
+            src_id__in=default_group_ids_for_stacks,
+            src_type=MappingType.group,
+            relationship_type=RelationshipType.owns,
+            dest_type=MappingType.dashboard
+        ).values_list("dest_id", flat=True)
+
+        user_dashboards = Dashboard.objects.filter(user=self)
+
+        user_cloned_dashboards_ids = DomainMapping.objects.filter(
+            src_id__in=list(user_dashboards.values_list("id", flat=True)),
+            src_type=MappingType.dashboard,
+            relationship_type=RelationshipType.cloneOf,
+            dest_type=MappingType.dashboard
+        ).values_list("dest_id", flat=True)
+
+        missing_dashboard_ids = group_dashboard_ids.difference(user_cloned_dashboards_ids)
+        # Create missing dashboards
+        if missing_dashboard_ids:
+            missing_group_dashboards = Dashboard.objects.filter(pk__in=missing_dashboard_ids)
+            dashboard_item = 0
+            for dashboard in missing_group_dashboards.all():
+                # Clone dashboard with new id
+                dashboard.id = None
+                dashboard.guid = uuid.uuid4()
+                dashboard.user = self
+                dashboard.save()
+
+                DomainMapping.create_user_dashboard_mapping(dashboard, missing_group_dashboards[dashboard_item])
+                dashboard_item += 1
+
+    def sync(self):
+        if self.requires_sync:
+            self.sync_widgets()
+            self.sync_dashboards()
+            self.requires_sync = False
+            self.save()
+
     def has_perm(self, perm, obj=None):
         """
         Does the user have a specific permission?
@@ -241,7 +352,7 @@ class PersonWidgetDefinition(models.Model):
     favorite = models.BooleanField(blank=True, null=True)
     display_name = models.CharField(max_length=256, blank=True, null=True)
     disabled = models.BooleanField(blank=True, null=True)
-    user_widget = models.BooleanField(blank=True, null=True, default=False)
+    user_widget = models.BooleanField(blank=True, null=True, default=True)
 
     objects = PersonWidgetDefinitionManager()
 
