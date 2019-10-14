@@ -3,7 +3,7 @@ from .models import WidgetDefinition, WidgetType, WidgetDefIntentDataTypes, Widg
 
 
 class WidgetDefinitionAdmin(admin.ModelAdmin):
-    list_display = ('display_name', 'universal_name', 'widget_guid', 'description')
+    list_display = ('id', 'display_name', 'universal_name', 'widget_guid', 'description')
     search_fields = ('display_name', 'universal_name', 'widget_guid')
 
 

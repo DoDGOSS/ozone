@@ -179,8 +179,9 @@ class GroupWidgetAdminApiTests(TestCase):
         response = requests.get(filter_url)
 
         domain_data = DomainMapping.objects.filter(
+            src_type=MappingType.group,
+            src_id=group_id,
             relationship_type=RelationshipType.owns,
-            src_type=MappingType.group, src_id=group_id,
             dest_type=MappingType.widget
         )
         count_widgets = response.data['widgets']
