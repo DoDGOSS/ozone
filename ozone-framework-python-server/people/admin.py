@@ -81,7 +81,7 @@ class PersonAdmin(BaseUserAdmin):
 
 
 class PersonWidgetDefinitionAdmin(admin.ModelAdmin):
-    list_display = ('display_name', 'widget_definition', 'person', 'version')
+    list_display = ('id', 'display_name', 'widget_definition', 'person', 'version')
     search_fields = ('display_name', 'widget_definition', 'person', 'version')
 
 

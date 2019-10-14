@@ -13,11 +13,13 @@ class DashboardViewSet(viewsets.ModelViewSet):
     API endpoint that allows dashboards to be viewed or edited.
     """
     # TODO: filter out dashboard's that are marked for deletion on a GET
-    queryset = Dashboard.objects.all()
     serializer_class = DashboardBaseSerializer
     permission_classes = (IsAuthenticated, IsStackOwner)
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['guid', ]
+
+    def get_queryset(self):
+        return Dashboard.objects.filter(user=self.request.user)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

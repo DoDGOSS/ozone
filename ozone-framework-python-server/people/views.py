@@ -6,23 +6,46 @@ from rest_framework import status
 from django.utils.translation import ugettext_lazy as _
 from django_filters.rest_framework import DjangoFilterBackend
 from config.owf_mixins import mixins
-from owf_groups.models import OwfGroup
-from stacks.models import Stack
+from dashboards.models import Dashboard
+from widgets.models import WidgetDefinition
+from dashboards.serializers import DashboardBaseSerializer
 from stacks.serializers import StackBaseSerializer
 from .models import Person, PersonWidgetDefinition
 from .serializers import PersonBaseSerializer, PersonWidgetDefinitionSerializer, PersonWidgetDefinitionBaseSerializer
+from widgets.serializers import WidgetDefinitionSerializer
 
 
 class PersonDetailView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
+        serialized_user = PersonBaseSerializer(request.user).data
+
+        return Response(serialized_user)
+
+
+class PersonDashboardsWidgetsView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
         """
-        Return the details of the currently logged in user matching the legacy api
+        Return the details of the currently logged in user's details, widgets, and dashboards
         """
-        user = Person.objects.get(email=request.user.email)
-        serializer = PersonBaseSerializer(user)
-        return Response(serializer.data)
+
+        # Sync dashboards and widgets
+        request.user.sync()
+
+        # Only return widgets that are directly assigned or assigned to active groups
+        widgets = request.user.get_active_widgets()
+        dashboards = Dashboard.objects.filter(user=request.user)
+
+        serialized_user = PersonBaseSerializer(request.user)
+        serialized_dashboards = DashboardBaseSerializer(dashboards, many=True)
+        serialized_widgets = WidgetDefinitionSerializer(widgets, many=True)
+
+        return Response({'user': serialized_user.data,
+                         'dashboards': serialized_dashboards.data,
+                         'widgets': serialized_widgets.data})
 
 
 class PersonWidgetDefinitionViewSet(mixins.BulkDestroyModelMixin, viewsets.ModelViewSet):

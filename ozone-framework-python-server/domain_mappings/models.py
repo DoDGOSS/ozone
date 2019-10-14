@@ -62,25 +62,25 @@ class DomainMapping(models.Model):
 
     @classmethod
     def create_group_dashboard_mapping(cls, group, groupDashboard):
-        existing_mapping, created_mapping = cls.objects.get_or_create(
+        mapping, _ = cls.objects.get_or_create(
             src_id=group.id,
             src_type=MappingType.group,
             relationship_type=RelationshipType.owns,
             dest_id=groupDashboard.id,
             dest_type=MappingType.dashboard
         )
-        return existing_mapping or created_mapping
+        return mapping
 
     @classmethod
     def create_user_dashboard_mapping(cls, userDashboard, groupDashboard):
-        existing_mapping, created_mapping = cls.objects.get_or_create(
+        mapping, _ = cls.objects.get_or_create(
             src_id=userDashboard.id,
             src_type=MappingType.dashboard,
             relationship_type=RelationshipType.cloneOf,
             dest_id=groupDashboard.id,
             dest_type=MappingType.dashboard
         )
-        return existing_mapping or created_mapping
+        return mapping
 
     @classmethod
     def create_group_widget_mapping(cls, widget, group):
