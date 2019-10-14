@@ -24,10 +24,9 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
 
         self.assertEqual(response.status_code, 201)
         self.assertGreaterEqual(response.data['id'], 2)
-        self.assertEqual(response.data['user_widget'], False)
+        self.assertEqual(response.data['user_widget'], True)
 
         # create again - this item exists already
-        # which should just update user_widget true
         url = reverse('admin_users-widgets-list')
         response = requests.post(url, payload, format="json")
 

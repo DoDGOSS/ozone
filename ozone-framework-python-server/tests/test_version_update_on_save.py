@@ -87,6 +87,7 @@ class VersionUpdateOnSave(TestCase):
         Stack.objects.create(name='testing_version')
 
     def test_version_update_on_save_appconf_model(self):
+        current_time = int(time.time())
         item_change = ApplicationConfiguration.objects.get(code='fake1234_owf.enable.cef.logging')
         item_change.title = 'changed'
 
@@ -94,12 +95,11 @@ class VersionUpdateOnSave(TestCase):
 
         check_item = ApplicationConfiguration.objects.get(code='fake1234_owf.enable.cef.logging')
 
-        current_time = int(time.time())
-
         self.assertEqual(check_item.title, 'changed')
-        self.assertEqual(check_item.version, current_time)
+        self.assertGreaterEqual(check_item.version, current_time)
 
     def test_version_update_on_save_domain_mapping_model(self):
+        current_time = int(time.time())
         item_change = DomainMapping.objects.get(src_id=100, src_type=MappingType.group,
                                                 relationship_type=RelationshipType.owns,
                                                 dest_id=100, dest_type=MappingType.dashboard)
@@ -111,12 +111,11 @@ class VersionUpdateOnSave(TestCase):
                                                relationship_type=RelationshipType.owns,
                                                dest_id=100, dest_type=MappingType.dashboard)
 
-        current_time = int(time.time())
-
         self.assertEqual(check_item.src_id, 101)
-        self.assertGreaterEqual(current_time, check_item.version)
+        self.assertGreaterEqual(check_item.version, current_time)
 
     def test_version_update_on_save_intent_model(self):
+        current_time = int(time.time())
         item_change = Intent.objects.get(action='test1')
         item_change.action = 'test123'
 
@@ -124,12 +123,11 @@ class VersionUpdateOnSave(TestCase):
 
         check_item = Intent.objects.get(action='test123')
 
-        current_time = int(time.time())
-
         self.assertEqual(check_item.action, 'test123')
-        self.assertGreaterEqual(current_time, check_item.version)
+        self.assertGreaterEqual(check_item.version, current_time)
 
     def test_version_update_on_save_intent_data_type_model(self):
+        current_time = int(time.time())
         item_change = IntentDataType.objects.get(data_type='test2')
         item_change.data_type = 'test123'
 
@@ -137,12 +135,11 @@ class VersionUpdateOnSave(TestCase):
 
         check_item = IntentDataType.objects.get(data_type='test123')
 
-        current_time = int(time.time())
-
         self.assertEqual(check_item.data_type, 'test123')
-        self.assertGreaterEqual(current_time, check_item.version)
+        self.assertGreaterEqual(check_item.version, current_time)
 
     def test_version_update_on_save_owf_groups_model(self):
+        current_time = int(time.time())
         item_change = OwfGroup.objects.get(name='special_name')
         item_change.email = 'emailer@email.com'
 
@@ -150,12 +147,11 @@ class VersionUpdateOnSave(TestCase):
 
         check_item = OwfGroup.objects.get(name='special_name')
 
-        current_time = int(time.time())
-
         self.assertEqual(check_item.email, 'emailer@email.com')
-        self.assertGreaterEqual(current_time, check_item.version)
+        self.assertGreaterEqual(check_item.version, current_time)
 
     def test_version_update_on_save_person_model(self):
+        current_time = int(time.time())
         item_change = Person.objects.get(username='test_user_version')
         item_change.email = 'email_test_2@goss.com'
 
@@ -163,12 +159,11 @@ class VersionUpdateOnSave(TestCase):
 
         check_item = Person.objects.get(username='test_user_version')
 
-        current_time = int(time.time())
-
         self.assertEqual(check_item.email, 'email_test_2@goss.com')
-        self.assertGreaterEqual(current_time, check_item.version)
+        self.assertGreaterEqual(check_item.version, current_time)
 
     def test_version_update_on_save_person_widget_definition_model(self):
+        current_time = int(time.time())
         item_change = PersonWidgetDefinition.objects.get(display_name='xxx_test_xxx')
         item_change.display_name = 'xxx'
 
@@ -176,12 +171,11 @@ class VersionUpdateOnSave(TestCase):
 
         check_item = PersonWidgetDefinition.objects.get(display_name='xxx')
 
-        current_time = int(time.time())
-
         self.assertEqual(check_item.display_name, 'xxx')
-        self.assertGreaterEqual(current_time, check_item.version)
+        self.assertGreaterEqual(check_item.version, current_time)
 
     def test_version_update_on_save_preferences_model(self):
+        current_time = int(time.time())
         item_change = Preference.objects.get(value='this_is_a_test')
         item_change.path = 'path_change'
 
@@ -189,12 +183,11 @@ class VersionUpdateOnSave(TestCase):
 
         check_item = Preference.objects.get(value='this_is_a_test')
 
-        current_time = int(time.time())
-
         self.assertEqual(check_item.path, 'path_change')
-        self.assertGreaterEqual(current_time, check_item.version)
+        self.assertGreaterEqual(check_item.version, current_time)
 
     def test_version_update_on_save_widget_definition_intent_model(self):
+        current_time = int(time.time())
         item_change = WidgetDefIntent.objects.get(receive=True,
                                                   send=True,
                                                   intent=Intent.objects.get(action='test1'),
@@ -210,12 +203,11 @@ class VersionUpdateOnSave(TestCase):
                                                  widget_definition=WidgetDefinition.objects.get(id=1)
                                                  )
 
-        current_time = int(time.time())
-
         self.assertEqual(check_item.send, False)
-        self.assertGreaterEqual(current_time, check_item.version)
+        self.assertGreaterEqual(check_item.version, current_time)
 
     def test_version_update_on_save_widget_type_model(self):
+        current_time = int(time.time())
         item_change = WidgetType.objects.get(name='xxx_test_xxx', display_name='xxx_test_xxx', )
         item_change.display_name = 'xxx_xxx'
 
@@ -223,12 +215,11 @@ class VersionUpdateOnSave(TestCase):
 
         check_item = WidgetType.objects.get(name='xxx_test_xxx', display_name='xxx_xxx')
 
-        current_time = int(time.time())
-
         self.assertEqual(check_item.display_name, 'xxx_xxx')
-        self.assertGreaterEqual(current_time, check_item.version)
+        self.assertGreaterEqual(check_item.version, current_time)
 
     def test_version_update_on_save_widget_definition_model(self):
+        current_time = int(time.time())
         item_change = WidgetDefinition.objects.get(visible=True,
                                                    image_url_medium='blah',
                                                    image_url_small='blah',
@@ -256,12 +247,11 @@ class VersionUpdateOnSave(TestCase):
                                                   descriptor_url='testGUID',
                                                   description='testGUID')
 
-        current_time = int(time.time())
-
         self.assertEqual(check_item.image_url_medium, 'xxx_xxx.com')
-        self.assertGreaterEqual(current_time, check_item.version)
+        self.assertGreaterEqual(check_item.version, current_time)
 
     def test_version_update_on_save_stack_model(self):
+        current_time = int(time.time())
         item_change = Stack.objects.get(name='testing_version')
         item_change.description = 'xxx_xxx'
 
@@ -269,12 +259,11 @@ class VersionUpdateOnSave(TestCase):
 
         check_item = Stack.objects.get(name='testing_version')
 
-        current_time = int(time.time())
-
         self.assertEqual(check_item.description, 'xxx_xxx')
-        self.assertGreaterEqual(current_time, check_item.version)
+        self.assertGreaterEqual(check_item.version, current_time)
 
     def test_version_update_on_save_dashboard_model(self):
+        current_time = int(time.time())
         item_change = Dashboard.objects.get(id=1)
         item_change.name = 'xxx_xxx'
 
@@ -282,7 +271,5 @@ class VersionUpdateOnSave(TestCase):
 
         check_item = Dashboard.objects.get(id=1)
 
-        current_time = int(time.time())
-
         self.assertEqual(check_item.name, 'xxx_xxx')
-        self.assertGreaterEqual(current_time, check_item.version)
+        self.assertGreaterEqual(check_item.version, current_time)

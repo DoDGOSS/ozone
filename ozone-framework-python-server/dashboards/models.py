@@ -45,7 +45,11 @@ class Dashboard(models.Model):
     objects = DashboardsManager()
 
     def __str__(self):
-        return f'{self.name} for user: {self.user.id}'
+        if self.user:
+            return f'{self.name} for user: {self.user.id}'
+        # Cloned dashboard
+        else:
+            return f'Group dashboard: {self.name}'
 
     def save(self, *args, **kwargs):
         # Version saver for incrementing as time

@@ -166,6 +166,8 @@ REST_FRAMEWORK = {
     )
 }
 
+LOGIN_REDIRECT_URL = '/api/v2/me/'
+
 #  LOG
 LOGGING = {
     'version': 1,
