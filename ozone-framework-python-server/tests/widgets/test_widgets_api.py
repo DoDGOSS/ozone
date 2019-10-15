@@ -105,3 +105,26 @@ class TestingWidgetsApi(TestCase):
         response = requests.delete(url)
 
         self.assertEqual(response.status_code, 403)
+
+    def test_admin_list_a_widget_showing_intents(self):
+        requests.login(email='admin@goss.com', password='password')
+
+        # create widget with intents
+        url = reverse('widgets-list')
+        created = requests.post(url, payload, format='json')
+
+        self.assertEqual(created.status_code, 201)
+
+        # list a widget to make sure intents are listed properly.
+        url = reverse('widgets-detail', args=str(created.data['id']))
+        response = requests.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['intents']['send'][0]['action'],
+                         payload['intents']['send'][0]['action'])
+
+        self.assertEqual(len(response.data['intents']['send'][0]['dataTypes']),
+                         len(payload['intents']['send'][0]['dataTypes']))
+
+        self.assertEqual(response.data['intents']['receive'][0]['action'],
+                         payload['intents']['receive'][0]['action'])
