@@ -16,6 +16,15 @@ class DashboardsManager(models.Manager):
         ).values_list("dest_id", flat=True)
         return self.filter(pk__in=group_dashboard_domain_mapping_ids)
 
+    def get_default_dashboard_for(self, dashboard):
+        default_dashboard_id = DomainMapping.objects.filter(
+            src_id=dashboard.id,
+            src_type=MappingType.dashboard,
+            relationship_type=RelationshipType.cloneOf,
+            dest_type=MappingType.dashboard
+        ).values_list("dest_id", flat=True).first()
+        return self.get(pk=default_dashboard_id)
+
 
 class Dashboard(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -74,6 +83,17 @@ class Dashboard(models.Model):
                 widgets.append(user_widget.widget_definition)
 
         return widgets
+
+    def restore(self):
+        default_dashboard = Dashboard.objects.get_default_dashboard_for(self)
+        self.name = default_dashboard.name
+        self.description = default_dashboard.description
+        self.icon_image_url = default_dashboard.icon_image_url
+        self.type = default_dashboard.type
+        self.locked = default_dashboard.locked
+        self.marked_for_deletion = default_dashboard.marked_for_deletion
+        self.layout_config = default_dashboard.layout_config
+        self.save()
 
     class Meta:
         managed = True

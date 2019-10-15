@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsStackOwner
 from .models import Dashboard
@@ -27,3 +28,16 @@ class DashboardViewSet(viewsets.ModelViewSet):
             instance.marked_for_deletion = True
             instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(methods=['post'], detail=True, permission_classes=(IsAuthenticated, ))
+    def restore(self, request, pk=None):
+        dashboard = Dashboard.objects.get(pk=pk)
+
+        if(request.user != dashboard.user):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        dashboard.restore()
+        dashboard.refresh_from_db()
+
+        serialized_dashboard = DashboardBaseSerializer(dashboard)
+        return Response(serialized_dashboard.data)
