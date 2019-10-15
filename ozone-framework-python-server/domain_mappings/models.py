@@ -35,6 +35,31 @@ class DomainMappingsManager(models.Manager):
             dest_id=dashboard_id
         )
 
+    def get_default_dashboard_ids(self, stack):
+        return self.filter(
+            src_id=stack.default_group_id,
+            src_type=MappingType.group,
+            relationship_type=RelationshipType.owns,
+            dest_type=MappingType.dashboard
+        ).values('dest_id')
+
+    def get_user_cloned_dashboards_ids(self, default_dashboard_ids_query):
+        return self.filter(
+            src_type=MappingType.dashboard,
+            relationship_type=RelationshipType.cloneOf,
+            dest_id__in=default_dashboard_ids_query,
+            dest_type=MappingType.dashboard
+        ).values('src_id')
+
+    def get_user_clone_of_groups_dashboard_domain_mapping(self, user_dashboard_id, default_dashboard_ids_query):
+        return self.filter(
+            src_type=MappingType.dashboard,
+            src_id=user_dashboard_id,
+            relationship_type=RelationshipType.cloneOf,
+            dest_type=MappingType.dashboard,
+            dest_id__in=default_dashboard_ids_query,
+        )
+
 
 class DomainMapping(models.Model):
     id = models.BigAutoField(primary_key=True)

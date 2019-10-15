@@ -1,9 +1,10 @@
 import time
 import json
 import uuid
+from django.dispatch import receiver
 from django.utils import timezone
 from django.db import models, IntegrityError
-from owf_groups.models import OwfGroup, GroupStatus
+from owf_groups.models import OwfGroup, GroupStatus, OwfGroupPeople
 from people.models import Person, PersonWidgetDefinition
 from domain_mappings.models import RelationshipType, MappingType, DomainMapping
 from dashboards.models import Dashboard
@@ -191,3 +192,30 @@ class StackGroups(models.Model):
         managed = True
         db_table = 'stack_groups'
         unique_together = (('group', 'stack'),)
+
+
+@receiver(models.signals.post_delete, sender=StackGroups)
+def stack_group_cleanup(sender, instance, *args, **kwargs):
+    stack = instance.stack
+    group = instance.group
+
+    default_dashboard_ids = DomainMapping.objects.get_default_dashboard_ids(stack)
+    user_cloned_dashboards_ids = DomainMapping.objects.get_user_cloned_dashboards_ids(default_dashboard_ids)
+
+    users_dashboards = Dashboard.objects.filter(pk__in=user_cloned_dashboards_ids)
+    stack_groups_filter_stack = StackGroups.objects.filter(stack=stack).values('group')
+
+    for user_dashboard in users_dashboards:
+        if not OwfGroupPeople.objects.filter(group=stack.default_group, person=user_dashboard.user).exists():
+            if not OwfGroupPeople.objects.filter(
+                    group_id__in=stack_groups_filter_stack, person=user_dashboard.user
+            ).exists():
+
+                delete_domain_mapping = DomainMapping.objects.get_user_clone_of_groups_dashboard_domain_mapping(
+                    user_dashboard_id=user_dashboard.id, default_dashboard_ids_query=default_dashboard_ids
+                )
+
+                delete_domain_mapping.delete()
+                user_dashboard.delete()
+    group.people.update(requires_sync=True)
+
