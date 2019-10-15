@@ -16,11 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import include
 from django.urls import path, re_path
-# from rest_framework_swagger.views import get_swagger_view
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from .views import SystemVersionView
+from .views import SystemVersionView, HelpFileView
 from rest_framework import permissions
+from django.conf import settings
+from django.conf.urls.static import static
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -51,4 +52,5 @@ urlpatterns = [
         path('api/v2/', include('widgets.urls')),
         path('api/v2/', include('appconf.urls')),
         path('system-version', SystemVersionView.as_view(), name='system-version-url'),
-    ]
+        path('help', HelpFileView.as_view(), name='help_files'),
+    ] + static(settings.HELP_FILES_URL, document_root=settings.HELP_FILES)
