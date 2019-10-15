@@ -27,6 +27,7 @@ SECRET_KEY = '6_0yi$sofm8lt(oc4l=%1nyxgog#ek0_+eyki_0a3)2_tej3fd'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+HOST_URL_HELPER = 'http://127.0.0.1:8000'
 
 # Application definition
 
@@ -149,6 +150,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
+HELP_FILES = os.path.join(BASE_DIR, 'help_files')
+HELP_FILES_URL = '/help_files/'
+
 SYSTEM_VERSION = '2'
 
 REST_FRAMEWORK = {
