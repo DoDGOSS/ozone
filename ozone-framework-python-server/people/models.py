@@ -229,10 +229,13 @@ class Person(AbstractBaseUser):
         group_ids = list(self.groups.values_list("id", flat=True))
 
         # Default groups that this user is in, represents user's direct assignment to stacks
-        default_group_ids = Stack.objects.filter(default_group_id__in=group_ids).values_list("default_group_id", flat=True)
+        default_group_ids = Stack.objects.filter(
+            default_group_id__in=group_ids).values_list(
+            "default_group_id", flat=True)
 
         # Get default groups from groups assigned to stacks
-        stacks_assigned_through_group = StackGroups.objects.filter(group_id__in=group_ids).values_list("stack", flat=True)
+        stacks_assigned_through_group = StackGroups.objects.filter(
+            group_id__in=group_ids).values_list("stack", flat=True)
         default_group_ids_from_stack_groups_assignment = Stack.objects.filter(pk__in=stacks_assigned_through_group)\
             .values_list("default_group_id", flat=True)
 
