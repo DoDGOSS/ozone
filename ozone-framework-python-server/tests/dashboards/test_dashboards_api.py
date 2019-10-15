@@ -8,7 +8,10 @@ requests = APIClient()
 
 
 class DashboardsApiTests(TestCase):
-    fixtures = ['people_data.json']
+    fixtures = [
+        'people_data.json',
+        'tests/dashboards/fixtures/default_test_dashboards.json'
+    ]
 
     def setUp(self):
         self.admin_user = Person.objects.get(pk=1)
@@ -64,5 +67,19 @@ class DashboardsApiTests(TestCase):
         requests.login(email='user@goss.com', password='password')
         url = reverse('dashboards-detail', args=(f'{user_dashboard.id}',))
         response = requests.delete(url)
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_owner_of_dashboard_can_restore_dashboard(self):
+        requests.login(email='admin@goss.com', password='password')
+        url = reverse('dashboards-restore', args=('2'))
+        response = requests.post(url)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_nonowner_of_dashboard_cannot_restore_dashboard(self):
+        requests.login(email='user@goss.com', password='password')
+        url = reverse('dashboards-restore', args=('2'))
+        response = requests.post(url)
 
         self.assertEqual(response.status_code, 403)
