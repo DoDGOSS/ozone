@@ -3,6 +3,10 @@ from rest_framework.test import APIClient
 from django.test import TestCase
 
 from stacks.models import StackGroups, Stack
+from people.models import Person
+from owf_groups.models import OwfGroup
+from dashboards.models import Dashboard
+from domain_mappings.models import DomainMapping, RelationshipType, MappingType
 
 requests = APIClient()
 
@@ -142,6 +146,21 @@ class StacksGroupsAdminApiTests(TestCase):
     stack_id_test_pass = 1
     stack_id_test_fail = 9
 
+    def setUp(self):
+        # Create the test data for stack groups
+        Person.objects.create_user(email='test_user_3@goss.com', username='test_user_3', password='password')
+        OwfGroup.objects.create(name='test_group_delete')
+        OwfGroup.objects.create(name='test_group_non_delete')
+
+        # add users association to groups
+        self.test_group_no_delete = OwfGroup.objects.get(name='test_group_delete')
+        self.user = Person.objects.get(username='user')
+        self.test_group_no_delete.add_user(self.user)
+        self.test_group_delete = OwfGroup.objects.get(name='test_group_non_delete')
+        self.test_user_3 = Person.objects.get(username='test_user_3')
+        self.test_group_delete.add_user(self.test_user_3)
+        self.test_group_delete.add_user(self.user)
+
     def test_admin_list_stack_groups(self):
         requests.login(email='admin@goss.com', password='password')
         url = reverse('admin_stacks-groups-list')
@@ -200,5 +219,88 @@ class StacksGroupsAdminApiTests(TestCase):
         response_no_exist = requests.get(filter_url_fails)
 
         self.assertEqual(response_no_exist.status_code, 400)
+
+        requests.logout()
+
+    def test_delete_stack_group_and_associated_data(self):
+
+        requests.login(email='admin@goss.com', password='password')
+        url_create_stack = reverse('admin_stacks-list')
+        requests.post(url_create_stack, data={
+            "name": "sg-rc-1",
+            "description": "string",
+            "image_url": "string",
+            "descriptor_url": "string",
+            "unique_widget_count": 0,
+            "approved": True
+        })
+
+        stack_groups_post_url = reverse('admin_stacks-groups-list')
+
+        stack_created = Stack.objects.get(name="sg-rc-1")
+
+        stack_groups_response_no_del = requests.post(stack_groups_post_url, data={
+            "group": self.test_group_no_delete.id,
+            "stack": stack_created.id,
+        })
+
+        stack_groups_response_del = requests.post(stack_groups_post_url, data={
+            "group": self.test_group_delete.id,
+            "stack": stack_created.id,
+        })
+
+        self.assertEqual(stack_groups_response_no_del.status_code, 201)
+
+        self.assertEqual(stack_groups_response_del.status_code, 201)
+
+        user = Person.objects.get(username='user')
+        user.sync()
+
+        test_user_3 = Person.objects.get(username='test_user_3')
+        test_user_3.sync()
+
+        self.assertEqual(Dashboard.objects.filter(user=test_user_3).exists(), True)
+
+        self.assertEqual(Dashboard.objects.filter(user=user).exists(), True)
+
+        test_user_3_dashboard = Dashboard.objects.get(user=test_user_3)
+        user_dashboard = Dashboard.objects.get(user=user)
+
+        stack_groups_detail_url = reverse('admin_stacks-groups-detail',
+                                          args=f"{stack_groups_response_del.data['id']}")
+
+        stack_groups_delete_response = requests.delete(stack_groups_detail_url)
+
+        self.assertEqual(stack_groups_delete_response.status_code, 204)
+
+        # Users Dashboard should be removed due to being in the group that was deleted
+        self.assertEqual(Dashboard.objects.filter(user=test_user_3).exists(), False)
+        # Users Dashboard should be not be removed due to being in the group that was
+        # deleted and a different group associated with the stack
+        self.assertEqual(Dashboard.objects.filter(user=user).exists(), True)
+
+        domain_mapping_search_for_dashboard_test_user_3 = DomainMapping.objects.filter(
+            src_id=test_user_3_dashboard.id,
+            src_type=MappingType.dashboard,
+            dest_type=MappingType.dashboard,
+            relationship_type=RelationshipType.cloneOf
+        )
+
+        domain_mapping_search_for_dashboard_user = DomainMapping.objects.filter(
+            src_id=user_dashboard.id,
+            src_type=MappingType.dashboard,
+            dest_type=MappingType.dashboard,
+            relationship_type=RelationshipType.cloneOf
+        )
+
+        # Users Mapping should be removed due to being in the group that was deleted
+        self.assertEqual(domain_mapping_search_for_dashboard_test_user_3.exists(), False)
+        # Users Mapping should be not be removed due to being in the group that was
+        # deleted and a different group associated with the stack
+        self.assertEqual(domain_mapping_search_for_dashboard_user.exists(), True)
+
+        # Both Users were in the group that was deleted and should be now synced
+        self.assertEqual(Person.objects.get(username='test_user_3').requires_sync, True)
+        self.assertEqual(Person.objects.get(username='user').requires_sync, True)
 
         requests.logout()
