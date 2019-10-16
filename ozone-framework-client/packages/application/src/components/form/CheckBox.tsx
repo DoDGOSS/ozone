@@ -12,6 +12,7 @@ export interface CheckBoxProps {
     defaultChecked?: boolean;
     inline?: boolean;
     className?: string;
+    disabled?: boolean;
 }
 
 const _CheckBox: React.FC<CheckBoxProps & FieldProps<any>> = (props) => (
@@ -28,6 +29,7 @@ const _CheckBox: React.FC<CheckBoxProps & FieldProps<any>> = (props) => (
             type="checkbox"
             label={props.text}
             defaultChecked={props.defaultChecked}
+            disabled={props.disabled}
             {...props.field}
         />
     </FormGroup>

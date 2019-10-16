@@ -67,3 +67,7 @@ export interface GroupDeleteResponse {
 }
 
 export const validateGroupDeleteResponse = createValidator<GroupDeleteResponse>(GROUP_DELETE_RESPONSE_SCHEMA);
+
+export function isDefaultGroup(group: GroupDTO): boolean {
+    return group !== undefined && group !== null && (group.name === 'OWF Administrators' || group.name === 'OWF Users');
+}
