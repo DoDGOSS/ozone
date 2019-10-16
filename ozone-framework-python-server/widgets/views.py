@@ -1,10 +1,16 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
+from rest_framework.renderers import TemplateHTMLRenderer
 from django.shortcuts import get_object_or_404
-from .models import WidgetDefinition, WidgetType
+from .models import WidgetDefinition, WidgetDefIntent, WidgetType
 from .serializers import WidgetDefinitionSerializer, WidgetTypeSerializer
 from rest_framework.response import Response
 from rest_framework import status
+from drf_yasg.inspectors import SwaggerAutoSchema
+from drf_yasg.utils import swagger_auto_schema
+import json
+from collections import defaultdict
 
 
 class WidgetDefinitionViewSet(viewsets.ModelViewSet):
@@ -84,3 +90,69 @@ class WidgetTypesViewSet(viewsets.ModelViewSet):
     queryset = WidgetType.objects.all()
     serializer_class = WidgetTypeSerializer
     permission_classes = (IsAdminUser,)
+
+
+class HTMLSchema(SwaggerAutoSchema):
+    def get_produces(self):
+        return ['text/html']
+
+
+class WidgetViewSet(viewsets.GenericViewSet):
+    queryset = WidgetDefinition.objects.all()
+    lookup_field = 'widget_guid'
+    serializer_class = WidgetDefinitionSerializer
+
+    @action(methods=['get'], detail=True, permission_classes=(IsAdminUser,), renderer_classes=[TemplateHTMLRenderer])
+    @swagger_auto_schema(auto_schema=HTMLSchema, responses={'200': 'Descriptor exported as HTML'})
+    def export(self, request, widget_guid=None):
+        widget = self.get_object()
+        descriptor = self._generate_descriptor_dict(widget)
+        return Response(
+            {'descriptor': json.dumps(descriptor)},
+            template_name='empty_descriptor.html'
+        )
+
+    def _generate_descriptor_dict(self, widget):
+        descriptor = {}
+
+        descriptor['name'] = widget.display_name
+        descriptor['widgetUrl'] = widget.widget_url
+        descriptor['imageUrlSmall'] = widget.image_url_small
+        descriptor['imageUrlMedium'] = widget.image_url_medium
+        descriptor['width'] = widget.width
+        descriptor['height'] = widget.height
+        descriptor['visible'] = widget.visible
+        descriptor['singleton'] = widget.singleton
+        descriptor['background'] = widget.background
+        descriptor['widgetTypes'] = list(
+            filter(lambda x: x is not None, [getattr(widget_type, 'name', None) for widget_type in widget.types.all()])
+        )
+
+        descriptor['mobileReady'] = widget.mobile_ready if widget.mobile_ready is not None else False
+
+        # Non-required fields
+        if widget.descriptor_url:
+            descriptor['descriptorUrl'] = widget.descriptor_url
+        if widget.universal_name:
+            descriptor['universalName'] = widget.universal_name
+        if widget.description:
+            descriptor['description'] = widget.description
+        if widget.widget_version:
+            descriptor['widgetVersion'] = widget.widget_version
+
+        # Intents
+        intents = defaultdict(list)
+        for intent in WidgetDefIntent.objects.filter(widget_definition=widget).all():
+            obj = {
+                'action': intent.intent.action,
+                'dataTypes': [intent_type.data_type for intent_type in intent.intent.types.all()]
+            }
+            if intent.send:
+                intents['send'].append(obj)
+            if intent.receive:
+                intents['receive'].append(obj)
+
+        if intents:
+            descriptor['intents'] = intents
+
+        return descriptor
