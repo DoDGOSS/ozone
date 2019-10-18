@@ -49,3 +49,12 @@ Login with test data after `python manage.py loaddata resources/fixtures/all_dat
 | admin@goss.com | password |
 | user@goss.com | password |
 
+
+### CAS Configuration
+
+To enable CAS, set the `OWF_ENABLE_CAS` environment variable to `'True'` and set the `OWF_CAS_SERVER_URL` environment variable to the CAS server's URL.
+
+Optional parameters:
+* `OWF_CAS_EXTRA_LOGIN_PARAMETERS`. A Python dict with additional values to send to the CAS server on login. Example: `{'key': 'value'}`
+* `OWF_CAS_USERNAME_ATTRIBUTE`. The CAS response attribute to use to set the user's username. Defaults to `uid`. Example: `nickname`
+* `OWF_CAS_VERSION`. The CAS version to use, defaults to `2`. Example: `3`

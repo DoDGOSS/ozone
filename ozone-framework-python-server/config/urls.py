@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf import settings
 from django.conf.urls import include
 from django.urls import path, re_path
 from drf_yasg.views import get_schema_view
@@ -54,3 +55,11 @@ urlpatterns = [
         path('system-version', SystemVersionView.as_view(), name='system-version-url'),
         path('help', HelpFileView.as_view(), name='help_files'),
     ] + static(settings.HELP_FILES_URL, document_root=settings.HELP_FILES)
+
+if settings.ENABLE_CAS:
+    import django_cas_ng.views
+
+    urlpatterns.extend([
+        path('cas/login/', django_cas_ng.views.LoginView.as_view(), name='cas_ng_login'),
+        path('cas/logout/', django_cas_ng.views.LogoutView.as_view(), name='cas_ng_logout'),
+    ])
