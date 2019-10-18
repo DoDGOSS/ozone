@@ -5,7 +5,7 @@ import { Form, Formik, FormikActions, FormikProps } from "formik";
 import * as yup from "yup";
 import { Button, Intent, Position, Toaster } from "@blueprintjs/core";
 
-import { GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
+import { GroupCreateRequest, GroupDTO, GroupUpdateRequest, isDefaultGroup } from "../../../../api/models/GroupDTO";
 import { cleanNullableProp } from "../../../../utility";
 import { CheckBox, FormError, TextField } from "../../../form";
 
@@ -43,14 +43,15 @@ export const GroupPropertiesPanel: React.FC<GroupEditProps> = ({ onSave, group }
                 <Form className={styles.form}>
                     <div className={styles.formBody}>
                         {" "}
-                        <TextField name="name" label="Name" labelInfo="(required)" />
-                        <TextField name="displayName" label="Display Name" labelInfo="(required)" />
+                        <TextField name="name" label="Name" labelInfo="(required)" disabled={isDefaultGroup(group)} />
+                        <TextField name="displayName" label="Display Name" labelInfo="(required)" disabled={isDefaultGroup(group)} />
                         <TextField name="description" label="Description" labelInfo="(required)" />
                         <CheckBox
                             name="active"
                             label="Active"
                             text="True"
                             defaultChecked={group !== undefined && group.status === "active"}
+                            disabled={isDefaultGroup(group)}
                         />
                         <CheckBox
                             name="automatic"

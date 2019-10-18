@@ -8,7 +8,7 @@ import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirm
 
 import { GroupSetup } from "./GroupSetup";
 import { groupApi } from "../../../../api/clients/GroupAPI";
-import { GroupDTO } from "../../../../api/models/GroupDTO";
+import { GroupDTO, isDefaultGroup } from "../../../../api/models/GroupDTO";
 
 import * as styles from "../Widgets.scss";
 
@@ -123,7 +123,7 @@ export class GroupsWidget extends React.Component<{}, State> {
                                 />
                                 <Divider />
                                 <DeleteButton
-                                    disabled={data.totalStacks > 0}
+                                    disabled={data.totalStacks > 0 || isDefaultGroup(data)}
                                     onClick={() => this.confirmDeleteGroup(data)}
                                 />
                             </ButtonGroup>
