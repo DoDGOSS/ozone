@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
 from rest_framework.renderers import TemplateHTMLRenderer
+from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 from .models import WidgetDefinition, WidgetDefIntent, WidgetType
 from .serializers import WidgetDefinitionSerializer, WidgetTypeSerializer
@@ -20,18 +21,8 @@ class WidgetDefinitionViewSet(viewsets.ModelViewSet):
     queryset = WidgetDefinition.objects.all()
     serializer_class = WidgetDefinitionSerializer
     permission_classes = (IsAdminUser,)
-
-    def get_object(self):
-        queryset = self.get_queryset()
-
-        try:
-            filters = {'pk': int(self.kwargs.get('pk'))}
-        except ValueError:
-            filters = {'universal_name': self.kwargs.get('pk')}
-
-        obj = get_object_or_404(queryset, **filters)
-        self.check_object_permissions(self.request, obj)
-        return obj
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['universal_name', ]
 
     def perform_create(self, serializer):
         self._adjust_optional_params(serializer)
