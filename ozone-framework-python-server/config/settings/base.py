@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import ast
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -198,3 +199,25 @@ LOGGING = {
 
 DEFAULT_USER_GROUP = 'OWF Users'
 DEFAULT_ADMIN_GROUP = 'OWF Administrators'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# CAS
+ENABLE_CAS = ast.literal_eval(os.getenv('OWF_ENABLE_CAS', 'False'))
+if ENABLE_CAS:
+    AUTHENTICATION_BACKENDS.append('django_cas_ng.backends.CASBackend')
+    INSTALLED_APPS.append('django_cas_ng')
+
+    CAS_EXTRA_LOGIN_PARAMS = ast.literal_eval(
+        os.getenv('OWF_CAS_EXTRA_LOGIN_PARAMETERS', '{}')
+    )
+    CAS_RENAME_ATTRIBUTES = {
+        os.getenv('OWF_CAS_USERNAME_ATTRIBUTE', 'uid'): 'username',
+    }
+    CAS_SERVER_URL = os.getenv('OWF_CAS_SERVER_URL')
+    CAS_VERSION = os.getenv('OWF_CAS_VERSION', '2')
+
+    CAS_CREATE_USER = False
+    CAS_STORE_NEXT = True
