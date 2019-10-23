@@ -52,6 +52,7 @@ urlpatterns = [
         path('api/v2/', include('stacks.urls')),
         path('api/v2/', include('widgets.urls')),
         path('api/v2/', include('appconf.urls')),
+        path('api/v2/', include('metrics.urls')),
         path('system-version', SystemVersionView.as_view(), name='system-version-url'),
         path('help', HelpFileView.as_view(), name='help_files'),
     ] + static(settings.HELP_FILES_URL, document_root=settings.HELP_FILES)

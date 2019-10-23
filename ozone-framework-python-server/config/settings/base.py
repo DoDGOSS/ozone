@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     'widgets.apps.WidgetsConfig',
     'dashboards.apps.DashboardsConfig',
     'preferences.apps.PreferencesConfig',
-    'appconf.apps.AppconfConfig'
+    'appconf.apps.AppconfConfig',
+    'metrics.apps.MetricsConfig',
 
 ]
 
@@ -221,3 +222,6 @@ if ENABLE_CAS:
 
     CAS_CREATE_USER = False
     CAS_STORE_NEXT = True
+
+ENABLE_METRICS = False
+METRICS_SERVER_URL = 'http://localhost:3000/metric'
