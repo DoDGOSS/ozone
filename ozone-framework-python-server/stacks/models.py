@@ -218,4 +218,3 @@ def stack_group_cleanup(sender, instance, *args, **kwargs):
                 delete_domain_mapping.delete()
                 user_dashboard.delete()
     group.people.update(requires_sync=True)
-
