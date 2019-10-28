@@ -80,16 +80,16 @@ class TestingWidgetsApi(TestCase):
         self.assertEqual(response.data['intents']['receive'][0]['action'],
                          payload['intents']['receive'][0]['action'])
 
-    def test_admin_update_a_widget_via_universal_name(self):
+    def test_admin_list_a_widget_via_universal_name(self):
         requests.login(email='admin@goss.com', password='password')
 
         universal_name = 'test_widget'
-        url = reverse('widgets-detail', kwargs={'pk': universal_name})
-        response = requests.put(url, payload, format='json')
+        url = reverse('widgets-list')
+        filter_url = f'{url}?universal_name={universal_name}'
+        response = requests.get(filter_url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['id'], 1)
-        self.assertEqual(response.data['universal_name'], 'test_widget_x')
+        self.assertEqual(response.data['results'][0]['universal_name'], universal_name)
 
     def test_admin_delete_widget(self):
         requests.login(email='admin@goss.com', password='password')
