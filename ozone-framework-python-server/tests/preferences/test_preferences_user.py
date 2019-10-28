@@ -27,8 +27,8 @@ class TestingPrefUser(TestCase):
         requests.login(email='user@goss.com', password='password')
         url = reverse('user_preferences-list')
         response = requests.get(url)
-        data = json.loads(response.content)
-        self.assertEqual(len(data['results']), 0)
+
+        self.assertEqual(len(response.data['results']), 0)
         self.assertEqual(response.status_code, 200)
         requests.logout()
 
@@ -36,6 +36,7 @@ class TestingPrefUser(TestCase):
         requests.login(email='admin@goss.com', password='password')
         url = reverse('user_preferences-list')
         data = requests.post(url, payload_1, format="json")
+
         self.assertEqual(data.status_code, 201)
         self.assertEqual(Preference.objects.count(), 2)
         requests.logout()
@@ -44,7 +45,7 @@ class TestingPrefUser(TestCase):
         requests.login(email='admin@goss.com', password='password')
         url = reverse('user_preferences-list')
         response = requests.get(url)
-        data = json.loads(response.content)
-        self.assertEqual(len(data['results']), 1)
+
+        self.assertEqual(len(response.data['results']), 1)
         self.assertEqual(response.status_code, 200)
         requests.logout()
