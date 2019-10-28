@@ -159,6 +159,13 @@ HELP_FILES_URL = '/help_files/'
 
 SYSTEM_VERSION = '2'
 
+# AUTHENTICATION CONFIGURATION
+# ------------------------------------------------------------------------------
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'config.owf_utils.authentication.DjangoAuthenticateByUsername',
+]
+
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100,
