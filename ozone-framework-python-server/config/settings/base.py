@@ -228,3 +228,18 @@ if ENABLE_CAS:
 
 ENABLE_METRICS = False
 METRICS_SERVER_URL = 'http://localhost:3000/metric'
+# SSL (CAC)
+ENABLE_SSL_AUTH = False
+if ENABLE_SSL_AUTH:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    MIDDLEWARE += [
+        'config.ssl_auth.SSLClientAuthMiddleware'
+    ]
+
+    AUTHENTICATION_BACKENDS += [
+        'config.ssl_auth.SSLClientAuthBackend'
+    ]
+
+    AUTOCREATE_VALID_SSL_USERS = False
+    EXTRACT_USERDATA_FN = 'config.ssl_auth.example.get_cac_id'
+    USER_DN_SSL_HEADER = 'HTTP_X_SSL_USER_DN'

@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+
+  nginx:
+    image: nginx:latest
+    container_name: ozone-framework-python-server_nginx_1
+    ports:
+      - "443:443"
+    volumes:
+      - certs:/etc/nginx/certs
+
+volumes:
+  certs:
