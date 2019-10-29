@@ -19,12 +19,22 @@ class MappingType(Enum):
 
 
 class DomainMappingsManager(models.Manager):
+
+    # Group
     def get_group_dashboard_mappings(self, group_id):
         return self.filter(
             src_id=group_id,
             src_type=MappingType.group,
             relationship_type=RelationshipType.owns,
             dest_type=MappingType.dashboard
+        )
+
+    def get_group_dashboard_clone_mappings(self, group_dashboard_mappings):
+        return self.filter(
+            src_type=MappingType.dashboard,
+            relationship_type=RelationshipType.cloneOf,
+            dest_type=MappingType.dashboard,
+            dest_id__in=list(group_dashboard_mappings.values_list("dest_id", flat=True))
         )
 
     def get_dashboard_clone_mappings(self, dashboard_id):

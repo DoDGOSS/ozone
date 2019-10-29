@@ -9,6 +9,8 @@ services:
     container_name: "ozone_server"
     ports:
       - "8080:8080"
+    networks:
+      - ozone_default
 
   ozone_widgets:
     image: "ozone/widgets"
@@ -17,3 +19,27 @@ services:
     container_name: "ozone_widgets"
     ports:
       - "4000:4000"
+
+  ozone_postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: owf
+      POSTGRES_USER: owf
+    networks:
+      - ozone_default
+    ports:
+      - "5432:5432"
+
+  ozone_pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@goss.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    networks:
+      - ozone_default
+    ports:
+      - "5555:80"
+
+networks:
+  ozone_default:
+    driver: bridge

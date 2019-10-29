@@ -7,7 +7,7 @@ grails:
         # Enable browser caching for static assets (time in seconds) - sets 'Cache-Control' header 'max-age'
         cachePeriod: 600
     cors:
-        enabled: true
+        enabled: false
 
 endpoints:
     enabled: false
@@ -44,11 +44,30 @@ environments:
             contextPath: "/owf"
 
         dataSource:
-            driverClassName: org.h2.Driver
-            username: sa
-            password: ''
             dbCreate: create-drop
-            url: jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+            url: jdbc:postgresql://0.0.0.0:5432
+            driverClassName: org.postgresql.Driver
+            username: owf
+            password: owf
+
+            properties:
+                jmxEnabled: true
+                initialSize: 5
+                maxActive: 50
+                minIdle: 5
+                maxIdle: 25
+                maxWait: 10000
+                maxAge: 600000
+                timeBetweenEvictionRunsMillis: 5000
+                minEvictableIdleTimeMillis: 60000
+                validationQuery: SELECT 1
+                validationQueryTimeout: 3
+                validationInterval: 15000
+                testOnBorrow: true
+                testWhileIdle: true
+                testOnReturn: false
+                jdbcInterceptors: ConnectionState
+                defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
 
     production:
         owf:
@@ -141,11 +160,11 @@ owf:
 
     exampleWidgets:
         enabled: true
-        baseUrl: "http://localhost:4000"
+        baseUrl: "http://dod-goss.sd.spawar.navy.mil:4000"
 
     metric:
         enabled: false
-        url: 'https://localhost:8443/metric/metric'
+        url: 'https://dod-goss.sd.spawar.navy.mil:8443/metric/metric'
 
         # Optional additional properties with default values shown
         #   keystorePath = System.properties['javax.net.ssl.keyStore']

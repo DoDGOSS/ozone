@@ -111,18 +111,11 @@ class Person(AbstractBaseUser):
         user_dashboard_mappings.delete()
 
     def purge_dashboards_for_group(self, group):
-        group_dashboard_mappings = DomainMapping.objects.filter(
-            src_id=group.id,
-            src_type=MappingType.group,
-            relationship_type=RelationshipType.owns,
-            dest_type=MappingType.dashboard
-        )
-        group_dashboard_clone_mappings = DomainMapping.objects.filter(
-            src_type=MappingType.dashboard,
-            relationship_type=RelationshipType.cloneOf,
-            dest_type=MappingType.dashboard,
-            dest_id__in=list(group_dashboard_mappings.values_list("dest_id", flat=True))
-        )
+        group_dashboard_mappings = DomainMapping.objects.get_group_dashboard_mappings(group.id)
+
+        group_dashboard_clone_mappings = DomainMapping.objects.\
+            get_group_dashboard_clone_mappings(group_dashboard_mappings)
+
         user_dashboards_for_group = Dashboard.objects.filter(
             pk__in=list(group_dashboard_clone_mappings.values_list("src_id", flat=True)),
             user=self
@@ -258,20 +251,9 @@ class Person(AbstractBaseUser):
             dest_type=MappingType.dashboard
         ).values_list("dest_id", flat=True)
 
-        missing_dashboard_ids = group_dashboard_ids.difference(user_cloned_dashboards_ids)
         # Create missing dashboards
-        if missing_dashboard_ids:
-            missing_group_dashboards = Dashboard.objects.filter(pk__in=missing_dashboard_ids)
-            dashboard_item = 0
-            for dashboard in missing_group_dashboards.all():
-                # Clone dashboard with new id
-                dashboard.id = None
-                dashboard.guid = uuid.uuid4()
-                dashboard.user = self
-                dashboard.save()
-
-                DomainMapping.create_user_dashboard_mapping(dashboard, missing_group_dashboards[dashboard_item])
-                dashboard_item += 1
+        missing_dashboard_ids = group_dashboard_ids.difference(user_cloned_dashboards_ids)
+        Dashboard.create_missing_dashboards_for_user(self, missing_dashboard_ids)
 
     def sync(self):
         if self.requires_sync:
