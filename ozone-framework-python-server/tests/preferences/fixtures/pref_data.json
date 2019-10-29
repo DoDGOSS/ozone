@@ -1,0 +1,57 @@
+[
+  {
+    "model": "preferences.preference",
+     "pk": 1,
+     "fields": {
+      "version": 1,
+       "value": "a9bf8e71-692d-44e3-a465-5337ce5e725e",
+       "path": "guide_to_launch",
+       "user": 1,
+       "namespace": "owf.admin.UserEditCopy"
+    }
+  },
+   {
+    "model": "preferences.preference",
+     "pk": 2,
+     "fields": {
+      "version": 1571152042,
+       "value": "679294b3-ccc3-4ace-a061-e3f27ed86451",
+       "path": "guide_to_launch",
+       "user": 1,
+       "namespace": "owf.admin.WidgetEditCopy"
+    }
+  },
+   {
+    "model": "preferences.preference",
+     "pk": 3,
+     "fields": {
+      "version": 1571152074,
+       "value": "dc5c2062-aaa8-452b-897f-60b4b55ab564",
+       "path": "guide_to_launch",
+       "user": 1,
+       "namespace": "owf.admin.GroupEditCopy"
+    }
+  },
+   {
+    "model": "preferences.preference",
+     "pk": 4,
+     "fields": {
+      "version": 1571152105,
+       "value": "2445afb9-eb3f-4b79-acf8-6b12180921c3",
+       "path": "guide_to_launch",
+       "user": 1,
+       "namespace": "owf.admin.DashboardEditCopy"
+    }
+  },
+   {
+    "model": "preferences.preference",
+     "pk": 5,
+     "fields": {
+      "version": 1571152128,
+       "value": "72c382a3-89e7-4abf-94db-18db7779e1d",
+       "path": "guide_to_launch",
+       "user": 1,
+       "namespace": "owf.admin.StackEditCopy"
+    }
+  }
+]

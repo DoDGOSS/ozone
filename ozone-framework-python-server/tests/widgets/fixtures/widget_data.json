@@ -1,0 +1,506 @@
+[
+  {
+    "model": "widgets.widgettype",
+     "pk": 1,
+     "fields": {
+      "version": 1,
+       "name": "1",
+       "display_name": "Test Widget Type"
+    }
+  },
+   {
+    "model": "widgets.widgettype",
+     "pk": 2,
+     "fields": {
+      "version": 1571152465,
+       "name": "administration",
+       "display_name": "administration"
+    }
+  },
+   {
+    "model": "widgets.widgettype",
+     "pk": 3,
+     "fields": {
+      "version": 1571152480,
+       "name": "standard",
+       "display_name": "standard"
+    }
+  },
+   {
+    "model": "widgets.widgettype",
+     "pk": 4,
+     "fields": {
+      "version": 1571152637,
+       "name": "marketplace",
+       "display_name": "store"
+    }
+  },
+   {
+    "model": "widgets.widgettype",
+     "pk": 5,
+     "fields": {
+      "version": 1571152660,
+       "name": "metric",
+       "display_name": "metric"
+    }
+  },
+   {
+    "model": "widgets.widgettype",
+     "pk": 6,
+     "fields": {
+      "version": 1571152673,
+       "name": "fullscreen",
+       "display_name": "fullscreen"
+    }
+  },
+   {
+    "model": "widgets.widgetdefinition",
+     "pk": 1,
+     "fields": {
+      "version": 1571155096,
+       "visible": true,
+       "image_url_medium": "images/widgets/widgets-manager.png",
+       "image_url_small": "images/widgets/widgets-manager.png",
+       "singleton": false,
+       "width": 400,
+       "widget_version": "1.0",
+       "height": 400,
+       "widget_url": "local:widget_admin",
+       "widget_guid": "25c85af7-6a2d-45c4-bbd5-5a58abd9e5e3",
+       "display_name": "Widget Administration",
+       "background": false,
+       "universal_name": "org.ozoneplatform.owf.admin.WidgetAdmin",
+       "descriptor_url": "Description for url",
+       "description": "Description",
+       "mobile_ready": false
+    }
+  },
+   {
+    "model": "widgets.widgetdefinition",
+     "pk": 2,
+     "fields": {
+      "version": 1571155160,
+       "visible": false,
+       "image_url_medium": "images/widgets/dashboards-manager.png",
+       "image_url_small": "images/widgets/dashboards-manager.png",
+       "singleton": false,
+       "width": 400,
+       "widget_version": "1.0",
+       "height": 400,
+       "widget_url": "local:dashboard_admin",
+       "widget_guid": "7519b430-1f20-4edc-9769-c9fde5d7dfcc",
+       "display_name": "Stack Administration",
+       "background": null,
+       "universal_name": "org.ozoneplatform.owf.admin.DashboardAdmin",
+       "descriptor_url": null,
+       "description": null,
+       "mobile_ready": false
+    }
+  },
+   {
+    "model": "widgets.widgetdefinition",
+     "pk": 3,
+     "fields": {
+      "version": 1571155214,
+       "visible": false,
+       "image_url_medium": "images/widgets/dashboards-manager.png",
+       "image_url_small": "images/widgets/dashboards-manager.png",
+       "singleton": false,
+       "width": 400,
+       "widget_version": "1.0",
+       "height": 400,
+       "widget_url": "local:user_admin",
+       "widget_guid": "29024e50-5070-4b75-bf85-c8210bc2f62a",
+       "display_name": "User Administration",
+       "background": null,
+       "universal_name": "org.ozoneplatform.owf.admin.UserAdmin",
+       "descriptor_url": null,
+       "description": null,
+       "mobile_ready": false
+    }
+  },
+   {
+    "model": "widgets.widgetdefinition",
+     "pk": 4,
+     "fields": {
+      "version": 1571155265,
+       "visible": false,
+       "image_url_medium": "images/widgets/groups-manager.png",
+       "image_url_small": "images/widgets/groups-manager.png",
+       "singleton": false,
+       "width": 400,
+       "widget_version": "1.0",
+       "height": 400,
+       "widget_url": "local:group_admin",
+       "widget_guid": "617c2a73-b440-412b-833d-a42b305a5a18",
+       "display_name": "Group Administration",
+       "background": null,
+       "universal_name": "org.ozoneplatform.owf.admin.GroupAdmin",
+       "descriptor_url": null,
+       "description": null,
+       "mobile_ready": false
+    }
+  },
+   {
+    "model": "widgets.widgetdefinition",
+     "pk": 5,
+     "fields": {
+      "version": 1571155320,
+       "visible": false,
+       "image_url_medium": "images/widgets/configuration-manager.png",
+       "image_url_small": "images/widgets/configuration-manager.png",
+       "singleton": false,
+       "width": 400,
+       "widget_version": "1.0",
+       "height": 400,
+       "widget_url": "local:system_config",
+       "widget_guid": "159529f1-edbf-4d34-bec6-bd96e3e83b33",
+       "display_name": "System Configuration",
+       "background": null,
+       "universal_name": "org.ozoneplatform.owf.admin.SystemConfig",
+       "descriptor_url": null,
+       "description": null,
+       "mobile_ready": false
+    }
+  },
+   {
+    "model": "widgets.widgetdefinition",
+     "pk": 6,
+     "fields": {
+      "version": 1571866095,
+       "visible": false,
+       "image_url_medium": "static/images/widget-icons/ChannelShouter.png",
+       "image_url_small": "static/images/widget-icons/ChannelShouter.png",
+       "singleton": false,
+       "width": 400,
+       "widget_version": null,
+       "height": 400,
+       "widget_url": "http://localhost:3000/channel_shouter.html",
+       "widget_guid": "1c21142a-d50a-4bd9-a928-6f9d626fd3b7",
+       "display_name": "Channel Shouter",
+       "background": false,
+       "universal_name": "org.owfgoss.owf.examples.ChannelShouter",
+       "descriptor_url": null,
+       "description": "Broadcast a message on a specified channel.",
+       "mobile_ready": false
+    }
+  },
+   {
+    "model": "widgets.widgetdefinition",
+     "pk": 7,
+     "fields": {
+      "version": 1571934185,
+       "visible": false,
+       "image_url_medium": "static/images/widget-icons/ChannelListener.png",
+       "image_url_small": "static/images/widget-icons/ChannelListener.png",
+       "singleton": false,
+       "width": 400,
+       "widget_version": null,
+       "height": 400,
+       "widget_url": "http://localhost:3000/channel_listener.html",
+       "widget_guid": "23134b74-5cec-499e-aeba-189f9af25ad6",
+       "display_name": "Channel Listener",
+       "background": false,
+       "universal_name": "org.owfgoss.owf.examples.ChannelListener",
+       "descriptor_url": null,
+       "description": "Receive a message on a specified channel.",
+       "mobile_ready": false
+    }
+  },
+   {
+    "model": "widgets.widgetdefinition",
+     "pk": 8,
+     "fields": {
+      "version": 1571935112,
+       "visible": false,
+       "image_url_medium": "static/images/widget-icons/ColorServer.png",
+       "image_url_small": "static/images/widget-icons/ColorServer.png",
+       "singleton": false,
+       "width": 400,
+       "widget_version": null,
+       "height": 400,
+       "widget_url": "http://localhost:3000/color_server.html",
+       "widget_guid": "782d37fa-b9cc-4af6-a4da-98913aebdf0a",
+       "display_name": "Color Server",
+       "background": false,
+       "universal_name": "org.owfgoss.owf.examples.ColorServer",
+       "descriptor_url": null,
+       "description": "Simple eventing example that works in tandem with Color Client.",
+       "mobile_ready": false
+    }
+  },
+   {
+    "model": "widgets.widgetdefinition",
+     "pk": 9,
+     "fields": {
+      "version": 1571935188,
+       "visible": false,
+       "image_url_medium": "static/images/widget-icons/ColorClient.png",
+       "image_url_small": "static/images/widget-icons/ColorClient.png",
+       "singleton": false,
+       "width": 400,
+       "widget_version": null,
+       "height": 400,
+       "widget_url": "http://localhost:3000/color_client.html",
+       "widget_guid": "6753483b-42a7-4b36-b87d-bdd97a253abf",
+       "display_name": "Color Client",
+       "background": false,
+       "universal_name": "org.owfgoss.owf.examples.ColorClient",
+       "descriptor_url": null,
+       "description": "Simple eventing example that works in tandem with Color Server.",
+       "mobile_ready": false
+    }
+  },
+   {
+    "model": "widgets.widgetdefinition",
+     "pk": 10,
+     "fields": {
+      "version": 1571935188,
+       "visible": false,
+       "image_url_medium": "static/images/widget-icons/WidgetLog.png",
+       "image_url_small": "static/images/widget-icons/WidgetLog.png",
+       "singleton": false,
+       "width": 400,
+       "widget_version": null,
+       "height": 400,
+       "widget_url": "http://localhost:3000/widget_search.html",
+       "widget_guid": "0d9cf0fc-d2f5-4fa4-a3c5-235940aa334e",
+       "display_name": "Widget Search",
+       "background": false,
+       "universal_name": "org.owfgoss.owf.examples.WidgetSearch",
+       "descriptor_url": null,
+       "description": "Display a list of the current widgets.",
+       "mobile_ready": false
+    }
+  },
+   {
+    "model": "widgets.widgetdefinition",
+     "pk": 11,
+     "fields": {
+      "version": 1571935188,
+       "visible": false,
+       "image_url_medium": "static/images/widget-icons/Preferences.png",
+       "image_url_small": "static/images/widget-icons/Preferences.png",
+       "singleton": false,
+       "width": 400,
+       "widget_version": null,
+       "height": 400,
+       "widget_url": "http://localhost:3000/preferences.html",
+       "widget_guid": "ddd85a2c-0388-4bec-9c91-b7cea0bf4007",
+       "display_name": "Preferences",
+       "background": false,
+       "universal_name": "org.owfgoss.owf.examples.Preferences",
+       "descriptor_url": null,
+       "description": "Example that utilizes the Preferences API",
+       "mobile_ready": false
+    }
+  },
+   {
+    "model": "widgets.widgetdefinition",
+     "pk": 12,
+     "fields": {
+      "version": 1571935188,
+       "visible": false,
+       "image_url_medium": "static/themes/common/images/widget-icons/EventMonitor.png",
+       "image_url_small": "static/themes/common/images/widget-icons/EventMonitor.png",
+       "singleton": false,
+       "width": 500,
+       "widget_version": null,
+       "height": 600,
+       "widget_url": "http://localhost:3000/event_monitor",
+       "widget_guid": "ea98827a-bc0d-4712-8f6f-1b5912cfc5c1",
+       "display_name": "Event Monitor Widget",
+       "background": false,
+       "universal_name": "org.owfgoss.owf.examples.EventMonitor",
+       "descriptor_url": null,
+       "description": "Example that utilizes the Eventing API.",
+       "mobile_ready": false
+    }
+  },
+   {
+    "model": "widgets.widgetdefinition",
+     "pk": 13,
+     "fields": {
+      "version": 1571935189,
+       "visible": false,
+       "image_url_medium": "static/themes/common/images/widget-icons/NYSEStock.png",
+       "image_url_small": "static/themes/common/images/widget-icons/NYSEStock.png",
+       "singleton": false,
+       "width": 825,
+       "widget_version": null,
+       "height": 437,
+       "widget_url": "http://localhost:3000/nyse",
+       "widget_guid": "afea4c11-2cd2-4c00-8356-16cd91fdbba8",
+       "display_name": "NYSE Widget",
+       "background": false,
+       "universal_name": "org.owfgoss.owf.examples.NYSE",
+       "descriptor_url": null,
+       "description": "This app component displays the end of day report for the New York Stock Exchange.",
+       "mobile_ready": false
+    }
+  },
+   {
+    "model": "widgets.widgetdefinition",
+     "pk": 14,
+     "fields": {
+      "version": 1571935189,
+       "visible": false,
+       "image_url_medium": "static/themes/common/images/widget-icons/PriceChart.png",
+       "image_url_small": "static/themes/common/images/widget-icons/PriceChart.png",
+       "singleton": false,
+       "width": 800,
+       "widget_version": null,
+       "height": 600,
+       "widget_url": "http://localhost:3000/stock_chart",
+       "widget_guid": "e396ce7d-b55f-41cb-9fac-a1d9badeed72",
+       "display_name": "Stock Chart",
+       "background": false,
+       "universal_name": "org.owfgoss.owf.examples.StockChart",
+       "descriptor_url": null,
+       "description": "This app component charts stock prices.",
+       "mobile_ready": false
+    }
+  },
+   {
+    "model": "widgets.widgetdefinition",
+     "pk": 15,
+     "fields": {
+      "version": 1571935227,
+       "visible": false,
+       "image_url_medium": "static/themes/common/images/widget-icons/HTMLViewer.png",
+       "image_url_small": "static/themes/common/images/widget-icons/HTMLViewer.png",
+       "singleton": false,
+       "width": 400,
+       "widget_version": null,
+       "height": 600,
+       "widget_url": "http://localhost:3000/html_viewer",
+       "widget_guid": "0218faf4-4f74-4c08-bda6-218a7b1c362b",
+       "display_name": "HTML Viewer",
+       "background": false,
+       "universal_name": "org.owfgoss.owf.examples.HTMLViewer",
+       "descriptor_url": null,
+       "description": "This app component displays HTML.",
+       "mobile_ready": false
+    }
+  },
+   {
+    "model": "widgets.widgetdefinitionwidgettypes",
+     "pk": 1,
+     "fields": {
+      "widget_definition": 6,
+       "widget_type": 3
+    }
+  },
+   {
+    "model": "widgets.widgetdefinitionwidgettypes",
+     "pk": 2,
+     "fields": {
+      "widget_definition": 7,
+       "widget_type": 3
+    }
+  },
+   {
+    "model": "widgets.widgetdefinitionwidgettypes",
+     "pk": 3,
+     "fields": {
+      "widget_definition": 8,
+       "widget_type": 3
+    }
+  },
+   {
+    "model": "widgets.widgetdefinitionwidgettypes",
+     "pk": 4,
+     "fields": {
+      "widget_definition": 9,
+       "widget_type": 3
+    }
+  },
+   {
+    "model": "widgets.widgetdefinitionwidgettypes",
+     "pk": 5,
+     "fields": {
+      "widget_definition": 10,
+       "widget_type": 3
+    }
+  },
+   {
+    "model": "widgets.widgetdefinitionwidgettypes",
+     "pk": 6,
+     "fields": {
+      "widget_definition": 11,
+       "widget_type": 3
+    }
+  },
+   {
+    "model": "widgets.widgetdefinitionwidgettypes",
+     "pk": 7,
+     "fields": {
+      "widget_definition": 12,
+       "widget_type": 3
+    }
+  },
+   {
+    "model": "widgets.widgetdefinitionwidgettypes",
+     "pk": 8,
+     "fields": {
+      "widget_definition": 13,
+       "widget_type": 3
+    }
+  },
+   {
+    "model": "widgets.widgetdefinitionwidgettypes",
+     "pk": 9,
+     "fields": {
+      "widget_definition": 14,
+       "widget_type": 3
+    }
+  },
+   {
+    "model": "widgets.widgetdefinitionwidgettypes",
+     "pk": 10,
+     "fields": {
+      "widget_definition": 15,
+       "widget_type": 3
+    }
+  },
+   {
+    "model": "widgets.widgetdefinitionwidgettypes",
+     "pk": 11,
+     "fields": {
+      "widget_definition": 1,
+       "widget_type": 2
+    }
+  },
+   {
+    "model": "widgets.widgetdefinitionwidgettypes",
+     "pk": 12,
+     "fields": {
+      "widget_definition": 2,
+       "widget_type": 2
+    }
+  },
+   {
+    "model": "widgets.widgetdefinitionwidgettypes",
+     "pk": 13,
+     "fields": {
+      "widget_definition": 3,
+       "widget_type": 2
+    }
+  },
+   {
+    "model": "widgets.widgetdefinitionwidgettypes",
+     "pk": 14,
+     "fields": {
+      "widget_definition": 4,
+       "widget_type": 2
+    }
+  },
+   {
+    "model": "widgets.widgetdefinitionwidgettypes",
+     "pk": 15,
+     "fields": {
+      "widget_definition": 5,
+       "widget_type": 2
+    }
+  }
+]

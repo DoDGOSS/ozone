@@ -19,7 +19,9 @@ payload = {
 
 
 class GroupsAdminApiTests(TestCase):
-    fixtures = ['people_data.json', 'groups_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json',
+                'tests/owf_groups/fixtures/groups_data.json']
 
     def test_admin_create_group(self):
         requests.login(email='admin@goss.com', password='password')
@@ -99,7 +101,9 @@ create_group_people_payload = {
 
 
 class GroupsPeopleAdminApiTests(TestCase):
-    fixtures = ['people_data.json', 'groups_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json',
+                'tests/owf_groups/fixtures/groups_data.json']
 
     def test_admin_list_groups_people(self):
         requests.login(email='admin@goss.com', password='password')
@@ -107,7 +111,7 @@ class GroupsPeopleAdminApiTests(TestCase):
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 2)
+        self.assertEqual(response.data['count'], 3)
         requests.logout()
 
     def test_admin_filter_by_user_group_people(self):
@@ -117,7 +121,7 @@ class GroupsPeopleAdminApiTests(TestCase):
         response = requests.get(filter_url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(response.data['count'], 2)
 
         # Non existing group_people entry
         filter_url = f'{url}?person=3'
@@ -136,7 +140,7 @@ class GroupsPeopleAdminApiTests(TestCase):
         self.assertEqual(response.data['count'], 2)
 
         # Non existing group_people entry
-        filter_url = f'{url}?group=6'
+        filter_url = f'{url}?group=0'
         response_fail = requests.get(filter_url)
 
         self.assertEqual(response_fail.status_code, 400)
@@ -168,7 +172,9 @@ add_widget_to_group_payload = {
 
 
 class GroupWidgetAdminApiTests(TestCase):
-    fixtures = ['people_data.json', 'groups_data.json', 'domain_mapping_data.json', 'widget_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json', 'tests/owf_groups/fixtures/groups_data.json',
+                'tests/domain_mappings/fixtures/domain_mapping_data.json',
+                'tests/widgets/fixtures/widget_data.json']
 
     def test_admin_get_group_widgets(self):
         group_id = 2
@@ -184,7 +190,7 @@ class GroupWidgetAdminApiTests(TestCase):
             relationship_type=RelationshipType.owns,
             dest_type=MappingType.widget
         )
-        count_widgets = response.data['widgets']
+        count_widgets = response.data['widgets'][0]
 
         self.assertEqual(domain_data.count(), len(count_widgets))
         requests.logout()

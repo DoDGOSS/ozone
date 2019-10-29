@@ -11,7 +11,8 @@ requests = APIClient()
 
 
 class StacksApiTests(TestCase):
-    fixtures = ['people_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json',]
 
     def tearDown(self):
         requests.logout()
@@ -53,7 +54,7 @@ class StacksApiTests(TestCase):
             'description': 'test description 1'
         })
         requests.login(email='user@goss.com', password='password')
-        url = reverse('stacks-share', args=f'{stack.id}')
+        url = reverse('stacks-share', args=(f'{stack.id}',))
         response = requests.post(url)
 
         self.assertEqual(response.status_code, 204)

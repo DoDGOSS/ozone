@@ -11,7 +11,8 @@ requests = APIClient()
 
 class MetricsApiTests(TestCase):
     fixtures = [
-        'people_data.json'
+        'tests/people/fixtures/people_data.json',
+        'tests/widgets/fixtures/widget_data.json',
     ]
 
     def tearDown(self):

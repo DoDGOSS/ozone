@@ -36,9 +36,16 @@ payload = {
     "widget_definition": WidgetDefinition(pk=1),
 }
 
+payload = {
+    "person": Person(pk=2),
+    "widget_definition": WidgetDefinition(pk=16),
+}
+
 
 class PersonModelTests(TestCase):
-    fixtures = ['people_data.json', 'widget_data.json', 'people_widget_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json',
+                ]
 
     def setUp(self):
         # create user - done by fixture for now
@@ -379,7 +386,10 @@ class PersonModelTests(TestCase):
 
 
 class PersonWidgetDefinitionModelTests(TestCase):
-    fixtures = ['people_data.json', 'widget_data.json', 'people_widget_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json',
+                'tests/people/fixtures/people_widget_data.json',
+                ]
 
     def test_create_person_widget_definition(self):
         # create - new item does not exists yet.
@@ -396,7 +406,7 @@ class PersonWidgetDefinitionModelTests(TestCase):
 
     def test_delete_should_not_hard_delete(self):
         # create - this item exists already
-        payload_existing = {**payload, "person": Person(pk=1)}
+        payload_existing = {**payload, "person": Person(pk=2)}
         instance = PersonWidgetDefinition.objects.create(**payload_existing)
 
         instance.delete()
@@ -406,7 +416,7 @@ class PersonWidgetDefinitionModelTests(TestCase):
         self.assertEqual(instance.user_widget, False)
 
     def test_delete_should_hard_delete(self):
-        payload_existing = {**payload, "person": Person(pk=1)}
+        payload_existing = {**payload, "person": Person(pk=2)}
         instance = PersonWidgetDefinition.objects.get(**payload_existing)
         instance.group_widget = False
         instance.save()

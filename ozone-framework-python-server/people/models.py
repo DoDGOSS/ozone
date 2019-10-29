@@ -174,7 +174,7 @@ class Person(AbstractBaseUser):
         active_group_ids = list(self.groups.filter(status=GroupStatus.active).values_list("id", flat=True))
 
         directly_assigned_widget_ids = PersonWidgetDefinition.objects.filter(
-            person=self, group_widget=False, user_widget=True).values_list("id", flat=True)
+            person=self, group_widget=False, user_widget=True).values_list("widget_definition", flat=True)
 
         active_group_widget_ids = DomainMapping.objects.filter(
             relationship_type=RelationshipType.owns,

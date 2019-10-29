@@ -33,7 +33,7 @@ payload = {
 
 
 class TestingWidgetsApi(TestCase):
-    fixtures = ['people_data.json', 'widget_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json', 'tests/widgets/fixtures/widget_data.json']
 
     def tearDown(self):
         requests.logout()
@@ -83,7 +83,7 @@ class TestingWidgetsApi(TestCase):
     def test_admin_list_a_widget_via_universal_name(self):
         requests.login(email='admin@goss.com', password='password')
 
-        universal_name = 'test_widget'
+        universal_name = 'org.owfgoss.owf.examples.HTMLViewer'
         url = reverse('widgets-list')
         filter_url = f'{url}?universal_name={universal_name}'
         response = requests.get(filter_url)
@@ -116,7 +116,7 @@ class TestingWidgetsApi(TestCase):
         self.assertEqual(created.status_code, 201)
 
         # list a widget to make sure intents are listed properly.
-        url = reverse('widgets-detail', args=str(created.data['id']))
+        url = reverse('widgets-detail', args=(f"{created.data['id']}",))
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 200)
