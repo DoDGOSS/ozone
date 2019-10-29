@@ -51,10 +51,8 @@ class Stack(models.Model):
         return new_group_dashboard, new_user_dashboard
 
     def share(self):
-        hasMarketplace = WidgetDefinition.objects.filter(types__name='marketplace')
-        if(not hasMarketplace):
-            self.approved = True
-            self.save()
+        self.approved = True
+        self.save()
 
         group_dashboard_mappings = DomainMapping.objects.get_group_dashboard_mappings(self.default_group.id)
 
@@ -89,6 +87,33 @@ class Stack(models.Model):
             widgets_to_add_to_stack = group_dashboard.get_widgets()
             for widget in widgets_to_add_to_stack:
                 self.default_group.add_widget(widget)
+
+    def restore(self, user):
+        group_dashboard_mappings = DomainMapping.objects.get_group_dashboard_mappings(self.default_group.id)
+
+        group_dashboard_clone_mappings = DomainMapping.objects.\
+            get_group_dashboard_clone_mappings(group_dashboard_mappings)
+
+        user_dashboards_for_group = Dashboard.objects.filter(
+            pk__in=list(group_dashboard_clone_mappings.values_list("src_id", flat=True)),
+            user=user
+        )
+
+        for user_dashboard in user_dashboards_for_group:
+            Dashboard.restore(user_dashboard)
+
+        group_dashboard_ids = group_dashboard_mappings.values_list("dest_id", flat=True)
+
+        user_cloned_dashboards_ids_for_group = DomainMapping.objects.filter(
+            src_id__in=list(user_dashboards_for_group.values_list("id", flat=True)),
+            src_type=MappingType.dashboard,
+            relationship_type=RelationshipType.cloneOf,
+            dest_type=MappingType.dashboard
+        ).values_list("dest_id", flat=True)
+
+        # Create missing dashboards
+        missing_dashboard_ids = group_dashboard_ids.difference(user_cloned_dashboards_ids_for_group)
+        Dashboard.create_missing_dashboards_for_user(user, missing_dashboard_ids)
 
     @classmethod
     def create(cls, user, kwargs):

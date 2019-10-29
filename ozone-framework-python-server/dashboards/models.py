@@ -95,6 +95,21 @@ class Dashboard(models.Model):
         self.layout_config = default_dashboard.layout_config
         self.save()
 
+    @staticmethod
+    def create_missing_dashboards_for_user(user, missing_dashboard_ids):
+        if missing_dashboard_ids:
+            missing_group_dashboards = Dashboard.objects.filter(pk__in=missing_dashboard_ids)
+            dashboard_item = 0
+            for dashboard in missing_group_dashboards.all():
+                # Create cloned dashboard with new id
+                dashboard.id = None
+                dashboard.guid = uuid.uuid4()
+                dashboard.user = user
+                dashboard.save()
+                # Create domain mapping entry for newly cloned dashboard
+                DomainMapping.create_user_dashboard_mapping(dashboard, missing_group_dashboards[dashboard_item])
+                dashboard_item += 1
+
     class Meta:
         managed = True
         db_table = 'dashboard'

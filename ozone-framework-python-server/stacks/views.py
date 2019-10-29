@@ -28,6 +28,16 @@ class StackViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @action(methods=['post'], detail=True, permission_classes=(IsAuthenticated, ))
+    def restore(self, request, pk=None):
+        stack = Stack.objects.get(pk=pk)
+
+        stack.restore(user=request.user)
+        stack.refresh_from_db()
+
+        serialized_stack = StackSerializer(stack)
+        return Response(serialized_stack.data)
+
     def perform_destroy(self, instance):
         # removing user from group will clean up the dashboards and widgets
         instance.default_group.remove_user(self.request.user)
@@ -38,7 +48,7 @@ class StackAdminViewSet(viewsets.ModelViewSet):
     serializer_class = StackSerializer
     permission_classes = (IsAdminUser,)
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['name', ]
+    filterset_fields = ['name', 'stack_context']
 
     @action(methods=['patch'], detail=True, permission_classes=(IsAdminUser,))
     def assign_to_me(self, request, pk=None):
