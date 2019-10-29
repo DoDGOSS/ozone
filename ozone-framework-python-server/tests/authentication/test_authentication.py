@@ -6,7 +6,9 @@ requests = APIClient()
 
 
 class TestAuthenticationApi(TestCase):
-    fixtures = ['people_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json',
+                ]
 
     def test_authentication_via_email(self):
         requests.login(email='admin@goss.com', password='password')

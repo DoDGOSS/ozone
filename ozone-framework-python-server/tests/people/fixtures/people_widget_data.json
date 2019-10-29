@@ -1,0 +1,40 @@
+[
+  {
+    "model": "people.personwidgetdefinition",
+    "pk": 21,
+    "fields": {
+      "version": 1,
+      "person": 2,
+      "visible": true,
+      "pwd_position": 0,
+      "widget_definition": 16,
+      "group_widget": true,
+      "favorite": true,
+      "display_name": "Widget Def One",
+      "disabled": true,
+      "user_widget": true
+    }
+  },
+     {
+    "model": "widgets.widgetdefinition",
+     "pk": 16,
+     "fields": {
+      "version": 1571935227,
+       "visible": false,
+       "image_url_medium": "static/themes/common/images/widget-icons/HTMLViewer.png",
+       "image_url_small": "static/themes/common/images/widget-icons/HTMLViewer.png",
+       "singleton": false,
+       "width": 400,
+       "widget_version": null,
+       "height": 600,
+       "widget_url": "http://localhost:3000/html_viewer",
+       "widget_guid": "1xx0218faf4-4f74-4c08-bda6-218a7b1c362b",
+       "display_name": "HTML Viewer",
+       "background": false,
+       "universal_name": "xorg.owfgoss.owf.examples.HTMLViewer",
+       "descriptor_url": null,
+       "description": "This app component displays HTML.",
+       "mobile_ready": false
+    }
+  }
+]

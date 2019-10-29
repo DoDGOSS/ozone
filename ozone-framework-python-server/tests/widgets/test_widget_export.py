@@ -5,7 +5,7 @@ from widgets.views import WidgetViewSet
 
 
 class TestingWidgetExport(TestCase):
-    fixtures = ['widget_data.json']
+    fixtures = ['tests/widgets/fixtures/widget_data.json']
 
     # Descriptor export function with widget types
     def test_generate_descriptor_dict_widget_types(self):
@@ -18,7 +18,7 @@ class TestingWidgetExport(TestCase):
 
         export = WidgetViewSet._generate_descriptor_dict(None, widget)
 
-        self.assertEquals(export.get('widgetTypes'), ['test_widget_type'])
+        self.assertEquals(export.get('widgetTypes'), ['administration', 'test_widget_type'])
 
     # Descriptor export function with no intents
     def test_generate_descriptor_dict_no_intents(self):

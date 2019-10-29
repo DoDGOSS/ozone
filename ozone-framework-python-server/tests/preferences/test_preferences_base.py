@@ -26,24 +26,25 @@ payload_2 = {
 
 
 class TestingPrefBaseUrl(TestCase):
-    fixtures = ['people_data.json',
-                'stacks_data.json',
-                'dashboard_data.json',
-                'groups_data.json',
-                'pref_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json',
+                'tests/stacks/fixtures/stacks_data.json',
+                'tests/dashboards/fixtures/dashboard_data.json',
+                'tests/owf_groups/fixtures/groups_data.json',
+                'tests/preferences/fixtures/pref_data.json']
 
     def test_post_person(self):
         requests.login(email='user@goss.com', password='password')
         url = reverse('base_preferences-list')
         data = requests.post(url, payload_1, format="json")
         self.assertEqual(data.status_code, 201)
-        self.assertEqual(Preference.objects.count(), 2)
+        self.assertEqual(Preference.objects.count(), 6)
         requests.logout()
         requests.login(email='admin@goss.com', password='password')
         url = reverse('base_preferences-list')
         data = requests.post(url, payload_2, format="json")
         self.assertEqual(data.status_code, 201)
-        self.assertEqual(Preference.objects.count(), 3)
+        self.assertEqual(Preference.objects.count(), 7)
         requests.logout()
 
     def test_get_person(self):

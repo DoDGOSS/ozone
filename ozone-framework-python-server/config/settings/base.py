@@ -208,10 +208,6 @@ LOGGING = {
 DEFAULT_USER_GROUP = 'OWF Users'
 DEFAULT_ADMIN_GROUP = 'OWF Administrators'
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-]
-
 # CAS
 ENABLE_CAS = ast.literal_eval(os.getenv('OWF_ENABLE_CAS', 'False'))
 if ENABLE_CAS:

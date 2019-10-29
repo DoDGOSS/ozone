@@ -13,7 +13,10 @@ requests = APIClient()
 
 
 class PersonApiTests(TestCase):
-    fixtures = ['people_data.json', 'widget_data.json', 'people_widget_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json',
+                # 'tests/people/fixtures/people_widget_data.json'
+                ]
 
     def setUp(self):
         self.regular_user = Person.objects.get(pk=2)
@@ -61,8 +64,7 @@ class PersonApiTests(TestCase):
 
         # assure user's widgets are returned
         regular_user = Person.objects.get(id=2)
-        widget_ids = PersonWidgetDefinition.objects.filter(person=self.regular_user)\
-            .values_list("widget_definition", flat=True)
+        widget_ids = regular_user.get_active_widgets()
         widgets = WidgetDefinition.objects.filter(id__in=widget_ids)
         serialized_widgets = WidgetDefinitionSerializer(widgets, many=True)
         self.assertEqual(response.data['widgets'], serialized_widgets.data)
