@@ -4,14 +4,20 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.renderers import TemplateHTMLRenderer
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
-from .models import WidgetDefinition, WidgetDefIntent, WidgetType
-from .serializers import WidgetDefinitionSerializer, WidgetTypeSerializer
+from .models import WidgetDefinition, WidgetDefIntent, WidgetType, WidgetDefinitionWidgetTypes
+from .serializers import WidgetDefinitionSerializer, WidgetTypeSerializer, WidgetDefinitionWidgetTypesSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.inspectors import SwaggerAutoSchema
 from drf_yasg.utils import swagger_auto_schema
 import json
 from collections import defaultdict
+
+
+class WidgetDefinitionWidgetTypesViewSet(viewsets.ModelViewSet):
+    queryset = WidgetDefinitionWidgetTypes.objects.all()
+    serializer_class = WidgetDefinitionWidgetTypesSerializer
+    permission_classes = (IsAdminUser,)
 
 
 class WidgetDefinitionViewSet(viewsets.ModelViewSet):

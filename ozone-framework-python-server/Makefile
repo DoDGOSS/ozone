@@ -27,24 +27,25 @@ dev:             ## make dev to create a dev settings file
 	@touch owf_framework/dev_settings.py
 
 populate:        ## populate db
-	@python manage.py loaddata people/fixtures/people_data.json && \
-	echo people && \
-	python manage.py loaddata owf_groups/fixtures/groups_data.json && \
-	echo groups && \
-	python manage.py loaddata preferences/fixtures/pref_data.json && \
-	echo preferences && \
-	python manage.py loaddata stacks/fixtures/stacks_data.json && \
-	echo stacks && \
-	python manage.py loaddata dashboards/fixtures/dashboard_data.json && \
-	echo dashboards && \
-	python manage.py loaddata roles/fixtures/roles_data.json && \
-	echo roles && \
-	python manage.py loaddata widgets/fixtures/widget_data.json && \
-	echo widgets && \
-	python manage.py loaddata appconf/fixtures/appconf_data.json && \
-	echo appconf && \
-	python manage.py loaddata domain_mappings/fixtures/domain_mapping_data.json && \
-	echo domain_mappings
+	python manage.py loaddata resources/fixtures/default_data.json
+#	@python manage.py loaddata ./tests/people/fixtures/people_data.json && \
+#	echo people && \
+#	python manage.py loaddata ./tests/widgets/fixtures/widget_data.json && \
+#	echo widgets && \
+#	python manage.py loaddata ./tests/owf_groups/fixtures/groups_data.json && \
+#	echo groups && \
+#	python manage.py loaddata ./tests/preferences/fixtures/pref_data.json && \
+#	echo preferences && \
+#	python manage.py loaddata ./tests/stacks/fixtures/stacks_data.json && \
+#	echo stacks && \
+#	python manage.py loaddata ./tests/dashboards/fixtures/dashboard_data.json && \
+#	echo dashboards && \
+#	python manage.py loaddata ./tests/roles/fixtures/roles_data.json && \
+#	echo roles && \
+#	python manage.py loaddata ./tests/appconf/fixtures/appconf_data.json && \
+#	echo appconf && \
+#	python manage.py loaddata ./tests/domain_mappings/fixtures/domain_mapping_data.json && \
+#	echo domain_mappings
 
 pep8:             ## make pep8 to change the file to best pep8 format before commit
 	@autopep8 --max-line-length=120 --in-place --aggressive $(file)

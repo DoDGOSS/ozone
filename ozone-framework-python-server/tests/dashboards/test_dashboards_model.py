@@ -4,7 +4,8 @@ from dashboards.models import Dashboard
 
 class DashboardModelTests(TestCase):
     fixtures = [
-        'people_data.json',
+        'tests/people/fixtures/people_data.json',
+        'tests/widgets/fixtures/widget_data.json',
         'tests/dashboards/fixtures/default_test_dashboards.json'
     ]
 

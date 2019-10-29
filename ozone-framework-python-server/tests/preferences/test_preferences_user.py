@@ -17,11 +17,12 @@ payload_1 = {
 
 
 class TestingPrefUser(TestCase):
-    fixtures = ['people_data.json',
-                'stacks_data.json',
-                'dashboard_data.json',
-                'groups_data.json',
-                'pref_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json',
+                'tests/stacks/fixtures/stacks_data.json',
+                'tests/dashboards/fixtures/dashboard_data.json',
+                'tests/owf_groups/fixtures/groups_data.json',
+                'tests/preferences/fixtures/pref_data.json']
 
     def test_get_person(self):
         requests.login(email='user@goss.com', password='password')
@@ -38,14 +39,16 @@ class TestingPrefUser(TestCase):
         data = requests.post(url, payload_1, format="json")
 
         self.assertEqual(data.status_code, 201)
-        self.assertEqual(Preference.objects.count(), 2)
+        self.assertEqual(Preference.objects.count(), 6)
         requests.logout()
 
     def test_get_admin(self):
         requests.login(email='admin@goss.com', password='password')
         url = reverse('user_preferences-list')
         response = requests.get(url)
+        data = json.loads(response.content)
+        self.assertEqual(len(data['results']), 5)
 
-        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(len(response.data['results']), 5)
         self.assertEqual(response.status_code, 200)
         requests.logout()

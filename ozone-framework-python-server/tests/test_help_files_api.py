@@ -16,7 +16,8 @@ def ordered(obj):
 
 
 class HelpFilesAPITest(TestCase):
-    fixtures = ['people_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json']
 
     url = reverse('help_files')
 

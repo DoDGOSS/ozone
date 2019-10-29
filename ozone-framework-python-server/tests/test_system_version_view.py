@@ -7,7 +7,8 @@ requests = APIClient()
 
 
 class SimpleSystemVersionTest(TestCase):
-    fixtures = ['people_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json']
 
     def test_authentication(self):
         requests.login(email='admin@goss.com', password='password')
