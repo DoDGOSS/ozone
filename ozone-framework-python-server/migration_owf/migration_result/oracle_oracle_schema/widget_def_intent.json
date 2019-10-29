@@ -1,0 +1,44 @@
+[
+  {
+    "column_name": "ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": "\"ADMIN\".\"ISEQ$$_26397\".nextval",
+    "nullable": "N"
+  },
+  {
+    "column_name": "SEND",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  },
+  {
+    "column_name": "RECEIVE",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  },
+  {
+    "column_name": "VERSION",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  },
+  {
+    "column_name": "INTENT_ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  },
+  {
+    "column_name": "WIDGET_DEFINITION_ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  }
+]

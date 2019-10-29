@@ -1,0 +1,17 @@
+[
+  {
+    "column_name": "id",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "version",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "data_type",
+    "data_type": "nvarchar",
+    "is_nullable": "NO"
+  }
+]

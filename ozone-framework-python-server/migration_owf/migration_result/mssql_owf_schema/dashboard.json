@@ -1,0 +1,102 @@
+[
+  {
+    "column_name": "id",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "guid",
+    "data_type": "nvarchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "name",
+    "data_type": "nvarchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "type",
+    "data_type": "nvarchar",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "locked",
+    "data_type": "bit",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "user_id",
+    "data_type": "bigint",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "version",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "stack_id",
+    "data_type": "bigint",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "isdefault",
+    "data_type": "bit",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "description",
+    "data_type": "nvarchar",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "edited_date",
+    "data_type": "datetime2",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "created_date",
+    "data_type": "datetime2",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "edited_by_id",
+    "data_type": "bigint",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "created_by_id",
+    "data_type": "bigint",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "layout_config",
+    "data_type": "nvarchar",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "icon_image_url",
+    "data_type": "nvarchar",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "altered_by_admin",
+    "data_type": "bit",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "dashboard_position",
+    "data_type": "int",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "published_to_store",
+    "data_type": "bit",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "marked_for_deletion",
+    "data_type": "bit",
+    "is_nullable": "YES"
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "send": 0,
+    "receive": 1,
+    "version": 0,
+    "intent_id": 2,
+    "widget_definition_id": 19
+  },
+  {
+    "id": 2,
+    "send": 1,
+    "receive": 0,
+    "version": 0,
+    "intent_id": 1,
+    "widget_definition_id": 20
+  },
+  {
+    "id": 3,
+    "send": 1,
+    "receive": 0,
+    "version": 0,
+    "intent_id": 2,
+    "widget_definition_id": 20
+  },
+  {
+    "id": 4,
+    "send": 0,
+    "receive": 1,
+    "version": 0,
+    "intent_id": 1,
+    "widget_definition_id": 21
+  }
+]

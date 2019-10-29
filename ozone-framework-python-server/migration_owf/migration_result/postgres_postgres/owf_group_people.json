@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "group_id": 1,
+    "person_id": 1
+  },
+  {
+    "id": 2,
+    "group_id": 1,
+    "person_id": 2
+  },
+  {
+    "id": 3,
+    "group_id": 6,
+    "person_id": 1
+  }
+]

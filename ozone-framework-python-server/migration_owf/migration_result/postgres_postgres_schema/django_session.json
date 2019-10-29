@@ -1,0 +1,17 @@
+[
+  {
+    "column_name": "expire_date",
+    "data_type": "timestamp with time zone",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "session_key",
+    "data_type": "character varying",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "session_data",
+    "data_type": "text",
+    "is_nullable": "NO"
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "column_name": "role_id",
+    "data_type": "bigint",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "person_authorities_id",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  }
+]

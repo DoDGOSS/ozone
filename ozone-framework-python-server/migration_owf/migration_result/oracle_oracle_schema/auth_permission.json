@@ -1,0 +1,30 @@
+[
+  {
+    "column_name": "ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": "\"ADMIN\".\"ISEQ$$_26449\".nextval",
+    "nullable": "N"
+  },
+  {
+    "column_name": "NAME",
+    "data_type": "NVARCHAR2",
+    "data_length": 510,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "CODENAME",
+    "data_type": "NVARCHAR2",
+    "data_length": 200,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "CONTENT_TYPE_ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  }
+]

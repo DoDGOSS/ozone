@@ -1,0 +1,42 @@
+[
+  {
+    "column_name": "id",
+    "data_type": "int",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "user_id",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "object_id",
+    "data_type": "nvarchar",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "action_flag",
+    "data_type": "smallint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "action_time",
+    "data_type": "datetime2",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "object_repr",
+    "data_type": "nvarchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "change_message",
+    "data_type": "nvarchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "content_type_id",
+    "data_type": "int",
+    "is_nullable": "YES"
+  }
+]

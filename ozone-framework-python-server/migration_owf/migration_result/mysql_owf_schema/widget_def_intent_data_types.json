@@ -1,0 +1,12 @@
+[
+  {
+    "column_name": "intent_data_type_id",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "widget_definition_intent_id",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  }
+]

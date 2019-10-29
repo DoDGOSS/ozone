@@ -1,0 +1,32 @@
+[
+  {
+    "column_name": "id",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "path",
+    "data_type": "varchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "value",
+    "data_type": "longtext",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "user_id",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "version",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "namespace",
+    "data_type": "varchar",
+    "is_nullable": "NO"
+  }
+]
