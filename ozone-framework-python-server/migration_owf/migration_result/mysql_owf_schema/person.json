@@ -1,0 +1,62 @@
+[
+  {
+    "column_name": "id",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "email",
+    "data_type": "varchar",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "enabled",
+    "data_type": "bit",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "version",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "username",
+    "data_type": "varchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "email_show",
+    "data_type": "bit",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "last_login",
+    "data_type": "datetime",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "prev_login",
+    "data_type": "datetime",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "description",
+    "data_type": "varchar",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "requires_sync",
+    "data_type": "bit",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "user_real_name",
+    "data_type": "varchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "last_notification",
+    "data_type": "datetime",
+    "is_nullable": "YES"
+  }
+]

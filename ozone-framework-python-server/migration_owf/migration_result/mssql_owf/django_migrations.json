@@ -1,0 +1,170 @@
+[
+  {
+    "id": 1,
+    "app": "intents",
+    "name": "0001_initial",
+    "applied": "2019-10-16T06:37:07.3976650"
+  },
+  {
+    "id": 2,
+    "app": "widgets",
+    "name": "0001_initial",
+    "applied": "2019-10-16T06:37:07.4964330"
+  },
+  {
+    "id": 3,
+    "app": "people",
+    "name": "0001_initial",
+    "applied": "2019-10-16T06:37:07.6093570"
+  },
+  {
+    "id": 4,
+    "app": "contenttypes",
+    "name": "0001_initial",
+    "applied": "2019-10-16T06:37:07.6469150"
+  },
+  {
+    "id": 5,
+    "app": "admin",
+    "name": "0001_initial",
+    "applied": "2019-10-16T06:37:07.6895540"
+  },
+  {
+    "id": 6,
+    "app": "admin",
+    "name": "0002_logentry_remove_auto_add",
+    "applied": "2019-10-16T06:37:07.7188680"
+  },
+  {
+    "id": 7,
+    "app": "admin",
+    "name": "0003_logentry_add_action_flag_choices",
+    "applied": "2019-10-16T06:37:07.7361070"
+  },
+  {
+    "id": 8,
+    "app": "appconf",
+    "name": "0001_initial",
+    "applied": "2019-10-16T06:37:07.8252690"
+  },
+  {
+    "id": 9,
+    "app": "contenttypes",
+    "name": "0002_remove_content_type_name",
+    "applied": "2019-10-16T06:37:08.4148610"
+  },
+  {
+    "id": 10,
+    "app": "auth",
+    "name": "0001_initial",
+    "applied": "2019-10-16T06:37:08.4893560"
+  },
+  {
+    "id": 11,
+    "app": "auth",
+    "name": "0002_alter_permission_name_max_length",
+    "applied": "2019-10-16T06:37:08.5410670"
+  },
+  {
+    "id": 12,
+    "app": "auth",
+    "name": "0003_alter_user_email_max_length",
+    "applied": "2019-10-16T06:37:08.5610440"
+  },
+  {
+    "id": 13,
+    "app": "auth",
+    "name": "0004_alter_user_username_opts",
+    "applied": "2019-10-16T06:37:08.5896790"
+  },
+  {
+    "id": 14,
+    "app": "auth",
+    "name": "0005_alter_user_last_login_null",
+    "applied": "2019-10-16T06:37:08.6135210"
+  },
+  {
+    "id": 15,
+    "app": "auth",
+    "name": "0006_require_contenttypes_0002",
+    "applied": "2019-10-16T06:37:08.6239930"
+  },
+  {
+    "id": 16,
+    "app": "auth",
+    "name": "0007_alter_validators_add_error_messages",
+    "applied": "2019-10-16T06:37:08.6487900"
+  },
+  {
+    "id": 17,
+    "app": "auth",
+    "name": "0008_alter_user_username_max_length",
+    "applied": "2019-10-16T06:37:08.6750110"
+  },
+  {
+    "id": 18,
+    "app": "auth",
+    "name": "0009_alter_user_last_name_max_length",
+    "applied": "2019-10-16T06:37:08.6988910"
+  },
+  {
+    "id": 19,
+    "app": "auth",
+    "name": "0010_alter_group_name_max_length",
+    "applied": "2019-10-16T06:37:09.8524720"
+  },
+  {
+    "id": 20,
+    "app": "auth",
+    "name": "0011_update_proxy_permissions",
+    "applied": "2019-10-16T06:37:09.8915410"
+  },
+  {
+    "id": 21,
+    "app": "owf_groups",
+    "name": "0001_initial",
+    "applied": "2019-10-16T06:37:09.9533290"
+  },
+  {
+    "id": 22,
+    "app": "stacks",
+    "name": "0001_initial",
+    "applied": "2019-10-16T06:37:10.0826910"
+  },
+  {
+    "id": 23,
+    "app": "dashboards",
+    "name": "0001_initial",
+    "applied": "2019-10-16T06:37:10.1621190"
+  },
+  {
+    "id": 24,
+    "app": "domain_mappings",
+    "name": "0001_initial",
+    "applied": "2019-10-16T06:37:10.2102260"
+  },
+  {
+    "id": 25,
+    "app": "intents",
+    "name": "0002_intent_types",
+    "applied": "2019-10-16T06:37:10.2524630"
+  },
+  {
+    "id": 26,
+    "app": "preferences",
+    "name": "0001_initial",
+    "applied": "2019-10-16T06:37:10.3029860"
+  },
+  {
+    "id": 27,
+    "app": "roles",
+    "name": "0001_initial",
+    "applied": "2019-10-16T06:37:10.3317910"
+  },
+  {
+    "id": 28,
+    "app": "sessions",
+    "name": "0001_initial",
+    "applied": "2019-10-16T06:37:10.3486810"
+  }
+]

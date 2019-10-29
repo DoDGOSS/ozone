@@ -1,0 +1,62 @@
+[
+  {
+    "column_name": "id",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "code",
+    "data_type": "varchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "help",
+    "data_type": "varchar",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "type",
+    "data_type": "varchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "title",
+    "data_type": "varchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "value",
+    "data_type": "varchar",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "mutable",
+    "data_type": "bit",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "version",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "group_name",
+    "data_type": "varchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "description",
+    "data_type": "varchar",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "sub_group_name",
+    "data_type": "varchar",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "sub_group_order",
+    "data_type": "int",
+    "is_nullable": "YES"
+  }
+]

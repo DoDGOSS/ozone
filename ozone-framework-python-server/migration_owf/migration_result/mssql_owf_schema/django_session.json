@@ -1,0 +1,17 @@
+[
+  {
+    "column_name": "expire_date",
+    "data_type": "datetime2",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "session_key",
+    "data_type": "nvarchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "session_data",
+    "data_type": "nvarchar",
+    "is_nullable": "NO"
+  }
+]

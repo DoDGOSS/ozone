@@ -1,0 +1,79 @@
+[
+  {
+    "column_name": "ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": "\"ADMIN\".\"ISEQ$$_26424\".nextval",
+    "nullable": "N"
+  },
+  {
+    "column_name": "VERSION",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  },
+  {
+    "column_name": "VISIBLE",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  },
+  {
+    "column_name": "DISABLED",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "FAVORITE",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "PERSON_ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  },
+  {
+    "column_name": "USER_WIDGET",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "DISPLAY_NAME",
+    "data_type": "NVARCHAR2",
+    "data_length": 512,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "GROUP_WIDGET",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "PWD_POSITION",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "WIDGET_DEFINITION_ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  }
+]

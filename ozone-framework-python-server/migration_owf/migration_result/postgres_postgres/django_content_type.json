@@ -1,0 +1,127 @@
+[
+  {
+    "id": 1,
+    "app_label": "admin",
+    "model": "logentry"
+  },
+  {
+    "id": 2,
+    "app_label": "auth",
+    "model": "permission"
+  },
+  {
+    "id": 3,
+    "app_label": "auth",
+    "model": "group"
+  },
+  {
+    "id": 4,
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  },
+  {
+    "id": 5,
+    "app_label": "sessions",
+    "model": "session"
+  },
+  {
+    "id": 6,
+    "app_label": "domain_mappings",
+    "model": "domainmapping"
+  },
+  {
+    "id": 7,
+    "app_label": "intents",
+    "model": "intent"
+  },
+  {
+    "id": 8,
+    "app_label": "intents",
+    "model": "intentdatatype"
+  },
+  {
+    "id": 9,
+    "app_label": "intents",
+    "model": "intentdatatypes"
+  },
+  {
+    "id": 10,
+    "app_label": "owf_groups",
+    "model": "owfgroup"
+  },
+  {
+    "id": 11,
+    "app_label": "owf_groups",
+    "model": "owfgrouppeople"
+  },
+  {
+    "id": 12,
+    "app_label": "people",
+    "model": "person"
+  },
+  {
+    "id": 13,
+    "app_label": "people",
+    "model": "personrole"
+  },
+  {
+    "id": 14,
+    "app_label": "people",
+    "model": "personwidgetdefinition"
+  },
+  {
+    "id": 15,
+    "app_label": "roles",
+    "model": "role"
+  },
+  {
+    "id": 16,
+    "app_label": "stacks",
+    "model": "stack"
+  },
+  {
+    "id": 17,
+    "app_label": "stacks",
+    "model": "stackgroups"
+  },
+  {
+    "id": 18,
+    "app_label": "widgets",
+    "model": "widgetdefinition"
+  },
+  {
+    "id": 19,
+    "app_label": "widgets",
+    "model": "widgetdefintent"
+  },
+  {
+    "id": 20,
+    "app_label": "widgets",
+    "model": "widgettype"
+  },
+  {
+    "id": 21,
+    "app_label": "widgets",
+    "model": "widgetdefintentdatatypes"
+  },
+  {
+    "id": 22,
+    "app_label": "widgets",
+    "model": "widgetdefinitionwidgettypes"
+  },
+  {
+    "id": 23,
+    "app_label": "dashboards",
+    "model": "dashboard"
+  },
+  {
+    "id": 24,
+    "app_label": "preferences",
+    "model": "preference"
+  },
+  {
+    "id": 25,
+    "app_label": "appconf",
+    "model": "applicationconfiguration"
+  }
+]

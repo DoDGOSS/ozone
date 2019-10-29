@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "version": 0,
+    "src_id": 2,
+    "src_type": "group",
+    "relationship_type": "owns",
+    "dest_id": 1,
+    "dest_type": "widget_definition"
+  },
+  {
+    "id": 2,
+    "version": 0,
+    "src_id": 1,
+    "src_type": "group",
+    "relationship_type": "owns",
+    "dest_id": 1,
+    "dest_type": "widget_definition"
+  }
+]
