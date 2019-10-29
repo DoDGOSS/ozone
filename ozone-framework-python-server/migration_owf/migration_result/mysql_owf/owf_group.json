@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "name": "OWF Administrators",
+    "email": null,
+    "status": "active",
+    "version": 0,
+    "stack_id": null,
+    "automatic": true,
+    "description": "OWF Administrators",
+    "display_name": "OWF Administrators",
+    "stack_default": false
+  },
+  {
+    "id": 2,
+    "name": "OWF Users",
+    "email": null,
+    "status": "active",
+    "version": 0,
+    "stack_id": null,
+    "automatic": true,
+    "description": "OWF Users",
+    "display_name": "OWF Users",
+    "stack_default": false
+  },
+  {
+    "id": 3,
+    "name": "f9267111-b8fb-4e1c-977b-d52fdfd94cdf",
+    "email": null,
+    "status": "active",
+    "version": 1,
+    "stack_id": null,
+    "automatic": false,
+    "description": "",
+    "display_name": null,
+    "stack_default": true
+  },
+  {
+    "id": 4,
+    "name": "d6dd348b-332d-49bb-8b55-c0a17de41953",
+    "email": null,
+    "status": "active",
+    "version": 1,
+    "stack_id": null,
+    "automatic": false,
+    "description": "",
+    "display_name": null,
+    "stack_default": true
+  },
+  {
+    "id": 5,
+    "name": "OWF Test",
+    "email": null,
+    "status": "active",
+    "version": 1,
+    "stack_id": null,
+    "automatic": false,
+    "description": "Some test group",
+    "display_name": "OWF Test",
+    "stack_default": false
+  },
+  {
+    "id": 6,
+    "name": "4f6e0742-c4ea-4dc2-b6ca-69d2aae46882",
+    "email": null,
+    "status": "active",
+    "version": 1,
+    "stack_id": null,
+    "automatic": false,
+    "description": "",
+    "display_name": null,
+    "stack_default": true
+  }
+]

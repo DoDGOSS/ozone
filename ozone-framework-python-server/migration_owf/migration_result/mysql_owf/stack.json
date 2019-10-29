@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "name": "Administration",
+    "version": 0,
+    "approved": true,
+    "owner_id": null,
+    "image_url": "themes/common/images/admin/64x64_admin_app.png",
+    "description": "This application collects the administrative components into a common set of application pages for managing system resources.  These pages can be used to create, modify, update, and delete Apps, App Components, Users and Groups, and system configuration settings.",
+    "stack_context": "ef8b5d6f-4b16-4743-9a57-31683c94b616",
+    "descriptor_url": null,
+    "default_group_id": 1,
+    "unique_widget_count": 5
+  },
+  {
+    "id": 2,
+    "name": "Investments",
+    "version": 0,
+    "approved": true,
+    "owner_id": null,
+    "image_url": null,
+    "description": "Sample app containing example investment pages.",
+    "stack_context": "investments",
+    "descriptor_url": null,
+    "default_group_id": 2,
+    "unique_widget_count": 6
+  },
+  {
+    "id": 3,
+    "name": "Sample",
+    "version": 0,
+    "approved": true,
+    "owner_id": null,
+    "image_url": null,
+    "description": null,
+    "stack_context": "908d934d-9d53-406c-8143-90b406fb508f",
+    "descriptor_url": null,
+    "default_group_id": 2,
+    "unique_widget_count": 2
+  },
+  {
+    "id": 4,
+    "name": "Untitled",
+    "version": 0,
+    "approved": false,
+    "owner_id": 1,
+    "image_url": null,
+    "description": null,
+    "stack_context": "fd275613-7a34-46f6-94e8-244f68676064",
+    "descriptor_url": null,
+    "default_group_id": 3,
+    "unique_widget_count": 0
+  },
+  {
+    "id": 5,
+    "name": "Test Stack",
+    "version": 2,
+    "approved": true,
+    "owner_id": 1,
+    "image_url": null,
+    "description": "This is a test Stack.",
+    "stack_context": "d33388d1-29a9-40fd-a645-7510b0bd9421",
+    "descriptor_url": null,
+    "default_group_id": 4,
+    "unique_widget_count": 0
+  },
+  {
+    "id": 6,
+    "name": "Quad Layout Test",
+    "version": 0,
+    "approved": false,
+    "owner_id": 1,
+    "image_url": null,
+    "description": "Quad Layout Test",
+    "stack_context": "74b17d80-2ade-4747-a3f2-8931fbcaf77b",
+    "descriptor_url": null,
+    "default_group_id": 6,
+    "unique_widget_count": 0
+  }
+]

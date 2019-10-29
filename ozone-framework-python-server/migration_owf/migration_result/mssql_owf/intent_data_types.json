@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "intent_id": 1,
+    "intent_data_type_id": 1
+  },
+  {
+    "id": 2,
+    "intent_id": 2,
+    "intent_data_type_id": 2
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "action": "Graph",
+    "version": 0
+  },
+  {
+    "id": 2,
+    "action": "View",
+    "version": 0
+  }
+]

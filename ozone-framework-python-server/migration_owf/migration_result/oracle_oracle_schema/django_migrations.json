@@ -1,0 +1,30 @@
+[
+  {
+    "column_name": "ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": "\"ADMIN\".\"ISEQ$$_26377\".nextval",
+    "nullable": "N"
+  },
+  {
+    "column_name": "APP",
+    "data_type": "NVARCHAR2",
+    "data_length": 510,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "NAME",
+    "data_type": "NVARCHAR2",
+    "data_length": 510,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "APPLIED",
+    "data_type": "TIMESTAMP(6)",
+    "data_length": 11,
+    "data_default": null,
+    "nullable": "N"
+  }
+]

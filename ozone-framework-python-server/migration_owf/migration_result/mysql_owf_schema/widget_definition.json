@@ -1,0 +1,87 @@
+[
+  {
+    "column_name": "id",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "width",
+    "data_type": "int",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "height",
+    "data_type": "int",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "version",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "visible",
+    "data_type": "bit",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "singleton",
+    "data_type": "bit",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "background",
+    "data_type": "bit",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "widget_url",
+    "data_type": "varchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "description",
+    "data_type": "varchar",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "widget_guid",
+    "data_type": "varchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "display_name",
+    "data_type": "varchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "mobile_ready",
+    "data_type": "bit",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "descriptor_url",
+    "data_type": "varchar",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "universal_name",
+    "data_type": "varchar",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "widget_version",
+    "data_type": "varchar",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "image_url_small",
+    "data_type": "varchar",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "image_url_medium",
+    "data_type": "varchar",
+    "is_nullable": "NO"
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "email": "testAdmin1@ozone.test",
+    "enabled": true,
+    "version": 3,
+    "username": "testAdmin1",
+    "email_show": false,
+    "last_login": null,
+    "prev_login": null,
+    "description": "Test Administrator 1",
+    "requires_sync": false,
+    "user_real_name": "Test Administrator 1",
+    "last_notification": null
+  },
+  {
+    "id": 2,
+    "email": "testUser1@ozone.test",
+    "enabled": true,
+    "version": 0,
+    "username": "testUser1",
+    "email_show": false,
+    "last_login": null,
+    "prev_login": null,
+    "description": "Test User 1",
+    "requires_sync": false,
+    "user_real_name": "Test User 1",
+    "last_notification": null
+  }
+]

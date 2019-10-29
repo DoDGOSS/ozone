@@ -1,0 +1,17 @@
+[
+  {
+    "column_name": "id",
+    "data_type": "int",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "group_id",
+    "data_type": "int",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "permission_id",
+    "data_type": "int",
+    "is_nullable": "NO"
+  }
+]
