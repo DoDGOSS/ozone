@@ -9,7 +9,8 @@ requests = APIClient()
 
 class DashboardsApiTests(TestCase):
     fixtures = [
-        'people_data.json',
+        'tests/people/fixtures/people_data.json',
+        'tests/widgets/fixtures/widget_data.json',
         'tests/dashboards/fixtures/default_test_dashboards.json'
     ]
 

@@ -23,10 +23,11 @@ payload = {
 
 
 class StacksAdminApiTests(TestCase):
-    fixtures = ['people_data.json',
-                'stacks_data.json',
-                'dashboard_data.json',
-                'groups_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json',
+                'tests/stacks/fixtures/stacks_data.json',
+                'tests/dashboards/fixtures/dashboard_data.json',
+                'tests/owf_groups/fixtures/groups_data.json']
 
     def test_admin_create_stack(self):
         requests.login(email='admin@goss.com', password='password')
@@ -77,7 +78,7 @@ class StacksAdminApiTests(TestCase):
     def test_admin_filter_stack(self):
         requests.login(email='admin@goss.com', password='password')
         url = reverse('admin_stacks-list')
-        filter_url = f'{url}?name=Test Stack 1'
+        filter_url = f'{url}?name=Sample'
         response = requests.get(filter_url, format="json")
 
         self.assertGreaterEqual(response.data['count'], 1)
@@ -111,7 +112,7 @@ class StacksAdminApiTests(TestCase):
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['owner']['id'], 2)
+        self.assertEqual(response.data['owner']['id'], 1)
 
         # switch the owner to requesting admin, ie 1
         url = reverse('admin_stacks-assign-to-me', args='1')
@@ -138,10 +139,11 @@ create_stack_group_payload = {
 
 
 class StacksGroupsAdminApiTests(TestCase):
-    fixtures = ['people_data.json',
-                'stacks_data.json',
-                'dashboard_data.json',
-                'groups_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json',
+                'tests/stacks/fixtures/stacks_data.json',
+                'tests/dashboards/fixtures/dashboard_data.json',
+                'tests/owf_groups/fixtures/groups_data.json']
 
     stack_id_test_pass = 1
     stack_id_test_fail = 9

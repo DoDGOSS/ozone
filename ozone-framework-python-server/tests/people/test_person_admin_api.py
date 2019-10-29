@@ -1,7 +1,7 @@
 from django.urls import reverse
 from rest_framework.test import APIClient
 from django.test import TestCase
-from people.models import Person
+from people.models import Person, PersonWidgetDefinition
 from stacks.models import Stack
 
 requests = APIClient()
@@ -13,7 +13,11 @@ payload = {
 
 
 class PersonWidgetDefinitionAdminApiTests(TestCase):
-    fixtures = ['people_data.json', 'widget_data.json', 'people_widget_data.json']
+    fixtures = [
+                'tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json',
+                # 'tests/people/fixtures/people_widget_data.json'
+                ]
 
     def test_admin_create_person_widget(self):
         requests.login(email='admin@goss.com', password='password')
@@ -41,7 +45,7 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(response.data['count'], 20)
         requests.logout()
 
     def test_admin_detail_person_widget(self):
@@ -51,7 +55,7 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['id'], 1)
-        self.assertEqual(response.data['display_name'], "Widget Def One")
+        self.assertEqual(response.data["widget_definition"]['display_name'], "Channel Shouter")
         requests.logout()
 
     def test_admin_update_person_widget(self):
@@ -71,7 +75,7 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
         response = requests.get(filter_url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(response.data['count'], 10)
 
         # Non existing group_people entry
         filter_url = f'{url}?person=3'
@@ -87,16 +91,20 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
         response = requests.get(filter_url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(response.data['count'], 0)
 
         # Non existing group_people entry
-        filter_url = f'{url}?widget_definition=3'
+        filter_url = f'{url}?widget_definition=0'
         response_fail = requests.get(filter_url)
 
         self.assertEqual(response_fail.status_code, 400)
         requests.logout()
 
     def test_admin_delete_person_widget_should_not_hard_delete(self):
+        group_widget = PersonWidgetDefinition.objects.get(id=1)
+        group_widget.group_widget = True
+        group_widget.save()
+
         requests.login(email='admin@goss.com', password='password')
         url = reverse('admin_users-widgets-detail', args='1')
         response = requests.delete(url)
@@ -118,19 +126,18 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
         # create new for hard delete.
         url = reverse('admin_users-widgets-list')
         created = requests.post(url, payload, format="json")
-
         self.assertEqual(created.status_code, 201)
         self.assertEqual(created.data['group_widget'], False)
 
         # delete
-        url = reverse('admin_users-widgets-detail', args=str(created.data['id']))
+        url = reverse('admin_users-widgets-detail', args=(f'{created.data["id"]}',))
         response = requests.delete(url)
 
         self.assertEqual(response.status_code, 204)
         self.assertEqual(response.data, None)
 
         # read again detail
-        url = reverse('admin_users-widgets-detail', args=str(created.data['id']))
+        url = reverse('admin_users-widgets-detail', args=(f'{created.data["id"]}',))
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 404)
@@ -159,7 +166,7 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(response.data['count'], 19)
         requests.logout()
 
     def test_admin_auth_only_person_widget(self):
@@ -185,7 +192,9 @@ create_stack_payload2 = {
 
 
 class PersonStacksAdminApiTests(TestCase):
-    fixtures = ['people_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json',
+]
 
     def setUp(self):
         self.admin_user = Person.objects.get(pk=1)

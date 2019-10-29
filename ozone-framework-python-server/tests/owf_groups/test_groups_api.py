@@ -8,7 +8,9 @@ requests = APIClient()
 
 
 class GroupsApiTests(TestCase):
-    fixtures = ['people_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json',
+                ]
 
     def setUp(self):
         self.admin_user = Person.objects.get(pk=1)

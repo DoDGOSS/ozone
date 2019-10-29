@@ -164,7 +164,7 @@ def cleanup(sender, instance, *args, **kwargs):
 
 class WidgetDefinitionWidgetTypes(models.Model):
     id = models.BigAutoField(primary_key=True)
-    widget_definition = models.OneToOneField(WidgetDefinition, on_delete=models.CASCADE)
+    widget_definition = models.ForeignKey(WidgetDefinition, on_delete=models.CASCADE)
     widget_type = models.ForeignKey('WidgetType', on_delete=models.CASCADE)
 
     class Meta:

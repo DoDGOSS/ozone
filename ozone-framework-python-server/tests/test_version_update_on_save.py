@@ -12,13 +12,14 @@ from dashboards.models import Dashboard
 
 
 class VersionUpdateOnSave(TestCase):
-    fixtures = ['people_data.json',
-                'stacks_data.json',
-                'dashboard_data.json',
-                'groups_data.json',
-                'pref_data.json',
-                'widget_data.json',
-                'appconf_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json',
+                'tests/widgets/fixtures/widget_data.json',
+                'tests/stacks/fixtures/stacks_data.json',
+                'tests/dashboards/fixtures/dashboard_data.json',
+                'tests/owf_groups/fixtures/groups_data.json',
+                'tests/preferences/fixtures/pref_data.json',
+                'tests/widgets/fixtures/widget_data.json',
+                'tests/appconf/fixtures/appconf_data.json']
 
     def setUp(self):
         ApplicationConfiguration.objects.create(code="fake1234_owf.enable.cef.logging",
