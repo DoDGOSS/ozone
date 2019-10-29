@@ -1,0 +1,57 @@
+[
+  {
+    "column_name": "id",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "name",
+    "data_type": "character varying",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "version",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "approved",
+    "data_type": "boolean",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "owner_id",
+    "data_type": "bigint",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "image_url",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "description",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "stack_context",
+    "data_type": "character varying",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "descriptor_url",
+    "data_type": "character varying",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "default_group_id",
+    "data_type": "bigint",
+    "is_nullable": "YES"
+  },
+  {
+    "column_name": "unique_widget_count",
+    "data_type": "bigint",
+    "is_nullable": "YES"
+  }
+]

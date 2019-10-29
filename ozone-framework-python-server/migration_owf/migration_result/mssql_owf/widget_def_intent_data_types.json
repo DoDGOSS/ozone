@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "intent_data_type_id": 1,
+    "widget_definition_intent_id": 2
+  },
+  {
+    "id": 2,
+    "intent_data_type_id": 1,
+    "widget_definition_intent_id": 4
+  },
+  {
+    "id": 3,
+    "intent_data_type_id": 2,
+    "widget_definition_intent_id": 1
+  },
+  {
+    "id": 4,
+    "intent_data_type_id": 2,
+    "widget_definition_intent_id": 3
+  }
+]

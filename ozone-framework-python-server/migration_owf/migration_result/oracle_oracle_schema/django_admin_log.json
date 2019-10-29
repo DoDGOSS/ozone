@@ -1,0 +1,58 @@
+[
+  {
+    "column_name": "ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": "\"ADMIN\".\"ISEQ$$_26434\".nextval",
+    "nullable": "N"
+  },
+  {
+    "column_name": "USER_ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  },
+  {
+    "column_name": "OBJECT_ID",
+    "data_type": "NCLOB",
+    "data_length": 4000,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "ACTION_FLAG",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  },
+  {
+    "column_name": "ACTION_TIME",
+    "data_type": "TIMESTAMP(6)",
+    "data_length": 11,
+    "data_default": null,
+    "nullable": "N"
+  },
+  {
+    "column_name": "OBJECT_REPR",
+    "data_type": "NVARCHAR2",
+    "data_length": 400,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "CHANGE_MESSAGE",
+    "data_type": "NCLOB",
+    "data_length": 4000,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "CONTENT_TYPE_ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "Y"
+  }
+]

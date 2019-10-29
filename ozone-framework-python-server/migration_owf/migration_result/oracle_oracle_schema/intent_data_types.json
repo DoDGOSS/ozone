@@ -1,0 +1,23 @@
+[
+  {
+    "column_name": "ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": "\"ADMIN\".\"ISEQ$$_26387\".nextval",
+    "nullable": "N"
+  },
+  {
+    "column_name": "INTENT_ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  },
+  {
+    "column_name": "INTENT_DATA_TYPE_ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  }
+]

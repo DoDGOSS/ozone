@@ -1,0 +1,77 @@
+[
+  {
+    "column_name": "id",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "email",
+    "data_type": "character varying",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "enabled",
+    "data_type": "boolean",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "version",
+    "data_type": "bigint",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "is_admin",
+    "data_type": "boolean",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "password",
+    "data_type": "character varying",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "username",
+    "data_type": "character varying",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "is_active",
+    "data_type": "boolean",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "email_show",
+    "data_type": "boolean",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "last_login",
+    "data_type": "timestamp with time zone",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "prev_login",
+    "data_type": "timestamp with time zone",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "description",
+    "data_type": "character varying",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "requires_sync",
+    "data_type": "boolean",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "user_real_name",
+    "data_type": "character varying",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "last_notification",
+    "data_type": "timestamp with time zone",
+    "is_nullable": "NO"
+  }
+]

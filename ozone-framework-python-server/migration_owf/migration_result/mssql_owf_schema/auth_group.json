@@ -1,0 +1,12 @@
+[
+  {
+    "column_name": "id",
+    "data_type": "int",
+    "is_nullable": "NO"
+  },
+  {
+    "column_name": "name",
+    "data_type": "nvarchar",
+    "is_nullable": "NO"
+  }
+]

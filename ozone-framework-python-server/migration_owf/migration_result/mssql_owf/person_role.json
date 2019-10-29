@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "person_authorities_id": 1,
+    "role_id": 1
+  },
+  {
+    "id": 2,
+    "person_authorities_id": 1,
+    "role_id": 2
+  },
+  {
+    "id": 3,
+    "person_authorities_id": 2,
+    "role_id": 2
+  }
+]

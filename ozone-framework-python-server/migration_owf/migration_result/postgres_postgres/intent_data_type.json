@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "version": 1571197630,
+    "data_type": "type-1"
+  },
+  {
+    "id": 2,
+    "version": 1571197630,
+    "data_type": "type-2"
+  },
+  {
+    "id": 3,
+    "version": 1571197630,
+    "data_type": "type-3"
+  }
+]

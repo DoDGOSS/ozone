@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "version": 0,
+    "authority": "ROLE_ADMIN",
+    "description": "Admin Role"
+  },
+  {
+    "id": 2,
+    "version": 0,
+    "authority": "ROLE_USER",
+    "description": "User Role"
+  }
+]

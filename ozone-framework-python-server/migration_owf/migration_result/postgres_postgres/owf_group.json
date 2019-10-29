@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "version": 1,
+    "status": "active",
+    "email": "admin@geocent.com",
+    "description": "Description for OWF Users",
+    "name": "OWF Users",
+    "automatic": false,
+    "display_name": "OWF Users",
+    "stack_default": false
+  },
+  {
+    "id": 2,
+    "version": 1,
+    "status": "active",
+    "email": "admin@geocent.com",
+    "description": "Description for OWF Administrators",
+    "name": "OWF Administrators",
+    "automatic": false,
+    "display_name": "OWF Administrators",
+    "stack_default": false
+  },
+  {
+    "id": 3,
+    "version": 1,
+    "status": "active",
+    "email": "admin@geocent.com",
+    "description": "Description for test group",
+    "name": "Test Group",
+    "automatic": false,
+    "display_name": "Test Group",
+    "stack_default": false
+  },
+  {
+    "id": 4,
+    "version": 1,
+    "status": "active",
+    "email": "admin@geocent.com",
+    "description": "Description for test group 2",
+    "name": "Test Group 2",
+    "automatic": false,
+    "display_name": "Test Group",
+    "stack_default": false
+  },
+  {
+    "id": 5,
+    "version": 1,
+    "status": "active",
+    "email": "admin@geocent.com",
+    "description": "Description for test group 3",
+    "name": "Test Group 3",
+    "automatic": false,
+    "display_name": "Test Group",
+    "stack_default": false
+  },
+  {
+    "id": 6,
+    "version": 1571155471,
+    "status": "active",
+    "email": null,
+    "description": null,
+    "name": "9f2929c8-ba82-4dd5-b4e1-656d269de205",
+    "automatic": false,
+    "display_name": "9f2929c8-ba82-4dd5-b4e1-656d269de205",
+    "stack_default": true
+  }
+]

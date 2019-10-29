@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "action_time": "2019-10-08T23:56:45.953393-04:00",
+    "object_id": "1",
+    "object_repr": "act",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]",
+    "content_type_id": 7,
+    "user_id": 1
+  },
+  {
+    "id": 2,
+    "action_time": "2019-10-08T23:56:54.988946-04:00",
+    "object_id": "1",
+    "object_repr": "type",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]",
+    "content_type_id": 8,
+    "user_id": 1
+  },
+  {
+    "id": 3,
+    "action_time": "2019-10-08T23:59:11.435167-04:00",
+    "object_id": "1",
+    "object_repr": "widget = 1 & intent = act",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]",
+    "content_type_id": 19,
+    "user_id": 1
+  },
+  {
+    "id": 4,
+    "action_time": "2019-10-08T23:59:23.495443-04:00",
+    "object_id": "1",
+    "object_repr": "WidgetDefIntentDataTypes object (1)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]",
+    "content_type_id": 21,
+    "user_id": 1
+  },
+  {
+    "id": 5,
+    "action_time": "2019-10-09T00:01:10.471221-04:00",
+    "object_id": "1",
+    "object_repr": "WidgetDefIntentDataTypes object (1)",
+    "action_flag": 2,
+    "change_message": "[]",
+    "content_type_id": 21,
+    "user_id": 1
+  }
+]

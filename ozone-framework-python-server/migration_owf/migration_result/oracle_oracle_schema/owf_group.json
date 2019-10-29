@@ -1,0 +1,65 @@
+[
+  {
+    "column_name": "ID",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": "\"ADMIN\".\"ISEQ$$_26464\".nextval",
+    "nullable": "N"
+  },
+  {
+    "column_name": "NAME",
+    "data_type": "NVARCHAR2",
+    "data_length": 400,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "EMAIL",
+    "data_type": "NVARCHAR2",
+    "data_length": 510,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "STATUS",
+    "data_type": "NVARCHAR2",
+    "data_length": 16,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "VERSION",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  },
+  {
+    "column_name": "AUTOMATIC",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "N"
+  },
+  {
+    "column_name": "DESCRIPTION",
+    "data_type": "NVARCHAR2",
+    "data_length": 510,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "DISPLAY_NAME",
+    "data_type": "NVARCHAR2",
+    "data_length": 400,
+    "data_default": null,
+    "nullable": "Y"
+  },
+  {
+    "column_name": "STACK_DEFAULT",
+    "data_type": "NUMBER",
+    "data_length": 22,
+    "data_default": null,
+    "nullable": "Y"
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "version": 1571155537,
+    "name": "Sample",
+    "description": null,
+    "stack_context": "",
+    "image_url": null,
+    "descriptor_url": null,
+    "unique_widget_count": 2,
+    "approved": true,
+    "default_group_id": 1,
+    "owner_id": 1
+  },
+  {
+    "id": 2,
+    "version": 1571155471,
+    "name": "Administration",
+    "description": "This application collects the administrative components into a common set of application pages for managing system resources.  These pages can be used to create, modify, update, and delete Apps, App Components, Users and Groups, and system configuration settings.",
+    "stack_context": "cb9adaad-8301-4e96-bec7-085b7ac05fe5",
+    "image_url": "themes/common/images/admin/64x64_admin_app.png",
+    "descriptor_url": "",
+    "unique_widget_count": 5,
+    "approved": true,
+    "default_group_id": 6,
+    "owner_id": 1
+  }
+]
