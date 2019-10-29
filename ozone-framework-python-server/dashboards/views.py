@@ -24,7 +24,7 @@ class DashboardViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        if(instance.user == request.user):
+        if instance.user == request.user:
             instance.marked_for_deletion = True
             instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -33,7 +33,7 @@ class DashboardViewSet(viewsets.ModelViewSet):
     def restore(self, request, pk=None):
         dashboard = Dashboard.objects.get(pk=pk)
 
-        if(request.user != dashboard.user):
+        if request.user != dashboard.user:
             return Response(status=status.HTTP_403_FORBIDDEN)
 
         dashboard.restore()

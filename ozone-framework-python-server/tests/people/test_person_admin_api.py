@@ -14,10 +14,10 @@ payload = {
 
 class PersonWidgetDefinitionAdminApiTests(TestCase):
     fixtures = [
-                'tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                # 'tests/people/fixtures/people_widget_data.json'
-                ]
+        'tests/people/fixtures/people_data.json',
+        'tests/widgets/fixtures/widget_data.json',
+        # 'tests/people/fixtures/people_widget_data.json'
+    ]
 
     def test_admin_create_person_widget(self):
         requests.login(email='admin@goss.com', password='password')
@@ -194,7 +194,7 @@ create_stack_payload2 = {
 class PersonStacksAdminApiTests(TestCase):
     fixtures = ['tests/people/fixtures/people_data.json',
                 'tests/widgets/fixtures/widget_data.json',
-]
+                ]
 
     def setUp(self):
         self.admin_user = Person.objects.get(pk=1)
