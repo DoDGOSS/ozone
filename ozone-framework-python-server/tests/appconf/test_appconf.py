@@ -6,36 +6,37 @@ from people.models import Person
 requests = APIClient()
 
 post_payload = {
-            "code": "test_payload_owf.enable.cef.logging",
-            "value": "False",
-            "title": "Enable CEF Logging Update",
-            "description": "None",
-            "type": "Boolean",
-            "group_name": "AUDITING",
-            "sub_group_name": "None",
-            "mutable": False,
-            "sub_group_order": 1,
-            "help": "help 2",
+    "code": "test_payload_owf.enable.cef.logging",
+    "value": "False",
+    "title": "Enable CEF Logging Update",
+    "description": "None",
+    "type": "Boolean",
+    "group_name": "AUDITING",
+    "sub_group_name": "None",
+    "mutable": False,
+    "sub_group_order": 1,
+    "help": "help 2",
 }
 
 patch_payload = {"description": "Has Changed"}
 
 put_payload = {
-            "code": "test_payload_owf.enable.cef.logging",
-            "value": "False",
-            "title": "Enable CEF Logging Update",
-            "description": "Change PUT",
-            "type": "Boolean",
-            "group_name": "AUDITING",
-            "sub_group_name": "None",
-            "mutable": False,
-            "sub_group_order": 1,
-            "help": "help 2",
+    "code": "test_payload_owf.enable.cef.logging",
+    "value": "False",
+    "title": "Enable CEF Logging Update",
+    "description": "Change PUT",
+    "type": "Boolean",
+    "group_name": "AUDITING",
+    "sub_group_name": "None",
+    "mutable": False,
+    "sub_group_order": 1,
+    "help": "help 2",
 }
 
 
 class TestingApplicationConfigAPI(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json', 'tests/widgets/fixtures/widget_data.json', 'tests/appconf/fixtures/appconf_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json', 'tests/widgets/fixtures/widget_data.json',
+                'tests/appconf/fixtures/appconf_data.json']
 
     def test_admin_can_create_appconf_data(self):
         admin_user = Person.objects.get(email='admin@goss.com')
@@ -51,7 +52,6 @@ class TestingApplicationConfigAPI(TestCase):
         requests.logout()
 
     def test_admin_can_list_appconf_endpoint(self):
-
         requests.login(email='admin@goss.com', password='password')
         url = reverse('applicationconfiguration-list')
         data = requests.get(url)
@@ -85,7 +85,6 @@ class TestingApplicationConfigAPI(TestCase):
         requests.logout()
 
     def test_admin_can_delete_appconf_data(self):
-
         requests.login(email='admin@goss.com', password='password')
         url = reverse('applicationconfiguration-detail', args='1')
         response = requests.delete(url)
@@ -95,7 +94,6 @@ class TestingApplicationConfigAPI(TestCase):
         requests.logout()
 
     def test_admin_auth_only_appconf(self):
-
         requests.login(email='user@goss.com', password='password')
         url = reverse('applicationconfiguration-list')
         data = requests.get(url)

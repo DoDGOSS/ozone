@@ -13,6 +13,11 @@ create_stack_payload = {
     'description': 'test description 1'
 }
 
+create_stack_payload2 = {
+    'name': 'test stack share',
+    'description': 'test description 1'
+}
+
 dashboard1_payload = {
     'name': 'test dash 1',
     'description': 'description for test dash 1',
@@ -24,6 +29,14 @@ dashboard1_payload = {
 dashboard2_payload = {
     'name': 'test dash 2',
     'description': 'description for test dash 2',
+    'type': '',
+    'locked': '',
+    'layout_config': '{\"backgroundWidgets\":[],\"panels\":[],\"tree\":null}'
+}
+
+dashboard3_payload = {
+    'name': 'test dash 3',
+    'description': 'description for test dash 3',
     'type': '',
     'locked': '',
     'layout_config': '{\"backgroundWidgets\":[],\"panels\":[],\"tree\":null}'
@@ -218,3 +231,59 @@ class StacksModelTests(TransactionTestCase):
             dest_type=MappingType.widget
         )
         self.assertEqual(widgets_to_stack_mapping.count(), 3)
+
+    def test_user_can_restore_stack(self):
+        # data setup
+        stack = Stack.create(self.admin_user, create_stack_payload2)
+
+        group_dash1, user_dash1 = stack.add_dashboard(self.admin_user, dashboard1_payload)
+        group_dash2, user_dash2 = stack.add_dashboard(self.admin_user, dashboard2_payload)
+
+        # add user to stack and sync user
+        stack.default_group.add_user(self.regular_user)
+        self.regular_user.sync_dashboards()
+
+        # check that user has 3 dashboards that are apart of this stack
+        user_dashboards = Dashboard.objects.filter(user=self.regular_user, stack=stack)
+        self.assertEqual(user_dashboards.count(), 3)
+
+        # make modifications to stack's dashboards
+        layout_config = {
+            "tree": {
+                "direction": "row",
+                "first": "02d98075-2fd8-42f0-8e35-f24cd88d8893",
+            },
+            "panels": [{
+                "id": "02d98075-2fd8-42f0-8e35-f24cd88d8856",
+                "title": "Test Fit Panel",
+                "type": "fit",
+                "widgets": []
+            }],
+            "backgroundWidgets": []
+        }
+        user_dash1.layout_config = json.dumps(layout_config)
+        user_dash1.save()
+
+        name_update = 'dashboard name updated'
+        user_dash2.name = name_update
+        user_dash2.save()
+
+        # add a new dashboard after user sync has occurred to assure user gets a copy of it on restore
+        stack.add_dashboard(self.admin_user, dashboard3_payload)
+
+        stack.share()
+
+        # restore stack as a regular user
+        stack.restore(self.regular_user)
+        user_dashboards = Dashboard.objects.filter(user=self.regular_user, stack=stack)
+
+        # check that this user has updated dashboards
+        shared_user_dashboard_1 = user_dashboards.get(name=dashboard1_payload['name'])
+        shared_user_dashboard_2_exists = user_dashboards.filter(name=name_update).exists()
+        shared_user_dashboard_3_exists = user_dashboards.filter(name=dashboard3_payload['name']).exists()
+
+        self.assertEqual(shared_user_dashboard_1.layout_config, user_dash1.layout_config)
+        self.assertTrue(shared_user_dashboard_2_exists)
+
+        # confirm user received a copy of a dashboard added to stack without the user being synced
+        self.assertTrue(shared_user_dashboard_3_exists)
