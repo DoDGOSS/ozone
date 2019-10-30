@@ -168,6 +168,9 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_REDIRECT_URL = '/api/v2/me/'
 
 #  LOG
+if not os.path.exists('./logs'):
+    os.mkdir('./logs')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
