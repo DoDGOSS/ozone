@@ -8,8 +8,6 @@ from .serializers import StackSerializer, StackGroupsSerializer, StackGroupsSeri
 from dashboards.permissions import IsStackOwner
 from dashboards.models import Dashboard
 from domain_mappings.models import DomainMapping, MappingType
-from owf_groups.models import OwfGroup, GroupStatus
-import uuid
 
 
 class StackViewSet(viewsets.ModelViewSet):
