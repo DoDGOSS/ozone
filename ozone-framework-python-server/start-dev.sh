@@ -23,4 +23,4 @@ python manage.py loaddata resources/fixtures/default_data.json
 
 # Start server
 echo "Starting server"
-python man
+python manage.py runserver 0.0.0.0:8000
