@@ -2,7 +2,7 @@ from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions
-from config.helpers.tree import file_tree_helper
+from config.helpers.tree import tree_to_json
 
 
 class SystemVersionView(APIView):
@@ -17,10 +17,9 @@ class SystemVersionView(APIView):
 
 class HelpFileView(APIView):
     """
-    gets the media files version (Back end)
+    gets the help files and server location of the files
     """
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        help_file_location = settings.HELP_FILES
-        return Response(file_tree_helper(url=settings.HOST_URL_HELPER, destination=help_file_location))
+        return Response(tree_to_json(settings.HELP_FILES))

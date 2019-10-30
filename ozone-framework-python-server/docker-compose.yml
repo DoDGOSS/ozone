@@ -4,40 +4,29 @@ services:
 
   db:
     image: postgres
+    container_name: "ozone_postgres_dev"
     environment:
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     networks:
-      - postgres
+      - owf_dev
     depends_on:
       - pgadmin
 
   web:
     build: .
-    # command: python manage.py runserver 0.0.0.0:8000
-    entrypoint: /code/docker-entrypoint.sh
+    container_name: "ozone_dev"
+    entrypoint: /code/start-dev.sh
     volumes:
       - .:/code
     ports:
       - "8000:8000"
     networks:
-      - postgres
+      - owf_dev
     depends_on:
       - db
 
-  # Postgres Admin Interface
-  # http://localhost:5555
-  # How to connect to New Postgres server
-  # Add new server
-  # Required Fields
-  ## General
-  ### Name: Postgres Django
-  ## Connection
-  ### Host      db
-  ### Port      5432
-  ### Username  postgres
-  ### Password  postgres
   pgadmin:
     image: dpage/pgadmin4
     environment:
@@ -46,8 +35,8 @@ services:
     ports:
       - "5555:80"
     networks:
-      - postgres
+      - owf_dev
 
 networks:
-  postgres:
+  owf_dev:
     driver: bridge

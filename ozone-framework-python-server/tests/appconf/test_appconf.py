@@ -35,8 +35,11 @@ put_payload = {
 
 
 class TestingApplicationConfigAPI(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json', 'tests/widgets/fixtures/widget_data.json',
-                'tests/appconf/fixtures/appconf_data.json']
+    fixtures = [
+        'tests/people/fixtures/people_data.json',
+        'tests/widgets/fixtures/widget_data.json',
+        'tests/appconf/fixtures/appconf_data.json',
+    ]
 
     def test_admin_can_create_appconf_data(self):
         admin_user = Person.objects.get(email='admin@goss.com')
