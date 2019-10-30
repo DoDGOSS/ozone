@@ -16,46 +16,54 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls import include
-from django.urls import path, re_path
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-from .views import SystemVersionView, HelpFileView
-from rest_framework import permissions
-from django.conf import settings
 from django.conf.urls.static import static
-
-schema_view = get_schema_view(
-   openapi.Info(
-      title="OWF Server API",
-      default_version='v2',
-      description="OWF Server Endpoints",
-      terms_of_service="",
-      contact=openapi.Contact(email=""),
-      license=openapi.License(name="MIT License"),
-   ),
-   public=True,
-   permission_classes=(permissions.AllowAny,),
-)
+from django.urls import path, re_path
+from django.views.generic import TemplateView
+from .views import SystemVersionView, HelpFileView
 
 
 urlpatterns = [
+    re_path(r'^$', TemplateView.as_view(template_name='index.html')),
+    path('accounts/', include('rest_framework.urls')),
+    path('api/v2/', include('dashboards.urls')),
+    path('api/v2/', include('intents.urls')),
+    path('api/v2/', include('owf_groups.urls')),
+    path('api/v2/', include('people.urls')),
+    path('api/v2/', include('preferences.urls')),
+    path('api/v2/', include('roles.urls')),
+    path('api/v2/', include('stacks.urls')),
+    path('api/v2/', include('widgets.urls')),
+    path('api/v2/', include('appconf.urls')),
+    path('api/v2/', include('metrics.urls')),
+    path('system-version', SystemVersionView.as_view(), name='system-version-url'),
+    path('help', HelpFileView.as_view(), name='help_files'),
+] + static(settings.HELP_FILES_URL, document_root=settings.HELP_FILES)
+
+
+if settings.DEBUG:
+    from rest_framework import permissions
+    from drf_yasg.views import get_schema_view
+    from drf_yasg import openapi
+    schema_view = get_schema_view(
+        openapi.Info(
+            title="OWF Server API",
+            default_version='v2',
+            description="OWF Server Endpoints",
+            terms_of_service="",
+            contact=openapi.Contact(email=""),
+            license=openapi.License(name="MIT License"),
+        ),
+        public=True,
+        permission_classes=(permissions.AllowAny,),
+    )
+
+    urlpatterns.extend([
         path('admin/', admin.site.urls),
-        re_path(r'^$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+        path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
         re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-        path('accounts/', include('rest_framework.urls')),
-        path('api/v2/', include('dashboards.urls')),
-        path('api/v2/', include('intents.urls')),
-        path('api/v2/', include('owf_groups.urls')),
-        path('api/v2/', include('people.urls')),
-        path('api/v2/', include('preferences.urls')),
-        path('api/v2/', include('roles.urls')),
-        path('api/v2/', include('stacks.urls')),
-        path('api/v2/', include('widgets.urls')),
-        path('api/v2/', include('appconf.urls')),
-        path('api/v2/', include('metrics.urls')),
-        path('system-version', SystemVersionView.as_view(), name='system-version-url'),
-        path('help', HelpFileView.as_view(), name='help_files'),
-    ] + static(settings.HELP_FILES_URL, document_root=settings.HELP_FILES)
+        # static(settings.HELP_FILES_URL, document_root=settings.HELP_FILES)
+    ])
+
 
 if settings.ENABLE_CAS:
     import django_cas_ng.views

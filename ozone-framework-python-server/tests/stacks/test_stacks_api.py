@@ -115,4 +115,4 @@ class StacksApiTests(TestCase):
         self.assertFalse(OwfGroupPeople.objects.filter(
             group=self.stack.default_group,
             person=self.regular_user).exists()
-                         )
+        )
