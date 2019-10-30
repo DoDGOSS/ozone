@@ -23,7 +23,6 @@ from .views import SystemVersionView, HelpFileView
 
 
 urlpatterns = [
-    re_path(r'^$', TemplateView.as_view(template_name='index.html')),
     path('accounts/', include('rest_framework.urls')),
     path('api/v2/', include('dashboards.urls')),
     path('api/v2/', include('intents.urls')),
@@ -38,6 +37,9 @@ urlpatterns = [
     path('system-version', SystemVersionView.as_view(), name='system-version-url'),
     path('help', HelpFileView.as_view(), name='help_files'),
 ] + static(settings.HELP_FILES_URL, document_root=settings.HELP_FILES)
+
+if not settings.DEBUG:
+    urlpatterns.extend([re_path(r'^$', TemplateView.as_view(template_name='index.html'))])
 
 
 if settings.DEBUG:
