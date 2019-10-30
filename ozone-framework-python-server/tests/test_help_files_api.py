@@ -18,81 +18,6 @@ def ordered(obj):
         return obj
 
 
-assert_data_false = [
-    {
-        "text": "sample_dir_test",
-                "leaf": False,
-                "path": "sample_dir_test",
-                "children": [
-                    {
-                        "text": "test.txt",
-                        "leaf": True,
-                        "path": "sample_dir_test/test.txt"
-                    },
-                    {
-                        "text": "ReadMe.pdf",
-                        "leaf": True,
-                        "path": "sample_dir_test/ReadMe.pdf"
-                    },
-                    {
-                        "text": "testing_dir",
-                        "leaf": False,
-                        "path": "sample_dir_test/testing_dir",
-                        "children": [
-                            {
-                                "text": "test.txt",
-                                "leaf": True,
-                                "path": "sample_dir_test/testing_dir/test.txt"
-                            }
-                        ]
-                    }
-                ]
-    },
-    {
-        "text": "ReadMe.pdf",
-                "leaf": True,
-                "path": "ReadMe.pdf"
-    }
-]
-
-assert_data_true = [
-    {
-        "text": "sample_dir_test",
-        "leaf": False,
-        "path": "help_files/sample_dir_test",
-        "children": [
-                {
-                    "text": "test.txt",
-                    "leaf": True,
-                    "path": "help_files/sample_dir_test/test.txt"
-                },
-            {
-                    "text": "ReadMe.pdf",
-                    "leaf": True,
-                    "path": "help_files/sample_dir_test/ReadMe.pdf"
-                },
-            {
-                    "text": "testing_dir",
-                    "leaf": False,
-                    "path": "help_files/sample_dir_test/testing_dir",
-                    "children": [
-                        {
-                            "text": "test.txt",
-                            "leaf": True,
-                            "path": "help_files/sample_dir_test/testing_dir/test.txt"
-                        }
-                    ]
-                }
-        ]
-    },
-    {
-        "text": "ReadMe.pdf",
-        "leaf": True,
-        "path": "help_files/ReadMe.pdf"
-    }
-]
-
-
 class HelpFilesAPITest(TestCase):
     fixtures = ['tests/people/fixtures/people_data.json',
                 'tests/widgets/fixtures/widget_data.json']
@@ -113,7 +38,6 @@ class HelpFilesAPITest(TestCase):
         requests.login(email='admin@goss.com', password='password')
         request = requests.get(self.url)
 
-        # self.assertEqual(ordered(assert_data_true), ordered(request.data))
         self.assertEqual(ordered(tree_to_json(settings.HELP_FILES)), ordered(request.data))
 
         requests.logout()
