@@ -68,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'config.owf_utils.transformer.django.middleware.OwfCaseTransformerMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
