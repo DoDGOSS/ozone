@@ -46,8 +46,6 @@ class TestingPrefUser(TestCase):
         requests.login(email='admin@goss.com', password='password')
         url = reverse('user_preferences-list')
         response = requests.get(url)
-        data = json.loads(response.content)
-        self.assertEqual(len(data['results']), 5)
 
         self.assertEqual(len(response.data['results']), 5)
         self.assertEqual(response.status_code, 200)
