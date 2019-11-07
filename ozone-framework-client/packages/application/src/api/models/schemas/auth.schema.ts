@@ -2,7 +2,7 @@ export const AUTH_GROUP_SCHEMA = {
     title: "AuthGroup",
     type: "object",
     required: ["automatic", "description", "displayName", "email", "id", "name", "status"],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         automatic: {
             type: "boolean"
@@ -33,7 +33,7 @@ export const AUTH_USER_SCHEMA = {
     title: "AuthUser",
     type: "object",
     required: ["email", "groups", "id", "isAdmin", "roles", "theme", "userRealName", "username"],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         email: {
             type: ["string", "null"]

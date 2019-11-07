@@ -155,3 +155,13 @@ export interface Boxed<T> {
 export function boxed<T>(value?: T): Boxed<T> {
     return { value };
 }
+
+export function getCookie(cname:string) {
+    const name = cname + "=";
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(';');
+    for(const cookie of ca) {
+        return cookie.substring(name.length, cookie.length);
+    }
+    return "";
+}
