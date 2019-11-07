@@ -34,7 +34,7 @@ Listing::
     Any software dashboard or widget that a user enters into the Store is called a "Listing." Listings can be a various types of Web content.
 
 Marketplace::
-    A searchable catalog of shared listings of widgets and dashboards (also referred to as the Store).
+    A searchable catalog of shared listings of widgets and stacks (also referred to as the Store).
 
 OWF::
     Abbreviation for Ozone Widget Framework.

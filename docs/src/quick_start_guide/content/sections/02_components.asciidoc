@@ -20,7 +20,7 @@ image::toolbar_right.png[]
 |===
 | image::marketplace_button.png[]
 | *Marketplace view* +
-  Select and switch the view to a Marketplace, to discover and add dashboards and widgets.
+  Select and switch the view to a Marketplace, to discover and add stacks and widgets.
 
 | image::dashboard_button.png[]
 | *Dashboard view* +
@@ -187,9 +187,9 @@ To toggle the selected theme:
 
 // TODO Update after Marketplace integration and UI has been completed.
 
-The Ozone Marketplace, similar to a commercial app store, operates as a thin-client registry of applications and services. The Marketplace provides search and discovery functionality that enables OWF users to find, add and share useful tools including (but not limited to) widgets, dashboards, and web applications.
+The AML Marketplace, similar to a commercial app store, operates as a thin-client registry of applications and services. The Marketplace provides search and discovery functionality that enables OWF users to find, add and share useful tools including (but not limited to) widgets, dashboards, and web applications.
 
-If OWF has been configured for is connected to one or more Marketplaces, the Marketplace button  allows the user to select and launch the Marketplace within the OWF user interface.
+If OWF has been configured to be connected to one or more Marketplaces, the Marketplace button allows the user to select and launch the Marketplace within the OWF user interface.
 
 When a single Marketplace is connected, clicking the Marketplace button immediately launch the default Marketplace.
 

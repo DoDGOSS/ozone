@@ -432,7 +432,7 @@ To connect OWF to a Store:
 
 . Click the btn:[Add Store] button.
 
-. This opens the Store Configuration window. Enter the Store's URL and then, click btn:[Next]. OWF will use the URL and automatically gather Store details.
+. This opens the Store Configuration window. Enter the Store's Front-End URL & Back-End URL and then click btn:[Next]. OWF will use the URLs and automatically gather Store details.
 
 . The Review or Edit page appears. Review or Edit the Store details:
 

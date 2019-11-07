@@ -8,7 +8,7 @@ OWF offers custom configuration options via the settings files used by Django, l
 The default settings provided in the `config/settings/production.py` file are intended for use in a local, non-production environment. For production deployment to a non-local environment or to use an external database, this file must be configured with the appropriate settings, which are explained throughout this guide.
 
 
-=== Help settings
+== Help settings
 
 When a user clicks the question mark button in the toolbar, OWF offers online help:
 
@@ -16,7 +16,7 @@ Out of the bundle, the Help window contains:
 
 * Instructions for Configuring Help
 
-==== Changing the location of help files
+=== Changing the location of help files
 
 The help directory location is defined by the `HELP_FILES` property in `{path-to-config}`.
 
@@ -25,8 +25,24 @@ By default, help files are located  in the `/config/staticfiles/` directory. In 
 To change the directory location, replace `HELP_FILES` and then run 
 `python manage.py collectstatic --settings=config.settings.production --no-input`
 
-=== Custom Access Alert settings
+== Custom Access Alert settings
 
 Depending on the individual security requirements where OWF is being deployed, users may be required to agree to the specific terms of a security warning. 
 
 Deploying a custom security warning requires modifications to one of the files in the client application and will require a re-build of the client application. Modifications will need to be made in the `messages.ts` file located in the `ozone-framework-client/packages/application/src/environment/` directory. Once the changes have been made, follow the instructions in the *Build Guide* to re-build and deploy the client application.
+
+
+== Connecting to AML (Marketplace)
+
+In order to the connect AML Marketplace with {app-bundle}, you must modify the following files in your AML installation: +
+
+    aml-backend\Makefile
+    aml-frontend\webpack.dev.js
+    aml-frontend\webpack.prod.js
+    aml-frontend\src\components\shared\LaunchModal.js
+
+Patching and possibly modifying with the files provided in the 'aml_ozone_patch.zip' compressed directory that is included with {app-bundle}.
+
+=== Modifying AML Patch files
+
+Within the `aml-frontend\webpack.prod.js` file, set the PERMITTED_OZONE_PARENT_DOMAIN variable equal to the URL for your OWF instance. If you wish to run the system in dev mode, make the same change in `aml-frontend\webpack.dev.js` as well. 

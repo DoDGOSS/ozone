@@ -8,7 +8,7 @@ The purpose of this guide is to explain how to use the Ozone Widget Framework (O
 
 This guide is not an exhaustive reference. It is intended for users, developers and administrators seeking a quick introduction on how to deploy, start, and use OWF. For information about specific areas, see the relevant documentation included with the OWF bundle.
 
-In this document, the terms Store and Marketplace are used interchangeably. Both applications share features described in this guide and both may be configured to OWF.
+In this document, the terms Store and Marketplace are used interchangeably.
 
 OWF runs on the Django framework and requires Python 3.7 or higher. By default, OWF will run using Waitress, a WSGI server. Waitress does not support TLS and a reverse proxy will be required, if a secure connection is desired. 
 
