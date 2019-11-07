@@ -5,7 +5,7 @@ import { AuthenticationError, ValidationError } from "../api/errors";
 import { AuthUserDTO, validateAuthUser } from "../api/models/AuthUserDTO";
 
 import { trimEnd, trimStart } from "lodash";
-import { lazy } from "../utility";
+import { getCookie, lazy } from "../utility";
 import { backendUrl } from "../environment";
 
 export class OzoneGateway implements Gateway {
@@ -34,11 +34,10 @@ export class OzoneGateway implements Gateway {
 
     async login(username: string, password: string): Promise<Response<AuthUserDTO>> {
         try {
-            const response = await this.post("perform_login", null, {
-                params: {
-                    username,
-                    password
-                },
+            const response = await this.post("auth/login/", {
+                username,
+                password
+            }, {
                 validate: validateAuthUser
             });
             this._isAuthenticated = true;
@@ -57,7 +56,7 @@ export class OzoneGateway implements Gateway {
 
     async logout(): Promise<Response<{}>> {
         try {
-            return await this.get("/logout");
+            return await this.post("auth/logout/");
         } catch (ex) {
             if (ex instanceof ValidationError) throw ex;
             if (ex.response.status === 401) {
@@ -69,7 +68,7 @@ export class OzoneGateway implements Gateway {
 
     async getLoginStatus(): Promise<Response<AuthUserDTO>> {
         try {
-            const response = await this.get(`login/status`, {
+            const response = await this.get(`me/`, {
                 validate: validateAuthUser
             });
             this._isAuthenticated = true;
@@ -84,8 +83,9 @@ export class OzoneGateway implements Gateway {
 
     async get<T>(url: string, options: RequestOptions<T> = {}): Promise<Response<T>> {
         try {
-            const { params, headers, validate } = options;
+            const { params, validate } = options;
             const normalizedUrl = trimStart(url, "/");
+            const headers = this.getHeaders(options.headers);
 
             const response = await axios.get(`${this.rootUrl}/${normalizedUrl}`, {
                 withCredentials: true,
@@ -106,9 +106,10 @@ export class OzoneGateway implements Gateway {
 
     async post<T>(url: string, data?: any, options: RequestOptions<T> = {}): Promise<Response<T>> {
         try {
-            const { params, headers, validate } = options;
+            const { params, validate } = options;
             const normalizedUrl = trimStart(url, "/");
-
+            const headers = this.getHeaders(options.headers);
+            
             const response = await axios.post(`${this.rootUrl}/${normalizedUrl}`, data, {
                 withCredentials: true,
                 headers,
@@ -129,8 +130,9 @@ export class OzoneGateway implements Gateway {
 
     async put<T>(url: string, data?: any, options: RequestOptions<T> = {}): Promise<Response<T>> {
         try {
-            const { params, headers, validate } = options;
+            const { params, validate } = options;
             const normalizedUrl = trimStart(url, "/");
+            const headers = this.getHeaders(options.headers);
 
             const response = await axios.put(`${this.rootUrl}/${normalizedUrl}`, data, {
                 withCredentials: true,
@@ -152,8 +154,9 @@ export class OzoneGateway implements Gateway {
 
     async delete<T>(url: string, data?: any, options: RequestOptions<T> = {}): Promise<Response<T>> {
         try {
-            const { params, headers, validate } = options;
+            const { params, validate } = options;
             const normalizedUrl = trimStart(url, "/");
+            const headers = this.getHeaders(options.headers);
 
             const response = await axios.delete(`${this.rootUrl}/${normalizedUrl}`, {
                 withCredentials: true,
@@ -180,5 +183,13 @@ export class OzoneGateway implements Gateway {
         return new Promise<Response<{}>>(() => {
             return {};
         });
+    }
+
+    private getHeaders(initialHeaders?: any): any {
+        return {...initialHeaders,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "X-CSRFToken": getCookie("csrftoken")
+        };
     }
 }
