@@ -9,7 +9,7 @@ export * from "./interfaces";
 
 const defaultEnvironment: Environment = {
     server: {
-        backendUrl: "http://localhost:8080/owf",
+        backendUrl: "http://localhost:8000/api/v2",
         frontendUrl: "http://localhost:3000",
         staticAssetPath: ""
     },
