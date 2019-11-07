@@ -19,11 +19,12 @@ from django.conf.urls import include
 from django.conf.urls.static import static
 from django.urls import path, re_path
 from django.views.generic import TemplateView
-from .views import SystemVersionView, HelpFileView
+from .views import SystemVersionView, HelpFileView, LoginView, LogoutView
 
 
 urlpatterns = [
-    path('accounts/', include('rest_framework.urls')),
+    path('api/v2/auth/login/', LoginView.as_view(), name='login'),
+    path('api/v2/auth/logout/', LogoutView.as_view(), name='logout'),
     path('api/v2/', include('dashboards.urls')),
     path('api/v2/', include('intents.urls')),
     path('api/v2/', include('owf_groups.urls')),
@@ -63,6 +64,7 @@ if settings.DEBUG:
         path('admin/', admin.site.urls),
         path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
         re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+        path('accounts/', include('rest_framework.urls')),
         # static(settings.HELP_FILES_URL, document_root=settings.HELP_FILES)
     ])
 
