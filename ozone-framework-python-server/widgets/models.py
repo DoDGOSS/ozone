@@ -66,7 +66,7 @@ class WidgetDefinitionManager(models.Manager):
         _intents.append((intent, created))
 
         # create intent data type
-        for value in item['dataTypes']:
+        for value in item['data_types']:
             data_type, created = IntentDataType.objects.get_or_create(data_type=value)
             _data_types.append((data_type, created))
 

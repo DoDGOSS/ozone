@@ -27,14 +27,14 @@ payload = {
         "send": [
             {
                 "action": "act",
-                "dataTypes": [
+                "data_types": [
                     "type-1",
                     "type-2"
                 ]
             },
             {
                 "action": "another",
-                "dataTypes": [
+                "data_types": [
                     "another_type"
                 ]
             }
@@ -42,14 +42,14 @@ payload = {
         "receive": [
             {
                 "action": "act",
-                "dataTypes": [
+                "data_types": [
                     "type-1",
                     "type-2"
                 ]
             },
             {
                 "action": "another",
-                "dataTypes": [
+                "data_types": [
                     "another_type"
                 ]
             }
