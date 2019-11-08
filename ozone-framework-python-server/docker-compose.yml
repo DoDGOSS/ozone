@@ -18,8 +18,8 @@ services:
     build: .
     container_name: "ozone_dev"
     entrypoint: /code/start-dev.sh
-    volumes:
-      - .:/code
+    environment:
+      OWF_DB_HOST: 'db'
     ports:
       - "8000:8000"
     networks:

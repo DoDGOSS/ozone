@@ -47,10 +47,10 @@ class TestingPrefAdmin(TestCase):
         url = reverse('admin_preferences-list')
         filter_url = f'{url}?user=2'
         response = requests.get(filter_url)
-        
+
         self.assertEqual(len(response.data['results']), 0)
         self.assertEqual(response.status_code, 200)
-        
+
         requests.logout()
 
     def test_auth_admin_url(self):
