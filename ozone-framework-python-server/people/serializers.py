@@ -13,7 +13,7 @@ class PersonBaseSerializer(serializers.ModelSerializer):
         for item in groups_object_to_modify:
             item['status'] = item['status'].value
         json_groups = json.dumps([dict(item) for item in groups_object_to_modify])
-        
+
         extra_ret = {
             'groups': json.loads(json_groups),
             'roles': [],
@@ -21,9 +21,11 @@ class PersonBaseSerializer(serializers.ModelSerializer):
         }
         ret.update(extra_ret)
         return ret
+
     class Meta:
         model = Person
         exclude = ('password',)
+
 
 class PersonThinSerializer(serializers.ModelSerializer):
     class Meta:
