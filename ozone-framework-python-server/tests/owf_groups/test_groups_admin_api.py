@@ -21,7 +21,9 @@ payload = {
 class GroupsAdminApiTests(TestCase):
     fixtures = ['tests/people/fixtures/people_data.json',
                 'tests/widgets/fixtures/widget_data.json',
-                'tests/owf_groups/fixtures/groups_data.json']
+                'tests/owf_groups/fixtures/groups_data.json',
+                'tests/appconf/fixtures/appconf_data.json',
+                ]
 
     def test_admin_create_group(self):
         requests.login(email='admin@goss.com', password='password')
@@ -103,7 +105,9 @@ create_group_people_payload = {
 class GroupsPeopleAdminApiTests(TestCase):
     fixtures = ['tests/people/fixtures/people_data.json',
                 'tests/widgets/fixtures/widget_data.json',
-                'tests/owf_groups/fixtures/groups_data.json']
+                'tests/owf_groups/fixtures/groups_data.json',
+                'tests/appconf/fixtures/appconf_data.json',
+                ]
 
     def test_admin_list_groups_people(self):
         requests.login(email='admin@goss.com', password='password')
@@ -174,7 +178,9 @@ add_widget_to_group_payload = {
 class GroupWidgetAdminApiTests(TestCase):
     fixtures = ['tests/people/fixtures/people_data.json', 'tests/owf_groups/fixtures/groups_data.json',
                 'tests/domain_mappings/fixtures/domain_mapping_data.json',
-                'tests/widgets/fixtures/widget_data.json']
+                'tests/widgets/fixtures/widget_data.json',
+                'tests/appconf/fixtures/appconf_data.json',
+                ]
 
     def test_admin_get_group_widgets(self):
         group_id = 2

@@ -59,7 +59,7 @@
     "created_date": null,
     "edited_date": null,
     "code": "owf.cef.log.location",
-    "value": "/usr/share/tomcat6",
+    "value": "logs",
     "title": "CEF Log Location",
     "description": null,
     "type": "String",

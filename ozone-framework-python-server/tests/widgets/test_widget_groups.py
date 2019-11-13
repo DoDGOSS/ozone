@@ -8,7 +8,9 @@ requests = APIClient()
 
 class TestingGroupsWidgets(TestCase):
     fixtures = ['tests/people/fixtures/people_data.json', 'tests/owf_groups/fixtures/groups_data.json',
-                'tests/domain_mappings/fixtures/domain_mapping_data.json', 'tests/widgets/fixtures/widget_data.json']
+                'tests/domain_mappings/fixtures/domain_mapping_data.json', 'tests/widgets/fixtures/widget_data.json',
+                'tests/appconf/fixtures/appconf_data.json',
+                ]
     widget_id = 1
 
     def test_get_group_widgets(self):

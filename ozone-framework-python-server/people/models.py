@@ -11,6 +11,7 @@ from dashboards.models import Dashboard
 from domain_mappings.models import MappingType, RelationshipType, DomainMapping
 from widgets.models import WidgetDefinition
 from django.dispatch import receiver
+from django.contrib.sessions.models import Session
 
 
 class MyUserManager(BaseUserManager):
@@ -113,7 +114,7 @@ class Person(AbstractBaseUser):
     def purge_dashboards_for_group(self, group):
         group_dashboard_mappings = DomainMapping.objects.get_group_dashboard_mappings(group.id)
 
-        group_dashboard_clone_mappings = DomainMapping.objects.\
+        group_dashboard_clone_mappings = DomainMapping.objects. \
             get_group_dashboard_clone_mappings(group_dashboard_mappings)
 
         user_dashboards_for_group = Dashboard.objects.filter(
@@ -229,7 +230,7 @@ class Person(AbstractBaseUser):
         # Get default groups from groups assigned to stacks
         stacks_assigned_through_group = StackGroups.objects.filter(
             group_id__in=group_ids).values_list("stack", flat=True)
-        default_group_ids_from_stack_groups_assignment = Stack.objects.filter(pk__in=stacks_assigned_through_group)\
+        default_group_ids_from_stack_groups_assignment = Stack.objects.filter(pk__in=stacks_assigned_through_group) \
             .values_list("default_group_id", flat=True)
 
         # List of all default groups from stacks assigned to user and remove any duplicates
@@ -363,3 +364,28 @@ class PersonWidgetDefinition(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['person', 'widget_definition'], name='unique_person_widget_definition')
         ]
+
+
+class PersonSessionManager(models.Manager):
+
+    def get_user_expired_sessions(self, user):
+        return self.filter(
+            person=user,
+            session__expire_date__lt=timezone.now()
+        ).values_list(
+            'session', flat=True
+        )
+
+    def get_user_sessions(self, user):
+        return self.filter(
+            person=user
+        ).values_list(
+            'session', flat=True
+        )
+
+
+class PersonSession(models.Model):
+    person = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+
+    objects = PersonSessionManager()

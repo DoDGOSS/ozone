@@ -59,7 +59,7 @@
     "help": null,
     "type": "String",
     "title": "CEF Log Location",
-    "value": "/usr/share/tomcat6",
+    "value": "logs",
     "mutable": 1,
     "version": 0,
     "group_name": "AUDITING",

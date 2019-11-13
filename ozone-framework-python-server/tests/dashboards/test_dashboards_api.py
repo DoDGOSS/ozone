@@ -11,7 +11,8 @@ class DashboardsApiTests(TestCase):
     fixtures = [
         'tests/people/fixtures/people_data.json',
         'tests/widgets/fixtures/widget_data.json',
-        'tests/dashboards/fixtures/default_test_dashboards.json'
+        'tests/dashboards/fixtures/default_test_dashboards.json',
+        'tests/appconf/fixtures/appconf_data.json',
     ]
 
     def setUp(self):
