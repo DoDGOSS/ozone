@@ -11,7 +11,9 @@ payload = {
 
 
 class TestingWidgetType(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json', 'tests/widgets/fixtures/widget_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json', 'tests/widgets/fixtures/widget_data.json',
+                'tests/appconf/fixtures/appconf_data.json',
+                ]
 
     url_list = reverse('widget-types-list')
 

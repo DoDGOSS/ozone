@@ -27,7 +27,9 @@ class StacksAdminApiTests(TestCase):
                 'tests/widgets/fixtures/widget_data.json',
                 'tests/stacks/fixtures/stacks_data.json',
                 'tests/dashboards/fixtures/dashboard_data.json',
-                'tests/owf_groups/fixtures/groups_data.json']
+                'tests/owf_groups/fixtures/groups_data.json',
+                'tests/appconf/fixtures/appconf_data.json',
+                ]
 
     def test_admin_create_stack(self):
         requests.login(email='admin@goss.com', password='password')
@@ -143,7 +145,9 @@ class StacksGroupsAdminApiTests(TestCase):
                 'tests/widgets/fixtures/widget_data.json',
                 'tests/stacks/fixtures/stacks_data.json',
                 'tests/dashboards/fixtures/dashboard_data.json',
-                'tests/owf_groups/fixtures/groups_data.json']
+                'tests/owf_groups/fixtures/groups_data.json',
+                'tests/appconf/fixtures/appconf_data.json',
+                ]
 
     stack_id_test_pass = 1
     stack_id_test_fail = 9

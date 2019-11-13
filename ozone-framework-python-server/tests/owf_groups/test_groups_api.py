@@ -10,6 +10,7 @@ requests = APIClient()
 class GroupsApiTests(TestCase):
     fixtures = ['tests/people/fixtures/people_data.json',
                 'tests/widgets/fixtures/widget_data.json',
+                'tests/appconf/fixtures/appconf_data.json',
                 ]
 
     def setUp(self):
