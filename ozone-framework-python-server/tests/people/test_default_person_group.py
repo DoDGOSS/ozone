@@ -28,7 +28,9 @@ payload = {
 class TestingPersonGroupCreation(TestCase):
     fixtures = ['tests/people/fixtures/people_data.json',
                 'tests/widgets/fixtures/widget_data.json',
-                'tests/owf_groups/fixtures/groups_data.json']
+                'tests/owf_groups/fixtures/groups_data.json',
+                'tests/appconf/fixtures/appconf_data.json',
+                ]
 
     def test_that_the_groups_exist(self):
         base_group = settings.DEFAULT_USER_GROUP
