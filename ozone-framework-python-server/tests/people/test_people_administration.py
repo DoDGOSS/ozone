@@ -51,7 +51,9 @@ class TestingPersonBaseUrl(TestCase):
                 'tests/owf_groups/fixtures/groups_data.json',
                 'tests/dashboards/fixtures/dashboard_data.json',
                 'tests/domain_mappings/fixtures/domain_mapping_data.json',
-                'tests/stacks/fixtures/stacks_data.json', ]
+                'tests/stacks/fixtures/stacks_data.json',
+                'tests/appconf/fixtures/appconf_data.json',
+                ]
 
     def test_admin_post_user(self):
         requests.login(email='admin@goss.com', password='password')
@@ -154,7 +156,9 @@ class TestingPersonCleanUp(TestCase):
                 'tests/owf_groups/fixtures/groups_data.json',
                 'tests/dashboards/fixtures/dashboard_data.json',
                 'tests/domain_mappings/fixtures/domain_mapping_data.json',
-                'tests/stacks/fixtures/stacks_data.json', ]
+                'tests/stacks/fixtures/stacks_data.json',
+                'tests/appconf/fixtures/appconf_data.json',
+                ]
 
     create_stack_payload = {
         'name': 'test stack 1',

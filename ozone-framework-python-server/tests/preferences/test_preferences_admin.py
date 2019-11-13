@@ -23,7 +23,9 @@ class TestingPrefAdmin(TestCase):
                 'tests/stacks/fixtures/stacks_data.json',
                 'tests/dashboards/fixtures/dashboard_data.json',
                 'tests/owf_groups/fixtures/groups_data.json',
-                'tests/preferences/fixtures/pref_data.json']
+                'tests/preferences/fixtures/pref_data.json',
+                'tests/appconf/fixtures/appconf_data.json',
+                ]
 
     def test_post_admin(self):
         requests.login(email='admin@goss.com', password='password')

@@ -33,7 +33,9 @@ payload = {
 
 
 class TestingWidgetsApi(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json', 'tests/widgets/fixtures/widget_data.json']
+    fixtures = ['tests/people/fixtures/people_data.json', 'tests/widgets/fixtures/widget_data.json',
+                'tests/appconf/fixtures/appconf_data.json',
+                ]
 
     def tearDown(self):
         requests.logout()

@@ -14,6 +14,7 @@ class TestingLegacyApi(TestCase):
         'tests/people/fixtures/people_data.json',
         'tests/widgets/fixtures/widget_data.json',
         'tests/preferences/fixtures/pref_data.json',
+        'tests/appconf/fixtures/appconf_data.json',
     ]
 
     def test_person_whoami(self):

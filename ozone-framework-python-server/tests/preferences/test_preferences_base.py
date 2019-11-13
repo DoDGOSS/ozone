@@ -31,7 +31,9 @@ class TestingPrefBaseUrl(TestCase):
                 'tests/stacks/fixtures/stacks_data.json',
                 'tests/dashboards/fixtures/dashboard_data.json',
                 'tests/owf_groups/fixtures/groups_data.json',
-                'tests/preferences/fixtures/pref_data.json']
+                'tests/preferences/fixtures/pref_data.json',
+                'tests/appconf/fixtures/appconf_data.json',
+                ]
 
     def test_post_person(self):
         requests.login(email='user@goss.com', password='password')
