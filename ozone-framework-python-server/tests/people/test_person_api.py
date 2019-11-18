@@ -1,23 +1,18 @@
 from django.urls import reverse
 from rest_framework.test import APIClient
 from django.test import TestCase
-from rest_framework.test import APIClient
 from people.models import Person, PersonWidgetDefinition
+from people.serializers import PersonWidgetDefinitionSerializer
 from stacks.models import Stack
 from dashboards.models import Dashboard
 from dashboards.serializers import DashboardBaseSerializer
 from widgets.models import WidgetDefinition
-from widgets.serializers import WidgetDefinitionSerializer
 
 requests = APIClient()
 
 
 class PersonApiTests(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                # 'tests/people/fixtures/people_widget_data.json'
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def setUp(self):
         self.regular_user = Person.objects.get(pk=2)
@@ -67,7 +62,7 @@ class PersonApiTests(TestCase):
         regular_user = Person.objects.get(id=2)
         widget_ids = regular_user.get_active_widgets()
         widgets = WidgetDefinition.objects.filter(id__in=widget_ids)
-        serialized_widgets = WidgetDefinitionSerializer(widgets, many=True)
+        serialized_widgets = PersonWidgetDefinitionSerializer(widgets, many=True)
         self.assertEqual(response.data['widgets'], serialized_widgets.data)
 
         # assure user's dashboards are returned

@@ -147,7 +147,7 @@ export class UsersWidget extends React.Component<{}, State> {
         const response = await userApi.getUsers();
 
         // TODO: Handle failed request
-        if (response.status !== 200) return;
+        if (!(response.status >= 200 && response.status < 400)) return;
 
         if (!this._isMounted) {
             return;
@@ -178,7 +178,7 @@ export class UsersWidget extends React.Component<{}, State> {
         const response = await userApi.deleteUser(user.id);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (!(response.status >= 200 && response.status < 400)) return false;
         this.getUsers();
         return true;
     };

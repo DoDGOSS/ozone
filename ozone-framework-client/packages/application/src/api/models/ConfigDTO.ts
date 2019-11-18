@@ -1,5 +1,6 @@
 import { createValidator } from "./validate";
 import { CONFIG_LIST_SCHEMA, CONFIG_SCHEMA } from "./schemas/config.schema";
+import { ListOf } from "../interfaces";
 
 export interface ConfigDTO {
     id: number;
@@ -15,9 +16,8 @@ export interface ConfigDTO {
     subGroupOrder?: number;
 }
 
-export const validateConfig = createValidator<ConfigDTO>(CONFIG_SCHEMA);
-
-export const validateConfigList = createValidator<ConfigDTO[]>(CONFIG_LIST_SCHEMA);
+export const validateConfigDetailResponse = createValidator<ConfigDTO>(CONFIG_SCHEMA);
+export const validateConfigListResponse = createValidator<ListOf<ConfigDTO[]>>(CONFIG_LIST_SCHEMA);
 
 export interface ConfigUpdateRequest {
     id: number;

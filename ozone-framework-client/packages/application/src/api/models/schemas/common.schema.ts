@@ -2,7 +2,7 @@ export const ID_SCHEMA = {
     title: "IdObject",
     type: "object",
     required: ["id"],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         id: {
             type: "number"

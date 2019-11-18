@@ -5,7 +5,7 @@ from people.serializers import PersonBaseSerializer
 
 
 class PreferenceSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=Person.objects.all(),)
+    user = serializers.PrimaryKeyRelatedField(queryset=Person.objects.all())
 
     class Meta:
         model = Preference

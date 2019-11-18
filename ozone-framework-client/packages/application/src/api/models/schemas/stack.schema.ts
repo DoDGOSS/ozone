@@ -14,19 +14,20 @@ export const STACK_SCHEMA = {
         "imageUrl",
         "name",
         "owner",
-        "stackContext",
-        "totalDashboards",
-        "totalGroups",
-        "totalUsers",
-        "totalWidgets"
+        "stackContext"
+        // TODO -- add in django
+        // "totalDashboards",
+        // "totalGroups",
+        // "totalUsers",
+        // "totalWidgets"
     ],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         approved: {
-            type: "boolean"
+            type: ["boolean", "null"]
         },
         defaultGroup: {
-            $ref: "#/definitions/Group"
+            type: ["number", "null"]
         },
         description: {
             type: ["string", "null"]
@@ -50,12 +51,7 @@ export const STACK_SCHEMA = {
             type: "string"
         },
         owner: {
-            oneOf: [
-                {
-                    $ref: "#/definitions/User"
-                },
-                { type: "null" }
-            ]
+            oneOf: [{ $ref: "#/definitions/User" }, { type: "null" }]
         },
         stackContext: {
             type: "string"
@@ -83,7 +79,7 @@ export const STACK_GET_RESPONSE_SCHEMA = {
     title: "StackGetResponse",
     type: "object",
     required: ["data", "results"],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         data: {
             type: "array",
@@ -101,20 +97,27 @@ export const STACK_GET_RESPONSE_SCHEMA = {
     }
 };
 
-export const STACK_CREATE_RESPONSE_SCHEMA = {
-    title: "StackCreateResponse",
+export const STACK_USER_GET_RESPONSE_SCHEMA = {
+    title: "StackUserGetResponse",
     type: "object",
-    required: ["data", "success"],
-    additionalProperties: false,
+    required: ["stacks", "user"],
+    additionalProperties: true,
     properties: {
-        data: {
-            type: "array",
-            items: {
-                $ref: "#/definitions/Stack"
-            }
+        stacks: {
+            anyOf: [
+                {
+                    type: "array"
+                },
+                {
+                    type: "array",
+                    items: {
+                        $ref: "#/definitions/Stack"
+                    }
+                }
+            ]
         },
-        success: {
-            type: "boolean"
+        user: {
+            $ref: "#/definitions/User"
         }
     },
     definitions: {
@@ -123,131 +126,21 @@ export const STACK_CREATE_RESPONSE_SCHEMA = {
     }
 };
 
-export const STACK_UPDATE_RESPONSE_SCHEMA = {
-    ...STACK_CREATE_RESPONSE_SCHEMA,
-    title: "StackUpdateResponse"
-};
-
-export const STACK_DELETE_ADMIN_RESPONSE_SCHEMA = {
-    title: "StackDeleteResponse",
+export const STACK_GROUP_GET_RESPONSE_SCHEMA = {
+    title: "StackGroupGetResponse",
     type: "object",
-    required: ["data", "success"],
-    additionalProperties: false,
+    required: ["stack", "group"],
+    additionalProperties: true,
     properties: {
-        data: {
-            type: "array",
-            items: {
-                type: "object",
-                required: ["id"],
-                additionalProperties: false,
-                properties: {
-                    id: {
-                        type: "number"
-                    }
-                }
-            }
+        stack: {
+            $ref: "#/definitions/Stack"
         },
-        success: {
-            type: "boolean"
-        }
-    }
-};
-
-export const STACK_DELETE_USER_VIEW_SCHEMA = {
-    title: "StackDeleteUserView",
-    type: "object",
-    required: [
-        "approved",
-        "defaultGroup",
-        "description",
-        "descriptorUrl",
-        "groups",
-        "id",
-        "imageUrl",
-        "name",
-        "owner",
-        "stackContext",
-        "uniqueWidgetCount"
-    ],
-    additionalProperties: false,
-    properties: {
-        approved: {
-            type: "boolean"
-        },
-        defaultGroup: {
-            oneOf: [
-                {
-                    type: "object",
-                    require: ["id"],
-                    additionalProperties: false,
-                    properties: {
-                        id: {
-                            type: "number"
-                        }
-                    }
-                },
-                { type: "null" }
-            ]
-        },
-        description: {
-            type: ["string", "null"]
-        },
-        descriptorUrl: {
-            type: ["string", "null"]
-        },
-        groups: {
-            type: "array" // TODO
-        },
-        id: {
-            type: "number"
-        },
-        imageUrl: {
-            type: ["string", "null"]
-        },
-        name: {
-            type: "string"
-        },
-        owner: {
-            oneOf: [
-                {
-                    type: "object",
-                    required: ["id"],
-                    additionalProperties: false,
-                    properties: {
-                        id: {
-                            type: "number"
-                        }
-                    }
-                },
-                { type: "null" }
-            ]
-        },
-        stackContext: {
-            type: "string"
-        },
-        uniqueWidgetCount: {
-            type: "number"
-        }
-    }
-};
-
-export const STACK_DELETE_USER_RESPONSE_SCHEMA = {
-    title: "StackDeleteUserResponse",
-    type: "object",
-    required: ["data", "success"],
-    additionalProperties: false,
-    properties: {
-        data: {
-            type: "array",
-            items: {
-                $ref: "#/definitions/StackDeleteUserView"
-            }
-        },
-        success: {
-            type: "boolean"
+        group: {
+            $ref: "#/definitions/Group"
         }
     },
     definitions: {
-        StackDeleteUserView: STACK_DELETE_USER_VIEW_SCHEMA
+        Stack: STACK_SCHEMA,
+        ...STACK_SCHEMA.definitions
     }
 };

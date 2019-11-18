@@ -21,7 +21,7 @@ describe("Preference API", () => {
         gateway = new NodeGateway();
         preferenceApi = new PreferenceAPI(gateway);
 
-        const response = await gateway.login("testAdmin1", "password");
+        const response = await gateway.login("admin", "password");
         user = response.data;
         expect(gateway.isAuthenticated).toEqual(true);
     });

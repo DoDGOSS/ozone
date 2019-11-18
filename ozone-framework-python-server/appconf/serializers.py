@@ -4,10 +4,13 @@ from rest_framework import serializers
 from rest_framework.serializers import raise_errors_on_nested_writes
 from rest_framework.utils import model_meta
 import fileinput
+from people.serializers import PersonBaseSerializer
 from .models import ApplicationConfiguration
 
 
 class AppConfSerializer(serializers.ModelSerializer):
+    created_by = PersonBaseSerializer(many=False, read_only=True)
+    edited_by = PersonBaseSerializer(many=False, read_only=True)
 
     class Meta:
         model = ApplicationConfiguration

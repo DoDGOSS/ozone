@@ -94,7 +94,7 @@ class OwfGroupPeopleManager(models.Manager):
         try:
             group = obj_data.pop('group')
             person = obj_data.pop('person')
-            new_group_people = super().create(
+            new_group_people, _ = super().get_or_create(
                 group=group,
                 person=person
             )
@@ -121,7 +121,9 @@ class OwfGroupPeople(models.Model):
     class Meta:
         managed = True
         db_table = 'owf_group_people'
-        unique_together = (('group', 'person'),)
+        constraints = [
+            models.UniqueConstraint(fields=['group', 'person'], name='unique_owfgroup_people')
+        ]
 
 
 @receiver(models.signals.post_delete, sender=OwfGroupPeople)

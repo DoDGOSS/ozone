@@ -12,6 +12,7 @@ import { GroupCreateRequest, GroupDTO, GroupUpdateRequest } from "../../../../ap
 import { groupApi } from "../../../../api/clients/GroupAPI";
 
 import * as styles from "../Widgets.scss";
+import { Response } from "../../../../api/interfaces";
 
 export interface GroupSetupProps {
     onUpdate: (update?: any) => void;
@@ -80,22 +81,16 @@ export class GroupSetup extends React.Component<GroupSetupProps, GroupSetupState
         } else {
             group.status = group.active ? "active" : "inactive";
         }
-        let response: any;
+        let response: Response<GroupDTO>;
         if ("id" in group) {
             response = await groupApi.updateGroup(group);
         } else {
             response = await groupApi.createGroup(group);
         }
 
-        if (
-            response.status === 200 &&
-            response.data &&
-            response.data.data &&
-            response.data.data.length !== undefined &&
-            response.data.data.length > 0
-        ) {
+        if (response.status >= 200 && response.status < 400 && response.data) {
             this.setState({
-                group: response.data.data[0]
+                group: response.data
             });
             this.props.onUpdate();
             return true;

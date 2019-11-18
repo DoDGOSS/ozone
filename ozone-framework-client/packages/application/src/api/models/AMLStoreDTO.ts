@@ -4,6 +4,7 @@ import { AML_ICON_SCHEMA, AML_LISTING_SCHEMA, AML_LISTINGTYPE_SCHEMA } from "./s
 export interface AMLListingTypeDTO {
     title: string;
 }
+
 export const validateAMLListingType = createValidator<AMLListingTypeDTO>(AML_LISTINGTYPE_SCHEMA);
 
 export interface AMLIconDTO {
@@ -11,6 +12,7 @@ export interface AMLIconDTO {
     url: string;
     security_marking: string;
 }
+
 export const validateAMLIcon = createValidator<AMLIconDTO>(AML_ICON_SCHEMA);
 
 export interface AMLListingDTO {
@@ -32,4 +34,5 @@ export interface AMLListingDTO {
     is_private: boolean;
     required_listings: AMLListingDTO[];
 }
+
 export const validateAMLListing = createValidator<AMLListingDTO>(AML_LISTING_SCHEMA);

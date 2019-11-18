@@ -6,7 +6,7 @@ import { Form, Formik, FormikActions, FormikProps } from "formik";
 
 import { Button, Intent, Position, Toaster } from "@blueprintjs/core";
 
-import { StackDTO, StackUpdateRequest } from "../../api/models/StackDTO";
+import { StackDTO } from "../../api/models/StackDTO";
 
 import { FormError, TextField } from "../form";
 
@@ -15,7 +15,6 @@ import { userDashboardApi } from "../../api/clients/UserDashboardAPI";
 import { dashboardApi } from "../../api/clients/DashboardAPI";
 
 import { assetUrl } from "../../environment";
-import { DashboardDTO } from "../../api/models/DashboardDTO";
 
 export interface EditStackFormProps {
     onSubmit: () => void;
@@ -31,12 +30,16 @@ export const EditStackForm: React.FC<EditStackFormProps> = ({ onSubmit, stack })
     return (
         <Formik
             initialValues={initialFormValues}
-            onSubmit={async (values: StackUpdateRequest, actions: FormikActions<StackUpdateRequest>) => {
+            onSubmit={async (values: StackDTO, actions: FormikActions<StackDTO>) => {
                 let defaultDashboard;
                 let dashSuccess = false;
 
                 const userDashboardsResponse = await userDashboardApi.getOwnDashboards();
-                if (userDashboardsResponse.status === 200 && userDashboardsResponse.data.dashboards !== undefined) {
+                if (
+                    userDashboardsResponse.status >= 200 &&
+                    userDashboardsResponse.status < 400 &&
+                    userDashboardsResponse.data.dashboards !== undefined
+                ) {
                     for (const dash of userDashboardsResponse.data.dashboards) {
                         if (!dash.stack) {
                             continue;
@@ -46,7 +49,7 @@ export const EditStackForm: React.FC<EditStackFormProps> = ({ onSubmit, stack })
                         }
                     }
                     if (stack.name !== values.name && defaultDashboard !== undefined) {
-                        const updatedDash = {
+                        const updatedDash: any = {
                             guid: defaultDashboard.guid,
                             name: values.name + " (default)"
                         };
@@ -78,7 +81,7 @@ export const EditStackForm: React.FC<EditStackFormProps> = ({ onSubmit, stack })
                 }
             }}
         >
-            {(formik: FormikProps<StackUpdateRequest>) => (
+            {(formik: FormikProps<StackDTO>) => (
                 <Form>
                     {formik.status && formik.status.error && <FormError message={formik.status.error} />}
 

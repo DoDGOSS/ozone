@@ -12,14 +12,8 @@ from dashboards.models import Dashboard
 
 
 class VersionUpdateOnSave(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/stacks/fixtures/stacks_data.json',
-                'tests/dashboards/fixtures/dashboard_data.json',
-                'tests/owf_groups/fixtures/groups_data.json',
-                'tests/preferences/fixtures/pref_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/appconf/fixtures/appconf_data.json']
+    fixtures = ['resources/fixtures/default_data.json',
+                'tests/dashboards/fixtures/default_test_dashboards.json']
 
     def setUp(self):
         ApplicationConfiguration.objects.create(code="fake1234_owf.enable.cef.logging",
@@ -165,7 +159,7 @@ class VersionUpdateOnSave(TestCase):
 
     def test_version_update_on_save_person_widget_definition_model(self):
         current_time = int(time.time())
-        item_change = PersonWidgetDefinition.objects.get(display_name='xxx_test_xxx')
+        item_change = PersonWidgetDefinition.objects.all().first()
         item_change.display_name = 'xxx'
 
         item_change.save()
@@ -265,12 +259,12 @@ class VersionUpdateOnSave(TestCase):
 
     def test_version_update_on_save_dashboard_model(self):
         current_time = int(time.time())
-        item_change = Dashboard.objects.get(id=1)
+        item_change = Dashboard.objects.get(id=100)
         item_change.name = 'xxx_xxx'
 
         item_change.save()
 
-        check_item = Dashboard.objects.get(id=1)
+        check_item = Dashboard.objects.get(id=100)
 
         self.assertEqual(check_item.name, 'xxx_xxx')
         self.assertGreaterEqual(check_item.version, current_time)

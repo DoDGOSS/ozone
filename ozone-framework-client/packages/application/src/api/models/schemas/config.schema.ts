@@ -2,25 +2,29 @@ export const CONFIG_SCHEMA = {
     title: "Config",
     type: "object",
     required: [
+        "createdDate",
+        "editedDate",
         "code",
-        "description",
-        "groupName",
-        "help",
-        "id",
-        "mutable",
-        "subGroupName",
-        "subGroupOrder",
+        "value",
         "title",
+        "description",
         "type",
-        "value"
+        "groupName",
+        "subGroupName",
+        "mutable",
+        "subGroupOrder",
+        "help",
+        // TODO -- django add refrences not just ids.
+        "createdBy",
+        "editedBy"
     ],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         code: {
             type: "string"
         },
         description: {
-            type: "string"
+            type: ["string", "null"]
         },
         groupName: {
             type: "string"
@@ -54,9 +58,19 @@ export const CONFIG_SCHEMA = {
 
 export const CONFIG_LIST_SCHEMA = {
     title: "Config",
-    type: "array",
-    items: {
-        $ref: "#/definitions/Config"
+    type: "object",
+    required: ["data", "results"],
+    additionalProperties: true,
+    properties: {
+        data: {
+            type: "array",
+            items: {
+                $ref: "#/definitions/Config"
+            }
+        },
+        results: {
+            type: "number"
+        }
     },
     definitions: {
         Config: CONFIG_SCHEMA

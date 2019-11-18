@@ -44,9 +44,7 @@ dashboard3_payload = {
 
 
 class StacksModelTests(TransactionTestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/owf_groups/fixtures/groups_data.json']
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def setUp(self):
         self.admin_user = Person.objects.get(pk=1)
@@ -61,7 +59,7 @@ class StacksModelTests(TransactionTestCase):
         self.group.people.all().update(requires_sync=False)
 
     def test_user_can_create_stack(self):
-        created_stack_id = Stack.create(self.regular_user, create_stack_payload).id
+        created_stack_id = self.stack.id
 
         created_stack = Stack.objects.get(pk=created_stack_id)
         self.assertTrue(created_stack.stack_context)

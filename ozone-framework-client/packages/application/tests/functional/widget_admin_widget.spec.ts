@@ -5,7 +5,7 @@ import { GlobalElements, WidgetAdminWidget } from "./selectors";
 import { loggedInAs } from "./helpers";
 import { HomeScreen, WidgetAdminCreateForm } from "./pages";
 
-const LOGIN_USERNAME: string = "testAdmin1";
+const LOGIN_USERNAME: string = "admin";
 const LOGIN_PASSWORD: string = "password";
 
 const NEW_WIDGET_NAME: string = "Example Functional Test Widget";

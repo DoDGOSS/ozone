@@ -6,7 +6,7 @@ import { loggedInAs } from "./helpers";
 
 module.exports = {
     "As a user, I want to be able to create a new Stack": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
 
@@ -29,7 +29,7 @@ module.exports = {
 
     //    Edit
     "As an administrator, I can edit a stack": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
 
@@ -66,7 +66,7 @@ module.exports = {
 
     //    Share with confirmation
     "As an administrator, I can share a stack": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
 
@@ -96,7 +96,7 @@ module.exports = {
 
     //    Add a Dashboard to a Stack
     "As an administrator, I can add a Dashboard to a Stack": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
 
@@ -132,7 +132,7 @@ module.exports = {
 
     //    Add a Dashboard to a Stack and Copy Layout
     "As an administrator, I can add a Dashboard to a Stack with a Copied Layout": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
 
@@ -172,7 +172,7 @@ module.exports = {
 
     //    Edit Dashboard
     "As an administrator, I can edit a dashboard in a stack": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
 
@@ -214,7 +214,7 @@ module.exports = {
 
     //    Delete Dashboard with confirmation
     "As an administrator, I can delete a dashboard from a stack": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
 
@@ -256,7 +256,7 @@ module.exports = {
 
     //    Delete Stack with confirmation
     "As an administrator, I can delete a stack": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
 
@@ -292,7 +292,7 @@ module.exports = {
 
     // document title changes
     "As a user, the browser's tab title should reflect the name of the current dashboard": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser.getTitle(function(title) {
             if (title)

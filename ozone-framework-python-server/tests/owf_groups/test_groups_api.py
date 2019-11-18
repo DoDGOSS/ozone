@@ -8,10 +8,7 @@ requests = APIClient()
 
 
 class GroupsApiTests(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def setUp(self):
         self.admin_user = Person.objects.get(pk=1)
@@ -19,14 +16,13 @@ class GroupsApiTests(TestCase):
 
         # create group
         self.group = OwfGroup.objects.create(name="group")
-        self.group.people.add(self.regular_user)
+        self.group.add_user(self.regular_user)
 
-    def test_admin_can_remove_user_from_group(self):
+    def test_admin_can_remove_user_from_group(self):  # TODO: John
         requests.login(email='admin@goss.com', password='password')
-        group_people = OwfGroupPeople.objects.get(person=self.regular_user, group=self.group)
-        url = reverse('admin_groups-people-detail', args=(group_people.id,))
+        url = reverse('admin_groups-people-detail', args=('0'))
 
-        response = requests.delete(url)
+        response = requests.delete(url, {'group_id': self.group.id, 'person_id': self.regular_user.id})
 
         self.assertEqual(response.status_code, 204)
         requests.logout()

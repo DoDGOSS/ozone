@@ -4,6 +4,7 @@ import { SelectionDialogProps, TableSelectionDialog } from "../../../table-selec
 import { stackApi } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";
 import { ColumnTabulator } from "../../../generic-table/GenericTable";
+import { ListOf, Response } from "../../../../api/interfaces";
 
 export class UserStacksEditDialog extends React.Component<SelectionDialogProps<StackDTO>> {
     constructor(props: SelectionDialogProps<StackDTO>) {
@@ -32,9 +33,9 @@ export class UserStacksEditDialog extends React.Component<SelectionDialogProps<S
     }
 
     protected async getAllStacks(): Promise<Array<StackDTO>> {
-        const response = await stackApi.getStacks();
+        const response: Response<ListOf<StackDTO[]>> = await stackApi.getStacks();
 
-        if (response.status !== 200) return [];
+        if (!(response.status >= 200 && response.status < 400)) return [];
 
         return response.data.data.filter((stack) => stack.approved);
     }

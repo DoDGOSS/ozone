@@ -15,7 +15,7 @@ export class ThemeAPI {
     }
 
     getTheme(): Promise<Response<string>> {
-        return this.preferenceApi.getPreference("owf", "selected_theme").then(formatResponseFromGet);
+        return this.preferenceApi.getPreference("owf", "selected_theme").then(formatResponseFromGet); // TODO: look at this in more detail. And possibly look into the default data.
     }
 
     async setTheme(newTheme: string): Promise<Response<string>> {

@@ -69,10 +69,13 @@ class Dashboard(models.Model):
         from people.models import PersonWidgetDefinition
         try:
             layout_config = json.loads(self.layout_config)
+            while(type(layout_config) is not dict):
+                layout_config = json.loads(layout_config)
         except ValueError as e:
             return []
 
         widgets = []
+        
         for background_widget in layout_config["backgroundWidgets"]:
             user_widget = PersonWidgetDefinition.objects.get(pk=background_widget["userWidgetId"])
             widgets.append(user_widget.widget_definition)

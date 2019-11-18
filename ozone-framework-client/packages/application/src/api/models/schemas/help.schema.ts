@@ -12,7 +12,7 @@ export const HELP_GET_RESPONSE_SCHEMA = {
             title: "HelpFolder",
             type: "object",
             required: ["children", "leaf", "path", "text"],
-            additionalProperties: false,
+            additionalProperties: true,
             properties: {
                 children: {
                     type: "array",
@@ -36,7 +36,7 @@ export const HELP_GET_RESPONSE_SCHEMA = {
             title: "HelpFile",
             type: "object",
             required: ["leaf", "path", "text"],
-            additionalProperties: false,
+            additionalProperties: true,
             properties: {
                 leaf: {
                     type: "boolean",

@@ -23,13 +23,7 @@ payload = {
 
 
 class StacksAdminApiTests(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/stacks/fixtures/stacks_data.json',
-                'tests/dashboards/fixtures/dashboard_data.json',
-                'tests/owf_groups/fixtures/groups_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def test_admin_create_stack(self):
         requests.login(email='admin@goss.com', password='password')
@@ -141,16 +135,10 @@ create_stack_group_payload = {
 
 
 class StacksGroupsAdminApiTests(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/stacks/fixtures/stacks_data.json',
-                'tests/dashboards/fixtures/dashboard_data.json',
-                'tests/owf_groups/fixtures/groups_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', 'tests/stacks/fixtures/stacks_test_data.json']
 
     stack_id_test_pass = 1
-    stack_id_test_fail = 9
+    stack_id_test_fail = 100
 
     def setUp(self):
         # Create the test data for stack groups
@@ -269,18 +257,19 @@ class StacksGroupsAdminApiTests(TestCase):
 
         self.assertEqual(Dashboard.objects.filter(user=user).exists(), True)
 
-        test_user_3_dashboard = Dashboard.objects.get(user=test_user_3)
-        user_dashboard = Dashboard.objects.get(user=user)
+        test_user_3_dashboard = Dashboard.objects.get(user=test_user_3, name='sg-rc-1')
+        user_dashboard = Dashboard.objects.get(user=user, name='sg-rc-1')
 
         stack_groups_detail_url = reverse('admin_stacks-groups-detail',
-                                          args=f"{stack_groups_response_del.data['id']}")
+                                          args=(f"{stack_groups_response_del.data['id']}",))
 
-        stack_groups_delete_response = requests.delete(stack_groups_detail_url)
+        stack_groups_delete_response = requests.delete(stack_groups_detail_url, {'stack_id': stack_created.id,
+                                                                                 'group_id': self.test_group_delete.id})
 
         self.assertEqual(stack_groups_delete_response.status_code, 204)
 
         # Users Dashboard should be removed due to being in the group that was deleted
-        self.assertEqual(Dashboard.objects.filter(user=test_user_3).exists(), False)
+        self.assertEqual(Dashboard.objects.filter(user=test_user_3, name='sg-rc-1').exists(), False)
         # Users Dashboard should be not be removed due to being in the group that was
         # deleted and a different group associated with the stack
         self.assertEqual(Dashboard.objects.filter(user=user).exists(), True)

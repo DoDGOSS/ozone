@@ -77,7 +77,6 @@ export const CreateStackForm: React.FC<CreateStackFormProps> = ({ onSubmit }) =>
                 }
 
                 const stackCreationSuccess = await dashboardStore.createNewStack(newStackInfo, defaultDashLayout);
-
                 if (!stackCreationSuccess) {
                     return;
                 }

@@ -23,7 +23,7 @@ export const UPDATE_DASHBOARD_RESPONSE = {
     locked: false,
     dashboardPosition: 0,
     name: "Untitled",
-    user: { userId: "testAdmin1" },
+    user: { userId: "admin" },
     type: null,
     EDashboardLayoutList: "[accordion, desktop, portal, tabbed]",
     layoutConfig:
@@ -39,8 +39,8 @@ export const UPDATE_DASHBOARD_RESPONSE = {
             id: 1,
             userRealName: "Test Administrator 1",
             totalWidgets: 0,
-            username: "testAdmin1",
-            email: "testAdmin1@ozone.test",
+            username: "admin",
+            email: "admin@goss.com",
             lastLogin: null,
             totalDashboards: 0
         },

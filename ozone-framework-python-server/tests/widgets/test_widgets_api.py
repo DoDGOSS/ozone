@@ -23,19 +23,17 @@ payload = {
     "mobile_ready": False,
     "intents": {
         "send": [
-            {"action": "act", "dataTypes": ["type-1", "type-2"]}
+            {"action": "act", "data_types": ["type-1", "type-2"]}
         ],
         "receive": [
-            {"action": "act", "dataTypes": ["type-2"]}
+            {"action": "act", "data_types": ["type-2"]}
         ]
     }
 }
 
 
 class TestingWidgetsApi(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json', 'tests/widgets/fixtures/widget_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def tearDown(self):
         requests.logout()
@@ -71,13 +69,13 @@ class TestingWidgetsApi(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['id'], 1)
-        self.assertEqual(response.data['display_name'], payload['name'])
+        self.assertEqual(response.data['value']['display_name'], payload['name'])
 
         self.assertEqual(response.data['intents']['send'][0]['action'],
                          payload['intents']['send'][0]['action'])
 
-        self.assertEqual(len(response.data['intents']['send'][0]['dataTypes']),
-                         len(payload['intents']['send'][0]['dataTypes']))
+        self.assertEqual(len(response.data['intents']['send'][0]['data_types']),
+                         len(payload['intents']['send'][0]['data_types']))
 
         self.assertEqual(response.data['intents']['receive'][0]['action'],
                          payload['intents']['receive'][0]['action'])
@@ -85,13 +83,13 @@ class TestingWidgetsApi(TestCase):
     def test_admin_list_a_widget_via_universal_name(self):
         requests.login(email='admin@goss.com', password='password')
 
-        universal_name = 'org.owfgoss.owf.examples.HTMLViewer'
+        universal_name = 'org.owfgoss.owf.examples.ColorServer'
         url = reverse('widgets-list')
         filter_url = f'{url}?universal_name={universal_name}'
         response = requests.get(filter_url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['results'][0]['universal_name'], universal_name)
+        self.assertEqual(response.data['results'][0]['value']['universal_name'], universal_name)
 
     def test_admin_delete_widget(self):
         requests.login(email='admin@goss.com', password='password')
@@ -122,11 +120,10 @@ class TestingWidgetsApi(TestCase):
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['intents']['send'][0]['action'],
+        self.assertEqual(response.data['value']['intents']['send'][0]['action'],
                          payload['intents']['send'][0]['action'])
+        self.assertEqual(len(response.data['value']['intents']['send'][0]['dataTypes']),
+                         len(payload['intents']['send'][0]['data_types']))
 
-        self.assertEqual(len(response.data['intents']['send'][0]['dataTypes']),
-                         len(payload['intents']['send'][0]['dataTypes']))
-
-        self.assertEqual(response.data['intents']['receive'][0]['action'],
+        self.assertEqual(response.data['value']['intents']['receive'][0]['action'],
                          payload['intents']['receive'][0]['action'])

@@ -199,7 +199,7 @@ export namespace AdminWidget {
 
     export const EDIT_USER_ID = "button[data-element-id='user-admin-widget-edit-newUserEmail1@email.com']";
 
-    export const EDIT_PREFERENCE_USER_ID = "button[data-element-id='user-admin-widget-edit-testUser1@ozone.test']";
+    export const EDIT_PREFERENCE_USER_ID = "button[data-element-id='user-admin-widget-edit-user@goss.com']";
 
     export const DELETE_USER_ID = "button[data-element-id='user-admin-widget-delete-newUserEmail1@email.com']";
 
@@ -257,8 +257,8 @@ export namespace StackAdminWidget {
 
     // USERS TAB
     export const ADD_USER_BUTTON = "button[data-element-id='user-edit-add-user-dialog-add-button']";
-    export const FIRST_USERNAME = "testAdmin1";
-    export const SECOND_USERNAME = "testUser1";
+    export const FIRST_USERNAME = "admin";
+    export const SECOND_USERNAME = "user";
 
     export function dashboardUserTableActions(username: string): string {
         return `div[data-role="stack-admin-widget-user-actions"][data-username="${username}"]`;

@@ -1,4 +1,4 @@
-import { Gateway } from "../interfaces";
+import { Gateway, Response } from "../interfaces";
 import { OzoneGateway } from "../../services/OzoneGateway";
 
 import { MarketplaceAPI } from "./MarketplaceAPI";
@@ -18,6 +18,7 @@ import { showToast } from "../../components/toaster/Toaster";
 import { Intent } from "@blueprintjs/core";
 import { dashboardLayoutToJson } from "../../codecs/Dashboard.codec";
 import { dashboardApi } from "./DashboardAPI";
+import { DashboardDTO } from "../models/DashboardDTO";
 
 export class AmlMarketplaceAPI implements MarketplaceAPI {
     private readonly gateway: Gateway;
@@ -243,7 +244,7 @@ export class AmlMarketplaceAPI implements MarketplaceAPI {
             (lItem: AMLListing) => lItem.unique_name === listing.unique_name
         );
 
-        if (response.status !== 200 || foundListings.length > 1) {
+        if (!(response.status >= 200 && response.status < 400) || foundListings.length > 1) {
             return undefined;
         } else if (foundListings.length === 1) {
             return foundListings[0];
@@ -405,10 +406,10 @@ export class AmlMarketplaceAPI implements MarketplaceAPI {
     }
 
     private async getDashboardEditedDateAsEpochVersion(dashboard: Dashboard): Promise<string> {
-        const response = await dashboardApi.getDashboard(dashboard.guid);
+        const response: Response<DashboardDTO> = await dashboardApi.getDashboard(dashboard.id);
         let retVal: string = "0";
-        if (response && response.data && response.data.data) {
-            const dashboardData = response.data.data[0];
+        if (response && (response.status >= 200 && response.status < 400) && response.data) {
+            const dashboardData = response.data;
             retVal = (Date.parse(dashboardData.editedDate) / 1000).toString();
         }
         return retVal;

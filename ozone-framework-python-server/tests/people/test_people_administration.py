@@ -46,14 +46,7 @@ payload2 = {
 
 
 class TestingPersonBaseUrl(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/owf_groups/fixtures/groups_data.json',
-                'tests/dashboards/fixtures/dashboard_data.json',
-                'tests/domain_mappings/fixtures/domain_mapping_data.json',
-                'tests/stacks/fixtures/stacks_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def test_admin_post_user(self):
         requests.login(email='admin@goss.com', password='password')
@@ -151,14 +144,7 @@ class TestingPersonBaseUrl(TestCase):
 
 
 class TestingPersonCleanUp(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/owf_groups/fixtures/groups_data.json',
-                'tests/dashboards/fixtures/dashboard_data.json',
-                'tests/domain_mappings/fixtures/domain_mapping_data.json',
-                'tests/stacks/fixtures/stacks_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     create_stack_payload = {
         'name': 'test stack 1',
@@ -202,12 +188,11 @@ class TestingPersonCleanUp(TestCase):
                                                                     dest_type=MappingType.dashboard, dest_id=5).count()
 
         # Test Delete Stack, Groups, Dashboards and Domain Mappings
-        self.assertEqual(domain_mappings_check_delete, 1)
+        self.assertEqual(domain_mappings_check_delete, 0)
         self.assertEqual(stack_owner_deleted, 0)
         self.assertEqual(stack_total_2, 3)
         self.assertEqual(dashboard_check_deleted, 0)
         self.assertEqual(group_check_deleted, 0)
-        self.assertEqual(domain_mappings_check_delete, 1)
         self.assertEqual(delete_user_response.status_code, 204)
 
         requests.logout()

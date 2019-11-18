@@ -101,7 +101,7 @@ export class StacksWidget extends React.Component<{}, StacksWidgetState> {
         const response = await stackApi.getStacks();
 
         // TODO: Handle failed request
-        if (response.status !== 200) return;
+        if (!(response.status >= 200 && response.status < 400)) return;
 
         if (!this._isMounted) {
             return;
@@ -169,7 +169,7 @@ export class StacksWidget extends React.Component<{}, StacksWidgetState> {
     private async onShareConfirmed(stack: StackDTO) {
         try {
             const response = await stackApi.shareStack(stack.id);
-            if (response.status !== 200) return false;
+            if (!(response.status >= 200 && response.status < 400)) return false;
         } catch (e) {
             return false;
         }
@@ -189,7 +189,7 @@ export class StacksWidget extends React.Component<{}, StacksWidgetState> {
         const response = await stackApi.deleteStackAsAdmin(stack.id);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (!(response.status >= 200 && response.status < 400)) return false;
 
         this.getStacks();
 
