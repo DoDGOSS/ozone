@@ -2,7 +2,7 @@
 
 echo "Running PEP8 checks"
 echo "See pep8-results.txt for list of errors."
-pycodestyle --max-line-length=120 --show-source --show-pep8 --count --exclude="*/migrations, ./migration_owf, ./migration_tool" . > pep8-results.txt
+pycodestyle --max-line-length=120 --show-source --show-pep8 --count --exclude="*/migrations, ./migration_owf, ./migration_tool, config/owf_utils/owf_logging_backends.py" . > pep8-results.txt
 # autopep8 --max-line-length=120 --in-place --recursive --aggressive owf_framework
 
 
