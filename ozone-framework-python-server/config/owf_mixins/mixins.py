@@ -48,6 +48,7 @@ class BulkDestroyModelMixin(object):
     Param: id
     id: [1,2,3,4]
     """
+    bulk_destroy_key = 'id'
 
     def allow_bulk_destroy(self, *args, **kwargs):
         """
@@ -80,7 +81,7 @@ class BulkDestroyModelMixin(object):
         try:
             filters = {}
             # delete if we have a list of ids.
-            id_list = request.data and request.data.getlist('id')
+            id_list = request.data and request.data.getlist(self.bulk_destroy_key)
             if id_list:
                 filters.update({
                     # use map and int to validate and assure its an int.

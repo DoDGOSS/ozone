@@ -14,7 +14,7 @@ describe("Widget Definition API", () => {
         gateway = new NodeGateway();
         widgetDefApi = new WidgetDefinitionAPI(gateway);
 
-        await gateway.login("testAdmin1", "password");
+        await gateway.login("admin", "password");
         expect(gateway.isAuthenticated).toEqual(true);
     });
 

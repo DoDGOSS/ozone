@@ -34,7 +34,7 @@ export function toArray<T>(value: T | T[] | undefined): T[] {
 }
 
 export function isNil(value: unknown): value is undefined | null {
-    return value === null || value === undefined;
+    return value === null || value === undefined || value === "null";
 }
 
 function isUndefined(value: unknown): value is undefined {
@@ -156,12 +156,16 @@ export function boxed<T>(value?: T): Boxed<T> {
     return { value };
 }
 
-export function getCookie(cname:string) {
+export function getCookie(cname: string) {
     const name = cname + "=";
     const decodedCookie = decodeURIComponent(document.cookie);
-    const ca = decodedCookie.split(';');
-    for(const cookie of ca) {
-        return cookie.substring(name.length, cookie.length);
+    const ca = decodedCookie.split(";");
+    for (let cookie of ca) {
+        cookie = cookie.trim();
+        const cookieKey = cookie.substring(0, cookie.indexOf("=")).trim();        
+        const cookieValue = cookie.substring(cookieKey.length + 1, cookie.length).trim();
+        if(cookieKey === cname)
+            return cookieValue;        
     }
     return "";
 }

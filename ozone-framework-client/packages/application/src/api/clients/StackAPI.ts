@@ -1,27 +1,20 @@
-import * as qs from "qs";
-
-import { Gateway, getGateway, Response } from "../interfaces";
-
-import { mapIds } from "../models/IdDTO";
-import {
-    StackCreateRequest,
-    StackCreateResponse,
-    StackDeleteAdminResponse,
-    StackDeleteUserResponse,
-    StackGetResponse,
-    StackShareResponse,
-    StackUpdateRequest,
-    StackUpdateResponse,
-    validateStackCreateResponse,
-    validateStackDeleteAdminResponse,
-    validateStackDeleteUserResponse,
-    validateStackGetResponse,
-    validateStackUpdateResponse
-} from "../models/StackDTO";
+import { Gateway, getGateway, ListOf, Response } from "../interfaces";
 import { GroupDTO } from "../models/GroupDTO";
 import { UserDTO } from "../models/UserDTO";
 
 import { dashboardApi } from "./DashboardAPI";
+import {
+    StackCreateRequest,
+    StackDTO,
+    StackGroupResponse,
+    StackUpdateRequest,
+    StackUserResponse,
+    validateStackDetailResponse,
+    validateStackGroupResponse,
+    validateStackListResponse,
+    validateStackUserResponse
+} from "../models/StackDTO";
+import { groupApi } from "./GroupAPI";
 
 export interface StackQueryCriteria {
     limit?: number;
@@ -30,6 +23,7 @@ export interface StackQueryCriteria {
     groupId?: number;
 }
 
+// TODO: need to create a new functions to hit the admin url and replace in all admin widgets.
 export class StackAPI {
     private readonly gateway: Gateway;
 
@@ -37,175 +31,134 @@ export class StackAPI {
         this.gateway = gateway || getGateway();
     }
 
-    async getStacks(criteria?: StackQueryCriteria): Promise<Response<StackGetResponse>> {
-        return this.gateway.get("stack/", {
-            params: getOptionParams(criteria),
-            validate: validateStackGetResponse
+    async getStacks(): Promise<Response<ListOf<StackDTO[]>>> {
+        return this.gateway.get("stacks/", { // TODO: from todo above class definition
+            validate: validateStackListResponse
         });
     }
 
-    async getStackById(id: number): Promise<Response<StackGetResponse>> {
-        return this.gateway.get(`stack/${id}/`, {
-            validate: validateStackGetResponse
+    async getStackById(id: number): Promise<Response<StackDTO>> {
+        return this.gateway.get(`stacks/${id}/`, {  // TODO: from todo above class definition
+            validate: validateStackDetailResponse
         });
     }
 
-    async createStack(data: StackCreateRequest): Promise<Response<StackCreateResponse>> {
-        const requestData = qs.stringify({
-            data: JSON.stringify([data])
-        });
-
-        return this.gateway.post(`stack/`, requestData, {
+    async createStack(data: StackCreateRequest): Promise<Response<StackDTO>> {
+        return this.gateway.post(`stacks/`, data, { // TODO: verify request data is what api expects
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateStackCreateResponse
+            validate: validateStackDetailResponse
         });
     }
 
-    async updateStack(data: StackUpdateRequest): Promise<Response<StackUpdateResponse>> {
-        const requestData = qs.stringify({
-            data: JSON.stringify([data])
-        });
-
-        return this.gateway.put(`stack/${data.id}/`, requestData, {
+    async updateStack(data: StackUpdateRequest): Promise<Response<StackDTO>> {
+        return this.gateway.put(`stacks/${data.id}/`, data, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateStackUpdateResponse
+            validate: validateStackDetailResponse
         });
     }
 
-    async restoreStack(data: StackUpdateRequest): Promise<Response<StackUpdateResponse>> {
-        const requestData = qs.stringify({
-            data: JSON.stringify([data])
-        });
-
-        return this.gateway.post(`stack/restore/${data.id}/`, requestData, {
+    async restoreStack(stackId: number): Promise<Response<StackDTO>> {
+        return this.gateway.post(`stacks/${stackId}/restore/`, null, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             }
         });
     }
 
-    async shareStack(id: number): Promise<Response<StackShareResponse>> {
-        return this.gateway.post(`stack/share/${id}`, {
+    async shareStack(stackId: number): Promise<Response<void>> {
+        return this.gateway.post(`stacks/${stackId}/share/`, null, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             }
         });
     }
 
-    async deleteStackAsAdmin(id: number): Promise<Response<StackDeleteAdminResponse>> {
-        // need to delete any dashboards that point to this, otherwise they stay unfindable and
-        // undeletable in the system forever, with a null stack pointer that breaks anything that
-        // assumes dashboards have stacks.
-        await dashboardApi.deleteDashboardsInStack(id);
-
-        const requestData = qs.stringify({
-            _method: "DELETE",
-            adminEnabled: true,
-            data: JSON.stringify(mapIds(id))
-        });
-
-        return this.gateway.post("stack/", requestData, {
+    async deleteStackAsAdmin(stackId: number): Promise<Response<void>> {
+        return this.gateway.delete(`admin/stacks/${stackId}/`, null, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateStackDeleteAdminResponse
+            }
         });
     }
 
-    async deleteStackAsUser(id: number): Promise<Response<StackDeleteUserResponse>> {
-        await dashboardApi.deleteDashboardsInStack(id);
-
-        const requestData: any = qs.stringify({
-            _method: "DELETE",
-            data: JSON.stringify(mapIds(id))
-        });
-
-        return this.gateway.post("stack/", requestData, {
+    async deleteStackAsUser(stackId: number): Promise<Response<void>> {
+        return this.gateway.delete(`stacks/${stackId}/`, null, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateStackDeleteUserResponse
+            }
         });
     }
 
-    async addStackGroups(id: number, groups: GroupDTO[]): Promise<Response<StackUpdateResponse>> {
-        const requestData = qs.stringify({
-            stack_id: id,
-            tab: "groups",
-            update_action: "add",
-            data: JSON.stringify(groups)
-        });
+    async addStackGroups(id: any, groups: GroupDTO[]): Promise<Response<StackGroupResponse>> {
+        const url = "admin/stacks-groups/";
+        let responses: any = [];
+        for (const group of groups) { // TODO: enhancement by creating an endpoint for bulk add.
+            const requestData = {
+                stack: id,
+                group: (group as any).id
+            };
 
-        return this.gateway.put(`stack/${id}`, requestData, {
+            const response = await this.gateway.post(url, requestData, {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            });
+
+            responses.push(response);
+        }
+        return responses[0];
+    }
+
+    async removeStackGroups(stackId: any, groups: GroupDTO[]): Promise<Response<void>> {
+        const requestData = {
+            stack_id: stackId,
+            group_ids: groups.map((group: any) => group.id)
+        };
+
+        // here /0/ is a dummy detail view so delete in backend can take place
+        // otherwise backend doesnt offer DELETE method a list.
+        const url = "admin/stacks-groups/0/";
+
+        return this.gateway.delete(url, requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateStackUpdateResponse
+            }
         });
     }
 
-    async removeStackGroups(id: number, groups: GroupDTO[]): Promise<Response<StackUpdateResponse>> {
-        const requestData = qs.stringify({
-            stack_id: id,
-            tab: "groups",
-            update_action: "remove",
-            data: JSON.stringify(groups)
-        });
+    async addStackUsers(stack: StackDTO, users: UserDTO[]): Promise<Response<any>> {
+        const group: any = { id: 
+            (typeof stack.defaultGroup === "number") ? stack.defaultGroup: stack.defaultGroup.id 
+        };
+        return groupApi.addUsersToGroup(group, users);
+    }
 
-        return this.gateway.put(`stack/${id}`, requestData, {
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateStackUpdateResponse
+    async removeStackUsers(stack: StackDTO, users: UserDTO[]): Promise<Response<void>> {
+        const group: any = { id: 
+            (typeof stack.defaultGroup === "number") ? stack.defaultGroup: stack.defaultGroup.id 
+        };
+        return groupApi.removeUsersFromGroup(group, users);
+    }
+
+    async getStacksForUser(userId: number): Promise<Response<StackUserResponse>> {
+        return this.gateway.get("admin/users-stacks/", {
+            params: { person: userId },
+            validate: validateStackUserResponse
         });
     }
 
-    async addStackUsers(id: number, users: UserDTO[]): Promise<Response<StackUpdateResponse>> {
-        const requestData = qs.stringify({
-            stack_id: id,
-            tab: "users",
-            update_action: "add",
-            data: JSON.stringify(users)
-        });
-
-        return this.gateway.put(`stack/${id}`, requestData, {
+    async getStacksForGroup(groupId: number): Promise<Response<any>> {
+        return this.gateway.get("admin/stacks-groups/", {
+            params: { group: groupId },
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateStackUpdateResponse
-        });
-    }
-
-    async removeStackUsers(id: number, users: UserDTO[]): Promise<Response<StackUpdateResponse>> {
-        const requestData = qs.stringify({
-            stack_id: id,
-            tab: "users",
-            update_action: "remove",
-            data: JSON.stringify(users)
-        });
-
-        return this.gateway.put(`stack/${id}`, requestData, {
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateStackUpdateResponse
+            }
         });
     }
 }
 
 export const stackApi = new StackAPI();
-
-function getOptionParams(options?: StackQueryCriteria): any | undefined {
-    if (!options) return undefined;
-
-    const params: any = {};
-    if (options.limit) params.max = options.limit;
-    if (options.offset) params.offset = options.offset;
-    if (options.userId) params.user_id = options.userId;
-    if (options.groupId) params.group_id = options.groupId;
-    return params;
-}

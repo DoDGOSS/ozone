@@ -1,20 +1,12 @@
-import * as qs from "qs";
-
-import { Gateway, getGateway, Response } from "../interfaces";
-
-import { mapIds } from "../models/IdDTO";
+import { Gateway, getGateway, ListOf, Response } from "../interfaces";
 import {
     UserCreateRequest,
-    UserCreateResponse,
-    UserDeleteResponse,
-    UserGetResponse,
+    UserDTO,
     UserUpdateRequest,
-    UserUpdateResponse,
-    validateUserCreateResponse,
-    validateUserDeleteResponse,
-    validateUserGetResponse,
-    validateUserUpdateResponse
+    validateUserDetailResponse,
+    validateUserListResponse
 } from "../models/UserDTO";
+import { UserWidgetDTO, validateUserWidgetListResponse } from "../models/UserWidgetDTO";
 
 export interface UserQueryCriteria {
     _method?: string;
@@ -31,84 +23,66 @@ export class UserAPI {
         this.gateway = gateway || getGateway();
     }
 
-    getUsers(criteria?: UserQueryCriteria): Promise<Response<UserGetResponse>> {
-        return this.gateway.get("user/", {
-            params: getOptionParams(criteria),
-            validate: validateUserGetResponse
+    getUsers(): Promise<Response<ListOf<UserDTO[]>>> {
+        return this.gateway.get("admin/users/", {
+            validate: validateUserListResponse
         });
     }
 
-    getUsersForWidget(widgetId: string): Promise<Response<UserGetResponse>> {
-        const requestData = qs.stringify({
-            _method: "GET",
-            widget_id: widgetId
+    getUserById(id: number): Promise<Response<UserDTO>> {
+        return this.gateway.get(`admin/users/${id}/`, {
+            validate: validateUserDetailResponse
         });
+    }
 
-        return this.gateway.post("user/", requestData, {
+    createUser(data: UserCreateRequest): Promise<Response<UserDTO>> {
+        return this.gateway.post("admin/users/", data, { //TODO: verify that the data being sent is what the backend expects.
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateUserGetResponse
+            validate: validateUserDetailResponse
         });
     }
 
-    getUserById(id: number): Promise<Response<UserGetResponse>> {
-        return this.gateway.get(`user/${id}/`, {
-            validate: validateUserGetResponse
-        });
-    }
-
-    createUser(data: UserCreateRequest): Promise<Response<UserCreateResponse>> {
-        const requestData = qs.stringify({
-            data: JSON.stringify([data])
-        });
-
-        return this.gateway.post("user/", requestData, {
+    updateUser(data: UserUpdateRequest): Promise<Response<UserDTO>> {
+        return this.gateway.put(`admin/users/${data.id}/`, data, { //TODO: verify that the data being sent is what the backend expects.
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateUserCreateResponse
+            validate: validateUserDetailResponse
         });
     }
 
-    updateUser(data: UserUpdateRequest): Promise<Response<UserUpdateResponse>> {
-        const requestData = qs.stringify({
-            data: JSON.stringify([data])
-        });
-
-        return this.gateway.post(`user/${data.id}/`, requestData, {
+    deleteUser(id: number): Promise<Response<void>> {
+        return this.gateway.delete(`admin/users/${id}/`, null, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateUserUpdateResponse
+            }
         });
     }
 
-    deleteUser(id: number | number[]): Promise<Response<UserDeleteResponse>> {
-        const requestData = qs.stringify({
-            _method: "DELETE",
-            data: JSON.stringify(mapIds(id))
-        });
-
-        return this.gateway.post("user/", requestData, {
+    getUsersForWidget(widgetId: string): Promise<Response<ListOf<UserWidgetDTO[]>>> {
+        return this.gateway.get("admin/users-widgets/", {
+            params: {
+                widget_definition: widgetId
+            },
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateUserDeleteResponse
+            validate: validateUserWidgetListResponse
+        });
+    }
+
+    getUsersForGroup(groupId: number): Promise<Response<ListOf<any>>> {
+        return this.gateway.get("admin/groups-people/", {
+            params: {
+                group: groupId
+            },
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
         });
     }
 }
 
 export const userApi = new UserAPI();
-
-function getOptionParams(options?: UserQueryCriteria): any | undefined {
-    if (!options) return undefined;
-
-    const params: any = {};
-    if (options._method) params._method = options._method;
-    if (options.limit) params.max = options.limit;
-    if (options.offset) params.offset = options.offset;
-    if (options.group_id) params.group_id = options.group_id;
-    if (options.widget_id) params.widget_id = options.widget_id;
-    return params;
-}

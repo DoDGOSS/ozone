@@ -35,11 +35,7 @@ put_payload = {
 
 
 class TestingApplicationConfigAPI(TestCase):
-    fixtures = [
-        'tests/people/fixtures/people_data.json',
-        'tests/widgets/fixtures/widget_data.json',
-        'tests/appconf/fixtures/appconf_data.json',
-    ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def test_admin_can_create_appconf_data(self):
         admin_user = Person.objects.get(email='admin@goss.com')
@@ -50,7 +46,7 @@ class TestingApplicationConfigAPI(TestCase):
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data['edited_by'], None)
-        self.assertEqual(response.data['created_by'], admin_user.id)
+        self.assertEqual(response.data['created_by']['id'], admin_user.id)
 
         requests.logout()
 
@@ -71,7 +67,7 @@ class TestingApplicationConfigAPI(TestCase):
         response = requests.patch(url, patch_payload)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['edited_by'], admin_user.id)
+        self.assertEqual(response.data['edited_by']['id'], admin_user.id)
 
         requests.logout()
 
@@ -83,7 +79,7 @@ class TestingApplicationConfigAPI(TestCase):
         response = requests.put(url, put_payload)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['edited_by'], admin_user.id)
+        self.assertEqual(response.data['edited_by']['id'], admin_user.id)
 
         requests.logout()
 

@@ -29,6 +29,7 @@ export interface DashboardLayout {
 }
 
 export interface DashboardProps extends DashboardLayout {
+    id?: number;
     description?: string;
     guid: string;
     imageUrl?: string;
@@ -176,7 +177,7 @@ export class Dashboard {
         const panel = new FitPanel({ title, widget: instance });
 
         let newTree: DashboardNode;
-        if (tree === null) {
+        if (!tree) {
             newTree = panel.id;
         } else if (path !== undefined && position !== undefined) {
             newTree = addToLayout(tree, panel.id, path, position);

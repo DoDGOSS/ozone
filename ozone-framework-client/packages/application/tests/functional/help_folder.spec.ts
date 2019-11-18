@@ -6,7 +6,7 @@ import { loggedInAs } from "./helpers";
 
 module.exports = {
     "As an admin, I can see files in the help folder": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser
             .waitForElementVisible(MainPage.HELP_BUTTON, 3000, "[Help Dialog Button] is visible.")

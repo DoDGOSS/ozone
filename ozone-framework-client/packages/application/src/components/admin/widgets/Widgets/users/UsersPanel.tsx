@@ -13,6 +13,8 @@ import { userFromJson } from "../../../../../codecs/User.codec";
 import { ColumnTabulator, GenericTable } from "../../../../generic-table/GenericTable";
 import { DeleteButton } from "../../../../generic-table/TableButtons";
 import { UsersDialog } from "./UsersDialog";
+import { ListOf, Response } from "../../../../../api/interfaces";
+import { UserWidgetDTO } from "../../../../../api/models/UserWidgetDTO";
 
 interface Props {
     widget: WidgetDTO;
@@ -44,19 +46,27 @@ export class UsersPanel extends React.Component<Props, State> {
 
     getAllUsers = async () => {
         const response = await userApi.getUsers();
+
         // TODO: Handle failed request
-        if (response.status !== 200) return [];
+        if (!(response.status >= 200 && response.status < 400)) return [];
 
         return this.parseUserDTOs(response.data.data);
     };
 
     getWidgetUsers = async () => {
-        const response = await userApi.getUsersForWidget(this.props.widget.id);
+        const response: Response<ListOf<UserWidgetDTO[]>> = await userApi.getUsersForWidget(this.props.widget.id);
+
         // TODO: Handle failed request
-        if (response.status !== 200) return [];
+        if (!(response.status >= 200 && response.status < 400)) return [];
+
+        const users: UserDTO[] = response.data.data.map((data: any) => {
+            if (data.hasOwnProperty("person")) {
+                return data.person;
+            }
+        });
 
         this.setState({
-            widgetUsers: this.parseUserDTOs(response.data.data),
+            widgetUsers: this.parseUserDTOs(users),
             loading: false
         });
     };
@@ -149,8 +159,8 @@ export class UsersPanel extends React.Component<Props, State> {
         });
     }
 
-    removeUserAndRefresh(userToRemove: User): void {
-        this.removeUser(userToRemove).then(() => this.getWidgetUsers());
+    removeUserAndRefresh(user: User): void {
+        this.removeUser(user).then(() => this.getWidgetUsers());
         this.props.onUpdate();
     }
 
@@ -158,10 +168,11 @@ export class UsersPanel extends React.Component<Props, State> {
         if (this.props.widget === undefined) {
             return false;
         }
+
         const response = await widgetApi.removeWidgetUsers(this.props.widget.id, user.id);
+
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
-        return true;
+        return response.status >= 200 && response.status < 400;
     }
 
     addSelectedUsers(newSelections: User[]): void {
@@ -189,7 +200,7 @@ export class UsersPanel extends React.Component<Props, State> {
         }
         const response = await widgetApi.addWidgetUsers(this.props.widget.id, userIds);
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (!(response.status >= 200 && response.status < 400)) return false;
         return true;
     }
 }

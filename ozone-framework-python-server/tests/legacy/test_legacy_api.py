@@ -10,12 +10,7 @@ def login_as_admin():
 
 
 class TestingLegacyApi(TestCase):
-    fixtures = [
-        'tests/people/fixtures/people_data.json',
-        'tests/widgets/fixtures/widget_data.json',
-        'tests/preferences/fixtures/pref_data.json',
-        'tests/appconf/fixtures/appconf_data.json',
-    ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def test_person_whoami(self):
         login_as_admin()
@@ -26,7 +21,7 @@ class TestingLegacyApi(TestCase):
 
     def test_person_whoami_unauthenticated(self):
         response = requests.get('/person/whoami/')
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 403)
 
     def test_prefs_has_preference(self):
         login_as_admin()
@@ -46,7 +41,7 @@ class TestingLegacyApi(TestCase):
 
     def test_prefs_has_preference_unauthenticated(self):
         response = requests.get('/prefs/hasPreference/namespace/path/')
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 403)
 
     def test_prefs_preference_get(self):
         login_as_admin()
@@ -62,7 +57,7 @@ class TestingLegacyApi(TestCase):
 
     def test_prefs_preference_get_unauthenticated(self):
         response = requests.get('/prefs/preference/namespace/path/')
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 403)
 
     def test_prefs_preference_post(self):
         login_as_admin()
@@ -85,7 +80,7 @@ class TestingLegacyApi(TestCase):
 
     def test_prefs_preference_post_unauthenticated(self):
         response = requests.post('/prefs/preference/namespace/path/')
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 403)
 
     def test_prefs_preference_put(self):
         login_as_admin()
@@ -108,7 +103,7 @@ class TestingLegacyApi(TestCase):
 
     def test_prefs_preference_put_unauthenticated(self):
         response = requests.put('/prefs/preference/namespace/path/')
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 403)
 
     def test_prefs_server_resources(self):
         login_as_admin()
@@ -119,4 +114,4 @@ class TestingLegacyApi(TestCase):
 
     def test_prefs_server_resources_unauthenticated(self):
         response = requests.get('/prefs/server/resources/')
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 403)

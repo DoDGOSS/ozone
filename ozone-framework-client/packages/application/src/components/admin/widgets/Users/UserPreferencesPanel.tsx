@@ -129,9 +129,9 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
         const response = await preferenceApi.getPreferences();
 
         // TODO: Handle failed request
-        if (response.status !== 200) return;
+        if (!(response.status >= 200 && response.status < 400)) return;
 
-        const preferencesForUser = response.data.rows.filter((preference) => {
+        const preferencesForUser = response.data.data.filter((preference) => {
             return preference.user.userId === username;
         });
 
@@ -146,12 +146,12 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
         if ("id" in pref) {
             response = await preferenceApi.updatePreference(pref);
         } else {
-            pref.userId = this.state.user.id;
+            pref.user = this.state.user.id;
             response = await preferenceApi.createPreference(pref);
         }
 
         // TODO: Handle failed request
-        if (response.status === 200) {
+        if (response.status >= 200 && response.status < 400) {
             OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
         } else {
             OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
@@ -182,7 +182,7 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
         const response = await preferenceApi.deletePreference(preference);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (!(response.status >= 200 && response.status < 400)) return false;
         this.getPreferences(this.state.user.username);
         return true;
     };

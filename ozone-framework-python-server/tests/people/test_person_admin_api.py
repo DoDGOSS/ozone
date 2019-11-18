@@ -1,3 +1,4 @@
+from django.http import QueryDict
 from django.urls import reverse
 from rest_framework.test import APIClient
 from django.test import TestCase
@@ -13,12 +14,7 @@ payload = {
 
 
 class PersonWidgetDefinitionAdminApiTests(TestCase):
-    fixtures = [
-        'tests/people/fixtures/people_data.json',
-        'tests/widgets/fixtures/widget_data.json',
-        'tests/appconf/fixtures/appconf_data.json',
-        # 'tests/people/fixtures/people_widget_data.json'
-    ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def test_admin_create_person_widget(self):
         requests.login(email='admin@goss.com', password='password')
@@ -40,28 +36,41 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
         self.assertEqual(response.data['user_widget'], True)
         requests.logout()
 
+    def test_admin_create_person_widget_bulk_users(self):
+        requests.login(email='admin@goss.com', password='password')
+
+        # create - new item does not exists yet.
+        url = reverse('admin_users-widgets-list')
+        payload = {"person_ids": [1, 2], "widget_definition": 1}
+        response = requests.post(url, payload, format="json")
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(len(response.data), 2)
+
+        requests.logout()
+
     def test_admin_list_person_widget(self):
         requests.login(email='admin@goss.com', password='password')
         url = reverse('admin_users-widgets-list')
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 20)
+        self.assertEqual(response.data['count'], 17)
         requests.logout()
 
     def test_admin_detail_person_widget(self):
         requests.login(email='admin@goss.com', password='password')
-        url = reverse('admin_users-widgets-detail', args='1')
+        url = reverse('admin_users-widgets-detail', args='8')
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['id'], 1)
-        self.assertEqual(response.data["widget_definition"]['display_name'], "Channel Shouter")
+        self.assertEqual(response.data['id'], 8)
+        self.assertEqual(response.data['value']['display_name'], "Channel Shouter")
         requests.logout()
 
     def test_admin_update_person_widget(self):
         requests.login(email='admin@goss.com', password='password')
-        url = reverse('admin_users-widgets-detail', args='1')
+        url = reverse('admin_users-widgets-detail', args='3')
         payload['display_name'] = 'Widget Def Two Updated'
         response = requests.put(url, payload)
 
@@ -76,7 +85,7 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
         response = requests.get(filter_url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 10)
+        self.assertEqual(response.data['count'], 11)
 
         # Non existing group_people entry
         filter_url = f'{url}?person=3'
@@ -92,7 +101,7 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
         response = requests.get(filter_url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 0)
+        self.assertEqual(response.data['count'], 1)
 
         # Non existing group_people entry
         filter_url = f'{url}?widget_definition=0'
@@ -102,23 +111,25 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
         requests.logout()
 
     def test_admin_delete_person_widget_should_not_hard_delete(self):
-        group_widget = PersonWidgetDefinition.objects.get(id=1)
+        group_widget = PersonWidgetDefinition.objects.get(id=3)
         group_widget.group_widget = True
         group_widget.save()
 
         requests.login(email='admin@goss.com', password='password')
-        url = reverse('admin_users-widgets-detail', args='1')
-        response = requests.delete(url)
+        url = reverse('admin_users-widgets-detail', args='0')
+        response = requests.delete(url,
+                                   {'widget_id': group_widget.widget_definition.id,
+                                    'person_id': group_widget.person.id})
 
         self.assertEqual(response.status_code, 204)
         self.assertEqual(response.data, None)
 
         # read detail
-        url = reverse('admin_users-widgets-detail', args='1')
+        url = reverse('admin_users-widgets-detail', args='3')
         response = requests.get(url)
 
-        self.assertEqual(response.data['group_widget'], True)
-        self.assertEqual(response.data['user_widget'], False)
+        self.assertEqual(response.data['value']['groupWidget'], True)
+        self.assertEqual(response.data['value']['userWidget'], False)
         requests.logout()
 
     def test_admin_delete_person_widget_should_hard_delete_admin(self):
@@ -131,8 +142,10 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
         self.assertEqual(created.data['group_widget'], False)
 
         # delete
-        url = reverse('admin_users-widgets-detail', args=(f'{created.data["id"]}',))
-        response = requests.delete(url)
+        url = reverse('admin_users-widgets-detail', args=('0'))
+        response = requests.delete(url,
+                                   {'widget_id': created.data["widget_definition"],
+                                    'person_id': created.data["person"]})
 
         self.assertEqual(response.status_code, 204)
         self.assertEqual(response.data, None)
@@ -142,32 +155,6 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 404)
-        requests.logout()
-
-    def test_admin_delete_person_widget_bulk_one_soft_delete_second_hard_delete(self):
-        requests.login(email='admin@goss.com', password='password')
-
-        # create new for hard delete.
-        url = reverse('admin_users-widgets-list')
-        created = requests.post(url, payload, format="json")
-
-        self.assertEqual(created.status_code, 201)
-        self.assertEqual(created.data['group_widget'], False)
-
-        # delete bulk ids
-        url = reverse('admin_users-widgets-detail', args='1')
-        response = requests.delete(url, data={'id': [1, created.data['id']]})
-
-        self.assertEqual(response.status_code, 204)
-        self.assertEqual(response.data, None)
-
-        # read list after deletion.
-        requests.login(email='admin@goss.com', password='password')
-        url = reverse('admin_users-widgets-list')
-        response = requests.get(url)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 19)
         requests.logout()
 
     def test_admin_auth_only_person_widget(self):
@@ -193,17 +180,10 @@ create_stack_payload2 = {
 
 
 class PersonStacksAdminApiTests(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def setUp(self):
         self.admin_user = Person.objects.get(pk=1)
-
-        # create stacks
-        stack = Stack.create(self.admin_user, create_stack_payload)
-        stack2 = Stack.create(self.admin_user, create_stack_payload2)
 
     def test_admin_filter_by_user_users_stacks(self):
         # Get all stacks directly assigned to user

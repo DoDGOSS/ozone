@@ -19,10 +19,7 @@ def ordered(obj):
 
 
 class HelpFilesAPITest(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     url = reverse('help_files')
 

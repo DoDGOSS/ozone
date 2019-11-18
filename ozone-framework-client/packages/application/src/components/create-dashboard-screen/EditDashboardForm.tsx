@@ -38,7 +38,7 @@ export const EditDashboardForm: React.FC<EditDashboardFormProps> = ({ onSubmit, 
 
                 actions.setSubmitting(false);
 
-                if (response.status === 200) {
+                if (response.status >= 200 && response.status < 400) {
                     OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
                     actions.setStatus(null);
                     onSubmit();

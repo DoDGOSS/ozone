@@ -1,17 +1,12 @@
-import * as qs from "qs";
 import { isNil } from "lodash";
 
-import { Gateway, getGateway, Response } from "../interfaces";
+import { Gateway, getGateway, ListOf, Response } from "../interfaces";
 
 import {
     DashboardDTO,
-    DashboardGetResponse,
-    DashboardUpdateParams,
     DashboardUpdateRequest,
-    DashboardUpdateResponse,
-    validateDashboard,
-    validateDashboardGetResponse,
-    validateDashboardUpdateResponse
+    validateDashboardDetailResponse,
+    validateDashboardListResponse
 } from "../models/DashboardDTO";
 
 export class DashboardAPI {
@@ -21,105 +16,47 @@ export class DashboardAPI {
         this.gateway = gateway || getGateway();
     }
 
-    async getDashboards(): Promise<Response<DashboardGetResponse>> {
-        return this.gateway.get("dashboard/", {
-            validate: validateDashboardGetResponse
+    async getDashboards(): Promise<Response<ListOf<DashboardDTO[]>>> {
+        return this.gateway.get("dashboards/", {
+            validate: validateDashboardListResponse
         });
     }
 
-    async getDashboard(guid: string | null): Promise<Response<DashboardDTO>> {
-        const requestData = qs.stringify({
-            data: JSON.stringify({ guid })
-        });
-        return this.gateway.get(`dashboard/${guid}/`);
-    }
-
-    async createDashboard(
-        data: DashboardUpdateRequest,
-        options?: DashboardUpdateParams
-    ): Promise<Response<DashboardUpdateResponse>> {
-        const requestData = buildDashboardUpdateRequest(data, options);
-
-        return this.gateway.post(`dashboard/`, requestData, {
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateDashboardUpdateResponse
-        });
-    }
+    async getDashboard(dashboardId: number): Promise<Response<DashboardDTO>> { //TODO: fix one of the callers that is still passing in the GUID
+        return this.gateway.get(`dashboards/${dashboardId}/`); //TODO: verif this works right
+    }    
 
     async restoreDashboard(
         data: DashboardUpdateRequest,
-        options?: DashboardUpdateParams
-    ): Promise<Response<DashboardUpdateResponse>> {
-        const requestData = buildDashboardUpdateRequest(data, options);
-
-        return this.gateway.post(`dashboard/restore/${data.guid}/`, requestData, {
+    ): Promise<Response<DashboardDTO>> {
+        return this.gateway.post(`dashboards/${data.id}/restore/`, null, { //TODO: verify guid works
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateDashboardUpdateResponse
+            validate: validateDashboardDetailResponse
         });
     }
 
     async updateDashboard(
         data: DashboardUpdateRequest,
-        options?: DashboardUpdateParams
-    ): Promise<Response<DashboardUpdateResponse>> {
-        const requestData = buildDashboardUpdateRequest(data, options);
-
-        return this.gateway.put(`dashboard/${data.guid}/`, requestData, {
+    ): Promise<Response<DashboardDTO>> {
+        return this.gateway.put(`dashboards/${data.id}/`, data, { // TODO: verify request data contains all properties needed for update.
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateDashboardUpdateResponse
+            validate: validateDashboardDetailResponse
         });
     }
 
-    async deleteDashboard(guid: string): Promise<Response<DashboardDTO>> {
-        const requestData = qs.stringify({
-            data: JSON.stringify({ guid })
-        });
-
-        return this.gateway.delete(`dashboard/${guid}/`, requestData, {
+    async deleteDashboard(data: DashboardDTO): Promise<Response<void>> {
+        return this.gateway.delete(`dashboards/${data.id}/`, null, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateDashboard
-        });
-    }
-
-    async deleteDashboardsInStack(stackID: number): Promise<void> {
-        const response = await this.getDashboards();
-        if (response.status === 200 && response.data && response.data.data) {
-            for (const dash of response.data.data) {
-                if (!dash.stack || dash.stack.id === stackID) {
-                    await this.deleteDashboard(dash.guid);
-                }
             }
-        }
-        return;
+        });
     }
+
 }
+
 
 export const dashboardApi = new DashboardAPI();
-
-function buildDashboardUpdateRequest(data: DashboardUpdateRequest, options?: DashboardUpdateParams): string {
-    const request: any = {
-        data: JSON.stringify([data])
-    };
-
-    if (options && !isNil(options.adminEnabled)) {
-        request.adminEnabled = options.adminEnabled;
-    }
-
-    if (options && !isNil(options.isGroupDashboard)) {
-        request.isGroupDashboard = options.isGroupDashboard;
-    }
-
-    if (options && !isNil(options.user_id)) {
-        request.user_id = options.user_id;
-    }
-
-    return qs.stringify(request);
-}

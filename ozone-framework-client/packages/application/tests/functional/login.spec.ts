@@ -3,8 +3,8 @@ import { NightwatchAPI } from "nightwatch";
 import { Application } from "./pages";
 
 module.exports = {
-    "Login as 'testAdmin1'": (browser: NightwatchAPI) => {
-        const username = "testAdmin1";
+    "Login as 'admin'": (browser: NightwatchAPI) => {
+        const username = "admin";
         const password = "password";
 
         new Application(browser)

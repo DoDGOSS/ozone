@@ -16,7 +16,7 @@ describe("Dashboard API", () => {
         gateway = new NodeGateway();
         dashboardApi = new DashboardAPI(gateway);
 
-        await gateway.login("testAdmin1", "password");
+        await gateway.login("admin", "password");
         expect(gateway.isAuthenticated).toEqual(true);
     });
 
@@ -63,7 +63,7 @@ describe("Dashboard API", () => {
                     stack: null,
                     type: null,
                     user: {
-                        userId: "testAdmin1"
+                        userId: "admin"
                     }
                 }
             ]
@@ -103,7 +103,7 @@ describe("Dashboard API", () => {
                     stack: null,
                     type: null,
                     user: {
-                        userId: "testAdmin1"
+                        userId: "admin"
                     }
                 }
             ]
@@ -145,7 +145,7 @@ describe("Dashboard API", () => {
                     stack: null,
                     type: null,
                     user: {
-                        userId: "testAdmin1"
+                        userId: "admin"
                     }
                 }
             ]

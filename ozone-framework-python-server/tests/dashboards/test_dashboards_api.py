@@ -9,10 +9,8 @@ requests = APIClient()
 
 class DashboardsApiTests(TestCase):
     fixtures = [
-        'tests/people/fixtures/people_data.json',
-        'tests/widgets/fixtures/widget_data.json',
+        'resources/fixtures/default_data.json',
         'tests/dashboards/fixtures/default_test_dashboards.json',
-        'tests/appconf/fixtures/appconf_data.json',
     ]
 
     def setUp(self):
@@ -25,7 +23,8 @@ class DashboardsApiTests(TestCase):
 
         self.create_dashboard_payload = {
             'name': 'test dashboard 1',
-            'description': 'test dash description 1'
+            'description': 'test dash description 1',
+            'layout_config': '{"backgroundWidgets": [], "panels": [], "tree": null}'
         }
 
     def tearDown(self):
@@ -33,7 +32,7 @@ class DashboardsApiTests(TestCase):
 
     def test_owner_of_stack_can_add_new_dashboard_to_stack(self):
         stack = Stack.create(self.regular_user, self.create_stack_payload)
-        self.create_dashboard_payload['stack'] = stack.id
+        self.create_dashboard_payload['stack_id'] = stack.id
 
         requests.login(email='user@goss.com', password='password')
         url = reverse('dashboards-list')
@@ -74,7 +73,7 @@ class DashboardsApiTests(TestCase):
 
     def test_owner_of_dashboard_can_restore_dashboard(self):
         requests.login(email='admin@goss.com', password='password')
-        url = reverse('dashboards-restore', args=('2'))
+        url = reverse('dashboards-restore', args=('101',))
         response = requests.post(url)
 
         self.assertEqual(response.status_code, 200)
@@ -84,4 +83,4 @@ class DashboardsApiTests(TestCase):
         url = reverse('dashboards-restore', args=('2'))
         response = requests.post(url)
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 404)

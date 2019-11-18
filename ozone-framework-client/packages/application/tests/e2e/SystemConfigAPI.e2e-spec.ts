@@ -10,7 +10,7 @@ describe("System Config API", () => {
         gateway = new NodeGateway();
         configApi = new SystemConfigAPI(gateway);
 
-        await gateway.login("testAdmin1", "password");
+        await gateway.login("admin", "password");
         expect(gateway.isAuthenticated).toEqual(true);
     });
 

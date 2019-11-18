@@ -1,6 +1,5 @@
-import { Gateway, getGateway, Response } from "../interfaces";
-
-import { WidgetTypeDTO } from "../models/WidgetTypeDTO";
+import { Gateway, getGateway, ListOf, Response } from "../interfaces";
+import { validateWidgetTypeListResponse, WidgetTypeDTO } from "../models/WidgetTypeDTO";
 
 export class WidgetTypeAPI {
     private readonly gateway: Gateway;
@@ -9,17 +8,15 @@ export class WidgetTypeAPI {
         this.gateway = gateway || getGateway();
     }
 
-    async getWidgetTypes(): Promise<Response<Response<WidgetTypeDTO[]>>> {
-        return this.gateway.get("/widgettype/list/");
-    }
-
-    async widgetTypesAsList(typesList: string[]) {
-        return await Promise.all(typesList.map((type: string) => this.getWidgetType(type)));
+    async getWidgetTypes(): Promise<Response<ListOf<WidgetTypeDTO[]>>> {
+        return this.gateway.get("admin/widgets-types/", {
+            validate: validateWidgetTypeListResponse
+        });
     }
 
     async getWidgetType(name: string): Promise<WidgetTypeDTO> {
-        const response = await this.getWidgetTypes();
-        if (response.status !== 200 || !response.data.data || !response.data.data.length) {
+        const response: Response<ListOf<WidgetTypeDTO[]>> = await this.getWidgetTypes();
+        if (!(response.status >= 200 && response.status < 400)) {
             return {
                 id: 1,
                 name: "Standard",

@@ -1,20 +1,13 @@
-import * as qs from "qs";
-
-import { Gateway, getGateway, Response } from "../interfaces";
-
+import { Gateway, getGateway, ListOf, Response } from "../interfaces";
 import {
     GroupCreateRequest,
-    GroupCreateResponse,
-    GroupDeleteResponse,
-    GroupGetResponse,
+    GroupDTO,
     GroupUpdateRequest,
-    GroupUpdateResponse,
-    validateGroupCreateResponse,
-    validateGroupDeleteResponse,
-    validateGroupGetResponse,
-    validateGroupUpdateResponse
+    validateGroupDetailResponse,
+    validateGroupListResponse
 } from "../models/GroupDTO";
-import { mapIds } from "../models/IdDTO";
+import { GetWidgetGroupsResponse, validateWidgetGroupsResponse } from "../models/WidgetDTO";
+import { UserDTO } from "../models/UserDTO";
 
 export interface GroupQueryCriteria {
     limit?: number;
@@ -30,85 +23,113 @@ export class GroupAPI {
         this.gateway = gateway || getGateway();
     }
 
-    // TODO - Add admin groups people endpoint
-
-    getGroups(criteria?: GroupQueryCriteria): Promise<Response<GroupGetResponse>> {
-        return this.gateway.get("group/", {
-            params: getOptionParams(criteria),
-            validate: validateGroupGetResponse
+    getGroups(): Promise<Response<ListOf<GroupDTO[]>>> {
+        return this.gateway.get("admin/groups/", {
+            validate: validateGroupListResponse
         });
     }
 
-    getGroupById(id: number): Promise<Response<GroupGetResponse>> {
-        return this.gateway.get(`group/${id}/`, {
-            validate: validateGroupGetResponse
+    getGroupById(id: number): Promise<Response<GroupDTO>> {
+        return this.gateway.get(`admin/groups/${id}/`, {
+            validate: validateGroupDetailResponse
         });
     }
 
-    getGroupsForWidget(widgetId: string): Promise<Response<GroupGetResponse>> {
-        const requestData = qs.stringify({
-            _method: "GET",
-            widget_id: widgetId
+    getGroupsForWidget(widgetId: string): Promise<Response<GetWidgetGroupsResponse>> {
+        return this.gateway.get("admin/groups-widgets/", {
+            params: {
+                widget_id: widgetId
+            },
+            validate: validateWidgetGroupsResponse
         });
+    }
 
-        return this.gateway.post("group/", requestData, {
+    getGroupsForUser(userId: number): Promise<Response<any>> {
+        return this.gateway.get("admin/groups-people/", {
+            params: {
+                person: userId
+            },
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        });
+    }
+
+    getGroupsForStack(stackId: number): Promise<Response<any>> {
+        return this.gateway.get("admin/stacks-groups/", {
+            params: {
+                stack: stackId
+            },
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        });
+    }
+
+    createGroup(data: GroupCreateRequest): Promise<Response<GroupDTO>> {
+        return this.gateway.post("admin/groups/", data, { // TODO: verify the data being sent up is everything the api expects.
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateGroupGetResponse
+            validate: validateGroupDetailResponse
         });
     }
 
-    createGroup(data: GroupCreateRequest): Promise<Response<GroupCreateResponse>> {
-        const requestData = qs.stringify({
-            data: JSON.stringify([data])
-        });
-
-        return this.gateway.post("group/", requestData, {
+    updateGroup(data: GroupUpdateRequest | GroupUpdateRequest): Promise<Response<GroupDTO>> {
+        return this.gateway.put(`admin/groups/${data.id}/`, data, { // TODO: verify the data being sent up is everything the api expects.
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateGroupCreateResponse
+            validate: validateGroupDetailResponse
         });
     }
 
-    updateGroup(data: GroupUpdateRequest): Promise<Response<GroupUpdateResponse>> {
-        const requestData = qs.stringify({
-            data: JSON.stringify([data])
-        });
+    deleteGroup(id: number): Promise<Response<void>> {
+        let url = `admin/groups/${id}/`;
 
-        return this.gateway.put(`group/${data.id}/`, requestData, {
+        return this.gateway.delete(url, null, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateGroupUpdateResponse
+            }
         });
     }
 
-    deleteGroup(id: number | number[]): Promise<Response<GroupDeleteResponse>> {
-        const requestData = qs.stringify({
-            _method: "DELETE",
-            data: JSON.stringify(mapIds(id))
-        });
+    async addUsersToGroup(group: GroupDTO, users: UserDTO[]): Promise<any> {
+        const url = "admin/groups-people/";
 
-        return this.gateway.post("group/", requestData, {
+        let responses: any = [];
+        for (const user of users) {
+            const requestData: any = {
+                group: group.id,
+                person: (user as any).id
+            };
+
+            const response = await this.gateway.post(url, requestData, {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            });
+
+            responses.push(response);
+        }
+        return responses[0];
+    }
+
+    async removeUsersFromGroup(group: GroupDTO, users: UserDTO[]): Promise<any> {
+        // here /0/ is a dummy detail view so delete in backend can take place
+        // otherwise backend doesnt offer DELETE method a list.
+        const url = "admin/groups-people/0/"; // TODO: verify this works
+        const requestData: any = {
+            group_id: group.id,
+            person_ids: users.map((user: UserDTO) => user.id)
+        };
+
+        return this.gateway.delete(url, requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateGroupDeleteResponse
+            }
         });
     }
 }
 
 export const groupApi = new GroupAPI();
-
-function getOptionParams(options?: GroupQueryCriteria): any | undefined {
-    if (!options) return undefined;
-
-    const params: any = {};
-    if (options.limit) params.max = options.limit;
-    if (options.offset) params.offset = options.offset;
-    if (options.user_id) params.user_id = options.user_id;
-    if (options.widget_id) params.widget_id = options.widget_id;
-    return params;
-}

@@ -4,6 +4,8 @@ import { WidgetTypeDTO } from "./WidgetTypeDTO";
 import { createValidator } from "./validate";
 
 import { USER_WIDGET_SCHEMA } from "./schemas/user-dashboard.schema";
+import { ListOf } from "../interfaces";
+import { USER_WIDGETS_GET_RESPONSE_SCHEMA } from "./schemas/user.schema";
 
 export interface UserWidgetDTO {
     id: number;
@@ -12,7 +14,10 @@ export interface UserWidgetDTO {
     value: UserWidgetPropertiesDTO;
 }
 
-export const validateUserWidget = createValidator<UserWidgetDTO>(USER_WIDGET_SCHEMA);
+export const validateUserWidgetDetailResponse = createValidator<UserWidgetDTO>(USER_WIDGET_SCHEMA);
+export const validateUserWidgetListResponse = createValidator<ListOf<UserWidgetDTO[]>>(
+    USER_WIDGETS_GET_RESPONSE_SCHEMA
+);
 
 export interface UserWidgetPropertiesDTO {
     background: boolean;

@@ -11,9 +11,7 @@ payload = {
 
 
 class TestingWidgetType(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json', 'tests/widgets/fixtures/widget_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     url_list = reverse('widget-types-list')
 
@@ -36,8 +34,8 @@ class TestingWidgetType(TestCase):
         self.assertEqual(db_count, request_count)
 
         # request details widget type request and DB details widget type continuity
-        db_details = WidgetType.objects.get(id=1)
-        url_details = reverse('widget-types-detail', args='1')
+        db_details = WidgetType.objects.get(id=2)
+        url_details = reverse('widget-types-detail', args='2')
         widget_type_obj = requests.get(url_details)
         self.assertEqual(db_details.display_name, widget_type_obj.data['display_name'])
         self.assertEqual(db_details.name, widget_type_obj.data['name'])

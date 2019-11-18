@@ -9,7 +9,7 @@ export class HelpAPI {
     }
 
     getHelpFiles(): Promise<Response<HelpGetResponse>> {
-        return this.gateway.get("helpFiles/", {
+        return this.gateway.get("help/", {
             validate: validateHelpGetResponse
         });
     }

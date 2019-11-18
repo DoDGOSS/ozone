@@ -31,13 +31,15 @@ import { GenericTree } from "../generic-tree/GenericTree";
 import { CreateDashboardForm } from "../create-dashboard-screen/CreateDashboardForm";
 import { EditStackForm } from "../create-stack-screen/EditStackForm";
 import { userDashboardApi } from "../../api/clients/UserDashboardAPI";
-import { UserDashboardDTO } from "../../api/models/UserDashboardDTO";
+import { UserDashboardDTO, UserDashboardsGetResponse } from "../../api/models/UserDashboardDTO";
 
 import { uuid } from "../../utility";
 import { AuthUserDTO } from "../../api/models/AuthUserDTO";
 import { Widget } from "../../models/Widget";
 import { showToast } from "../toaster/Toaster";
 import { showStoreSelectionDialog } from "../confirmation-dialog/showStoreSelectionDialog";
+import { ListOf, Response } from "../../api/interfaces";
+import { GroupDTO } from "../../api/models/GroupDTO";
 
 // TODO - iconImageUrl not saving to database`
 
@@ -48,38 +50,42 @@ const fetchUserDashboardsAndStacks = (
     dispatchDashboardState: (dashLoading: boolean) => void,
     dispatchStackState: (stackLoading: boolean) => void
 ) => {
-    userDashboardApi.getOwnDashboards().then((ownDashboardResponse) => {
-        if (ownDashboardResponse.status !== 200) return;
+    userDashboardApi.getOwnDashboards().then((ownDashboardResponse: Response<UserDashboardsGetResponse>) => {
+        if (!(ownDashboardResponse.status >= 200 && ownDashboardResponse.status < 400)) return;
         const userDashboards: UserDashboardDTO[] = ownDashboardResponse.data.dashboards;
 
-        dashboardApi.getDashboards().then((dashboardResponse) => {
-            if (dashboardResponse.status !== 200) return;
-
+        dashboardApi.getDashboards().then((dashboardResponse: Response<ListOf<DashboardDTO[]>>) => {
+            if (!(dashboardResponse.status >= 200 && dashboardResponse.status < 400)) return;
             dispatchDashboardResult(
-                dashboardResponse.data.data.filter((dashboard) =>
-                    userDashboards.some((userDashboard) => userDashboard.guid === dashboard.guid)
+                dashboardResponse.data.data.filter((dashboard: any) =>
+                    userDashboards.some((userDashboard: UserDashboardDTO) => userDashboard.guid === dashboard.guid)
                 )
             );
             dispatchDashboardState(false);
         });
 
-        authService.check().then(async (currentUser) => {
+        authService.check().then(async (currentUser) => { // TODO: this needs to be fixed. This looks like a hack to get the user's stacks. But we should be filtering the stacks in the backend.
             dispatchCurrentUserResult(currentUser.data);
 
-            const allUserGroupsResponse = await groupApi.getGroups({ user_id: currentUser.data.id });
-            if (allUserGroupsResponse.status !== 200) return;
+            const allUserGroupsResponse: Response<ListOf<GroupDTO[]>> = await groupApi.getGroupsForUser(currentUser.data.id)           
+            if (!(allUserGroupsResponse.status >= 200 && allUserGroupsResponse.status < 400)) return;
             const allUserGroups = allUserGroupsResponse.data.data;
 
-            const stackResponseForUser = await stackApi.getStacks({ userId: currentUser.data.id });
-            if (stackResponseForUser.status !== 200) return;
+            const stackResponseForUser: Response<ListOf<StackDTO[]>> = await stackApi.getStacks({
+                userId: currentUser.data.id
+            });
+            if (!(stackResponseForUser.status >= 200 && stackResponseForUser.status < 400)) return;
             const allPermittedStacks = stackResponseForUser.data.data;
 
             for (const userGroup of allUserGroups) {
-                const stackResponseForGroup = await stackApi.getStacks({ groupId: userGroup.id });
-                if (stackResponseForGroup.status !== 200) return;
+                const stackResponseForGroup: Response<ListOf<StackDTO[]>> = await stackApi.getStacks({
+                    groupId: userGroup.id
+                });
+                if (!(stackResponseForGroup.status >= 200 && stackResponseForGroup.status < 400)) return;
 
-                for (const stack of stackResponseForGroup.data.data) {
-                    if (!allPermittedStacks.find((s) => s.stackContext === stack.stackContext)) {
+                const allStackResponseForGroup = stackResponseForGroup.data.data;
+                for (const stack of allStackResponseForGroup) {
+                    if (!allPermittedStacks.find((s: any) => s.stackContext === stack.stackContext)) {
                         allPermittedStacks.push(stack);
                     }
                 }
@@ -226,7 +232,8 @@ export const StackDialog: React.FC<{}> = () => {
             } else {
                 response = await stackApi.deleteStackAsUser(stack.id);
             }
-            if (response && response.status !== 200) return false;
+
+            if (!(response.status >= 200 && response.status < 400)) return false;
         } catch (e) {
             fetchData();
             return false;
@@ -245,8 +252,8 @@ export const StackDialog: React.FC<{}> = () => {
     };
 
     const onDeleteDashboardConfirmed = async (dashboard: DashboardDTO) => {
-        const response = await dashboardApi.deleteDashboard(dashboard.guid);
-        if (response.status !== 200) return false;
+        const response = await dashboardApi.deleteDashboard(dashboard);
+        if (!(response.status >= 200 && response.status < 400)) return false;
 
         fetchData();
         return true;
@@ -307,7 +314,7 @@ export const StackDialog: React.FC<{}> = () => {
     const onShareConfirmed = async (stack: StackDTO) => {
         try {
             const response = await stackApi.shareStack(stack.id);
-            if (response.status !== 200) return false;
+            if (!(response.status >= 200 && response.status < 400)) return false;
         } catch (e) {
             fetchData();
             console.log("Error in sharing stack");
@@ -344,15 +351,15 @@ export const StackDialog: React.FC<{}> = () => {
 
     const onRestoreDashboardConfirmed = async (dashboard: DashboardDTO) => {
         const response = await dashboardApi.restoreDashboard(dashboard);
-        if (response.status !== 200) return false;
+        if (!(response.status >= 200 && response.status < 400)) return false;
 
         mainStore.hideStackDialog();
         return true;
     };
 
     const onRestoreStackConfirmed = async (stack: StackDTO) => {
-        const response = await stackApi.restoreStack(stack);
-        if (response.status !== 200) return false;
+        const response = await stackApi.restoreStack(stack.id);
+        if (!(response.status >= 200 && response.status < 400)) return false;
 
         mainStore.hideStackDialog();
         return true;

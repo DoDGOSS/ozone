@@ -3,7 +3,6 @@ from rest_framework.test import APIClient
 from django.test import TestCase
 from domain_mappings.models import DomainMapping, RelationshipType, MappingType
 
-
 requests = APIClient()
 
 payload = {
@@ -19,11 +18,7 @@ payload = {
 
 
 class GroupsAdminApiTests(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/owf_groups/fixtures/groups_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def test_admin_create_group(self):
         requests.login(email='admin@goss.com', password='password')
@@ -39,7 +34,7 @@ class GroupsAdminApiTests(TestCase):
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertGreaterEqual(response.data['count'], 3)
+        self.assertGreaterEqual(response.data['count'], 2)
         requests.logout()
 
     def test_admin_read_one_group(self):
@@ -74,7 +69,7 @@ class GroupsAdminApiTests(TestCase):
     def test_admin_filter_group(self):
         requests.login(email='admin@goss.com', password='password')
         url = reverse('admin_groups-list')
-        filter_url = f'{url}?name=Test Group 2'
+        filter_url = f'{url}?name=OWF Administrators'
         response = requests.get(filter_url)
 
         self.assertEqual(response.status_code, 200)
@@ -103,11 +98,7 @@ create_group_people_payload = {
 
 
 class GroupsPeopleAdminApiTests(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/owf_groups/fixtures/groups_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def test_admin_list_groups_people(self):
         requests.login(email='admin@goss.com', password='password')
@@ -115,7 +106,7 @@ class GroupsPeopleAdminApiTests(TestCase):
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 3)
+        self.assertEqual(response.data['count'], 5)
         requests.logout()
 
     def test_admin_filter_by_user_group_people(self):
@@ -125,7 +116,7 @@ class GroupsPeopleAdminApiTests(TestCase):
         response = requests.get(filter_url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 2)
+        self.assertEqual(response.data['count'], 4)
 
         # Non existing group_people entry
         filter_url = f'{url}?person=3'
@@ -176,11 +167,7 @@ add_widget_to_group_payload = {
 
 
 class GroupWidgetAdminApiTests(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json', 'tests/owf_groups/fixtures/groups_data.json',
-                'tests/domain_mappings/fixtures/domain_mapping_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def test_admin_get_group_widgets(self):
         group_id = 2
@@ -196,7 +183,7 @@ class GroupWidgetAdminApiTests(TestCase):
             relationship_type=RelationshipType.owns,
             dest_type=MappingType.widget
         )
-        count_widgets = response.data['widgets'][0]
+        count_widgets = response.data['widgets']
 
         self.assertEqual(domain_data.count(), len(count_widgets))
         requests.logout()
@@ -215,6 +202,20 @@ class GroupWidgetAdminApiTests(TestCase):
 
         url = reverse('admin_groups-widgets')
         response = requests.delete(url, add_widget_to_group_payload)
+
+        self.assertEqual(response.status_code, 204)
+        requests.logout()
+
+    def test_admin_remove_bulk_groups_from_widget(self):
+        requests.login(email='admin@goss.com', password='password')
+
+        payload = {
+            "group_ids": [1, 2],
+            "widget_id": 1,
+        }
+
+        url = reverse('admin_groups-widgets')
+        response = requests.delete(url, payload)
 
         self.assertEqual(response.status_code, 204)
         requests.logout()

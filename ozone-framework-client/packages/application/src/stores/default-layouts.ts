@@ -1,6 +1,8 @@
 import { dashboardApi } from "../api/clients/DashboardAPI";
 import { DashboardLayout } from "../models/Dashboard";
 import { ExpandoPanel, FitPanel, TabbedPanel } from "../models/panel";
+import { Response } from "../api/interfaces";
+import { DashboardDTO } from "../api/models/DashboardDTO";
 
 interface Layout {
     name: string;
@@ -54,7 +56,7 @@ export const DEFAULT_LAYOUTS: Layout[] = [
     }
 ];
 
-export async function createPresetLayout(layoutName: string | null, guid: string | null): Promise<DashboardLayout> {
+export async function createPresetLayout(layoutName: string | null, dashboardId: number): Promise<DashboardLayout> {
     switch (layoutName) {
         case "Fit":
             return createFitLayout();
@@ -79,7 +81,7 @@ export async function createPresetLayout(layoutName: string | null, guid: string
         case "Tab-Fit-Fit":
             return createTabbedFitFitLayout();
         case "copy":
-            return onCopyDashboard(guid);
+            return onCopyDashboard(dashboardId);
         default:
             return {
                 backgroundWidgets: [],
@@ -89,9 +91,9 @@ export async function createPresetLayout(layoutName: string | null, guid: string
     }
 }
 
-const onCopyDashboard = async (guid: string | null): Promise<DashboardLayout> => {
-    const response = await dashboardApi.getDashboard(guid);
-    const layout = JSON.parse(response.data.data[0].layoutConfig);
+const onCopyDashboard = async (dashboardId: number): Promise<DashboardLayout> => {
+    const response: Response<DashboardDTO> = await dashboardApi.getDashboard(dashboardId);
+    const layout = JSON.parse(response.data.layoutConfig);
     let panels = JSON.stringify(layout.panels);
     panels = panels.replace(/"userWidgetIds":/g, '"widgets":');
     panels = JSON.parse(panels);

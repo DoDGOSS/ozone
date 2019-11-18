@@ -15,7 +15,7 @@ describe("Theme API", () => {
         const preferenceApi = new PreferenceAPI(gateway);
         themeApi = new ThemeAPI(preferenceApi);
 
-        await gateway.login("testAdmin1", "password");
+        await gateway.login("admin", "password");
         expect(gateway.isAuthenticated).toEqual(true);
     });
 

@@ -1,7 +1,7 @@
 import { Widget } from "../../models/Widget";
 import { Dashboard } from "../../models/Dashboard";
 import { Stack } from "../../models/Stack";
-import { StackUpdateRequest } from "../models/StackDTO";
+import { StackDTO } from "../models/StackDTO";
 import { Intent } from "@blueprintjs/core";
 
 export abstract class MarketplaceAPI {
@@ -13,7 +13,7 @@ export abstract class MarketplaceAPI {
 
     abstract storeListingAsStack(stackID: number, stackListing: any): Promise<Stack | undefined>;
 
-    abstract listingAsSimpleNewStack(listing: any): StackUpdateRequest | undefined;
+    abstract listingAsSimpleNewStack(listing: any): StackDTO | undefined;
 
     abstract getAllUniqueWidgetsFromStackListing(listing: any): Promise<Widget[]>;
 

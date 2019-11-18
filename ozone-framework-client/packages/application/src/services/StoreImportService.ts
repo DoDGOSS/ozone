@@ -23,6 +23,8 @@ import { AuthUserDTO } from "../api/models/AuthUserDTO";
 import { dashboardStore } from "../stores/DashboardStore";
 import { isNil } from "../utility";
 import { dashboardService } from "./DashboardService";
+import { Response } from "../api/interfaces";
+import { WidgetDTO } from "../api/models/WidgetDTO";
 
 export interface InfractingItemUrl {
     type: "stack" | "dashboard" | "widget";
@@ -142,7 +144,7 @@ class StoreImportService {
 
         let stackExists: boolean = false;
         const stacksResponse = await stackApi.getStacks();
-        if (stacksResponse.status !== 200) {
+        if (!(stacksResponse.status >= 200 && stacksResponse.status < 400)) {
             return;
         }
         for (const s of stacksResponse.data.data) {
@@ -173,7 +175,7 @@ class StoreImportService {
 
             const giveWidgetToCurrentUserResponse = await widgetApi.addWidgetUsers(savedWidget.id, importingUser.id);
 
-            if (giveWidgetToCurrentUserResponse.status !== 200) {
+            if (!(giveWidgetToCurrentUserResponse.status >= 200 && giveWidgetToCurrentUserResponse.status < 400)) {
                 console.log("Could not give current user access to widget '", widget.universalName, "'");
             }
             savedWidgets += 1;
@@ -246,7 +248,7 @@ class StoreImportService {
             });
         }
 
-        if (response.status !== 200 || !response.data.data || !(response.data.data.length > 0)) {
+        if (!(response.status >= 200 && response.status < 400)) {
             console.log("Could not import stack.");
             showToast({
                 message: "Stack `" + stackInfo.name + "` could not be imported.",
@@ -254,7 +256,7 @@ class StoreImportService {
             });
             return undefined;
         }
-        return response.data.data[0].id;
+        return response.data.id;
     }
 
     private async saveStoreDashboard(dash: Dashboard, stackID: number, stackName: string): Promise<string | undefined> {
@@ -269,7 +271,7 @@ class StoreImportService {
             };
 
             const response = await userDashboardApi.createDashboard(dashWithStackInfo);
-            if (response.status !== 200) {
+            if (!(response.status >= 200 && response.status < 400)) {
                 console.log("Could not create dashboard ", dash.state().value.name);
                 return undefined;
             }
@@ -283,7 +285,7 @@ class StoreImportService {
 
     private async saveStoreWidget(widget: Widget): Promise<Widget | undefined> {
         try {
-            let response: any;
+            let response: Response<WidgetDTO>;
             if (!widget) {
                 throw new Error("Could not load data to convert widget");
             }
@@ -293,7 +295,7 @@ class StoreImportService {
             } else {
                 response = await widgetApi.createWidget(widgetCreateRequestFromWidget(widget));
             }
-            return widgetFromJson(response.data.data[0]);
+            return widgetFromJson(response.data);
         } catch (e) {
             showToast({
                 message: typeof e.response.data === "string" ? e.response.data : "Error in importing widget.",

@@ -5,7 +5,7 @@ import { GlobalElements, GroupAdminWidget, MainPage, StackDialog } from "./selec
 import { loggedInAs } from "./helpers";
 import { GroupAdmin } from "./pages";
 
-const LOGIN_USERNAME: string = "testAdmin1";
+const LOGIN_USERNAME: string = "admin";
 const LOGIN_PASSWORD: string = "password";
 
 const NEW_GROUP_NAME: string = "NewGroup";
@@ -17,7 +17,7 @@ const SEARCH_WIDGET: string = "Color";
 const ADDED_WIDGETS = ["Color Client", "Color Server"];
 const DEFAULT_STACK = "Untitled (default)";
 
-const DEFAULT_USER_EMAILS = ["testAdmin1@ozone.test", "testUser1@ozone.test"];
+const DEFAULT_USER_EMAILS = ["admin@goss.com", "user@goss.com"];
 
 function openEditSectionForGroup(browser: NightwatchAPI, userDisplayName: string, section?: string) {
     browser.click(`${GroupAdminWidget.Main.DIALOG} div[role='grid'] div[role='row'] ${GlobalElements.STD_EDIT_BUTTON}`);
@@ -50,7 +50,7 @@ module.exports = {
     },
 
     "As an Administrator, I want to search for a group": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         GroupAdmin.navigateTo(browser);
 

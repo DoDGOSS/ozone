@@ -26,7 +26,7 @@ export const HelpDialog: React.FC = () => {
 
         helpApi.getHelpFiles().then((response) => {
             // TODO: Error handling
-            if (response.status !== 200) return;
+            if (!(response.status >= 200 && response.status < 400)) return;
 
             if (response.data.length === 0) {
                 showConfirmationDialog({

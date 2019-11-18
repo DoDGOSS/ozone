@@ -62,7 +62,7 @@ class Stack(models.Model):
             cloned_dashboard_ids = list(cloned_dashboard_mappings.values_list("src_id", flat=True))
             owner_dashboard = Dashboard.objects.get(pk__in=cloned_dashboard_ids, user=self.owner)
 
-            if(owner_dashboard.marked_for_deletion):
+            if (owner_dashboard.marked_for_deletion):
                 cloned_dashboards = Dashboard.objects.filter(pk__in=cloned_dashboard_ids)
 
                 # cloned_dashboards will include the owner's dashboard
@@ -91,7 +91,7 @@ class Stack(models.Model):
     def restore(self, user):
         group_dashboard_mappings = DomainMapping.objects.get_group_dashboard_mappings(self.default_group.id)
 
-        group_dashboard_clone_mappings = DomainMapping.objects.\
+        group_dashboard_clone_mappings = DomainMapping.objects. \
             get_group_dashboard_clone_mappings(group_dashboard_mappings)
 
         user_dashboards_for_group = Dashboard.objects.filter(
@@ -117,6 +117,7 @@ class Stack(models.Model):
 
     @classmethod
     def create(cls, user, kwargs):
+        # not sure why this is using get or create. stacks should always have a new default group
         default_group = OwfGroup.objects.create(
             name=str(uuid.uuid4()),
             stack_default=True,
@@ -139,6 +140,7 @@ class Stack(models.Model):
             isdefault=False,
             stack=new_stack,
             name=new_stack.name,
+            description=kwargs.get('description'),
             created_date=timezone.now()
         )
 
@@ -155,6 +157,7 @@ class Stack(models.Model):
             layout_config=new_dashboard_layout_config,
             stack=new_stack,
             name=new_stack.name,
+            description=kwargs.get('description'),
             user=user,
             created_date=timezone.now()
         )
@@ -186,21 +189,17 @@ class Stack(models.Model):
 class StackGroupsManager(models.Manager):
 
     def create(self, **obj_data):
-        try:
-            stack = obj_data.pop('stack')
-            group = obj_data.pop('group')
-            new_stack_group = super().create(
-                stack=stack,
-                group=group
-            )
+        stack = obj_data.pop('stack')
+        group = obj_data.pop('group')
+        new_stack_group, _ = super().get_or_create(
+            stack=stack,
+            group=group
+        )
 
-            # Set requires_sync for all users in group added to stack
-            group.people.all().update(requires_sync=True)
+        # Set requires_sync for all users in group added to stack
+        group.people.all().update(requires_sync=True)
 
-            return new_stack_group
-
-        except IntegrityError:
-            print("Relationship already exists")
+        return new_stack_group
 
 
 class StackGroups(models.Model):
@@ -216,7 +215,9 @@ class StackGroups(models.Model):
     class Meta:
         managed = True
         db_table = 'stack_groups'
-        unique_together = (('group', 'stack'),)
+        constraints = [
+            models.UniqueConstraint(fields=['group', 'stack'], name='unique_stack_groups')
+        ]
 
 
 @receiver(models.signals.post_delete, sender=StackGroups)
@@ -235,7 +236,6 @@ def stack_group_cleanup(sender, instance, *args, **kwargs):
             if not OwfGroupPeople.objects.filter(
                     group_id__in=stack_groups_filter_stack, person=user_dashboard.user
             ).exists():
-
                 delete_domain_mapping = DomainMapping.objects.get_user_clone_of_groups_dashboard_domain_mapping(
                     user_dashboard_id=user_dashboard.id, default_dashboard_ids_query=default_dashboard_ids
                 )

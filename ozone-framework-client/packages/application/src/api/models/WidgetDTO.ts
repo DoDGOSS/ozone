@@ -1,16 +1,9 @@
-import { GroupDTO } from "./GroupDTO";
 import { IntentsDTO } from "./IntentDTO";
-import { UserDTO } from "./UserDTO";
 import { WidgetTypeDTO, WidgetTypeReference } from "./WidgetTypeDTO";
 import { createValidator } from "./validate";
-import {
-    WIDGET_CREATE_RESPONSE_SCHEMA,
-    WIDGET_DELETE_RESPONSE_SCHEMA,
-    WIDGET_GET_RESPONSE_SCHEMA,
-    WIDGET_SCHEMA,
-    WIDGET_UPDATE_GROUPS_RESPONSE_SCHEMA,
-    WIDGET_UPDATE_USERS_RESPONSE_SCHEMA
-} from "./schemas/widget.schema";
+import { ListOf } from "../interfaces";
+import { WIDGET_GET_RESPONSE_SCHEMA, WIDGET_SCHEMA } from "./schemas/widget.schema";
+import { WIDGET_GROUPS_GET_RESPONSE_SCHEMA } from "./schemas/group.schema";
 
 export interface WidgetDTO {
     id: string;
@@ -18,8 +11,6 @@ export interface WidgetDTO {
     path: string;
     value: WidgetPropertiesDTO;
 }
-
-export const validateWidget = createValidator<WidgetDTO>(WIDGET_SCHEMA);
 
 export interface WidgetPropertiesDTO {
     allRequired: string[];
@@ -51,19 +42,14 @@ export interface WidgetPropertiesDTO {
     y: number;
 }
 
-export interface WidgetGetResponse {
-    success: boolean;
-    results: number;
-    data: WidgetDTO[];
+export interface GetWidgetGroupsResponse { // TODO: look into strongly typing these properties
+    widget: object;
+    groups: [];
 }
 
-export interface WidgetGetDependentsResponse {
-    success: boolean;
-    results: number;
-    data: WidgetDTO[];
-}
-
-export const validateWidgetGetResponse = createValidator<WidgetGetResponse>(WIDGET_GET_RESPONSE_SCHEMA);
+export const validateWidgetDetailResponse = createValidator<WidgetDTO>(WIDGET_SCHEMA);
+export const validateWidgetListResponse = createValidator<ListOf<WidgetDTO[]>>(WIDGET_GET_RESPONSE_SCHEMA);
+export const validateWidgetGroupsResponse = createValidator<GetWidgetGroupsResponse>(WIDGET_GROUPS_GET_RESPONSE_SCHEMA);
 
 export interface WidgetCreateRequest {
     displayName: string;
@@ -105,45 +91,7 @@ export interface WidgetGetDescriptorResponse {
     intents: IntentsDTO;
 }
 
-export interface WidgetCreateResponse {
-    success: boolean;
-    data: WidgetDTO[];
-}
-
-export const validateWidgetCreateResponse = createValidator<WidgetCreateResponse>(WIDGET_CREATE_RESPONSE_SCHEMA);
-
 export interface WidgetUpdateRequest extends WidgetCreateRequest {
     id: string;
-    update_action?: "add" | "remove";
     widget_ids?: number[];
 }
-
-export interface WidgetDeleteIdDTO {
-    id: string;
-    value: object;
-}
-
-export interface WidgetDeleteResponse {
-    success: boolean;
-    data: WidgetDeleteIdDTO[];
-}
-
-export const validateWidgetDeleteResponse = createValidator<WidgetDeleteResponse>(WIDGET_DELETE_RESPONSE_SCHEMA);
-
-export interface WidgetUpdateUsersResponse {
-    success: boolean;
-    data: UserDTO[];
-}
-
-export const validateWidgetUpdateUsersResponse = createValidator<WidgetUpdateUsersResponse>(
-    WIDGET_UPDATE_USERS_RESPONSE_SCHEMA
-);
-
-export interface WidgetUpdateGroupsResponse {
-    success: boolean;
-    data: GroupDTO[];
-}
-
-export const validateWidgetUpdateGroupsResponse = createValidator<WidgetUpdateGroupsResponse>(
-    WIDGET_UPDATE_GROUPS_RESPONSE_SCHEMA
-);

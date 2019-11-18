@@ -1,5 +1,6 @@
 import { createValidator } from "./validate";
-import { WIDGET_TYPE_SCHEMA } from "./schemas/widget.schema";
+import { WIDGET_TYPE_GET_RESPONSE_SCHEMA } from "./schemas/widget.schema";
+import { ListOf } from "../interfaces";
 
 export class WidgetTypeDTO {
     id: number;
@@ -7,9 +8,9 @@ export class WidgetTypeDTO {
     displayName: string;
 }
 
-export const validateWidgetType = createValidator<WidgetTypeDTO>(WIDGET_TYPE_SCHEMA);
-
 export class WidgetTypeReference {
     id: number;
     name: string;
 }
+
+export const validateWidgetTypeListResponse = createValidator<ListOf<WidgetTypeDTO[]>>(WIDGET_TYPE_GET_RESPONSE_SCHEMA);

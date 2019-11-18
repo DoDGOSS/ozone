@@ -153,8 +153,7 @@ class WidgetDefinition(models.Model):
 @receiver(models.signals.pre_delete, sender=WidgetDefinition)
 def cleanup(sender, instance, *args, **kwargs):
     from people.models import Person, PersonWidgetDefinition
-    DomainMapping.objects.filter(src_id=instance.id, src_type=MappingType.widget)
-    DomainMapping.objects.filter(dest_id=instance.id, dest_type=MappingType.widget)
+    DomainMapping.objects.filter(dest_id=instance.id, dest_type=MappingType.widget).delete()
 
     users_assigned_to_widget = PersonWidgetDefinition.objects.filter(
         widget_definition=instance

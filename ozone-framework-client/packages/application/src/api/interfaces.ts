@@ -24,6 +24,8 @@ export interface Gateway {
 
     put<T>(url: string, data?: any, options?: RequestOptions<T>): Promise<Response<T>>;
 
+    patch<T>(url: string, data?: any, options?: RequestOptions<T>): Promise<Response<T>>;
+
     delete<T>(url: string, data?: any, options?: RequestOptions<T>): Promise<Response<T>>;
 }
 
@@ -44,4 +46,11 @@ export interface Response<T> {
     headers: any;
     config: any;
     request?: any;
+}
+
+export interface ListOf<T> { // TODO: see if we can get rid of this and make the Response
+    data: T;
+    results: number;
+    next: null | string;
+    previous: null | string;
 }

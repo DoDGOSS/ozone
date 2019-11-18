@@ -54,7 +54,7 @@ interface LoginRequest {
 
 const LoginRequestSchema = object().shape({
     username: string()
-        .matches(/^[a-zA-Z0-9_]+$/, { message: "Username must contain only alphanumeric or underscore characters." })
+        // .matches(/^[a-zA-Z0-9_]+$/, { message: "Username must contain only alphanumeric or underscore characters." })
         .required("Required"),
 
     password: string().required("Required")

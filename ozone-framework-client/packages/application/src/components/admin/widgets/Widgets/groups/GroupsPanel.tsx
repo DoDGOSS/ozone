@@ -39,18 +39,25 @@ export class GroupsPanel extends React.Component<Props, State> {
 
     getAllGroups = async () => {
         const response = await groupApi.getGroups();
+
         // TODO: Handle failed request
-        if (response.status !== 200) return [];
+        if (!(response.status >= 200 && response.status < 400)) return [];
 
         return this.parseGroupDTOs(response.data.data);
     };
 
     getWidgetGroups = async () => {
-        const response = await groupApi.getGroupsForWidget(this.props.widget.id);
-        // TODO: Handle failed request
-        if (response.status !== 200) return;
+        let groups: any;
+        try {
+            const response = await groupApi.getGroupsForWidget(this.props.widget.id);
+            groups = response.data.groups;
+        } catch (ex) {
+            // api returns 400 if widget does not exists.
+            groups = [];
+        }
+
         this.setState({
-            widgetGroups: this.parseGroupDTOs(response.data.data),
+            widgetGroups: this.parseGroupDTOs(groups),
             loading: false
         });
     };
@@ -104,7 +111,7 @@ export class GroupsPanel extends React.Component<Props, State> {
         }
         const response = await widgetApi.addWidgetGroups(this.props.widget.id, groupIds);
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (!(response.status >= 200 && response.status < 400)) return false;
         return true;
     }
 
@@ -179,7 +186,9 @@ export class GroupsPanel extends React.Component<Props, State> {
         }
         const response = await widgetApi.removeWidgetGroups(this.props.widget.id, group.id);
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+
+        if (!(response.status >= 200 && response.status < 400)) return false;
+
         return true;
     }
 

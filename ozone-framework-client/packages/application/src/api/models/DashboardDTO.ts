@@ -1,21 +1,16 @@
 import { ProfileReference, UserReference } from "./UserDTO";
 import { createValidator } from "./validate";
-import {
-    DASHBOARD_GET_RESPONSE_SCHEMA,
-    DASHBOARD_SCHEMA,
-    DASHBOARD_UPDATE_RESPONSE_SCHEMA
-} from "./schemas/dashboard.schema";
+import { DASHBOARD_GET_RESPONSE_SCHEMA, DASHBOARD_SCHEMA } from "./schemas/dashboard.schema";
 import { StackDTO } from "./StackDTO";
+import { ListOf } from "../interfaces";
 
 export interface DashboardDTO {
-    EDashboardLayoutList: string;
+    id: number;
     alteredByAdmin: string;
-    createdBy: ProfileReference;
     createdDate: string;
     dashboardPosition: number;
     description?: string;
     editedDate: string;
-    groups: any[];
     guid: string;
     iconImageUrl?: string;
     isGroupDashboard: boolean;
@@ -24,31 +19,20 @@ export interface DashboardDTO {
     locked: boolean;
     markedForDeletion: boolean;
     name: string;
-    prettyCreatedDate: string;
-    prettyEditedDate: string;
     publishedToStore: boolean;
-    stack?: StackDTO;
     type?: any;
+    // TODO: DJANGO NEEDED.
+    createdBy: ProfileReference;
+    stack?: StackDTO;
     user: UserReference;
     data?: any;
 }
 
-export const validateDashboard = createValidator<DashboardDTO>(DASHBOARD_SCHEMA);
-
-export interface DashboardGetResponse {
-    success: boolean;
-    results: number;
-    data: DashboardDTO[];
+export interface DashboardUpdateRequest extends DashboardCreateRequest {
+    id: number;
 }
 
-export const validateDashboardGetResponse = createValidator<DashboardGetResponse>(DASHBOARD_GET_RESPONSE_SCHEMA);
-
-// tslint:disable-next-line
-export interface DashboardCreateRequest extends DashboardUpdateRequest {
-    //
-}
-
-export interface DashboardUpdateRequest {
+export interface DashboardCreateRequest {
     dashboardPosition?: number;
     description?: string;
     guid: string;
@@ -60,17 +44,5 @@ export interface DashboardUpdateRequest {
     name: string;
 }
 
-export interface DashboardUpdateParams {
-    user_id?: number;
-    isGroupDashboard?: boolean;
-    adminEnabled?: boolean;
-}
-
-export interface DashboardUpdateResponse {
-    success: boolean;
-    data: DashboardDTO[];
-}
-
-export const validateDashboardUpdateResponse = createValidator<DashboardUpdateResponse>(
-    DASHBOARD_UPDATE_RESPONSE_SCHEMA
-);
+export const validateDashboardListResponse = createValidator<ListOf<DashboardDTO[]>>(DASHBOARD_GET_RESPONSE_SCHEMA);
+export const validateDashboardDetailResponse = createValidator<DashboardDTO>(DASHBOARD_SCHEMA);

@@ -11,10 +11,7 @@ requests = APIClient()
 
 
 class StacksApiTests(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def tearDown(self):
         requests.logout()
@@ -68,7 +65,7 @@ class StacksApiTests(TestCase):
         url = reverse('stacks-share', args=f'{stack.id}')
         response = requests.post(url)
 
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 403)
 
     def test_user_can_restore_stack(self):
         admin_user = Person.objects.get(pk=1)

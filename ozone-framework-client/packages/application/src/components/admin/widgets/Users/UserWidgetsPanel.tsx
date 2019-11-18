@@ -11,6 +11,9 @@ import { UserWidgetsEditDialog } from "./UserWidgetsEditDialog";
 import { WidgetTable } from "../Widgets/WidgetTable";
 
 import * as styles from "../Widgets.scss";
+import { ListOf, Response } from "../../../../api/interfaces";
+import { userWidgetApi, UserWidgetQueryCriteria } from "../../../../api/clients/UserWidgetAPI";
+import { UserWidgetDTO } from "../../../../api/models/UserWidgetDTO";
 
 interface UserEditWidgetsProps {
     onUpdate: (update?: any) => void;
@@ -79,14 +82,10 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
     private getWidgets = async () => {
         const currentUser: UserDTO = this.props.user;
 
-        const criteria: WidgetQueryCriteria = {
-            user_id: currentUser.id
-        };
-
-        const response = await widgetApi.getWidgets(criteria);
+        const response: any = await userWidgetApi.getUserWidgets(currentUser.id);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return;
+        if (!(response.status >= 200 && response.status < 400)) return;
 
         this.setState({
             widgets: response.data.data,
@@ -100,8 +99,11 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
             if (this.state.widgets.findIndex((w) => w.id === widget.id) >= 0) {
                 continue;
             }
-            const response = await widgetApi.addWidgetUsers(widget.id, this.props.user.id);
-            if (response.status === 200) {
+            const response: Response<ListOf<WidgetDTO[]>> = await widgetApi.addWidgetUsers(
+                widget.id,
+                this.props.user.id
+            );
+            if (response.status >= 200 && response.status < 400) {
                 OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
             } else {
                 OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
@@ -143,10 +145,10 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
     };
 
     private removeWidget = async (widget: WidgetDTO) => {
-        const response = await widgetApi.removeWidgetUsers(widget.id, this.props.user.id);
+        const response: Response<void> = await widgetApi.removeWidgetUsers(widget.id, this.props.user.id);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (!(response.status >= 200 && response.status < 400)) return false;
 
         this.getWidgets();
         this.props.onUpdate();

@@ -4,7 +4,7 @@ import { asBehavior } from "../observables";
 import { Gateway, getGateway } from "../api/interfaces";
 import { AuthUserDTO } from "../api/models/AuthUserDTO";
 import { AuthenticationError } from "../api/errors";
-import { env, logoutUrl } from "../environment";
+import { logoutUrl } from "../environment";
 import { isNil } from "../utility";
 
 import { mainStore } from "./MainStore";
@@ -63,8 +63,8 @@ export class AuthStore {
     };
 }
 
-export const authStore = new AuthStore();
-
 function isUnauthorized(error: Error): boolean {
     return error instanceof AuthenticationError && !isNil(error.cause.response) && error.cause.response.status === 401;
 }
+
+export const authStore = new AuthStore();

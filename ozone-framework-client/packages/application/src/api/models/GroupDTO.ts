@@ -1,12 +1,6 @@
-import { IdDTO } from "./IdDTO";
 import { createValidator } from "./validate";
-import {
-    GROUP_CREATE_RESPONSE_SCHEMA,
-    GROUP_DELETE_RESPONSE_SCHEMA,
-    GROUP_GET_RESPONSE_SCHEMA,
-    GROUP_SCHEMA,
-    GROUP_UPDATE_RESPONSE_SCHEMA
-} from "./schemas/group.schema";
+import { GROUP_GET_RESPONSE_SCHEMA, GROUP_SCHEMA, GROUP_WIDGETS_GET_RESPONSE_SCHEMA } from "./schemas/group.schema";
+import { ListOf } from "../interfaces";
 
 export interface GroupDTO {
     id: number;
@@ -22,15 +16,6 @@ export interface GroupDTO {
     totalWidgets: number;
 }
 
-export const validateGroup = createValidator<GroupDTO>(GROUP_SCHEMA);
-
-export interface GroupGetResponse {
-    results: number;
-    data: GroupDTO[];
-}
-
-export const validateGroupGetResponse = createValidator<GroupGetResponse>(GROUP_GET_RESPONSE_SCHEMA);
-
 export interface GroupCreateRequest {
     name: string;
     displayName?: string;
@@ -41,33 +26,20 @@ export interface GroupCreateRequest {
     active?: boolean;
 }
 
-export interface GroupCreateResponse {
-    success: boolean;
-    data: GroupDTO[];
-}
-
-export const validateGroupCreateResponse = createValidator<GroupCreateResponse>(GROUP_CREATE_RESPONSE_SCHEMA);
-
 export interface GroupUpdateRequest extends GroupCreateRequest {
     id: number;
-    update_action?: "add" | "remove";
     user_ids?: number[];
 }
 
-export interface GroupUpdateResponse {
-    success: boolean;
-    data: GroupDTO[];
+export interface GetGroupWidgetsResponse {
+    group: object;
+    widgets: [];
 }
 
-export const validateGroupUpdateResponse = createValidator<GroupUpdateResponse>(GROUP_UPDATE_RESPONSE_SCHEMA);
-
-export interface GroupDeleteResponse {
-    success: boolean;
-    data: IdDTO[];
+export function isDefaultGroup(group: GroupDTO | undefined): boolean {
+    return group !== undefined && group !== null && (group.name === "OWF Administrators" || group.name === "OWF Users");
 }
 
-export const validateGroupDeleteResponse = createValidator<GroupDeleteResponse>(GROUP_DELETE_RESPONSE_SCHEMA);
-
-export function isDefaultGroup(group: GroupDTO): boolean {
-    return group !== undefined && group !== null && (group.name === 'OWF Administrators' || group.name === 'OWF Users');
-}
+export const validateGroupDetailResponse = createValidator<GroupDTO>(GROUP_SCHEMA);
+export const validateGroupListResponse = createValidator<ListOf<GroupDTO[]>>(GROUP_GET_RESPONSE_SCHEMA);
+export const validateGroupWidgetsResponse = createValidator<GetGroupWidgetsResponse>(GROUP_WIDGETS_GET_RESPONSE_SCHEMA);

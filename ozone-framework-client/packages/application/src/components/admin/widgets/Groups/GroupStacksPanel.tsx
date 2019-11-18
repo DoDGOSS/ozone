@@ -101,26 +101,22 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
 
     private getStacks = async () => {
         const currentGroup: GroupDTO = this.props.group;
-
-        const criteria: StackQueryCriteria = {
-            groupId: currentGroup.id
-        };
-
-        const response = await stackApi.getStacks(criteria);
+        const response = await stackApi.getStacksForGroup(currentGroup.id);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return;
+        if (!(response.status >= 200 && response.status < 400)) return;
 
         this.setState({
-            stacks: response.data.data,
+            stacks: response.data.data.map((data: any) => data.stack),
             loading: false
         });
     };
 
     private addStacks = async (stacks: Array<StackDTO>) => {
         for (const newStack of stacks) {
-            const response = await stackApi.addStackGroups(newStack.id, [this.props.group]);
-            if (response.status === 200) {
+            const response: any = await stackApi.addStackGroups(newStack.id, [this.props.group]);
+
+            if (response.status >= 200 && response.status < 400) {
                 OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
             } else {
                 OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
@@ -161,7 +157,7 @@ export class GroupStacksPanel extends React.Component<GroupEditStacksProps, Grou
         const response = await stackApi.removeStackGroups(stack.id, [this.props.group]);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (!(response.status >= 200 && response.status < 400)) return false;
 
         this.setState({
             loading: true

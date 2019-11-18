@@ -34,12 +34,16 @@ export class OzoneGateway implements Gateway {
 
     async login(username: string, password: string): Promise<Response<AuthUserDTO>> {
         try {
-            const response = await this.post("auth/login/", {
-                username,
-                password
-            }, {
-                validate: validateAuthUser
-            });
+            const response = await this.post(
+                "auth/login/",
+                {
+                    username,
+                    password
+                },
+                {
+                    validate: validateAuthUser
+                }
+            );
             this._isAuthenticated = true;
             return response;
         } catch (ex) {
@@ -109,7 +113,7 @@ export class OzoneGateway implements Gateway {
             const { params, validate } = options;
             const normalizedUrl = trimStart(url, "/");
             const headers = this.getHeaders(options.headers);
-            
+
             const response = await axios.post(`${this.rootUrl}/${normalizedUrl}`, data, {
                 withCredentials: true,
                 headers,
@@ -135,6 +139,30 @@ export class OzoneGateway implements Gateway {
             const headers = this.getHeaders(options.headers);
 
             const response = await axios.put(`${this.rootUrl}/${normalizedUrl}`, data, {
+                withCredentials: true,
+                headers,
+                params
+            });
+
+            if (validate) validate(response.data);
+
+            return response;
+        } catch (ex) {
+            if (ex instanceof AuthenticationError) {
+                return this.toLogin();
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    async patch<T>(url: string, data?: any, options: RequestOptions<T> = {}): Promise<Response<T>> {
+        try {
+            const { params, validate } = options;
+            const normalizedUrl = trimStart(url, "/");
+            const headers = this.getHeaders(options.headers);
+
+            const response = await axios.patch(`${this.rootUrl}/${normalizedUrl}`, data, {
                 withCredentials: true,
                 headers,
                 params
@@ -186,7 +214,8 @@ export class OzoneGateway implements Gateway {
     }
 
     private getHeaders(initialHeaders?: any): any {
-        return {...initialHeaders,
+        return {
+            ...initialHeaders,
             "Content-Type": "application/json",
             Accept: "application/json",
             "X-CSRFToken": getCookie("csrftoken")

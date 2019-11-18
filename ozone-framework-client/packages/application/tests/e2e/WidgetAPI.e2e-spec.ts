@@ -27,7 +27,7 @@ describe("Widget API", () => {
         widgetApi = new WidgetAPI(gateway);
         userWidgetApi = new UserWidgetAPI(gateway);
 
-        const loginResponse = await gateway.login("testAdmin1", "password");
+        const loginResponse = await gateway.login("admin", "password");
         testAdmin1 = loginResponse.data;
 
         expect(gateway.isAuthenticated).toEqual(true);
