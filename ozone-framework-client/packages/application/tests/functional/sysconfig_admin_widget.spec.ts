@@ -5,7 +5,7 @@ import { GlobalElements, StackAdminWidget, SystemConfigAdminWidget } from "./sel
 import { loggedInAs } from "./helpers";
 import { SysConfigAdmin } from "./pages";
 
-const LOGIN_USERNAME: string = "testAdmin1";
+const LOGIN_USERNAME: string = "admin";
 const LOGIN_PASSWORD: string = "password";
 
 // TODO - Write test to set settings back to default

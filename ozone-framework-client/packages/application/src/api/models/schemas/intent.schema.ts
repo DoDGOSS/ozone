@@ -2,7 +2,7 @@ export const INTENT_SCHEMA = {
     title: "Intent",
     type: "object",
     required: ["action", "dataTypes"],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         action: {
             type: "string"
@@ -20,7 +20,7 @@ export const INTENTS_SCHEMA = {
     title: "Intents",
     type: "object",
     required: ["receive", "send"],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         receive: {
             type: "array",

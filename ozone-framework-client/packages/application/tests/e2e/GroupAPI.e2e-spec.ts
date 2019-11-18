@@ -15,7 +15,7 @@ describe("Group API", () => {
         gateway = new NodeGateway();
         groupApi = new GroupAPI(gateway);
 
-        await gateway.login("testAdmin1", "password");
+        await gateway.login("admin", "password");
         expect(gateway.isAuthenticated).toEqual(true);
     });
 

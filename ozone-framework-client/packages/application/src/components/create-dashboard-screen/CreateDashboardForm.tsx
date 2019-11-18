@@ -28,7 +28,7 @@ export interface CreateDashboardOptions {
     name: string;
     description: string;
     presetLayoutName: string | null;
-    copyGuid: string | null;
+    copyId: number;
     stackId?: number;
 }
 
@@ -48,14 +48,14 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
                 name: "",
                 description: "",
                 presetLayoutName: null,
-                copyGuid: "",
+                copyId: 0,
                 stackId
             }}
             onSubmit={(values: CreateDashboardOptions, actions: FormikActions<CreateDashboardOptions>) => {
                 values.presetLayoutName = selectedPresetLayout;
                 if (selectedValue === "copy") {
                     values.presetLayoutName = selectedValue;
-                    values.copyGuid = selectedCopyLayout;
+                    values.copyId = parseInt(selectedCopyLayout);
                 }
 
                 dashboardStore

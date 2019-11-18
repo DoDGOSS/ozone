@@ -7,7 +7,7 @@ import { log } from "util";
 
 module.exports = {
     "As an Administrator, I can view the widget sidebar": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser
             .click(MainPage.WIDGETS_BUTTON)
@@ -17,7 +17,7 @@ module.exports = {
     },
 
     "As an Administrator, I can search the widget sidebar": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser
             .click(MainPage.WIDGETS_BUTTON)
@@ -37,7 +37,7 @@ module.exports = {
     },
 
     "As an Administrator, I can toggle ascending and descending": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser
             .click(MainPage.WIDGETS_BUTTON)
@@ -49,7 +49,7 @@ module.exports = {
     },
 
     "As an Administrator, I can delete a widget from the sidebar": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser
             .click(MainPage.WIDGETS_BUTTON)
@@ -87,7 +87,7 @@ module.exports = {
     },
 
     "As a User, I can delete a widget from the sidebar": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testUser1", "password", "Test User 1");
+        loggedInAs(browser, "user", "password", "Test User 1");
 
         browser
             .click(MainPage.WIDGETS_BUTTON)

@@ -1,0 +1,18 @@
+[
+  {
+    "model": "stacks.stackgroups",
+    "pk": 1,
+    "fields": {
+      "group": 1,
+      "stack": 1
+    }
+  },
+  {
+    "model": "stacks.stackgroups",
+    "pk": 2,
+    "fields": {
+      "group": 2,
+      "stack": 1
+    }
+  }
+]

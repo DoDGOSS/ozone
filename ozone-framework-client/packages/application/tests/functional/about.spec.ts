@@ -6,7 +6,7 @@ import { loggedInAs } from "./helpers";
 
 module.exports = {
     "As a user, I can open the about dialog": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser
             .click(MainPage.USER_MENU_BUTTON)

@@ -34,7 +34,7 @@ export class GroupWidgetsEditDialog extends React.Component<SelectionDialogProps
     protected async getAllWidgets(): Promise<Array<WidgetDTO>> {
         const response = await widgetApi.getWidgets();
 
-        if (response.status !== 200) return [];
+        if (!(response.status >= 200 && response.status < 400)) return [];
 
         return response.data.data;
     }

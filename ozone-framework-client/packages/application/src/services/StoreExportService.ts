@@ -21,7 +21,7 @@ export interface InfractingItemUrl {
 }
 
 class StoreExportService {
-    async uploadStack(stackID: number, store: Widget): Promise<void> {
+    async uploadStack(stackID: any, store: Widget): Promise<void> {
         // Taking input of stackID instead of actual stack means they'll need to save any changes before
         // pushing their current stack, else those changes won't get pushed.
         // Do that automatically, or show notification.

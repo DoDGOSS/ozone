@@ -1,4 +1,3 @@
-import { DashboardUpdateRequest } from "../api/models/DashboardDTO";
 import { UserDashboardDTO, UserDashboardStackDTO } from "../api/models/UserDashboardDTO";
 import { UserWidgetDTO } from "../api/models/UserWidgetDTO";
 import { DashboardNode } from "../components/widget-dashboard/types";
@@ -103,44 +102,51 @@ class UserStateDeserializer {
         if (stack === undefined) {
             throw new Error("No stack?");
         }
-
-        const layout = JSON.parse(dto.layoutConfig) as DashboardLayoutDTO;
-
-        const panels: Dictionary<Panel<any>> = {};
-        for (const panel of layout.panels) {
-            const _panel = this.createPanel(panel);
-            panels[_panel.id] = _panel;
-        }
-
-        const backgroundWidgets = layout.backgroundWidgets
-            ? layout.backgroundWidgets.map(this.createWidgetInstance)
-            : [];
-
-        const props: DashboardProps = {
-            backgroundWidgets,
-            description: optional(dto.description),
-            guid: dto.guid,
-            imageUrl: optional(dto.iconImageUrl),
-            isAlteredByAdmin: dto.alteredByAdmin,
-            isDefault: dto.isdefault,
-            isGroupDashboard: dto.isGroupDashboard,
-            isLocked: dto.locked,
-            isMarkedForDeletion: dto.markedForDeletion,
-            isPublishedToStore: dto.publishedToStore,
-            name: dto.name,
-            panels,
-            position: dto.dashboardPosition,
-            stackId: stack.id,
-            tree: layout.tree,
-            user: {
-                username: dto.user.username
+        //TODO: the double JSON.parse is a temp fix. Someone fix this.
+        if(dto.layoutConfig){
+            let layout = JSON.parse(dto.layoutConfig);
+            while(typeof layout !== 'object')
+                layout = JSON.parse(layout);
+            
+            const panels: Dictionary<Panel<any>> = {};
+            if (layout.panels) {
+                for (const panel of layout.panels) {
+                    const _panel = this.createPanel(panel);
+                    panels[_panel.id] = _panel;
+                }
             }
-        };
 
-        const _dashboard = new Dashboard(props);
+            const backgroundWidgets = layout.backgroundWidgets
+                ? layout.backgroundWidgets.map(this.createWidgetInstance)
+                : [];
 
-        this.dashboards[_dashboard.guid] = _dashboard;
-        stack.dashboards[_dashboard.guid] = _dashboard;
+            const props: DashboardProps = {
+                backgroundWidgets,
+                description: optional(dto.description),
+                guid: dto.guid,
+                imageUrl: optional(dto.iconImageUrl),
+                isAlteredByAdmin: dto.alteredByAdmin,
+                isDefault: dto.isdefault,
+                isGroupDashboard: dto.isGroupDashboard,
+                isLocked: dto.locked,
+                isMarkedForDeletion: dto.markedForDeletion,
+                isPublishedToStore: dto.publishedToStore,
+                name: dto.name,
+                panels,
+                id: optional(dto.id),
+                position: dto.dashboardPosition,
+                stackId: stack.id,
+                tree: layout.tree,
+                user: {
+                    username: dto.user.username
+                }
+            };
+
+            const _dashboard = new Dashboard(props);
+
+            this.dashboards[_dashboard.guid] = _dashboard;
+            stack.dashboards[_dashboard.guid] = _dashboard;
+        }
     }
 
     private createPanel(dto: PanelDTO): Panel<PanelState> {
@@ -183,7 +189,7 @@ class UserStateDeserializer {
     };
 }
 
-export function dashboardToCreateRequest(dashboard: Dashboard): DashboardUpdateRequest {
+export function dashboardToCreateRequest(dashboard: Dashboard): any {
     const state = dashboard.state().value;
 
     return {
@@ -198,10 +204,10 @@ export function dashboardToCreateRequest(dashboard: Dashboard): DashboardUpdateR
     };
 }
 
-export function dashboardToUpdateRequest(dashboard: Dashboard): DashboardUpdateRequest {
+export function dashboardToUpdateRequest(dashboard: Dashboard): any {
     const state = dashboard.state().value;
-
     return {
+        id: state.id,
         dashboardPosition: state.position,
         description: state.description,
         guid: state.guid,

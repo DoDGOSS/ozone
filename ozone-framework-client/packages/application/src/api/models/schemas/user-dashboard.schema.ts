@@ -5,7 +5,7 @@ export const USER_DASHBOARD_USER_SCHEMA = {
     title: "UserDashboard_User",
     type: "object",
     required: ["email", "id", "lastLogin", "username", "userRealName"],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         email: {
             type: "string"
@@ -39,7 +39,7 @@ export const USER_DASHBOARD_STACK_SCHEMA = {
         "stackContext",
         "totalWidgets"
     ],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         approved: {
             type: "boolean"
@@ -90,11 +90,11 @@ export const USER_DASHBOARD_SCHEMA = {
         "markedForDeletion",
         "name",
         "publishedToStore",
-        "stack",
-        "type",
-        "user"
+        "stack"
+        // "type",
+        // "user"
     ],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         alteredByAdmin: {
             type: "boolean"
@@ -134,13 +134,13 @@ export const USER_DASHBOARD_SCHEMA = {
         },
         stack: {
             $ef: "#/definitions/UserDashboard_Stack"
-        },
-        type: {
-            type: ["null"]
-        },
-        user: {
-            $ref: "#/definitions/UserDashboard_User"
         }
+        // type: {
+        //     type: ["null"]
+        // },
+        // user: {
+        //     $ref: "#/definitions/UserDashboard_User"
+        // }
     },
     definitions: {
         UserDashboard_Stack: USER_DASHBOARD_STACK_SCHEMA,
@@ -156,27 +156,27 @@ export const USER_WIDGET_PROPERTIES_SCHEMA = {
         "definitionVisible",
         "description",
         "descriptorUrl",
-        "disabled",
-        "editable",
-        "favorite",
-        "groupWidget",
+        // "disabled",
+        // "editable",
+        // "favorite",
+        // "groupWidget",
         "headerIcon",
         "height",
         "image",
         "intents",
-        "largeIconUrl",
+        // "largeIconUrl",
         "maximized",
         "minimized",
         "mobileReady",
         "namespace",
-        "originalName",
-        "position",
+        // "originalName",
+        // "position",
         "singleton",
         "smallIconUrl",
         "universalName",
         "url",
-        "userId",
-        "userRealName",
+        // "userId",
+        // "userRealName",
         "visible",
         "widgetTypes",
         "widgetVersion",
@@ -184,10 +184,10 @@ export const USER_WIDGET_PROPERTIES_SCHEMA = {
         "x",
         "y"
     ],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         background: {
-            type: "boolean"
+            type: ["boolean", "null"]
         },
         definitionVisible: {
             type: "boolean"
@@ -293,7 +293,7 @@ export const USER_WIDGET_PROPERTIES_SCHEMA = {
 export const USER_WIDGET_SCHEMA = {
     title: "UserWidget",
     type: "object",
-    additionalProperties: false,
+    additionalProperties: true,
     required: ["id", "namespace", "path", "value"],
     properties: {
         id: {
@@ -319,7 +319,7 @@ export const USER_DASHBOARDS_GET_RESPONSE_SCHEMA = {
     title: "UserDashboards Get Response",
     type: "object",
     required: ["dashboards", "widgets"],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         dashboards: {
             type: "array",
@@ -332,6 +332,9 @@ export const USER_DASHBOARDS_GET_RESPONSE_SCHEMA = {
             items: {
                 $ref: "#/definitions/UserWidget"
             }
+        },
+        user: {
+            $ref: "#/definitions/UserDashboard_User"
         }
     },
     definitions: {

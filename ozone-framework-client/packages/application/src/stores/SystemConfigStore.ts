@@ -1,11 +1,10 @@
 import { BehaviorSubject } from "rxjs";
 import { asBehavior } from "../observables";
-
-import { Response } from "../api/interfaces";
 import { ConfigDTO } from "../api/models/ConfigDTO";
 import { SystemConfigAPI, systemConfigApi as configApiDefault } from "../api/clients/SystemConfigAPI";
 import { systemConfigFromJson } from "../codecs/SystemConfig.codec";
 import { isBlank, isNil } from "../utility";
+import { ListOf, Response } from "../api/interfaces";
 
 const CUSTOM_JS_ID = "custom-added-js";
 const CUSTOM_CSS_ID = "custom-added-css";
@@ -37,16 +36,16 @@ export class SystemConfigStore {
         this.configApi.getConfigs().then(this.updateConfigs);
     };
 
-    private updateConfigs = (results: Response<ConfigDTO[]>): void => {
+    private updateConfigs = (results: Response<ListOf<ConfigDTO[]>>): void => {
         // TODO: Error handling?
-        if (results.status !== 200) {
+        if (!(results.status >= 200 && results.status < 400)) {
             this.configs$.next([]);
             return;
         }
 
-        this.configs$.next(results.data);
+        this.configs$.next(results.data.data);
 
-        const sysConfig = systemConfigFromJson(results.data);
+        const sysConfig = systemConfigFromJson(results.data.data);
 
         this.backgroundImageConfig$.next(sysConfig.backgroundImageUrl);
         this.headerHeight$.next(sysConfig.headerHeight);
@@ -65,7 +64,7 @@ export class SystemConfigStore {
 export const systemConfigStore = new SystemConfigStore();
 
 async function getBodyFromUrl(url: string | undefined): Promise<string | undefined> {
-    if (url === undefined || isBlank(url)) return undefined;
+    if (!url || isBlank(url)) return undefined;
 
     const response = await fetch(url);
     if (!response.ok) return undefined;

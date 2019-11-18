@@ -15,6 +15,7 @@ import { IntentsPanel } from "./intents/IntentsPanel";
 import { UsersPanel } from "./users/UsersPanel";
 import { GroupsPanel } from "./groups/GroupsPanel";
 import { StoreComponent } from "../../../Store/StoreComponent";
+import { Response } from "../../../../api/interfaces";
 
 export interface WidgetSetupProps {
     widget: WidgetDTO | undefined;
@@ -89,7 +90,7 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
     }
 
     createOrUpdateWidget = async (widget: WidgetCreateRequest | WidgetUpdateRequest) => {
-        let response: any;
+        let response: Response<WidgetDTO>;
         if ("id" in widget) {
             response = await widgetApi.updateWidget(widget);
         } else {
@@ -97,7 +98,7 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
         }
 
         // TODO: Handle failed request
-        if (response.status === 200) {
+        if (response.status >= 200 && response.status < 400) {
             OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
         } else {
             OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
@@ -105,7 +106,7 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
         }
 
         this.setState({
-            widget: response.data.data[0]
+            widget: response.data
         });
         this.props.onUpdate();
         return true;

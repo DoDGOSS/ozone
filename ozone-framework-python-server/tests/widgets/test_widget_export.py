@@ -5,7 +5,7 @@ from widgets.views import WidgetViewSet
 
 
 class TestingWidgetExport(TestCase):
-    fixtures = ['tests/widgets/fixtures/widget_data.json']
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     # Descriptor export function with widget types
     def test_generate_descriptor_dict_widget_types(self):

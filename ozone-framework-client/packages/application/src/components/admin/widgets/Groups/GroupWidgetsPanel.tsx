@@ -5,9 +5,7 @@ import { GroupWidgetsEditDialog } from "./GroupWidgetEditDialog";
 
 import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 
-import { GroupDTO } from "../../../../api/models/GroupDTO";
-
-import { widgetApi, WidgetQueryCriteria } from "../../../../api/clients/WidgetAPI";
+import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 import { WidgetTable } from "../Widgets/WidgetTable";
 
@@ -30,6 +28,7 @@ const OzoneToaster = Toaster.create({
 
 export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, GroupEditWidgetState> {
     defaultPageSize: number = 5;
+
     constructor(props: GroupEditWidgetProps) {
         super(props);
         this.state = {
@@ -79,18 +78,13 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
     }
 
     private getWidgets = async () => {
-        const currentGroup: GroupDTO = this.props.group;
-
-        const criteria: WidgetQueryCriteria = {
-            group_id: currentGroup.id
-        };
-        const response = await widgetApi.getWidgets(criteria);
+        const response = await widgetApi.getWidgetsForGroup(this.props.group.id);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return;
+        if (!(response.status >= 200 && response.status < 400)) return;
 
         this.setState({
-            widgets: response.data.data,
+            widgets: response.data.widgets,
             loading: false
         });
     };
@@ -99,14 +93,14 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         const responses = [];
         for (const widget of widgets) {
             const response = await widgetApi.addWidgetGroups(widget.id, this.props.group.id);
-            if (response.status === 200) {
+            if (response.status >= 200 && response.status < 400) {
                 OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
             } else {
                 OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
                 return;
             }
 
-            responses.push(response.data.data);
+            responses.push(response.data);
         }
 
         this.setState({
@@ -143,7 +137,7 @@ export class GroupWidgetsPanel extends React.Component<GroupEditWidgetProps, Gro
         const response = await widgetApi.removeWidgetGroups(widget.id, this.props.group.id);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (!(response.status >= 200 && response.status < 400)) return false;
 
         this.getWidgets();
         this.props.onUpdate();

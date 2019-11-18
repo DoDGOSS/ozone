@@ -89,27 +89,25 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
             loading: true
         });
         stackApi.getStackById(this.props.stack.id).then((stackResponse) => {
-            const updatedStack = stackResponse.data.data[0];
+            const updatedStack = stackResponse.data;
 
-            const criteria: UserQueryCriteria = {
-                group_id: updatedStack.defaultGroup.id
-            };
+            if (updatedStack.defaultGroup) {
+                userApi.getUsersForGroup(updatedStack.defaultGroup.id).then((response) => {
+                    // TODO: Handle failed request
+                    if (!(response.status >= 200 && response.status < 400)) return;
 
-            userApi.getUsers(criteria).then((userResponse) => {
-                // TODO: Handle failed request
-                if (userResponse.status !== 200) return;
-
-                this.setState({
-                    loading: false,
-                    users: userResponse.data.data
+                    this.setState({
+                        loading: false,
+                        users: response.data.data.map((data: any) => data.person)
+                    });
                 });
-            });
+            }
         });
     }
 
     private addUser = async (users: Array<UserDTO>) => {
-        const response = await stackApi.addStackUsers(this.props.stack.id, users);
-        if (response.status === 200) {
+        const response: any = await stackApi.addStackUsers(this.props.stack, users);
+        if (response.status >= 200 && response.status < 400) {
             OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
         } else {
             OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
@@ -143,7 +141,7 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
     };
 
     private removeUser = async (user: UserDTO) => {
-        stackApi.removeStackUsers(this.props.stack.id, [user]).then(() => this.getStackUsers());
+        stackApi.removeStackUsers(this.props.stack, [user]).then(() => this.getStackUsers());
     };
 
     private getTableColumns() {

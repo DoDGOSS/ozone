@@ -11,6 +11,7 @@ import {
 } from "./schemas/user-dashboard.schema";
 
 export interface UserDashboardDTO {
+    id: number;
     alteredByAdmin: boolean;
     dashboardPosition: number;
     description: string | null;

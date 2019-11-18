@@ -22,8 +22,8 @@ export class MainStore {
 
     themeClass = () => asBehavior(this.themeClass$);
     getTheme = () => this.themeClass$.value;
-    setTheme = (newTheme: string) => {
-        this.themeClass$.next(newTheme);
+    setTheme = (newTheme: string | undefined) => {
+        // this.themeClass$.next(newTheme);
     };
     updateTheme = async (newTheme: string) => {
         const result = await themeApi.setTheme(newTheme);

@@ -13,9 +13,7 @@ create_stack_payload = {
 
 
 class GroupsModelTests(TransactionTestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/owf_groups/fixtures/groups_data.json']
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def setUp(self):
         self.admin_user = Person.objects.get(pk=1)
@@ -179,9 +177,7 @@ class GroupsModelTests(TransactionTestCase):
 
 
 class GroupWidgetModelTests(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/owf_groups/fixtures/groups_data.json']
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def test_add_widget_to_group(self):
         group = OwfGroup.objects.get(id=1)
@@ -202,7 +198,7 @@ class GroupWidgetModelTests(TestCase):
         # add a widget to a group first.
         self.test_add_widget_to_group()
 
-        group = OwfGroup.objects.get(id=1)
+        group = OwfGroup.objects.get(id=2)
         widget = WidgetDefinition.objects.get(id=1)
 
         deleted, _ = group.remove_widget(widget=widget)

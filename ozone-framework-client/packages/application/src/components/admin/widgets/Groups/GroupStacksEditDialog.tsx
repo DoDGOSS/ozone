@@ -34,7 +34,7 @@ export class GroupStacksEditDialog extends React.Component<SelectionDialogProps<
     protected async getAllStacks(): Promise<Array<StackDTO>> {
         const response = await stackApi.getStacks();
 
-        if (response.status !== 200) return [];
+        if (!(response.status >= 200 && response.status < 400)) return [];
 
         return response.data.data.filter((stack) => stack.approved);
     }

@@ -4,35 +4,35 @@ export const PREFERENCES = [
         namespace: "owf.admin.UserEditCopy",
         path: "guid_to_launch",
         value: "a9bf8e71-692d-44e3-a465-5337ce5e725e",
-        user: { userId: "testAdmin1" }
+        user: { userId: "admin" }
     },
     {
         id: 2,
         namespace: "owf.admin.WidgetEditCopy",
         path: "guid_to_launch",
         value: "679294b3-ccc3-4ace-a061-e3f27ed86451",
-        user: { userId: "testAdmin1" }
+        user: { userId: "admin" }
     },
     {
         id: 3,
         namespace: "owf.admin.GroupEditCopy",
         path: "guid_to_launch",
         value: "dc5c2062-aaa8-452b-897f-60b4b55ab564",
-        user: { userId: "testAdmin1" }
+        user: { userId: "admin" }
     },
     {
         id: 4,
         namespace: "owf.admin.DashboardEditCopy",
         path: "guid_to_launch",
         value: "2445afb9-eb3f-4b79-acf8-6b12180921c3",
-        user: { userId: "testAdmin1" }
+        user: { userId: "admin" }
     },
     {
         id: 5,
         namespace: "owf.admin.StackEditCopy",
         path: "guid_to_launch",
         value: "72c382a3-89e7-4abf-94db-18db7779e1df",
-        user: { userId: "testAdmin1" }
+        user: { userId: "admin" }
     }
 ];
 
@@ -44,8 +44,8 @@ export const USERS = [
         id: 1,
         userRealName: "Test Administrator 1",
         totalWidgets: 0,
-        username: "testAdmin1",
-        email: "testAdmin1@ozone.test",
+        username: "admin",
+        email: "admin@goss.com",
         lastLogin: null,
         totalDashboards: 0
     },
@@ -56,8 +56,8 @@ export const USERS = [
         id: 2,
         userRealName: "Test User 1",
         totalWidgets: 0,
-        username: "testUser1",
-        email: "testUser1@ozone.test",
+        username: "user",
+        email: "user@goss.com",
         lastLogin: null,
         totalDashboards: 0
     }

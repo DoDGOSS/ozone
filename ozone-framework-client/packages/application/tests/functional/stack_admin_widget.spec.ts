@@ -7,7 +7,7 @@ import { StackAdmin } from "./pages";
 
 module.exports = {
     "As an Administrator, I can view all dashboards in the Stack Admin Widget": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         StackAdmin.navigateTo(browser);
 
@@ -15,7 +15,7 @@ module.exports = {
     },
 
     "As an Administrator, I can add and remove groups from a shared dashboard": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         // First create Dashboard for testing
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Dashboard Button] is visible");
@@ -221,7 +221,7 @@ module.exports = {
     },
 
     "As an Administrator, I can add and remove users from a shared dashboard": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
 

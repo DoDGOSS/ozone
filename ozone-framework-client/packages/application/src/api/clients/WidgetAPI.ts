@@ -1,23 +1,15 @@
-import * as qs from "qs";
-
-import { Gateway, getGateway, Response } from "../interfaces";
-
-import { mapIds, mapUuids } from "../models/IdDTO";
+import { Gateway, getGateway, ListOf, Response } from "../interfaces";
 import {
-    validateWidgetCreateResponse,
-    validateWidgetDeleteResponse,
-    validateWidgetGetResponse,
-    validateWidgetUpdateGroupsResponse,
-    validateWidgetUpdateUsersResponse,
+    GetWidgetGroupsResponse,
+    validateWidgetDetailResponse,
+    validateWidgetGroupsResponse,
+    validateWidgetListResponse,
     WidgetCreateRequest,
-    WidgetCreateResponse,
-    WidgetDeleteResponse,
+    WidgetDTO,
     WidgetGetDescriptorResponse,
-    WidgetGetResponse,
-    WidgetUpdateGroupsResponse,
-    WidgetUpdateRequest,
-    WidgetUpdateUsersResponse
+    WidgetUpdateRequest
 } from "../models/WidgetDTO";
+import { GetGroupWidgetsResponse, validateGroupWidgetsResponse } from "../models/GroupDTO";
 
 export interface WidgetQueryCriteria {
     limit?: number;
@@ -33,16 +25,41 @@ export class WidgetAPI {
         this.gateway = gateway || getGateway();
     }
 
-    async getWidgets(criteria?: WidgetQueryCriteria): Promise<Response<WidgetGetResponse>> {
-        return this.gateway.get("widget/", {
-            params: getOptionParams(criteria),
-            validate: validateWidgetGetResponse
+    async getWidgets(): Promise<Response<ListOf<WidgetDTO[]>>> {
+        return this.gateway.get("admin/widgets/", {
+            validate: validateWidgetListResponse
         });
     }
 
-    async getWidgetById(id: string): Promise<Response<WidgetGetResponse>> {
-        return this.gateway.get(`widget/${id}/`, {
-            validate: validateWidgetGetResponse
+    async getWidgetById(id: string): Promise<Response<WidgetDTO>> {
+        return this.gateway.get(`admin/widgets/${id}/`, {
+            validate: validateWidgetDetailResponse
+        });
+    }
+
+    async createWidget(data: WidgetCreateRequest): Promise<Response<WidgetDTO>> {
+        return this.gateway.post("admin/widgets/", data, { // TODO: verify the data being sent is what the backend expects.
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            validate: validateWidgetDetailResponse
+        });
+    }
+
+    async updateWidget(data: WidgetUpdateRequest): Promise<Response<WidgetDTO>> {
+        return this.gateway.put(`admin/widgets/${data.id}/`, data, { // TODO: verify the data being sent is what the backend expects.
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            validate: validateWidgetDetailResponse
+        });
+    }
+
+    async deleteWidget(id: string): Promise<Response<void>> {
+        return this.gateway.post(`admin/widgets/${id}/`, null, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
         });
     }
 
@@ -50,143 +67,73 @@ export class WidgetAPI {
         return this.gateway.get<WidgetGetDescriptorResponse>(url);
     }
 
-    async createWidget(data: WidgetCreateRequest): Promise<Response<WidgetCreateResponse>> {
-        const requestData = qs.stringify({
-            data: JSON.stringify([data])
-        });
+    //TODO: verify this whole function works. Primarily the bulk add.
+    async addWidgetUsers(widgetId: string, userIds: number | number[]): Promise<Response<ListOf<WidgetDTO[]>>> {
+        let url = "admin/users-widgets/";
+        let requestData: any = { widget_definition: widgetId };
 
-        return this.gateway.post("widget/", requestData, {
+        if (userIds instanceof Array) {
+            requestData = { person_ids: userIds, ...requestData };
+        } else {
+            requestData = { person: userIds, ...requestData };
+        }
+
+        return this.gateway.post(url, requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateWidgetCreateResponse
+            }
         });
     }
 
-    async updateWidget(data: WidgetUpdateRequest): Promise<Response<WidgetCreateResponse>> {
-        const requestData = qs.stringify({
-            data: JSON.stringify([data])
-        });
+    //TODO: verify this whole function works. Primarily the bulk add.
+    async addWidgetGroups(widgetId: string, groupIds: number | number[]): Promise<Response<GetWidgetGroupsResponse>> {
+        let url = "admin/groups-widgets/";
+        let requestData: any = { widget_id: widgetId };
 
-        return this.gateway.put(`widget/${data.id}`, requestData, {
+        if (groupIds instanceof Array) {
+            requestData = { group_ids: groupIds, ...requestData };
+        } else {
+            requestData = { group_id: groupIds, ...requestData };
+        }
+
+        return this.gateway.post(url, requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            validate: validateWidgetCreateResponse
+            validate: validateWidgetGroupsResponse
         });
     }
 
-    async addWidgetUsers(widgetId: string, userIds: number | number[]): Promise<Response<WidgetUpdateUsersResponse>> {
-        const requestData = qs.stringify({
-            widget_id: widgetId,
-            data: JSON.stringify(mapIds(userIds)),
-            tab: "users",
-            update_action: "add"
-        });
+    //TODO: verify this whole function works.
+    async removeWidgetUsers(widgetId: string, userId: number): Promise<Response<void>> {
+        let requestData: any = { person_id: userId, widget_id: widgetId };
 
-        return this.gateway.put(`widget/${widgetId}/`, requestData, {
+        return this.gateway.delete(`admin/users-widgets/`, requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateWidgetUpdateUsersResponse
+            }
         });
     }
 
-    async removeWidgetUsers(
-        widgetId: string,
-        userIds: number | number[]
-    ): Promise<Response<WidgetUpdateUsersResponse>> {
-        const requestData = qs.stringify({
-            widget_id: widgetId,
-            data: JSON.stringify(mapIds(userIds)),
-            tab: "users",
-            update_action: "remove",
-            _method: "PUT"
-        });
+    //TODO: verify this whole function works. 
+    async removeWidgetGroups(widgetId: string, groupId: number): Promise<Response<void>> {
+        let requestData: any = { group_id: groupId, widget_id: widgetId };
 
-        return this.gateway.put(`widget/`, requestData, {
+        return this.gateway.delete("admin/groups-widgets/", requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateWidgetUpdateUsersResponse
+            }
         });
     }
 
-    async addWidgetGroups(
-        widgetId: string,
-        groupIds: number | number[]
-    ): Promise<Response<WidgetUpdateGroupsResponse>> {
-        const requestData = qs.stringify({
-            widget_id: widgetId,
-            data: JSON.stringify(mapIds(groupIds)),
-            tab: "groups",
-            update_action: "add"
-        });
-
-        return this.gateway.put(`widget/${widgetId}/`, requestData, {
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
+    getWidgetsForGroup(groupId: string): Promise<Response<GetGroupWidgetsResponse>> {
+        return this.gateway.get("admin/groups-widgets/", {
+            params: {
+                group_id: groupId
             },
-            validate: validateWidgetUpdateGroupsResponse
-        });
-    }
-
-    async removeWidgetGroups(
-        widgetId: string,
-        groupIds: number | number[]
-    ): Promise<Response<WidgetUpdateGroupsResponse>> {
-        const requestData = qs.stringify({
-            widget_id: widgetId,
-            data: JSON.stringify(mapIds(groupIds)),
-            tab: "groups",
-            update_action: "remove"
-        });
-
-        return this.gateway.put(`widget/${widgetId}/`, requestData, {
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateWidgetUpdateGroupsResponse
-        });
-    }
-
-    async deleteWidget(id: string | string[]): Promise<Response<WidgetDeleteResponse>> {
-        const requestData = qs.stringify({
-            _method: "DELETE",
-            data: JSON.stringify(mapUuids(id))
-        });
-
-        return this.gateway.post("widget/", requestData, {
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateWidgetDeleteResponse
-        });
-    }
-
-    async getDependentWidgets(id: string): Promise<Response<WidgetCreateResponse>> {
-        const requestData = qs.stringify({
-            ids: id
-        });
-
-        return this.gateway.post("/widgetDefinition/dependents", requestData, {
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateWidgetCreateResponse
+            validate: validateGroupWidgetsResponse
         });
     }
 }
 
 export const widgetApi = new WidgetAPI();
-
-function getOptionParams(options?: WidgetQueryCriteria): any | undefined {
-    if (!options) return undefined;
-
-    const params: any = {};
-    if (options.limit) params.max = options.limit;
-    if (options.offset) params.offset = options.offset;
-    if (options.user_id) params.user_id = options.user_id;
-    if (options.group_id) params.group_id = options.group_id;
-    return params;
-}

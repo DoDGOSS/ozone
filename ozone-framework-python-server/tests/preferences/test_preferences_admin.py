@@ -18,18 +18,11 @@ payload_1 = {
 
 
 class TestingPrefAdmin(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/stacks/fixtures/stacks_data.json',
-                'tests/dashboards/fixtures/dashboard_data.json',
-                'tests/owf_groups/fixtures/groups_data.json',
-                'tests/preferences/fixtures/pref_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def test_post_admin(self):
         requests.login(email='admin@goss.com', password='password')
-        url = reverse('user_preferences-list')
+        url = reverse('admin_preferences-list')
         data = requests.post(url, payload_1, format="json")
 
         self.assertEqual(data.status_code, 201)
@@ -38,7 +31,7 @@ class TestingPrefAdmin(TestCase):
 
     def test_get_admin(self):
         requests.login(email='admin@goss.com', password='password')
-        url = reverse('user_preferences-list')
+        url = reverse('admin_preferences-list')
         data = requests.get(url)
 
         self.assertEqual(data.status_code, 200)

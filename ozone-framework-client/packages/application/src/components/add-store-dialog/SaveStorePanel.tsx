@@ -15,6 +15,7 @@ import { showConfirmationDialog } from "../confirmation-dialog/showConfirmationD
 import { showToast } from "../toaster/Toaster";
 
 import styles from "./index.scss";
+import { ListOf, Response } from "../../api/interfaces";
 
 export interface SaveStorePanelProps {
     storeWidget: Widget | undefined;
@@ -108,7 +109,7 @@ export const SaveStorePanel: React.FC<SaveStorePanelProps> = (props: SaveStorePa
                             store.images.largeUrl = icon;
                             store.description = description;
                             storeMetaService.saveOrUpdateStore(store).then((response: any) => {
-                                if (response.status === 200) {
+                                if (response.status >= 200 && response.status < 400) {
                                     showToast({
                                         message: "Store successfully saved",
                                         intent: Intent.SUCCESS
@@ -216,10 +217,10 @@ async function imageExists(image_url: string): Promise<boolean> {
 }
 
 async function getWidgetTypes(): Promise<WidgetTypeDTO[]> {
-    const response = await widgetTypeApi.getWidgetTypes();
+    const response: Response<ListOf<WidgetTypeDTO[]>> = await widgetTypeApi.getWidgetTypes();
 
     // TODO: Handle failed request
-    if (response.status !== 200) return [];
+    if (!(response.status >= 200 && response.status < 400)) return [];
 
     return response.data.data;
 }

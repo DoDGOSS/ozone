@@ -39,6 +39,7 @@ INSTALLED_APPS = [
 
     # 3rd party apps
     'rest_framework',
+    'corsheaders',
     'drf_yasg',
     'django_filters',
 
@@ -61,6 +62,7 @@ AUTH_USER_MODEL = 'people.Person'
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -151,8 +153,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100000,
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -292,3 +294,8 @@ METRICS_SERVER_URL = 'http://localhost:3000/metric'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 1440 * 60
+
+# REST CORS CONFIGURATION
+# ------------------------------------------------------------------------------
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True

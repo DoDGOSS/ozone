@@ -1,941 +1,5 @@
 [
 {
-    "model": "auth.permission",
-    "pk": 1,
-    "fields": {
-        "name": "Can add log entry",
-        "content_type": 1,
-        "codename": "add_logentry"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 2,
-    "fields": {
-        "name": "Can change log entry",
-        "content_type": 1,
-        "codename": "change_logentry"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 3,
-    "fields": {
-        "name": "Can delete log entry",
-        "content_type": 1,
-        "codename": "delete_logentry"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 4,
-    "fields": {
-        "name": "Can view log entry",
-        "content_type": 1,
-        "codename": "view_logentry"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 5,
-    "fields": {
-        "name": "Can add permission",
-        "content_type": 2,
-        "codename": "add_permission"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 6,
-    "fields": {
-        "name": "Can change permission",
-        "content_type": 2,
-        "codename": "change_permission"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 7,
-    "fields": {
-        "name": "Can delete permission",
-        "content_type": 2,
-        "codename": "delete_permission"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 8,
-    "fields": {
-        "name": "Can view permission",
-        "content_type": 2,
-        "codename": "view_permission"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 9,
-    "fields": {
-        "name": "Can add group",
-        "content_type": 3,
-        "codename": "add_group"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 10,
-    "fields": {
-        "name": "Can change group",
-        "content_type": 3,
-        "codename": "change_group"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 11,
-    "fields": {
-        "name": "Can delete group",
-        "content_type": 3,
-        "codename": "delete_group"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 12,
-    "fields": {
-        "name": "Can view group",
-        "content_type": 3,
-        "codename": "view_group"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 13,
-    "fields": {
-        "name": "Can add content type",
-        "content_type": 4,
-        "codename": "add_contenttype"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 14,
-    "fields": {
-        "name": "Can change content type",
-        "content_type": 4,
-        "codename": "change_contenttype"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 15,
-    "fields": {
-        "name": "Can delete content type",
-        "content_type": 4,
-        "codename": "delete_contenttype"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 16,
-    "fields": {
-        "name": "Can view content type",
-        "content_type": 4,
-        "codename": "view_contenttype"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 17,
-    "fields": {
-        "name": "Can add session",
-        "content_type": 5,
-        "codename": "add_session"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 18,
-    "fields": {
-        "name": "Can change session",
-        "content_type": 5,
-        "codename": "change_session"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 19,
-    "fields": {
-        "name": "Can delete session",
-        "content_type": 5,
-        "codename": "delete_session"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 20,
-    "fields": {
-        "name": "Can view session",
-        "content_type": 5,
-        "codename": "view_session"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 21,
-    "fields": {
-        "name": "Can add domain mapping",
-        "content_type": 6,
-        "codename": "add_domainmapping"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 22,
-    "fields": {
-        "name": "Can change domain mapping",
-        "content_type": 6,
-        "codename": "change_domainmapping"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 23,
-    "fields": {
-        "name": "Can delete domain mapping",
-        "content_type": 6,
-        "codename": "delete_domainmapping"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 24,
-    "fields": {
-        "name": "Can view domain mapping",
-        "content_type": 6,
-        "codename": "view_domainmapping"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 25,
-    "fields": {
-        "name": "Can add intent",
-        "content_type": 7,
-        "codename": "add_intent"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 26,
-    "fields": {
-        "name": "Can change intent",
-        "content_type": 7,
-        "codename": "change_intent"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 27,
-    "fields": {
-        "name": "Can delete intent",
-        "content_type": 7,
-        "codename": "delete_intent"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 28,
-    "fields": {
-        "name": "Can view intent",
-        "content_type": 7,
-        "codename": "view_intent"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 29,
-    "fields": {
-        "name": "Can add intent data type",
-        "content_type": 8,
-        "codename": "add_intentdatatype"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 30,
-    "fields": {
-        "name": "Can change intent data type",
-        "content_type": 8,
-        "codename": "change_intentdatatype"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 31,
-    "fields": {
-        "name": "Can delete intent data type",
-        "content_type": 8,
-        "codename": "delete_intentdatatype"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 32,
-    "fields": {
-        "name": "Can view intent data type",
-        "content_type": 8,
-        "codename": "view_intentdatatype"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 33,
-    "fields": {
-        "name": "Can add intent data types",
-        "content_type": 9,
-        "codename": "add_intentdatatypes"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 34,
-    "fields": {
-        "name": "Can change intent data types",
-        "content_type": 9,
-        "codename": "change_intentdatatypes"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 35,
-    "fields": {
-        "name": "Can delete intent data types",
-        "content_type": 9,
-        "codename": "delete_intentdatatypes"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 36,
-    "fields": {
-        "name": "Can view intent data types",
-        "content_type": 9,
-        "codename": "view_intentdatatypes"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 37,
-    "fields": {
-        "name": "Can add owf group",
-        "content_type": 10,
-        "codename": "add_owfgroup"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 38,
-    "fields": {
-        "name": "Can change owf group",
-        "content_type": 10,
-        "codename": "change_owfgroup"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 39,
-    "fields": {
-        "name": "Can delete owf group",
-        "content_type": 10,
-        "codename": "delete_owfgroup"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 40,
-    "fields": {
-        "name": "Can view owf group",
-        "content_type": 10,
-        "codename": "view_owfgroup"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 41,
-    "fields": {
-        "name": "Can add owf group people",
-        "content_type": 11,
-        "codename": "add_owfgrouppeople"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 42,
-    "fields": {
-        "name": "Can change owf group people",
-        "content_type": 11,
-        "codename": "change_owfgrouppeople"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 43,
-    "fields": {
-        "name": "Can delete owf group people",
-        "content_type": 11,
-        "codename": "delete_owfgrouppeople"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 44,
-    "fields": {
-        "name": "Can view owf group people",
-        "content_type": 11,
-        "codename": "view_owfgrouppeople"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 45,
-    "fields": {
-        "name": "Can add person",
-        "content_type": 12,
-        "codename": "add_person"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 46,
-    "fields": {
-        "name": "Can change person",
-        "content_type": 12,
-        "codename": "change_person"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 47,
-    "fields": {
-        "name": "Can delete person",
-        "content_type": 12,
-        "codename": "delete_person"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 48,
-    "fields": {
-        "name": "Can view person",
-        "content_type": 12,
-        "codename": "view_person"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 49,
-    "fields": {
-        "name": "Can add person role",
-        "content_type": 13,
-        "codename": "add_personrole"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 50,
-    "fields": {
-        "name": "Can change person role",
-        "content_type": 13,
-        "codename": "change_personrole"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 51,
-    "fields": {
-        "name": "Can delete person role",
-        "content_type": 13,
-        "codename": "delete_personrole"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 52,
-    "fields": {
-        "name": "Can view person role",
-        "content_type": 13,
-        "codename": "view_personrole"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 53,
-    "fields": {
-        "name": "Can add person widget definition",
-        "content_type": 14,
-        "codename": "add_personwidgetdefinition"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 54,
-    "fields": {
-        "name": "Can change person widget definition",
-        "content_type": 14,
-        "codename": "change_personwidgetdefinition"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 55,
-    "fields": {
-        "name": "Can delete person widget definition",
-        "content_type": 14,
-        "codename": "delete_personwidgetdefinition"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 56,
-    "fields": {
-        "name": "Can view person widget definition",
-        "content_type": 14,
-        "codename": "view_personwidgetdefinition"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 57,
-    "fields": {
-        "name": "Can add person session",
-        "content_type": 15,
-        "codename": "add_personsession"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 58,
-    "fields": {
-        "name": "Can change person session",
-        "content_type": 15,
-        "codename": "change_personsession"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 59,
-    "fields": {
-        "name": "Can delete person session",
-        "content_type": 15,
-        "codename": "delete_personsession"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 60,
-    "fields": {
-        "name": "Can view person session",
-        "content_type": 15,
-        "codename": "view_personsession"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 61,
-    "fields": {
-        "name": "Can add role",
-        "content_type": 16,
-        "codename": "add_role"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 62,
-    "fields": {
-        "name": "Can change role",
-        "content_type": 16,
-        "codename": "change_role"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 63,
-    "fields": {
-        "name": "Can delete role",
-        "content_type": 16,
-        "codename": "delete_role"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 64,
-    "fields": {
-        "name": "Can view role",
-        "content_type": 16,
-        "codename": "view_role"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 65,
-    "fields": {
-        "name": "Can add stack",
-        "content_type": 17,
-        "codename": "add_stack"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 66,
-    "fields": {
-        "name": "Can change stack",
-        "content_type": 17,
-        "codename": "change_stack"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 67,
-    "fields": {
-        "name": "Can delete stack",
-        "content_type": 17,
-        "codename": "delete_stack"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 68,
-    "fields": {
-        "name": "Can view stack",
-        "content_type": 17,
-        "codename": "view_stack"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 69,
-    "fields": {
-        "name": "Can add stack groups",
-        "content_type": 18,
-        "codename": "add_stackgroups"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 70,
-    "fields": {
-        "name": "Can change stack groups",
-        "content_type": 18,
-        "codename": "change_stackgroups"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 71,
-    "fields": {
-        "name": "Can delete stack groups",
-        "content_type": 18,
-        "codename": "delete_stackgroups"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 72,
-    "fields": {
-        "name": "Can view stack groups",
-        "content_type": 18,
-        "codename": "view_stackgroups"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 73,
-    "fields": {
-        "name": "Can add widget definition",
-        "content_type": 19,
-        "codename": "add_widgetdefinition"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 74,
-    "fields": {
-        "name": "Can change widget definition",
-        "content_type": 19,
-        "codename": "change_widgetdefinition"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 75,
-    "fields": {
-        "name": "Can delete widget definition",
-        "content_type": 19,
-        "codename": "delete_widgetdefinition"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 76,
-    "fields": {
-        "name": "Can view widget definition",
-        "content_type": 19,
-        "codename": "view_widgetdefinition"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 77,
-    "fields": {
-        "name": "Can add widget def intent",
-        "content_type": 20,
-        "codename": "add_widgetdefintent"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 78,
-    "fields": {
-        "name": "Can change widget def intent",
-        "content_type": 20,
-        "codename": "change_widgetdefintent"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 79,
-    "fields": {
-        "name": "Can delete widget def intent",
-        "content_type": 20,
-        "codename": "delete_widgetdefintent"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 80,
-    "fields": {
-        "name": "Can view widget def intent",
-        "content_type": 20,
-        "codename": "view_widgetdefintent"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 81,
-    "fields": {
-        "name": "Can add widget type",
-        "content_type": 21,
-        "codename": "add_widgettype"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 82,
-    "fields": {
-        "name": "Can change widget type",
-        "content_type": 21,
-        "codename": "change_widgettype"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 83,
-    "fields": {
-        "name": "Can delete widget type",
-        "content_type": 21,
-        "codename": "delete_widgettype"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 84,
-    "fields": {
-        "name": "Can view widget type",
-        "content_type": 21,
-        "codename": "view_widgettype"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 85,
-    "fields": {
-        "name": "Can add widget def intent data types",
-        "content_type": 22,
-        "codename": "add_widgetdefintentdatatypes"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 86,
-    "fields": {
-        "name": "Can change widget def intent data types",
-        "content_type": 22,
-        "codename": "change_widgetdefintentdatatypes"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 87,
-    "fields": {
-        "name": "Can delete widget def intent data types",
-        "content_type": 22,
-        "codename": "delete_widgetdefintentdatatypes"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 88,
-    "fields": {
-        "name": "Can view widget def intent data types",
-        "content_type": 22,
-        "codename": "view_widgetdefintentdatatypes"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 89,
-    "fields": {
-        "name": "Can add widget definition widget types",
-        "content_type": 23,
-        "codename": "add_widgetdefinitionwidgettypes"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 90,
-    "fields": {
-        "name": "Can change widget definition widget types",
-        "content_type": 23,
-        "codename": "change_widgetdefinitionwidgettypes"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 91,
-    "fields": {
-        "name": "Can delete widget definition widget types",
-        "content_type": 23,
-        "codename": "delete_widgetdefinitionwidgettypes"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 92,
-    "fields": {
-        "name": "Can view widget definition widget types",
-        "content_type": 23,
-        "codename": "view_widgetdefinitionwidgettypes"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 93,
-    "fields": {
-        "name": "Can add dashboard",
-        "content_type": 24,
-        "codename": "add_dashboard"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 94,
-    "fields": {
-        "name": "Can change dashboard",
-        "content_type": 24,
-        "codename": "change_dashboard"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 95,
-    "fields": {
-        "name": "Can delete dashboard",
-        "content_type": 24,
-        "codename": "delete_dashboard"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 96,
-    "fields": {
-        "name": "Can view dashboard",
-        "content_type": 24,
-        "codename": "view_dashboard"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 97,
-    "fields": {
-        "name": "Can add preference",
-        "content_type": 25,
-        "codename": "add_preference"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 98,
-    "fields": {
-        "name": "Can change preference",
-        "content_type": 25,
-        "codename": "change_preference"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 99,
-    "fields": {
-        "name": "Can delete preference",
-        "content_type": 25,
-        "codename": "delete_preference"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 100,
-    "fields": {
-        "name": "Can view preference",
-        "content_type": 25,
-        "codename": "view_preference"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 101,
-    "fields": {
-        "name": "Can add application configuration",
-        "content_type": 26,
-        "codename": "add_applicationconfiguration"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 102,
-    "fields": {
-        "name": "Can change application configuration",
-        "content_type": 26,
-        "codename": "change_applicationconfiguration"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 103,
-    "fields": {
-        "name": "Can delete application configuration",
-        "content_type": 26,
-        "codename": "delete_applicationconfiguration"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 104,
-    "fields": {
-        "name": "Can view application configuration",
-        "content_type": 26,
-        "codename": "view_applicationconfiguration"
-    }
-},
-{
     "model": "domain_mappings.domainmapping",
     "pk": 1,
     "fields": {
@@ -945,42 +9,6 @@
         "relationship_type": "owns",
         "dest_id": 1,
         "dest_type": "widget_definition"
-    }
-},
-{
-    "model": "domain_mappings.domainmapping",
-    "pk": 2,
-    "fields": {
-        "version": 0,
-        "src_id": 1,
-        "src_type": "group",
-        "relationship_type": "owns",
-        "dest_id": 1,
-        "dest_type": "widget_definition"
-    }
-},
-{
-    "model": "domain_mappings.domainmapping",
-    "pk": 3,
-    "fields": {
-        "version": 1571180762,
-        "src_id": 7,
-        "src_type": "group",
-        "relationship_type": "owns",
-        "dest_id": 5,
-        "dest_type": "dashboard"
-    }
-},
-{
-    "model": "domain_mappings.domainmapping",
-    "pk": 4,
-    "fields": {
-        "version": 1571180762,
-        "src_id": 6,
-        "src_type": "dashboard",
-        "relationship_type": "cloneOf",
-        "dest_id": 5,
-        "dest_type": "dashboard"
     }
 },
 {
@@ -1032,6 +60,174 @@
     }
 },
 {
+    "model": "domain_mappings.domainmapping",
+    "pk": 9,
+    "fields": {
+        "version": 1573767006,
+        "src_id": 1,
+        "src_type": "group",
+        "relationship_type": "owns",
+        "dest_id": 6,
+        "dest_type": "widget_definition"
+    }
+},
+{
+    "model": "domain_mappings.domainmapping",
+    "pk": 10,
+    "fields": {
+        "version": 1573767006,
+        "src_id": 1,
+        "src_type": "group",
+        "relationship_type": "owns",
+        "dest_id": 7,
+        "dest_type": "widget_definition"
+    }
+},
+{
+    "model": "domain_mappings.domainmapping",
+    "pk": 11,
+    "fields": {
+        "version": 1573767006,
+        "src_id": 1,
+        "src_type": "group",
+        "relationship_type": "owns",
+        "dest_id": 8,
+        "dest_type": "widget_definition"
+    }
+},
+{
+    "model": "domain_mappings.domainmapping",
+    "pk": 12,
+    "fields": {
+        "version": 1573767006,
+        "src_id": 1,
+        "src_type": "group",
+        "relationship_type": "owns",
+        "dest_id": 9,
+        "dest_type": "widget_definition"
+    }
+},
+{
+    "model": "domain_mappings.domainmapping",
+    "pk": 13,
+    "fields": {
+        "version": 1573767006,
+        "src_id": 1,
+        "src_type": "group",
+        "relationship_type": "owns",
+        "dest_id": 10,
+        "dest_type": "widget_definition"
+    }
+},
+{
+    "model": "domain_mappings.domainmapping",
+    "pk": 14,
+    "fields": {
+        "version": 1573767006,
+        "src_id": 1,
+        "src_type": "group",
+        "relationship_type": "owns",
+        "dest_id": 11,
+        "dest_type": "widget_definition"
+    }
+},
+{
+    "model": "domain_mappings.domainmapping",
+    "pk": 15,
+    "fields": {
+        "version": 1573767007,
+        "src_id": 1,
+        "src_type": "group",
+        "relationship_type": "owns",
+        "dest_id": 12,
+        "dest_type": "widget_definition"
+    }
+},
+{
+    "model": "domain_mappings.domainmapping",
+    "pk": 16,
+    "fields": {
+        "version": 1573767007,
+        "src_id": 1,
+        "src_type": "group",
+        "relationship_type": "owns",
+        "dest_id": 13,
+        "dest_type": "widget_definition"
+    }
+},
+{
+    "model": "domain_mappings.domainmapping",
+    "pk": 17,
+    "fields": {
+        "version": 1573767007,
+        "src_id": 1,
+        "src_type": "group",
+        "relationship_type": "owns",
+        "dest_id": 14,
+        "dest_type": "widget_definition"
+    }
+},
+{
+    "model": "domain_mappings.domainmapping",
+    "pk": 18,
+    "fields": {
+        "version": 1573767007,
+        "src_id": 1,
+        "src_type": "group",
+        "relationship_type": "owns",
+        "dest_id": 15,
+        "dest_type": "widget_definition"
+    }
+},
+{
+    "model": "domain_mappings.domainmapping",
+    "pk": 19,
+    "fields": {
+        "version": 1573784788,
+        "src_id": 3,
+        "src_type": "group",
+        "relationship_type": "owns",
+        "dest_id": 1,
+        "dest_type": "dashboard"
+    }
+},
+{
+    "model": "domain_mappings.domainmapping",
+    "pk": 20,
+    "fields": {
+        "version": 1573784788,
+        "src_id": 2,
+        "src_type": "dashboard",
+        "relationship_type": "cloneOf",
+        "dest_id": 1,
+        "dest_type": "dashboard"
+    }
+},
+{
+    "model": "domain_mappings.domainmapping",
+    "pk": 21,
+    "fields": {
+        "version": 1573784840,
+        "src_id": 4,
+        "src_type": "group",
+        "relationship_type": "owns",
+        "dest_id": 3,
+        "dest_type": "dashboard"
+    }
+},
+{
+    "model": "domain_mappings.domainmapping",
+    "pk": 22,
+    "fields": {
+        "version": 1573784840,
+        "src_id": 4,
+        "src_type": "dashboard",
+        "relationship_type": "cloneOf",
+        "dest_id": 3,
+        "dest_type": "dashboard"
+    }
+},
+{
     "model": "owf_groups.owfgroup",
     "pk": 1,
     "fields": {
@@ -1063,55 +259,27 @@
     "model": "owf_groups.owfgroup",
     "pk": 3,
     "fields": {
-        "version": 1,
+        "version": 1573784788,
         "status": "active",
-        "email": "admin@geocent.com",
-        "description": "Description for test group",
-        "name": "Test Group",
+        "email": null,
+        "description": null,
+        "name": "4050cf13-e732-413f-9883-f2dc5e061184",
         "automatic": false,
-        "display_name": "Test Group",
-        "stack_default": false
+        "display_name": "4050cf13-e732-413f-9883-f2dc5e061184",
+        "stack_default": true
     }
 },
 {
     "model": "owf_groups.owfgroup",
     "pk": 4,
     "fields": {
-        "version": 1,
-        "status": "active",
-        "email": "admin@geocent.com",
-        "description": "Description for test group 2",
-        "name": "Test Group 2",
-        "automatic": false,
-        "display_name": "Test Group",
-        "stack_default": false
-    }
-},
-{
-    "model": "owf_groups.owfgroup",
-    "pk": 5,
-    "fields": {
-        "version": 1,
-        "status": "active",
-        "email": "admin@geocent.com",
-        "description": "Description for test group 3",
-        "name": "Test Group 3",
-        "automatic": false,
-        "display_name": "Test Group",
-        "stack_default": false
-    }
-},
-{
-    "model": "owf_groups.owfgroup",
-    "pk": 7,
-    "fields": {
-        "version": 1571180762,
+        "version": 1573784840,
         "status": "active",
         "email": null,
         "description": null,
-        "name": "8fd5f08c-612b-416f-aee5-c4a979ee3167",
+        "name": "5c29c5a2-a5fc-4116-b90a-3c5bb08cb91f",
         "automatic": false,
-        "display_name": "8fd5f08c-612b-416f-aee5-c4a979ee3167",
+        "display_name": "5c29c5a2-a5fc-4116-b90a-3c5bb08cb91f",
         "stack_default": true
     }
 },
@@ -1120,17 +288,17 @@
     "pk": 1,
     "fields": {
         "password": "pbkdf2_sha256$150000$gdZ6UnreySUI$vGHintLE85fA1bMzXHEg20GH7wrDA8CeC2JRZSqCF3U=",
-        "version": 1571855572,
+        "version": 1573767702,
         "enabled": true,
-        "user_real_name": "",
+        "user_real_name": "admin",
         "username": "admin",
-        "last_login": "2019-11-11T20:32:52.011Z",
+        "last_login": "2019-11-15T02:35:35.597Z",
         "email_show": true,
         "email": "admin@goss.com",
         "prev_login": "2019-08-13T17:04:35.675Z",
         "description": "",
         "last_notification": "2019-08-13T17:04:35.675Z",
-        "requires_sync": true,
+        "requires_sync": false,
         "is_active": true,
         "is_admin": true
     }
@@ -1140,11 +308,11 @@
     "pk": 2,
     "fields": {
         "password": "pbkdf2_sha256$150000$13PiGqtQp4mn$T9WsCbw8Z9kSSFCNXuDQ01gdHiZY80XT567saUmfd7c=",
-        "version": 1571855572,
+        "version": 1573767201,
         "enabled": true,
         "user_real_name": "user",
         "username": "user",
-        "last_login": "2019-08-13T21:18:23.008Z",
+        "last_login": "2019-11-14T20:54:02.952Z",
         "email_show": true,
         "email": "user@goss.com",
         "prev_login": "2019-08-13T21:18:23.008Z",
@@ -1157,49 +325,19 @@
 },
 {
     "model": "people.personwidgetdefinition",
-    "pk": 1,
-    "fields": {
-        "version": 1571936370,
-        "person": 2,
-        "visible": false,
-        "pwd_position": null,
-        "widget_definition": 6,
-        "group_widget": false,
-        "favorite": false,
-        "display_name": null,
-        "disabled": false,
-        "user_widget": false
-    }
-},
-{
-    "model": "people.personwidgetdefinition",
-    "pk": 2,
-    "fields": {
-        "version": 1571936370,
-        "person": 2,
-        "visible": false,
-        "pwd_position": null,
-        "widget_definition": 7,
-        "group_widget": false,
-        "favorite": false,
-        "display_name": null,
-        "disabled": false,
-        "user_widget": false
-    }
-},
-{
-    "model": "people.personwidgetdefinition",
     "pk": 3,
     "fields": {
-        "version": 1571936370,
-        "person": 2,
-        "visible": false,
+        "version": 1573767702,
+        "person": [
+            "admin@goss.com"
+        ],
+        "visible": true,
         "pwd_position": null,
-        "widget_definition": 8,
-        "group_widget": false,
+        "widget_definition": 1,
+        "group_widget": true,
         "favorite": false,
         "display_name": null,
-        "disabled": false,
+        "disabled": null,
         "user_widget": false
     }
 },
@@ -1207,15 +345,17 @@
     "model": "people.personwidgetdefinition",
     "pk": 4,
     "fields": {
-        "version": 1571936370,
-        "person": 2,
-        "visible": false,
+        "version": 1573767702,
+        "person": [
+            "admin@goss.com"
+        ],
+        "visible": true,
         "pwd_position": null,
-        "widget_definition": 9,
-        "group_widget": false,
+        "widget_definition": 3,
+        "group_widget": true,
         "favorite": false,
         "display_name": null,
-        "disabled": false,
+        "disabled": null,
         "user_widget": false
     }
 },
@@ -1223,15 +363,17 @@
     "model": "people.personwidgetdefinition",
     "pk": 5,
     "fields": {
-        "version": 1571936370,
-        "person": 2,
-        "visible": false,
+        "version": 1573767702,
+        "person": [
+            "admin@goss.com"
+        ],
+        "visible": true,
         "pwd_position": null,
-        "widget_definition": 10,
-        "group_widget": false,
+        "widget_definition": 4,
+        "group_widget": true,
         "favorite": false,
         "display_name": null,
-        "disabled": false,
+        "disabled": null,
         "user_widget": false
     }
 },
@@ -1239,15 +381,17 @@
     "model": "people.personwidgetdefinition",
     "pk": 6,
     "fields": {
-        "version": 1571936371,
-        "person": 2,
-        "visible": false,
+        "version": 1573767702,
+        "person": [
+            "admin@goss.com"
+        ],
+        "visible": true,
         "pwd_position": null,
-        "widget_definition": 11,
-        "group_widget": false,
+        "widget_definition": 5,
+        "group_widget": true,
         "favorite": false,
         "display_name": null,
-        "disabled": false,
+        "disabled": null,
         "user_widget": false
     }
 },
@@ -1255,15 +399,17 @@
     "model": "people.personwidgetdefinition",
     "pk": 7,
     "fields": {
-        "version": 1571936371,
-        "person": 2,
-        "visible": false,
+        "version": 1573767702,
+        "person": [
+            "admin@goss.com"
+        ],
+        "visible": true,
         "pwd_position": null,
-        "widget_definition": 12,
-        "group_widget": false,
+        "widget_definition": 2,
+        "group_widget": true,
         "favorite": false,
         "display_name": null,
-        "disabled": false,
+        "disabled": null,
         "user_widget": false
     }
 },
@@ -1271,15 +417,17 @@
     "model": "people.personwidgetdefinition",
     "pk": 8,
     "fields": {
-        "version": 1571936371,
-        "person": 2,
-        "visible": false,
+        "version": 1573767702,
+        "person": [
+            "admin@goss.com"
+        ],
+        "visible": true,
         "pwd_position": null,
-        "widget_definition": 13,
-        "group_widget": false,
+        "widget_definition": 6,
+        "group_widget": true,
         "favorite": false,
         "display_name": null,
-        "disabled": false,
+        "disabled": null,
         "user_widget": false
     }
 },
@@ -1287,15 +435,17 @@
     "model": "people.personwidgetdefinition",
     "pk": 9,
     "fields": {
-        "version": 1571936371,
-        "person": 2,
-        "visible": false,
+        "version": 1573767702,
+        "person": [
+            "admin@goss.com"
+        ],
+        "visible": true,
         "pwd_position": null,
-        "widget_definition": 14,
-        "group_widget": false,
+        "widget_definition": 7,
+        "group_widget": true,
         "favorite": false,
         "display_name": null,
-        "disabled": false,
+        "disabled": null,
         "user_widget": false
     }
 },
@@ -1303,15 +453,17 @@
     "model": "people.personwidgetdefinition",
     "pk": 10,
     "fields": {
-        "version": 1571936371,
-        "person": 2,
-        "visible": false,
+        "version": 1573767702,
+        "person": [
+            "admin@goss.com"
+        ],
+        "visible": true,
         "pwd_position": null,
-        "widget_definition": 15,
-        "group_widget": false,
+        "widget_definition": 8,
+        "group_widget": true,
         "favorite": false,
         "display_name": null,
-        "disabled": false,
+        "disabled": null,
         "user_widget": false
     }
 },
@@ -1319,15 +471,17 @@
     "model": "people.personwidgetdefinition",
     "pk": 11,
     "fields": {
-        "version": 1571936380,
-        "person": 1,
-        "visible": false,
+        "version": 1573767702,
+        "person": [
+            "admin@goss.com"
+        ],
+        "visible": true,
         "pwd_position": null,
-        "widget_definition": 6,
-        "group_widget": false,
+        "widget_definition": 9,
+        "group_widget": true,
         "favorite": false,
         "display_name": null,
-        "disabled": false,
+        "disabled": null,
         "user_widget": false
     }
 },
@@ -1335,15 +489,17 @@
     "model": "people.personwidgetdefinition",
     "pk": 12,
     "fields": {
-        "version": 1571936380,
-        "person": 1,
-        "visible": false,
+        "version": 1573767702,
+        "person": [
+            "admin@goss.com"
+        ],
+        "visible": true,
         "pwd_position": null,
-        "widget_definition": 7,
-        "group_widget": false,
+        "widget_definition": 10,
+        "group_widget": true,
         "favorite": false,
         "display_name": null,
-        "disabled": false,
+        "disabled": null,
         "user_widget": false
     }
 },
@@ -1351,79 +507,17 @@
     "model": "people.personwidgetdefinition",
     "pk": 13,
     "fields": {
-        "version": 1571936380,
-        "person": 1,
-        "visible": false,
-        "pwd_position": null,
-        "widget_definition": 8,
-        "group_widget": false,
-        "favorite": false,
-        "display_name": null,
-        "disabled": false,
-        "user_widget": false
-    }
-},
-{
-    "model": "people.personwidgetdefinition",
-    "pk": 14,
-    "fields": {
-        "version": 1571936380,
-        "person": 1,
-        "visible": false,
-        "pwd_position": null,
-        "widget_definition": 9,
-        "group_widget": false,
-        "favorite": false,
-        "display_name": null,
-        "disabled": false,
-        "user_widget": false
-    }
-},
-{
-    "model": "people.personwidgetdefinition",
-    "pk": 15,
-    "fields": {
-        "version": 1571936381,
-        "person": 1,
-        "visible": false,
-        "pwd_position": null,
-        "widget_definition": 10,
-        "group_widget": false,
-        "favorite": false,
-        "display_name": null,
-        "disabled": false,
-        "user_widget": false
-    }
-},
-{
-    "model": "people.personwidgetdefinition",
-    "pk": 16,
-    "fields": {
-        "version": 1571936381,
-        "person": 1,
-        "visible": false,
+        "version": 1573767702,
+        "person": [
+            "admin@goss.com"
+        ],
+        "visible": true,
         "pwd_position": null,
         "widget_definition": 11,
-        "group_widget": false,
+        "group_widget": true,
         "favorite": false,
         "display_name": null,
-        "disabled": false,
-        "user_widget": false
-    }
-},
-{
-    "model": "people.personwidgetdefinition",
-    "pk": 17,
-    "fields": {
-        "version": 1571936381,
-        "person": 1,
-        "visible": false,
-        "pwd_position": null,
-        "widget_definition": 12,
-        "group_widget": false,
-        "favorite": false,
-        "display_name": null,
-        "disabled": false,
+        "disabled": null,
         "user_widget": false
     }
 },
@@ -1431,15 +525,17 @@
     "model": "people.personwidgetdefinition",
     "pk": 18,
     "fields": {
-        "version": 1571936381,
-        "person": 1,
-        "visible": false,
+        "version": 1573767201,
+        "person": [
+            "user@goss.com"
+        ],
+        "visible": true,
         "pwd_position": null,
-        "widget_definition": 13,
-        "group_widget": false,
+        "widget_definition": 6,
+        "group_widget": true,
         "favorite": false,
         "display_name": null,
-        "disabled": false,
+        "disabled": null,
         "user_widget": false
     }
 },
@@ -1447,15 +543,17 @@
     "model": "people.personwidgetdefinition",
     "pk": 19,
     "fields": {
-        "version": 1571936381,
-        "person": 1,
-        "visible": false,
+        "version": 1573767201,
+        "person": [
+            "user@goss.com"
+        ],
+        "visible": true,
         "pwd_position": null,
-        "widget_definition": 14,
-        "group_widget": false,
+        "widget_definition": 7,
+        "group_widget": true,
         "favorite": false,
         "display_name": null,
-        "disabled": false,
+        "disabled": null,
         "user_widget": false
     }
 },
@@ -1463,15 +561,71 @@
     "model": "people.personwidgetdefinition",
     "pk": 20,
     "fields": {
-        "version": 1571936381,
-        "person": 1,
-        "visible": false,
+        "version": 1573767201,
+        "person": [
+            "user@goss.com"
+        ],
+        "visible": true,
         "pwd_position": null,
-        "widget_definition": 15,
-        "group_widget": false,
+        "widget_definition": 8,
+        "group_widget": true,
         "favorite": false,
         "display_name": null,
-        "disabled": false,
+        "disabled": null,
+        "user_widget": false
+    }
+},
+{
+    "model": "people.personwidgetdefinition",
+    "pk": 21,
+    "fields": {
+        "version": 1573767201,
+        "person": [
+            "user@goss.com"
+        ],
+        "visible": true,
+        "pwd_position": null,
+        "widget_definition": 9,
+        "group_widget": true,
+        "favorite": false,
+        "display_name": null,
+        "disabled": null,
+        "user_widget": false
+    }
+},
+{
+    "model": "people.personwidgetdefinition",
+    "pk": 22,
+    "fields": {
+        "version": 1573767201,
+        "person": [
+            "user@goss.com"
+        ],
+        "visible": true,
+        "pwd_position": null,
+        "widget_definition": 10,
+        "group_widget": true,
+        "favorite": false,
+        "display_name": null,
+        "disabled": null,
+        "user_widget": false
+    }
+},
+{
+    "model": "people.personwidgetdefinition",
+    "pk": 23,
+    "fields": {
+        "version": 1573767201,
+        "person": [
+            "user@goss.com"
+        ],
+        "visible": true,
+        "pwd_position": null,
+        "widget_definition": 11,
+        "group_widget": true,
+        "favorite": false,
+        "display_name": null,
+        "disabled": null,
         "user_widget": false
     }
 },
@@ -1497,57 +651,36 @@
     "model": "stacks.stack",
     "pk": 1,
     "fields": {
-        "version": 1571155537,
+        "version": 1573784788,
         "name": "Sample",
-        "description": null,
-        "stack_context": "",
-        "image_url": null,
-        "descriptor_url": null,
-        "unique_widget_count": 2,
-        "owner": 1,
-        "approved": true,
-        "default_group": 1
+        "description": "Sample Stack",
+        "stack_context": "33e4d1ea-dc08-4287-a5d5-80d91193ab83",
+        "image_url": "",
+        "descriptor_url": "",
+        "unique_widget_count": null,
+        "owner": [
+            "admin@goss.com"
+        ],
+        "approved": false,
+        "default_group": 3
     }
 },
 {
     "model": "stacks.stack",
-    "pk": 3,
-    "fields": {
-        "version": 1571180762,
-        "name": "Administration",
-        "description": "This application collects the administrative components into a common set of application pages for managing system resources.  These pages can be used to create, modify, update, and delete Apps, App Components, Users and Groups, and system configuration settings.",
-        "stack_context": "b926a190-61b6-4e3e-9706-430abe8b6a78",
-        "image_url": "themes/common/images/admin/64x64_admin_app.png",
-        "descriptor_url": "",
-        "unique_widget_count": 5,
-        "owner": 1,
-        "approved": true,
-        "default_group": 7
-    }
-},
-{
-    "model": "stacks.stackgroups",
-    "pk": 1,
-    "fields": {
-        "group": 1,
-        "stack": 1
-    }
-},
-{
-    "model": "stacks.stackgroups",
     "pk": 2,
     "fields": {
-        "group": 2,
-        "stack": 1
-    }
-},
-{
-    "model": "widgets.widgettype",
-    "pk": 1,
-    "fields": {
-        "version": 1,
-        "name": "1",
-        "display_name": "Test Widget Type"
+        "version": 1573784840,
+        "name": "Administration",
+        "description": "This application collects the administrative components into a common set of application pages for managing system resources.  These pages can be used to create, modify, update, and delete Apps, App Components, Users and Groups, and system configuration settings.",
+        "stack_context": "60ab161e-e11b-4f34-8107-22251a37a12d",
+        "image_url": "",
+        "descriptor_url": "",
+        "unique_widget_count": null,
+        "owner": [
+            "admin@goss.com"
+        ],
+        "approved": false,
+        "default_group": 4
     }
 },
 {
@@ -1621,8 +754,8 @@
     "model": "widgets.widgetdefinition",
     "pk": 2,
     "fields": {
-        "version": 1571155160,
-        "visible": false,
+        "version": 1573765115,
+        "visible": true,
         "image_url_medium": "images/widgets/dashboards-manager.png",
         "image_url_small": "images/widgets/dashboards-manager.png",
         "singleton": false,
@@ -1838,94 +971,6 @@
     }
 },
 {
-    "model": "widgets.widgetdefinition",
-    "pk": 12,
-    "fields": {
-        "version": 1571935188,
-        "visible": false,
-        "image_url_medium": "static/themes/common/images/widget-icons/EventMonitor.png",
-        "image_url_small": "static/themes/common/images/widget-icons/EventMonitor.png",
-        "singleton": false,
-        "width": 500,
-        "widget_version": null,
-        "height": 600,
-        "widget_url": "http://localhost:3000/event_monitor",
-        "widget_guid": "ea98827a-bc0d-4712-8f6f-1b5912cfc5c1",
-        "display_name": "Event Monitor Widget",
-        "background": false,
-        "universal_name": "org.owfgoss.owf.examples.EventMonitor",
-        "descriptor_url": null,
-        "description": "Example that utilizes the Eventing API.",
-        "mobile_ready": false
-    }
-},
-{
-    "model": "widgets.widgetdefinition",
-    "pk": 13,
-    "fields": {
-        "version": 1571935189,
-        "visible": false,
-        "image_url_medium": "static/themes/common/images/widget-icons/NYSEStock.png",
-        "image_url_small": "static/themes/common/images/widget-icons/NYSEStock.png",
-        "singleton": false,
-        "width": 825,
-        "widget_version": null,
-        "height": 437,
-        "widget_url": "http://localhost:3000/nyse",
-        "widget_guid": "afea4c11-2cd2-4c00-8356-16cd91fdbba8",
-        "display_name": "NYSE Widget",
-        "background": false,
-        "universal_name": "org.owfgoss.owf.examples.NYSE",
-        "descriptor_url": null,
-        "description": "This app component displays the end of day report for the New York Stock Exchange.",
-        "mobile_ready": false
-    }
-},
-{
-    "model": "widgets.widgetdefinition",
-    "pk": 14,
-    "fields": {
-        "version": 1571935189,
-        "visible": false,
-        "image_url_medium": "static/themes/common/images/widget-icons/PriceChart.png",
-        "image_url_small": "static/themes/common/images/widget-icons/PriceChart.png",
-        "singleton": false,
-        "width": 800,
-        "widget_version": null,
-        "height": 600,
-        "widget_url": "http://localhost:3000/stock_chart",
-        "widget_guid": "e396ce7d-b55f-41cb-9fac-a1d9badeed72",
-        "display_name": "Stock Chart",
-        "background": false,
-        "universal_name": "org.owfgoss.owf.examples.StockChart",
-        "descriptor_url": null,
-        "description": "This app component charts stock prices.",
-        "mobile_ready": false
-    }
-},
-{
-    "model": "widgets.widgetdefinition",
-    "pk": 15,
-    "fields": {
-        "version": 1571935227,
-        "visible": false,
-        "image_url_medium": "static/themes/common/images/widget-icons/HTMLViewer.png",
-        "image_url_small": "static/themes/common/images/widget-icons/HTMLViewer.png",
-        "singleton": false,
-        "width": 400,
-        "widget_version": null,
-        "height": 600,
-        "widget_url": "http://localhost:3000/html_viewer",
-        "widget_guid": "0218faf4-4f74-4c08-bda6-218a7b1c362b",
-        "display_name": "HTML Viewer",
-        "background": false,
-        "universal_name": "org.owfgoss.owf.examples.HTMLViewer",
-        "descriptor_url": null,
-        "description": "This app component displays HTML.",
-        "mobile_ready": false
-    }
-},
-{
     "model": "widgets.widgetdefinitionwidgettypes",
     "pk": 1,
     "fields": {
@@ -1975,38 +1020,6 @@
 },
 {
     "model": "widgets.widgetdefinitionwidgettypes",
-    "pk": 7,
-    "fields": {
-        "widget_definition": 12,
-        "widget_type": 3
-    }
-},
-{
-    "model": "widgets.widgetdefinitionwidgettypes",
-    "pk": 8,
-    "fields": {
-        "widget_definition": 13,
-        "widget_type": 3
-    }
-},
-{
-    "model": "widgets.widgetdefinitionwidgettypes",
-    "pk": 9,
-    "fields": {
-        "widget_definition": 14,
-        "widget_type": 3
-    }
-},
-{
-    "model": "widgets.widgetdefinitionwidgettypes",
-    "pk": 10,
-    "fields": {
-        "widget_definition": 15,
-        "widget_type": 3
-    }
-},
-{
-    "model": "widgets.widgetdefinitionwidgettypes",
     "pk": 11,
     "fields": {
         "widget_definition": 1,
@@ -2049,121 +1062,21 @@
     "model": "dashboards.dashboard",
     "pk": 1,
     "fields": {
-        "version": 1,
-        "isdefault": false,
-        "dashboard_position": 1,
-        "altered_by_admin": false,
-        "guid": "ef8b5d6f-4b16-4743-9a57-31683c94b698",
-        "name": "test_dashboard",
-        "user": 1,
-        "description": "testdash1",
-        "created_by": 1,
-        "created_date": "2019-08-13T18:22:05Z",
-        "edited_by": 1,
-        "edited_date": "2019-08-13T18:22:10Z",
-        "layout_config": "\"{\r\n        \\\"backgroundWidgets\\\":[\r\n\r\n        ],\r\n        \\\"panels\\\":[\r\n\r\n        ],\r\n        \\\"tree\\\":null\r\n      }\"",
-        "locked": false,
-        "stack": 1,
-        "type": "None",
-        "icon_image_url": "None",
-        "published_to_store": false,
-        "marked_for_deletion": false
-    }
-},
-{
-    "model": "dashboards.dashboard",
-    "pk": 2,
-    "fields": {
-        "version": 1,
-        "isdefault": false,
-        "dashboard_position": 1,
-        "altered_by_admin": false,
-        "guid": "ef8b5d6f-4b16-4743-9a57-31683c00000000",
-        "name": "test_dashboard",
-        "user": 1,
-        "description": "testdash1",
-        "created_by": 1,
-        "created_date": "2019-08-13T18:22:05Z",
-        "edited_by": 1,
-        "edited_date": "2019-08-13T18:22:10Z",
-        "layout_config": "\"{\r\n        \\\"backgroundWidgets\\\":[\r\n\r\n        ],\r\n        \\\"panels\\\":[\r\n\r\n        ],\r\n        \\\"tree\\\":null\r\n      }\"",
-        "locked": false,
-        "stack": 1,
-        "type": "None",
-        "icon_image_url": "None",
-        "published_to_store": false,
-        "marked_for_deletion": false
-    }
-},
-{
-    "model": "dashboards.dashboard",
-    "pk": 3,
-    "fields": {
-        "version": 1,
-        "isdefault": false,
-        "dashboard_position": 1,
-        "altered_by_admin": false,
-        "guid": "ef8b5d6f-4b16-4743-9a57-31683c94100100",
-        "name": "test_dashboard",
-        "user": 1,
-        "description": "testdash1",
-        "created_by": 1,
-        "created_date": "2019-08-13T18:22:05Z",
-        "edited_by": 1,
-        "edited_date": "2019-08-13T18:22:10Z",
-        "layout_config": "\"{\r\n        \\\"backgroundWidgets\\\":[\r\n\r\n        ],\r\n        \\\"panels\\\":[\r\n\r\n        ],\r\n        \\\"tree\\\":null\r\n      }\"",
-        "locked": false,
-        "stack": 1,
-        "type": "None",
-        "icon_image_url": "None",
-        "published_to_store": false,
-        "marked_for_deletion": false
-    }
-},
-{
-    "model": "dashboards.dashboard",
-    "pk": 4,
-    "fields": {
-        "version": 1,
-        "isdefault": false,
-        "dashboard_position": 1,
-        "altered_by_admin": false,
-        "guid": "ef8b5d6f-4b16-4743-9a57-31683c941001009",
-        "name": "test_dashboard",
-        "user": 1,
-        "description": "testdash1",
-        "created_by": 1,
-        "created_date": "2019-08-13T18:22:05Z",
-        "edited_by": 1,
-        "edited_date": "2019-08-13T18:22:10Z",
-        "layout_config": "\"{\r\n        \\\"backgroundWidgets\\\":[\r\n\r\n        ],\r\n        \\\"panels\\\":[\r\n\r\n        ],\r\n        \\\"tree\\\":null\r\n      }\"",
-        "locked": false,
-        "stack": 1,
-        "type": "None",
-        "icon_image_url": "None",
-        "published_to_store": false,
-        "marked_for_deletion": false
-    }
-},
-{
-    "model": "dashboards.dashboard",
-    "pk": 5,
-    "fields": {
-        "version": 1571180762,
+        "version": 1573784788,
         "isdefault": false,
         "dashboard_position": 0,
         "altered_by_admin": false,
-        "guid": "48760ac7-c52a-401a-a4e3-3b16cc89b69c",
-        "name": "Administration",
+        "guid": "b1eee77b-0c9e-440f-b89b-6a97c03b17da",
+        "name": "Sample",
         "user": null,
         "description": null,
         "created_by": null,
-        "created_date": "2019-10-15T23:06:02.674Z",
+        "created_date": "2019-11-15T02:26:28.191Z",
         "edited_by": null,
         "edited_date": null,
         "layout_config": "",
         "locked": false,
-        "stack": 3,
+        "stack": 1,
         "type": null,
         "icon_image_url": null,
         "published_to_store": false,
@@ -2172,23 +1085,77 @@
 },
 {
     "model": "dashboards.dashboard",
-    "pk": 6,
+    "pk": 2,
     "fields": {
-        "version": 1571180762,
+        "version": 1573784788,
         "isdefault": false,
         "dashboard_position": 0,
         "altered_by_admin": false,
-        "guid": "fbcd7ac2-8eca-47b9-8e39-410ac79b26b1",
-        "name": "Administration",
-        "user": 1,
+        "guid": "160d7f46-2a55-4a24-9fd4-9fe6724f67c1",
+        "name": "Sample",
+        "user": [
+            "admin@goss.com"
+        ],
         "description": null,
         "created_by": null,
-        "created_date": "2019-10-15T23:06:02.676Z",
+        "created_date": "2019-11-15T02:26:28.194Z",
         "edited_by": null,
         "edited_date": null,
         "layout_config": "",
         "locked": false,
-        "stack": 3,
+        "stack": 1,
+        "type": null,
+        "icon_image_url": null,
+        "published_to_store": false,
+        "marked_for_deletion": false
+    }
+},
+{
+    "model": "dashboards.dashboard",
+    "pk": 3,
+    "fields": {
+        "version": 1573784840,
+        "isdefault": false,
+        "dashboard_position": 0,
+        "altered_by_admin": false,
+        "guid": "a1266a8e-47fc-4f3f-9a23-969abe057d59",
+        "name": "Administration",
+        "user": null,
+        "description": null,
+        "created_by": null,
+        "created_date": "2019-11-15T02:27:20.708Z",
+        "edited_by": null,
+        "edited_date": null,
+        "layout_config": "",
+        "locked": false,
+        "stack": 2,
+        "type": null,
+        "icon_image_url": null,
+        "published_to_store": false,
+        "marked_for_deletion": false
+    }
+},
+{
+    "model": "dashboards.dashboard",
+    "pk": 4,
+    "fields": {
+        "version": 1573784840,
+        "isdefault": false,
+        "dashboard_position": 0,
+        "altered_by_admin": false,
+        "guid": "8fc2a1fe-a1b7-4202-801b-e89e505ae4df",
+        "name": "Administration",
+        "user": [
+            "admin@goss.com"
+        ],
+        "description": null,
+        "created_by": null,
+        "created_date": "2019-11-15T02:27:20.710Z",
+        "edited_by": null,
+        "edited_date": null,
+        "layout_config": "",
+        "locked": false,
+        "stack": 2,
         "type": null,
         "icon_image_url": null,
         "published_to_store": false,
@@ -2199,10 +1166,12 @@
     "model": "preferences.preference",
     "pk": 1,
     "fields": {
-        "version": 1,
+        "version": 1573767341,
         "value": "a9bf8e71-692d-44e3-a465-5337ce5e725e",
         "path": "guide_to_launch",
-        "user": 1,
+        "user": [
+            "admin@goss.com"
+        ],
         "namespace": "owf.admin.UserEditCopy"
     }
 },
@@ -2213,7 +1182,9 @@
         "version": 1571152042,
         "value": "679294b3-ccc3-4ace-a061-e3f27ed86451",
         "path": "guide_to_launch",
-        "user": 1,
+        "user": [
+            "admin@goss.com"
+        ],
         "namespace": "owf.admin.WidgetEditCopy"
     }
 },
@@ -2224,7 +1195,9 @@
         "version": 1571152074,
         "value": "dc5c2062-aaa8-452b-897f-60b4b55ab564",
         "path": "guide_to_launch",
-        "user": 1,
+        "user": [
+            "admin@goss.com"
+        ],
         "namespace": "owf.admin.GroupEditCopy"
     }
 },
@@ -2235,7 +1208,9 @@
         "version": 1571152105,
         "value": "2445afb9-eb3f-4b79-acf8-6b12180921c3",
         "path": "guide_to_launch",
-        "user": 1,
+        "user": [
+            "admin@goss.com"
+        ],
         "namespace": "owf.admin.DashboardEditCopy"
     }
 },
@@ -2246,7 +1221,9 @@
         "version": 1571152128,
         "value": "72c382a3-89e7-4abf-94db-18db7779e1d",
         "path": "guide_to_launch",
-        "user": 1,
+        "user": [
+            "admin@goss.com"
+        ],
         "namespace": "owf.admin.StackEditCopy"
     }
 },
@@ -2255,9 +1232,13 @@
     "pk": 1,
     "fields": {
         "version": 1,
-        "created_by": 1,
+        "created_by": [
+            "admin@goss.com"
+        ],
         "created_date": "2019-08-29",
-        "edited_by": 1,
+        "edited_by": [
+            "admin@goss.com"
+        ],
         "edited_date": "2019-08-29",
         "code": "owf.enable.cef.logging",
         "value": "false",
@@ -2287,7 +1268,7 @@
         "type": "Boolean",
         "group_name": "AUDITING",
         "sub_group_name": null,
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 2,
         "help": null
     }
@@ -2308,7 +1289,7 @@
         "type": "Boolean",
         "group_name": "AUDITING",
         "sub_group_name": null,
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 3,
         "help": null
     }
@@ -2329,7 +1310,7 @@
         "type": "String",
         "group_name": "AUDITING",
         "sub_group_name": null,
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 4,
         "help": null
     }
@@ -2350,7 +1331,7 @@
         "type": "String",
         "group_name": "AUDITING",
         "sub_group_name": null,
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 5,
         "help": null
     }
@@ -2371,7 +1352,7 @@
         "type": "String",
         "group_name": "AUDITING",
         "sub_group_name": null,
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 6,
         "help": null
     }
@@ -2392,7 +1373,7 @@
         "type": "Boolean",
         "group_name": "USER_ACCOUNT_SETTINGS",
         "sub_group_name": "Session Control",
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 1,
         "help": null
     }
@@ -2413,7 +1394,7 @@
         "type": "Integer",
         "group_name": "USER_ACCOUNT_SETTINGS",
         "sub_group_name": "Session Control",
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 2,
         "help": null
     }
@@ -2434,7 +1415,7 @@
         "type": "Boolean",
         "group_name": "USER_ACCOUNT_SETTINGS",
         "sub_group_name": "Inactive Accounts",
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 1,
         "help": null
     }
@@ -2455,7 +1436,7 @@
         "type": "Integer",
         "group_name": "USER_ACCOUNT_SETTINGS",
         "sub_group_name": "Inactive Accounts",
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 2,
         "help": null
     }
@@ -2476,7 +1457,7 @@
         "type": "String",
         "group_name": "HIDDEN",
         "sub_group_name": null,
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 1,
         "help": null
     }
@@ -2497,7 +1478,7 @@
         "type": "Integer",
         "group_name": "HIDDEN",
         "sub_group_name": null,
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 2,
         "help": null
     }
@@ -2518,7 +1499,7 @@
         "type": "String",
         "group_name": "BRANDING",
         "sub_group_name": null,
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 1,
         "help": null
     }
@@ -2539,7 +1520,7 @@
         "type": "String",
         "group_name": "BRANDING",
         "sub_group_name": "Custom Background",
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 1,
         "help": null
     }
@@ -2560,7 +1541,7 @@
         "type": "String",
         "group_name": "BRANDING",
         "sub_group_name": "Custom Header and Footer",
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 1,
         "help": null
     }
@@ -2581,7 +1562,7 @@
         "type": "Integer",
         "group_name": "BRANDING",
         "sub_group_name": "Custom Header and Footer",
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 2,
         "help": null
     }
@@ -2602,7 +1583,7 @@
         "type": "String",
         "group_name": "BRANDING",
         "sub_group_name": "Custom Header and Footer",
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 3,
         "help": null
     }
@@ -2623,7 +1604,7 @@
         "type": "Integer",
         "group_name": "BRANDING",
         "sub_group_name": "Custom Header and Footer",
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 4,
         "help": null
     }
@@ -2644,7 +1625,7 @@
         "type": "String",
         "group_name": "BRANDING",
         "sub_group_name": "Custom Header and Footer",
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 5,
         "help": null
     }
@@ -2665,7 +1646,7 @@
         "type": "String",
         "group_name": "BRANDING",
         "sub_group_name": "Custom Header and Footer",
-        "mutable": false,
+        "mutable": true,
         "sub_group_order": 6,
         "help": null
     }
@@ -2675,7 +1656,9 @@
     "pk": 1,
     "fields": {
         "group": 1,
-        "person": 1
+        "person": [
+            "admin@goss.com"
+        ]
     }
 },
 {
@@ -2683,15 +1666,39 @@
     "pk": 2,
     "fields": {
         "group": 1,
-        "person": 2
+        "person": [
+            "user@goss.com"
+        ]
     }
 },
 {
     "model": "owf_groups.owfgrouppeople",
-    "pk": 4,
+    "pk": 5,
     "fields": {
-        "group": 7,
-        "person": 1
+        "group": 2,
+        "person": [
+            "admin@goss.com"
+        ]
+    }
+},
+{
+    "model": "owf_groups.owfgrouppeople",
+    "pk": 6,
+    "fields": {
+        "group": 3,
+        "person": [
+            "admin@goss.com"
+        ]
+    }
+},
+{
+    "model": "owf_groups.owfgrouppeople",
+    "pk": 7,
+    "fields": {
+        "group": 4,
+        "person": [
+            "admin@goss.com"
+        ]
     }
 },
 {
@@ -2699,8 +1706,13 @@
     "pk": 1,
     "fields": {
         "action_time": "2019-10-23T22:27:28.891Z",
-        "user": 1,
-        "content_type": 23,
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "widgets",
+            "widgetdefinitionwidgettypes"
+        ],
         "object_id": "1",
         "object_repr": "WidgetDefinitionWidgetTypes object (1)",
         "action_flag": 1,
@@ -2712,8 +1724,13 @@
     "pk": 2,
     "fields": {
         "action_time": "2019-10-23T22:29:30.230Z",
-        "user": 1,
-        "content_type": 23,
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "widgets",
+            "widgetdefinitionwidgettypes"
+        ],
         "object_id": "2",
         "object_repr": "WidgetDefinitionWidgetTypes object (2)",
         "action_flag": 1,
@@ -2725,12 +1742,359 @@
     "pk": 3,
     "fields": {
         "action_time": "2019-10-24T16:23:05.371Z",
-        "user": 1,
-        "content_type": 19,
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "widgets",
+            "widgetdefinition"
+        ],
         "object_id": "7",
         "object_repr": "Channel Listener",
         "action_flag": 2,
         "change_message": "[{\"changed\": {\"fields\": [\"widget_url\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+        "action_time": "2019-11-14T20:56:05.558Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "domain_mappings",
+            "domainmapping"
+        ],
+        "object_id": "2",
+        "object_repr": "MappingType.group:1 RelationshipType.owns MappingType.widget:1",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 5,
+    "fields": {
+        "action_time": "2019-11-14T20:58:35.545Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "widgets",
+            "widgetdefinition"
+        ],
+        "object_id": "2",
+        "object_repr": "Stack Administration",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"visible\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 6,
+    "fields": {
+        "action_time": "2019-11-14T20:59:49.602Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "people",
+            "person"
+        ],
+        "object_id": "1",
+        "object_repr": "admin @ admin@goss.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"user_real_name\", \"requires_sync\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 7,
+    "fields": {
+        "action_time": "2019-11-14T21:01:54.969Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "owf_groups",
+            "owfgrouppeople"
+        ],
+        "object_id": "5",
+        "object_repr": "group  = OWF Administrators & person =  admin",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 8,
+    "fields": {
+        "action_time": "2019-11-14T21:02:10.710Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "people",
+            "person"
+        ],
+        "object_id": "1",
+        "object_repr": "admin @ admin@goss.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"requires_sync\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 9,
+    "fields": {
+        "action_time": "2019-11-14T21:17:16.406Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "people",
+            "person"
+        ],
+        "object_id": "2",
+        "object_repr": "user @ user@goss.com",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"requires_sync\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 10,
+    "fields": {
+        "action_time": "2019-11-14T21:31:59.350Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "widgets",
+            "widgetdefinition"
+        ],
+        "object_id": "12",
+        "object_repr": "Event Monitor Widget",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 11,
+    "fields": {
+        "action_time": "2019-11-14T21:32:24.625Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "widgets",
+            "widgetdefinition"
+        ],
+        "object_id": "13",
+        "object_repr": "NYSE Widget",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 12,
+    "fields": {
+        "action_time": "2019-11-14T21:32:38.968Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "widgets",
+            "widgetdefinition"
+        ],
+        "object_id": "14",
+        "object_repr": "Stock Chart",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 13,
+    "fields": {
+        "action_time": "2019-11-14T21:32:46.419Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "widgets",
+            "widgetdefinition"
+        ],
+        "object_id": "15",
+        "object_repr": "HTML Viewer",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 14,
+    "fields": {
+        "action_time": "2019-11-14T21:33:54.242Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "owf_groups",
+            "owfgroup"
+        ],
+        "object_id": "3",
+        "object_repr": "Test Group",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 15,
+    "fields": {
+        "action_time": "2019-11-14T21:33:59.619Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "owf_groups",
+            "owfgroup"
+        ],
+        "object_id": "5",
+        "object_repr": "Test Group 3",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 16,
+    "fields": {
+        "action_time": "2019-11-14T21:34:05.919Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "owf_groups",
+            "owfgroup"
+        ],
+        "object_id": "4",
+        "object_repr": "Test Group 2",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 17,
+    "fields": {
+        "action_time": "2019-11-14T21:34:41.587Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "widgets",
+            "widgettype"
+        ],
+        "object_id": "1",
+        "object_repr": "1",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 18,
+    "fields": {
+        "action_time": "2019-11-14T21:35:41.415Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "preferences",
+            "preference"
+        ],
+        "object_id": "1",
+        "object_repr": "user = admin & namespace = owf.admin.UserEditCopy",
+        "action_flag": 2,
+        "change_message": "[]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 19,
+    "fields": {
+        "action_time": "2019-11-14T21:39:08.941Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "dashboards",
+            "dashboard"
+        ],
+        "object_id": "3",
+        "object_repr": "test_dashboard for user: 1",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 20,
+    "fields": {
+        "action_time": "2019-11-14T21:39:14.441Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "dashboards",
+            "dashboard"
+        ],
+        "object_id": "4",
+        "object_repr": "test_dashboard for user: 1",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 21,
+    "fields": {
+        "action_time": "2019-11-14T21:39:37.431Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "dashboards",
+            "dashboard"
+        ],
+        "object_id": "1",
+        "object_repr": "test_dashboard (default) for user: 1",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"isdefault\", \"name\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 22,
+    "fields": {
+        "action_time": "2019-11-14T21:41:29.397Z",
+        "user": [
+            "admin@goss.com"
+        ],
+        "content_type": [
+            "stacks",
+            "stack"
+        ],
+        "object_id": "1",
+        "object_repr": "Sample",
+        "action_flag": 3,
+        "change_message": ""
     }
 }
 ]

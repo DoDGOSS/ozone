@@ -26,7 +26,7 @@ describe("User Dashboard API", () => {
         stackApi = new StackAPI(gateway);
         userDashboardApi = new UserDashboardAPI(gateway);
 
-        await gateway.login("testUser1", "password");
+        await gateway.login("user", "password");
         expect(gateway.isAuthenticated).toEqual(true);
     });
 
@@ -96,7 +96,7 @@ describe("User Dashboard API", () => {
     });
 
     test("cleanup - remove stacks and dashboard", async () => {
-        await gateway.login("testAdmin1", "password");
+        await gateway.login("admin", "password");
 
         const initialResponse = await stackApi.getStacks();
         logResponse(initialResponse);

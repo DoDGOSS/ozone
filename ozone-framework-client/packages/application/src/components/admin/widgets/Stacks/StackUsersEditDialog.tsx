@@ -31,7 +31,7 @@ export class StackUsersEditDialog extends React.Component<SelectionDialogProps<U
     protected async dataLoader(): Promise<Array<UserDTO>> {
         const response = await userApi.getUsers();
 
-        if (response.status !== 200) return [];
+        if (!(response.status >= 200 && response.status < 400)) return [];
 
         return response.data.data;
     }

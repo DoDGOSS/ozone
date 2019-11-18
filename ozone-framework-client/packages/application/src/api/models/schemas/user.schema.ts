@@ -1,21 +1,22 @@
-import { ID_SCHEMA } from "./common.schema";
+import { USER_WIDGET_SCHEMA } from "./user-dashboard.schema";
 
 export const USER_SCHEMA = {
     title: "User",
     type: "object",
     required: [
-        "email",
-        "hasPWD",
-        "id",
-        "lastLogin",
-        "totalDashboards",
-        "totalGroups",
-        "totalStacks",
-        "totalWidgets",
         "userRealName",
-        "username"
+        "username",
+        "email",
+        "id",
+        "lastLogin"
+        // TODO -- add in django
+        // "hasPWD",
+        // "totalDashboards",
+        // "totalGroups",
+        // "totalStacks",
+        // "totalWidgets"
     ],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         email: {
             type: "string"
@@ -29,32 +30,32 @@ export const USER_SCHEMA = {
         lastLogin: {
             type: ["string", "null"]
         },
-        totalDashboards: {
-            type: "number"
-        },
-        totalGroups: {
-            type: "number"
-        },
-        totalStacks: {
-            type: "number"
-        },
-        totalWidgets: {
-            type: "number"
-        },
         userRealName: {
             type: "string"
         },
         username: {
             type: "string"
         }
+        // totalDashboards: {
+        //     type: "number"
+        // },
+        // totalGroups: {
+        //     type: "number"
+        // },
+        // totalStacks: {
+        //     type: "number"
+        // },
+        // totalWidgets: {
+        //     type: "number"
+        // },
     }
 };
 
 export const USER_GET_RESPONSE_SCHEMA = {
     title: "UserGetResponse",
     type: "object",
-    required: ["data", "results", "success"],
-    additionalProperties: false,
+    required: ["data", "results"],
+    additionalProperties: true,
     properties: {
         data: {
             type: "array",
@@ -64,9 +65,6 @@ export const USER_GET_RESPONSE_SCHEMA = {
         },
         results: {
             type: "number"
-        },
-        success: {
-            type: "boolean"
         }
     },
     definitions: {
@@ -74,48 +72,24 @@ export const USER_GET_RESPONSE_SCHEMA = {
     }
 };
 
-export const USER_CREATE_RESPONSE_SCHEMA = {
-    title: "UserCreateResponse",
+export const USER_WIDGETS_GET_RESPONSE_SCHEMA = {
+    title: "UserWidgetsGetResponse",
     type: "object",
-    required: ["data", "success"],
-    additionalProperties: false,
+    required: ["data", "results"],
+    additionalProperties: true,
     properties: {
         data: {
             type: "array",
             items: {
-                $ref: "#/definitions/User"
+                $ref: "#/definitions/UserWidgets"
             }
         },
-        success: {
-            type: "boolean"
+        results: {
+            type: "number"
         }
     },
     definitions: {
-        User: USER_SCHEMA
-    }
-};
-export const USER_UPDATE_RESPONSE_SCHEMA = {
-    ...USER_CREATE_RESPONSE_SCHEMA,
-    title: "UserUpdateResponse"
-};
-
-export const USER_DELETE_RESPONSE_SCHEMA = {
-    title: "UserDeleteResponse",
-    type: "object",
-    required: ["data", "success"],
-    additionalProperties: false,
-    properties: {
-        data: {
-            type: "array",
-            items: {
-                $ref: "#/definitions/Id"
-            }
-        },
-        success: {
-            type: "boolean"
-        }
-    },
-    definitions: {
-        Id: ID_SCHEMA
+        UserWidgets: USER_WIDGET_SCHEMA,
+        ...USER_WIDGET_SCHEMA.definitions
     }
 };

@@ -11,7 +11,7 @@
       "group_widget": true,
       "favorite": true,
       "display_name": "Widget Def One",
-      "disabled": true,
+      "disabled": false,
       "user_widget": true
     }
   },
