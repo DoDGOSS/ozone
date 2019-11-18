@@ -44,7 +44,12 @@ export const GroupPropertiesPanel: React.FC<GroupEditProps> = ({ onSave, group }
                     <div className={styles.formBody}>
                         {" "}
                         <TextField name="name" label="Name" labelInfo="(required)" disabled={isDefaultGroup(group)} />
-                        <TextField name="displayName" label="Display Name" labelInfo="(required)" disabled={isDefaultGroup(group)} />
+                        <TextField
+                            name="displayName"
+                            label="Display Name"
+                            labelInfo="(required)"
+                            disabled={isDefaultGroup(group)}
+                        />
                         <TextField name="description" label="Description" labelInfo="(required)" />
                         <CheckBox
                             name="active"

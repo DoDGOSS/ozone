@@ -8,7 +8,7 @@ import { StackAdmin } from "./pages";
 
 module.exports = {
     "As an Administrator, I can restore a shared Dashboard": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
         // Create Stack
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
 
@@ -202,7 +202,7 @@ module.exports = {
     },
     "As a User, I can restore a shared Stack": (browser: NightwatchAPI) => {
         // Login as testUser
-        loggedInAs(browser, "testUser1", "password", "Test User 1");
+        loggedInAs(browser, "user", "password", "Test User 1");
 
         // Load Stack
 
@@ -331,7 +331,7 @@ module.exports = {
         browser.closeWindow().end();
     },
     "As an Administrator, I want to delete the shared Dashboard": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");
 

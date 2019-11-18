@@ -1,10 +1,13 @@
 from django.test import TestCase
+from rest_framework.test import APIClient
 from people.models import Person, PersonWidgetDefinition
 from domain_mappings.models import DomainMapping, MappingType, RelationshipType
 from dashboards.models import Dashboard
 from stacks.models import Stack, StackGroups
 from owf_groups.models import OwfGroup, GroupStatus
 from widgets.models import WidgetDefinition
+
+requests = APIClient()
 
 create_stack_payload = {
     'name': 'test stack 1',
@@ -43,9 +46,7 @@ payload = {
 
 
 class PersonModelTests(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def setUp(self):
         # create user - done by fixture for now
@@ -154,6 +155,9 @@ class PersonModelTests(TestCase):
             description="widget user had direct access to, but now also has one through the group",
             universal_name="widget4.universal.name"
         )
+
+    def tearDown(self):
+        requests.logout()
 
     def test_purge_dashboards_for_group(self):
         group = OwfGroup.objects.filter(name="group1").first()
@@ -279,8 +283,7 @@ class PersonModelTests(TestCase):
             relationship_type=RelationshipType.cloneOf,
             dest_type=MappingType.dashboard
          )
-
-        self.assertEqual(user_cloned_dashboards.count(), 2)
+        self.assertEqual(user_cloned_dashboards.count(), 4)
 
         admin_user.refresh_from_db()
         admin_user.sync_dashboards()
@@ -304,7 +307,7 @@ class PersonModelTests(TestCase):
                 dest_type=MappingType.dashboard
             )
 
-        self.assertEqual(user_cloned_dashboards.count(), 5)
+        self.assertEqual(user_cloned_dashboards.count(), 7)
 
         self.assertTrue(
             DomainMapping.objects.filter(
@@ -333,7 +336,10 @@ class PersonModelTests(TestCase):
             ).exists()
         )
 
+    # TODO - Investigate why widgets 1 - 4 have PWDs for regular user before test begins
+    # TODO - Logic is sound, however, I believe this is a test data setup issue
     def test_get_active_widgets_for_user(self):
+
         user_widget = PersonWidgetDefinition.objects.create(
             person=self.regular_user,
             widget_definition=self.widget1,
@@ -386,9 +392,8 @@ class PersonModelTests(TestCase):
 
 
 class PersonWidgetDefinitionModelTests(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/people/fixtures/people_widget_data.json',
+    fixtures = ['resources/fixtures/default_data.json',
+                'tests/people/fixtures/people_widget_test_data.json',
                 ]
 
     def test_create_person_widget_definition(self):

@@ -20,7 +20,7 @@ class DashboardViewSet(viewsets.ModelViewSet):
     filterset_fields = ['guid', ]
 
     def get_queryset(self):
-        return Dashboard.objects.filter(user=self.request.user)
+        return Dashboard.objects.filter(user=self.request.user, marked_for_deletion=False)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -31,7 +31,7 @@ class DashboardViewSet(viewsets.ModelViewSet):
 
     @action(methods=['post'], detail=True, permission_classes=(IsAuthenticated, ))
     def restore(self, request, pk=None):
-        dashboard = Dashboard.objects.get(pk=pk)
+        dashboard = self.get_object()
 
         if request.user != dashboard.user:
             return Response(status=status.HTTP_403_FORBIDDEN)

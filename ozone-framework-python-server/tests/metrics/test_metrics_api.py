@@ -10,11 +10,7 @@ requests = APIClient()
 
 
 class MetricsApiTests(TestCase):
-    fixtures = [
-        'tests/people/fixtures/people_data.json',
-        'tests/widgets/fixtures/widget_data.json',
-        'tests/appconf/fixtures/appconf_data.json',
-    ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def tearDown(self):
         requests.logout()

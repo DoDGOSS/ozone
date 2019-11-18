@@ -41,14 +41,21 @@ class PersonDashboardsWidgetsView(APIView):
 
         serialized_user = PersonBaseSerializer(request.user)
         serialized_dashboards = DashboardBaseSerializer(dashboards, many=True)
-        serialized_widgets = WidgetDefinitionSerializer(widgets, many=True)
 
-        return Response({'user': serialized_user.data,
-                         'dashboards': serialized_dashboards.data,
-                         'widgets': serialized_widgets.data})
+        # widget_definitions to person_widget_definitions
+        widget_ids = widgets.values_list('id', flat=True)
+        person_widgets = PersonWidgetDefinition.objects.filter(widget_definition__in=widget_ids)
+        serialized_widgets = PersonWidgetDefinitionSerializer(person_widgets, many=True)
+
+        return Response({
+            'user': serialized_user.data,
+            'dashboards': serialized_dashboards.data,
+            'widgets': serialized_widgets.data
+        })
 
 
-class PersonWidgetDefinitionViewSet(mixins.BulkDestroyModelMixin, viewsets.ModelViewSet):
+class PersonWidgetDefinitionViewSet(mixins.BulkDestroyModelMixin,
+                                    viewsets.ModelViewSet):
     """
     API endpoint that allows users-widgets to be viewed or edited.
     """
@@ -64,6 +71,55 @@ class PersonWidgetDefinitionViewSet(mixins.BulkDestroyModelMixin, viewsets.Model
             return PersonWidgetDefinitionBaseSerializer
         else:
             return PersonWidgetDefinitionSerializer
+
+    def create(self, request, *args, **kwargs):
+        user_ids = request.data and request.data.get('person_ids')
+        if user_ids:
+            request.data.pop('person_ids', None)
+            for user_id in user_ids:
+                try:
+                    payload = request.data.copy()
+                    payload.update({"person": user_id})
+                    serializer = self.get_serializer(data=payload)
+                    serializer.is_valid(raise_exception=True)
+                    self.perform_create(serializer)
+                except Exception:
+                    continue
+            instances = PersonWidgetDefinition.objects.filter(widget_definition=request.data.get('widget_definition'))
+            serializer = self.get_serializer(instances, many=True)
+        else:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            filters = {'widget_definition': request.data.get('widget_id')}
+            id_list = request.data and request.data.get('id')
+            person_id = request.data and request.data.get('person_id')
+            person_ids = request.data and request.data.get('person_ids')
+
+            if id_list:
+                filters.update({
+                    'id__in': list(map(int, id_list))
+                })
+            elif person_id:
+                filters.update({
+                    'person_id': person_id
+                })
+            elif person_ids:
+                filters.update({
+                    'person_id__in': list(map(int, person_ids))
+                })
+            else:
+                return Response({'detail': 'missing user_id or user_ids'}, status=status.HTTP_400_BAD_REQUEST)
+
+            return self.bulk_destroy(request, **filters)
+        except (ValueError,):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class PersonStackViewset(APIView):

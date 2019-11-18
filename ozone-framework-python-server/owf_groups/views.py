@@ -1,9 +1,12 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
 from rest_framework import status
 from django.utils.translation import ugettext_lazy as _
+
+from config.owf_mixins import mixins
 from .models import OwfGroup, OwfGroupPeople
 from .serializers import OWFGroupBaseSerializer, OWFGroupPeopleBaseSerializer, OWFGroupPeopleSerializer
 from rest_framework.response import Response
@@ -23,7 +26,7 @@ class OWFGroupViewSet(viewsets.ModelViewSet):
     filterset_fields = ['name']
 
 
-class OWFGroupPeopleViewSet(viewsets.ModelViewSet):
+class OWFGroupPeopleViewSet(mixins.BulkDestroyModelMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows group people to be viewed or edited.
     """
@@ -38,6 +41,32 @@ class OWFGroupPeopleViewSet(viewsets.ModelViewSet):
             return OWFGroupPeopleBaseSerializer
         else:
             return OWFGroupPeopleSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            filters = {'group_id': request.data.get('group_id')}
+            id_list = request.data and request.data.get('id')
+            person_id = request.data and request.data.get('person_id')
+            person_ids = request.data and request.data.get('person_ids')
+
+            if id_list:
+                filters.update({
+                    'id__in': list(map(int, id_list))
+                })
+            elif person_id:
+                filters.update({
+                    'person_id': person_id
+                })
+            elif person_ids:
+                filters.update({
+                    'person_id__in': list(map(int, person_ids))
+                })
+            else:
+                return Response({'detail': 'missing person_id or person_ids'}, status=status.HTTP_400_BAD_REQUEST)
+
+            return self.bulk_destroy(request, **filters)
+        except (ValueError,):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class OWFGroupWidgetViewSet(APIView):
@@ -75,7 +104,7 @@ class OWFGroupWidgetViewSet(APIView):
                 serialize_group = OWFGroupBaseSerializer(group)
                 widget_serializer = WidgetDefinitionSerializer(widgets, many=True)
                 return Response({'group': serialize_group.data,
-                                 'widgets': [widget_serializer.data]})
+                                 'widgets': widget_serializer.data})
             else:
                 return Response({'Error': 'Group Does Not Exist'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -104,11 +133,31 @@ class OWFGroupWidgetViewSet(APIView):
         else:
             return Response({'Error': 'Query Error'}, status=status.HTTP_400_BAD_REQUEST)
 
+    def get_widget_and_groups_via_request_data(self, request):
+        group_filters = {}
+        group_ids = request.data and request.data.get('group_ids')
+
+        if group_ids:
+            group_filters.update({
+                'id__in': list(map(int, group_ids))
+            })
+        else:
+            group_filters.update({
+                'id__in': (request.data.get('group_id'), )
+            })
+
+        widget = WidgetDefinition.objects.get(pk=request.data.get('widget_id'))
+        groups = OwfGroup.objects.filter(**group_filters)
+        return widget, groups
+
     def post(self, request):
         try:
-            group = OwfGroup.objects.get(pk=request.data.get('group_id'))
-            widget = WidgetDefinition.objects.get(pk=request.data.get('widget_id'))
-            instance, _ = group.add_widget(widget=widget)
+            widget, groups = self.get_widget_and_groups_via_request_data(request)
+            if not groups:
+                raise OwfGroup.DoesNotExist
+
+            for _group in groups:
+                instance, _ = _group.add_widget(widget=widget)
 
         except OwfGroup.DoesNotExist:
             return Response({"group_id": [(self.default_error_messages['object_404']).format('OwfGroup')]},
@@ -119,14 +168,20 @@ class OWFGroupWidgetViewSet(APIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
         else:
-            serializer = OWFGroupBaseSerializer(group)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            serialize_widget = WidgetDefinitionSerializer(widget)
+            serialize_groups = OWFGroupBaseSerializer(groups, many=True)
+            return Response({'widget': serialize_widget.data,
+                             'groups': serialize_groups.data},
+                            status=status.HTTP_201_CREATED)
 
     def delete(self, request):
         try:
-            group = OwfGroup.objects.get(pk=request.data.get('group_id'))
-            widget = WidgetDefinition.objects.get(pk=request.data.get('widget_id'))
-            group.remove_widget(widget=widget)
+            widget, groups = self.get_widget_and_groups_via_request_data(request)
+            if not groups:
+                raise OwfGroup.DoesNotExist
+
+            for _group in groups:
+                _group.remove_widget(widget=widget)
 
         except OwfGroup.DoesNotExist:
             return Response({"group_id": [(self.default_error_messages['object_404']).format('OwfGroup')]},

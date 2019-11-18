@@ -2,7 +2,7 @@ export const PREFERENCE_SCHEMA = {
     title: "Preference",
     type: "object",
     required: ["id", "namespace", "path", "user", "value"],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         id: {
             type: "number"
@@ -16,7 +16,7 @@ export const PREFERENCE_SCHEMA = {
         user: {
             type: "object",
             required: ["userId"],
-            additionalProperties: false,
+            additionalProperties: true,
             properties: {
                 userId: {
                     type: "string"
@@ -32,38 +32,17 @@ export const PREFERENCE_SCHEMA = {
 export const PREFERENCE_GET_RESPONSE_SCHEMA = {
     title: "PreferenceGetResponse",
     type: "object",
-    required: ["results", "rows", "success"],
-    additionalProperties: false,
+    required: ["results", "data"],
+    additionalProperties: true,
     properties: {
         results: {
             type: "number"
         },
-        rows: {
+        data: {
             type: "array",
             items: {
                 $ref: "#/definitions/Preference"
             }
-        },
-        success: {
-            type: "boolean"
-        }
-    },
-    definitions: {
-        Preference: PREFERENCE_SCHEMA
-    }
-};
-
-export const PREFERENCE_GET_SINGLE_RESPONSE_SCHEMA = {
-    title: "PreferenceGetSingleResponse",
-    type: "object",
-    required: ["preference", "success"],
-    additionalProperties: false,
-    properties: {
-        preference: {
-            oneOf: [{ $ref: "#/definitions/Preference" }, { type: "null" }]
-        },
-        success: {
-            type: "boolean"
         }
     },
     definitions: {

@@ -2,45 +2,71 @@ export const DASHBOARD_SCHEMA = {
     title: "Dashboard",
     type: "object",
     required: [
-        "EDashboardLayoutList",
-        "alteredByAdmin",
-        "createdBy",
-        "dashboardPosition",
-        "description",
-        "editedDate",
-        "groups",
-        "guid",
-        "iconImageUrl",
-        "isGroupDashboard",
         "isdefault",
+        "dashboardPosition",
+        "alteredByAdmin",
+        "guid",
+        "name",
+        "description",
+        "createdDate",
+        "editedDate",
         "layoutConfig",
         "locked",
-        "markedForDeletion",
-        "name",
-        "prettyCreatedDate",
-        "prettyEditedDate",
-        "publishedToStore",
-        "stack",
         "type",
-        "user"
+        "iconImageUrl",
+        "publishedToStore",
+        "markedForDeletion",
+        "user",
+        "createdBy",
+        "editedBy",
+        "stack",
+        "isGroupDashboard",
+        "disabled",
+        "originalName"
     ],
-    additionalProperties: false,
-    properties: {
+    additionalProperties: true,
+    properties: {        
+        id: {
+            type: "number"
+        },
         alteredByAdmin: {
-            type: "string"
+            type: "boolean"
         },
         createdBy: {
-            type: "object",
-            required: ["userId", "userRealName"],
-            additionalProperties: false,
-            properties: {
-                userId: {
-                    type: ["string", "null"]
-                },
-                userRealName: {
-                    type: ["string", "null"]
+            oneOf: [
+                { type: "null" },
+                {
+                    type: "object",
+                    required: ["id", "userRealName"],
+                    additionalProperties: true,
+                    properties: {
+                        id: {
+                            type: ["number", "null"]
+                        },
+                        userRealName: {
+                            type: ["string", "null"]
+                        }
+                    }
                 }
-            }
+            ]
+        },
+        editedBy: {
+            oneOf: [
+                { type: "null" },
+                {
+                    type: "object",
+                    required: ["id", "userRealName"],
+                    additionalProperties: true,
+                    properties: {
+                        id: {
+                            type: ["number", "null"]
+                        },
+                        userRealName: {
+                            type: ["string", "null"]
+                        }
+                    }
+                }
+            ]
         },
         createdDate: {
             type: "string"
@@ -52,13 +78,7 @@ export const DASHBOARD_SCHEMA = {
             type: ["string", "null"]
         },
         editedDate: {
-            type: "string"
-        },
-        EDashboardLayoutList: {
-            type: "string"
-        },
-        groups: {
-            type: "array" // TODO
+            type: ["string", "null"]
         },
         guid: {
             type: "string"
@@ -84,12 +104,6 @@ export const DASHBOARD_SCHEMA = {
         name: {
             type: "string"
         },
-        prettyCreatedDate: {
-            type: "string"
-        },
-        prettyEditedDate: {
-            type: "string"
-        },
         publishedToStore: {
             type: "boolean"
         },
@@ -97,15 +111,15 @@ export const DASHBOARD_SCHEMA = {
             oneOf: [{ type: "null" }, { type: "object" }]
         },
         type: {
-            type: ["null"] // TODO
+            type: ["null", "string"] // TODO
         },
         user: {
             type: "object",
-            required: ["userId"],
-            additionalProperties: false,
+            required: ["id"],
+            additionalProperties: true,
             properties: {
-                userId: {
-                    type: "string"
+                id: {
+                    type: "number"
                 }
             }
         }
@@ -115,8 +129,8 @@ export const DASHBOARD_SCHEMA = {
 export const DASHBOARD_GET_RESPONSE_SCHEMA = {
     title: "DashboardGetResponse",
     type: "object",
-    required: ["data", "results", "success"],
-    additionalProperties: false,
+    required: ["data", "results"],
+    additionalProperties: true,
     properties: {
         data: {
             type: "array",
@@ -126,30 +140,6 @@ export const DASHBOARD_GET_RESPONSE_SCHEMA = {
         },
         results: {
             type: "number"
-        },
-        success: {
-            type: "boolean"
-        }
-    },
-    definitions: {
-        Dashboard: DASHBOARD_SCHEMA
-    }
-};
-
-export const DASHBOARD_UPDATE_RESPONSE_SCHEMA = {
-    title: "DashboardUpdateResponse",
-    type: "object",
-    required: ["data", "success"],
-    additionalProperties: false,
-    properties: {
-        data: {
-            type: "array",
-            items: {
-                $ref: "#/definitions/Dashboard"
-            }
-        },
-        success: {
-            type: "boolean"
         }
     },
     definitions: {

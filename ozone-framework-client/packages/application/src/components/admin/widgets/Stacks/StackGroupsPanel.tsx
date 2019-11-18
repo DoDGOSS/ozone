@@ -110,14 +110,15 @@ export class StackGroupsPanel extends React.Component<StackEditGroupsProps, Stac
         stackApi.getStackById(this.props.stack.id).then((response) => {
             this.setState({
                 loading: false,
-                groups: response.data.data[0].groups
+                groups: response.data.groups
             });
         });
     }
 
     private addGroups = async (groups: Array<GroupDTO>) => {
-        const response = await stackApi.addStackGroups(this.props.stack.id, groups);
-        if (response.status === 200) {
+        const response: any = await stackApi.addStackGroups(this.props.stack.id, groups);
+
+        if (response.status >= 200 && response.status < 400) {
             OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
         } else {
             OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });

@@ -13,6 +13,7 @@ import { CancelButton } from "../../../form";
 
 import * as styles from "../Widgets.scss";
 import { UserStacksPanel } from "./UserStacksPanel";
+import { Response } from "../../../../api/interfaces";
 
 export interface UserSetupProps {
     onUpdate: (update?: any) => void;
@@ -84,7 +85,7 @@ export class UserSetup extends React.Component<UserSetupProps, UserSetupState> {
     }
 
     private createOrUpdate = async (user: UserCreateRequest | UserUpdateRequest): Promise<boolean> => {
-        let response: any = {};
+        let response: Response<UserDTO>;
 
         if ("id" in user && user.hasOwnProperty("id")) {
             response = await userApi.updateUser(user);
@@ -92,15 +93,9 @@ export class UserSetup extends React.Component<UserSetupProps, UserSetupState> {
             response = await userApi.createUser(user);
         }
 
-        if (
-            response.status === 200 &&
-            response.data &&
-            response.data.data &&
-            response.data.data.length !== undefined &&
-            response.data.data.length > 0
-        ) {
+        if (response.status >= 200 && response.status < 400 && response.data) {
             this.setState({
-                user: response.data.data[0]
+                user: response.data
             });
             this.props.onUpdate();
             return true;

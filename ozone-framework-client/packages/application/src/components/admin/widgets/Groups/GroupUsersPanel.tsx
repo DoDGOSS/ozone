@@ -107,37 +107,22 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
         });
     }
 
-    // TODO - Refactor this when we refactor Client APIs
     private getUsers = async () => {
-        const currentGroup: GroupDTO = this.props.group;
-
-        const criteria: UserQueryCriteria = {
-            group_id: currentGroup.id
-        };
-
-        const response = await userApi.getUsers(criteria);
+        const response = await userApi.getUsersForGroup(this.props.group.id);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return;
+        if (!(response.status >= 200 && response.status < 400)) return;
 
         this.setState({
-            users: response.data.data,
+            users: response.data.data.map((data: any) => data.person),
             loading: false
         });
     };
 
-    // TODO - Refactor this when we refactor Client APIs
     private addUsers = async (users: Array<UserDTO>) => {
-        const request: GroupUpdateRequest = {
-            id: this.props.group.id,
-            name: this.props.group.name,
-            update_action: "add",
-            user_ids: users.map((user: UserDTO) => user.id)
-        };
+        const response = await groupApi.addUsersToGroup(this.props.group, users);
 
-        const response = await groupApi.updateGroup(request);
-
-        if (response.status === 200) {
+        if (response.status >= 200 && response.status < 400) {
             OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
         } else {
             OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
@@ -150,7 +135,7 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
         });
 
         this.getUsers();
-        this.props.onUpdate(response.data.data);
+        this.props.onUpdate(response.data);
     };
 
     private closeUsersDialog = () => {
@@ -173,19 +158,11 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
         });
     };
 
-    // TODO - Refactor this when we refactor Client APIs
     private async removeUser(user: UserDTO): Promise<boolean> {
-        const request: GroupUpdateRequest = {
-            id: this.props.group.id,
-            name: this.props.group.name,
-            update_action: "remove",
-            user_ids: [user.id]
-        };
-
-        const response = await groupApi.updateGroup(request);
+        const response = await groupApi.removeUsersFromGroup(this.props.group, [user]);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (!(response.status >= 200 && response.status < 400)) return false;
 
         this.getUsers();
         this.props.onUpdate();

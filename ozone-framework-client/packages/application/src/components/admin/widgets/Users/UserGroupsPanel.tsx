@@ -7,9 +7,9 @@ import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTab
 import { DeleteButton } from "../../../generic-table/TableButtons";
 import { UserGroupsEditDialog } from "./UserGroupsEditDialog";
 import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
-import { GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
+import { GroupDTO } from "../../../../api/models/GroupDTO";
 import { UserDTO } from "../../../../api/models/UserDTO";
-import { groupApi, GroupQueryCriteria } from "../../../../api/clients/GroupAPI";
+import { groupApi } from "../../../../api/clients/GroupAPI";
 
 interface UserEditGroupsProps {
     onUpdate: (update?: any) => void;
@@ -106,17 +106,13 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
     // TODO - Refactor this when we refactor Client APIs
     private getGroups = async () => {
         const currentUser: UserDTO = this.props.user;
-
-        const criteria: GroupQueryCriteria = {
-            user_id: currentUser.id
-        };
-
-        const response = await groupApi.getGroups(criteria);
+        const response = await groupApi.getGroupsForUser(currentUser.id);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return;
+        if (!(response.status >= 200 && response.status < 400)) return;
+
         this.setState({
-            groups: response.data.data,
+            groups: response.data.data.map((data: any) => data.group),
             loading: false
         });
     };
@@ -129,23 +125,17 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
             if (this.state.groups.findIndex((g) => g.id === group.id) >= 0) {
                 continue;
             }
-            const request: GroupUpdateRequest = {
-                id: group.id,
-                name: group.name,
-                update_action: "add",
-                user_ids: [this.props.user.id]
-            };
 
-            const response = await groupApi.updateGroup(request);
+            const response = await groupApi.addUsersToGroup(group, [this.props.user]);
 
-            if (response.status === 200) {
+            if (response.status >= 200 && response.status < 400) {
                 OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
             } else {
                 OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
                 return;
             }
 
-            responses.push(response.data.data);
+            responses.push(response.data);
         }
 
         this.setState({
@@ -181,17 +171,10 @@ export class UserGroupsPanel extends React.Component<UserEditGroupsProps, UserEd
 
     // TODO - Refactor this when we refactor Client APIs
     private removeGroup = async (group: GroupDTO) => {
-        const request: GroupUpdateRequest = {
-            id: group.id,
-            name: group.name,
-            update_action: "remove",
-            user_ids: [this.props.user.id]
-        };
-
-        const response = await groupApi.updateGroup(request);
+        const response = await groupApi.removeUsersFromGroup(group, [this.props.user]);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (!(response.status >= 200 && response.status < 400)) return false;
 
         this.getGroups();
         this.props.onUpdate();

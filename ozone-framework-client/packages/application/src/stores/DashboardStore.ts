@@ -19,6 +19,7 @@ import { dashboardToUpdateRequest, deserializeUserState, UserState } from "../co
 import { CreateDashboardOptions } from "../components/create-dashboard-screen/CreateDashboardForm";
 import { createPresetLayout } from "./default-layouts";
 import _ from "lodash";
+import { userApi } from "../api/clients/UserAPI";
 
 const EMPTY_USER_DASHBOARDS_STATE: UserState = {
     dashboards: {},
@@ -61,8 +62,11 @@ export class DashboardStore {
     fetchUserDashboards = async (newCurrentDashGuid?: string | any) => {
         this.isLoading$.next(true);
 
+        // TODO --- TEMPORARY TEST
+
         let response = await this.userDashboardApi.getOwnDashboards();
-        if (response.status !== 200) {
+
+        if (!(response.status >= 200 && response.status < 400)) {
             throw new Error("Failed to fetch user dashboards");
         }
 
@@ -90,16 +94,16 @@ export class DashboardStore {
         };
         this.createNewStack(defStack);
 
-        const refetchResponse = await this.userDashboardApi.getOwnDashboards();
-        if (refetchResponse.status !== 200) {
+        const response = await this.userDashboardApi.getOwnDashboards();
+        if (!(response.status >= 200 && response.status < 400)) {
             throw new Error("Failed to fetch user dashboards");
         }
 
-        return refetchResponse;
+        return response;
     };
 
     createDashboard = async (dashboard: CreateDashboardOptions) => {
-        const { tree, panels } = await createPresetLayout(dashboard.presetLayoutName, dashboard.copyGuid);
+        const { tree, panels } = await createPresetLayout(dashboard.presetLayoutName, dashboard.copyId);
         const opts: DashboardCreateOpts = {
             backgroundWidgets: [],
             name: dashboard.name,
@@ -107,11 +111,12 @@ export class DashboardStore {
             panels,
             stackId: dashboard.stackId
         };
-        const createResponse = await this.userDashboardApi.createDashboard(opts);
-        if (createResponse.status !== 200) {
+
+        const response = await this.userDashboardApi.createDashboard(opts);
+        if (!(response.status >= 200 && response.status < 400)) {
             throw new Error("Failed to create new dashboard");
         }
-        const createdDashboard = createResponse.data;
+        const createdDashboard = response.data;
         await this.fetchUserDashboards(createdDashboard.guid);
         return createdDashboard;
     };
@@ -120,16 +125,19 @@ export class DashboardStore {
         stackRequest: StackCreateRequest,
         defaultDashLayoutOptions?: { presetLayoutName: string | null; copyGuid: string | null }
     ): Promise<Boolean> {
-        const defaultDashOptions: CreateDashboardOptions = {
-            name: stackRequest.name + " (default)",
-            description: "Default dashboard for stack `" + stackRequest.name + "`",
-            presetLayoutName: defaultDashLayoutOptions ? defaultDashLayoutOptions.presetLayoutName : null,
-            copyGuid: defaultDashLayoutOptions ? defaultDashLayoutOptions.copyGuid : null
-        };
+        // TODO: handle passing up the layout config for creating the default dashboard
+        const newStack = (await stackApi.createStack(stackRequest)).data;
 
-        const newDash = await this.createDashboard(defaultDashOptions);
         const userDashboardsResponse = await userDashboardApi.getOwnDashboards();
-        if (userDashboardsResponse.status !== 200 || !userDashboardsResponse.data.dashboards) {
+        const userDashboards = userDashboardsResponse.data.dashboards;
+        const newStackDefaultDashboard = userDashboards.filter(userDashboard => {
+            return userDashboard.stack.id === newStack.id;
+        })[0];
+        await this.fetchUserDashboards(newStackDefaultDashboard.guid);
+        if (
+            !(userDashboardsResponse.status >= 200 && userDashboardsResponse.status < 400) ||
+            !userDashboardsResponse.data.dashboards
+        ) {
             console.log("Could not create stack.");
             showToast({
                 message: "Stack `" + stackRequest.name + "` could not be created.",
@@ -138,28 +146,10 @@ export class DashboardStore {
             return false;
         }
 
-        let newStack: UserDashboardStackDTO | undefined;
-
-        for (const dash of userDashboardsResponse.data.dashboards) {
-            if (dash.guid === newDash.guid) {
-                newStack = dash.stack;
-            }
-        }
         if (!newStack) {
             return false;
         }
-        const stackUpdateRequest: StackUpdateRequest = {
-            ...stackRequest,
-            id: newStack.id,
-            stackContext: newStack.stackContext
-        };
-        console.log(stackUpdateRequest);
 
-        const stackResponse = await stackApi.updateStack(stackUpdateRequest);
-
-        if (stackResponse.status !== 200 || !stackResponse.data.data || !(stackResponse.data.data.length > 0)) {
-            return false;
-        }
         return true;
     }
 
@@ -172,7 +162,7 @@ export class DashboardStore {
 
         const response = await this.dashboardApi.updateDashboard(request);
 
-        if (response.status !== 200) {
+        if (!(response.status >= 200 && response.status < 400)) {
             throw new Error("Failed to save user dashboard");
         }
     };
@@ -183,7 +173,7 @@ export class DashboardStore {
         const currentDashboard = this.currentDashboard$.value;
 
         const response = await this.userDashboardApi.getOwnDashboards();
-        if (response.status !== 200) {
+        if (!(response.status >= 200 && response.status < 400)) {
             throw new Error("Failed to fetch user dashboards");
         }
 

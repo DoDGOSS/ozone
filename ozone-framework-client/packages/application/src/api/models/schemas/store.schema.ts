@@ -2,7 +2,7 @@ export const AML_LISTINGTYPE_SCHEMA = {
     title: "AML Listing TYpe",
     type: "object",
     required: ["title"],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         title: {
             type: "string"
@@ -14,7 +14,7 @@ export const AML_ICON_SCHEMA = {
     title: "AML Store Icon",
     type: "object",
     required: ["security_marking"],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         id: {
             type: "number"
@@ -32,7 +32,7 @@ export const AML_LISTING_SCHEMA = {
     title: "AML Store Listing",
     type: "object",
     required: ["title"],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         id: {
             type: "number"

@@ -4,14 +4,13 @@ from dashboards.models import Dashboard
 
 class DashboardModelTests(TestCase):
     fixtures = [
-        'tests/people/fixtures/people_data.json',
-        'tests/widgets/fixtures/widget_data.json',
-        'tests/dashboards/fixtures/default_test_dashboards.json'
+        'resources/fixtures/default_data.json',
+        'tests/dashboards/fixtures/default_test_dashboards.json',
     ]
 
     def test_restore_dashboard(self):
-        default_dashboard = Dashboard.objects.get(pk=1)
-        dashboard_to_restore = Dashboard.objects.get(pk=2)
+        default_dashboard = Dashboard.objects.get(pk=100)
+        dashboard_to_restore = Dashboard.objects.get(pk=101)
         dashboard_to_restore.restore()
         dashboard_to_restore.refresh_from_db()
 

@@ -25,7 +25,7 @@ const USER_WIDGET: UserWidgetDTO = {
         favorite: false,
         groupWidget: false,
         position: 0,
-        userId: "testUser1",
+        userId: "user",
         userRealName: "Test User 1",
         namespace: "Channel Shouter",
         description: "Broadcast a message on a specified channel.",

@@ -6,10 +6,9 @@ export interface AuthUserDTO {
     username: string;
     userRealName: string;
     email?: string;
-    theme: string;
     isAdmin: boolean;
-    roles: string[];
     groups: AuthGroupDTO[];
+    theme?: string | undefined;
 }
 
 export const validateAuthUser = createValidator<AuthUserDTO>(AUTH_USER_SCHEMA);

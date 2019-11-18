@@ -1,22 +1,23 @@
-import { ID_SCHEMA } from "./common.schema";
+import { WIDGET_SCHEMA } from "./widget.schema";
 
 export const GROUP_SCHEMA = {
     title: "Group",
     type: "object",
     required: [
-        "automatic",
-        "description",
-        "displayName",
-        "email",
-        "id",
-        "name",
-        "stackDefault",
         "status",
-        "totalStacks",
-        "totalUsers",
-        "totalWidgets"
+        "email",
+        "description",
+        "name",
+        "automatic",
+        "displayName",
+        "stackDefault"
+        // "people",
+        // TODO -- missing in django
+        // "totalStacks",
+        // "totalUsers",
+        // "totalWidgets"
     ],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         automatic: {
             type: "boolean"
@@ -33,6 +34,9 @@ export const GROUP_SCHEMA = {
         id: {
             type: "number"
         },
+        version: {
+            type: "number"
+        },
         name: {
             type: "string"
         },
@@ -42,6 +46,9 @@ export const GROUP_SCHEMA = {
         status: {
             type: "string",
             enum: ["active", "inactive"]
+        },
+        people: {
+            type: "array"
         },
         totalUsers: {
             type: "number"
@@ -59,7 +66,7 @@ export const GROUP_GET_RESPONSE_SCHEMA = {
     title: "GroupGetResponse",
     type: "object",
     required: ["data", "results"],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         data: {
             type: "array",
@@ -69,57 +76,60 @@ export const GROUP_GET_RESPONSE_SCHEMA = {
         },
         results: {
             type: "number"
-        },
-        success: {
-            type: "boolean"
         }
     },
     definitions: {
         Group: GROUP_SCHEMA
     }
-};
-export const GROUP_CREATE_RESPONSE_SCHEMA = {
-    title: "GroupCreateResponse",
-    type: "object",
-    required: ["data", "success"],
-    additionalProperties: false,
-    properties: {
-        data: {
-            type: "array",
-            items: {
-                $ref: "#/definitions/Group"
-            }
-        },
-        success: {
-            type: "boolean"
-        }
-    },
-    definitions: {
-        Group: GROUP_SCHEMA
-    }
-};
-export const GROUP_UPDATE_RESPONSE_SCHEMA = {
-    ...GROUP_CREATE_RESPONSE_SCHEMA,
-    title: "GroupUpdateResponse"
 };
 
-export const GROUP_DELETE_RESPONSE_SCHEMA = {
-    title: "GroupDeleteResponse",
+export const GROUP_WIDGETS_GET_RESPONSE_SCHEMA = {
+    title: "GroupWidgetsGetResponse",
     type: "object",
-    required: ["data", "success"],
-    additionalProperties: false,
+    required: ["group", "widgets"],
+    additionalProperties: true,
     properties: {
-        data: {
-            type: "array",
-            items: {
-                $ref: "#/definitions/IdObject"
+        group: {
+            type: "object",
+            properties: {
+                ...GROUP_SCHEMA.properties
             }
         },
-        success: {
-            type: "boolean"
+        widgets: {
+            type: "array",
+            items: {
+                $ref: "#/definitions/Widgets"
+            }
         }
     },
     definitions: {
-        IdObject: ID_SCHEMA
+        Widgets: WIDGET_SCHEMA,
+        ...WIDGET_SCHEMA.definitions
+    }
+};
+
+export const WIDGET_GROUPS_GET_RESPONSE_SCHEMA = {
+    title: "WidgetGroupsGetResponse",
+    type: "object",
+    required: ["widget", "groups"],
+    additionalProperties: true,
+    properties: {
+        widget: {
+            type: "object",
+            properties: {
+                ...WIDGET_SCHEMA.properties
+            }
+        },
+        groups: {
+            type: "array",
+            items: {
+                $ref: "#/definitions/Groups"
+            }
+        }
+    },
+    definitions: {
+        Groups: GROUP_SCHEMA,
+        Widgets: WIDGET_SCHEMA,
+        ...WIDGET_SCHEMA.definitions
     }
 };

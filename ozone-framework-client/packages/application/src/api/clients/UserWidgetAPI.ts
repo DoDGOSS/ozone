@@ -1,6 +1,6 @@
-import * as qs from "qs";
-
-import { Gateway, getGateway, Response } from "../interfaces";
+import { Gateway, getGateway, ListOf, Response } from "../interfaces";
+import { UserWidgetDTO, validateUserWidgetListResponse } from "../models/UserWidgetDTO";
+import { Widget } from "../../models/Widget";
 
 export interface UserWidgetQueryCriteria {
     limit?: number;
@@ -15,19 +15,15 @@ export class UserWidgetAPI {
         this.gateway = gateway || getGateway();
     }
 
-    async getUserWidgets(criteria?: UserWidgetQueryCriteria): Promise<Response<any>> {
-        return this.gateway.get("prefs/widget/", {
-            params: getOptionParams(criteria)
+    async getUserWidgets(userId: number): Promise<Response<ListOf<UserWidgetDTO[]>>> {
+        return this.gateway.get("admin/users-widgets/", {
+            params: { person: userId },
+            validate: validateUserWidgetListResponse
         });
     }
 
-    async deleteUserWidget(widgetGuid: string): Promise<Response<any>> {
-        const requestData = qs.stringify({
-            _method: "DELETE",
-            guid: widgetGuid
-        });
-
-        return this.gateway.post("prefs/widget/", requestData, {
+    async deleteUserWidget(widgetId: number): Promise<Response<void>> {
+        return this.gateway.delete(`admin/users-widgets/${widgetId}/`, null, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             }
@@ -36,13 +32,3 @@ export class UserWidgetAPI {
 }
 
 export const userWidgetApi = new UserWidgetAPI();
-
-function getOptionParams(options?: UserWidgetQueryCriteria): any | undefined {
-    if (!options) return undefined;
-
-    const params: any = {};
-    if (options.limit) params.max = options.limit;
-    if (options.offset) params.offset = options.offset;
-    if (options.user_id) params.user_id = options.user_id;
-    return params;
-}

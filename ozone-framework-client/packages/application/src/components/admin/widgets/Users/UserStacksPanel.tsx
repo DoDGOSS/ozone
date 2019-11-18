@@ -11,6 +11,7 @@ import { stackApi, StackQueryCriteria } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";
 import { UserDTO } from "../../../../api/models/UserDTO";
 import { UserStacksEditDialog } from "./UserStacksEditDialog";
+import { groupApi } from "../../../../api/clients/GroupAPI";
 
 interface UserEditStacksProps {
     onUpdate: (update?: any) => void;
@@ -100,30 +101,25 @@ export class UserStacksPanel extends React.Component<UserEditStacksProps, UserEd
 
     private getStacks = async () => {
         const currentUser: UserDTO = this.props.user;
-
-        const criteria: StackQueryCriteria = {
-            userId: currentUser.id
-        };
-
-        const response = await stackApi.getStacks(criteria);
+        const response = await stackApi.getStacksForUser(currentUser.id);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return;
+        if (!(response.status >= 200 && response.status < 400)) return;
 
         this.setState({
-            stacks: response.data.data,
+            stacks: response.data.stacks,
             loading: false
         });
     };
 
     private addStacks = async (stacks: Array<StackDTO>) => {
         for (const newStack of stacks) {
-            const response = await stackApi.addStackUsers(newStack.id, [this.props.user]);
-            if (response.status === 200) {
+            const response: any = await stackApi.addStackUsers(newStack, [this.props.user]);
+
+            if (response.status >= 200 && response.status < 400) {
                 OzoneToaster.show({ intent: Intent.SUCCESS, message: "Successfully Submitted!" });
             } else {
                 OzoneToaster.show({ intent: Intent.DANGER, message: "Submit Unsuccessful, something went wrong." });
-                break;
             }
         }
 
@@ -157,10 +153,10 @@ export class UserStacksPanel extends React.Component<UserEditStacksProps, UserEd
     };
 
     private async removeStack(stack: StackDTO): Promise<boolean> {
-        const response = await stackApi.removeStackUsers(stack.id, [this.props.user]);
+        const response = await stackApi.removeStackUsers(stack, [this.props.user]);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (!(response.status >= 200 && response.status < 400)) return false;
 
         this.setState({
             loading: true

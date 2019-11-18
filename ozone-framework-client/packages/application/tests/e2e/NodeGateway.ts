@@ -4,6 +4,7 @@ import { get, isNil, trimEnd, trimStart } from "lodash";
 import { Gateway, RequestOptions, Response } from "../../src/api/interfaces";
 import { AuthenticationError, ValidationError } from "../../src/api/errors";
 import { AuthUserDTO, validateAuthUser } from "../../src/api/models/AuthUserDTO";
+import { getCookie } from "../../src/utility";
 
 export class NodeGateway implements Gateway {
     private readonly rootUrl: string;
@@ -20,7 +21,7 @@ export class NodeGateway implements Gateway {
 
     async login(username: string, password: string): Promise<Response<AuthUserDTO>> {
         try {
-            const response = await axios.post(`${this.rootUrl}/perform_login`, null, {
+            const response = await axios.post(`${this.rootUrl}/auth/login/`, null, {
                 params: {
                     username,
                     password
@@ -43,13 +44,13 @@ export class NodeGateway implements Gateway {
     }
 
     async logout(): Promise<Response<any>> {
-        const response = await this.get(`/logout`);
+        const response = await this.get(`auth/logout/`);
         return response;
     }
 
     async getLoginStatus(): Promise<Response<AuthUserDTO>> {
         try {
-            return await this.get(`login/status`, {
+            return await this.get(`me/`, {
                 validate: validateAuthUser
             });
         } catch (ex) {
@@ -125,14 +126,14 @@ export class NodeGateway implements Gateway {
         return response;
     }
 
-    private getHeaders(additionalHeaders?: any): any {
-        const defaultHeaders = {
+    private getHeaders(initialHeaders?: any): any {
+        return {
+            ...initialHeaders,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "X-CSRFToken": getCookie("csrftoken"),
             Cookie: this.sessionCookie
         };
-
-        if (!additionalHeaders) return defaultHeaders;
-
-        return { ...defaultHeaders, ...additionalHeaders };
     }
 }
 
@@ -145,5 +146,5 @@ function getSessionCookie(headers: any) {
 }
 
 function getDefaultBaseUrl(): string {
-    return get(process.env, "OZONE_API_SERVER_URL", "http://localhost:8080/owf") as string;
+    return get(process.env, "OZONE_API_SERVER_URL", "http://localhost:8000/api/v2") as string;
 }

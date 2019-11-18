@@ -6,12 +6,7 @@ requests = APIClient()
 
 
 class TestingApplicationConfigAPI(TestCase):
-    fixtures = [
-        'tests/people/fixtures/people_data.json',
-        'tests/widgets/fixtures/widget_data.json',
-        'tests/appconf/fixtures/appconf_data.json',
-        'tests/appconf/fixtures/appconf_data.json',
-    ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def test_requests_post_params_from_camelCase_to_snake_case(self):
         requests.login(email='admin@goss.com', password='password')

@@ -25,9 +25,9 @@ const OzoneToaster = Toaster.create({
 export class ExportDialog extends React.Component<ExportDialogProps, {}> {
     getWidgetExport = async (values: ExportForm, actions: FormikActions<ExportForm>) => {
         try {
-            const url = `widget/export?id=${this.props.widget.id}&filename=${values.filename}`;
+            const url = `widget/${this.props.widget.id}/export?id=&filename=${values.filename}`; // TODO: check what is happening with the filename, it doesn't look like the backend cares about the filename.
             const response = await widgetApi.getWidgetDescriptorJson(url);
-            if (response.status !== 200) {
+            if (!(response.status >= 200 && response.status < 400)) {
                 // Show error Dialog
                 this.props.onClose();
                 this.props.openExportErrorDialog(this.props.widget);

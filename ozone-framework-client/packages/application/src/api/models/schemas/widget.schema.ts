@@ -1,12 +1,10 @@
 import { INTENTS_SCHEMA } from "./intent.schema";
-import { USER_SCHEMA } from "./user.schema";
-import { GROUP_SCHEMA } from "./group.schema";
 
 export const WIDGET_TYPE_SCHEMA = {
     title: "WidgetType",
     type: "object",
     required: ["displayName", "id", "name"],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         displayName: {
             type: "string"
@@ -17,6 +15,27 @@ export const WIDGET_TYPE_SCHEMA = {
         name: {
             type: "string"
         }
+    }
+};
+
+export const WIDGET_TYPE_GET_RESPONSE_SCHEMA = {
+    title: "WidgetGetResponse",
+    type: "object",
+    required: ["data", "results"],
+    additionalProperties: true,
+    properties: {
+        data: {
+            type: "array",
+            items: {
+                $ref: "#/definitions/WidgetType"
+            }
+        },
+        results: {
+            type: "number"
+        }
+    },
+    definitions: {
+        WidgetType: WIDGET_TYPE_SCHEMA
     }
 };
 
@@ -52,7 +71,7 @@ export const WIDGET_PROPERTIES_SCHEMA = {
         "x",
         "y"
     ],
-    additionalProperties: false,
+    additionalProperties: true,
     properties: {
         allRequired: {
             type: "array",
@@ -61,7 +80,7 @@ export const WIDGET_PROPERTIES_SCHEMA = {
             }
         },
         background: {
-            type: "boolean"
+            type: ["boolean", "null"]
         },
         definitionVisible: {
             type: "boolean"
@@ -154,11 +173,11 @@ export const WIDGET_PROPERTIES_SCHEMA = {
 export const WIDGET_SCHEMA = {
     title: "Widget",
     type: "object",
-    additionalProperties: false,
+    additionalProperties: true,
     required: ["id", "namespace", "path", "value"],
     properties: {
         id: {
-            type: "string"
+            type: "number"
         },
         namespace: {
             type: "string"
@@ -181,8 +200,8 @@ export const WIDGET_SCHEMA = {
 export const WIDGET_GET_RESPONSE_SCHEMA = {
     title: "WidgetGetResponse",
     type: "object",
-    required: ["data", "results", "success"],
-    additionalProperties: false,
+    required: ["data", "results"],
+    additionalProperties: true,
     properties: {
         data: {
             type: "array",
@@ -192,104 +211,10 @@ export const WIDGET_GET_RESPONSE_SCHEMA = {
         },
         results: {
             type: "number"
-        },
-        success: {
-            type: "boolean"
         }
     },
     definitions: {
         Widget: WIDGET_SCHEMA,
         ...WIDGET_SCHEMA.definitions
-    }
-};
-
-export const WIDGET_CREATE_RESPONSE_SCHEMA = {
-    title: "WidgetCreateResponse",
-    type: "object",
-    required: ["data", "success"],
-    additionalProperties: false,
-    properties: {
-        data: {
-            type: "array",
-            items: {
-                $ref: "#/definitions/Widget"
-            }
-        },
-        success: {
-            type: "boolean"
-        }
-    },
-    definitions: {
-        Widget: WIDGET_SCHEMA,
-        ...WIDGET_SCHEMA.definitions
-    }
-};
-
-export const WIDGET_DELETE_RESPONSE_SCHEMA = {
-    title: "WidgetDeleteResponse",
-    type: "object",
-    required: ["data", "success"],
-    additionalProperties: false,
-    properties: {
-        data: {
-            type: "array",
-            items: {
-                type: "object",
-                require: ["id", "value"],
-                additionalProperties: false,
-                properties: {
-                    id: {
-                        type: "string"
-                    },
-                    value: {
-                        type: "object"
-                    }
-                }
-            }
-        },
-        success: {
-            type: "boolean"
-        }
-    }
-};
-
-export const WIDGET_UPDATE_USERS_RESPONSE_SCHEMA = {
-    title: "WidgetUpdateUsersResponse",
-    type: "object",
-    required: ["data", "success"],
-    additionalProperties: false,
-    properties: {
-        data: {
-            type: "array",
-            items: {
-                $ref: "#/definitions/User"
-            }
-        },
-        success: {
-            type: "boolean"
-        }
-    },
-    definitions: {
-        User: USER_SCHEMA
-    }
-};
-export const WIDGET_UPDATE_GROUPS_RESPONSE_SCHEMA = {
-    title: "WidgetUpdateGroupsResponse",
-    type: "object",
-    required: ["data", "success"],
-    additionalProperties: false,
-    properties: {
-        data: {
-            type: "array",
-            items: {
-                $ref: "#/definitions/Group"
-            }
-        },
-        success: {
-            type: "boolean"
-        }
-    },
-    definitions: {
-        Group: GROUP_SCHEMA
     }
 };

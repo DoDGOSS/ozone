@@ -5,14 +5,14 @@ import { AdminWidget, GlobalElements, UserAdminWidget, MainPage, StackDialog } f
 import { loggedInAs } from "./helpers";
 import { UserAdmin } from "./pages";
 
-const LOGIN_USERNAME: string = "testAdmin1";
+const LOGIN_USERNAME: string = "admin";
 const LOGIN_PASSWORD: string = "password";
 
-const USER_ADD_WIDGET: string = "testUser1";
+const USER_ADD_WIDGET: string = "user";
 const SEARCH_WIDGET: string = "Color";
 const ADDED_WIDGETS = ["Color Client", "Color Server"];
 
-const ADMIN_EMAIL = "testAdmin1@ozone.test";
+const ADMIN_EMAIL = "admin@goss.com";
 const NEW_USER_EMAIL = "new_user_email@email.com";
 const NEW_USER_DISPLAY_NAME = "Edited User";
 const NEW_USER_USERNAME = "newUser1";
@@ -38,7 +38,7 @@ function openEditSectionForUser(browser: NightwatchAPI, userDisplayName: string,
 module.exports = {
     // TODO - Change test to launch the widget when functionality is implemented
     "As an Administrator, I can view all Users in the User Admin Widget": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         UserAdmin.navigateTo(browser);
 
@@ -52,11 +52,11 @@ module.exports = {
     },
 
     "As an Administrator, I can view all Preferences in the User Admin Widget": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         UserAdmin.navigateTo(browser);
 
-        browser.click(AdminWidget.userTableEditButton("testUser1"));
+        browser.click(AdminWidget.userTableEditButton("user"));
 
         browser.waitForElementVisible(AdminWidget.PREFERENCES_TAB, 2000);
         browser.click(AdminWidget.PREFERENCES_TAB);
@@ -73,7 +73,7 @@ module.exports = {
     },
 
     "As an Administrator, I can create a new User": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         UserAdmin.navigateTo(browser);
 
@@ -116,7 +116,7 @@ module.exports = {
     },
 
     "As an Administrator, I can edit a User": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         UserAdmin.navigateTo(browser);
 
@@ -280,7 +280,7 @@ module.exports = {
     },
 
     "As an Administrator, I can search for a User": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         UserAdmin.navigateTo(browser);
 
@@ -304,7 +304,7 @@ module.exports = {
     },
 
     "As an Administrator, I can create a new preference for a user": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         UserAdmin.navigateTo(browser);
 
@@ -314,7 +314,7 @@ module.exports = {
             "[User Admin Widget] Displays user information"
         );
 
-        browser.click(AdminWidget.userTableEditButton("testUser1"));
+        browser.click(AdminWidget.userTableEditButton("user"));
 
         browser.waitForElementVisible(AdminWidget.PREFERENCES_TAB, 2000);
         browser.click(AdminWidget.PREFERENCES_TAB);
@@ -457,7 +457,7 @@ module.exports = {
     },
 
     "As an Administrator, I can delete a User": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         UserAdmin.navigateTo(browser);
 
@@ -494,7 +494,7 @@ module.exports = {
     "As an Administrator, When I view preferences for a selected user, I should see preferences that are assigned to that user.": (
         browser: NightwatchAPI
     ) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         UserAdmin.navigateTo(browser);
 
@@ -504,7 +504,7 @@ module.exports = {
             "[User Admin Widget] Displays user information"
         );
 
-        browser.click(AdminWidget.userTableEditButton("testUser1"));
+        browser.click(AdminWidget.userTableEditButton("user"));
 
         browser.waitForElementVisible(AdminWidget.PREFERENCES_TAB, 2000);
         browser.click(AdminWidget.PREFERENCES_TAB);

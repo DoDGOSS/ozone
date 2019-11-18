@@ -72,7 +72,7 @@ export class StackSetup extends React.Component<StackSetupProps, StackSetupState
         }
 
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (!(response.status >= 200 && response.status < 400)) return false;
 
         this.props.onUpdate();
 

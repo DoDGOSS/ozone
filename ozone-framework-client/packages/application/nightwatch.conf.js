@@ -53,6 +53,9 @@ module.exports = {
                 acceptSslCerts: true,
                 nativeEvents: true,
                 elementScrollBehavior: 1,
+                chromeOptions: {
+                    w3c: false
+                }
                 // "chromeOptions": {
                 //     "args": [
                 //         "headless",

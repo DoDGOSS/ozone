@@ -10,8 +10,8 @@ export const GET_STACK_BY_ID_RESPONSE = {
                 id: 26,
                 userRealName: "Test User 1",
                 totalWidgets: 0,
-                username: "testUser1",
-                email: "testUser1@ozone.test",
+                username: "user",
+                email: "user@goss.com",
                 lastLogin: null,
                 totalDashboards: 0
             },

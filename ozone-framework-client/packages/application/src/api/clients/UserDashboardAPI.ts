@@ -1,12 +1,9 @@
-import * as qs from "qs";
-
 import { Gateway, getGateway, Response } from "../interfaces";
 import { UserDashboardsGetResponse, validateUserDashboardsGetResponse } from "../models/UserDashboardDTO";
-import { DashboardDTO, validateDashboard } from "../models/DashboardDTO";
-import { dashboardLayoutToJson } from "../../codecs/Dashboard.codec";
+import { DashboardDTO } from "../models/DashboardDTO";
 import { DashboardLayout } from "../../models/Dashboard";
-
 import { isNil, uuid } from "../../utility";
+import { dashboardLayoutToJson } from "../../codecs/Dashboard.codec";
 
 export class UserDashboardAPI {
     private readonly gateway: Gateway;
@@ -16,29 +13,19 @@ export class UserDashboardAPI {
     }
 
     async getOwnDashboards(): Promise<Response<UserDashboardsGetResponse>> {
-        return this.gateway.get("person/me/", {
+        return this.gateway.get("me/dashboards-widgets/", {
             validate: validateUserDashboardsGetResponse
         });
     }
 
-    async createDefaultDashboard(): Promise<Response<DashboardDTO>> {
-        return this.createDashboard({
-            backgroundWidgets: [],
-            name: "Untitled",
-            tree: null,
-            panels: {},
-            isDefault: true
-        });
-    }
-
-    async createDashboard(opts: DashboardCreateOpts): Promise<Response<DashboardDTO>> {
+    async createDashboard(opts: DashboardCreateOpts): Promise<Response<DashboardDTO>> { //TODO: this should be refactored.
         const stack = {
             name: opts.name,
             id: opts.stackId
         };
+
         const dashboard = {
-            name: opts.name,
-            guid: uuid(),
+            name: opts.name,            
             isdefault: !isNil(opts.isDefault) ? opts.isDefault : false,
             state: [],
             layoutConfig: dashboardLayoutToJson({
@@ -49,24 +36,20 @@ export class UserDashboardAPI {
             publishedToStore: false
         };
 
-        const requestData = qs.stringify({
-            _method: "POST",
-            adminEnabled: false,
-            tab: "dashboards",
-            update_action: "createAndAddDashboard",
-            stackData: JSON.stringify(stack),
-            dashboardData: JSON.stringify(dashboard)
-        });
-        return this.gateway.post("stack/addPage/", requestData, {
+        const requestData = {
+            description: opts.name,
+            stack: stack,
+            stack_id: opts.stackId,
+            ...dashboard
+        };
+
+        return this.gateway.post("dashboards/", requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
-            },
-            validate: validateDashboard
+            }
         });
     }
 }
-
-export const userDashboardApi = new UserDashboardAPI();
 
 export interface DashboardCreateOpts extends DashboardLayout {
     name: string;
@@ -74,3 +57,5 @@ export interface DashboardCreateOpts extends DashboardLayout {
     stackId?: number;
     stackName?: string;
 }
+
+export const userDashboardApi = new UserDashboardAPI();

@@ -7,10 +7,7 @@ requests = APIClient()
 
 
 class SimpleSystemVersionTest(TestCase):
-    fixtures = ['tests/people/fixtures/people_data.json',
-                'tests/widgets/fixtures/widget_data.json',
-                'tests/appconf/fixtures/appconf_data.json',
-                ]
+    fixtures = ['resources/fixtures/default_data.json', ]
 
     def test_authentication(self):
         requests.login(email='admin@goss.com', password='password')
@@ -22,7 +19,7 @@ class SimpleSystemVersionTest(TestCase):
         self.assertEqual(request.status_code, 200)
         requests.logout()
         request = requests.get('/system-version')
-        self.assertEqual(request.status_code, 401)
+        self.assertEqual(request.status_code, 403)
 
     def test_get_system_version(self):
         requests.login(email='admin@goss.com', password='password')

@@ -7,6 +7,7 @@ import { DashboardDTO } from "../../api/models/DashboardDTO";
 import { Field, FieldProps } from "formik";
 
 import * as styles from "./index.scss";
+import { ListOf, Response } from "../../api/interfaces";
 
 export interface CopyLayoutsProps {
     onChange: (event: React.FormEvent) => void;
@@ -19,8 +20,8 @@ const _DashboardSelect: React.FC<CopyLayoutsProps & FieldProps<any>> = (props) =
 
     useEffect(() => {
         // TODO: Handle failed request
-        dashboardApi.getDashboards().then((response) => {
-            if (response.status !== 200) return;
+        dashboardApi.getDashboards().then((response: Response<ListOf<DashboardDTO[]>>) => {
+            if (!(response.status >= 200 && response.status < 400)) return;
             setDashboards(response.data.data);
         });
     }, []);
@@ -32,7 +33,7 @@ const _DashboardSelect: React.FC<CopyLayoutsProps & FieldProps<any>> = (props) =
                     Select
                 </option>
                 {dashboards.map((dashboard) => (
-                    <option key={dashboard.guid} value={dashboard.guid}>
+                    <option key={dashboard.id} value={dashboard.id}>
                         {dashboard.name}
                     </option>
                 ))}

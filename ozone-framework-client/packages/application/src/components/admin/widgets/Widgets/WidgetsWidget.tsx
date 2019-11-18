@@ -7,7 +7,7 @@ import { Button, ButtonGroup, Divider, Intent, Popover, Position, Tooltip } from
 import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { widgetTypeApi } from "../../../../api/clients/WidgetTypeAPI";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
-import { WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
+import { WidgetTypeDTO, WidgetTypeReference } from "../../../../api/models/WidgetTypeDTO";
 
 import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTable";
 import { DeleteButton, EditButton } from "../../../generic-table/TableButtons";
@@ -16,7 +16,7 @@ import { ExportDialog } from "./export/ExportDialog";
 import { ExportErrorDialog } from "./export/ExportErrorDialog";
 import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 import { WidgetSetup } from "./WidgetSetup";
-import { GroupDTO } from "../../../../api/models/GroupDTO";
+import { ListOf, Response } from "../../../../api/interfaces";
 
 interface WidgetsWidgetState {
     widgets: WidgetDTO[];
@@ -43,6 +43,7 @@ enum WidgetWidgetSubSection {
 export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
     defaultPageSize: number = 15;
     _isMounted: boolean = false;
+
     constructor(props: any) {
         super(props);
 
@@ -180,7 +181,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
     private getWidgets = async () => {
         const response = await widgetApi.getWidgets();
         // TODO: Handle failed request
-        if (response.status !== 200) return;
+        if (!(response.status >= 200 && response.status < 400)) return;
 
         if (!this._isMounted) {
             return;
@@ -192,14 +193,15 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
     };
 
     private getWidgetTypes = async () => {
-        const response = await widgetTypeApi.getWidgetTypes();
+        const response: Response<ListOf<WidgetTypeDTO[]>> = await widgetTypeApi.getWidgetTypes();
 
         // TODO: Handle failed request
-        if (response.status !== 200) return;
+        if (!(response.status >= 200 && response.status < 400)) return;
 
         if (!this._isMounted) {
             return;
         }
+
         this.setState({
             widgetTypes: response.data.data
         });
@@ -225,7 +227,7 @@ export class WidgetsWidget extends React.Component<{}, WidgetsWidgetState> {
         const response = await widgetApi.deleteWidget(widget.id);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (!(response.status >= 200 && response.status < 400)) return false;
 
         this.handleUpdate();
 

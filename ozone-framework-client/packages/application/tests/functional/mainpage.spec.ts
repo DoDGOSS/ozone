@@ -6,14 +6,14 @@ import { loggedInAs } from "./helpers";
 
 module.exports = {
     "As a user, I can see the classification banner": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser.waitForElementVisible(MainPage.CLASSIFICATION_BANNER, 2000, "[Classification Banner] is visible");
 
         browser.closeWindow().end();
     },
     "As an Admin, I can see the Admin User Menu Option": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testAdmin1", "password", "Test Administrator 1");
+        loggedInAs(browser, "admin", "password", "Test Administrator 1");
 
         browser
             .waitForElementVisible(MainPage.USER_MENU_BUTTON, 4000, "[Main Page] User Menu button is visible.")
@@ -28,7 +28,7 @@ module.exports = {
         browser.closeWindow().end();
     },
     "As a User, I cannot see the Admin User Menu Option": (browser: NightwatchAPI) => {
-        loggedInAs(browser, "testUser1", "password", "Test User 1");
+        loggedInAs(browser, "user", "password", "Test User 1");
 
         browser
             .waitForElementVisible(MainPage.USER_MENU_BUTTON, 4000, "[Main Page] User Menu button is visible.")
@@ -45,7 +45,7 @@ module.exports = {
     "As a User, I should see my last selected dashboard as the initial dashboard that loads": (
         browser: NightwatchAPI
     ) => {
-        loggedInAs(browser, "testUser1", "password", "Test User 1");
+        loggedInAs(browser, "user", "password", "Test User 1");
 
         //TODO: create a way to select a stack/dashboard from the list. The tree will need to be updated to include some attribute for the stack/dashboard that we can query against.
         browser.waitForElementVisible(MainPage.STACKS_BUTTON, 2000, "[Stacks Button] is visible.");

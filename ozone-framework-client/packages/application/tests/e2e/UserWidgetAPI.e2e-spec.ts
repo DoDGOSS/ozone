@@ -12,7 +12,7 @@ describe("User Widget API", () => {
         gateway = new NodeGateway();
         userWidgetApi = new UserWidgetAPI(gateway);
 
-        await gateway.login("testUser1", "password");
+        await gateway.login("user", "password");
         expect(gateway.isAuthenticated).toEqual(true);
     });
 

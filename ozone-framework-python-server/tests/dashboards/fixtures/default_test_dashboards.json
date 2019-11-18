@@ -29,7 +29,7 @@
         }
     }, {
         "model": "dashboards.dashboard",
-        "pk": 1,
+        "pk": 100,
         "fields": {
             "version": 1,
             "isdefault": false,
@@ -53,7 +53,7 @@
         }
     }, {
         "model": "dashboards.dashboard",
-        "pk": 2,
+        "pk": 101,
         "fields": {
             "version": 1,
             "isdefault": false,
@@ -84,7 +84,7 @@
             "src_id": 3,
             "src_type": "group",
             "relationship_type": "owns",
-            "dest_id": 1,
+            "dest_id": 100,
             "dest_type": "dashboard"
         }
     },
@@ -93,10 +93,10 @@
         "pk": 1,
         "fields": {
             "version": 0,
-            "src_id": 2,
+            "src_id": 101,
             "src_type": "dashboard",
             "relationship_type": "cloneOf",
-            "dest_id": 1,
+            "dest_id": 100,
             "dest_type": "dashboard"
         }
     }

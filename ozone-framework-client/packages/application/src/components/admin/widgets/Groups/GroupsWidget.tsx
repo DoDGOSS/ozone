@@ -145,7 +145,7 @@ export class GroupsWidget extends React.Component<{}, State> {
         const response = await groupApi.getGroups();
 
         // TODO: Handle failed request
-        if (response.status !== 200) return;
+        if (!(response.status >= 200 && response.status < 400)) return;
 
         if (!this._isMounted) {
             return;
@@ -173,7 +173,7 @@ export class GroupsWidget extends React.Component<{}, State> {
         const response = await groupApi.deleteGroup(group.id);
 
         // TODO: Handle failed request
-        if (response.status !== 200) return false;
+        if (!(response.status >= 200 && response.status < 400)) return false;
 
         this.getGroups();
 

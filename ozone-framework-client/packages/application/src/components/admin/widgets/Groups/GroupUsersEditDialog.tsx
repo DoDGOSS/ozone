@@ -32,7 +32,7 @@ export class GroupUsersEditDialog extends React.Component<SelectionDialogProps<U
     protected async getAllUsers(): Promise<Array<UserDTO>> {
         const response = await userApi.getUsers();
 
-        if (response.status !== 200) return [];
+        if (!(response.status >= 200 && response.status < 400)) return [];
 
         return response.data.data;
     }
