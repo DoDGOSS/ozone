@@ -68,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'config.owf_utils.log_middleware.LogMiddleware',
     'config.owf_utils.transformer.django.middleware.OwfCaseTransformerMiddleware',
 ]
 
@@ -169,6 +170,8 @@ AUTHENTICATION_BACKENDS = [
 
 LOGIN_REDIRECT_URL = '/api/v2/me/'
 
+LOGGER_INFORMATION = 'DEBUG'  # Other option is INFO
+
 #  LOG
 if not os.path.exists('./logs'):
     os.mkdir('./logs')
@@ -176,23 +179,76 @@ if not os.path.exists('./logs'):
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': './logs/debug.log',
+    'filters': {
+        'ignore_markdown_logs': {
+            '()': 'config.owf_utils.owf_logging_backends.MarkDownFilter',
         },
+        'ignore_reload_logs': {
+            '()': 'config.owf_utils.owf_logging_backends.ReloadFilter',
+        },
+        'ignore_favicon_logs': {
+            '()': 'config.owf_utils.owf_logging_backends.FaviconFilter',
+        },
+    },
+    'formatters': {
+        'console': {
+            'format': '%(levelname)-8s SHOST: [%(hostname)s] TIME [ %(asctime)s ] %(name)-12s %(message)s ',
+            'class': 'config.owf_utils.owf_logging_backends.HostnameAddingFormatter',
+        },
+        'cef-format': {
+            'format': '%(asctime)s CEF shost=%(hostname)s %(message)s ',
+            'datefmt': "%d/%b/%Y %H:%M:%S",
+            'class': 'config.owf_utils.owf_logging_backends.HostnameAddingFormatter',
+        },
+        'event-format': {
+            'format': '%(levelname)-8s SHOST: [%(hostname)s] TIME [ %(asctime)s ] %(name)-12s %(message)s ',
+            'datefmt': "%d/%b/%Y %H:%M:%S",
+            'class': 'config.owf_utils.owf_logging_backends.HostnameAddingFormatter',
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'filters': ['ignore_markdown_logs', 'ignore_reload_logs', 'ignore_favicon_logs'],
+            'formatter': 'console'
+        },
+        'cef-file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filters': ['ignore_markdown_logs', 'ignore_reload_logs', 'ignore_favicon_logs'],
+            'formatter': 'cef-format',
+            'filename': os.getenv('CEF_LOCATION', 'logs') + '/owf-cef.log',
+            'maxBytes': 50000,
+            'backupCount': 2,
+        },
+        'event-file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filters': ['ignore_markdown_logs', 'ignore_reload_logs', 'ignore_favicon_logs'],
+            'formatter': 'event-format',
+            'filename': os.getenv('CEF_LOCATION', 'logs') + '/owf-events.log',
+            'maxBytes': 50000,
+            'backupCount': 2,
+        }
     },
     'loggers': {
-        'django.request': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'maxBytes': 1048576,  # 5*1024*1024 bytes (1MB)
-            'propagate': True,
+        'owf.enable.cef.object.access.logging': {
+            'level': f'{LOGGER_INFORMATION}',
+            'handlers': ['console', 'event-file']
         },
-    },
+        'owf.enable.cef.logging': {
+            'level': f'{LOGGER_INFORMATION}',
+            'handlers': ['console', 'cef-file']
+        },
+        'django.security.DisallowedHost': {
+            'handlers': ['console', ],
+            'propagate': False,
+            'level': 'ERROR',
+        },
+        # 'django.db.backends': {  # For SQL expressions
+        #     'handlers': ['console'],
+        #     'level': 'DEBUG',
+        # },
+    }
 }
-
 
 DEFAULT_USER_GROUP = 'OWF Users'
 DEFAULT_ADMIN_GROUP = 'OWF Administrators'

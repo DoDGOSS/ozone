@@ -8,8 +8,7 @@ from rest_framework import views, generics, response, permissions, authenticatio
 from .serializers import LoginSerializer
 from people.serializers import PersonBaseSerializer
 
-# Get an instance of a logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('events.auditing')
 
 
 class SystemVersionView(APIView):
@@ -50,3 +49,20 @@ class LogoutView(views.APIView):
         print("logging out")
         logout(request)
         return response.Response()
+
+
+class AuditView(APIView):
+    """
+    gets the help files and server location of the files
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        return Response({'message': 'Please use this format'})
+
+    def post(self, request):
+        if 'message' in request.data:
+            logger.info(f"message: {request.data['message']}")
+            return Response({'message': f'{request.data["message"]}'})
+        else:
+            return Response({'message': 'Please use this format'})
