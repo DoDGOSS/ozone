@@ -21,6 +21,13 @@ payload = {
     "descriptor_url": "Description for a url",
     "description": "Description...",
     "mobile_ready": False,
+    "widget_types": [
+        {
+            "id": 2,
+            "name": "administration",
+            "display_name": "administration"
+        }
+    ],
     "intents": {
         "send": [
             {"action": "act", "data_types": ["type-1", "type-2"]}
@@ -80,6 +87,8 @@ class TestingWidgetsApi(TestCase):
         self.assertEqual(response.data['intents']['receive'][0]['action'],
                          payload['intents']['receive'][0]['action'])
 
+        self.assertEqual(response.data['value']['widget_types'][0]['id'], payload['widget_types'][0]['id'])
+
     def test_admin_list_a_widget_via_universal_name(self):
         requests.login(email='admin@goss.com', password='password')
 
@@ -127,3 +136,19 @@ class TestingWidgetsApi(TestCase):
 
         self.assertEqual(response.data['value']['intents']['receive'][0]['action'],
                          payload['intents']['receive'][0]['action'])
+
+    def test_admin_list_a_widget_showing_widget_types(self):
+        requests.login(email='admin@goss.com', password='password')
+
+        # create widget with intents
+        url = reverse('widgets-list')
+        created = requests.post(url, payload, format='json')
+
+        self.assertEqual(created.status_code, 201)
+
+        # list a widget to make sure intents are listed properly.
+        url = reverse('widgets-detail', args=(f"{created.data['id']}",))
+        response = requests.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['value']['widget_types'][0]['id'], payload['widget_types'][0]['id'])

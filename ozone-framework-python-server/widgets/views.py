@@ -30,18 +30,35 @@ class WidgetDefinitionViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['universal_name', ]
 
+    def create(self, request, *args, **kwargs):
+        widget_types = request.data.pop('widget_types', {})
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = self.perform_create(serializer)
+
+        if widget_types:
+            WidgetDefinition.objects.handle_widget_types(instance, widget_types)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
     def perform_create(self, serializer):
         self._adjust_optional_params(serializer)
-        serializer.save()
+        return serializer.save()
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-
         data = request.data.copy()
+
         intents = data.pop('intents', {})
         if intents:
             WidgetDefinition.objects.handle_intents(instance, intents)
+
+        widget_types = data.pop('widget_types', {})
+        if widget_types:
+            WidgetDefinition.objects.handle_widget_types(instance, widget_types)
 
         serializer = self.get_serializer(instance, data=data, partial=partial)
         if not serializer.is_valid():
