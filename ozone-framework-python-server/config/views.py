@@ -7,6 +7,8 @@ from django.contrib.auth import login, logout
 from rest_framework import views, generics, response, permissions, authentication
 from .serializers import LoginSerializer
 from people.serializers import PersonBaseSerializer
+from rest_framework import status
+
 
 logger = logging.getLogger('events.auditing')
 
@@ -66,3 +68,16 @@ class AuditView(APIView):
             return Response({'message': f'{request.data["message"]}'})
         else:
             return Response({'message': 'Please use this format'})
+
+
+class AccessView(APIView):
+    # The client is attempting to send this to the server looking for a 200 and a json object
+    # http://localhost:8000/api/v2/access/getConfig?version=7.15.1-v1&dojo.preventCache=1574272184516
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+
+        # version = self.request.query_params.get("version", None)
+        # dojo = self.request.query_params.get("dojo.preventCache", None)
+        return Response({}, status=status.HTTP_200_OK)

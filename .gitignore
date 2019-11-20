@@ -7,3 +7,14 @@ __pycache__
 *.pyc
 /.vscode/
 ozone-framework-python-server/pep8-results.txt
+.DS_Store
+docs/.DS_Store
+docs/users_guide/.DS_Store
+ozone-example-widgets/.DS_Store
+ozone-example-widgets/src/.DS_Store
+ozone-example-widgets/src/widgets/.DS_Store
+ozone-example-widgets/src/widgets/channel-listener/.DS_Store
+ozone-example-widgets/src/widgets/preferences/.DS_Store
+ozone-framework-client/.DS_Store
+ozone-framework-client/packages/.DS_Store
+owf-legacy/.DS_Store

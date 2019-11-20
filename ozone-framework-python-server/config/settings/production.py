@@ -11,7 +11,9 @@ STATIC_URL = '/'
 ROOT_DIR = os.path.dirname(os.path.dirname(BASE_DIR))
 CLIENT_DIR = os.path.join(ROOT_DIR, 'ozone-framework-client', 'packages', 'application', 'build')
 
-STATICFILES_DIRS = [CLIENT_DIR, HELP_FILES]
+WIDGETS_DIR = os.path.join(ROOT_DIR, 'ozone-example-widgets', 'build')
+
+STATICFILES_DIRS = [CLIENT_DIR, HELP_FILES, WIDGETS_DIR]
 
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = ('rest_framework.renderers.JSONRenderer',)

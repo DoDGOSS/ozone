@@ -12,6 +12,7 @@
     "check": "run-s -ns format:check format check:typing lint",
     "check:typing": "tsc -p ./src",
     "clean": "shx rm -rf build/*",
+    "copy-images": "shx cp -r ./public/images ./build",
     "format": "prettier --loglevel warn --write \"{src,tests}/**/*.{ts,tsx}\"",
     "format:check": "tslint-config-prettier-check ./tslint.json",
     "lint": "tslint --project ./src",
