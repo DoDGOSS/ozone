@@ -7,10 +7,13 @@ import { lazy } from "../utility";
 
 export * from "./interfaces";
 
+// @ts-ignore
+const frontendUrlPlaceholder = envChecker ? "http://localhost:8000" : "http://localhost:3000";
+
 const defaultEnvironment: Environment = {
     server: {
         backendUrl: "http://localhost:8000/api/v2",
-        frontendUrl: "http://localhost:3000",
+        frontendUrl: frontendUrlPlaceholder,
         staticAssetPath: ""
     },
     login: {

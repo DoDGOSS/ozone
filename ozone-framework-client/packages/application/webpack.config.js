@@ -184,7 +184,8 @@ module.exports = {
 
 function getPlugins() {
     const plugins = [
-        new CleanWebpackPlugin()
+        new CleanWebpackPlugin(),
+        new webpack.DefinePlugin({'envChecker': isProduction})
     ];
 
     if (isProduction) {

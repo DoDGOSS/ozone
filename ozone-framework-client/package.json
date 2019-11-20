@@ -5,6 +5,7 @@
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
     "clean": "lerna run clean",
+    "copy-images": "lerna run copy-images",
     "start": "npm run --prefix packages/application start",
     "test": "lerna run test"
   },

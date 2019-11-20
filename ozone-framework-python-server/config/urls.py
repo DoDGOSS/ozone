@@ -19,7 +19,7 @@ from django.conf.urls import include
 from django.conf.urls.static import static
 from django.urls import path, re_path
 from django.views.generic import TemplateView
-from .views import SystemVersionView, HelpFileView, LoginView, LogoutView, AuditView
+from .views import SystemVersionView, HelpFileView, LoginView, LogoutView, AuditView, AccessView
 
 
 urlpatterns = [
@@ -38,6 +38,7 @@ urlpatterns = [
     path('system-version', SystemVersionView.as_view(), name='system-version-url'),
     path('api/v2/help/', HelpFileView.as_view(), name='help_files'),
     path('audit', AuditView.as_view(), name='audit'),
+    path('api/v2/access/getConfig/', AccessView.as_view(), name='access_get_config'),
     path('', include('legacy.urls')),
 ] + static(settings.HELP_FILES_URL, document_root=settings.HELP_FILES)
 
