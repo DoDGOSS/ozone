@@ -22,7 +22,9 @@ class WidgetTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = WidgetType
         fields = '__all__'
-
+        extra_kwargs = {
+            'version': {'read_only': True},
+        }
 
 class WidgetDefIntentDataTypesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,7 +34,7 @@ class WidgetDefIntentDataTypesSerializer(serializers.ModelSerializer):
 
 class WidgetDefinitionSerializer(serializers.ModelSerializer):
     intents = serializers.JSONField(initial=dict, required=False)
-    types = WidgetTypeSerializer(many=True, required=False)
+    widget_types = WidgetTypeSerializer(many=True, required=False, source='types')
 
     def _intent_action_with_data_types(self, intent_qs):
         intents_obj = []
@@ -80,7 +82,6 @@ class WidgetDefinitionSerializer(serializers.ModelSerializer):
             'image': ret['image_url_medium'],
             'smallIconUrl': ret['image_url_small'],
             'largeIconUrl': ret['image_url_medium'],
-            'widgetTypes': ret['types'],
 
             'definitionVisible': ret['visible'],
             'mediumIconUrl': ret['image_url_medium'],

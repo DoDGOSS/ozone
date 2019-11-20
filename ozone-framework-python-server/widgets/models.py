@@ -105,12 +105,23 @@ class WidgetDefinitionManager(models.Manager):
                         }
                         data_type.widgetdefintentdatatypes_set.get_or_create(**data)
 
+    def handle_widget_types(self, instance, widget_types):
+        instance.widgetdefinitionwidgettypes_set.all().delete()
+        for _type in widget_types:
+            id = _type.get('id')
+            if id:
+                instance.widgetdefinitionwidgettypes_set.create(widget_type_id=id)
+
     def create(self, **kwargs):
         intents = kwargs.pop('intents', {})
+        widget_types = kwargs.pop('widget_types', {})
         obj = super().create(**kwargs)
 
         if intents:
             self.handle_intents(obj, intents)
+
+        if widget_types:
+            self.handle_widget_types(obj, widget_types)
 
         return obj
 
