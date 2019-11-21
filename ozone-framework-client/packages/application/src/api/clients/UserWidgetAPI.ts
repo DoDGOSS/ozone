@@ -22,7 +22,7 @@ export class UserWidgetAPI {
         });
     }
 
-    async deleteUserWidget(widgetId: number): Promise<Response<void>> {
+    async deleteUserWidget(widgetId: number | string): Promise<Response<void>> {
         return this.gateway.delete(`admin/users-widgets/${widgetId}/`, null, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"

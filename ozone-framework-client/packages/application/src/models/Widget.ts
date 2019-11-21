@@ -30,6 +30,7 @@ export class WidgetProps {
     title: string;
     types: WidgetType[];
     universalName: string;
+    widgetGuid: string;
     url: string;
     version?: string;
     width: number;
