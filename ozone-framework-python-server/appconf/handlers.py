@@ -21,11 +21,13 @@ def on_login(sender, user, request, **kwargs):
     obj_access_control = ApplicationConfiguration.objects.get(title='Enable CEF Object Access Logging',
                                                               group_name='AUDITING',
                                                               code='owf.enable.cef.object.access.logging').value
-    if (obj_access_control == 'true') or (obj_access_control == 'True'):
-        if settings.LOGGER_INFORMATION == 'DEBUG':
+    if (obj_access_control.startswith('t')) or (obj_access_control.startswith('T')):
+        sec_level = ApplicationConfiguration.objects.get(title='Security Level',
+                                                         code='owf.security.level').value
+        if sec_level.startswith('D') or sec_level.startswith('d'):
             logger.debug(f'IP: {get_client_ip(request)} User: {request.user.username} [USER LOGIN]: LOGIN SUCCESS - '
                          f'ACCESS GRANTED USER [{request.user.username}] with EMAIL [{request.user.email}]')
-        else:
+        elif sec_level.startswith('I') or sec_level.startswith('i'):
             logger.info(f'IP: {get_client_ip(request)} User: {request.user.username} [USER LOGIN]: LOGIN SUCCESS - '
                         f'ACCESS GRANTED USER [{request.user.username}] with EMAIL [{request.user.email}] ')
     else:
@@ -38,8 +40,10 @@ def on_logout(sender, user, request, **kwargs):
     obj_access_control = ApplicationConfiguration.objects.get(title='Enable CEF Object Access Logging',
                                                               group_name='AUDITING',
                                                               code='owf.enable.cef.object.access.logging').value
-    if (obj_access_control == 'true') or (obj_access_control == 'True'):
-        if settings.LOGGER_INFORMATION == 'DEBUG':
+    if (obj_access_control.startswith('t')) or (obj_access_control.startswith('T')):
+        sec_level = ApplicationConfiguration.objects.get(title='Security Level',
+                                                         code='owf.security.level').value
+        if sec_level.startswith('D') or sec_level.startswith('d'):
             try:
                 return logger.debug(
                     f'IP: {get_client_ip(request)} '
@@ -51,12 +55,12 @@ def on_logout(sender, user, request, **kwargs):
                 return logger.debug(
                     f'[USER LOGOUT]'
                 )
-        else:
+        elif sec_level.startswith('I') or sec_level.startswith('i'):
             return logger.info(
-                               f'IP: {get_client_ip(request)} SessionID: {request.session.session_key} '
-                               f'USER: {request.user.username} '
-                               f'[USER LOGOUT]'
-                               )
+                f'IP: {get_client_ip(request)} SessionID: {request.session.session_key} '
+                f'USER: {request.user.username} '
+                f'[USER LOGOUT]'
+            )
     else:
         pass
 
@@ -66,13 +70,15 @@ def on_login_failed(sender, credentials, request, **kwargs):
     obj_access_control = ApplicationConfiguration.objects.get(title='Enable CEF Object Access Logging',
                                                               group_name='AUDITING',
                                                               code='owf.enable.cef.object.access.logging').value
-    if (obj_access_control == 'true') or (obj_access_control == 'True'):
-        if settings.LOGGER_INFORMATION == 'DEBUG':
+    if (obj_access_control.startswith('t')) or (obj_access_control.startswith('T')):
+        sec_level = ApplicationConfiguration.objects.get(title='Security Level',
+                                                         code='owf.security.level').value
+        if sec_level.startswith('D') or sec_level.startswith('d'):
             return logger.debug(f' {settings.LOGGER_INFORMATION} IP: {get_client_ip(request)} '
                                 f'USER: {credentials["username"]}'
                                 f' [USER LOGIN]: ACCESS DENIED with FAILURE MSG: [Login for {credentials["username"]} '
                                 f'attempted with authenticated credentials')
-        else:
+        elif sec_level.startswith('I') or sec_level.startswith('i'):
             return logger.info(f' {settings.LOGGER_INFORMATION} IP: {get_client_ip(request)} '
                                f'USER: {credentials["username"]}'
                                f'[USER LOGIN]: ACCESS DENIED with FAILURE MSG: [Login for {credentials["username"]} '

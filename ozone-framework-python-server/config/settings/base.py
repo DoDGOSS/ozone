@@ -170,9 +170,7 @@ AUTHENTICATION_BACKENDS = [
     'config.owf_utils.authentication.DjangoAuthenticateByUsername',
 ]
 
-LOGIN_REDIRECT_URL = '/api/v2/me/'
-
-LOGGER_INFORMATION = 'DEBUG'  # Other option is INFO
+LOGIN_REDIRECT_URL = '/api/v2/me/'  # Other option is INFO
 
 #  LOG
 if not os.path.exists('./logs'):
@@ -233,11 +231,11 @@ LOGGING = {
     },
     'loggers': {
         'owf.enable.cef.object.access.logging': {
-            'level': f'{LOGGER_INFORMATION}',
+            'level': 'DEBUG',
             'handlers': ['console', 'event-file']
         },
         'owf.enable.cef.logging': {
-            'level': f'{LOGGER_INFORMATION}',
+            'level': 'DEBUG',
             'handlers': ['console', 'cef-file']
         },
         'django.security.DisallowedHost': {
