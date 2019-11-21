@@ -61,7 +61,7 @@ export class UserAPI {
         });
     }
 
-    getUsersForWidget(widgetId: string): Promise<Response<ListOf<UserWidgetDTO[]>>> {
+    getUsersForWidget(widgetId: number): Promise<Response<ListOf<UserWidgetDTO[]>>> {
         return this.gateway.get("admin/users-widgets/", {
             params: {
                 widget_definition: widgetId

@@ -290,7 +290,7 @@ class StoreImportService {
                 throw new Error("Could not load data to convert widget");
             }
 
-            if (widget.id && widget.id !== "") {
+            if (widget.id) {
                 response = await widgetApi.updateWidget(widgetUpdateRequestFromWidget(widget));
             } else {
                 response = await widgetApi.createWidget(widgetCreateRequestFromWidget(widget));
