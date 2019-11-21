@@ -77,6 +77,12 @@ export class StackAPI {
         });
     }
 
+    async getStacksAsAdmin(): Promise<Response<ListOf<StackDTO[]>>> {
+        return this.gateway.get("admin/stacks/", {
+            validate: validateStackListResponse
+        });
+    }
+
     async deleteStackAsAdmin(stackId: number): Promise<Response<void>> {
         return this.gateway.delete(`admin/stacks/${stackId}/`, null, {
             headers: {
