@@ -55,8 +55,8 @@ export class WidgetAPI {
         });
     }
 
-    async deleteWidget(id: string): Promise<Response<void>> {
-        return this.gateway.delete(`admin/widgets/${id}/`, null, {
+    async deleteWidget(id: number): Promise<Response<void>> {
+        return this.gateway.post(`admin/widgets/${id}/`, null, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             }
@@ -69,7 +69,7 @@ export class WidgetAPI {
     }
 
     //TODO: verify this whole function works. Primarily the bulk add.
-    async addWidgetUsers(widgetId: string, userIds: number | number[]): Promise<Response<ListOf<WidgetDTO[]>>> {
+    async addWidgetUsers(widgetId: number, userIds: number | number[]): Promise<Response<ListOf<WidgetDTO[]>>> {
         let url = "admin/users-widgets/";
         let requestData: any = { widget_definition: widgetId };
 
@@ -87,7 +87,7 @@ export class WidgetAPI {
     }
 
     //TODO: verify this whole function works. Primarily the bulk add.
-    async addWidgetGroups(widgetId: string, groupIds: number | number[]): Promise<Response<GetWidgetGroupsResponse>> {
+    async addWidgetGroups(widgetId: number, groupIds: number | number[]): Promise<Response<GetWidgetGroupsResponse>> {
         let url = "admin/groups-widgets/";
         let requestData: any = { widget_id: widgetId };
 
@@ -106,10 +106,9 @@ export class WidgetAPI {
     }
 
     //TODO: verify this whole function works.
-    async removeWidgetUsers(widgetId: string, userId: number): Promise<Response<void>> {
+    async removeWidgetUsers(widgetId: number, userId: number): Promise<Response<void>> {
         let requestData: any = { person_id: userId, widget_id: widgetId };
-
-        return this.gateway.delete(`admin/users-widgets/`, requestData, {
+        return this.gateway.delete(`admin/users-widgets/0/`, requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             }
@@ -117,7 +116,7 @@ export class WidgetAPI {
     }
 
     //TODO: verify this whole function works. 
-    async removeWidgetGroups(widgetId: string, groupId: number): Promise<Response<void>> {
+    async removeWidgetGroups(widgetId: number, groupId: number): Promise<Response<void>> {
         let requestData: any = { group_id: groupId, widget_id: widgetId };
 
         return this.gateway.delete("admin/groups-widgets/", requestData, {

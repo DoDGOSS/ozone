@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Button, Intent, Position, Toaster } from "@blueprintjs/core";
 
-import { widgetApi, WidgetQueryCriteria } from "../../../../api/clients/WidgetAPI";
+import { widgetApi } from "../../../../api/clients/WidgetAPI";
 import { UserDTO } from "../../../../api/models/UserDTO";
 import { WidgetDTO } from "../../../../api/models/WidgetDTO";
 
@@ -12,8 +12,7 @@ import { WidgetTable } from "../Widgets/WidgetTable";
 
 import * as styles from "../Widgets.scss";
 import { ListOf, Response } from "../../../../api/interfaces";
-import { userWidgetApi, UserWidgetQueryCriteria } from "../../../../api/clients/UserWidgetAPI";
-import { UserWidgetDTO } from "../../../../api/models/UserWidgetDTO";
+import { userWidgetApi } from "../../../../api/clients/UserWidgetAPI";
 
 interface UserEditWidgetsProps {
     onUpdate: (update?: any) => void;
@@ -145,7 +144,7 @@ export class UserWidgetsPanel extends React.Component<UserEditWidgetsProps, User
     };
 
     private removeWidget = async (widget: WidgetDTO) => {
-        const response: Response<void> = await widgetApi.removeWidgetUsers(widget.id, this.props.user.id);
+        const response: Response<void> = await widgetApi.removeWidgetUsers(widget.value.id, this.props.user.id);
 
         // TODO: Handle failed request
         if (!(response.status >= 200 && response.status < 400)) return false;
