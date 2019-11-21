@@ -45,6 +45,7 @@ export interface UserWidgetPropertiesDTO {
     url: string;
     userId: string;
     userRealName: string;
+    widgetGuid: string;
     visible: boolean;
     widgetTypes: WidgetTypeDTO[];
     widgetVersion: string | null;
