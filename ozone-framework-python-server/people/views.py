@@ -97,7 +97,7 @@ class PersonWidgetDefinitionViewSet(mixins.BulkDestroyModelMixin,
 
     def destroy(self, request, *args, **kwargs):
         try:
-            filters = {'widget_definition': request.data.get('widget_id')}
+            filters = {}
             id_list = request.data and request.data.get('id')
             person_id = request.data and request.data.get('person_id')
             person_ids = request.data and request.data.get('person_ids')
@@ -115,7 +115,12 @@ class PersonWidgetDefinitionViewSet(mixins.BulkDestroyModelMixin,
                     'person_id__in': list(map(int, person_ids))
                 })
             else:
-                return Response({'detail': 'missing user_id or user_ids'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'detail': 'missing person_id or person_ids'}, status=status.HTTP_400_BAD_REQUEST)
+
+            if request.data.get('widget_id'):
+                filters.update({
+                    'widget_definition': request.data.get('widget_id')
+                })
 
             return self.bulk_destroy(request, **filters)
         except (ValueError,):

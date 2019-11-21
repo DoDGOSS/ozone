@@ -6,13 +6,14 @@ import { WIDGET_GET_RESPONSE_SCHEMA, WIDGET_SCHEMA } from "./schemas/widget.sche
 import { WIDGET_GROUPS_GET_RESPONSE_SCHEMA } from "./schemas/group.schema";
 
 export interface WidgetDTO {
-    id: string;
+    id: number;
     namespace: string;
     path: string;
     value: WidgetPropertiesDTO;
 }
 
 export interface WidgetPropertiesDTO {
+    id?: any;
     allRequired: string[];
     directRequired: string[];
     background: boolean;
@@ -93,6 +94,6 @@ export interface WidgetGetDescriptorResponse {
 }
 
 export interface WidgetUpdateRequest extends WidgetCreateRequest {
-    id: string;
+    id: number;
     widget_ids?: number[];
 }
