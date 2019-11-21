@@ -44,8 +44,8 @@ export class HelpTree extends React.Component<State, Props> {
 
     private handleNodeDoubleClick = (nodeData: ITreeNode) => {
         if (nodeData.icon === "document") {
-            const fullUrl = backendUrl() + "/help" + nodeData.id;
-            window.open(fullUrl);
+            const fullUrl = backendUrl() + "/" + nodeData.id;
+            window.open(fullUrl.replace("api/v2/", ""));
         }
     };
 }
