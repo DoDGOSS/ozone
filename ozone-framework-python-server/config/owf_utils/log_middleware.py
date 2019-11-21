@@ -36,14 +36,16 @@ class LogMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
         cef_control = ApplicationConfiguration.objects.get(title='Enable CEF Logging', group_name='AUDITING',
                                                            code='owf.enable.cef.logging').value
-        if (cef_control == 'true') or (cef_control == 'True'):
+        if (cef_control.startswith('t')) or (cef_control.startswith('T')):
+            sec_level = ApplicationConfiguration.objects.get(title='Security Level',
+                                                             code='owf.security.level').value
             log_message = f'suid={request.user.username} requestMethod=USER_INITIATED|{request.method} ' \
                           f'outcome={response.status_code} data={check_key(request.POST, "password")} ' \
                           f'urlName={resolve(request.path_info).url_name} ' \
                           f'requestType={request}'
-            if settings.LOGGER_INFORMATION == 'DEBUG':
+            if sec_level.startswith('D') or sec_level.startswith('d'):
                 stdoutLogger.debug(log_message)
-            else:
+            elif sec_level.startswith('I') or sec_level.startswith('i'):
                 stdoutLogger.info(log_message)
             return response
         else:
