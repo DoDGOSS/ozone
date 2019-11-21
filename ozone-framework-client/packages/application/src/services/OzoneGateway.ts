@@ -217,7 +217,6 @@ export class OzoneGateway implements Gateway {
         return {
             ...initialHeaders,
             "Content-Type": "application/json",
-            Accept: "application/json",
             "X-CSRFToken": getCookie("csrftoken")
         };
     }

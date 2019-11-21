@@ -63,7 +63,8 @@ export class WidgetAPI {
         });
     }
 
-    async getWidgetDescriptorJson(url: string): Promise<Response<WidgetGetDescriptorResponse>> {
+    async getWidgetDescriptorJson(widget: WidgetDTO): Promise<Response<WidgetGetDescriptorResponse>> {
+        const url = `widgets/${widget.value.widgetGuid}/export/`;
         return this.gateway.get<WidgetGetDescriptorResponse>(url);
     }
 
