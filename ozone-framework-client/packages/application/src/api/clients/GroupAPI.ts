@@ -35,7 +35,7 @@ export class GroupAPI {
         });
     }
 
-    getGroupsForWidget(widgetId: string): Promise<Response<GetWidgetGroupsResponse>> {
+    getGroupsForWidget(widgetId: number): Promise<Response<GetWidgetGroupsResponse>> {
         return this.gateway.get("admin/groups-widgets/", {
             params: {
                 widget_id: widgetId

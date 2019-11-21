@@ -5,7 +5,7 @@ export class WidgetProps {
     description?: string;
     descriptorUrl?: string;
     height: number;
-    id: string;
+    id: number;
     images: {
         smallUrl: string;
         largeUrl: string;

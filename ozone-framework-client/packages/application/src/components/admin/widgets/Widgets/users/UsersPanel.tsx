@@ -169,7 +169,7 @@ export class UsersPanel extends React.Component<Props, State> {
             return false;
         }
 
-        const response = await widgetApi.removeWidgetUsers(this.props.widget.id, user.id);
+        const response = await widgetApi.removeWidgetUsers(this.props.widget.value.id, user.id);
 
         // TODO: Handle failed request
         return response.status >= 200 && response.status < 400;
