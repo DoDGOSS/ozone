@@ -143,10 +143,10 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
 
     private createOrUpdate = async (pref: PreferenceCreateRequest | PreferenceUpdateRequest) => {
         let response;
+        pref.user = this.state.user.id;
         if ("id" in pref) {
             response = await preferenceApi.updatePreference(pref);
         } else {
-            pref.user = this.state.user.id;
             response = await preferenceApi.createPreference(pref);
         }
 
