@@ -44,7 +44,7 @@ class PersonDashboardsWidgetsView(APIView):
 
         # widget_definitions to person_widget_definitions
         widget_ids = widgets.values_list('id', flat=True)
-        person_widgets = PersonWidgetDefinition.objects.filter(widget_definition__in=widget_ids)
+        person_widgets = PersonWidgetDefinition.objects.filter(widget_definition__in=widget_ids, person=request.user)
         serialized_widgets = PersonWidgetDefinitionSerializer(person_widgets, many=True)
 
         return Response({
