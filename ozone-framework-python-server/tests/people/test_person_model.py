@@ -209,7 +209,7 @@ class PersonModelTests(TestCase):
         )
 
     def test_get_stacks_for_user(self):
-        stacks = Person.get_directly_assigned_stacks(self.admin_user).count()
+        stacks = len(Person.get_directly_assigned_stacks(self.admin_user))
         self.assertGreaterEqual(stacks, 2)
 
     def test_user_sync_widgets(self):

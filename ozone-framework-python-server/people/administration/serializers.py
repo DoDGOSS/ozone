@@ -34,7 +34,7 @@ class AdministrationOfUserSerializerFull(serializers.ModelSerializer):
         expectation = {
             'totalDashboards': Dashboard.objects.filter(user_id=ret['id']).count(),
             'totalGroups': instance.groups.count(),
-            'totalStacks': Person.get_directly_assigned_stacks(instance).count(),
+            'totalStacks': len(Person.get_directly_assigned_stacks(instance)),
             'totalWidgets': instance.personwidgetdefinition_set.count(),
         }
 

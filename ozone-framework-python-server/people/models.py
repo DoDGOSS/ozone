@@ -155,11 +155,19 @@ class Person(AbstractBaseUser):
             user_widget.group_widget = False
             user_widget.save()
 
+    def get_group_assigned_stacks(self):
+        from stacks.models import StackGroups
+        group_ids = list(self.groups.values_list("id", flat=True))
+        stacks_assigned_through_group = StackGroups.objects.filter(
+            group_id__in=group_ids).values_list("stack", flat=True)
+
+        return list(stacks_assigned_through_group)
+
     def get_directly_assigned_stacks(self):
         from stacks.models import Stack
         stack_groups = self.groups.filter(stack_default=True)
 
-        return Stack.objects.filter(default_group__in=list(stack_groups.values_list(flat=True)))
+        return list(Stack.objects.filter(default_group__in=list(stack_groups.values_list(flat=True))))
 
     def get_active_widgets(self):
         # Get all widgets that are directly assigned to user or assigned by active groups
@@ -223,18 +231,19 @@ class Person(AbstractBaseUser):
         group_ids = list(self.groups.values_list("id", flat=True))
 
         # Default groups that this user is in, represents user's direct assignment to stacks
-        default_group_ids = Stack.objects.filter(
-            default_group_id__in=group_ids).values_list(
-            "default_group_id", flat=True)
+        default_group_ids = []
+        for stacks in self.get_directly_assigned_stacks():
+            default_group_ids.append(stacks.default_group.id)
 
         # Get default groups from groups assigned to stacks
-        stacks_assigned_through_group = StackGroups.objects.filter(
-            group_id__in=group_ids).values_list("stack", flat=True)
+        stacks_assigned_through_group = self.get_group_assigned_stacks()
         default_group_ids_from_stack_groups_assignment = Stack.objects.filter(pk__in=stacks_assigned_through_group) \
             .values_list("default_group_id", flat=True)
 
         # List of all default groups from stacks assigned to user and remove any duplicates
-        default_group_ids_for_stacks = list(default_group_ids.union(default_group_ids_from_stack_groups_assignment))
+        default_group_ids_for_stacks = list(
+            set(default_group_ids + list(default_group_ids_from_stack_groups_assignment))
+        )
 
         group_dashboard_ids = DomainMapping.objects.filter(
             src_id__in=default_group_ids_for_stacks,

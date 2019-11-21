@@ -33,7 +33,7 @@ export class UserStacksEditDialog extends React.Component<SelectionDialogProps<S
     }
 
     protected async getAllStacks(): Promise<Array<StackDTO>> {
-        const response: Response<ListOf<StackDTO[]>> = await stackApi.getStacks();
+        const response: Response<ListOf<StackDTO[]>> = await stackApi.getStacksAsAdmin();
 
         if (!(response.status >= 200 && response.status < 400)) return [];
 

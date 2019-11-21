@@ -75,7 +75,7 @@ class Dashboard(models.Model):
             return []
 
         widgets = []
-        
+
         for background_widget in layout_config["backgroundWidgets"]:
             user_widget = PersonWidgetDefinition.objects.get(pk=background_widget["userWidgetId"])
             widgets.append(user_widget.widget_definition)
