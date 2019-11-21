@@ -33,6 +33,7 @@ export interface WidgetPropertiesDTO {
     totalGroups: number;
     totalUsers: number;
     universalName: string;
+    widgetGuid: string;
     url: string;
     visible: boolean;
     widgetTypes: WidgetTypeDTO[];
