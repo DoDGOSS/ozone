@@ -132,7 +132,7 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
             message: [
                 "This action will remove ",
                 { text: user.userRealName, style: "bold" },
-                " from the dashboard ",
+                " from the stack ",
                 { text: this.props.stack.name, style: "bold" },
                 "."
             ],
