@@ -14,13 +14,11 @@ import {
 import { mainStore } from "../../stores/MainStore";
 import { dashboardStore } from "../../stores/DashboardStore";
 
-import { groupApi } from "../../api/clients/GroupAPI";
 import { dashboardApi } from "../../api/clients/DashboardAPI";
 import { stackApi } from "../../api/clients/StackAPI";
 import { storeMetaAPI } from "../../api/clients/StoreMetaAPI";
 
 import { storeExportService } from "../../services/StoreExportService";
-import { authService } from "../../services/AuthService";
 
 import { showConfirmationDialog } from "../confirmation-dialog/showConfirmationDialog";
 import { EditDashboardForm } from "../create-dashboard-screen/EditDashboardForm";
@@ -31,15 +29,14 @@ import { GenericTree } from "../generic-tree/GenericTree";
 import { CreateDashboardForm } from "../create-dashboard-screen/CreateDashboardForm";
 import { EditStackForm } from "../create-stack-screen/EditStackForm";
 import { userDashboardApi } from "../../api/clients/UserDashboardAPI";
-import { UserDashboardDTO, UserDashboardsGetResponse } from "../../api/models/UserDashboardDTO";
+import { UserDashboardsGetResponse } from "../../api/models/UserDashboardDTO";
 
 import { uuid } from "../../utility";
 import { AuthUserDTO } from "../../api/models/AuthUserDTO";
 import { Widget } from "../../models/Widget";
 import { showToast } from "../toaster/Toaster";
 import { showStoreSelectionDialog } from "../confirmation-dialog/showStoreSelectionDialog";
-import { ListOf, Response } from "../../api/interfaces";
-import { GroupDTO } from "../../api/models/GroupDTO";
+import { Response, ListOf } from "../../api/interfaces";
 
 // TODO - iconImageUrl not saving to database`
 
@@ -50,57 +47,20 @@ const fetchUserDashboardsAndStacks = (
     dispatchDashboardState: (dashLoading: boolean) => void,
     dispatchStackState: (stackLoading: boolean) => void
 ) => {
+    stackApi.getStacks().then((userStacksResponse: Response<ListOf<StackDTO[]>>) => {
+        const stacks = userStacksResponse.data.data;
+        dispatchStackResult(stacks);
+        dispatchStackState(false);
+    });
     userDashboardApi.getOwnDashboards().then((ownDashboardResponse: Response<UserDashboardsGetResponse>) => {
         if (!(ownDashboardResponse.status >= 200 && ownDashboardResponse.status < 400)) return;
-        const userDashboards: UserDashboardDTO[] = ownDashboardResponse.data.dashboards;
-
-        dashboardApi.getDashboards().then((dashboardResponse: Response<ListOf<DashboardDTO[]>>) => {
-            if (!(dashboardResponse.status >= 200 && dashboardResponse.status < 400)) return;
-            dispatchDashboardResult(
-                dashboardResponse.data.data.filter((dashboard: any) =>
-                    userDashboards.some((userDashboard: UserDashboardDTO) => userDashboard.guid === dashboard.guid)
-                )
-            );
-            dispatchDashboardState(false);
-        });
-
-        authService.check().then(async (currentUser) => { // TODO: this needs to be fixed. This looks like a hack to get the user's stacks. But we should be filtering the stacks in the backend.
-            dispatchCurrentUserResult(currentUser.data);
-
-            const allUserGroupsResponse: Response<ListOf<GroupDTO[]>> = await groupApi.getGroupsForUser(currentUser.data.id)           
-            if (!(allUserGroupsResponse.status >= 200 && allUserGroupsResponse.status < 400)) return;
-            const allUserGroups = allUserGroupsResponse.data.data;
-
-            const stackResponseForUser: Response<ListOf<StackDTO[]>> = await stackApi.getStacks({
-                userId: currentUser.data.id
-            });
-            if (!(stackResponseForUser.status >= 200 && stackResponseForUser.status < 400)) return;
-            const allPermittedStacks = stackResponseForUser.data.data;
-
-            for (const userGroup of allUserGroups) {
-                const stackResponseForGroup: Response<ListOf<StackDTO[]>> = await stackApi.getStacks({
-                    groupId: userGroup.id
-                });
-                if (!(stackResponseForGroup.status >= 200 && stackResponseForGroup.status < 400)) return;
-
-                const allStackResponseForGroup = stackResponseForGroup.data.data;
-                for (const stack of allStackResponseForGroup) {
-                    if (!allPermittedStacks.find((s: any) => s.stackContext === stack.stackContext)) {
-                        allPermittedStacks.push(stack);
-                    }
-                }
-            }
-
-            dispatchStackResult(allPermittedStacks);
-
-            dispatchStackState(false);
-        });
+        const userDashboards = (ownDashboardResponse.data.dashboards as unknown) as DashboardDTO[];
+        dispatchDashboardResult(userDashboards);
+        dispatchDashboardState(false);
+        dispatchCurrentUserResult(ownDashboardResponse.data.user);        
     });
+    
 };
-
-// const checkForStores = async () => {
-//     return storeMetaAPI.getStores().then((stores) => stores.length > 0);
-// };
 
 const fetchStores = async (
     dispatchStoresResult: (stores: Widget[]) => void,

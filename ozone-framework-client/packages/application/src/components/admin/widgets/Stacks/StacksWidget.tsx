@@ -98,7 +98,7 @@ export class StacksWidget extends React.Component<{}, StacksWidgetState> {
     }
 
     private getStacks = async () => {
-        const response = await stackApi.getStacks();
+        const response = await stackApi.getStacksAsAdmin();
 
         // TODO: Handle failed request
         if (!(response.status >= 200 && response.status < 400)) return;

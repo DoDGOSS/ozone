@@ -1,5 +1,6 @@
-import { UsernameDTO } from "./UserDTO";
+import { UsernameDTO, UserDTO } from "./UserDTO";
 import { UserWidgetDTO } from "./UserWidgetDTO";
+import { AuthUserDTO } from "../../api/models/AuthUserDTO";
 
 import { createValidator } from "./validate";
 
@@ -32,6 +33,7 @@ export interface UserDashboardDTO {
 export const validateUserDashboard = createValidator<UserDashboardDTO>(USER_DASHBOARD_SCHEMA);
 
 export interface UserDashboardsGetResponse {
+    user: AuthUserDTO;
     dashboards: UserDashboardDTO[];
     widgets: UserWidgetDTO[];
 }

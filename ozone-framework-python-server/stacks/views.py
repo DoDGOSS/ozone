@@ -16,10 +16,17 @@ class StackViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows stacks to be viewed or edited.
     """
-    # TODO - Should we filter this or return all as legacy did
-    queryset = Stack.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = StackSerializer
+
+    def get_queryset(self):
+        stack_ids = []
+        stacks = list(
+            set(self.request.user.get_group_assigned_stacks() + self.request.user.get_directly_assigned_stacks())
+        )
+        for stack in stacks:
+            stack_ids.append(stack.id)
+        return Stack.objects.filter(pk__in=stack_ids)
 
     @action(methods=['post'], detail=True, permission_classes=(IsAuthenticated, IsStackOwner))
     def share(self, request, pk=None):
