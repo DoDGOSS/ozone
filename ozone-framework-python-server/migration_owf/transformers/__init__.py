@@ -27,10 +27,11 @@ def import_transform(data_set, table_name, target_db, **kwargs):
         if not target_db.column_exists(table_name, k):
             del results[k]
 
-        if k == 'password' and table_name == 'person':
-            if results[k] is None:
-                password = utils.generate_password()
-                results[k] = make_password(password)
+        # We dont want to create password for users.
+        # if k == 'password' and table_name == 'person':
+        #     if results[k] is None:
+        #         password = utils.generate_password()
+        #         results[k] = make_password(password)
 
         # some values might be null from testing source db
         # fix and assign default value to those.
