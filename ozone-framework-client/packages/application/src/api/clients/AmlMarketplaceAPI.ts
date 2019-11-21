@@ -73,6 +73,7 @@ export class AmlMarketplaceAPI implements MarketplaceAPI {
                 title: listing.title,
                 types: baseWidget ? baseWidget.types : [],
                 universalName: listing.uniqueName,
+                widgetGuid: listing.widgetGuid,
                 url: listing.launchUrl,
                 version: listing.versionName,
                 width: baseWidget ? baseWidget.width : 200,

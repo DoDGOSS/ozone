@@ -46,6 +46,7 @@ export function userWidgetFromJson(dto: UserWidgetDTO): UserWidget {
             universalName: props.universalName,
             url: props.url,
             isVisible: props.visible,
+            widgetGuid: props.widgetGuid,
             types: props.widgetTypes.map(widgetTypeFromJson),
             version: optional(props.widgetVersion),
             width: props.width,
