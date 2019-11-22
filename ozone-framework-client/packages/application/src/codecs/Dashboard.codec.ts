@@ -102,7 +102,6 @@ class UserStateDeserializer {
         if (stack === undefined) {
             throw new Error("No stack?");
         }
-        //TODO: the double JSON.parse is a temp fix. Someone fix this.
         if(dto.layoutConfig){
             let layout = JSON.parse(dto.layoutConfig);
             while(typeof layout !== 'object')
@@ -110,8 +109,8 @@ class UserStateDeserializer {
             
             const panels: Dictionary<Panel<any>> = {};
             if (layout.panels) {
-                for (const panel of layout.panels) {
-                    const _panel = this.createPanel(panel);
+                for (const panelId in layout.panels) {
+                    const _panel = this.createPanel(layout.panels[panelId]);
                     panels[_panel.id] = _panel;
                 }
             }
