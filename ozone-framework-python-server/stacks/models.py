@@ -117,7 +117,12 @@ class Stack(models.Model):
 
     @classmethod
     def create(cls, user, kwargs):
-        # not sure why this is using get or create. stacks should always have a new default group
+        new_dashboard_layout_config = ''
+        try:
+            new_dashboard_layout_config = kwargs.pop('preset_layout')
+        except KeyError:
+            pass
+
         default_group = OwfGroup.objects.create(
             name=str(uuid.uuid4()),
             stack_default=True,
@@ -131,8 +136,6 @@ class Stack(models.Model):
 
         # TODO: move the logic for creating a default group to a manager
         default_group.people.add(user)
-
-        new_dashboard_layout_config = (kwargs['layout_config'] if hasattr(kwargs, "layout_config") else "")
 
         # TODO: move logic to create a default group dashboard to a manager
         new_group_dashboard = Dashboard.objects.create(

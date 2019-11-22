@@ -12,6 +12,7 @@ class StackSerializer(serializers.ModelSerializer):
     groups = OWFGroupSerializer(many=True, required=False, read_only=True)
     owner = PersonBaseSerializer(read_only=True)
     default_group = serializers.PrimaryKeyRelatedField(read_only=True, required=False)
+    preset_layout = serializers.JSONField(write_only=True, required=False)
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
