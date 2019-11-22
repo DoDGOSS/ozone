@@ -106,7 +106,7 @@ class GroupsPeopleAdminApiTests(TestCase):
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 5)
+        self.assertEqual(response.data['count'], 3)
         requests.logout()
 
     def test_admin_filter_by_user_group_people(self):
@@ -116,7 +116,7 @@ class GroupsPeopleAdminApiTests(TestCase):
         response = requests.get(filter_url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 4)
+        self.assertEqual(response.data['count'], 2)
 
         # Non existing group_people entry
         filter_url = f'{url}?person=3'

@@ -30,7 +30,7 @@ class OWFGroupPeopleViewSet(mixins.BulkDestroyModelMixin, viewsets.ModelViewSet)
     """
     API endpoint that allows group people to be viewed or edited.
     """
-    queryset = OwfGroupPeople.objects.all()
+    queryset = OwfGroupPeople.objects.filter(group__stack_default=False)
     permission_classes = (IsAdminUser,)
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['group', 'person']
