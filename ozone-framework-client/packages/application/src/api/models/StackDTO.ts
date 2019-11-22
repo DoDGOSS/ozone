@@ -43,6 +43,7 @@ export interface StackCreateRequest {
     stackContext: string;
     descriptorUrl?: string;
     description?: string;
+    presetLayout?: DashboardLayout;
 }
 
 export interface StackUpdateRequest extends StackCreateRequest {
