@@ -1,6 +1,7 @@
 import json
 from rest_framework import serializers
 
+from preferences.models import Preference
 from widgets.serializers import WidgetDefinitionSerializer
 from .models import Person, PersonWidgetDefinition
 
@@ -14,11 +15,17 @@ class PersonBaseSerializer(serializers.ModelSerializer):
             item['status'] = item['status'].value
         json_groups = json.dumps([dict(item) for item in groups_object_to_modify])
 
+        # client panel theme for user
+        try:
+            theme = Preference.objects.get(namespace='owf', path='selected_theme', user_id=ret['id']).value
+        except Preference.DoesNotExist:
+            theme = ""
+
         extra_ret = {
             'user_id': ret['username'],
             'groups': json.loads(json_groups),
             'roles': [],
-            'theme': '',
+            'theme': theme,
         }
         ret.update(extra_ret)
         return ret

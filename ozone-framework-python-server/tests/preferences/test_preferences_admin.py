@@ -13,7 +13,7 @@ payload_1 = {
     "value": 'set testing value',
     "path": '124d-wedfe-we49-ewwe33',
     "namespace": 'namespace-test-1',
-    "user": 1,
+    "user_id": 1,
 }
 
 

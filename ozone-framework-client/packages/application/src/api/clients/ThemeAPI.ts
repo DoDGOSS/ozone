@@ -1,53 +1,78 @@
-import { get } from "lodash";
+import {get} from "lodash";
 
-import { Response } from "../interfaces";
-import { preferenceApi, PreferenceAPI } from "./PreferenceAPI";
+import {ListOf, Response} from "../interfaces";
 
-import { isBlank } from "../../utility";
+import {isBlank, isNil} from "../../utility";
 
-import { DARK_THEME } from "../../constants";
+import {DARK_THEME} from "../../constants";
+import {userPreferenceApi, UserPreferenceAPI} from "./PreferenceUserAPI";
+import {PreferenceDTO} from "../models/PreferenceDTO";
 
 export class ThemeAPI {
-    private readonly preferenceApi: PreferenceAPI;
+    private readonly preferenceApi: UserPreferenceAPI;
+    private currentTheme: PreferenceDTO;
 
-    constructor(api?: PreferenceAPI) {
-        this.preferenceApi = api || preferenceApi;
+    constructor(api?: UserPreferenceAPI) {
+        this.preferenceApi = api || userPreferenceApi;
     }
 
-    getTheme(): Promise<Response<string>> {
-        return this.preferenceApi.getPreference("owf", "selected_theme").then(formatResponseFromGet); // TODO: look at this in more detail. And possibly look into the default data.
+    getTheme(): Promise<string> {
+        return this.getThemePreference()
+            .then((response: Response<ListOf<PreferenceDTO[]>>) => {
+                return get(response.data, "data.value", "");
+            });
     }
 
-    async setTheme(newTheme: string): Promise<Response<string>> {
+    async getThemePreference(): Promise<Response<ListOf<PreferenceDTO[]>>> {
+        return this.preferenceApi.getPreference("owf", "selected_theme")
+            .then((response: Response<ListOf<PreferenceDTO[]>>) => {
+                this.currentTheme = response.data.data[0];
+                return response;
+            });
+    }
+
+    async setInitalTheme(theme: string = ""): Promise<Response<PreferenceDTO>> {
+        return this.preferenceApi.createPreference({
+            namespace: "owf",
+            path: "selected_theme",
+            value: theme
+        }).then((response: Response<PreferenceDTO>) => {
+            this.currentTheme = response.data;
+            return response;
+        });
+    }
+
+    async setTheme(newTheme: string): Promise<string | undefined> {
         // make sure no one is trying to use this css class to inject something nefarious.
         // Mixed claims about whether it's possible, but it doesn't hurt to check.
         // https://stackoverflow.com/questions/5855398/user-defined-css-what-can-go-wrong
         newTheme = isBlank(newTheme) ? "" : DARK_THEME;
-        return this.preferenceApi
-            .updatePreference({
-                namespace: "owf",
-                path: "selected_theme",
-                value: newTheme
-            })
-            .then(formatResponseFromUpdate);
+        let themePreference: any = await this.getThemePreference();
+
+        // theme does not exists in database, lets add one.
+        if (themePreference.data.results <= 0) {
+            return this.setInitalTheme(newTheme)
+                .then((response) => get(response, "data.value", ""))
+        } else {
+            if (this.currentTheme) {
+                return this.preferenceApi
+                    .updatePreference({
+                        id: this.currentTheme.id,
+                        namespace: "owf",
+                        path: "selected_theme",
+                        value: newTheme
+                    })
+                    .then((response) => get(response, "data.value", ""))
+            }
+        }
     }
 
-    async toggle(): Promise<Response<any>> {
-        return this.getTheme().then((response) => {
-            const newTheme = isBlank(response.data) ? DARK_THEME : "";
+    async toggle(): Promise<string | undefined> {
+        return this.getTheme().then((theme) => {
+            const newTheme = isNil(theme) || isBlank(theme) ? DARK_THEME : "";
             return this.setTheme(newTheme);
         });
     }
 }
 
 export const themeApi = new ThemeAPI();
-
-function formatResponseFromGet(response: Response<any>): Response<string> {
-    response.data = get(response, "data.preference.value", "");
-    return response;
-}
-
-function formatResponseFromUpdate(response: Response<any>): Response<string> {
-    response.data = get(response, "data.value", "");
-    return response;
-}
