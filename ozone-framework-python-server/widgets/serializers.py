@@ -26,6 +26,7 @@ class WidgetTypeSerializer(serializers.ModelSerializer):
             'version': {'read_only': True},
         }
 
+
 class WidgetDefIntentDataTypesSerializer(serializers.ModelSerializer):
     class Meta:
         model = WidgetDefIntentDataTypes

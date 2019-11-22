@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from domain_mappings.models import DomainMapping, MappingType, RelationshipType
 from people.serializers import PersonBaseSerializer
 from .models import OwfGroup, OwfGroupPeople
