@@ -3,7 +3,7 @@ import { asBehavior } from "../observables";
 
 import { themeApi } from "../api/clients/ThemeAPI";
 import { DARK_THEME } from "../constants";
-import { isBlank } from "../utility";
+import {isBlank} from "../utility";
 
 export class MainStore {
     private readonly themeClass$ = new BehaviorSubject(DARK_THEME);
@@ -22,17 +22,12 @@ export class MainStore {
 
     themeClass = () => asBehavior(this.themeClass$);
     getTheme = () => this.themeClass$.value;
-    setTheme = (newTheme: string | undefined) => {
-        // this.themeClass$.next(newTheme);
-    };
+    setTheme = (newTheme: string | undefined) => this.themeClass$.next(newTheme ? newTheme : "");
     updateTheme = async (newTheme: string) => {
         const result = await themeApi.setTheme(newTheme);
-        this.themeClass$.next(result.data);
+        this.setTheme(result);
     };
-
-    toggleTheme = () => {
-        this.updateTheme(isBlank(this.themeClass$.value) ? DARK_THEME : "");
-    };
+    toggleTheme = () => this.updateTheme(isBlank(this.themeClass$.value) ? DARK_THEME : "");
 
     isStackDialogVisible = () => asBehavior(this.isStackDialogVisible$);
     showStackDialog = () => this.isStackDialogVisible$.next(true);
