@@ -9,7 +9,7 @@ class PersonBaseSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
 
-        groups_object_to_modify = [item for item in instance.groups.all().values()]
+        groups_object_to_modify = [item for item in instance.groups.filter(stack_default=False).values()]
         for item in groups_object_to_modify:
             item['status'] = item['status'].value
         json_groups = json.dumps([dict(item) for item in groups_object_to_modify])
