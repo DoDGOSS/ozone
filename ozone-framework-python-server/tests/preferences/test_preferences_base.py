@@ -12,7 +12,7 @@ payload_1 = {
     "value": 'set testing value',
     "path": '124d-wedfe-we49-ewwe33-test',
     "namespace": 'namespace-test-1',
-    "user": 1,
+    "user_id": 1,
 }
 
 payload_2 = {
@@ -21,7 +21,7 @@ payload_2 = {
     "value": 'set testing value 2',
     "path": '12w4d-wehrdfe-wefefw49-ewfee33-test',
     "namespace": 'namespace-test-2',
-    "user": 2,
+    "user_id": 1,
 }
 
 

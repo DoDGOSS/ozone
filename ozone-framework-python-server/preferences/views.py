@@ -6,14 +6,13 @@ from .serializer import PreferenceSerializer
 
 
 class PreferenceUserViewSet(viewsets.ModelViewSet):
-    queryset = Preference.objects.all()
     serializer_class = PreferenceSerializer
     permission_classes = (IsAuthenticated,)
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['namespace', 'path', 'user']
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user.id)
+        return Preference.objects.filter(user=self.request.user)
 
 
 class PreferenceAdminViewSet(viewsets.ModelViewSet):

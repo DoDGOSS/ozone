@@ -5,10 +5,14 @@ from people.serializers import PersonBaseSerializer
 
 
 class PreferenceSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=Person.objects.all())
+    user = PersonBaseSerializer(many=False, default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Preference
+        extra_kwargs = {
+            'value': {'allow_blank': True},
+            'version': {'read_only': True},
+        }
         fields = (
             'id',
             'user',
