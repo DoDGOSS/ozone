@@ -93,7 +93,9 @@ export async function createPresetLayout(layoutName: string | null, dashboardId:
 
 const onCopyDashboard = async (dashboardId: number): Promise<DashboardLayout> => {
     const response: Response<DashboardDTO> = await dashboardApi.getDashboard(dashboardId);
-    const layout = JSON.parse(response.data.layoutConfig);
+    let layout = JSON.parse(response.data.layoutConfig);
+    while(typeof layout !== 'object')
+        layout = JSON.parse(layout);
     let panels = JSON.stringify(layout.panels);
     panels = panels.replace(/"userWidgetIds":/g, '"widgets":');
     panels = JSON.parse(panels);

@@ -14,7 +14,7 @@ import { UserWidget } from "../models/UserWidget";
 import { StackCreateRequest, StackUpdateRequest } from "../api/models/StackDTO";
 import { UserDashboardStackDTO } from "../api/models/UserDashboardDTO";
 
-import { dashboardToUpdateRequest, deserializeUserState, UserState } from "../codecs/Dashboard.codec";
+import { dashboardToUpdateRequest, deserializeUserState, UserState, dashboardLayoutToJson } from "../codecs/Dashboard.codec";
 
 import { CreateDashboardOptions } from "../components/create-dashboard-screen/CreateDashboardForm";
 import { createPresetLayout } from "./default-layouts";
@@ -123,9 +123,14 @@ export class DashboardStore {
 
     async createNewStack(
         stackRequest: StackCreateRequest,
-        defaultDashLayoutOptions?: { presetLayoutName: string | null; copyGuid: string | null }
-    ): Promise<Boolean> {
-        // TODO: handle passing up the layout config for creating the default dashboard
+        defaultDashLayoutOptions?: { presetLayoutName: string | null; copyId: string | null }
+    ): Promise<Boolean> {    
+        const presetLayout = await createPresetLayout(defaultDashLayoutOptions.presetLayoutName, defaultDashLayoutOptions.copyId);
+        stackRequest.presetLayout = JSON.stringify(dashboardLayoutToJson({
+            backgroundWidgets: [],
+            tree: presetLayout.tree || null,
+            panels: presetLayout.panels || {}
+        }));
         const newStack = (await stackApi.createStack(stackRequest)).data;
 
         const userDashboardsResponse = await userDashboardApi.getOwnDashboards();
