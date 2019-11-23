@@ -61,7 +61,7 @@ class PersonApiTests(TestCase):
         # assure user's widgets are returned
         regular_user = Person.objects.get(id=2)
         widget_ids = regular_user.get_active_widgets()
-        widgets = WidgetDefinition.objects.filter(id__in=widget_ids)
+        widgets = PersonWidgetDefinition.objects.filter(widget_definition__in=widget_ids, person=regular_user)
         serialized_widgets = PersonWidgetDefinitionSerializer(widgets, many=True)
         self.assertEqual(response.data['widgets'], serialized_widgets.data)
 
