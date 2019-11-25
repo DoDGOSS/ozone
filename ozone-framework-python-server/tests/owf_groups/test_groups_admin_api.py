@@ -106,7 +106,7 @@ class GroupsPeopleAdminApiTests(TestCase):
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 3)
+        self.assertEqual(response.data['count'], 5)
         requests.logout()
 
     def test_admin_filter_by_user_group_people(self):
