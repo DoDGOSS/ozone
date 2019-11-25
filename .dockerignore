@@ -4,7 +4,6 @@
 
 /owf-legacy/
 
-/ozone-example-widgets/
 
 /ozone-framework-client/package-lock.json
 /ozone-framework-client/.gradle/
@@ -15,6 +14,10 @@
 /ozone-framework-client/packages/application/coverage/
 /ozone-framework-client/packages/application/node_modules/
 /ozone-framework-client/packages/application/reports/
+
+/ozone-example-widgets/package-lock.json
+/ozone-example-widgets/build/
+/ozone-example-widgets/node_modules/
 
 
 /ozone-framework-server/.gradle/
