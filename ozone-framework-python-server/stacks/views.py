@@ -61,7 +61,7 @@ class StackAdminViewSet(viewsets.ModelViewSet):
     def assign_to_me(self, request, pk=None):
         stack = self.get_object()
         stack.owner = request.user
-        stack.default_group.people.add(request.user)
+        stack.default_group.add_user(request.user)
         stack.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
