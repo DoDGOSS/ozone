@@ -25,6 +25,12 @@ export class WidgetAPI {
         this.gateway = gateway || getGateway();
     }
 
+    async getWidgetsAsUser(): Promise<Response<ListOf<WidgetDTO[]>>> {
+        return this.gateway.get("widgets/", {
+            validate: validateWidgetListResponse
+        });
+    }
+
     async getWidgets(): Promise<Response<ListOf<WidgetDTO[]>>> {
         return this.gateway.get("admin/widgets/", {
             validate: validateWidgetListResponse

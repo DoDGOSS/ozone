@@ -10,7 +10,7 @@ import { isNil } from "lodash";
 
 export class StoreMetaAPI {
     async getStores(): Promise<Widget[]> {
-        return widgetApi.getWidgets().then((response) => {
+        return widgetApi.getWidgetsAsUser().then((response) => {
             const storeWidgets = [];
             for (const widgetDto of response.data.data) {
                 if (widgetDto.value.widgetTypes.find((type) => type.name === "marketplace")) {
