@@ -92,7 +92,7 @@ export class StackUsersPanel extends React.Component<StackEditUsersProps, StackE
             const updatedStack = stackResponse.data;
 
             if (updatedStack.defaultGroup) {
-                userApi.getUsersForGroup(updatedStack.defaultGroup.id).then((response) => {
+                userApi.getUsersForGroup(updatedStack.defaultGroup).then((response) => {
                     // TODO: Handle failed request
                     if (!(response.status >= 200 && response.status < 400)) return;
 
