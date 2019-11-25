@@ -15,7 +15,7 @@ export class SystemConfigAPI {
     }
 
     async getConfigs(): Promise<Response<ListOf<ConfigDTO[]>>> {
-        return this.gateway.get("admin/application-configuration/", {
+        return this.gateway.get("application-configuration/", {
             validate: validateConfigListResponse
         });
     }
