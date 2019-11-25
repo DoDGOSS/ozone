@@ -35,6 +35,11 @@ class OWFGroupPeopleViewSet(mixins.BulkDestroyModelMixin, viewsets.ModelViewSet)
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['group', 'person']
 
+    def get_queryset(self):
+        if self.request.GET and self.request.GET.get('person'):
+            return OwfGroupPeople.objects.filter(group__stack_default=False)
+        return OwfGroupPeople.objects.all()
+
     # TODO - May need to update this to include DELETE
     def get_serializer_class(self):
         if self.request.method == 'POST':
