@@ -1,7 +1,7 @@
-import { UserReference } from "./UserDTO";
-import { createValidator } from "./validate";
-import { PREFERENCE_GET_RESPONSE_SCHEMA, PREFERENCE_SCHEMA } from "./schemas/preference.schema";
-import { ListOf } from "../interfaces";
+import {UserReference} from "./UserDTO";
+import {createValidator} from "./validate";
+import {PREFERENCE_GET_RESPONSE_SCHEMA, PREFERENCE_SCHEMA} from "./schemas/preference.schema";
+import {ListOf} from "../interfaces";
 
 export interface PreferenceDTO {
     id: number;
@@ -16,6 +16,7 @@ export interface PreferenceCreateRequest {
     path: string;
     value: string;
     user?: number;
+    user_id?: number;
 }
 
 export interface PreferenceUpdateRequest extends PreferenceCreateRequest {

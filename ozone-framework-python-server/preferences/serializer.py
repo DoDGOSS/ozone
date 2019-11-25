@@ -5,7 +5,7 @@ from people.serializers import PersonBaseSerializer
 
 
 class PreferenceSerializer(serializers.ModelSerializer):
-    user = PersonBaseSerializer(many=False, default=serializers.CurrentUserDefault())
+    user_id = serializers.IntegerField(required=False)
 
     class Meta:
         model = Preference
@@ -15,7 +15,7 @@ class PreferenceSerializer(serializers.ModelSerializer):
         }
         fields = (
             'id',
-            'user',
+            'user_id',
             'namespace',
             'path',
             'value',
