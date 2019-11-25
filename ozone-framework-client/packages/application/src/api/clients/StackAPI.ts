@@ -77,6 +77,14 @@ export class StackAPI {
         });
     }
 
+    async assignStackToMe(stackId: number): Promise<Response<void>> {
+        return this.gateway.patch(`admin/stacks/${stackId}/assign_to_me/`, null, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        });
+    }
+
     async getStacksAsAdmin(): Promise<Response<ListOf<StackDTO[]>>> {
         return this.gateway.get("admin/stacks/", {
             validate: validateStackListResponse

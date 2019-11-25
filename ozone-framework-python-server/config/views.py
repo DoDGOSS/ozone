@@ -48,7 +48,6 @@ class LogoutView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
-        print("logging out")
         logout(request)
         return response.Response()
 
