@@ -13,7 +13,7 @@ export interface StackDTO {
     id: number;
     name: string;
     approved: boolean;
-    defaultGroup: GroupDTO;
+    defaultGroup: number;
     stackContext: string;
     description?: string;
     descriptorUrl?: string;
