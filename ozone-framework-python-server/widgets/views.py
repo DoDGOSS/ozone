@@ -1,6 +1,6 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.renderers import TemplateHTMLRenderer
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
@@ -111,8 +111,10 @@ class HTMLSchema(SwaggerAutoSchema):
         return ['text/html']
 
 
-class WidgetViewSet(viewsets.GenericViewSet):
+# TODO - Add test to get widgets as an authenticated user
+class WidgetViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = WidgetDefinition.objects.all()
+    permission_classes = (IsAuthenticated,)
     lookup_field = 'widget_guid'
     serializer_class = WidgetDefinitionSerializer
 
