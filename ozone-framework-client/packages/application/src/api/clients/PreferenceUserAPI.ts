@@ -1,5 +1,4 @@
-import { has } from "lodash";
-import { Gateway, getGateway, ListOf, Response } from "../interfaces";
+import {Gateway, getGateway, ListOf, Response} from "../interfaces";
 import {
     PreferenceCreateRequest,
     PreferenceDeleteRequest,

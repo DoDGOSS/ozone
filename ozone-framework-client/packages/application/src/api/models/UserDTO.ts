@@ -39,11 +39,8 @@ export interface UserCreateRequest {
     email: string;
 }
 
-export interface UserUpdateRequest {
+export interface UserUpdateRequest extends UserCreateRequest {
     id: number;
-    username: string;
-    userRealName: string;
-    email: string;
 }
 
 export const validateUserDetailResponse = createValidator<UserDTO>(USER_SCHEMA);
