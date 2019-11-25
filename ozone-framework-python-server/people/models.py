@@ -156,11 +156,11 @@ class Person(AbstractBaseUser):
             user_widget.save()
 
     def get_group_assigned_stacks(self):
-        from stacks.models import StackGroups
+        from stacks.models import Stack, StackGroups
         group_ids = list(self.groups.values_list("id", flat=True))
-        stacks_assigned_through_group = StackGroups.objects.filter(
+        stack_ids_assigned_through_group = StackGroups.objects.filter(
             group_id__in=group_ids).values_list("stack", flat=True)
-
+        stacks_assigned_through_group = list(Stack.objects.filter(pk__in=stack_ids_assigned_through_group))
         return list(stacks_assigned_through_group)
 
     def get_directly_assigned_stacks(self):
@@ -236,8 +236,10 @@ class Person(AbstractBaseUser):
             default_group_ids.append(stacks.default_group.id)
 
         # Get default groups from groups assigned to stacks
-        stacks_assigned_through_group = self.get_group_assigned_stacks()
-        default_group_ids_from_stack_groups_assignment = Stack.objects.filter(pk__in=stacks_assigned_through_group) \
+        stack_ids_assigned_through_group = []
+        for stack in self.get_group_assigned_stacks():
+            stack_ids_assigned_through_group.append(stack.id)
+        default_group_ids_from_stack_groups_assignment = Stack.objects.filter(pk__in=stack_ids_assigned_through_group) \
             .values_list("default_group_id", flat=True)
 
         # List of all default groups from stacks assigned to user and remove any duplicates
