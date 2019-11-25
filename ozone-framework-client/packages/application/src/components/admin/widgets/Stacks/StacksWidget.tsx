@@ -11,7 +11,6 @@ import { CompactDeleteButton, CompactShareButton, DeleteButton, EditButton } fro
 
 import { StackSetup } from "./StackSetup";
 
-import * as styles from "../Widgets.scss";
 
 interface StacksWidgetState {
     stacks: StackDTO[];
@@ -20,10 +19,6 @@ interface StacksWidgetState {
     showStackSetup: boolean;
     updatingStack: StackDTO | undefined;
 }
-// TODO
-// Modify widget to take in widget values from administration menu and launch from menu
-// Pagination handling with client API
-// Style
 
 enum StackWidgetSubSection {
     TABLE,
@@ -120,13 +115,14 @@ export class StacksWidget extends React.Component<{}, StacksWidgetState> {
     private getTableColumns(): ColumnTabulator[] {
         return [
             { title: "Title", field: "name" },
+            { title: "Owner", field: "owner.username" },
             { title: "Dashboards", field: "totalDashboards" },
             { title: "Widgets", field: "totalWidgets" },
             { title: "Groups", field: "totalGroups" },
             { title: "Users", field: "totalUsers" },
             {
                 title: "Actions",
-                width: 150,
+                width: 275,
                 responsive: 0,
                 formatter: (row: { cell: { _cell: { row: { data: StackDTO } } } }) => {
                     const data: StackDTO = row.cell._cell.row.data;
@@ -146,12 +142,48 @@ export class StacksWidget extends React.Component<{}, StacksWidgetState> {
                                 }}
                             />
                             <Divider />
+                            <Button
+                                data-element-id={"stack-admin-widget-assign-to-me"}
+                                text="Assign To Me"
+                                intent={Intent.SUCCESS}
+                                icon="following"
+                                small={true}
+                                // TODO - Disable if owner === currentUser
+                                // disabled={}
+                                onClick={() => {
+                                    this.confirmAssignToMe(data);
+                                }}
+                            />
+                        <Divider />
                             <CompactDeleteButton onClick={() => this.confirmDeleteStack(data)} itemName={data.name} />
                         </ButtonGroup>
                     );
                 }
             }
         ] as ColumnTabulator[];
+    }
+
+    private async confirmAssignToMe(stack: StackDTO) {
+        showConfirmationDialog({
+            title: "Warning",
+            message: [
+                "You are attempting to assign stack: ",
+                { text: stack.name, style: "bold" },
+                " to yourself. This stack cannot be re-assigned after this action is performed. "
+            ],
+            onConfirm: () => this.onAssignConfirm(stack)
+        });
+    }
+
+    private async onAssignConfirm(stack: StackDTO) {
+        try {
+            const response = await stackApi.assignStackToMe(stack.id);
+            if (!(response.status >= 200 && response.status < 400)) return false;
+        } catch (e) {
+            return false;
+        }
+        this.getStacks();
+        return true;
     }
 
     private async confirmShare(stack: StackDTO) {
