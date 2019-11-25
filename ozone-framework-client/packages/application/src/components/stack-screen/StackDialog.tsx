@@ -36,7 +36,7 @@ import { AuthUserDTO } from "../../api/models/AuthUserDTO";
 import { Widget } from "../../models/Widget";
 import { showToast } from "../toaster/Toaster";
 import { showStoreSelectionDialog } from "../confirmation-dialog/showStoreSelectionDialog";
-import { Response, ListOf } from "../../api/interfaces";
+import { ListOf, Response } from "../../api/interfaces";
 
 // TODO - iconImageUrl not saving to database`
 
