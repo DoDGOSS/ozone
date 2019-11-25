@@ -41,7 +41,7 @@ class TestingApplicationConfigAPI(TestCase):
         admin_user = Person.objects.get(email='admin@goss.com')
 
         requests.login(email='admin@goss.com', password='password')
-        url = reverse('applicationconfiguration-list')
+        url = reverse('admin_application-configuration-list')
         response = requests.post(url, post_payload)
 
         self.assertEqual(response.status_code, 201)
@@ -52,7 +52,7 @@ class TestingApplicationConfigAPI(TestCase):
 
     def test_admin_can_list_appconf_endpoint(self):
         requests.login(email='admin@goss.com', password='password')
-        url = reverse('applicationconfiguration-list')
+        url = reverse('admin_application-configuration-list')
         data = requests.get(url)
 
         self.assertEqual(data.status_code, 200)
@@ -63,7 +63,7 @@ class TestingApplicationConfigAPI(TestCase):
         admin_user = Person.objects.get(email='admin@goss.com')
 
         requests.login(email='admin@goss.com', password='password')
-        url = reverse('applicationconfiguration-detail', args='9')
+        url = reverse('admin_application-configuration-detail', args='9')
         response = requests.patch(url, patch_payload)
 
         self.assertEqual(response.status_code, 200)
@@ -75,7 +75,7 @@ class TestingApplicationConfigAPI(TestCase):
         admin_user = Person.objects.get(email='admin@goss.com')
 
         requests.login(email='admin@goss.com', password='password')
-        url = reverse('applicationconfiguration-detail', args='9')
+        url = reverse('admin_application-configuration-detail', args='9')
         response = requests.put(url, put_payload)
 
         self.assertEqual(response.status_code, 200)
@@ -85,7 +85,7 @@ class TestingApplicationConfigAPI(TestCase):
 
     def test_admin_can_delete_appconf_data(self):
         requests.login(email='admin@goss.com', password='password')
-        url = reverse('applicationconfiguration-detail', args='9')
+        url = reverse('admin_application-configuration-detail', args='9')
         response = requests.delete(url)
 
         self.assertEqual(response.status_code, 204)
@@ -94,7 +94,7 @@ class TestingApplicationConfigAPI(TestCase):
 
     def test_admin_auth_only_appconf(self):
         requests.login(email='user@goss.com', password='password')
-        url = reverse('applicationconfiguration-list')
+        url = reverse('admin_application-configuration-list')
         data = requests.get(url)
 
         self.assertEqual(data.status_code, 403)
