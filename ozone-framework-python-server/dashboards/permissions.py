@@ -16,4 +16,7 @@ class IsStackOwner(permissions.BasePermission):
             return True
 
     def has_object_permission(self, request, view, obj):
+        if request.method != "POST" or view.action == "share":
+            return True
+
         return obj.stack.owner == request.user
