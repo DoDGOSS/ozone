@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     'method_override',
+    'django_nose',
 
     # owf apps
     'domain_mappings.apps.DomainMappingsConfig',
@@ -56,6 +57,18 @@ INSTALLED_APPS = [
     'preferences.apps.PreferencesConfig',
     'appconf.apps.AppconfConfig',
     'metrics.apps.MetricsConfig',
+
+]
+
+# Use nose to run all tests
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# Tell nose to measure coverage on the 'foo' and 'bar' apps
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-html',
+    '--cover-package=appconf,dashboards,domain_mappings,intents,legacy,metrics,owf_groups,people,preferences,'
+    'roles,stacks,widgets',
 
 ]
 
