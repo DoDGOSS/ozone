@@ -5,6 +5,8 @@ db.sqlite3
 logs/debug.log
 logs/*
 
+.coverage
+cover
 ### Python template
 # Byte-compiled / optimized / DLL files
 __pycache__/
