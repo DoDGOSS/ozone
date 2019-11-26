@@ -730,8 +730,8 @@
     "fields": {
         "version": 1571155214,
         "visible": false,
-        "image_url_medium": "images/widgets/dashboards-manager.png",
-        "image_url_small": "images/widgets/dashboards-manager.png",
+        "image_url_medium": "images/widgets/users-manager.png",
+        "image_url_small": "images/widgets/users-manager.png",
         "singleton": false,
         "width": 400,
         "widget_version": "1.0",
