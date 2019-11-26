@@ -62,7 +62,7 @@ export class WidgetAPI {
     }
 
     async deleteWidget(id: number): Promise<Response<void>> {
-        return this.gateway.post(`admin/widgets/${id}/`, null, {
+        return this.gateway.delete(`admin/widgets/${id}/`, null, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             }
