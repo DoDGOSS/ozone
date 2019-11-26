@@ -27,6 +27,8 @@ class DashboardViewSet(viewsets.ModelViewSet):
         if instance.user == request.user:
             instance.marked_for_deletion = True
             instance.save()
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['post'], detail=True, permission_classes=(IsAuthenticated, ))
