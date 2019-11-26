@@ -312,7 +312,7 @@ export const StackDialog: React.FC<{}> = () => {
     const onRestoreDashboardConfirmed = async (dashboard: DashboardDTO) => {
         const response = await dashboardApi.restoreDashboard(dashboard);
         if (!(response.status >= 200 && response.status < 400)) return false;
-
+        dashboardStore.fetchUserDashboards(dashboard.guid);
         mainStore.hideStackDialog();
         return true;
     };
@@ -320,7 +320,7 @@ export const StackDialog: React.FC<{}> = () => {
     const onRestoreStackConfirmed = async (stack: StackDTO) => {
         const response = await stackApi.restoreStack(stack.id);
         if (!(response.status >= 200 && response.status < 400)) return false;
-
+        dashboardStore.fetchUserDashboards(dashboardStore.currentDashboard.guid);
         mainStore.hideStackDialog();
         return true;
     };
