@@ -3,6 +3,7 @@ omit =
     ../*migrations*
     ../*admin.py*
     ../*handlers.py*
+    ../*apps.py*
 
 exclude_lines =
   pragma: no cover
