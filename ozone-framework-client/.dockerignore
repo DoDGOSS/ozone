@@ -1,8 +1,0 @@
-/node_modules/
-/package-lock.json
-
-/packages/application/node_modules/
-/packages/application/package-lock.json
-/packages/application/build/
-/packages/application/coverage/
-/packages/application/reports/
