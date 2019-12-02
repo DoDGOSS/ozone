@@ -22,14 +22,14 @@ export class DashboardAPI {
         });
     }
 
-    async getDashboard(dashboardId: number): Promise<Response<DashboardDTO>> { //TODO: fix one of the callers that is still passing in the GUID
-        return this.gateway.get(`dashboards/${dashboardId}/`); //TODO: verif this works right
-    }    
+    async getDashboard(dashboardId: number): Promise<Response<DashboardDTO>> { // TODO: fix one of the callers that is still passing in the GUID
+        return this.gateway.get(`dashboards/${dashboardId}/`);
+    }
 
     async restoreDashboard(
         data: DashboardUpdateRequest,
     ): Promise<Response<DashboardDTO>> {
-        return this.gateway.post(`dashboards/${data.id}/restore/`, null, { //TODO: verify guid works
+        return this.gateway.post(`dashboards/${data.id}/restore/`, null, { // TODO: verify guid works
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },

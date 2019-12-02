@@ -12,14 +12,12 @@ import { stackApi } from "../api/clients/StackAPI";
 import { Dashboard, EMPTY_DASHBOARD } from "../models/Dashboard";
 import { UserWidget } from "../models/UserWidget";
 import { StackCreateRequest, StackUpdateRequest } from "../api/models/StackDTO";
-import { UserDashboardStackDTO } from "../api/models/UserDashboardDTO";
 
 import { dashboardToUpdateRequest, deserializeUserState, UserState, dashboardLayoutToJson } from "../codecs/Dashboard.codec";
 
 import { CreateDashboardOptions } from "../components/create-dashboard-screen/CreateDashboardForm";
 import { createPresetLayout } from "./default-layouts";
 import _ from "lodash";
-import { userApi } from "../api/clients/UserAPI";
 
 const EMPTY_USER_DASHBOARDS_STATE: UserState = {
     dashboards: {},
@@ -74,8 +72,10 @@ export class DashboardStore {
             response = await this.createDefaultDashboard();
         }
 
-        const defaultDashboard = response.data.dashboards.find((dashboard) => dashboard.isdefault === true);
-
+        let defaultDashboard = response.data.dashboards.find((dashboard) => dashboard.isdefault === true);
+        if(!defaultDashboard) {
+            defaultDashboard = response.data.dashboards[0];
+        }
         const newState = deserializeUserState(response.data.dashboards, response.data.widgets);
         this.userDashboards$.next(newState);
         newCurrentDashGuid = newCurrentDashGuid ? newCurrentDashGuid : defaultDashboard ? defaultDashboard.guid : null;
@@ -212,9 +212,12 @@ export class DashboardStore {
         }
 
         if (currentDashboard.guid) {
-            currentDashboard.setAsDefault(false);
-            const currentDashboardUpdate = dashboardToUpdateRequest(currentDashboard);
-            await this.dashboardApi.updateDashboard(currentDashboardUpdate);
+            // TODO: this is a hacky fix for setting the new default dashboard, when the currently selected one is deleted.
+            try {
+                currentDashboard.setAsDefault(false);
+                const currentDashboardUpdate = dashboardToUpdateRequest(currentDashboard);
+                await this.dashboardApi.updateDashboard(currentDashboardUpdate);
+            } catch(ex) {}
         }
 
         const currentGuid = !isNil(newCurrentGuid) ? newCurrentGuid : currentDashboard.guid;
