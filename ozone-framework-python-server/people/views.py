@@ -37,7 +37,7 @@ class PersonDashboardsWidgetsView(APIView):
 
         # Only return widgets that are directly assigned or assigned to active groups
         widgets = request.user.get_active_widgets()
-        dashboards = Dashboard.objects.filter(user=request.user)
+        dashboards = Dashboard.objects.filter(user=request.user, marked_for_deletion=False)
 
         serialized_user = PersonBaseSerializer(request.user)
         serialized_dashboards = DashboardBaseSerializer(dashboards, many=True)
