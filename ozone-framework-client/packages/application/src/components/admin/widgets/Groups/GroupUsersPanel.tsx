@@ -10,7 +10,7 @@ import { GroupUsersEditDialog } from "./GroupUsersEditDialog";
 import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 
 import { groupApi } from "../../../../api/clients/GroupAPI";
-import { GroupDTO, GroupUpdateRequest } from "../../../../api/models/GroupDTO";
+import { GroupDTO, GroupUpdateRequest, isAutoManaged } from "../../../../api/models/GroupDTO";
 
 import { userApi, UserQueryCriteria } from "../../../../api/clients/UserAPI";
 import { UserDTO } from "../../../../api/models/UserDTO";
@@ -63,6 +63,7 @@ export class GroupUsersPanel extends React.Component<GroupEditUsersProps, GroupE
                         text="Add"
                         onClick={() => this.showAdd()}
                         loading={this.state.loading}
+                        disabled={isAutoManaged(this.props.group)}
                         data-element-id="group-edit-add-user-dialog-add-button"
                     />
                 </div>

@@ -40,6 +40,10 @@ export function isDefaultGroup(group: GroupDTO | undefined): boolean {
     return group !== undefined && group !== null && (group.name === "OWF Administrators" || group.name === "OWF Users");
 }
 
+export function isAutoManaged(group: GroupDTO | undefined): boolean {
+    return group !== undefined && group !== null && group.automatic;
+}
+
 export const validateGroupDetailResponse = createValidator<GroupDTO>(GROUP_SCHEMA);
 export const validateGroupListResponse = createValidator<ListOf<GroupDTO[]>>(GROUP_GET_RESPONSE_SCHEMA);
 export const validateGroupWidgetsResponse = createValidator<GetGroupWidgetsResponse>(GROUP_WIDGETS_GET_RESPONSE_SCHEMA);
