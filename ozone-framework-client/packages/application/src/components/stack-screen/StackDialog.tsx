@@ -215,6 +215,7 @@ export const StackDialog: React.FC<{}> = () => {
         const response = await dashboardApi.deleteDashboard(dashboard);
         if (!(response.status >= 200 && response.status < 400)) return false;
 
+        dashboardStore.fetchUserDashboards();
         fetchData();
         return true;
     };
