@@ -35,4 +35,4 @@ The Store and OWF consists of a number of components that were designed to be in
 .Basic system architecture diagram
 image::ozone-architecture.png[]
 
-NOTE: OWF may run on a Python (version greater than 3.7) Server Such as Gunicorn or Waitress and must be a WSGI compliant application server can host the Ozone application. Additionally, the CAS server and LDAP components are examples of possible security integrations -- the Pluggable Security component acts as an adapter to integrate with many different enterprise security solutions.
+NOTE: OWF may run on a Python (version greater than 3.6.x) compliant Server Such as Gunicorn or Waitress or a WSGI compliant application server that can host the Ozone application. Additionally, the CAS server and LDAP components are examples of possible security integrations -- the Pluggable Security component acts as an adapter to integrate with many different enterprise security solutions.
