@@ -110,6 +110,7 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                                 columns={this.formatColumnNames(this.props.getColumns())}
                                 data={this.getItems()}
                                 rowClick={(ev: any, row: any) => this.selectItem(ev, row)}
+                                rowFormatter={(ev: any, row: any) => this.rowFormatItem(ev, row)}
                                 options={this.buildTableProps(this.state.dimensions.height)}
                                 // data-custom-attr="test-custom-attribute"
                                 className={classNames("table-sm table-striped table-borderless", mainStore.getTheme())}
@@ -128,6 +129,13 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
             options.height = Math.floor(containerHeight * 0.6);
         }
         return this.props.tableProps ? { ...options, ...this.props.tableProps } : options;
+    }
+
+
+    private rowFormatItem(ev:any, row:any): any {
+        if (ev._row.data.hasOwnProperty("status") && ev._row.data.status === 'inactive'){
+            return ev.getElement().style.color = '#9B9B9B'
+        }
     }
 
     /**
