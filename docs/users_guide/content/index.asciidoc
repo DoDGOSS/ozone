@@ -3,7 +3,7 @@
 :doctype: book
 :author: DOD GOSS
 :revnumber: 8.0.0.0
-:revdate: 2019-07-01
+:revdate: 2019-011-13
 // Settings:
 :reproducible:
 :experimental:
