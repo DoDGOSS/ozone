@@ -71,7 +71,7 @@ Opens the editor for the item, allowing the administrator to edit the user / gro
 
 ==== Manager Editors
 
-NOTE: If an administrator starts a manager in a fit pane, its editor will open in the first available empty pane. If not panes are available, it will "float" on top of the application. Additional application layout information is found in the _Ozone User's Guide_.
+NOTE: If an administrator starts a manager in a fit pane, its editor will open in the first available empty pane. If no panes are available, it will "float" on top of the application. Additional application layout information is found in the _Ozone User's Guide_.
 
 .User Editor -- Widgets tab
 image::user-admin-widget_widgets-tab.png[]
@@ -93,25 +93,21 @@ NOTE: If a user is in Group A and Group B and each group has Widget 1 assigned t
 | Widgets -- Properties tab
 | A drop-down menu that determines where the widget may be launched.
 
-* Only standard widgets appear in the Widget Menu.
+* All widgets that are not of type "Store" will appear in the Widgets Menu.
 
 * Administration widgets will appear under the Administration link available in the drop-down User Menu.
 
 * Widgets set to type "Store" will appear under the Store button on the toolbar.
 
-* Metric Widgets are accessible through the Metrics link in the drop-down User Menu.
-
-* Setting an widget to "fullscreen" in OWF does nothing to the widget. This field is used by the Store to send Web Apps to OWF as separate applications.
-
 NOTE: Instructions explaining how to associate OWF with a Metrics Service are found in the _Ozone Configuration Guide_.
 
 | Assign to Me
-| Dashboards
-| This button allows an administrator to claim ownership of a dashboard. Only an application owner can share a dashboard with the Store or with other users if there is no Store. If the application owner is removed from the system, the application owner defaults to "System".
+| Stacks
+| This button allows an administrator to claim ownership of a stack. Only a stack owner can share a stack with the Store or with other users, if there is no Store. If the stack owner is removed from the system, the stack owner defaults to "System".
 
 | Background
 | Widgets -- Properties tab
-| Some widgets do not have user interfaces. These widgets are often used to cache or log data on behalf of other widgets. If a widget is set to run in the background, it will not appear in the application. Users can close background widgets by using the Widget Switcher (activated with kbd:[Alt + Shift + Q]).
+| Some widgets do not have user interfaces. These widgets are often used to cache or log data on behalf of other widgets. If a widget is set to run in the background, it will not appear in the dashboard. Users can close background widgets by using the Widget Switcher, located in the User Menu.
 
 | Container Icon URL
 | Widgets -- Properties tab
@@ -302,11 +298,11 @@ Click on the text field and type in the number of days that need to elapse since
 
 When a user's account is disabled:
 
-* Application ownership for the disabled account transitions to "System" so that any application the disabled user created will not be removed from the instance of OWF.
+* Stack ownership for the disabled account transitions to "System" so that any stacks the disabled user created will not be removed from the instance of OWF.
 
-* The disabled user's "last sign in" will be removed. Also removed are the user's preferences and any references to that user.
+* Also removed are the user's preferences and any references to that user.
 
-* If a user signs in after their account is disabled, any of their previous application components, preferences, etc. will not be recoverable.
+* If a user signs in after their account is disabled, any of their previous widgets, preferences, etc. will not be recoverable.
 
 NOTE: The Disable Inactive Accounts only removes user data within the OWF application. It does not affect the user's ability to log back into the application. Authentication decisions are handled by the customizable OWF Security Plugin. See the _Ozone Configuration Guide_ for more details.
 
@@ -323,11 +319,11 @@ If the Session Control function is turned on and the user exceeds the number of 
 
 The Store configuration provides an easy-to-use wizard to walk administrators through the process of connecting OWF to a Store. Admins can connect their OWF to one or more Stores. A new Store connection will not replace existing Stores connections. Instead, when users click the btn:[Store] button in the OZONE Toolbar, a prompt appears asking them to select from multiple Stores. Access the Store configuration by clicking Store from the left-side navigation panel on the Configuration console. Each option is described below:
 
-Add Store -- image:add-store-button.png[]::
+Add Store -- image:add-store-button.png[,150]::
 The first button that appears on the Store configuration page. Click this button to start the wizard and add a Store.
 
 Store URL::
-Enter the location for the Store that will be connected to OZONE. This URL is used by OWF to gather details about the Store including name and icon.
+Enter the location for the Store that will be connected to OZONE. This URL is used by OWF to gather details about the Store, including name and icon.
 
 * *Name* -- Name that identifies the Store to users in OWF.
 

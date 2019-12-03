@@ -18,3 +18,5 @@ ozone-example-widgets/src/widgets/preferences/.DS_Store
 ozone-framework-client/.DS_Store
 ozone-framework-client/packages/.DS_Store
 owf-legacy/.DS_Store
+docs/build
+dist

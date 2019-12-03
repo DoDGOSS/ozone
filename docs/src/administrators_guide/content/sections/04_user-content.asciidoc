@@ -138,9 +138,9 @@ NOTE: The stack cannot be saved without a title.
 
 .. Copy the layout of an existing Stack– Clicking this causes a drop-down menu to appear below the selection title. Choose a stack from this menu. The new stack will adopt the layout of the selected stack. However, it will not copy the widgets associated with that layout.
 
-.. Create a new layout – Opens the Dashboard Builder allowing the user to create a new layout. More information on creating a new layout is found in the OWF User's Guide.
+.. Create a new layout – More information on creating a new layout is found in the OWF User's Guide.
 
-. Click btn:[OK]. The stack will automatically start unless you selected "Create a new layout," if that is the case instructions for the Dashboard Builder are found in the OWF User's Guide.
+. Click btn:[OK]. The stack will automatically start unless you selected "Create a new layout".
 
 . To add widgets to the Dashboard, click the btn:[Widget] button on the OZONE Toolbar and select widgets by clicking them. If the Dashboard has more than one pane, click the pane where the widget will start.
 
@@ -160,7 +160,7 @@ NOTE: Creating a new stack, in effect, creates a one-page application. The stack
 [#edit-a-stack]
 === Edit a Stack
 
-Only shared stacks or stacks added to the Store and Approved in the Store can be assigned to individual users or groups from the Stacks Manager. That means that a user willingly made available a copy of their stacks for administrators to distribute to other users. For that reason, administrators have limited editing ability for Stacks. They cannot edit the Stack's properties (name, layout, etc.) or Widgets from the Stack Manager. Those edits must occur in the actual Stack, for instructions see the _Ozone User's Guide_. From the Stack Manager, administrators can add or remove users and groups as described below:
+Only shared stacks or stacks pushed to the Store can be assigned to individual users or groups from the Stacks Manager. That means that a user willingly made available a copy of their stacks for administrators to distribute to other users. For that reason, administrators have limited editing ability for Stacks. They cannot edit the Stack's properties (name, layout, etc.) or Widgets from the Stack Manager. Those edits must occur in the actual Stack, for instructions see the _Ozone User's Guide_. From the Stack Manager, administrators can add or remove users and groups as described below:
 
 . Click the btn:[Administration] link in the drop-down User Menu.
 
