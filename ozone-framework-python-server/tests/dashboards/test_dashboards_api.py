@@ -61,15 +61,15 @@ class DashboardsApiTests(TestCase):
         self.assertEqual(response.status_code, 204)
         self.assertTrue(user_dashboard.marked_for_deletion)
 
-    def test_nonowner_of_stack_cannot_delete_dashboard(self):
+    def test_nonowner_of_dashboard_cannot_delete_dashboard(self):
         stack = Stack.create(self.admin_user, self.create_stack_payload)
-        group_dashboard, user_dashboard = stack.add_dashboard(self.regular_user, self.create_dashboard_payload)
+        group_dashboard, user_dashboard = stack.add_dashboard(self.admin_user, self.create_dashboard_payload)
 
         requests.login(email='user@goss.com', password='password')
         url = reverse('dashboards-detail', args=(f'{user_dashboard.id}',))
         response = requests.delete(url)
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 404)
 
     def test_owner_of_dashboard_can_restore_dashboard(self):
         requests.login(email='admin@goss.com', password='password')
