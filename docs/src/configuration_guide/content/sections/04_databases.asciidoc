@@ -1,0 +1,57 @@
+[#database-config]
+= Database Configuration
+
+While the full extent of administering databases is outside the scope of this guide, this section provides information on how to configure an external database for OWF.
+
+Below is an example setting for defining a connection to the database. This setting is defined in `config/production.py`
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': 5432,
+        # Wraps each web request in a transaction. So if anything fails, it will rollback automatically.
+        'ATOMIC_REQUESTS': True,
+    }
+}
+```
+
+Supported engine string for OWF are listed below +
+`'django.db.backends.postgresql'` +
+`'django.db.backends.mysql'` +
+`'django.db.backends.oracle'` +
+`'sql_server.pyodbc'`
+
+Depending on the database that you choose to use, you will need to install the appropriate packages for Django to support that database. You can simply add any of the following packages to the ``requirements_prod.txt`` and execute ``pip install -r requirements_prod.txt``
+
+You can configure OWF's database connection settings using environment variables. If the environment variable does not exist, it will default to the values listed below. If further customization is needed, you can do so by modifying the `config/production.py` file.
+
+[cols="1m,1m"]
+|===
+| Property | Default Value
+
+| OWF_DB_ENGINE
+| django.db.backends.postgresql
+
+| OWF_DB_NAME
+| postgres
+
+| OWF_DB_USER
+| postgres
+
+| OWF_DB_PASSWORD
+| postgres
+
+| OWF_DB_HOST
+| localhost
+
+| OWF_DB_PORT
+| 5432
+
+|===
+
+NOTE: When setting up databases for OWF, be mindful of the database's lexical sorting mechanism. For some instances of OWF, with a small handful of users, this may not be much of an issue, but as the database becomes more populated, sorting may become increasingly difficult to manage.
+

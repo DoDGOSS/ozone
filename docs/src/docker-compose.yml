@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+
+  ozone_docs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: "ozone/docs_builder"
+    container_name: "ozone_docs_builder"
+    entrypoint: /bin/generate.sh
+

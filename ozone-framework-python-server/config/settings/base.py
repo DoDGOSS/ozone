@@ -283,11 +283,11 @@ if ENABLE_CAS:
     CAS_SERVER_URL = os.getenv('OWF_CAS_SERVER_URL')
     CAS_VERSION = os.getenv('OWF_CAS_VERSION', '2')
 
-    CAS_CREATE_USER = False
-    CAS_STORE_NEXT = True
+    CAS_CREATE_USER = ast.literal_eval(os.getenv('OWF_CAS_CREATE_USER', 'False'))
+    CAS_STORE_NEXT = ast.literal_eval(os.getenv('OWF_CAS_STORE_NEXT', 'True'))
 
 # SSL (CAC)
-ENABLE_SSL_AUTH = False
+ENABLE_SSL_AUTH = ast.literal_eval(os.getenv('OWF_ENABLE_SSL_AUTH', 'False'))
 if ENABLE_SSL_AUTH:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     MIDDLEWARE += [
@@ -298,9 +298,9 @@ if ENABLE_SSL_AUTH:
         'config.ssl_auth.SSLClientAuthBackend'
     ]
 
-    AUTOCREATE_VALID_SSL_USERS = False
-    EXTRACT_USERDATA_FN = 'config.ssl_auth.example.get_cac_id'
-    USER_DN_SSL_HEADER = 'HTTP_X_SSL_USER_DN'
+    EXTRACT_USERDATA_FN = ast.literal_eval(os.getenv('OWF_EXTRACT_USERDATA_FN', 'config.ssl_auth.example.get_cac_id'))
+    USER_DN_SSL_HEADER = ast.literal_eval(os.getenv('OWF_USER_DN_SSL_HEADER', 'HTTP_X_SSL_USER_DN'))
+    USER_AUTH_STATUS_HEADER = ast.literal_eval(os.getenv('OWF_USER_AUTH_STATUS_HEADER', 'HTTP_X_SSL_AUTHENTICATED'))
 
 ENABLE_METRICS = False
 METRICS_SERVER_URL = 'http://localhost:3000/metric'

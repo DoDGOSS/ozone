@@ -1,0 +1,6 @@
+:app-bundle: OWF-8.0.0.0rc2
+:prod-requirements-file: requirements_prod.txt
+:path-to-config: {app-bundle}/config/
+
+
+:url-github: https://github.com/ozoneplatform/

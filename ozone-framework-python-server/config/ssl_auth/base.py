@@ -18,8 +18,8 @@ class SSLClientAuthBackend(backends.ModelBackend):
 
         if not request.is_secure():
             return None
-        authentication_status = request.META.get('HTTP_X_SSL_AUTHENTICATED', None)
-        if (authentication_status != "SUCCESS" or 'HTTP_X_SSL_USER_DN' not in request.META):
+        authentication_status = request.META.get(settings.USER_AUTH_STATUS_HEADER, None)
+        if (authentication_status != "SUCCESS" or settings.USER_DN_SSL_HEADER not in request.META):
             # HTTP_X_SSL_AUTHENTICATED marked failed or configured SSL USER DN header missing
             return None
 

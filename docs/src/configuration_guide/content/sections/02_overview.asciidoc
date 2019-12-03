@@ -1,0 +1,33 @@
+include::../_variables.asciidoc[]
+
+[#overview]
+= Overview
+
+== Purpose
+
+The Ozone Widget Framework (OWF) is a set of tools, generally delivered in the OWF Bundle. When deployed, OWF is used for organizing and displaying Web applications (widgets) in a single browser window known as an OZONE dashboard.
+
+
+== Dependencies
+
+The OWF Bundle is shipped with Waitress and requires Python 3.7.4 or higher. The bundle does not include a reverse proxy and will require one if a secure connection is desired. More information of setting up a reverse proxy to work with OWF will be provided in the <<security>> section of this guide.
+
+== Components
+
+=== Ozone Widget Framework (OWF) Web Application
+
+==== Frontend
+
+The frontend is built using ReactJs and TypeScript. The frontend client is transpiled into Javascript and minimized into smaller files to optimize loading of the application in the browser. This bundled client application is then served up as static files by the backend.
+
+==== Backend
+
+OWF is built using Python, an interpreted programming language, meaning the application will not be compiled into a single executable and all of the files necessary to start and run the application is located in the `{app-bundle}/` directory. The backend bundle will include a pre-built frontend that will be served up to the clients. OWF uses a Django package, WhiteNoise (https://github.com/evansd/whitenoise/), to serve up static files. OWF's default configuration will serve up static files from `config/staticfiles`.
+
+==== Sample Widgets
+
+A set of example widgets are provided with the project in order to demonstrate the functionality of the widget APIs.
+
+The example widgets are also included in the bundle by default and are located under the static files directory (`/config/staticfiles`).
+
+The OWF Developer's Guide includes specific examples and guides regarding the developing widgets and utilizing the widget APIs.
