@@ -12,7 +12,7 @@ const frontendUrlPlaceholder = envChecker ? "http://localhost:8000" : "http://lo
 
 const defaultEnvironment: Environment = {
     server: {
-        backendUrl: "http://localhost:8000/api/v2",
+        backendUrl: "http://localhost:8000",
         frontendUrl: frontendUrlPlaceholder,
         staticAssetPath: ""
     },

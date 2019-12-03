@@ -156,12 +156,13 @@ export class PreferencesWidget extends Component<{}, WidgetState> {
     }
 
     private validate(preference: Preference): boolean {
-        if (preference.namespace.trim() === "") {
+        console.log('validate', preference);
+        if (preference.namespace && preference.namespace.trim() === "") {
             AppToaster.show({ intent: Intent.WARNING, message: "Namespace is required" });
             return false;
         }
 
-        if (preference.path.trim() === "") {
+        if (preference.path && preference.path.trim() === "") {
             AppToaster.show({ intent: Intent.WARNING, message: "Path is required" });
             return false;
         }
