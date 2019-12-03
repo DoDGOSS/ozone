@@ -73,9 +73,4 @@ Contributions to the baseline project from outside the US Federal Government sho
 Contributions from government agencies do not need to have a CLA on file, but do require verification that the government has unlimited rights to the contribution.  An email to goss-support@owfgoss.org is sufficient, stating that the contribution was developed by an employee of the United States Government in the course of his or her duties. Alternatively, if the contribution was developed by a contractor, the email should provide the name of the Contractor, Contract number, and an assertion that the contract included the standard "Unlimited rights" clause specified by [DFARS 252.227.7014](http://www.acq.osd.mil/dpap/dars/dfars/html/current/252227.htm#252.227-7014) "Rights in noncommercial computer software and noncommercial computer software documentation".
  
 Government agencies are encouraged to submit contributions as pull requests on GitHub.  If your agency cannot use GitHub, contributions can be emailed as patches to goss-support@owfgoss.org.
- 
-### Related projects
 
-#### OZONE Marketplace
-A sister project of OWF, [Marketplace](https://github.com/ozoneplatform/omp-marketplace) is a search engine for "widgets", effectively the "apps store" for OWF.  
- 
