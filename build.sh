@@ -18,13 +18,14 @@ cp -r ./ozone-framework-client/packages/application/build ./ozone-framework-pyth
 pushd ./ozone-framework-python-server
 python setup.py sdist --formats=zip
 popd
+mkdir ./dist
 cp -r ./ozone-framework-python-server/dist/* ./dist
 
-pushd ./docs
+pushd ./docs/src
 docker container rm ozone_docs_builder
 docker image rm ozone/docs_builder
 docker-compose up --build
-docker cp ozone_docs_builder:/documents/build ./build
+docker cp ozone_docs_builder:/documents/build ../build
 popd
 mkdir ./dist/docs
 cp -r ./docs/build/* ./dist/docs
