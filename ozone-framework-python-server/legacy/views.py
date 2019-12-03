@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.utils.decorators import method_decorator
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view, parser_classes, permission_classes
@@ -23,8 +24,18 @@ from preferences.serializer import PreferenceSerializer
 from widgets.models import WidgetDefinition, WidgetType
 from widgets.serializers import WidgetDefinitionSerializer, WidgetTypeSerializer
 
+from rest_framework.authentication import SessionAuthentication
+
+
+# This is currently a work around for the legacy endpoints, used by the client widget api that do not attach a csrf token to the requests.
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
+
 
 class PreferencesViewSet(GenericViewSet):
+    authentication_classes = (CsrfExemptSessionAuthentication,)
     permission_classes = (IsAuthenticated,)
     queryset = Preference.objects.all()
     parser_classes = (FormParser,)
@@ -42,14 +53,14 @@ class PreferencesViewSet(GenericViewSet):
             defaults={"value": value}
         )
         serialized = PreferenceSerializer(obj).data
-        del(serialized['version'])
+        del (serialized['version'])
         return Response(serialized)
 
     def get(self, request, namespace=None, path=None):
         try:
             pref = Preference.objects.get(user=request.user, namespace=namespace, path=path)
             serialized = PreferenceSerializer(pref).data
-            del(serialized['version'])
+            del (serialized['version'])
             return Response(serialized)
         except Preference.DoesNotExist:
             return Response({'success': True, 'preference': None})
@@ -151,7 +162,7 @@ def _create_widget_definition_service_model(widget):
     # Add fields.
     serialized.update({
         'totalUsers': total_users,
-        'totalGroups':  total_groups,
+        'totalGroups': total_groups,
         'x': 0,
         'y': 0,
         'namespace': serialized['display_name'],

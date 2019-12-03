@@ -10,8 +10,8 @@ preferences = PreferencesViewSet.as_view({
 
 urlpatterns = [
     path('person/whoami/', whoami),
-    path('prefs/hasPreference/<str:namespace>/<str:path>/', has_preference),
-    path('prefs/preference/<str:namespace>/<str:path>/', preferences),
+    path('prefs/hasPreference/<str:namespace>/<str:path>', has_preference),
+    path('prefs/preference/<str:namespace>/<str:path>', preferences),
     path('prefs/server/resources/', server_resources),
     re_path(r'prefs/widget/listUserAndGroupWidgets/?$', prefs_widget_list_user_and_group),
 ]
