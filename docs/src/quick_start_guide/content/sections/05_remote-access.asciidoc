@@ -11,17 +11,17 @@ To run OWF remotely, and NOT from a localhost environment, execute the following
 
 The server host name can be chosen arbitrarily and entered into the users' HOST files, or it can be obtained from DNS. This Quick Start Guide will refer to the selected server host name as `servername` and to OWF as `https://servername:port/owf/`.
 
-=== Modify the Externalized Configuration Files
+=== Modify the Client's Environment Properties
 
-In order to access OWF from remote computers, externalized configuration files must point to the correct location.
+In order to access OWF from remote computers, the frontend must be configured and rebuilt. In the future this will this will be an externalized configuration file.
 
-Find the `owf.server.backendUrl` and `frontendUrl` properties in the `application.yml` file, and update the URLs with the new server host name.
+Find the `owf.server.backendUrl` and `frontendUrl` properties in the `ozone-framework-client/packages/application/src/environment/index.ts` file, and update the URLs with the new server host name.
 
-.Example: application.yml
-[source,yaml]
-----
-owf:
-    server:
-        backendUrl: "https://servername:8443/owf"
-        frontendUrl: "https://servername:8443/owf"
-----
+//.Example: application.yml
+//[source,yaml]
+//----
+//owf:
+//    server:
+//        backendUrl: "https://servername:8443/owf"
+//        frontendUrl: "https://servername:8443/owf"
+//----

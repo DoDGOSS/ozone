@@ -26,8 +26,7 @@ include::sections/03_bundle.asciidoc[]
 
 include::sections/04_development.asciidoc[]
 
-// TODO: bring this back when we make frontend settings more configurable.
-// include::sections/05_remote-access.asciidoc[]
+include::sections/05_remote-access.asciidoc[]
 
 include::../../common/glossary.asciidoc[leveloffset=+1]
 
