@@ -1,0 +1,150 @@
+include::../_variables.asciidoc[]
+
+[#security]
+= Security
+
+== Overview
+
+OWF allows an administrator to customize the type of security that is implemented for authentication.
+
+OWF uses a pluggable security solution using Django middlewares. This documentation will include instructions on how to configure them.
+
+Familiarity with Django settings (https://docs.djangoproject.com/en/2.2/ref/settings/) will help administrators customize OWF.
+
+
+=== Basic Security Concepts and OWF
+
+While this guide is not intended as a comprehensive guide to basic security concepts, Web security, or Spring Security, there are a few key concepts that must be understood in order to use the sample OWF security plugins and the OWF security plugin architecture.
+
+First are the concepts of authentication and authorization, known colloquially as auth & auth. Authentication essentially means providing proof that the user is exactly who they are presenting themselves to be. Some authentication techniques include a username/password combination, an X509 certificate, a CAC card and card reader, or various biometric solutions. Authorization, on the other hand, is determining the specific access rights that an individual user should have. Consider the following:
+
+* "Bill is allowed to log into the system – prove that you are Bill," is a matter of authentication.
+* "Bill has access to resources," is a question of authorization.
+
+By necessity, authentication occurs before authorization. Once authentication is satisfied, OWF moves to authorize. OWF has two authorization concepts at this time. First, OWF needs to know whether or not a user has OWF administrative access via ROLE_ADMIN or is only a regular user, via ROLE_USER. Administrative access provides a user access to the administrative widgets and the administrative console. Regular users have access only to the framework and their assigned dashboards.
+
+Second, OWF needs to know what external OWF user groups (if any) the user has been assigned. There are two kinds of user groups; automatic user groups, which are pulled in from an external authorization source, such as LDAP or a configuration file, and manual user groups, which are set up from within OWF. If an automatic user group is new to OWF, all of the automatic user groups' details such as description, active/inactive status, contact email address, and name come from the external source. But after the initial creation of the group in OWF, no further updates to the description, status, etc. are made.
+
+
+=== Production Deployments
+
+The samples included with OWF are *NOT* production-quality samples. They are intended to provide examples on how to easily integrate various security solutions with OWF, not to provide a comprehensive security solution out of the box or a comprehensive tutorial on django's authentication mechanism.
+
+It is expected that each organization using OWF will examine its security guidelines and enterprise-wide authentication/authorization solutions and produce an OWF security plugin that is both secure and meets its standards. That solution can then be shared among OWF deployments within the organization.
+
+
+== Default Security Configuration
+
+The OWF Bundle is configured to run by default on `localhost` with a predefined set of users.
+
+
+[#default-users-config]
+=== Adding Users, Roles, & Groups
+
+The addition of users and groups into OWF depends on the choice of security implementation. The following example outlines the procedures for adding users, groups, and roles when using the sample security configurations.
+
+
+=== Installing Security Modules
+
+A security module can be enabled by setting the environment variable associated with enabling the security module or to set the settings value manually in `config/settings/base.py` to enable the the desired authentication mechanism.
+
+=== Basic Authentication
+
+By default, OWF uses basic authentication as its security mechanism. Basic auth is a username and password based authentication.
+
+When using basic authentication users can be added to OWF via python shell.
+```
+python manage.py shell
+>>> from people.models import Person
+>>> Person.objects.create_user(email='', username='', password='')
+```
+
+=== CAC Authentication - X.509 Certificate (PKI)
+
+CAC authentication is a certificate based authentication. Because OWF does not support communication over secure channels out-of-the-box, the proper way to enable certficate based authentication is to standup OWF behind a reverse proxy to handle the validation and decryption of client certificates.
+
+When CAC authentication is enabled, OWF assumes the client's certficiate has been validated and decrypted for any request it receives. 
+
+The following options are used for configuring certificate authentication in the OWF application config.
+|===
+
+| Setting | Env Var | Default Value | Description
+
+| ENABLE_SSL_AUTH
+| OWF_ENABLE_SSL_AUTH
+| False
+| enable or disable certificate based authentication.
+
+| USER_AUTH_STATUS_HEADER
+| OWF_USER_AUTH_STATUS_HEADER
+| HTTP_X_SSL_AUTHENTICATED
+| header that contains the authentication status of the request.
+
+| USER_DN_SSL_HEADER
+| OWF_USER_DN_SSL_HEADER
+| HTTP_X_SSL_USER_DN
+| header that contains the certificate's DN.
+
+| EXTRACT_USERDATA_FN
+| OWF_EXTRACT_USERDATA_FN
+| config.ssl_auth.example.get_cac_id
+| location of the function to parse data from the certificate's DN.
+
+|===
+
+The following is an example config file for nginx, a reverse proxy.
+```
+include::installation/nginx-config-example.asciidoc[]
+```
+More details on the nginx http ssl module can be found http://nginx.org/en/docs/http/ngx_http_ssl_module.html
+
+For development and testing purposes, you can run nginx in a container using the docker-compose.yml provided in `config/ssl_auth/samples` directory. The sample certificates are also included in the same directory, and need to be copied into the container or modify the docker-compose.yml to mount the necessary files.
+
+
+==== Installing User Certificates (PKI)
+
+In order to use certificate-based authentication, both the server and clients must be configured with the appropriate certificates. Sample certificates are included in the bundle under the `config/settings/ssl_auth/samples` directory.
+
+These default client certificates can be used by importing the included `testUser1.p12` or `testAdmin1.p12` certificate into the user's browser.
+
+The `testUser1` certificate grants regular user permissions to use the application, while the `testAdmin1` certificate grants both regular user administrator permissions. The private key password for both certificates is `password`.
+
+Please refer to the *Ozone Quick Start Guide* for detailed instructions on importing the user certificates into a web browser.
+
+=== CAS Authentication
+
+OWF comes with support for CAS based authentication. OWF leverages the `django-ng-cas` package to implement the CAS client used for this security mechanism.
+
+The following options are used for configuring CAS authentication in the OWF application config.
+|===
+
+| Setting | Env Var | Default Value | Description
+
+| ENABLE_CAS
+| OWF_ENABLE_CAS
+| False
+| enables or disabled CAS based authentication
+
+| CAS_EXTRA_LOGIN_PARAMS
+| OWF_CAS_EXTRA_LOGIN_PARAMETERS
+| {}
+| extra URL parameters to add to the login URL when redirecting the user
+
+| CAS_RENAME_ATTRIBUTES
+|
+| { uid: username }
+| a dict used to rename the (key of the) attributes that the CAS server may retrun
+
+| CAS_SERVER_URL
+| OWF_CAS_SERVER_URL
+|
+| base URL of your CAS source
+
+| CAS_VERSION
+| OWF_CAS_VERSION
+| 2
+| The CAS protocol version to use. '1' '2' '3' and 'CAS_2_SAML_1_0' are supported
+
+|===
+
+More details on the django-cas-ng package can be found https://github.com/mingchen/django-cas-ng

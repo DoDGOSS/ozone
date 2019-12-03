@@ -1,0 +1,73 @@
+include::../_variables.asciidoc[]
+
+[#installation]
+= Installation
+
+== Dependencies
+
+Listed below are the dependencies for running OWF:
+
+* Python 3.7.4 or higher.
+* A Relational Database Management System (RDBMS). Oracle, MySQL, MSSQL, or Postgres.
+* Docker 17.04.0 or higher (optional)
+
+== Supported Browsers
+
+OWF is tested against the following browsers:
+
+.Supported Browsers
+|===
+| Browser | Version(s)
+
+| Internet Explorer | > 11
+| Edge | > 44
+| Chrome | > 74
+| Firefox | > 60
+|===
+
+== Bundle Overview
+
+=== Bundle Contents
+
+The distribution of OWF consists of the bundled frontend and the Python/Django backend necessary to setup and run OWF in a development environment.
+
+* `{app-bundle}/` - bundled application that includes the client and the server.
+* `docs/` – Copies of the application documentation and guides.
+
+=== Running the Application
+
+The following instructions explain how an administrator might start the Ozone application from the bundle.
+
+==== Prerequisites
+* A supported database is running.
+* The migration of the database is complete.
+** More details can be found later in the <<database-config>> section of this guide.
+* All of the backend dependencies are installed.
+** This can be accomplished by running ``pip install -r requirements_prod.txt`` command from the ``{app-bundle}/`` directory in the bundle
+
+Once the prerequisites are met, run ``waitress-serve --port=8000 --url-scheme=https config.wsgi:application`` in ``{app-bundle}/``
+
+
+== Default Installation
+
+The default configuration will attempt to connect to a postgres database with the following options:
+
+`host: *localhost*` +
+`port: *5432*` +
+`database name: *postgres*` +
+`database user: *postgres*` +
+`database password: *postgres*`
+
+
+When using this standard configuration, OWF uses the default security module which provides a simple username and password login form for authentication.
+
+The default installation will not be behind a secure connection. In order to connect to the application through SSL/TLS, the application should be behind a reverse proxy server. An example configuration using Nginx as the reverse proxy server is provided later in the <<security>> section of this guide
+
+
+== Custom Installation
+
+OWF can be customized to run in a variety of environments.
+
+To configure an external database, see <<database-setup>>.
+
+To configure security settings, see <<security>>.
