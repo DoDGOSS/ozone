@@ -1,4 +1,4 @@
-= Ozone Administrators's Guide
+= Ozone Administrator's Guide
 // Metadata:
 :doctype: book
 :author: DOD GOSS
