@@ -1,0 +1,2 @@
+:bundle-dir: OWF-8.X.X.X
+:bundle-start-script: {bundle-dir}/start.sh

@@ -1,0 +1,208 @@
+= Logging
+
+== Logging Configuration
+
+Logging can be configured by editing the `base.py` file which can be found in the `config/settings/` directory.
+
+.Example logging configuration for the logger -- base.py
+[source,python]
+----
+#  LOG
+if not os.path.exists('./logs'):
+    os.mkdir('./logs')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'ignore_markdown_logs': {
+            '()': 'config.owf_utils.owf_logging_backends.MarkDownFilter',
+        },
+        'ignore_reload_logs': {
+            '()': 'config.owf_utils.owf_logging_backends.ReloadFilter',
+        },
+        'ignore_favicon_logs': {
+            '()': 'config.owf_utils.owf_logging_backends.FaviconFilter',
+        },
+    },
+    'formatters': {
+        'console': {
+            'format': '%(levelname)-8s SHOST: [%(hostname)s] TIME [ %(asctime)s ] %(name)-12s %(message)s ',
+            'class': 'config.owf_utils.owf_logging_backends.HostnameAddingFormatter',
+        },
+        'cef-format': {
+            'format': '%(asctime)s CEF shost=%(hostname)s %(message)s ',
+            'datefmt': "%d/%b/%Y %H:%M:%S",
+            'class': 'config.owf_utils.owf_logging_backends.HostnameAddingFormatter',
+        },
+        'event-format': {
+            'format': '%(levelname)-8s SHOST: [%(hostname)s] TIME [ %(asctime)s ] %(name)-12s %(message)s ',
+            'datefmt': "%d/%b/%Y %H:%M:%S",
+            'class': 'config.owf_utils.owf_logging_backends.HostnameAddingFormatter',
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'filters': ['ignore_markdown_logs', 'ignore_reload_logs', 'ignore_favicon_logs'],
+            'formatter': 'console'
+        },
+        'cef-file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filters': ['ignore_markdown_logs', 'ignore_reload_logs', 'ignore_favicon_logs'],
+            'formatter': 'cef-format',
+            'filename': os.getenv('CEF_LOCATION', 'logs') + '/owf-cef.log',
+            'maxBytes': 50000,
+            'backupCount': 2,
+        },
+        'event-file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filters': ['ignore_markdown_logs', 'ignore_reload_logs', 'ignore_favicon_logs'],
+            'formatter': 'event-format',
+            'filename': os.getenv('CEF_LOCATION', 'logs') + '/owf-events.log',
+            'maxBytes': 50000,
+            'backupCount': 2,
+        }
+    },
+    'loggers': {
+        'owf.enable.cef.object.access.logging': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'event-file']
+        },
+        'owf.enable.cef.logging': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'cef-file']
+        },
+        'django.security.DisallowedHost': {
+            'handlers': ['console', ],
+            'propagate': False,
+            'level': 'ERROR',
+        },
+        # 'django.db.backends': {
+        #     'handlers': ['console'],
+        #     'level': 'DEBUG',
+        # },
+        # Captures All SQL Expressions that are run in the server when uncommented
+        # WARNING IF RUN IN PRODUCTION THIS WILL SLOW DOWN THE APPLICATION
+    }
+}
+
+----
+
+Logging supports configuration using a Django (python wrapper) Domain Specific Language (DSL) as demonstrated above.
+
+The configuration options and syntax for the Django logger configuration are documented in the Django documentation as well as the python documentation, listed below.
+
+*References:*
+
+* Django: Logger Configuration (DSL) – https://docs.djangoproject.com/en/2.2/topics/logging/
+* Python >= v3.7.x: Logging Guide – https://docs.python.org/3.7/howto/logging-cookbook.html
+
+
+[#audit-logging]
+== Audit Logging
+
+OWF includes an option to audit all user entry and exit in the system. The OWF Bundle ships with this feature enabled by default. The Audit Log tracks the following types of changes:
+
+* Both successful and unsuccessful sign-in attempts
+* User sign-out events:
+
+// TODO: Session Log
+
+//* User Sign-out Events:
+//** A user signing out on purpose
+//** A session times out
+
+NOTE: References to CAS and OWF must match the settings of the current installation.
+
+
+=== Sign-in Events
+
+Sign-in events are logged by the `owf.enable.cef.object.access.logging` logger. This logger supports two levels of logging: `info` and `debug`, with the latter providing more detailed information about each sign-in event.
+
+
+A failed sign in produces the following log statement at the info level:
+
+.Failed sign-in event (INFO)
+----
+INFO     SHOST: [xxxxxxxx] TIME [ 28/Nov/2019 00:52:55 ] owf.enable.cef.object.access.logging IP: 127.0.0.1 USER: admin[USER LOGIN]: ACCESS DENIED with FAILURE MSG: [Login for admin] attempted with authenticated credentials
+----
+
+A failed sign in produces the following log statement at the debug level:
+
+.Failed sign-in event (DEBUG)
+----
+DEBUG    SHOST: [xxxxxxxx] TIME [ 28/Nov/2019 00:32:20 ] owf.enable.cef.object.access.logging  IP: 127.0.0.1 USER: admin [USER LOGIN]: ACCESS DENIED with FAILURE MSG: [Login for admin attempted with authenticated credentials]
+----
+
+A successful PKI Certificate sign in produces the following log statement at the info level:
+
+.Successful certificate sign-in event (INFO)
+----
+INFO     SHOST: [xxxxxxxx] TIME [ 28/Nov/2019 00:54:17 ] owf.enable.cef.object.access.logging IP: 127.0.0.1 User: admin [USER LOGIN]: LOGIN SUCCESS - ACCESS GRANTED USER [admin] with EMAIL [admin@goss.com]
+----
+
+A successful PKI Certificate sign-in statement produces the following log statement at the debug level:
+
+.Successful certificate sign-in event (DEBUG)
+----
+DEBUG    SHOST: [xxxxxxxx] TIME [ 28/Nov/2019 00:36:36 ] owf.enable.cef.object.access.logging IP: 127.0.0.1 User: admin [USER LOGIN]: LOGIN SUCCESS - ACCESS GRANTED USER [admin] with EMAIL [admin@goss.com]
+----
+
+
+=== Logout Events
+
+Sign-out events are logged by the `owf.enable.cef.object.access.logging` logger. This logger supports two levels of logging: `info` and `debug`, with the latter providing more detailed information about each sign-out event.
+
+Below is a typical user-initiated sign-out event which has been saved as a log entry, with the log level set to info:
+
+.Sign-out event (INFO)
+----
+INFO     SHOST: [xxxxxxxx] TIME [ 28/Nov/2019 00:54:54 ] owf.enable.cef.object.access.logging IP: 127.0.0.1 SessionID: k8ng2mgu1d9ycm7ofppdbhorfcbftqp4 USER: admin [USER LOGOUT]
+----
+
+Below is a typical user sign-out event which has been saved as a log entry, with the log level set to debug:
+
+.Sign-out event (DEBUG)
+----
+DEBUG    SHOST: [xxxxxxxx] TIME [ 28/Nov/2019 00:48:33 ] owf.enable.cef.object.access.logging IP: 127.0.0.1 SessionID: jfe6idrvl7vpeacaebb8a5iw20v7f2rp USER: admin [USER LOGOUT] with EMAIL admin@goss.com with LAST LOGIN DATE [ 2019-11-28 00:36:36.873949+00:00 ]
+----
+
+// TODO: Session Log
+
+//A user can also be forced to sign-out when their session times out. Below are info and debug log statements:
+//
+//.Session time-out event (INFO)
+//----
+//INFO [02/07/2011 10:08:21 -0500] IP: 127.0.0.1 SessionID: 1b4nvaqnb0qx8 User: testAdmin1 [USER SESSION TIMEOUT]
+//----
+//
+//.Session time-out event (DEBUG)
+//----
+//DEBUG [02/07/2011 10:24:21 -0500] IP: 127.0.0.1 SessionID: d0pq3g4xguv3 User: testAdmin1 [USER SESSION TIMEOUT] with ID [1], with EMAIL [testAdmin1@nowhere.com], with ACCOUNT CREATED DATE [02/07/2011 10:23:18 -0500], with LAST LOGIN DATE [02/07/2011 10:23:18 -0500]
+//----
+
+
+== Common Event Format (CEF) Auditing
+
+Common Event Format (CEF) auditing capabilities are available in OWF. To enable/disable them, sign into OWF as an administrator and navigate to the auditing configurations.
+CEF auditing is turned ON by default, the toggle controls for both CEF and Object Access auditing are found in OWF's Application Configurations which is located on the drop-down User Menu in the user interface. For more information, see the OWF Administrator's Guide.
+
+When enabled, CEF auditing records common user events:
+
+* Sign in and out requests
+* Create, Read, Edit and Delete requests
+* Import and Export requests
+
+The following are two log examples using CEF auditing:
+
+.CEF auditing from an object modification event
+----
+28/Nov/2019 01:04:36 CEF shost=Ryans-MacBook-Pro.local suid=admin requestMethod=USER_INITIATED|PUT outcome=200 data=<QueryDict: {'version': ['1571151178'], 'created_date': ['2019-10-15'], 'edited_date': ['2019-10-15'], 'code': ['owf.job.disable.accounts.start.time'], 'value': ['23:59:59'], 'title': ['Disable Accounts Job Start Time'], 'description': [''], 'type': ['String'], 'group_name': ['HIDDEN'], 'sub_group_name': [''], 'mutable': ['true'], 'sub_group_order': ['1'], 'help': ['']}> urlName=admin_application-configuration-detail requestType=<WSGIRequest: PUT '/api/v2/admin/application-configuration/11/'>
+
+----
+
+.CEF auditing from a log-in event
+----
+28/Nov/2019 01:02:24 CEF shost=Ryans-MacBook-Pro.local suid=admin requestMethod=USER_INITIATED|POST outcome=302 data=<QueryDict: {'csrfmiddlewaretoken': ['IpAMhvpgjUkSNa8WOOQwJjfeRz5SA73TD0YJfN2YGy51tdidvoqqC5MRx0wR8snH'], 'username': ['admin'], 'next': ['/admin/']}> urlName=login requestType=<WSGIRequest: POST '/admin/login/?next=/admin/'>
+----

@@ -74,14 +74,14 @@ def on_login_failed(sender, credentials, request, **kwargs):
         sec_level = ApplicationConfiguration.objects.get(title='Security Level',
                                                          code='owf.security.level').value
         if sec_level.startswith('D') or sec_level.startswith('d'):
-            return logger.debug(f' {settings.LOGGER_INFORMATION} IP: {get_client_ip(request)} '
+            return logger.debug(f'IP: {get_client_ip(request)} '
                                 f'USER: {credentials["username"]}'
                                 f' [USER LOGIN]: ACCESS DENIED with FAILURE MSG: [Login for {credentials["username"]} '
                                 f'attempted with authenticated credentials')
         elif sec_level.startswith('I') or sec_level.startswith('i'):
-            return logger.info(f' {settings.LOGGER_INFORMATION} IP: {get_client_ip(request)} '
+            return logger.info(f'IP: {get_client_ip(request)} '
                                f'USER: {credentials["username"]}'
-                               f'[USER LOGIN]: ACCESS DENIED with FAILURE MSG: [Login for {credentials["username"]} '
+                               f'[USER LOGIN]: ACCESS DENIED with FAILURE MSG: [Login for {credentials["username"]}] '
                                f'attempted with authenticated credentials')
     else:
         pass
