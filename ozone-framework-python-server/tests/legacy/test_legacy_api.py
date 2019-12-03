@@ -146,3 +146,12 @@ class TestingLegacyApi(TestCase):
             content_type='application/x-www-form-urlencoded'
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_prefs_widget_list_user_and_group_post_fails(self):
+        login_as_admin()
+        response = requests.post(
+            '/prefs/widget/listUserAndGroupWidgets',
+            'widgetVersion=1.0',
+            content_type='application/x-www-form-urlencoded'
+        )
+        self.assertEqual(response.status_code, 405)
