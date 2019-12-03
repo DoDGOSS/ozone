@@ -2,11 +2,15 @@ ifndef::path-root[]
 :path-root: ../..
 endif::[]
 
-:path-full: ozone/docs/developers_guide
+:path-full: ozone/docs/src/developers_guide
 :path-examples: examples
 :relpath-examples: {path-root}/{path-examples}
 
 :path-server: node-server
 :path-server-public: {path-server}/public
+:path-examples: examples
 
 :url-server: http://localhost:5000
+:github-legacy-sample-widgets: https://github.com/ozoneplatform/owf-framework/tree/master/sample-widgets
+
+:staticfiles-widget-js: config/staticfiles/owf-widget.js

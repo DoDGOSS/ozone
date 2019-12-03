@@ -19,7 +19,7 @@ Developers can save the Widget information in the descriptor file and then share
 
 Descriptor URLs offer several benefits. They reduce the risk of typing errors when entering widget data into the OWF interface. They allow for several installations of OWF to easily share widget information via the descriptor file. In addition, descriptor files can contain a universal name which is a developer-generated, custom identifier that can be used to identify the widget across multiple OWF instances.
 
-To support Internet Explorer 10 and higher, the location that hosts Widget descriptor files must be CORS enabled. Usually, the Web app used to create the Widget also serves as the host for the descriptor file. The method used to configure CORS support will vary based on the type of Web app platform used. For backwards compatibility, the format of the descriptor file itself is unchanged. The template is located in `etc/widget/descriptor` within the OWF bundle.
+To support Internet Explorer 10 and higher, the location that hosts Widget descriptor files must be CORS enabled. Usually, the Web app used to create the Widget also serves as the host for the descriptor file. The method used to configure CORS support will vary based on the type of Web app platform used. For backwards compatibility, the format of the descriptor file itself is unchanged. The template is located in `config/staticfiles/examples/descriptor.json` within the OWF bundle.
 
 To create a widget descriptor URL, follow these instructions:
 

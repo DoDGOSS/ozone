@@ -32,7 +32,8 @@ include::sections/05_preferences-api.asciidoc[]
 
 include::sections/06_launcher-api.asciidoc[]
 
-include::sections/07_intents-api.asciidoc[]
+// TODO - Translate intents api
+// include::sections/07_intents-api.asciidoc[]
 
 include::sections/08_rpc-api.asciidoc[]
 
