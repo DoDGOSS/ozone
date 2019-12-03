@@ -25,7 +25,7 @@ class TestingLegacyApi(TestCase):
 
     def test_prefs_has_preference(self):
         login_as_admin()
-        response = requests.get('/prefs/hasPreference/owf.admin.UserEditCopy/guide_to_launch/')
+        response = requests.get('/prefs/hasPreference/owf.admin.UserEditCopy/guide_to_launch')
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['preferenceExist'], True)
@@ -33,36 +33,36 @@ class TestingLegacyApi(TestCase):
 
     def test_prefs_has_preference_false(self):
         login_as_admin()
-        response = requests.get('/prefs/hasPreference/fake/fake/')
+        response = requests.get('/prefs/hasPreference/fake/fake')
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['preferenceExist'], False)
         self.assertEqual(response.data['statusCode'], 200)
 
     def test_prefs_has_preference_unauthenticated(self):
-        response = requests.get('/prefs/hasPreference/namespace/path/')
+        response = requests.get('/prefs/hasPreference/namespace/path')
         self.assertEqual(response.status_code, 403)
 
     def test_prefs_preference_get(self):
         login_as_admin()
-        response = requests.get('/prefs/preference/owf.admin.UserEditCopy/guide_to_launch/')
+        response = requests.get('/prefs/preference/owf.admin.UserEditCopy/guide_to_launch')
         self.assertTrue(response.status_code, 200)
 
     def test_prefs_preference_get_does_not_exist(self):
         login_as_admin()
-        response = requests.get('/prefs/preference/no/no/')
+        response = requests.get('/prefs/preference/no/no')
         self.assertTrue(response.status_code, 200)
         self.assertEqual(response.data['success'], True)
         self.assertEqual(response.data['preference'], None)
 
     def test_prefs_preference_get_unauthenticated(self):
-        response = requests.get('/prefs/preference/namespace/path/')
+        response = requests.get('/prefs/preference/namespace/path')
         self.assertEqual(response.status_code, 403)
 
     def test_prefs_preference_post(self):
         login_as_admin()
         response = requests.post(
-            '/prefs/preference/new_namespace/new_path/',
+            '/prefs/preference/new_namespace/new_path',
             'value=the_value',
             content_type='application/x-www-form-urlencoded'
         )
@@ -71,7 +71,7 @@ class TestingLegacyApi(TestCase):
     def test_prefs_preference_post_exists(self):
         login_as_admin()
         response = requests.post(
-            '/prefs/preference/owf.admin.UserEditCopy/guide_to_launch/',
+            '/prefs/preference/owf.admin.UserEditCopy/guide_to_launch',
             'value=new_value',
             content_type='application/x-www-form-urlencoded'
         )
@@ -79,13 +79,13 @@ class TestingLegacyApi(TestCase):
         self.assertEqual(response.data['value'], 'new_value')
 
     def test_prefs_preference_post_unauthenticated(self):
-        response = requests.post('/prefs/preference/namespace/path/')
+        response = requests.post('/prefs/preference/namespace/path')
         self.assertEqual(response.status_code, 403)
 
     def test_prefs_preference_put(self):
         login_as_admin()
         response = requests.put(
-            '/prefs/preference/owf.admin.UserEditCopy/guide_to_launch/',
+            '/prefs/preference/owf.admin.UserEditCopy/guide_to_launch',
             'value=new_value',
             content_type='application/x-www-form-urlencoded'
         )
@@ -95,14 +95,14 @@ class TestingLegacyApi(TestCase):
     def test_prefs_preference_put_new(self):
         login_as_admin()
         response = requests.put(
-            '/prefs/preference/new_namespace/new_path/',
+            '/prefs/preference/new_namespace/new_path',
             'value=the_value',
             content_type='application/x-www-form-urlencoded'
         )
         self.assertTrue(response.status_code, 200)
 
     def test_prefs_preference_put_unauthenticated(self):
-        response = requests.put('/prefs/preference/namespace/path/')
+        response = requests.put('/prefs/preference/namespace/path')
         self.assertEqual(response.status_code, 403)
 
     def test_prefs_server_resources(self):
