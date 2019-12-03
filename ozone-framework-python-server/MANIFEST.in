@@ -1,0 +1,6 @@
+include logs/
+include manage.py
+include requirements_prod.txt
+include start.sh
+recursive-include config/staticfiles *
+recursive-include config/help_files *

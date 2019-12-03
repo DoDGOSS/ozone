@@ -1,0 +1,199 @@
+ifndef::imagesdir[]
+:imagesdir: ../images/
+endif::[]
+
+== Components
+
+This is an overview explaining how to start using the Ozone Widget Framework. Find detailed information in the OWF User's Guide.
+
+
+=== Toolbar
+
+.Toolbar (left)
+image::toolbar_left.png[width=250px]
+
+.Toolbar (right)
+image::toolbar_right.png[]
+
+.Toolbar buttons
+[cols="1a,4"]
+|===
+| image::marketplace_button.png[]
+| *Marketplace view* +
+  Select and switch the view to a Marketplace, to discover and add dashboards and widgets.
+
+| image::dashboard_button.png[]
+| *Dashboard view* +
+  Switch the view to the active dashboard.
+
+| image::stacks_menu_button.png[width=90px]
+| *Stacks menu* +
+  Used to find, start, and manage stacks and dashboards.
+
+| image::widgets_button.png[]
+| *Widgets menu* +
+  Used to list available widgets and add them to the dashboard.
+
+| image::theme_button.png[]
+| *Theme toggle* +
+  Toggle between Light and Dark themes.
+
+| image::help_button.png[]
+| *Help* +
+  Online repository of Ozone guides and tutorials.
+|===
+
+
+=== User menu
+
+.User drop-down menu
+image::user_menu.png[width=250px]
+
+.User menu options
+[cols="1,4"]
+|===
+| Profile
+| View user information for the currently logged in user.
+
+| Administration
+| Manage stacks, widgets, users, groups and system configuration settings. +
+  _(Note: This option will only appear to users with Administrator privileges.)_
+
+| About
+| Information box containing a description of the current version of the application.
+
+| Widget Switcher
+| Manage widgets that are running in the background.
+
+| Sign Out
+| Log out of the application.
+|===
+
+=== Stacks
+
+A stack is a collection of dashboards. It can be used to group similar dasboards into a single category that can then be shared with other users.
+
+
+=== Dashboards
+
+In simple terms, a dashboard is a screen where a user can dictate which widgets to load, which layouts to use, and the arrangement of the widgets within the specified layouts. 
+
+Each time a saved dashboard loads, the layout maintains the same look and feel as the last time the dashboard was accessed by the user.
+
+Users can receive dashboards by the following methods:
+
+* Create their own.
+* Add from the Marketplace.
+* Stack assigned to individual user.
+* Stack assigned to a group that the user is a member of.
+
+Group-assigned dashboards provide identical layouts and widgets for each member of a group. Each group member can customize their instance of a pre-configured dashboard. Dashboards that were shared to a user can be restored to their default states.
+
+==== Stacks menu
+
+The stacks menu lists all of the user's stacks and the stacks can be expanded to list all of the dashboards in each stack. The stacks included here are Ozone dashboards, either created in OWF or obtained from the Marketplace.
+
+From the stacks menu, users can create, edit, share, restore, or delete a stack. Users can also create, restore, edit, or delete dashboards.
+
+To open the stacks menu, click the stacks menu button image:stacks_menu_button.png[width=90px] in the OWF toolbar.
+
+.Stacks menu
+image::stacks_dialog.png[width=600px]
+
+
+[discrete]
+===== Opening a dashboard
+
+Stacks can contain one or more layouts called Dashboards. If a stack has only one dashboard, then clicking its icon in the stacks menu will start it.
+
+To open a dashboard:
+
+. Click the stacks menu button in the toolbar to open the stacks menu.
+. Click a stack.
+.. If it has one dashboard, it will automatically open.
+.. If it has more than one dashboard, then clicking the stack's icon will expand the list, displaying all of the stack's dashboards.
+
+
+=== Widgets
+
+A widget is a lightweight, single-purpose application that offers a summary or limited view of a larger application or dashboard. In OWF, a widget is a global description for a piece of Web content that can be configured by the user and displayed within an dashboard.
+
+
+==== Widget toolbar
+
+Users can access their widgets from the widget toolbar by clicking the widgets button image:widgets_button.png[] in the toolbar. Once open, the Widget Toolbar appears on the left side of the screen.
+
+.Widget toolbar
+image::widget_toolbar.png[]
+
+
+[discrete]
+===== Adding a widget to a dashboard
+
+To start a widget in a dashboard:
+
+. Open the widget toolbar by clicking the widgets button image:widgets_button.png[] in the toolbar.
+. Start a widget using one of the following methods:
+** Click the widget to immediately add it to the active dashboard.
+** Drag the widget from the widget Toolbar into the active dashboard. +
+... The widget toolbar disappears revealing the active dashboard.
+... Drop the widget in the desired location of the dashboard.
+... The widget toolbar reappears after the widget has been added.
+. Repeat this action to open another widget.
+. When finished, close the widget toolbar by clicking the image:widget_toolbar_close_button.png[] in the upper-right corner.
+
+
+=== Intents
+
+Intents are the instructions for carrying out a widget's intentions. One widget requests an action (think of actions as verbs like view, share, edit, etc.), then another widget receives that request and performs the action. Intents build on OWF's publish / subscribe feature by allowing users to choose the widget(s) that will use data. This binding capability enables two widgets to share data in a way that improves their function.
+
+For example, the NYSE widget charts data about the stock exchange. Some users may want to view that data as a Web page. This is possible if the NYSE widget has an Intent that tells it to send data to widgets that display data in a Web format. 
+
+NOTE: Widgets may have multiple intents associated with them. Users cannot create widget intents. Administrators and developers (logged in as administrators) add widget intents through the OWF administrator interface. Developers also add the intents through widget descriptor URLs.
+
+
+==== How to Use Intents
+
+// TODO: Replace pictures (and review text) once Intents functionality and UI are added to the application.
+
+When a widget sends an intent request, a pop-up window appears displaying all of the open widgets that can receive the requested intent action and data for an intended purpose (graphing, displaying, etc.).
+
+.Widget selection dialog for intents
+image::intents_dialog_1.png[]
+
+Select a widget to accept the requested Intent:
+
+* Click one of the widgets displayed on the window OR
+* Click the widget link to send the information to a widget that is not open on the screen:
+
+.Select an alternate widget for the intent
+image::intents_dialog_2.png[]
+
+NOTE: Checking the "Remember" box will allow the selected widget to automatically open the requesting widget's data. This function will continue until the user breaks the connection by closing either the sending or receiving widget.
+
+After a user selects a receiving widget, the intent data is automatically sent to and processed by the receiving widget. To place the widget on the dashboard, click or drag it from the menu into the dashboard. Once the receiving widget is placed and open in the dashboard, it will receive the sending widget intent request.
+
+
+=== Themes
+
+OWF currently provides a light and a dark theme.
+
+To toggle the selected theme:
+
+. Click the Theme button image:theme_button.png[] in the toolbar.
+
+
+=== The Marketplace
+
+// TODO Update after Marketplace integration and UI has been completed.
+
+The Ozone Marketplace, similar to a commercial app store, operates as a thin-client registry of applications and services. The Marketplace provides search and discovery functionality that enables OWF users to find, add and share useful tools including (but not limited to) widgets, dashboards, and web applications.
+
+If OWF has been configured for is connected to one or more Marketplaces, the Marketplace button  allows the user to select and launch the Marketplace within the OWF user interface.
+
+When a single Marketplace is connected, clicking the Marketplace button immediately launch the default Marketplace.
+
+If multiple Marketplaces are connected, clicking the Marketplace button opens the Marketplace Switcher, allowing the user to select the desired Marketplace to launch.
+
+.Marketplace selection dialog
+image::stores_dialog.png[]

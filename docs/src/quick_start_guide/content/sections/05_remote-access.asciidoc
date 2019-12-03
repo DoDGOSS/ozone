@@ -1,0 +1,27 @@
+== Allowing Remote Access to OWF
+
+To run OWF remotely, and NOT from a localhost environment, execute the following steps:
+
+. Identify a server host name.
+. Generate a server certificate.
+. Install the server certificate.
+. Modify configuration files.
+
+=== Identifying a Server Name
+
+The server host name can be chosen arbitrarily and entered into the users' HOST files, or it can be obtained from DNS. This Quick Start Guide will refer to the selected server host name as `servername` and to OWF as `https://servername:port/owf/`.
+
+=== Modify the Externalized Configuration Files
+
+In order to access OWF from remote computers, externalized configuration files must point to the correct location.
+
+Find the `owf.server.backendUrl` and `frontendUrl` properties in the `application.yml` file, and update the URLs with the new server host name.
+
+.Example: application.yml
+[source,yaml]
+----
+owf:
+    server:
+        backendUrl: "https://servername:8443/owf"
+        frontendUrl: "https://servername:8443/owf"
+----

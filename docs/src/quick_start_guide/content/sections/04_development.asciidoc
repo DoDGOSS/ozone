@@ -1,0 +1,58 @@
+ifndef::imagesdir[]
+:imagesdir: ../images/
+endif::[]
+
+== Development Build Process
+
+=== Additional requirements
+
+* NodeJs
+* Python
+* Cloned ozone GitHub repository
+* Docker (optional)
+
+=== Starting the frontend
+
+.Start using Node.js and npm
+----
+ozone/ozone-framework-client$ npm install
+ozone/ozone-framework-client/packages/application$ npm install
+ozone/ozone-framework-client$ npm run start
+----
+
+
+=== Starting the backend
+
+.Start using manage.py
+----
+// Install all required dependencies with pip
+ozone/ozone-framework-python-server$ pip install -r requirements.txt
+
+// Start the backend server
+ozone/ozone-framework-python-server$ start-dev.sh
+----
+
+=== Starting OWF via Docker
+
+.Start single app bundle
+----
+// From the project's root directory
+ozone$ docker-compose up
+----
+
+.Start backend only
+----
+// Navigate to ozone-framework-python-server directory from within the cloned ozone repository
+ozone$ cd ozone-framework-python-server
+ozone/ozone-framework-python-server$ docker-compose up
+----
+
+==== Accessing OWF
+
+After the backend server has finished the initialization process, and the frontend is being served, OWF can be accessed by opening a web browser and navigating to the following URL:
+
+* http://localhost:3000/
+
+If the single app bundle option was used, OWF can be accessed by opening a web browser and navigating to the following URL:
+
+* http://localhost:8000/
