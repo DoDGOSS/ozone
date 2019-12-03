@@ -1,3 +1,5 @@
+include::../_variables.asciidoc[]
+
 = Launcher API
 
 
@@ -16,7 +18,7 @@ To demonstrate the Launcher API, if a user only has a Channel Shouter on their a
 
 *Step 1 - Import the correct JavaScript Files*
 
-The example `ChannelListener.gsp` and `ChannelShouter.gsp` files use the maximum JavaScript import list.
+The example `ChannelListener.gsp` and `ChannelShouter.gsp` files located in `{path-full}/{path-examples}/` use the maximum JavaScript import list.
 
 The minimum required include list needed to use the Launcher API is described in the <<required-includes>> section.
 

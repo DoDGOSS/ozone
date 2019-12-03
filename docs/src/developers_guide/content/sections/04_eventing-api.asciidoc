@@ -134,4 +134,4 @@ include::common/data-uri-convention.asciidoc[leveloffset=+2]
 
 === Eventing API Enhancements
 
-OWF automatically enables the Eventing API and the Drag & Drop API. By automatically enabling the Eventing API, a widget activates when a user clicks inside it. Without it, users would have to click once to focus the widget and then click a second time to activate it. The Eventing API also activates Drag & Drop indicators. For example, a widget will activate when a user drags the mouse over it.
+OWF automatically enables the Eventing API. By automatically enabling the Eventing API, a widget activates when a user clicks inside it. Without it, users would have to click once to focus the widget and then click a second time to activate it. The Eventing API also activates Drag & Drop indicators. For example, a widget will activate when a user drags the mouse over it.

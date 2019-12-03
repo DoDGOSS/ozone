@@ -20,12 +20,12 @@ This guide is written for software developers who want to change an existing app
 All directory and file paths in this guide are relative to the `{path-full}/` directory.
 
 _Example:_ The full path of `{path-server}/` would be found at `{path-full}/{path-server}/`.
-
+[.line-through]##
 
 === Example Code
 
 // TODO: Need to package documentation and examples as part of the build; update path to examples.
-All of the code examples listed in this document can be found in the owf.war. When unpacked or unzipped, the bundle will contain a `/ozone-framework-server/owf-framework/sample-widgets` which contains .zip files of example widgets with source code built in different technology stacks. The examples included in the distribution are detailed in <<example-widgets>>.
+All of the code examples listed in this document can be found in the `{path-full}/{path-examples}/`. Previously this repository contained example widgets with source code built in different technology stacks that is no longer shipped with this bundle. These can still be found on the public `{github-legacy-sample-widgets}[Github repository]`. The examples included in the distribution are detailed in <<example-widgets>>.
 
 
 == Additional Notes
