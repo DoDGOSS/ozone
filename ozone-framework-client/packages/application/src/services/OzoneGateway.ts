@@ -25,7 +25,7 @@ export class OzoneGateway implements Gateway {
         if (!this._rootUrl) {
             this._rootUrl = trimEnd(this.baseUrl || backendUrl(), "/");
         }
-        return this._rootUrl;
+        return this._rootUrl + '/api/v2';
     }
 
     get isAuthenticated(): boolean {
