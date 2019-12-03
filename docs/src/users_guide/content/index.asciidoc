@@ -2,7 +2,7 @@
 // Metadata:
 :doctype: book
 :author: DOD GOSS
-:revnumber: 8.0.0.0
+:revnumber: 8.0.0.0-RC2
 :revdate: 2019-011-13
 // Settings:
 :reproducible:
