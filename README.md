@@ -8,13 +8,11 @@ Fork the code for this repository. Make your changes and submit a pull request. 
 The OZONE Widget Framework (OWF) is a framework that allows data from different servers to communicate inside a browser window without sending information back to the respective servers. This unique capability allows the OWF web portal to offer decentralized data manipulation. It includes a secure, in-browser, pub-sub eventing system which allows widgets from different domains to share information. The combination of decentralized content and in-browser messaging makes OWF particularly suited for large distributed enterprises with legacy stovepipes that need to combine capability. Use it to quickly link applications and make composite tools.
 
 ## Technology components
-For OWF Version 8.0.0.0, the front-end user interface uses Typescript (React), and the backend uses Grails.  User preferences are stored in a relational database - anything supported by Hibernate.  Authentication of users is a modular function provided by Spring Security.  
+For OWF Version 8.0.0.0-RC2, the front-end user interface uses Typescript (React), and the backend uses Python (Django).  User preferences are stored in a relational database - anything supported by Django.
 
 ### Required Software
 
-* Node.js (version >= 10.10.0+) -- https://nodejs.org/
-* NPM (version >= 6.4.0) -- https://npmjs.com/
-
+* Python (3.7.4)
 
 ## Browser Support
 Internet Explorer: > 11
@@ -30,8 +28,9 @@ Firefox: > 60
 cp ozone-framework-8.0.0.0.zip /opt
 cd /opt
 unzip ozone-framework-8.0.0.0.zip
-cd tomcat
-./start.sh
+OWF-8.X.X.X/start.sh
+In a supported browser, navigate to: http://localhost:8000/
+Authenticate access to OWF by entering username admin and password password
 ```
 
 #### Installation and Run (Dev)
@@ -45,12 +44,11 @@ from the client project directory (`ozone-framework-client/`)
 
 ##### Backend
 
-from the server project directory (`ozone-framework-server/owf-framework`)
+from the server project directory (`ozone-framework-python-server`)
 
-. Option 1 - View Build Instructions (`owf-framework/docs/OWF Build Instructions`)
-. Option 2 - Run via docker (`./redeploy-ozone`)
-.. This script will deploy the frontend and backend
-. Visit http://localhost:8080/owf
+. Option 1 - View Build Instructions (`docs/OWF Build Instructions`)
+. Option 2 - Run via docker (`./start-dev.sh`)
+. Visit http://localhost:8000
  
 ## Copyrights
 > Software (c) 2015 [Next Century Corporation](http://www.nextcentury.com/ "Next Century")
