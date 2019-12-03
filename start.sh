@@ -5,7 +5,7 @@ npm install
 npm run bootstrap
 npm run clean
 npm run build
-npm run copy-images
+npm run copy-required-public
 
 popd
 pushd ./ozone-example-widgets/
