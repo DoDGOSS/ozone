@@ -1,3 +1,5 @@
+#!/bin/bash
+
 pip install -r requirements_prod.txt
 python manage.py collectstatic --clear --no-input
 python manage.py collectstatic --settings=config.settings.production --no-input
