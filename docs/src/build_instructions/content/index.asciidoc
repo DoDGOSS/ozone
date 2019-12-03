@@ -7,7 +7,7 @@
 // Settings:
 :reproducible:
 :experimental:
-:toc: left
+// :toc: left
 :toclevels: 6
 :sectnums:
 :sectnumlevels: 6
@@ -26,7 +26,9 @@ include::_variables.asciidoc[]
 
 The purpose of this document is to describe how to build the following projects:
 
-* OWF Server – A local copy of the bundled ZIP file as well as the release version.
+* docs - generating the pdf and html versions from the asciidoc source.
+* ozone-framework-client - A bundled and minified version of the frontend.
+* ozone-framework-python-server – A local copy of the bundled ZIP file.
 
 
 === Document Scope
@@ -47,17 +49,10 @@ Instructions provided below assume a Microsoft Windows development environment f
 
 The build and development process for OWF requires that the following development dependencies be installed:
 
-* Java Development Kit (JDK)
-* Node.js
+* NodeJs
 * NPM
-
-The following dependencies are provided as part of the build process, but may be installed locally at the developer's preference:
-
-* Gradle ^1^
-* Groovy
-* Grails
-
-^1.^ A build wrapper script, `gradlew`, is provided in the source distribution. If you do not wish to use the wrapper, a local Gradle installation is required, and the `gradle` command may be used in place of the `gradlew` command in the examples.
+* Python
+* Java Development Kit (JDK) - for frontend automated tests.
 
 IMPORTANT: Only the dependency versions listed in the tables below are tested and supported. Deviations from the listed versions may cause the build to be unsuccessful.
 
@@ -65,10 +60,6 @@ IMPORTANT: Only the dependency versions listed in the tables below are tested an
 [cols="2s,1a,4"]
 |===
 | Dependency | Version | Download Location
-
-| Oracle Java JDK
-| {version-jdk}
-| http://www.oracle.com/
 
 | Node.js
 | {version-node}
@@ -78,17 +69,15 @@ IMPORTANT: Only the dependency versions listed in the tables below are tested an
 | {version-npm}
 | https://www.npmjs.com/
 
-| Gradle
-| {version-gradle}
-| https://gradle.org/
+| Python
+| {version-python}
+| https://www.python.org/
 
-| Grails
-| {version-grails}
-| http://www.grails.org/
+| Oracle Java JDK
+| {version-jdk}
+| http://www.oracle.com/
 
-| Groovy
-| {version-groovy}
-| http://groovy-lang.org/
+
 |===
 
 ^1.^ NPM is provided as part of the Node.js distribution and may not need to be installed separately.
@@ -101,30 +90,6 @@ Obtain installation media and instructions for the various operating systems fro
 To verify the installation and version of the tools, use the version command for each tool in a Command Prompt Window.
 
 Example commands and output for an OWF 7 environment follow:
-
-.Java
-----
-C:\> java –version
-java version "1.8.0_161"
-Java(TM) SE Runtime Environment (build 1.8.0_161-b12)
-Java HotSpot(TM) 64-Bit Server VM (build 25.161-b12, mixed mode)
-----
-
-.Grails
-[subs="attributes"]
-----
-C:\> grails -version
-Welcome to Grails {version-grails} - http://grails.org/
-Licensed under Apache Standard License 2.0
-Grails home is set to: C:\Grails\grails-{version-grails}
-----
-
-.Groovy
-[subs="attributes"]
-----
-C:\> groovy –version
-Groovy Version: {version-groovy}
-----
 
 .Node
 [subs="attributes"]
@@ -140,165 +105,56 @@ C:\> npm –v
 {version-npm}
 ----
 
+.Python
+----
+C:\> python --version
+Python {version-python}
+----
+
+.Java
+----
+C:\> java –version
+java version "1.8.0_161"
+Java(TM) SE Runtime Environment (build 1.8.0_161-b12)
+Java HotSpot(TM) 64-Bit Server VM (build 25.161-b12, mixed mode)
+----
+
+
 
 == Build Instructions
 
 === Build & Install Project Modules
 
-IMPORTANT: Modules must be installed in the order listed below.
-
-.Project Modules
-[cols="1,3m,6m,3m"]
-|===
-| Order | Module | Location | Command
-
-| 1
-| ozone-classic-bom
-| /ozone/ozone-framework-server/ozone-classic-bom/
-| gradlew install
-
-| 2
-| owf-appconfig
-| /ozone/ozone-framework-server/owf-appconfig/
-| gradlew install
-
-| 3
-| owf-auditing
-| /ozone/ozone-framework-server/owf-auditing/
-| gradlew install
-
-| 4
-| owf-messaging
-| /ozone/ozone-framework-server/owf-messaging/
-| gradlew install
-
-| 5
-| owf-security
-| /ozone/ozone-framework-server/owf-security/
-| gradlew install
-
-| 6
-| owf-custom-tomcat
-| /ozone/ozone-framework-server/owf-custom-tomcat/
-| gradlew install
-
-| 7
-| ozone-client
-| /ozone/ozone-framework-client/
-| gradlew install
-
-| 8
-| owf-framework
-| /ozone/ozone-framework-server/owf-framework/
-| gradlew bundle
-|===
-
-.Example
+==== OWF Client
+To build the frontend client, run the following commands from the `ozone-framework-client` project
 ----
-C:\ozone\ozone-framework-server\ozone-classic-bom> gradlew install
-
-C:\ozone\ozone-framework-server\owf-appconfig> gradlew install
-
-C:\ozone\ozone-framework-server\owf-auditing> gradlew install
-
-C:\ozone\ozone-framework-server\owf-messaging> gradlew install
-
-C:\ozone\ozone-framework-server\owf-security> gradlew install
-
-C:\ozone\ozone-framework-server\owf-custom-tomcat> gradlew install
-
-C:\ozone\ozone-framework-client> gradlew install
+npm install
+npm run bootstrap
+npm run clean
+npm run build
 ----
 
+==== OWF Backend
+The backend end runs on Python, a dynamic language, meaning it does not have to build in order to run the application. But a zipped bundle can be produced for the backend by running the following command from the `ozone-framework-python-server` project
+----
+python setup.py sdist --formats=zip
+----
 
 === Run OWF Framework Server (Development)
 
-The `:bootRun` task will build the project and start the OWF Framework server in development mode.
+The `start-dev.sh` script will run migrations against the configured database, load the default data, and start the application in development mode.
 
 .Example
 ----
-C:\ozone\ozone-framework-server\owf-framework> gradlew :bootRun
+C:\ozone\ozone-framework-python-server> ./start-dev.sh
 ----
 
 
 === Run OWF Framework Server (Production)
 
-The `:bootRun` task and the `-Dgrails.env=production` argument will build the project and start the OWF Framework server in production mode.
+The `start.sh` script will run Django's `manage.py collectstatic` command (more information can be found here https://docs.djangoproject.com/en/2.2/ref/contrib/staticfiles/#management-commands), run migrations against the configured database, load the default data, and then host OWF using Waitress, a WSGI server.
 
 .Example
 ----
-C:\ozone\ozone-framework-server\owf-framework> gradlew :bootRun -Dgrails.env=production
-----
-
-
-=== Build WAR and Tomcat Bundle
-
-The `:bundle` task will build the projects, create the OWF WAR file, and create the Tomcat v{version-tomcat} ZIP distribution bundle.
-
-.Example
-----
-C:\ozone\ozone-framework-server\owf-framework> gradlew :bundle
-----
-
-After it is built, the ZIP file containing the pre-configured Tomcat v{version-tomcat} container and the OWF WAR can be found at `.\owf-framework\build\ozone-framework-{version-ozone}.zip`.
-
-
-=== Clean the Build Directory (optional)
-
-The `:clean` task will clear the build cache for the projects.
-
-.Example
-----
-C:\ozone\ozone-framework-server\owf-framework> gradlew :clean
-----
-
-TIP: If the build fails (especially after pulling new changes), run a full clean of the project, and then retry to build.
-
-
-=== Running the Bundle
-
-Scripts to start the server are included in the bundle in the tomcat directory.
-
-The server may be started in development mode to utilize the embedded, in-memory H2 database. The initial data is generated by the application.
-
-To run the server in production mode, the database must be pre-populated with the initial data using the supplied database scripts. Please refer to the _OWF Configuration Guide_ for instructions on configuring the database and running the initial data scripts.
-
-
-==== Windows start script
-
-.Example
-----
-C:\owf-bundle\tomcat> start.bat /dev
-----
-
-.Usage
-----
-start.bat [/dev] [/db database]
-  /dev       Start in DEVELOPMENT mode
-  /db        Use the selected database configuration
-  database     h2     - Embedded H2 file-based database (default)
-               pg     - PostgreSQL
-               mysql  - MySQL
-               oracle - Oracle RDBMS
-               mssql  - Microsoft SQL Server
-----
-
-
-==== Linux start script
-
-.Example
-----
-/opt/owf-bundle/tomcat$ ./start.sh --dev
-----
-
-.Usage
-----
-./start.sh [--dev] [--db database]
-  --dev      Start in DEVELOPMENT mode
-  --db       Use the selected database configuration
-  database      h2     - Embedded H2 file-based database (default)
-                pg     - PostgreSQL
-                mysql  - MySQL
-                oracle - Oracle RDBMS
-                mssql  - Microsoft SQL Server
+C:\ozone\ozone-framework-python-server> ./start.sh
 ----
