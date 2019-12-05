@@ -3,7 +3,7 @@ import { UserDashboardsGetResponse, validateUserDashboardsGetResponse } from "..
 import { DashboardDTO } from "../models/DashboardDTO";
 import { DashboardLayout } from "../../models/Dashboard";
 import { isNil, uuid } from "../../utility";
-import { dashboardLayoutToJson } from "../../codecs/Dashboard.codec";
+import { dashboardLayoutToDto } from "../../codecs/Dashboard.codec";
 
 export class UserDashboardAPI {
     private readonly gateway: Gateway;
@@ -18,19 +18,20 @@ export class UserDashboardAPI {
         });
     }
 
-    async createDashboard(opts: DashboardCreateOpts): Promise<Response<DashboardDTO>> { //TODO: this should be refactored.
+    async createDashboard(opts: DashboardCreateOpts): Promise<Response<DashboardDTO>> {
+        // TODO: this should be refactored.
         const stack = {
             name: opts.name,
             id: opts.stackId
         };
 
         const dashboard = {
-            name: opts.name,            
+            name: opts.name,
             isdefault: !isNil(opts.isDefault) ? opts.isDefault : false,
             state: [],
-            layoutConfig: dashboardLayoutToJson({
+            layoutConfig: dashboardLayoutToDto({
                 backgroundWidgets: [],
-                tree: opts.tree || null,
+                tree: opts.tree,
                 panels: opts.panels || {}
             }),
             publishedToStore: false

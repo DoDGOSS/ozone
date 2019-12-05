@@ -3,7 +3,7 @@ import { asBehavior } from "../observables";
 
 import { themeApi } from "../api/clients/ThemeAPI";
 import { DARK_THEME } from "../constants";
-import {isBlank} from "../utility";
+import { isBlank } from "../utility";
 
 export class MainStore {
     private readonly themeClass$ = new BehaviorSubject(DARK_THEME);

@@ -22,9 +22,10 @@ export class SystemConfigAPI {
 
     async updateConfigById(id: number, value: string): Promise<Response<ConfigDTO>> {
         const requestData: ConfigUpdateRequest = { id, value };
-        return this.gateway.patch(`admin/application-configuration/${id}/`, requestData, { // TODO: verify that the data being sent up is what the backend expects.
+        return this.gateway.patch(`admin/application-configuration/${id}/`, requestData, {
+            // TODO: verify that the data being sent up is what the backend expects.
             validate: validateConfigDetailResponse
-        });        
+        });
     }
 }
 

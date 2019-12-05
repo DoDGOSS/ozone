@@ -25,7 +25,7 @@ class StoreMetaService {
     is_private: boolean;
     required_listings: AMLListing[];
     async saveOrUpdateStore(store: Widget): Promise<any> {
-        if (store.id === undefined || store.id === "") {
+        if (!store.id) {
             return widgetApi.createWidget(widgetCreateRequestFromWidget(store));
         } else {
             return widgetApi.updateWidget(widgetUpdateRequestFromWidget(store));

@@ -11,7 +11,6 @@ import { CompactDeleteButton, CompactShareButton, DeleteButton, EditButton } fro
 
 import { StackSetup } from "./StackSetup";
 
-
 interface StacksWidgetState {
     stacks: StackDTO[];
     loading: boolean;
@@ -154,7 +153,7 @@ export class StacksWidget extends React.Component<{}, StacksWidgetState> {
                                     this.confirmAssignToMe(data);
                                 }}
                             />
-                        <Divider />
+                            <Divider />
                             <CompactDeleteButton onClick={() => this.confirmDeleteStack(data)} itemName={data.name} />
                         </ButtonGroup>
                     );

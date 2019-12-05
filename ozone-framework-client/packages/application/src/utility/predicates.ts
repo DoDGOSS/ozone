@@ -22,3 +22,8 @@ export function isStrictlyEqual<T>(value: T): Predicate<T> {
 export function hasSameId<T>(a: { id: T }): Predicate<{ id: T }> {
     return (b: { id: T }) => a.id === b.id;
 }
+
+// TODO - refactor widgetGuid to guid to make this a generic
+export function hasSameWidgetGuid<T>(a: { widgetGuid: T }): Predicate<{ widgetGuid: T }> {
+    return (b: { widgetGuid: T }) => a.widgetGuid === b.widgetGuid;
+}

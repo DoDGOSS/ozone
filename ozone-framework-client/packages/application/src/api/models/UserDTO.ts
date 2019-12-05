@@ -6,7 +6,7 @@ export interface UserDTO {
     id: number;
     enabled: boolean;
     username: string;
-    userRealName: string; 
+    userRealName: string;
     lastLogin?: string;
     email: string;
     emailShow: boolean;

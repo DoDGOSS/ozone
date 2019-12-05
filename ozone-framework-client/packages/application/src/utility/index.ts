@@ -162,10 +162,9 @@ export function getCookie(cname: string) {
     const ca = decodedCookie.split(";");
     for (let cookie of ca) {
         cookie = cookie.trim();
-        const cookieKey = cookie.substring(0, cookie.indexOf("=")).trim();        
+        const cookieKey = cookie.substring(0, cookie.indexOf("=")).trim();
         const cookieValue = cookie.substring(cookieKey.length + 1, cookie.length).trim();
-        if(cookieKey === cname)
-            return cookieValue;        
+        if (cookieKey === cname) return cookieValue;
     }
     return "";
 }

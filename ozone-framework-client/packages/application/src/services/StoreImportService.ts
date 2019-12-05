@@ -155,12 +155,10 @@ class StoreImportService {
             }
         }
 
-        console.log(stackExists);
         const stackID: number | undefined = await this.saveBasicStackInfo(basicStackInfo, !stackExists);
         if (!stackID) {
             return;
         }
-        console.log("Here");
 
         // need all widgets to exist before creating dashboards in storeListingAsStack()
         const stackWidgets = await marketplaceAPI.getAllUniqueWidgetsFromStackListing(listing);
@@ -173,7 +171,7 @@ class StoreImportService {
                 continue;
             }
 
-            const giveWidgetToCurrentUserResponse = await widgetApi.addWidgetUsers(savedWidget.id, importingUser.id);
+            const giveWidgetToCurrentUserResponse = await widgetApi.addWidgetUsers(savedWidget.id!, importingUser.id);
 
             if (!(giveWidgetToCurrentUserResponse.status >= 200 && giveWidgetToCurrentUserResponse.status < 400)) {
                 console.log("Could not give current user access to widget '", widget.universalName, "'");

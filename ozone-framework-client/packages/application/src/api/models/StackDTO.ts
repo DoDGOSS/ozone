@@ -8,6 +8,7 @@ import {
     STACK_USER_GET_RESPONSE_SCHEMA
 } from "./schemas/stack.schema";
 import { ListOf } from "../interfaces";
+import { DashboardLayoutDTO } from "../../codecs/Dashboard.codec";
 
 export interface StackDTO {
     id: number;
@@ -43,13 +44,11 @@ export interface StackCreateRequest {
     stackContext: string;
     descriptorUrl?: string;
     description?: string;
-    presetLayout?: DashboardLayout;
+    presetLayout?: string;
 }
 
 export interface StackUpdateRequest extends StackCreateRequest {
     id: number;
-    update_action?: "add" | "remove";
-    tab?: "users" | "groups";
     data?: UserDTO[] | GroupDTO[];
 }
 

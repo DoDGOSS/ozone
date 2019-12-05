@@ -67,7 +67,8 @@ export class GroupAPI {
     }
 
     createGroup(data: GroupCreateRequest): Promise<Response<GroupDTO>> {
-        return this.gateway.post("admin/groups/", data, { // TODO: verify the data being sent up is everything the api expects.
+        return this.gateway.post("admin/groups/", data, {
+            // TODO: verify the data being sent up is everything the api expects.
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
@@ -76,7 +77,8 @@ export class GroupAPI {
     }
 
     updateGroup(data: GroupUpdateRequest | GroupUpdateRequest): Promise<Response<GroupDTO>> {
-        return this.gateway.put(`admin/groups/${data.id}/`, data, { // TODO: verify the data being sent up is everything the api expects.
+        return this.gateway.put(`admin/groups/${data.id}/`, data, {
+            // TODO: verify the data being sent up is everything the api expects.
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
@@ -85,7 +87,7 @@ export class GroupAPI {
     }
 
     deleteGroup(id: number): Promise<Response<void>> {
-        let url = `admin/groups/${id}/`;
+        const url = `admin/groups/${id}/`;
 
         return this.gateway.delete(url, null, {
             headers: {
@@ -97,7 +99,7 @@ export class GroupAPI {
     async addUsersToGroup(group: GroupDTO, users: UserDTO[]): Promise<any> {
         const url = "admin/groups-people/";
 
-        let responses: any = [];
+        const responses: any = [];
         for (const user of users) {
             const requestData: any = {
                 group: group.id,

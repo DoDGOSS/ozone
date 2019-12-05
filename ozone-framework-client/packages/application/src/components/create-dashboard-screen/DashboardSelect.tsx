@@ -11,11 +11,11 @@ import { ListOf, Response } from "../../api/interfaces";
 
 export interface CopyLayoutsProps {
     onChange: (event: React.FormEvent) => void;
-    selectedValue: string | "";
+    selectedValue?: number;
 }
 
 const _DashboardSelect: React.FC<CopyLayoutsProps & FieldProps<any>> = (props) => {
-    const { onChange, selectedValue } = props;
+    const { onChange } = props;
     const [dashboards, setDashboards] = useState<DashboardDTO[]>([]);
 
     useEffect(() => {
@@ -29,7 +29,7 @@ const _DashboardSelect: React.FC<CopyLayoutsProps & FieldProps<any>> = (props) =
     return (
         <div className={styles.select} data-element-id="DashboardSelect">
             <select onChange={onChange} data-element-id="Select" className="select-css">
-                <option key="default" value="default">
+                <option key="default" value={0}>
                     Select
                 </option>
                 {dashboards.map((dashboard) => (

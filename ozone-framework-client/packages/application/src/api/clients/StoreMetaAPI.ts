@@ -148,7 +148,8 @@ export class StoreMetaAPI {
 
     private async createAmlStoreWidget(storeFrontUrl: string, storeBackUrl: string): Promise<Widget> {
         return new Widget({
-            id: "",
+            id: undefined,
+            widgetGuid: "",
             descriptorUrl: storeBackUrl,
             universalName: "store:aml:" + storeFrontUrl + "_" + uuid(),
             images: {

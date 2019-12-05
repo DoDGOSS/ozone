@@ -22,14 +22,17 @@ export class DashboardAPI {
         });
     }
 
-    async getDashboard(dashboardId: number): Promise<Response<DashboardDTO>> { // TODO: fix one of the callers that is still passing in the GUID
+    async getDashboard(dashboardId: number): Promise<Response<DashboardDTO>> {
         return this.gateway.get(`dashboards/${dashboardId}/`);
     }
 
-    async restoreDashboard(
-        data: DashboardUpdateRequest,
-    ): Promise<Response<DashboardDTO>> {
-        return this.gateway.post(`dashboards/${data.id}/restore/`, null, { // TODO: verify guid works
+    async getDashboardByGuid(dashboardGuid: string): Promise<Response<DashboardDTO>> {
+        return this.gateway.get(`dashboards/?guid=${dashboardGuid}`);
+    }
+
+    async restoreDashboard(data: DashboardUpdateRequest): Promise<Response<DashboardDTO>> {
+        return this.gateway.post(`dashboards/${data.id}/restore/`, null, {
+            // TODO: verify guid works
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
@@ -37,10 +40,9 @@ export class DashboardAPI {
         });
     }
 
-    async updateDashboard(
-        data: DashboardUpdateRequest,
-    ): Promise<Response<DashboardDTO>> {
-        return this.gateway.put(`dashboards/${data.id}/`, data, { // TODO: verify request data contains all properties needed for update.
+    async updateDashboard(data: DashboardUpdateRequest): Promise<Response<DashboardDTO>> {
+        return this.gateway.put(`dashboards/${data.id}/`, data, {
+            // TODO: verify request data contains all properties needed for update.
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
@@ -55,8 +57,6 @@ export class DashboardAPI {
             }
         });
     }
-
 }
-
 
 export const dashboardApi = new DashboardAPI();

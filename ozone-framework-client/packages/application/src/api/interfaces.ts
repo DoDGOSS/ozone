@@ -48,7 +48,8 @@ export interface Response<T> {
     request?: any;
 }
 
-export interface ListOf<T> { // TODO: see if we can get rid of this and make the Response
+export interface ListOf<T> {
+    // TODO: see if we can get rid of this and make the Response
     data: T;
     results: number;
     next: null | string;

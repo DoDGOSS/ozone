@@ -27,7 +27,7 @@ export interface CreateDashboardFormProps {
 export interface CreateDashboardOptions {
     name: string;
     description: string;
-    presetLayoutName: string | null;
+    presetLayoutName?: string;
     copyId: number;
     stackId?: number;
 }
@@ -36,10 +36,10 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
     const [selectedValue, setValue] = useState("new");
     const handleRadioChange = handleStringChange(setValue);
 
-    const [selectedPresetLayout, setPresetLayout] = useState<string | null>(null);
+    const [selectedPresetLayout, setPresetLayout] = useState<string>();
     const handlePresetLayoutChange = handleStringChange(setPresetLayout);
 
-    const [selectedCopyLayout, setCopyLayout] = useState("");
+    const [selectedCopyLayout, setCopyLayout] = useState<number>();
     const handleCopyLayoutChange = handleSelectChange(setCopyLayout);
 
     return (
@@ -47,7 +47,7 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
             initialValues={{
                 name: "",
                 description: "",
-                presetLayoutName: null,
+                presetLayoutName: "",
                 copyId: 0,
                 stackId
             }}
@@ -55,7 +55,7 @@ export const CreateDashboardForm: React.FC<CreateDashboardFormProps> = ({ onSubm
                 values.presetLayoutName = selectedPresetLayout;
                 if (selectedValue === "copy") {
                     values.presetLayoutName = selectedValue;
-                    values.copyId = parseInt(selectedCopyLayout);
+                    values.copyId = selectedCopyLayout!;
                 }
 
                 dashboardStore

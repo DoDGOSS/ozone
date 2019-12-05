@@ -1,4 +1,4 @@
-import { UsernameDTO, UserDTO } from "./UserDTO";
+import { UsernameDTO } from "./UserDTO";
 import { UserWidgetDTO } from "./UserWidgetDTO";
 import { AuthUserDTO } from "../../api/models/AuthUserDTO";
 

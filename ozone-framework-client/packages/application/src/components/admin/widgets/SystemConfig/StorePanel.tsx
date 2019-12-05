@@ -166,7 +166,7 @@ export class StorePanel extends React.Component<{}, StorePanelState> {
     }
 
     deleteStore(store: Widget) {
-        widgetApi.deleteWidget(store.id).then((response) => {
+        widgetApi.deleteWidget(store.id!).then((response) => {
             if (response.status >= 200 && response.status < 400) {
                 this.updateStoreList();
                 return;

@@ -1,3 +1,4 @@
+// @ts-ignore
 import update from "immutability-helper";
 import { drop, dropRight, isEqual, last, set, take } from "lodash";
 

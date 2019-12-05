@@ -44,7 +44,8 @@ export interface WidgetPropertiesDTO {
     y: number;
 }
 
-export interface GetWidgetGroupsResponse { // TODO: look into strongly typing these properties
+export interface GetWidgetGroupsResponse {
+    // TODO: look into strongly typing these properties
     widget: object;
     groups: [];
 }

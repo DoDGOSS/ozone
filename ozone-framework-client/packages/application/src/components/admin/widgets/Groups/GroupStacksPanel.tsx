@@ -10,7 +10,7 @@ import { GroupStacksEditDialog } from "./GroupStacksEditDialog";
 import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 
 import { GroupDTO } from "../../../../api/models/GroupDTO";
-import { stackApi, StackQueryCriteria } from "../../../../api/clients/StackAPI";
+import { stackApi } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";
 
 interface GroupEditStacksProps {
