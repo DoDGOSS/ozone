@@ -2,7 +2,6 @@ import { Gateway, getGateway, ListOf, Response } from "../interfaces";
 import { GroupDTO } from "../models/GroupDTO";
 import { UserDTO } from "../models/UserDTO";
 
-import { dashboardApi } from "./DashboardAPI";
 import {
     StackCreateRequest,
     StackDTO,
@@ -10,20 +9,11 @@ import {
     StackUpdateRequest,
     StackUserResponse,
     validateStackDetailResponse,
-    validateStackGroupResponse,
     validateStackListResponse,
     validateStackUserResponse
 } from "../models/StackDTO";
 import { groupApi } from "./GroupAPI";
 
-export interface StackQueryCriteria {
-    limit?: number;
-    offset?: number;
-    userId?: number;
-    groupId?: number;
-}
-
-// TODO: need to create a new functions to hit the admin url and replace in all admin widgets.
 export class StackAPI {
     private readonly gateway: Gateway;
 
@@ -32,19 +22,22 @@ export class StackAPI {
     }
 
     async getStacks(): Promise<Response<ListOf<StackDTO[]>>> {
-        return this.gateway.get("stacks/", { // TODO: from todo above class definition
+        return this.gateway.get("stacks/", {
+            // TODO: from todo above class definition
             validate: validateStackListResponse
         });
     }
 
     async getStackById(id: number): Promise<Response<StackDTO>> {
-        return this.gateway.get(`stacks/${id}/`, {  // TODO: from todo above class definition
+        return this.gateway.get(`stacks/${id}/`, {
+            // TODO: from todo above class definition
             validate: validateStackDetailResponse
         });
     }
 
     async createStack(data: StackCreateRequest): Promise<Response<StackDTO>> {
-        return this.gateway.post(`stacks/`, data, { // TODO: verify request data is what api expects
+        return this.gateway.post(`stacks/`, data, {
+            // TODO: verify request data is what api expects
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
@@ -109,8 +102,9 @@ export class StackAPI {
 
     async addStackGroups(id: any, groups: GroupDTO[]): Promise<Response<StackGroupResponse>> {
         const url = "admin/stacks-groups/";
-        let responses: any = [];
-        for (const group of groups) { // TODO: enhancement by creating an endpoint for bulk add.
+        const responses: any = [];
+        for (const group of groups) {
+            // TODO: enhancement by creating an endpoint for bulk add.
             const requestData = {
                 stack: id,
                 group: (group as any).id
@@ -145,16 +139,12 @@ export class StackAPI {
     }
 
     async addStackUsers(stack: StackDTO, users: UserDTO[]): Promise<Response<any>> {
-        const group: any = { id: 
-            (typeof stack.defaultGroup === "number") ? stack.defaultGroup: stack.defaultGroup.id 
-        };
+        const group = { id: stack.defaultGroup } as GroupDTO;
         return groupApi.addUsersToGroup(group, users);
     }
 
     async removeStackUsers(stack: StackDTO, users: UserDTO[]): Promise<Response<void>> {
-        const group: any = { id: 
-            (typeof stack.defaultGroup === "number") ? stack.defaultGroup: stack.defaultGroup.id 
-        };
+        const group = { id: stack.defaultGroup } as GroupDTO;
         return groupApi.removeUsersFromGroup(group, users);
     }
 

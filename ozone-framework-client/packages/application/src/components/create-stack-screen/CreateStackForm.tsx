@@ -1,30 +1,14 @@
 import * as React from "react";
 import { useState } from "react";
-
-import { Form, Formik, FormikActions, FormikProps } from "formik";
-
-import { Button, Intent, Radio, RadioGroup } from "@blueprintjs/core";
-
-import { stackApi } from "../../api/clients/StackAPI";
-import { userDashboardApi } from "../../api/clients/UserDashboardAPI";
-
+import { Form, Formik, FormikProps } from "formik";
+import { Radio, RadioGroup } from "@blueprintjs/core";
 import { dashboardStore } from "../../stores/DashboardStore";
 import { StackCreateRequest } from "../../api/models/StackDTO";
-import { UserDashboardStackDTO } from "../../api/models/UserDashboardDTO";
-
-import { CreateDashboardOptions } from "../create-dashboard-screen/CreateDashboardForm";
-
 import { PremadeLayouts } from "../create-dashboard-screen/PremadeLayouts";
 import { DashboardSelect } from "../create-dashboard-screen/DashboardSelect";
-
 import { FormError, SubmitButton, TextField } from "../form";
-
-import { handleSelectChange, handleStringChange, uuid } from "../../utility";
-
+import { handleSelectChange, handleStringChange } from "../../utility";
 import { assetUrl } from "../../environment";
-
-import { showToast } from "../toaster/Toaster";
-
 import * as styles from "./index.scss";
 
 export interface CreateStackFormProps {
@@ -41,11 +25,11 @@ export const CreateStackForm: React.FC<CreateStackFormProps> = ({ onSubmit }) =>
     const [selectedLayoutInputSource, setSelectedLayoutInputSource] = useState("");
     const handleLayoutInputRadioChange = handleStringChange(setSelectedLayoutInputSource);
 
-    const [selectedPresetLayout, setPresetLayout] = useState<string | null>(null);
+    const [selectedPresetLayout, setPresetLayout] = useState<string>();
     const handlePresetLayoutChange = handleStringChange(setPresetLayout);
 
-    const [selectedCopyLayoutGuid, setCopyLayoutGuid] = useState("");
-    const handleCopyLayoutChange = handleSelectChange(setCopyLayoutGuid);
+    const [selectedCopyLayoutDashboardId, setCopyLayoutDashboardId] = useState<number>();
+    const handleCopyLayoutChange = handleSelectChange(setCopyLayoutDashboardId);
 
     return (
         <Formik
@@ -54,7 +38,7 @@ export const CreateStackForm: React.FC<CreateStackFormProps> = ({ onSubmit }) =>
                 imageUrl: "/images/dashboard.png",
                 description: ""
             }}
-            onSubmit={async (stackValues: CreateStackOptions, actions: FormikActions<CreateStackOptions>) => {
+            onSubmit={async (stackValues: CreateStackOptions) => {
                 const newStackInfo: StackCreateRequest = {
                     name: stackValues.name,
                     imageUrl: stackValues.imageUrl,
@@ -63,17 +47,13 @@ export const CreateStackForm: React.FC<CreateStackFormProps> = ({ onSubmit }) =>
                     description: stackValues.description
                 };
 
-                const defaultDashLayout: { presetLayoutName: string | null; copyId: string | null } = {
-                    presetLayoutName: null,
-                    copyId: ""
-                };
+                const defaultDashLayout: { presetLayoutName?: string; copyId?: number } = {};
 
                 if (selectedLayoutInputSource === "copy") {
                     defaultDashLayout.presetLayoutName = "copy";
-                    defaultDashLayout.copyId = selectedCopyLayoutGuid;
+                    defaultDashLayout.copyId = selectedCopyLayoutDashboardId;
                 } else if (selectedLayoutInputSource === "premade") {
                     defaultDashLayout.presetLayoutName = selectedPresetLayout;
-                    defaultDashLayout.copyId = "";
                 }
 
                 const stackCreationSuccess = await dashboardStore.createNewStack(newStackInfo, defaultDashLayout);
@@ -107,7 +87,10 @@ export const CreateStackForm: React.FC<CreateStackFormProps> = ({ onSubmit }) =>
                         )}
                         <Radio label="Copy the layout of an existing dashboard" value="copy" />
                         {selectedLayoutInputSource === "copy" && (
-                            <DashboardSelect selectedValue={selectedCopyLayoutGuid} onChange={handleCopyLayoutChange} />
+                            <DashboardSelect
+                                selectedValue={selectedCopyLayoutDashboardId}
+                                onChange={handleCopyLayoutChange}
+                            />
                         )}
                     </RadioGroup>
 

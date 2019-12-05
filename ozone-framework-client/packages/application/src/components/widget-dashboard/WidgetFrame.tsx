@@ -37,7 +37,7 @@ const _WidgetFrame: React.FC<WidgetFrameProps> = ({ widgetInstance }) => {
 
     const nameJson = JSON.stringify({
         id: widgetInstance.id,
-        guid: widget.id,
+        guid: widget.widgetGuid,
         url: widget.url,
         owf: true,
         version: "1.0",

@@ -7,11 +7,10 @@ import { ColumnTabulator, GenericTable } from "../../../generic-table/GenericTab
 import { DeleteButton } from "../../../generic-table/TableButtons";
 import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 
-import { stackApi, StackQueryCriteria } from "../../../../api/clients/StackAPI";
+import { stackApi } from "../../../../api/clients/StackAPI";
 import { StackDTO } from "../../../../api/models/StackDTO";
 import { UserDTO } from "../../../../api/models/UserDTO";
 import { UserStacksEditDialog } from "./UserStacksEditDialog";
-import { groupApi } from "../../../../api/clients/GroupAPI";
 
 interface UserEditStacksProps {
     onUpdate: (update?: any) => void;

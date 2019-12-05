@@ -13,7 +13,7 @@ export function widgetFromJson(dto: WidgetDTO): Widget {
         description: optional(props.description),
         descriptorUrl: optional(props.descriptorUrl),
         height: props.height,
-        id: dto.path,
+        id: dto.id,
         images: {
             smallUrl: props.smallIconUrl,
             largeUrl: props.mediumIconUrl
@@ -80,7 +80,7 @@ export function widgetUpdateRequestFromWidget(widget: Widget): WidgetUpdateReque
         width: widget.width,
         height: widget.height,
         widgetGuid: widget.widgetGuid,
-        id: widget.id,
+        id: widget.id!,
         universalName: widget.universalName,
         visible: widget.isVisible,
         background: widget.isBackground,

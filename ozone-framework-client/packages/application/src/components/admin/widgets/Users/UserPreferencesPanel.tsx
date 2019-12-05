@@ -17,6 +17,7 @@ import {
 import { preferenceApi } from "../../../../api/clients/PreferenceAPI";
 import { showConfirmationDialog } from "../../../confirmation-dialog/showConfirmationDialog";
 import { UserPreferenceDialog } from "./UserPreferenceDialog";
+import { parseInt10 } from "../../../../utility";
 
 interface UserEditPreferencesProps {
     onUpdate: (update?: any) => void;
@@ -91,9 +92,29 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
                     return (
                         <div>
                             <ButtonGroup>
-                                <EditButton onClick={() => this.showSettingsDialog(data)} />
+                                <EditButton
+                                    onClick={() =>
+                                        this.showSettingsDialog({
+                                            id: data.id,
+                                            namespace: data.namespace,
+                                            path: data.path,
+                                            value: data.value,
+                                            user: parseInt10(data.user.userId)
+                                        } as PreferenceUpdateRequest)
+                                    }
+                                />
                                 <Divider />
-                                <DeleteButton onClick={() => this.confirmDeletePreference(data)} />
+                                <DeleteButton
+                                    onClick={() =>
+                                        this.confirmDeletePreference({
+                                            id: data.id,
+                                            namespace: data.namespace,
+                                            path: data.path,
+                                            value: data.value,
+                                            user: parseInt10(data.user.userId)
+                                        } as PreferenceDeleteRequest)
+                                    }
+                                />
                             </ButtonGroup>
                         </div>
                     );
@@ -144,6 +165,8 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
     private createOrUpdate = async (pref: PreferenceCreateRequest | PreferenceUpdateRequest) => {
         let response;
         pref.user = this.state.user.id;
+        if (pref.hasOwnProperty("user")) pref["user_id"] = pref["user"];
+
         if ("id" in pref) {
             response = await preferenceApi.updatePreference(pref);
         } else {

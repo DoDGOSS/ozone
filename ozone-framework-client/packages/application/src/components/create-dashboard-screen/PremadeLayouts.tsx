@@ -10,7 +10,7 @@ import { DEFAULT_LAYOUTS } from "../../stores/default-layouts";
 
 export interface PremadeLayoutsProps {
     onChange: (event: React.FormEvent<HTMLElement>) => void;
-    selectedValue: string | null;
+    selectedValue?: string;
 }
 
 const _PremadeLayouts: React.FC<PremadeLayoutsProps & FieldProps<any>> = (props) => {

@@ -60,7 +60,7 @@ export const UserPropertiesPanel: React.FC<UserPropertiesProps> = ({ saveUser, u
 
 const UserSchema = object().shape({
     username: string()
-        //.matches(/^[a-zA-Z0-9_]+$/, { message: "Username must contain only alphanumeric or underscore characters." })
+        // .matches(/^[a-zA-Z0-9_]+$/, { message: "Username must contain only alphanumeric or underscore characters." })
         .required("Required"),
 
     userRealName: string().required("Required"),

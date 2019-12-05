@@ -44,7 +44,8 @@ export class WidgetAPI {
     }
 
     async createWidget(data: WidgetCreateRequest): Promise<Response<WidgetDTO>> {
-        return this.gateway.post("admin/widgets/", data, { // TODO: verify the data being sent is what the backend expects.
+        return this.gateway.post("admin/widgets/", data, {
+            // TODO: verify the data being sent is what the backend expects.
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
@@ -53,7 +54,8 @@ export class WidgetAPI {
     }
 
     async updateWidget(data: WidgetUpdateRequest): Promise<Response<WidgetDTO>> {
-        return this.gateway.put(`admin/widgets/${data.id}/`, data, { // TODO: verify the data being sent is what the backend expects.
+        return this.gateway.put(`admin/widgets/${data.id}/`, data, {
+            // TODO: verify the data being sent is what the backend expects.
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
@@ -74,9 +76,8 @@ export class WidgetAPI {
         return this.gateway.get<WidgetGetDescriptorResponse>(url);
     }
 
-    //TODO: verify this whole function works. Primarily the bulk add.
     async addWidgetUsers(widgetId: number, userIds: number | number[]): Promise<Response<ListOf<WidgetDTO[]>>> {
-        let url = "admin/users-widgets/";
+        const url = "admin/users-widgets/";
         let requestData: any = { widget_definition: widgetId };
 
         if (userIds instanceof Array) {
@@ -92,9 +93,8 @@ export class WidgetAPI {
         });
     }
 
-    //TODO: verify this whole function works. Primarily the bulk add.
     async addWidgetGroups(widgetId: number, groupIds: number | number[]): Promise<Response<GetWidgetGroupsResponse>> {
-        let url = "admin/groups-widgets/";
+        const url = "admin/groups-widgets/";
         let requestData: any = { widget_id: widgetId };
 
         if (groupIds instanceof Array) {
@@ -111,9 +111,8 @@ export class WidgetAPI {
         });
     }
 
-    //TODO: verify this whole function works.
     async removeWidgetUsers(widgetId: number, userId: number): Promise<Response<void>> {
-        let requestData: any = { person_id: userId, widget_id: widgetId };
+        const requestData: any = { person_id: userId, widget_id: widgetId };
         return this.gateway.delete(`admin/users-widgets/0/`, requestData, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -121,9 +120,8 @@ export class WidgetAPI {
         });
     }
 
-    //TODO: verify this whole function works. 
     async removeWidgetGroups(widgetId: number, groupId: number): Promise<Response<void>> {
-        let requestData: any = { group_id: groupId, widget_id: widgetId };
+        const requestData: any = { group_id: groupId, widget_id: widgetId };
 
         return this.gateway.delete("admin/groups-widgets/", requestData, {
             headers: {

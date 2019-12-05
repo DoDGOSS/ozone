@@ -140,7 +140,7 @@ export class WidgetSetup extends React.Component<WidgetSetupProps, WidgetSetupSt
             imageUrlMedium: cleanNullableProp(dto.value.mediumIconUrl),
             width: dto.value.width,
             height: dto.value.height,
-            widgetGuid: dto.id,
+            widgetGuid: dto.value.widgetGuid,
             universalName: cleanNullableProp(dto.value.universalName),
             visible: dto.value.visible,
             background: dto.value.background,

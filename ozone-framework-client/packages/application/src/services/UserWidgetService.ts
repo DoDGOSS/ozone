@@ -2,18 +2,17 @@ import { userWidgetApi, UserWidgetAPI } from "../api/clients/UserWidgetAPI";
 import { WidgetAPI, widgetApi } from "../api/clients/WidgetAPI";
 import { UserWidget } from "../models/UserWidget";
 import { DashboardStore, dashboardStore } from "../stores/DashboardStore";
-import { values } from "../utility";
-import { ListOf } from "../api/interfaces";
 
 export class UserWidgetService {
-    private readonly widgetApi: WidgetAPI;
+    // TODO: Multiple commmented lines in this file need to be uncommented once dependencies are re-implemented.
+    // private readonly widgetApi: WidgetAPI;
     private readonly userWidgetApi: UserWidgetAPI;
-    private readonly dashboardStore: DashboardStore;
+    // private readonly dashboardStore: DashboardStore;
 
     constructor(_widgetApi?: WidgetAPI, _userWidgetApi?: UserWidgetAPI, _dashboardStore?: DashboardStore) {
-        this.widgetApi = _widgetApi || widgetApi;
+        // this.widgetApi = _widgetApi || widgetApi;
         this.userWidgetApi = _userWidgetApi || userWidgetApi;
-        this.dashboardStore = _dashboardStore || dashboardStore;
+        // this.dashboardStore = _dashboardStore || dashboardStore;
     }
 
     async getDependencies(userWidget: UserWidget): Promise<any> {
@@ -24,7 +23,8 @@ export class UserWidgetService {
         // const userWidgets: UserWidget[] = values(userState.widgets);
         //
         // return userWidgets.filter((w) => dependentWidgetIds.includes(w.widget.id));
-        return <any>[];
+        // return <any>[];
+        return new Promise(() => undefined);
     }
 
     async deleteUserWidget(
@@ -55,7 +55,8 @@ export class UserWidgetService {
         for (const dependency of dependencies) {
             await this.userWidgetApi.deleteUserWidget(dependency.widget.id);
         }
-        await this.userWidgetApi.deleteUserWidget(userWidget.widget.id);
+        // TODO: need to create an endpoint for deleting the PWD. A user deleting his own widget.
+        await this.userWidgetApi.deleteUserWidget(userWidget.id);
         return true;
     }
 }

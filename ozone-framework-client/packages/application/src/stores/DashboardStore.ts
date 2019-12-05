@@ -11,9 +11,14 @@ import { stackApi } from "../api/clients/StackAPI";
 
 import { Dashboard, EMPTY_DASHBOARD } from "../models/Dashboard";
 import { UserWidget } from "../models/UserWidget";
-import { StackCreateRequest, StackUpdateRequest } from "../api/models/StackDTO";
+import { StackCreateRequest } from "../api/models/StackDTO";
 
-import { dashboardToUpdateRequest, deserializeUserState, UserState, dashboardLayoutToJson } from "../codecs/Dashboard.codec";
+import {
+    dashboardLayoutToDto,
+    dashboardToUpdateRequest,
+    deserializeUserState,
+    UserState
+} from "../codecs/Dashboard.codec";
 
 import { CreateDashboardOptions } from "../components/create-dashboard-screen/CreateDashboardForm";
 import { createPresetLayout } from "./default-layouts";
@@ -73,7 +78,7 @@ export class DashboardStore {
         }
 
         let defaultDashboard = response.data.dashboards.find((dashboard) => dashboard.isdefault === true);
-        if(!defaultDashboard) {
+        if (!defaultDashboard) {
             defaultDashboard = response.data.dashboards[0];
         }
         const newState = deserializeUserState(response.data.dashboards, response.data.widgets);
@@ -92,7 +97,7 @@ export class DashboardStore {
             stackContext: "",
             description: "Automatically-generated stack"
         };
-        this.createNewStack(defStack);
+        await this.createNewStack(defStack);
 
         const response = await this.userDashboardApi.getOwnDashboards();
         if (!(response.status >= 200 && response.status < 400)) {
@@ -107,7 +112,7 @@ export class DashboardStore {
         const opts: DashboardCreateOpts = {
             backgroundWidgets: [],
             name: dashboard.name,
-            tree,
+            tree: tree,
             panels,
             stackId: dashboard.stackId
         };
@@ -123,19 +128,24 @@ export class DashboardStore {
 
     async createNewStack(
         stackRequest: StackCreateRequest,
-        defaultDashLayoutOptions?: { presetLayoutName: string | null; copyId: string | null }
-    ): Promise<Boolean> {    
-        const presetLayout = await createPresetLayout(defaultDashLayoutOptions.presetLayoutName, defaultDashLayoutOptions.copyId);
-        stackRequest.presetLayout = JSON.stringify(dashboardLayoutToJson({
-            backgroundWidgets: [],
-            tree: presetLayout.tree || null,
-            panels: presetLayout.panels || {}
-        }));
+        defaultDashLayoutOptions?: { presetLayoutName?: string; copyId?: number }
+    ): Promise<Boolean> {
+        const presetLayout = await createPresetLayout(
+            defaultDashLayoutOptions ? defaultDashLayoutOptions.presetLayoutName : undefined,
+            defaultDashLayoutOptions ? defaultDashLayoutOptions.copyId : undefined
+        );
+        stackRequest.presetLayout = JSON.stringify(
+            dashboardLayoutToDto({
+                backgroundWidgets: [],
+                tree: presetLayout.tree,
+                panels: presetLayout.panels || {}
+            })
+        );
         const newStack = (await stackApi.createStack(stackRequest)).data;
 
         const userDashboardsResponse = await userDashboardApi.getOwnDashboards();
         const userDashboards = userDashboardsResponse.data.dashboards;
-        const newStackDefaultDashboard = userDashboards.filter(userDashboard => {
+        const newStackDefaultDashboard = userDashboards.filter((userDashboard) => {
             return userDashboard.stack.id === newStack.id;
         })[0];
         await this.fetchUserDashboards(newStackDefaultDashboard.guid);
@@ -217,7 +227,9 @@ export class DashboardStore {
                 currentDashboard.setAsDefault(false);
                 const currentDashboardUpdate = dashboardToUpdateRequest(currentDashboard);
                 await this.dashboardApi.updateDashboard(currentDashboardUpdate);
-            } catch(ex) {}
+            } catch (ex) {
+                console.log("Error updating Dashboard, contact your Administrator if you continue to have issues.");
+            }
         }
 
         const currentGuid = !isNil(newCurrentGuid) ? newCurrentGuid : currentDashboard.guid;

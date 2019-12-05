@@ -102,16 +102,17 @@ class UserStateDeserializer {
         if (stack === undefined) {
             throw new Error("No stack?");
         }
-        if(dto.layoutConfig){
+        if (dto.layoutConfig) {
             let layout = JSON.parse(dto.layoutConfig);
-            while(typeof layout !== 'object')
-                layout = JSON.parse(layout);
-            
+            while (typeof layout !== "object") layout = JSON.parse(layout);
+
             const panels: Dictionary<Panel<any>> = {};
             if (layout.panels) {
                 for (const panelId in layout.panels) {
-                    const _panel = this.createPanel(layout.panels[panelId]);
-                    panels[_panel.id] = _panel;
+                    if (panelId) {
+                        const _panel = this.createPanel(layout.panels[panelId]);
+                        panels[_panel.id] = _panel;
+                    }
                 }
             }
 
@@ -197,7 +198,7 @@ export function dashboardToCreateRequest(dashboard: Dashboard): any {
         guid: uuid(),
         iconImageUrl: state.imageUrl,
         isdefault: state.isDefault,
-        layoutConfig: JSON.stringify(dashboardLayoutToJson(state)),
+        layoutConfig: JSON.stringify(dashboardLayoutToDto(state)),
         locked: state.isLocked,
         name: state.name
     };
@@ -212,28 +213,28 @@ export function dashboardToUpdateRequest(dashboard: Dashboard): any {
         guid: state.guid,
         iconImageUrl: state.imageUrl,
         isdefault: state.isDefault,
-        layoutConfig: JSON.stringify(dashboardLayoutToJson(state)),
+        layoutConfig: JSON.stringify(dashboardLayoutToDto(state)),
         locked: state.isLocked,
         name: state.name
     };
 }
 
-export function dashboardLayoutToJson(state: DashboardLayout): DashboardLayoutDTO {
+export function dashboardLayoutToDto(state: DashboardLayout): DashboardLayoutDTO {
     return {
         tree: state.tree,
-        panels: values(state.panels).map(panelToJson),
-        backgroundWidgets: state.backgroundWidgets.map(widgetInstanceToJson)
+        panels: values(state.panels).map(panelToDto),
+        backgroundWidgets: state.backgroundWidgets.map(widgetInstanceToDto)
     };
 }
 
-export function panelToJson(panel: Panel<PanelState>): PanelDTO {
+export function panelToDto(panel: Panel<PanelState>): PanelDTO {
     if (panel.state) {
         const state = panel.state().value;
         return {
             id: state.id,
             title: state.title,
             type: state.type,
-            widgets: state.widgets.filter((instance) => instance.userWidget !== undefined).map(widgetInstanceToJson),
+            widgets: state.widgets.filter((instance) => instance.userWidget !== undefined).map(widgetInstanceToDto),
             activeWidgetId: getActiveWidgetId(state),
             collapsed: isExpandoPanelState(state) ? state.collapsed : undefined
         };
@@ -250,7 +251,7 @@ export function panelToJson(panel: Panel<PanelState>): PanelDTO {
     }
 }
 
-export function widgetInstanceToJson(instance: WidgetInstance): WidgetInstanceDTO {
+export function widgetInstanceToDto(instance: WidgetInstance): WidgetInstanceDTO {
     return {
         id: instance.id,
         userWidgetId: instance.userWidget.id

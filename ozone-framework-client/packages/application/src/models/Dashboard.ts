@@ -409,7 +409,7 @@ export const EMPTY_DASHBOARD = new Dashboard({
     panels: {},
     position: 0,
     stackId: 0,
-    tree: null,
+    tree: "",
     user: {
         username: ""
     }

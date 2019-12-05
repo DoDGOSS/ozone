@@ -37,6 +37,7 @@ import { Widget } from "../../models/Widget";
 import { showToast } from "../toaster/Toaster";
 import { showStoreSelectionDialog } from "../confirmation-dialog/showStoreSelectionDialog";
 import { ListOf, Response } from "../../api/interfaces";
+import { Dashboard } from "../../models/Dashboard";
 
 // TODO - iconImageUrl not saving to database`
 
@@ -57,9 +58,8 @@ const fetchUserDashboardsAndStacks = (
         const userDashboards = (ownDashboardResponse.data.dashboards as unknown) as DashboardDTO[];
         dispatchDashboardResult(userDashboards);
         dispatchDashboardState(false);
-        dispatchCurrentUserResult(ownDashboardResponse.data.user);        
+        dispatchCurrentUserResult(ownDashboardResponse.data.user);
     });
-    
 };
 
 const fetchStores = async (
@@ -321,7 +321,7 @@ export const StackDialog: React.FC<{}> = () => {
     const onRestoreStackConfirmed = async (stack: StackDTO) => {
         const response = await stackApi.restoreStack(stack.id);
         if (!(response.status >= 200 && response.status < 400)) return false;
-        dashboardStore.fetchUserDashboards(dashboardStore.currentDashboard.guid);
+        dashboardStore.fetchUserDashboards();
         mainStore.hideStackDialog();
         return true;
     };

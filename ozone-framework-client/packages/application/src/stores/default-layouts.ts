@@ -56,7 +56,7 @@ export const DEFAULT_LAYOUTS: Layout[] = [
     }
 ];
 
-export async function createPresetLayout(layoutName: string | null, dashboardId: number): Promise<DashboardLayout> {
+export async function createPresetLayout(layoutName?: string, dashboardId?: number): Promise<DashboardLayout> {
     switch (layoutName) {
         case "Fit":
             return createFitLayout();
@@ -81,6 +81,7 @@ export async function createPresetLayout(layoutName: string | null, dashboardId:
         case "Tab-Fit-Fit":
             return createTabbedFitFitLayout();
         case "copy":
+            dashboardId = dashboardId ? dashboardId : 0;
             return onCopyDashboard(dashboardId);
         default:
             return {
@@ -94,8 +95,7 @@ export async function createPresetLayout(layoutName: string | null, dashboardId:
 const onCopyDashboard = async (dashboardId: number): Promise<DashboardLayout> => {
     const response: Response<DashboardDTO> = await dashboardApi.getDashboard(dashboardId);
     let layout = JSON.parse(response.data.layoutConfig);
-    while(typeof layout !== 'object')
-        layout = JSON.parse(layout);
+    while (typeof layout !== "object") layout = JSON.parse(layout);
     let panels = JSON.stringify(layout.panels);
     panels = panels.replace(/"userWidgetIds":/g, '"widgets":');
     panels = JSON.parse(panels);

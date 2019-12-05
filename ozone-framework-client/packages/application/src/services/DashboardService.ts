@@ -8,8 +8,7 @@ import { Widget } from "../models/Widget";
 import { WidgetInstance } from "../models/WidgetInstance";
 import { MosaicDropTargetPosition } from "../shared/dragAndDrop";
 import { dashboardStore, DashboardStore } from "../stores/DashboardStore";
-import { hasSameId, isNil, Predicate, values } from "../utility";
-
+import { hasSameWidgetGuid, isNil, Predicate, values } from "../utility";
 import { authService } from "./AuthService";
 import { errorStore } from "./ErrorStore";
 import { WidgetLaunchArgs } from "./widget-api/WidgetLaunchArgs";
@@ -70,7 +69,7 @@ export class DashboardService {
             return false;
         }
         const { widget, title } = getUserWidget(opts.widget);
-        if (widget.isSingleton && dashboard.containsWidget(hasSameId(widget))) {
+        if (widget.isSingleton && dashboard.containsWidget(hasSameWidgetGuid(widget))) {
             errorStore.notice("Singleton Widget", `The Widget '${title}' is a Singleton and may not be added twice.`);
             return false;
         }
@@ -87,7 +86,7 @@ export class DashboardService {
     isWidgetAlreadyAdded(opts: AddWidgetOpts): boolean {
         const dashboard = this.dashboard;
         const { widget } = getUserWidget(opts.widget);
-        return dashboard.containsWidget(hasSameId(widget));
+        return dashboard.containsWidget(hasSameWidgetGuid(widget));
     }
 
     async addWidgetSimple(
@@ -263,7 +262,7 @@ function getUserWidget(widget: UserWidget | WidgetInstance): UserWidget {
 
 function byGuidOrUniversalName(guid?: string, universalName?: string): Predicate<UserWidget> {
     return (userWidget: UserWidget) =>
-        (!isNil(guid) && userWidget.widget.id === guid) ||
+        (!isNil(guid) && userWidget.widget.widgetGuid === guid) ||
         (!isNil(universalName) && userWidget.widget.universalName === universalName);
 }
 

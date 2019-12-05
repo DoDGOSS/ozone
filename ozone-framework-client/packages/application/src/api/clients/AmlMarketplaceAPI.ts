@@ -7,8 +7,6 @@ import { Widget } from "../../models/Widget";
 import { Dashboard } from "../../models/Dashboard";
 import { Stack } from "../../models/Stack";
 
-import { StackUpdateRequest } from "../models/StackDTO";
-
 import { AMLListingDTO } from "../models/AMLStoreDTO";
 import { AMLListing } from "../../models/AMLListing";
 import { isNil } from "lodash";
@@ -16,7 +14,7 @@ import { parseInt10, stringTruncate } from "../../utility/collections";
 import { dashboardStore } from "../../stores/DashboardStore";
 import { showToast } from "../../components/toaster/Toaster";
 import { Intent } from "@blueprintjs/core";
-import { dashboardLayoutToJson } from "../../codecs/Dashboard.codec";
+import { dashboardLayoutToDto } from "../../codecs/Dashboard.codec";
 import { dashboardApi } from "./DashboardAPI";
 import { DashboardDTO } from "../models/DashboardDTO";
 
@@ -35,7 +33,7 @@ export class AmlMarketplaceAPI implements MarketplaceAPI {
         return new Promise(() => undefined);
     }
 
-    listingAsSimpleNewStack(listing: AMLListingDTO): StackUpdateRequest | undefined {
+    listingAsSimpleNewStack(listing: AMLListingDTO): any | undefined {
         return undefined;
     }
 
@@ -54,7 +52,7 @@ export class AmlMarketplaceAPI implements MarketplaceAPI {
                 description: stringTruncate(listing.description, 255),
                 descriptorUrl: baseWidget ? baseWidget.descriptorUrl : undefined,
                 height: baseWidget ? baseWidget.height : 200,
-                id: baseWidget ? baseWidget.id : "",
+                id: baseWidget ? baseWidget.id : undefined,
                 images: {
                     smallUrl: listing.icon.url,
                     largeUrl: listing.bannerIcon.url
@@ -403,11 +401,11 @@ export class AmlMarketplaceAPI implements MarketplaceAPI {
 
     private getDashboardLayoutAsString(dashboard: Dashboard): string {
         const state = dashboard.state().value;
-        return JSON.stringify(dashboardLayoutToJson(state));
+        return JSON.stringify(dashboardLayoutToDto(state));
     }
 
     private async getDashboardEditedDateAsEpochVersion(dashboard: Dashboard): Promise<string> {
-        const response: Response<DashboardDTO> = await dashboardApi.getDashboard(dashboard.id);
+        const response: Response<DashboardDTO> = await dashboardApi.getDashboardByGuid(dashboard.guid);
         let retVal: string = "0";
         if (response && (response.status >= 200 && response.status < 400) && response.data) {
             const dashboardData = response.data;

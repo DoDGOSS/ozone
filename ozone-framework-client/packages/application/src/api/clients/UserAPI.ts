@@ -36,7 +36,7 @@ export class UserAPI {
     }
 
     createUser(data: UserCreateRequest): Promise<Response<UserDTO>> {
-        return this.gateway.post("admin/users/", data, { //TODO: verify that the data being sent is what the backend expects.
+        return this.gateway.post("admin/users/", data, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
@@ -45,7 +45,7 @@ export class UserAPI {
     }
 
     updateUser(data: UserUpdateRequest): Promise<Response<UserDTO>> {
-        return this.gateway.put(`admin/users/${data.id}/`, data, { //TODO: verify that the data being sent is what the backend expects.
+        return this.gateway.put(`admin/users/${data.id}/`, data, {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },

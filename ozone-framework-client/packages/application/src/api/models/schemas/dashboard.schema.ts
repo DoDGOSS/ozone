@@ -25,7 +25,7 @@ export const DASHBOARD_SCHEMA = {
         "originalName"
     ],
     additionalProperties: true,
-    properties: {        
+    properties: {
         id: {
             type: "number"
         },

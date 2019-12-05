@@ -29,7 +29,7 @@ export function userWidgetFromJson(dto: UserWidgetDTO): UserWidget {
             description: optional(props.description),
             descriptorUrl: optional(props.descriptorUrl),
             height: props.height,
-            id: dto.path,
+            id: dto.id,
             images: {
                 smallUrl: props.smallIconUrl,
                 largeUrl: props.largeIconUrl
