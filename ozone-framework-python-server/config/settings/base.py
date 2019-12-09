@@ -307,6 +307,8 @@ METRICS_SERVER_URL = 'http://localhost:3000/metric'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 1440 * 60
+SESSION_SAVE_EVERY_REQUEST = True
+
 
 # REST CORS CONFIGURATION
 # ------------------------------------------------------------------------------

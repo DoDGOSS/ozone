@@ -198,11 +198,11 @@ The following are two log examples using CEF auditing:
 
 .CEF auditing from an object modification event
 ----
-28/Nov/2019 01:04:36 CEF shost=Ryans-MacBook-Pro.local suid=admin requestMethod=USER_INITIATED|PUT outcome=200 data=<QueryDict: {'version': ['1571151178'], 'created_date': ['2019-10-15'], 'edited_date': ['2019-10-15'], 'code': ['owf.job.disable.accounts.start.time'], 'value': ['23:59:59'], 'title': ['Disable Accounts Job Start Time'], 'description': [''], 'type': ['String'], 'group_name': ['HIDDEN'], 'sub_group_name': [''], 'mutable': ['true'], 'sub_group_order': ['1'], 'help': ['']}> urlName=admin_application-configuration-detail requestType=<WSGIRequest: PUT '/api/v2/admin/application-configuration/11/'>
+28/Nov/2019 01:04:36 CEF shost=xxxx suid=admin requestMethod=USER_INITIATED|PUT outcome=200 data=<QueryDict: {'version': ['1571151178'], 'created_date': ['2019-10-15'], 'edited_date': ['2019-10-15'], 'code': ['owf.job.disable.accounts.start.time'], 'value': ['23:59:59'], 'title': ['Disable Accounts Job Start Time'], 'description': [''], 'type': ['String'], 'group_name': ['HIDDEN'], 'sub_group_name': [''], 'mutable': ['true'], 'sub_group_order': ['1'], 'help': ['']}> urlName=admin_application-configuration-detail requestType=<WSGIRequest: PUT '/api/v2/admin/application-configuration/11/'>
 
 ----
 
 .CEF auditing from a log-in event
 ----
-28/Nov/2019 01:02:24 CEF shost=Ryans-MacBook-Pro.local suid=admin requestMethod=USER_INITIATED|POST outcome=302 data=<QueryDict: {'csrfmiddlewaretoken': ['IpAMhvpgjUkSNa8WOOQwJjfeRz5SA73TD0YJfN2YGy51tdidvoqqC5MRx0wR8snH'], 'username': ['admin'], 'next': ['/admin/']}> urlName=login requestType=<WSGIRequest: POST '/admin/login/?next=/admin/'>
+28/Nov/2019 01:02:24 CEF shost=xxxx suid=admin requestMethod=USER_INITIATED|POST outcome=302 data=<QueryDict: {'csrfmiddlewaretoken': ['IpAMhvpgjUkSNa8WOOQwJjfeRz5SA73TD0YJfN2YGy51tdidvoqqC5MRx0wR8snH'], 'username': ['admin'], 'next': ['/admin/']}> urlName=login requestType=<WSGIRequest: POST '/admin/login/?next=/admin/'>
 ----
