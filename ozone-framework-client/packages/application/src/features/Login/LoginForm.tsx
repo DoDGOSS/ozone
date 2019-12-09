@@ -24,12 +24,29 @@ export const LoginForm: React.FC<LoginFormProps> = (props) => {
             onSubmit={async (values: LoginRequest, actions: FormikActions<LoginRequest>) => {
                 actions.setSubmitting(false);
 
-                const isSuccess = await authService.login(values.username, values.password);
-
-                if (isSuccess) {
-                    props.onSuccess();
-                } else {
-                    actions.setStatus({ error: "An unexpected error has occurred" });
+                try {
+                    const isSuccess = await authService.login(values.username, values.password);
+                    if (isSuccess) {
+                        props.onSuccess();
+                    } else {
+                        actions.setStatus({ error: "An unexpected error has occurred" });
+                    }
+                } catch (e) {
+                    if (e.cause.response) {
+                        // The request was made and the server responded with a status code
+                        // that falls out of the range of 2xx
+                        if (e.hasOwnProperty("cause") && e.cause.hasOwnProperty("response")) {
+                            actions.setStatus({ error: e.cause.response.data.nonFieldErrors[0] });
+                        }
+                    } else if (e.cause.request) {
+                        // The request was made but no response was received
+                        // `error.cause.request` is an instance of XMLHttpRequest in the
+                        // browser and an instance of http.ClientRequest in node.js
+                        actions.setStatus({ error: "Not connected to the internet or backend server is down." });
+                    } else {
+                        // Something happened in setting up the request that triggered an Error
+                        actions.setStatus({ error: "An unexpected error has occurred" });
+                    }
                 }
             }}
         >

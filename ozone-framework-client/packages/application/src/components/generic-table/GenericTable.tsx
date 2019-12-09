@@ -131,10 +131,9 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
         return this.props.tableProps ? { ...options, ...this.props.tableProps } : options;
     }
 
-
-    private rowFormatItem(ev:any, row:any): any {
-        if (ev._row.data.hasOwnProperty("status") && ev._row.data.status === 'inactive'){
-            return ev.getElement().style.color = '#9B9B9B'
+    private rowFormatItem(ev: any, row: any): any {
+        if (ev._row.data.hasOwnProperty("status") && ev._row.data.status === "inactive") {
+            return (ev.getElement().style.color = "#9B9B9B");
         }
     }
 

@@ -5,7 +5,13 @@ import { Form, Formik, FormikActions, FormikProps } from "formik";
 import * as yup from "yup";
 import { Button, Intent, Position, Toaster } from "@blueprintjs/core";
 
-import { GroupCreateRequest, GroupDTO, GroupUpdateRequest, isAutoManaged, isDefaultGroup } from "../../../../api/models/GroupDTO";
+import {
+    GroupCreateRequest,
+    GroupDTO,
+    GroupUpdateRequest,
+    isAutoManaged,
+    isDefaultGroup
+} from "../../../../api/models/GroupDTO";
 import { cleanNullableProp } from "../../../../utility";
 import { CheckBox, FormError, TextField } from "../../../form";
 

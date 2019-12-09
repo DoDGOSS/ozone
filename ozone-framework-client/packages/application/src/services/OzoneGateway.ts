@@ -34,27 +34,13 @@ export class OzoneGateway implements Gateway {
 
     async login(username: string, password: string): Promise<Response<AuthUserDTO>> {
         try {
-            const response = await this.post(
-                "auth/login/",
-                {
-                    username,
-                    password
-                },
-                {
-                    validate: validateAuthUser
-                }
-            );
+            const response = await this.post("auth/login/", { username, password }, { validate: validateAuthUser });
             this._isAuthenticated = true;
             return response;
         } catch (ex) {
             this._isAuthenticated = false;
-
             if (ex instanceof ValidationError) throw ex;
-
-            if (ex.response.status === 401) {
-                throw new AuthenticationError("Invalid username or password", ex);
-            }
-            throw new AuthenticationError("Unknown error", ex);
+            throw new AuthenticationError("An error occurred", ex);
         }
     }
 
