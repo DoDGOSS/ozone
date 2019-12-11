@@ -95,3 +95,4 @@ $RECYCLE.BIN/
 *.msp
 
 config/staticfiles/
+webpack-stats.json

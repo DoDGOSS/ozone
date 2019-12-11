@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.conf.urls import include
 from django.conf.urls.static import static
@@ -23,6 +24,8 @@ from .views import SystemVersionView, HelpFileView, LoginView, LogoutView, Audit
 
 
 urlpatterns = [
+    re_path(r'^$', login_required(TemplateView.as_view(template_name='index.html'))),
+    path('login.html', TemplateView.as_view(template_name='login.html')),
     path('api/v2/auth/login/', LoginView.as_view(), name='login'),
     path('api/v2/auth/logout/', LogoutView.as_view(), name='logout'),
     path('api/v2/', include('dashboards.urls')),
@@ -41,9 +44,6 @@ urlpatterns = [
     path('api/v2/access/getConfig/', AccessView.as_view(), name='access_get_config'),
     path('', include('legacy.urls')),
 ] + static(settings.HELP_FILES_URL, document_root=settings.HELP_FILES)
-
-if not settings.DEBUG:
-    urlpatterns.extend([re_path(r'^$', TemplateView.as_view(template_name='index.html'))])
 
 
 if settings.DEBUG:
@@ -67,7 +67,7 @@ if settings.DEBUG:
         path('admin/', admin.site.urls),
         path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
         re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-        path('accounts/', include('rest_framework.urls')),
+        # path('accounts/', include('rest_framework.urls')),
         # static(settings.HELP_FILES_URL, document_root=settings.HELP_FILES)
     ])
 

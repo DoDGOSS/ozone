@@ -28,7 +28,14 @@ setup(
         'config.owf_permissions',
         'config.helpers',
         'config.owf_utils',
+        'config.owf_utils.transformer',
+        'config.owf_utils.transformer.django',
         'config.ssl_auth',
+
+        'migration_owf',
+        'migration_owf.transformers',
+        'migration_tool',
+        'migration_tool.adapters',
 
         'appconf',
         'appconf.migrations',
