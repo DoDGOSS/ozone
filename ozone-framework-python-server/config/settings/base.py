@@ -17,6 +17,14 @@ import ast
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT_DIR = os.path.dirname(os.path.dirname(BASE_DIR))
+CLIENT_DIR = os.path.join(ROOT_DIR, 'ozone-framework-client', 'packages', 'application')
+CLIENT_BUILD_DIR = os.path.join(CLIENT_DIR, 'build')
+WIDGETS_DIR = os.path.join(ROOT_DIR, 'ozone-example-widgets', 'build')
+WIDGETS_BUILD_DIR = os.path.join(WIDGETS_DIR, 'build')
+HELP_FILES = os.path.join(BASE_DIR, 'help_files')
+HELP_FILES_URL = '/help_files/'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -44,6 +52,7 @@ INSTALLED_APPS = [
     'django_filters',
     'method_override',
     'django_nose',
+    'webpack_loader',
 
     # owf apps
     'domain_mappings.apps.DomainMappingsConfig',
@@ -91,10 +100,17 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.2/howto/static-files/
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [CLIENT_BUILD_DIR, HELP_FILES, WIDGETS_BUILD_DIR]
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'), 'templates'],
+        'DIRS': ['config/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -154,14 +170,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
-
-HELP_FILES = os.path.join(BASE_DIR, 'help_files')
-HELP_FILES_URL = '/help_files/'
-
 SYSTEM_VERSION = '2'
 
 REST_FRAMEWORK = {
@@ -185,7 +193,8 @@ AUTHENTICATION_BACKENDS = [
     'config.owf_utils.authentication.DjangoAuthenticateByUsername',
 ]
 
-LOGIN_REDIRECT_URL = '/api/v2/me/'  # Other option is INFO
+LOGIN_URL = '/login.html'
+LOGIN_REDIRECT_URL = '/index.html'
 
 #  LOG
 if not os.path.exists('./logs'):
@@ -314,3 +323,14 @@ SESSION_SAVE_EVERY_REQUEST = True
 # ------------------------------------------------------------------------------
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': '/',  # must end with slash
+        'STATS_FILE': os.path.join(CLIENT_DIR, 'webpack-stats.json'),
+        'POLL_INTERVAL': 0.1,
+        'TIMEOUT': None,
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
+    }
+}

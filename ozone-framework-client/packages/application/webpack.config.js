@@ -3,19 +3,17 @@ const path = require("path");
 const webpack = require("webpack");
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const BundleTracker = require('webpack-bundle-tracker');
 
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const { gspTemplates, htmlTemplates } = require("./scripts/page-templates");
 const { getLocalIdent } = require("./scripts/getCSSModuleLocalIdent");
 
 const isProduction = process.env.NODE_ENV === "production";
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 const BUILD_PATH = path.join(__dirname, "/build");
-
-const PUBLIC_PATH = "./";
 
 const SASS_REGEX = /\.(scss|sass)$/;
 const SASS_MODULE_REGEX = /\.module\.(scss|sass)$/;
@@ -47,9 +45,9 @@ module.exports = {
         host: "0.0.0.0",
         port: process.env.PORT || "3000",
         hot: true,
-        publicPath: isProduction ? PUBLIC_PATH : "/",
         contentBase: path.join(__dirname, "public"),
         watchContentBase: true,
+        writeToDisk: true,
         headers: {
             "Access-Control-Allow-Origin": "*"
         },
@@ -67,7 +65,6 @@ module.exports = {
         filename: isDevelopment ? "scripts/[name].js" : "scripts/[name].[contenthash:8].js",
         chunkFilename: isDevelopment ? `scripts/[name].chunk.js` : "scripts/[name].[contenthash:8].chunk.js",
         path: BUILD_PATH,
-        publicPath: PUBLIC_PATH
     },
 
     module: {
@@ -185,7 +182,10 @@ module.exports = {
 function getPlugins() {
     const plugins = [
         new CleanWebpackPlugin(),
-        new webpack.DefinePlugin({'envChecker': isProduction})
+        new webpack.DefinePlugin({'envChecker': isProduction}),
+        new BundleTracker({
+            filename: './webpack-stats.json'
+        })
     ];
 
     if (isProduction) {
@@ -204,8 +204,6 @@ function getPlugins() {
                 reportFilename: "../reports/bundle-analysis.html",
                 logLevel: "warn"
             }),
-            ...htmlTemplates,
-            ...gspTemplates
         );
     } else {
         plugins.push(
@@ -216,7 +214,6 @@ function getPlugins() {
                 cwd: process.cwd()
             }),
             new webpack.HotModuleReplacementPlugin(),
-            ...htmlTemplates
         );
     }
 

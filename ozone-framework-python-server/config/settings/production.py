@@ -5,20 +5,14 @@ from .base import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+# You must
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/'
+STATICFILES_DIRS = []
 
-
-ROOT_DIR = os.path.dirname(os.path.dirname(BASE_DIR))
-CLIENT_DIR = os.path.join(ROOT_DIR, 'ozone-framework-client', 'packages', 'application', 'build')
-
-WIDGETS_DIR = os.path.join(ROOT_DIR, 'ozone-example-widgets', 'build')
-
-STATICFILES_DIRS = [CLIENT_DIR, HELP_FILES, WIDGETS_DIR]
 
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = ('rest_framework.renderers.JSONRenderer',)
-
-TEMPLATES[0]['DIRS'] = [os.path.join(BASE_DIR, 'templates'), 'templates', STATIC_ROOT]
 
 # REST CORS CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -34,3 +28,13 @@ CORS_ALLOW_METHODS = (
     'POST',
     'PUT',
 )
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': '/',  # must end with slash
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        'TIMEOUT': None,
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
+    }
+}

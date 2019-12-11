@@ -1,5 +1,4 @@
 /node_modules/
 /package-lock.json
-
+webpack-stats.json
 /build/
-/.gradle/
