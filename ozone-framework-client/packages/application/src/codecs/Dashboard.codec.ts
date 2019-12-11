@@ -91,7 +91,7 @@ class UserStateDeserializer {
             imageUrl: optional(stack.imageUrl),
             name: stack.name,
             owner: optional(stack.owner),
-            context: stack.stackContext
+            stackContext: stack.stackContext
         });
 
         this.stacks[_stack.id] = _stack;

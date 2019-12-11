@@ -22,18 +22,18 @@ export class AmlMarketplaceAPI implements MarketplaceAPI {
     private readonly gateway: Gateway;
 
     constructor(storeUrl: string) {
-        this.gateway = new OzoneGateway(storeUrl);
+        this.gateway = new OzoneGateway(storeUrl, true);
     }
 
     storeListingAsDashboard(stackID: number, dashListing: any): Promise<Dashboard | undefined> {
         return new Promise(() => undefined);
     }
 
-    storeListingAsStack(stackID: number, stackListing: AMLListingDTO): Promise<Stack | undefined> {
+    storeListingAsStack(stackID: number, stackListing: any): Promise<Stack | undefined> {
         return new Promise(() => undefined);
     }
 
-    listingAsSimpleNewStack(listing: AMLListingDTO): any | undefined {
+    listingAsSimpleNewStack(listing: any): any | undefined {
         return undefined;
     }
 
@@ -446,7 +446,7 @@ export class AmlMarketplaceAPI implements MarketplaceAPI {
             launch_url: "http://localhost/index.html",
             /* Stacks do not have versions per se, so we calculated the latest version of any component (dashboard or widget) contained in the Stack */
             version_name: (await this.findLatestVersion(stack)).toString(),
-            unique_name: stack.context,
+            unique_name: stack.stackContext,
             /* Stacks do not have a 'short' description in Ozone, so we will just truncate whatever is in the existing description.*/
             description_short: stack.description ? stringTruncate(stack.description, 100) : "",
             is_enabled: true,

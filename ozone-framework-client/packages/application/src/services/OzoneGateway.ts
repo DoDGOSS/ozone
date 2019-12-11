@@ -12,20 +12,22 @@ export class OzoneGateway implements Gateway {
     static readonly instance = lazy(() => new OzoneGateway());
 
     private readonly baseUrl?: string;
+    private readonly forExternalApi?: boolean;
 
     private _rootUrl?: string;
 
     private _isAuthenticated: boolean = false;
 
-    constructor(baseUrl?: string) {
+    constructor(baseUrl?: string, forExternalApi?: boolean) {
         this.baseUrl = baseUrl;
+        this.forExternalApi = forExternalApi;
     }
 
     private get rootUrl(): string {
         if (!this._rootUrl) {
             this._rootUrl = trimEnd(this.baseUrl || backendUrl(), "/");
         }
-        return this._rootUrl + "/api/v2";
+        return this.forExternalApi ? this._rootUrl : this._rootUrl + "/api/v2";
     }
 
     get isAuthenticated(): boolean {
