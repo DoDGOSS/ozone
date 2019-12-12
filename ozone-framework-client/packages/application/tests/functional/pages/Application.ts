@@ -10,7 +10,7 @@ export class Application extends PageObject {
     constructor(browser: NightwatchAPI) {
         super(browser, Application.Selector, "Application");
 
-        browser.url("http://localhost:3000");
+        browser.url("http://localhost:8000");
     }
 
     waitForConsentPage(): ConsentPage {

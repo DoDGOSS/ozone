@@ -6,6 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="/favicon.ico">
     <title>Ozone Platform</title>
+    <script type="text/javascript">
+        window.env = {
+            consentNotice: {
+                isEnabled: {{ enable_consent }},
+                title: "{{ consent_title }}",
+                message: "{{ consent_message }}",
+                details: {
+                    isEnabled: {{ enable_user_agreement }}
+                }
+            },
+            userAgreement: {
+                title: "{{ user_agreement_title}}",
+                message: "{{ user_agreement_message}}"
+            }
+        }
+    </script>
     {% render_bundle 'blueprint' 'css' 'DEFAULT' %}
     {% render_bundle 'vendors' 'css' 'DEFAULT' %}
     {% render_bundle 'login' 'css' 'DEFAULT' %}
@@ -13,7 +29,6 @@
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-
     {% render_bundle 'polyfill' 'js' 'DEFAULT' %}
     {% render_bundle 'blueprint' 'js' 'DEFAULT' %}
     {% render_bundle 'vendors' 'js' 'DEFAULT' %}
