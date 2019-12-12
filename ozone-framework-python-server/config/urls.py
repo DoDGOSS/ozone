@@ -25,7 +25,15 @@ from .views import SystemVersionView, HelpFileView, LoginView, LogoutView, Audit
 
 urlpatterns = [
     re_path(r'^$', login_required(TemplateView.as_view(template_name='index.html'))),
-    path('login.html', TemplateView.as_view(template_name='login.html')),
+    path('login.html', TemplateView.as_view(template_name='login.html'), {
+            'enable_consent': str(settings.ENABLE_CONSENT).lower(),
+            'consent_title': settings.CONSENT_TITLE,
+            'consent_message': settings.CONSENT_MESSAGE,
+            'enable_user_agreement': str(settings.ENABLE_USER_AGREEMENT).lower(),
+            'user_agreement_title': settings.USER_AGREEMENT_TITLE,
+            'user_agreement_message': settings.USER_AGREEMENT_MESSAGE
+        }
+    ),
     path('api/v2/auth/login/', LoginView.as_view(), name='login'),
     path('api/v2/auth/logout/', LogoutView.as_view(), name='logout'),
     path('api/v2/', include('dashboards.urls')),
