@@ -3,6 +3,7 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out, user_lo
 from django.dispatch import receiver
 import logging
 from django.conf import settings
+from config.owf_utils.log_middleware import session_expired
 
 logger = logging.getLogger('owf.enable.cef.object.access.logging')
 
@@ -83,5 +84,29 @@ def on_login_failed(sender, credentials, request, **kwargs):
                                f'USER: {credentials["username"]}'
                                f'[USER LOGIN]: ACCESS DENIED with FAILURE MSG: [Login for {credentials["username"]}] '
                                f'attempted with authenticated credentials')
+    else:
+        pass
+
+
+@receiver(session_expired)
+def on_done(sender, user, request, **kwargs):
+    obj_access_control = ApplicationConfiguration.objects.get(title='Enable CEF Object Access Logging',
+                                                              group_name='AUDITING',
+                                                              code='owf.enable.cef.object.access.logging').value
+    if (obj_access_control.startswith('t')) or (obj_access_control.startswith('T')):
+        sec_level = ApplicationConfiguration.objects.get(title='Security Level',
+                                                         code='owf.security.level').value
+        if sec_level.startswith('D') or sec_level.startswith('d'):
+            return logger.debug(f'IP: {get_client_ip(request)} '
+                                f'SessionID: {request.session.session_key} '
+                                f'USER: {user.username} [USER SESSION TIMEOUT], '
+                                f'with ID [{user.id}], with EMAIL [{user.email}], '
+                                f'with LAST LOGIN DATE [{user.last_login}] '
+                                )
+        elif sec_level.startswith('I') or sec_level.startswith('i'):
+            return logger.info(f'IP: {get_client_ip(request)} '
+                               f'SessionID: {request.session.session_key} '
+                               f'USER: {user.username} [USER SESSION TIMEOUT]'
+                               )
     else:
         pass

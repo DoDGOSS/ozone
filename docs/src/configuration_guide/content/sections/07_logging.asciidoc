@@ -106,12 +106,8 @@ OWF includes an option to audit all user entry and exit in the system. The OWF B
 
 * Both successful and unsuccessful sign-in attempts
 * User sign-out events:
-
-// TODO: Session Log
-
-//* User Sign-out Events:
-//** A user signing out on purpose
-//** A session times out
+** A user signing out on purpose
+** A session times out
 
 NOTE: References to CAS and OWF must match the settings of the current installation.
 
@@ -119,6 +115,7 @@ NOTE: References to CAS and OWF must match the settings of the current installat
 === Sign-in Events
 
 Sign-in events are logged by the `owf.enable.cef.object.access.logging` logger. This logger supports two levels of logging: `info` and `debug`, with the latter providing more detailed information about each sign-in event.
+This is located in the handler file withing the appconf folder `appconf/handlers.py`.
 
 
 A failed sign in produces the following log statement at the info level:
@@ -153,6 +150,7 @@ DEBUG    SHOST: [xxxxxxxx] TIME [ 28/Nov/2019 00:36:36 ] owf.enable.cef.object.a
 === Logout Events
 
 Sign-out events are logged by the `owf.enable.cef.object.access.logging` logger. This logger supports two levels of logging: `info` and `debug`, with the latter providing more detailed information about each sign-out event.
+This is located in the handler file withing the appconf folder `appconf/handlers.py`.
 
 Below is a typical user-initiated sign-out event which has been saved as a log entry, with the log level set to info:
 
@@ -168,25 +166,25 @@ Below is a typical user sign-out event which has been saved as a log entry, with
 DEBUG    SHOST: [xxxxxxxx] TIME [ 28/Nov/2019 00:48:33 ] owf.enable.cef.object.access.logging IP: 127.0.0.1 SessionID: jfe6idrvl7vpeacaebb8a5iw20v7f2rp USER: admin [USER LOGOUT] with EMAIL admin@goss.com with LAST LOGIN DATE [ 2019-11-28 00:36:36.873949+00:00 ]
 ----
 
-// TODO: Session Log
+A user is forced to sign-out when their session times out. Below are info and debug log statements:
 
-//A user can also be forced to sign-out when their session times out. Below are info and debug log statements:
-//
-//.Session time-out event (INFO)
-//----
-//INFO [02/07/2011 10:08:21 -0500] IP: 127.0.0.1 SessionID: 1b4nvaqnb0qx8 User: testAdmin1 [USER SESSION TIMEOUT]
-//----
-//
-//.Session time-out event (DEBUG)
-//----
-//DEBUG [02/07/2011 10:24:21 -0500] IP: 127.0.0.1 SessionID: d0pq3g4xguv3 User: testAdmin1 [USER SESSION TIMEOUT] with ID [1], with EMAIL [testAdmin1@nowhere.com], with ACCOUNT CREATED DATE [02/07/2011 10:23:18 -0500], with LAST LOGIN DATE [02/07/2011 10:23:18 -0500]
-//----
+.Session time-out event (INFO)
+----
+INFO    SHOST: [xxxx.xxxx.xxxx] TIME [ 10/Dec/2019 20:11:03 ] owf.enable.cef.object.access.logging IP: 127.0.0.1 SessionID: oanq3tguneb6i6oayt5fgm8c8v3lgdpe USER: admin [USER SESSION TIMEOUT]
+
+----
+
+.Session time-out event (DEBUG)
+----
+DEBUG    SHOST: [xxxx.xxxx.xxxx] TIME [ 10/Dec/2019 20:11:03 ] owf.enable.cef.object.access.logging IP: 127.0.0.1 SessionID: oanq3tguneb6i6oayt5fgm8c8v3lgdpe USER: admin [USER SESSION TIMEOUT], with ID [1], with EMAIL [admin@goss.com], with LAST LOGIN DATE [2019-12-10 20:10:34.940871+00:00]
+----
 
 
 == Common Event Format (CEF) Auditing
 
 Common Event Format (CEF) auditing capabilities are available in OWF. To enable/disable them, sign into OWF as an administrator and navigate to the auditing configurations.
 CEF auditing is turned ON by default, the toggle controls for both CEF and Object Access auditing are found in OWF's Application Configurations which is located on the drop-down User Menu in the user interface. For more information, see the OWF Administrator's Guide.
+This code is middleware and located in `config/owf_utils/log_middleware.py`.
 
 When enabled, CEF auditing records common user events:
 

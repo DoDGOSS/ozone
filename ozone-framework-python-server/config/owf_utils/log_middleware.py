@@ -1,8 +1,15 @@
+from django.contrib.sessions.models import Session
+from django.utils import timezone
 from django.utils.deprecation import MiddlewareMixin
 import logging
 from django.conf import settings
 from appconf.models import ApplicationConfiguration
 from django.urls import resolve
+import django.dispatch
+from people.models import PersonSession
+from people.models import Person
+
+session_expired = django.dispatch.Signal(providing_args=["user", "request"])
 
 stdoutLogger = logging.getLogger('owf.enable.cef.logging')
 
@@ -27,8 +34,21 @@ def check_key(dictionary, key):
 
 class LogMiddleware(MiddlewareMixin):
 
+    def send_session_logout(self, user, request):
+        session_expired.send(sender=self.__class__, user=user, request=request)
+
     def process_request(self, request):
-        pass
+        if request.session.session_key is not None and Session.objects.filter(
+                pk=f'{request.session.session_key}'
+        ).exists():
+            try:
+                user_session = Session.objects.get(pk=f'{request.session.session_key}')
+                if user_session.expire_date <= timezone.now():
+                    user_session_data = PersonSession.objects.get(session=request.session.session_key)
+                    user = Person.objects.get(id=user_session_data.person_id)
+                    self.send_session_logout(user=user, request=request)
+            except SystemError:
+                pass
 
     def process_view(self, request, callback, callback_args, callback_kwargs):
         pass
