@@ -32,6 +32,7 @@ import { userDashboardApi } from "../../api/clients/UserDashboardAPI";
 import { UserDashboardsGetResponse } from "../../api/models/UserDashboardDTO";
 
 import { uuid } from "../../utility";
+import { authService } from "../../services/AuthService";
 import { AuthUserDTO } from "../../api/models/AuthUserDTO";
 import { Widget } from "../../models/Widget";
 import { showToast } from "../toaster/Toaster";
@@ -41,13 +42,16 @@ import { Dashboard } from "../../models/Dashboard";
 
 // TODO - iconImageUrl not saving to database`
 
-const fetchUserDashboardsAndStacks = (
+const fetchUserDashboardsAndStacks = async (
     dispatchCurrentUserResult: (currentUser: AuthUserDTO) => void,
     dispatchDashboardResult: (dashboards: DashboardDTO[]) => void,
     dispatchStackResult: (stacks: StackDTO[]) => void,
     dispatchDashboardState: (dashLoading: boolean) => void,
     dispatchStackState: (stackLoading: boolean) => void
 ) => {
+    authService.check().then((authcheckResponse: any) => {
+        dispatchCurrentUserResult(authcheckResponse.data);
+    });
     stackApi.getStacks().then((userStacksResponse: Response<ListOf<StackDTO[]>>) => {
         const stacks = userStacksResponse.data.data;
         dispatchStackResult(stacks);
@@ -58,7 +62,6 @@ const fetchUserDashboardsAndStacks = (
         const userDashboards = (ownDashboardResponse.data.dashboards as unknown) as DashboardDTO[];
         dispatchDashboardResult(userDashboards);
         dispatchDashboardState(false);
-        dispatchCurrentUserResult(ownDashboardResponse.data.user);
     });
 };
 
@@ -125,6 +128,12 @@ export const StackDialog: React.FC<{}> = () => {
             .some((dashboard) => dashboard.name === stack.name || dashboard.name === stack.name + " (default)");
 
         return numOfDashboards > 1 || (!hasDefaultDashboard && numOfDashboards > 0);
+    }
+
+    function userDoesNotOwnStack(stack: StackDTO): boolean {
+        const loggedInUsername: string | undefined = currentUser ? currentUser.username : undefined;
+        const stackOwner: string | undefined = stack.owner ? stack.owner.username : undefined;
+        return loggedInUsername !== undefined && stackOwner !== undefined && loggedInUsername !== stackOwner;
     }
 
     const addNewDashboardToStack = async (stack: StackDTO) => {
@@ -355,6 +364,7 @@ export const StackDialog: React.FC<{}> = () => {
                                     const firstDash = dashboards.find((dashboard) =>
                                         dashboard.stack ? dashboard.stack.id === stack.id : false
                                     );
+                                    const userDoesNotOwn: boolean = userDoesNotOwnStack(stack);
                                     const stackNode: ITreeNode = {
                                         id: firstDash ? firstDash.guid : "_NoDash_" + uuid(), // since this must be unique
                                         // @ts-ignore
@@ -374,18 +384,31 @@ export const StackDialog: React.FC<{}> = () => {
                                                 >
                                                     <Divider />
                                                     <CompactAddButton
-                                                        itemName="Add New Dashboard"
+                                                        itemName={
+                                                            userDoesNotOwn
+                                                                ? "Can't edit a stack you do not own.  Owner is listed as: " +
+                                                                  stack.owner!.username +
+                                                                  "."
+                                                                : "Add New Dashboard"
+                                                        }
                                                         onClick={(event) => {
                                                             // don't let the click activate the tree node
                                                             event.stopPropagation();
                                                             addNewDashboardToStack(stack);
                                                         }}
+                                                        disabled={userDoesNotOwn}
                                                     />
                                                     <Divider />
                                                     <CompactShareButton
                                                         itemName={
                                                             // sorry about the nesting
-                                                            firstDash === undefined
+                                                            userDoesNotOwn
+                                                                ? "Can't " +
+                                                                  (storeConnected ? "push" : "share") +
+                                                                  " a stack you do not own.  Owner is listed as: " +
+                                                                  stack.owner!.username +
+                                                                  "."
+                                                                : firstDash === undefined
                                                                 ? "Can't " +
                                                                   (storeConnected ? "push" : "share") +
                                                                   " an empty stack."
@@ -402,7 +425,7 @@ export const StackDialog: React.FC<{}> = () => {
                                                             event.stopPropagation();
                                                             shareOrPush(stack);
                                                         }}
-                                                        disabled={firstDash === undefined}
+                                                        disabled={firstDash === undefined || userDoesNotOwn}
                                                     />
                                                     <Divider />
                                                     <CompactRestoreButton
@@ -415,21 +438,35 @@ export const StackDialog: React.FC<{}> = () => {
                                                     />
                                                     <Divider />
                                                     <CompactEditButton
-                                                        itemName="Edit Stack"
+                                                        itemName={
+                                                            userDoesNotOwn
+                                                                ? "Can't edit a stack you do not own.  Owner is listed as: " +
+                                                                  stack.owner!.username +
+                                                                  "."
+                                                                : "Edit Stack"
+                                                        }
                                                         onClick={(event) => {
                                                             // don't let the click activate the tree node
                                                             event.stopPropagation();
                                                             showEditStackDialog(stack);
                                                         }}
+                                                        disabled={userDoesNotOwn}
                                                     />
                                                     <Divider />
                                                     <CompactDeleteButton
-                                                        itemName="Delete Stack"
+                                                        itemName={
+                                                            userDoesNotOwn
+                                                                ? "Can't delete a stack you do not own.  Owner is listed as: " +
+                                                                  stack.owner!.username +
+                                                                  "."
+                                                                : "Delete Stack"
+                                                        }
                                                         onClick={(event) => {
                                                             // don't let the click activate the tree node
                                                             event.stopPropagation();
                                                             confirmStackDelete(stack);
                                                         }}
+                                                        disabled={userDoesNotOwn}
                                                     />
                                                     <Divider />
                                                 </ButtonGroup>
