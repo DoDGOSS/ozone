@@ -3,7 +3,7 @@ import { Dashboard } from "./Dashboard";
 
 export class StackProps {
     approved: boolean;
-    context: string;
+    stackContext: string;
     dashboards: Dictionary<Dashboard>;
     description?: string;
     descriptorUrl?: string;

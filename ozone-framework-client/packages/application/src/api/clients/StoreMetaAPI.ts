@@ -63,7 +63,7 @@ export class StoreMetaAPI {
     }
 
     private async findMissingListings(storeBackUrl: string): Promise<Array<string>> {
-        const gateway = new OzoneGateway(storeBackUrl);
+        const gateway = new OzoneGateway(storeBackUrl, true);
 
         // We need the AML store to know about Widget, Dashboard, and Web Application (Stack)
         const neededListingTypes = ["Widget", "Dashboard", "Web Application"];
@@ -86,7 +86,7 @@ export class StoreMetaAPI {
     private async addMissingListingsToStore(storeBackUrl: string, missingListings: string[]): Promise<boolean> {
         let runningResponse: boolean = true;
 
-        const gateway = new OzoneGateway(storeBackUrl);
+        const gateway = new OzoneGateway(storeBackUrl, true);
 
         if (isNil(missingListings)) {
             console.log("WARN: No new listingTypes to add to AML Store."); // Should never be hit.
@@ -113,7 +113,7 @@ export class StoreMetaAPI {
         storeBackUrl: string,
         callbackOnCompletion: (store: Widget) => any
     ): Promise<Widget | undefined> {
-        const gateway = new OzoneGateway(storeBackUrl);
+        const gateway = new OzoneGateway(storeBackUrl, true);
         let maybeAMLstoreData: any | undefined;
         try {
             maybeAMLstoreData = await gateway.get(`api/metadata/`);
