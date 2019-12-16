@@ -1,0 +1,4 @@
+from .production import *
+
+
+STATICFILES_DIRS = [CLIENT_BUILD_DIR, HELP_FILES, WIDGETS_BUILD_DIR]
