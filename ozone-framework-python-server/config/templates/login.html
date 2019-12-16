@@ -8,6 +8,11 @@
     <title>Ozone Platform</title>
     <script type="text/javascript">
         window.env = {
+            server: {
+                backendUrl: "{{ server_url }}",
+                frontendUrl: "{{ server_url }}",
+                staticAssetPath: ""
+            },
             consentNotice: {
                 isEnabled: {{ enable_consent }},
                 title: "{{ consent_title }}",
