@@ -432,3 +432,4 @@ psychotherapists, or clergy, and their assistants), the U.S. Government may, sol
 accordance with DoD policy, elect to apply a privilege or other restriction on the U.S. Government's \\
 otherwise-authorized use or disclosure of such information.\\
 """
+SERVER_URL = "http://localhost:8000"
