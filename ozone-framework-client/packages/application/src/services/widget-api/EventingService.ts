@@ -132,7 +132,7 @@ export class EventingService {
     private onWidgetInit(message: RpcMessage): void {
         try {
             const instance = findWidgetInDashboard(message.senderId);
-            const instanceId = instance.userWidget.widget.widgetGuid;
+            const instanceId = instance.id;
 
             const userWidget = instance.userWidget;
             const widget = userWidget.widget;
@@ -144,7 +144,7 @@ export class EventingService {
                     name: userWidget.title,
                     url: widget.url,
                     frameId: `widget-${instanceId}`,
-                    widgetGuid: widget.widgetGuid,
+                    widgetGuid: widget.id,
                     widgetName: userWidget.title,
                     universalName: widget.universalName || ""
                 },
