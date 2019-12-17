@@ -6,8 +6,9 @@ npm run bootstrap
 npm run clean
 npm run build
 npm run copy-required-public
-
 popd
+cp ./ozone-framework-client/packages/application/webpack-stats.json ./ozone-framework-python-server/config/webpack-stats.json
+
 pushd ./ozone-example-widgets/
 npm install
 npm run clean

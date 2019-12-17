@@ -14,7 +14,7 @@ npm run clean
 npm run build
 popd
 cp -r ./ozone-framework-client/packages/application/build ./ozone-framework-python-server/config/staticfiles
-cp ./ozone-framework-client/packages/applciation/webpack-stats.json ./ozone-framework-python-server/config/webpack-stats.json
+cp ./ozone-framework-client/packages/application/webpack-stats.json ./ozone-framework-python-server/config/webpack-stats.json
 
 pushd ./ozone-framework-python-server
 python setup.py sdist --formats=zip
