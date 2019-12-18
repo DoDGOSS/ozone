@@ -32,7 +32,7 @@ HELP_FILES_URL = '/help_files/'
 SECRET_KEY = os.getenv('SECRET_KEY', "6_0yi$sofm8lt(oc4l=%1nyxgog#ek0_+eyki_0a3)2_tej3fd")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = ast.literal_eval(os.getenv('DEBUG', True))
+DEBUG = ast.literal_eval(os.getenv('DEBUG', 'True'))
 
 ALLOWED_HOSTS = ast.literal_eval(os.getenv('ALLOWED_HOSTS', "['*']"))
 # Application definition
