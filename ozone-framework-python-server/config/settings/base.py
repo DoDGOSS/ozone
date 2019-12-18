@@ -267,10 +267,15 @@ LOGGING = {
             'propagate': False,
             'level': 'ERROR',
         },
+        'api.events.auditing': {
+            'handlers': ['console', ],
+            'propagate': False,
+            'level': 'DEBUG',
+        },
         # 'django.db.backends': {  # For SQL expressions
         #     'handlers': ['console'],
         #     'level': 'DEBUG',
-        # },
+        # },api.events.auditing
     }
 }
 
