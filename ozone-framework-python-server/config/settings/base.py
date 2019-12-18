@@ -29,12 +29,12 @@ HELP_FILES_URL = '/help_files/'
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '6_0yi$sofm8lt(oc4l=%1nyxgog#ek0_+eyki_0a3)2_tej3fd'
+SECRET_KEY = os.getenv('SECRET_KEY', "6_0yi$sofm8lt(oc4l=%1nyxgog#ek0_+eyki_0a3)2_tej3fd")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = ast.literal_eval(os.getenv('DEBUG', True))
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ast.literal_eval(os.getenv('ALLOWED_HOSTS', "['*']"))
 # Application definition
 
 INSTALLED_APPS = [
@@ -316,10 +316,10 @@ if ENABLE_SSL_AUTH:
     USER_DN_SSL_HEADER = ast.literal_eval(os.getenv('OWF_USER_DN_SSL_HEADER', 'HTTP_X_SSL_USER_DN'))
     USER_AUTH_STATUS_HEADER = ast.literal_eval(os.getenv('OWF_USER_AUTH_STATUS_HEADER', 'HTTP_X_SSL_AUTHENTICATED'))
 
-ENABLE_METRICS = False
-METRICS_SERVER_URL = 'http://localhost:3000/metric'
+ENABLE_METRICS = ast.literal_eval(os.getenv('ENABLE_METRICS', 'False'))
+METRICS_SERVER_URL = os.getenv('METRICS_SERVER_URL', 'http://localhost:3000/metric')
 
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = ast.literal_eval(os.getenv('SESSION_EXPIRE_AT_BROWSER_CLOSE', 'True'))
 SESSION_COOKIE_AGE = 1440 * 60
 SESSION_SAVE_EVERY_REQUEST = True
 
@@ -340,7 +340,7 @@ WEBPACK_LOADER = {
     }
 }
 
-ENABLE_CONSENT = True
+ENABLE_CONSENT = ast.literal_eval(os.getenv('ENABLE_CONSENT', 'True'))
 CONSENT_TITLE = "DoD Privacy and Consent Notice"
 CONSENT_MESSAGE = """\\
 You are accessing a U.S. Government (USG) Information System (IS) that is provided for USG-authorized use \\
@@ -365,7 +365,7 @@ services by attorneys, psychotherapists, or clergy, and their assistants. Such c
 private and confidential.\\
 """
 
-ENABLE_USER_AGREEMENT = True
+ENABLE_USER_AGREEMENT = ast.literal_eval(os.getenv('ENABLE_USER_AGREEMENT', 'True'))
 USER_AGREEMENT_TITLE = "User Agreement"
 USER_AGREEMENT_MESSAGE = """\\
 __STANDARD MANDATORY NOTICE AND CONSENT PROVISION__\\
@@ -437,4 +437,4 @@ psychotherapists, or clergy, and their assistants), the U.S. Government may, sol
 accordance with DoD policy, elect to apply a privilege or other restriction on the U.S. Government's \\
 otherwise-authorized use or disclosure of such information.\\
 """
-SERVER_URL = "http://localhost:8000"
+SERVER_URL = os.getenv('SERVER_URL', 'http://localhost:8000')
