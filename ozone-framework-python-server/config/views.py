@@ -10,7 +10,7 @@ from people.serializers import PersonBaseSerializer
 from rest_framework import status
 
 
-logger = logging.getLogger('api.events.auditing')
+logger = logging.getLogger('events.auditing')
 
 
 class SystemVersionView(APIView):

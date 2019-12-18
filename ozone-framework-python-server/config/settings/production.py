@@ -3,7 +3,7 @@
 from .base import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = ast.literal_eval(os.getenv('DEBUG', False))
 
 # You must
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
