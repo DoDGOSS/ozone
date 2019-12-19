@@ -81,7 +81,7 @@ export class UserPreferencesPanel extends React.Component<UserEditPreferencesPro
     private getTableColumns(): ColumnTabulator[] {
         return [
             { title: "Namespace", field: "namespace" },
-            { title: "Path", field: "path" },
+            { title: "Preference Name", field: "path" },
             { title: "value", field: "value" },
             {
                 title: "Actions",
