@@ -29,11 +29,12 @@ class SSLClientAuthBackend(backends.ModelBackend):
         try:
             user = User.objects.get(username=user_data['username'])
         except User.DoesNotExist:
-            if settings.AUTOCREATE_VALID_SSL_USERS:
-                user = User(**user_data)
-                user.save()
-            else:
-                return None
+            return None
+            # if settings.AUTOCREATE_VALID_SSL_USERS:
+            #     user = User(**user_data)
+            #     user.save()
+            # else:
+            #     return None
         return user
 
     def get_user(self, user_id):

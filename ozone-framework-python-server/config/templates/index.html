@@ -8,6 +8,12 @@
     <title>Ozone Platform</title>
     <script type="text/javascript">
         window.env = {
+            login: {
+                isEnabled: {{ enable_login }}
+            },
+            logout: {
+                isEnabled: {{ enable_logout }}
+            },
             server: {
                 backendUrl: "{{ server_url }}",
                 frontendUrl: "{{ server_url }}",

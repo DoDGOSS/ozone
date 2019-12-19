@@ -25,6 +25,8 @@ from .views import SystemVersionView, HelpFileView, LoginView, LogoutView, Audit
 
 template_context = {
     'server_url': settings.SERVER_URL,
+    'enable_login': str(settings.ENABLE_LOGIN).lower(),
+    'enable_logout': str(settings.ENABLE_LOGOUT).lower(),
     'enable_consent': str(settings.ENABLE_CONSENT).lower(),
     'consent_title': settings.CONSENT_TITLE,
     'consent_message': settings.CONSENT_MESSAGE,
@@ -35,7 +37,6 @@ template_context = {
 
 urlpatterns = [
     re_path(r'^$', login_required(TemplateView.as_view(template_name='index.html')), template_context),
-    path('login.html', TemplateView.as_view(template_name='login.html'), template_context),
     path('api/v2/auth/login/', LoginView.as_view(), name='login'),
     path('api/v2/auth/logout/', LogoutView.as_view(), name='logout'),
     path('api/v2/', include('dashboards.urls')),
@@ -55,6 +56,10 @@ urlpatterns = [
     path('', include('legacy.urls')),
 ] + static(settings.HELP_FILES_URL, document_root=settings.HELP_FILES)
 
+if settings.ENABLE_LOGIN:
+    urlpatterns.append(
+        path('login.html', TemplateView.as_view(template_name='login.html'), template_context)
+    )
 
 if settings.DEBUG:
     from rest_framework import permissions
