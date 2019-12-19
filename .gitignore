@@ -20,3 +20,4 @@ ozone-framework-client/packages/.DS_Store
 owf-legacy/.DS_Store
 docs/build
 dist
+pep8-results.txt

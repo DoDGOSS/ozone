@@ -282,6 +282,9 @@ LOGGING = {
 DEFAULT_USER_GROUP = 'OWF Users'
 DEFAULT_ADMIN_GROUP = 'OWF Administrators'
 
+ENABLE_LOGIN = ast.literal_eval(os.getenv('ENABLE_LOGIN', 'True'))
+ENABLE_LOGOUT = ast.literal_eval(os.getenv('ENABLE_LOGOUT', 'True'))
+
 # CAS
 ENABLE_CAS = ast.literal_eval(os.getenv('OWF_ENABLE_CAS', 'False'))
 if ENABLE_CAS:
@@ -312,9 +315,9 @@ if ENABLE_SSL_AUTH:
         'config.ssl_auth.SSLClientAuthBackend'
     ]
 
-    EXTRACT_USERDATA_FN = ast.literal_eval(os.getenv('OWF_EXTRACT_USERDATA_FN', 'config.ssl_auth.example.get_cac_id'))
-    USER_DN_SSL_HEADER = ast.literal_eval(os.getenv('OWF_USER_DN_SSL_HEADER', 'HTTP_X_SSL_USER_DN'))
-    USER_AUTH_STATUS_HEADER = ast.literal_eval(os.getenv('OWF_USER_AUTH_STATUS_HEADER', 'HTTP_X_SSL_AUTHENTICATED'))
+    EXTRACT_USERDATA_FN = os.getenv('OWF_EXTRACT_USERDATA_FN', 'config.ssl_auth.example.get_cac_id')
+    USER_DN_SSL_HEADER = os.getenv('OWF_USER_DN_SSL_HEADER', 'HTTP_X_SSL_USER_DN')
+    USER_AUTH_STATUS_HEADER = os.getenv('OWF_USER_AUTH_STATUS_HEADER', 'HTTP_X_SSL_AUTHENTICATED')
 
 ENABLE_METRICS = ast.literal_eval(os.getenv('ENABLE_METRICS', 'False'))
 METRICS_SERVER_URL = os.getenv('METRICS_SERVER_URL', 'http://localhost:3000/metric')
