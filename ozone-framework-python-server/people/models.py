@@ -73,16 +73,16 @@ class Person(AbstractBaseUser):
     enabled = models.BooleanField(default=True)
     user_real_name = models.CharField(max_length=200)
     username = models.CharField(unique=True, max_length=200, blank=False)
-    last_login = models.DateTimeField(default=timezone.now, blank=True)
+    last_login = models.DateTimeField(default=timezone.now, null=True)
     email_show = models.BooleanField(default=True)
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
         unique=True,
     )
-    prev_login = models.DateTimeField(default=timezone.now, blank=True)
+    prev_login = models.DateTimeField(default=timezone.now, null=True)
     description = models.CharField(max_length=255, blank=True)
-    last_notification = models.DateTimeField(default=timezone.now, blank=True)
+    last_notification = models.DateTimeField(default=timezone.now, null=True)
     requires_sync = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
