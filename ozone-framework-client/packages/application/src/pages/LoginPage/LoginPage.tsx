@@ -9,6 +9,10 @@ import { ConsentNotice } from "../../features/ConsentNotice";
 import { UserAgreement } from "../../features/UserAgreement";
 import { authService } from "../../services/AuthService";
 
+export interface LoginPageProps {
+    hideLogin: boolean;
+    onConsentAcknowledged: () => void;
+}
 enum LoginState {
     Loading,
     Consent,
@@ -17,14 +21,14 @@ enum LoginState {
     Redirect
 }
 
-export const LoginPage: React.FC<{}> = () => {
+export const LoginPage: React.FC<LoginPageProps> = (props) => {
     const consentOpts = useMemo(() => env().consentNotice, []);
     const agreementsOpts = useMemo(() => env().userAgreement, []);
 
     const nextUrl = useMemo(() => loginNextUrl(), []);
 
     const params = useSearchParams();
-    const showLogin = useMemo(() => hasStatusParam(params), [params]);
+    const showLogin = useMemo(() => !props.hideLogin && !hasStatusParam(params), [params]);
 
     const [state, setState] = useState<LoginState>(showLogin ? LoginState.Login : LoginState.Loading);
 
@@ -34,13 +38,16 @@ export const LoginPage: React.FC<{}> = () => {
     }, []);
 
     useEffect(() => {
-        if (showLogin) return;
-
-        const isConsentEnabled = consentOpts.isEnabled !== false;
-
+        const isConsentEnabled = consentOpts.isEnabled !== false && !hasStatusParam(params);
+        setState(isConsentEnabled ? LoginState.Consent : LoginState.Login);
         authService
             .check()
-            .then(() => redirectToDesktop())
+            .then(() => { 
+                if(!props.hideLogin) 
+                    redirectToDesktop();
+                if(!isConsentEnabled)
+                    props.onConsentAcknowledged();
+            })
             .catch(() => setState(isConsentEnabled ? LoginState.Consent : LoginState.Login));
     }, []);
 
@@ -52,7 +59,7 @@ export const LoginPage: React.FC<{}> = () => {
                 opts={consentOpts}
                 isOpen={state === LoginState.Consent}
                 showUserAgreement={() => setState(LoginState.UserAgreement)}
-                onAccept={() => setState(LoginState.Login)}
+                onAccept={() => { setState(LoginState.Login); props.onConsentAcknowledged(); }}
             />
 
             <UserAgreement

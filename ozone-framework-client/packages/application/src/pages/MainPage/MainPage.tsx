@@ -1,6 +1,6 @@
 import styles from "./index.module.scss";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useBehavior } from "../../hooks";
 
 import { DragDropContextProvider } from "react-dnd";
@@ -15,6 +15,7 @@ import { dashboardStore } from "../../stores/DashboardStore";
 
 import { HomeScreen } from "../../components/home-screen/HomeScreen";
 import { ClassificationWrapper } from "../../components/classification/ClassificationWrapper";
+import { LoginPage } from "../LoginPage/LoginPage";
 
 import { asInteger, clampMinimum, isNil } from "../../utility";
 import { systemConfigStore } from "../../stores/SystemConfigStore";
@@ -24,6 +25,8 @@ export const MainPage: React.FC<{}> = () => {
     const isLoginEnabled = useMemo(() => env().login.isEnabled, []);
 
     const authStatus = useBehavior(authStore.status);
+
+    const [consentAcknowledged, setConsentAcknowledge] = useState(false);
 
     useEffect(() => {
         authStore.check();
@@ -56,10 +59,13 @@ export const MainPage: React.FC<{}> = () => {
 
     return (
         <DragDropContextProvider backend={HTML5Backend}>
-            <ClassificationWrapper>
-                {authStatus === AuthStatus.PENDING && <Spinner className={styles.loadingSpinner} />}
-                {authStatus === AuthStatus.LOGGED_IN && <HomeScreen />}
-            </ClassificationWrapper>
+            {(!isLoginEnabled && !consentAcknowledged) && <LoginPage hideLogin={true} onConsentAcknowledged={() => setConsentAcknowledge(true)} />}
+            {(isLoginEnabled || consentAcknowledged) &&
+                <ClassificationWrapper>
+                    {authStatus === AuthStatus.PENDING && <Spinner className={styles.loadingSpinner} />}
+                    {authStatus === AuthStatus.LOGGED_IN && <HomeScreen />}
+                </ClassificationWrapper>
+            }
         </DragDropContextProvider>
     );
 };
