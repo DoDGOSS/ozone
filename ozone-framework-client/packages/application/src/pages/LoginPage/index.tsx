@@ -15,4 +15,4 @@ import { setDefaultEnvironment } from "../../environment";
 
 setDefaultEnvironment();
 
-ReactDOM.render(<LoginPage />, document.getElementById("root") as HTMLElement);
+ReactDOM.render(<LoginPage hideLogin={false} onConsentAcknowledged={() => {}} />, document.getElementById("root") as HTMLElement);

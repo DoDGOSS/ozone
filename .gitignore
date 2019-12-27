@@ -21,3 +21,4 @@ owf-legacy/.DS_Store
 docs/build
 dist
 pep8-results.txt
+ozone-framework-python-server/migration_owf/migration_result
