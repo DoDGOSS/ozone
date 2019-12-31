@@ -83,6 +83,7 @@ class Person(AbstractBaseUser):
     prev_login = models.DateTimeField(default=timezone.now, null=True)
     description = models.CharField(max_length=255, blank=True)
     last_notification = models.DateTimeField(default=timezone.now, null=True)
+    password = models.CharField(max_length=200, null=True, blank=True)
     requires_sync = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

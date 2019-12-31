@@ -9,8 +9,8 @@ from .models import Person, PersonWidgetDefinition
 class PersonCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput, required=False)
+    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput, required=False)
 
     class Meta:
         model = Person
