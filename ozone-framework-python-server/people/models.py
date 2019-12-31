@@ -264,7 +264,13 @@ class Person(AbstractBaseUser):
         ).values_list("dest_id", flat=True)
 
         # Create missing dashboards
-        missing_dashboard_ids = group_dashboard_ids.difference(user_cloned_dashboards_ids)
+        # TODO: extract this into a method for reuse. Same logic exists in stacks/models.py
+        # TODO: modify this to use .exclude(). This was originally refactored, because of issues
+        #       using .difference() on querysets with mysql.
+        missing_dashboard_ids = []
+        for group_dashboard_id in group_dashboard_ids:
+            if group_dashboard_id not in user_cloned_dashboards_ids:
+                missing_dashboard_ids.append(group_dashboard_id)
         Dashboard.create_missing_dashboards_for_user(self, missing_dashboard_ids)
 
     def sync(self):
