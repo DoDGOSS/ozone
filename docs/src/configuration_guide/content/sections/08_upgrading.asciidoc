@@ -3,7 +3,7 @@ include::../_variables.asciidoc[]
 [#upgrading]
 = Upgrading
 
-OWF v8.0.0.0-RC2 is a complete rewrite of the OWF backend. Because of the new technology that OWF leverages, the legacy config files will no longer be used and the only thing that needs to migrate is the data in the database.
+OWF v8.0.0.0-GA is a complete rewrite of the OWF backend. Because of the new technology that OWF leverages, the legacy config files will no longer be used and the only thing that needs to migrate is the data in the database.
 
 == Data Migration
 There are 2 modules in OWF that handle the exporting and importing of legacy data, into the new application. These modules are located with the rest of the OWF application modules. `ozone-framework-python-server/` in the repo and `OWF-8.x.x.x/` in the bundle.

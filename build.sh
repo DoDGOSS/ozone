@@ -33,6 +33,6 @@ cp -r ./docs/build/* ./dist/docs
 
 pushd ./dist
 #TODO: make the zip name configurable
-unzip OWF-8.0.0.0rc2.zip
-rm OWF-8.0.0.0rc2.zip
-zip -r OWF-8.0.0.0rc2.zip .
+#unzip OZONE-8.0.0.0ga.zip
+#rm OZONE-8.0.0.0ga.zip
+#zip -r OZONE-8.0.0.0ga.zip .
