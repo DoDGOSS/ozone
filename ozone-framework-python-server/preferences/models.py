@@ -23,7 +23,6 @@ class Preference(models.Model):
     class Meta:
         managed = True
         db_table = 'preference'
-        unique_together = (('path', 'namespace', 'user'),)
         constraints = [
             models.UniqueConstraint(fields=['path', 'namespace', 'user'], name='unique_path_namespace_user_preference')
         ]
