@@ -13,23 +13,23 @@ payload = {
 class TestingWidgetType(TestCase):
     fixtures = ['resources/fixtures/default_data.json', ]
 
-    url_list = reverse('widget-types-list')
-
     def test_access_widget_type_url(self):
+        url_list = reverse('widget-types-list')
         requests.login(email='admin@goss.com', password='password')
-        data = requests.get(self.url_list)
+        data = requests.get(url_list)
         self.assertEqual(data.status_code, 200)
         requests.logout()
         requests.login(email='user@goss.com', password='password')
-        data = requests.get(self.url_list)
+        data = requests.get(url_list)
         self.assertEqual(data.status_code, 403)
         requests.logout()
 
     def test_operation_widget_list(self):
+        url_list = reverse('widget-types-list')
         # Request list Widget Type and DB continuity.
         db_count = WidgetType.objects.count()
         requests.login(email='admin@goss.com', password='password')
-        all_request_count = requests.get(self.url_list)
+        all_request_count = requests.get(url_list)
         request_count = all_request_count.data['count']
         self.assertEqual(db_count, request_count)
 

@@ -21,12 +21,11 @@ def ordered(obj):
 class HelpFilesAPITest(TestCase):
     fixtures = ['resources/fixtures/default_data.json', ]
 
-    url = reverse('help_files')
-
     @override_settings(DEBUG=False)
     def test_help_files_list_response_debug_false(self):
+        url = reverse('help_files')
         requests.login(email='admin@goss.com', password='password')
-        request = requests.get(self.url)
+        request = requests.get(url)
 
         self.assertEqual(ordered(tree_to_json(settings.HELP_FILES)), ordered(request.data))
 
@@ -34,23 +33,25 @@ class HelpFilesAPITest(TestCase):
 
     @override_settings(DEBUG=True)
     def test_help_files_list_response_debug_true(self):
+        url = reverse('help_files')
         requests.login(email='admin@goss.com', password='password')
-        request = requests.get(self.url)
+        request = requests.get(url)
 
         self.assertEqual(ordered(tree_to_json(settings.HELP_FILES)), ordered(request.data))
 
         requests.logout()
 
     def test_help_files_api_authentication(self):
+        url = reverse('help_files')
         requests.login(email='admin@goss.com', password='password')
-        request = requests.get(self.url)
+        request = requests.get(url)
 
         self.assertEqual(request.status_code, 200)
 
         requests.logout()
 
         requests.login(email='user@goss.com', password='password')
-        request = requests.get(self.url)
+        request = requests.get(url)
 
         self.assertEqual(request.status_code, 200)
 
