@@ -108,7 +108,7 @@ module.exports = {
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
-            NEW_USER_DISPLAY_NAME,
+            NEW_USER_EMAIL,
             "[User Admin Widget] New user successfully created"
         );
 
@@ -122,7 +122,7 @@ module.exports = {
 
         browser.assert.containsText(
             AdminWidget.USER_ADMIN_WIDGET_DIALOG,
-            NEW_USER_USERNAME,
+            NEW_USER_EMAIL,
             "[User Admin Widget] Displays user information we wish to edit"
         );
 
