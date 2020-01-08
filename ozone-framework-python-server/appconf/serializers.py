@@ -26,6 +26,12 @@ class AppConfSerializer(serializers.ModelSerializer):
                 for line in file:
                     print(line.replace(f'CEF_LOCATION={instance.value}', f'CEF_LOCATION={validated_data["value"]}'),
                           end='')
+        if instance.code == 'owf.inactivity.threshold':
+            with fileinput.FileInput('.env', inplace=True, backup='.bak') as file:
+                for line in file:
+                    print(line.replace(f'SESSION_INACTIVITY_THRESHOLD={instance.value}',
+                                       f'SESSION_INACTIVITY_THRESHOLD={validated_data["value"]}'),
+                          end='')
         validated_data['edited_by'] = self.context['request'].user
         validated_data['edited_date'] = timezone.localdate()
         return super(AppConfSerializer, self).update(instance, validated_data)
