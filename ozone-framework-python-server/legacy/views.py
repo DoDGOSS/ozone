@@ -139,3 +139,10 @@ def whoami(request):
     converted['email'] = serialized_user['email']
 
     return Response(converted)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def widget_has_marketplace(request):
+    exists = WidgetDefinition.objects.filter(types__name='marketplace').exists()
+    return Response({'data': exists})

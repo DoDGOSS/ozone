@@ -155,3 +155,8 @@ class TestingLegacyApi(TestCase):
             content_type='application/x-www-form-urlencoded'
         )
         self.assertEqual(response.status_code, 405)
+
+    def test_widget_has_marketplace(self):
+        login_as_admin()
+        response = requests.get('/widget/hasMarketplace/')
+        self.assertEqual(response.status_code, 200)
