@@ -45,7 +45,7 @@ NOTE: When viewing the widget count, only the widgets that are assigned directly
 
 Administrators use the managers to create and delete users, groups and widgets. Differences between the managers are referenced in sub-bullets.
 
-Create button -- image:create-button.png[]::
+Create button -- image:create-button-2.png[,100]::
 
 Opens the manager's editor. From the editor, an administrator can create a new user/group/widget (depending on which editor the administrator opens) and assign related data to the new entry.
 
@@ -203,7 +203,7 @@ Administrators have the ability to change OWF configurations quickly and without
 . Select btn:[System Configuration] to open the System Configuration Console.
 
 .System Configuration Console
-image::system-config-widget.png[,800]
+image::system-config-widget-2.png[,800]
 
 The System Configuration Console has four sections accessible to administrators: Auditing, User Account Settings, Branding, and Store. The following sections describe each option:
 
@@ -219,16 +219,16 @@ NOTE: For more information about CEF Auditing, see the OWF Configuration Guide.
 Object Access Auditing::
 Disabled by default, this records CEF audit logs for all database reads. This includes most user actions such as viewing an application, clicking a button, etc. Click btn:[ON] to enable.
 
-Relocate CEF Logs::
-Disabled by default, this feature allows the system to relocate the CEF logs from their original location to a different location. Click btn:[ON] to enable.
+//Relocate CEF Logs::
+//Disabled by default, this feature allows the system to relocate the CEF logs from their original location to a different location. Click btn:[ON] to enable.
 
-CEF Log Source Location::
-The directory location where the CEF logs are generated. The default location is the Tomcat directory: `/usr/share/tomcat/`
+CEF Log Location::
+The directory location where the CEF and the Object Access logs are generated. The default location is the Django logs directory: `logs`
 
-CEF Log Destination Location::
-The directory location where the CEF logs will be relocated if the "Relocated CEF Logs" option is enabled.
-+
-NOTE: Developers may need to grant permission for the application container to write to this location.
+//CEF Log Destination Location::
+//The directory location where the CEF logs will be relocated if the "Relocated CEF Logs" option is enabled.
+//+
+NOTE: Developers may need to grant permission for the application container to write to this location as well as restart the server when the log location is changed.
 
 Application Security Level::
 The security level of the CEF logs.
