@@ -8,7 +8,7 @@ endif::[]
 OWF ships with a default user profile and default user groups. Administrators can use the default profile and default group to add stacks and widgets to a user or several users' instance of OWF.
 
 .Group Manager -- Default groups
-image::group-admin-widget.png[]
+image::group-admin-widget-2.png[]
 
 OWF Users::
 A default group that ships with OWF. Every user is automatically assigned to it.
