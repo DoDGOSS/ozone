@@ -27,7 +27,7 @@ module.exports = {
         // Standard selenium port
         port: 4444,
         cli_args: {
-            "webdriver.chrome.driver": chromedriver.path,
+            // "webdriver.chrome.driver": chromedriver.path,
             "webdriver.gecko.driver": geckodriver.path
         }
     },
@@ -48,14 +48,14 @@ module.exports = {
             },
             desiredCapabilities: {
                 // The default test
-                browserName: "chrome",
+                browserName: "firefox",
                 javascriptEnabled: true,
                 acceptSslCerts: true,
                 nativeEvents: true,
                 elementScrollBehavior: 1,
-                chromeOptions: {
-                    w3c: false
-                }
+                // chromeOptions: {
+                //     w3c: false
+                // }
                 // "chromeOptions": {
                 //     "args": [
                 //         "headless",
@@ -68,15 +68,15 @@ module.exports = {
         },
 
         // Here, we give each of the browsers we want to test in, and their driver configuration
-        chrome: {
-            desiredCapabilities: {
-                browserName: "chrome",
-                javascriptEnabled: true,
-                acceptSslCerts: true,
-                nativeEvents: true,
-                elementScrollBehavior: 1
-            }
-        },
+        // chrome: {
+        //     desiredCapabilities: {
+        //         browserName: "chrome",
+        //         javascriptEnabled: true,
+        //         acceptSslCerts: true,
+        //         nativeEvents: true,
+        //         elementScrollBehavior: 1
+        //     }
+        // },
 
         firefox: {
             desiredCapabilities: {
