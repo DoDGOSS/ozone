@@ -160,3 +160,13 @@ class TestingLegacyApi(TestCase):
         login_as_admin()
         response = requests.get('/widget/hasMarketplace/')
         self.assertEqual(response.status_code, 200)
+
+    def widget_type_list(self):
+        login_as_admin()
+        response = requests.get('/widgettype/list/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['success'], True)
+
+    def widget_type_list_unauthenticated(self):
+        response = requests.get('/widgettype/list/')
+        self.assertEqual(response.status_code, 403)
