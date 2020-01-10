@@ -19,7 +19,7 @@ export abstract class MarketplaceAPI {
 
     abstract uploadStack(stack: Stack): Promise<{ intent: Intent; message: string }>;
 
-    abstract storeListingAsWidget(listing: any): Widget | undefined;
+    abstract storeListingAsWidget(listing: any): Promise<Widget | undefined>;
 
     abstract storeListingHasNecessaryFields(listing: any): boolean;
 }

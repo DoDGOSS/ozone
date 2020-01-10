@@ -55,14 +55,14 @@ class StoreImportService {
         const listingType: string | undefined = marketplaceAPI.getListingType(listing);
 
         if (listingType === "Widget" || listingType === "widget") {
-            this.importWidget(marketplaceAPI, listing, true);
+            await this.importWidget(marketplaceAPI, listing, true);
         } else if (listingType === "Dashboard" || listingType === "dashboard" || listingType === "dash") {
             // TODO: IMPLEMENT dashboards for AML, something like:
             // const dashboard = marketplaceAPI.storeListingAsDashboard(listing);
             // something.saveContainedWidgets
             // something.saveDash with stack as current stack, and current widgets.?
         } else if (listingType === "Web Application" || listingType === "Stack" || listingType === "stack") {
-            this.importStack(marketplaceAPI, listing, importingUser);
+            await this.importStack(marketplaceAPI, listing, importingUser);
         } else {
             showToast({
                 message: "Error: Unknown Widget Type for Import!",
@@ -86,7 +86,7 @@ class StoreImportService {
             return;
         }
 
-        const widget = marketplaceAPI.storeListingAsWidget(listing);
+        const widget = await marketplaceAPI.storeListingAsWidget(listing);
         if (!widget) {
             console.log(
                 "Warning: The widget '" +
@@ -287,7 +287,7 @@ class StoreImportService {
             if (!widget) {
                 throw new Error("Could not load data to convert widget");
             }
-
+            console.log("we have widget: " + JSON.stringify(widget));
             if (widget.id) {
                 response = await widgetApi.updateWidget(widgetUpdateRequestFromWidget(widget));
             } else {

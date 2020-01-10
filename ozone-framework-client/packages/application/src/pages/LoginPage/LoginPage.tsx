@@ -42,11 +42,9 @@ export const LoginPage: React.FC<LoginPageProps> = (props) => {
         setState(isConsentEnabled ? LoginState.Consent : LoginState.Login);
         authService
             .check()
-            .then(() => { 
-                if(!props.hideLogin) 
-                    redirectToDesktop();
-                if(!isConsentEnabled)
-                    props.onConsentAcknowledged();
+            .then(() => {
+                if (!props.hideLogin) redirectToDesktop();
+                if (!isConsentEnabled) props.onConsentAcknowledged();
             })
             .catch(() => setState(isConsentEnabled ? LoginState.Consent : LoginState.Login));
     }, []);
@@ -59,7 +57,10 @@ export const LoginPage: React.FC<LoginPageProps> = (props) => {
                 opts={consentOpts}
                 isOpen={state === LoginState.Consent}
                 showUserAgreement={() => setState(LoginState.UserAgreement)}
-                onAccept={() => { setState(LoginState.Login); props.onConsentAcknowledged(); }}
+                onAccept={() => {
+                    setState(LoginState.Login);
+                    props.onConsentAcknowledged();
+                }}
             />
 
             <UserAgreement

@@ -144,7 +144,7 @@ export class EventingService {
                     name: userWidget.title,
                     url: widget.url,
                     frameId: `widget-${instanceId}`,
-                    widgetGuid: widget.id,
+                    widgetGuid: widget.id ? widget.id.toString() : "",
                     widgetName: userWidget.title,
                     universalName: widget.universalName || ""
                 },
