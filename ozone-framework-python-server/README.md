@@ -10,6 +10,77 @@ Fork the code for this repository. Make your changes and submit a pull request. 
 1. `pip install -r requirements.txt` - install the root dependencies
 2. `./start-dev.sh` - Run backend in development mode
 
+OWF v8.0.0.0 introduced server-side rendering for the pages requested by the client(browser). Which requires the both the client and the backend to be built, in order to properly run OWF. A more detailed explanation of the server-side mechanism exists in the development section of the Quick Start Guide.
+
+#### Client setup
+
+```
+# from the /ozone-framework-client/packages/application directory
+
+# install dependencies
+npm install
+
+# build the client project bundle
+npm run build
+# or if the webpack hot-reload feature is desired
+npm run start
+
+# copy the static files(icon images and etc.) to the build directory 
+npm run copy-required-public
+
+```
+
+#### Example widgets setup
+
+```
+# from the /ozone-example-widgets directory
+
+# install dependencies
+npm install
+
+# build the client project bundle
+npm run build
+# or if the OWF application expects the widgets to be hosted on a standalone server running on localhost:4000
+npm run start
+
+# copy the pre-bundled client widget api to the build directory
+npm run copy-owf-js
+
+```
+The repo includes a set of example widgets that will run inside of a dashboard in OWF. The loading of these example widgets will depend on the location of the widgets defined in the database.
+
+#### Backend setup
+```
+# from the /ozone-framework-python-server directory
+
+# it is recommended that you create a virtual python environment to avoid poluting the global packages environment
+# this can be achieved using the pipenv package
+pip install pipenv
+# create virtual env
+pipenv shell
+
+# install dependencies
+pip install -r requirements.txt
+
+# run migrations to create the database schema, if needed
+python manage.py makemigrations
+
+# run the start script, which will assure that the database schema is up-to-date and load the default data.
+./start-dev.sh
+
+```
+
+#### Running OWF via Docker
+To facilitate running OWF in any environment, a `/docker-compose.yml` in the root of the repo exists to run OWF inside a Docker container.
+
+Run the following command to start OWF inside a Docker container
+```
+# from the repo root 
+
+docker-compose up -d
+```
+
+
 #### Migration
 See Upgrading section of Configuration Guide 
 

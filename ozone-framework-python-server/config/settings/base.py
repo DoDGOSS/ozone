@@ -315,7 +315,7 @@ if ENABLE_SSL_AUTH:
         'config.ssl_auth.SSLClientAuthBackend'
     ]
 
-    EXTRACT_USERDATA_FN = os.getenv('OWF_EXTRACT_USERDATA_FN', 'config.ssl_auth.example.get_cac_id')
+    EXTRACT_USERDATA_FN = os.getenv('OWF_EXTRACT_USERDATA_FN', 'config.ssl_auth.samples.get_cac_id')
     USER_DN_SSL_HEADER = os.getenv('OWF_USER_DN_SSL_HEADER', 'HTTP_X_SSL_USER_DN')
     USER_AUTH_STATUS_HEADER = os.getenv('OWF_USER_AUTH_STATUS_HEADER', 'HTTP_X_SSL_AUTHENTICATED')
 
