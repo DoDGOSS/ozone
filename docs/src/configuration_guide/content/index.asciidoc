@@ -39,6 +39,8 @@ include::sections/08_upgrading.asciidoc[]
 
 // include::appendices/apdx-a_custom-security.asciidoc[]
 
+include::sections/10_env_configuration.asciidoc[]
+
 include::../../common/glossary.asciidoc[]
 
 :leveloffset: -1
