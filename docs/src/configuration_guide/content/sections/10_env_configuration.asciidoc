@@ -1,0 +1,130 @@
+[env_configuration]
+= Environmental Variable Configuration (.env file)
+
+[#env_configuration]
+
+[cols="1s,3"]
+|===
+| Environmental Variable | Purpose
+
+|`DEBUG=True`
+
+|This boolean value represents the applications state when its running. When DEBUG is set to `True` the application will give detailed error messages and be running in a development state.
+
+|`SECRET_KEY=xxxxxxxxx`
+
+|This value is the key to securing signed data – it is vital you keep this secure, or attackers could use it to generate their own signed values.
+
+|`ALLOWED_HOSTS=['*']`
+
+|This is a list of strings representing the host/domain names that this Django site can serve. This is a security measure to prevent HTTP Host header attacks, which are possible even under many seemingly-safe web server configurations.
+
+|`OWF_DB_ENGINE=django.db.backends.postgresql`
+
+|This value is the the pointer to the Django provided backend engine that will manage the interactions between the different databases. Values for the other backends can be located https://docs.djangoproject.com/en/2.2/ref/databases/[here] at the Django official documentation.
+
+|`OWF_DB_NAME=postgres`
+
+|This value is your database *name* that you will need to connect to your database.
+
+|`OWF_DB_USER=postgres`
+
+|This value is your database *username* that you will need to connect to your database.
+
+|`OWF_DB_PASSWORD=postgres`
+
+|This value is your database *password* that you will need to connect to your database.
+
+|`OWF_DB_HOST=localhost`
+
+|This value is your database *host* location that you will need to connect to your database.
+
+|`OWF_DB_PORT=5432`
+
+|This value is the database *port number* needed to identify the location of the database related to the host.
+
+|`CEF_LOCATION=logs`
+
+|This is the logging files directory location.  When changing this location value the directory needs to exist before the application can run & the server needs to be restarted if the location has changed.
+
+NOTE: _The recommended way of interacting with this configuration is to go through the API to keep the DB settings and the_ `.env` __file in sync. __
+
+|`OWF_ENABLE_CAS=False`
+
+|When this value is enabled it allows the CAS (Central Authentication Service) to serve as a alternate form of authorization for the application. Please refer to this section on the implementation <<cas-config>>
+
+|`OWF_CAS_EXTRA_LOGIN_PARAMETERS={}`
+
+|When CAS is enabled this is the extra URL parameters to add to the login URL when redirecting the user. Please refer to this section on the implementation <<cas-config>>.  For more information read about the CAS integration https://pypi.org/project/django-cas-ng/[here].
+
+|`OWF_CAS_USERNAME_ATTRIBUTE=uid`
+
+|Please refer to this section on the implementation <<cas-config>>. For more information read about the CAS integration https://pypi.org/project/django-cas-ng/[here].
+
+|`OWF_CAS_SERVER_URL=`
+
+|Please refer to this section on the implementation <<cas-config>>.For more information read about the CAS integration https://pypi.org/project/django-cas-ng/[here].
+
+|`OWF_CAS_VERSION=2`
+
+|Please refer to this section on the implementation <<cas-config>>. For more information read about the CAS integration https://pypi.org/project/django-cas-ng/[here].
+
+|`OWF_CAS_CREATE_USER=False`
+
+|Please refer to this section on the implementation <<cas-config>>. For more information read about the CAS integration https://pypi.org/project/django-cas-ng/[here].
+
+|`OWF_CAS_STORE_NEXT=True`
+
+|Please refer to this section on the implementation <<cas-config>>. For more information read about the CAS integration https://pypi.org/project/django-cas-ng/[here].
+
+|`OWF_ENABLE_SSL_AUTH=False`
+
+|This Boolean value is represents the applications ability to handle the CAC (Common Access Card) based login through SSL verification. Please refer to this <<cac-config>> documentation for detailed information on how this security feature works.
+
+|`OWF_EXTRACT_USERDATA_FN=config.ssl_auth.example.get_cac_id`
+
+|This value is used to parse data from the certificate’s DN. Please refer to this <<cac-config>> documentation for detailed information on how this security feature works.
+
+|`OWF_USER_DN_SSL_HEADER=HTTP_X_SSL_USER_DN`
+
+|Please refer to this <<cac-config>> documentation for detailed information on how this security feature works.
+
+|`OWF_USER_AUTH_STATUS_HEADER=HTTP_X_SSL_AUTHENTICATED`
+
+|Please refer to this <<cac-config>> documentation for detailed information on how this security feature works.
+
+|`ENABLE_METRICS=False`
+
+|This boolean value is the control for metrics application metrics to be enabled. Please refer to the <<admin-managers>> for more information.
+
+|`METRICS_SERVER_URL=http://localhost:3000/metric`
+
+|Please refer to the <<admin-managers>> for more information.
+
+|`SESSION_EXPIRE_AT_BROWSER_CLOSE=True`
+
+|This boolean value is the control for sessions for browser interactions. If the value is `True` then the session of the logged in user will expire at the moment of the browser being closed. If it is false that users session will still be valid until the `SESSION_COOKIE_AGE` time has lapsed. SESSION_COOKIE_AGE can be found withing the `base.py` located in `/config/settings/`.
+
+|`ENABLE_USER_AGREEMENT=True`
+
+|This boolean value is the control for the user agreement popup that is displayed.  When set to `True` the popup will be displayed. When set to `False` the popup will be disabled.
+
+|`ENABLE_CONSENT=True`
+
+|This boolean value is the control for the user consent link that is displayed.  When set to `True` the link will be displayed. When set to `False` the link will be disabled.
+
+|`SERVER_URL=http://localhost:8000`
+
+|This value is the server location and port number of the application.  This is used within aspects of the application as a reference point.
+
+NOTE: _This should be changed anytime that the application is running on anything other than the default values of the Django server._
+
+|`ENABLE_LOGIN=True`
+
+|This boolean value when `True` is allowing the user to login through the django based authentication system. When `False` it is assumed that you will be providing your own login authentication.
+
+|`ENABLE_LOGOUT=True`
+
+|This boolean value when `True` allows the user to logout through the user interface.  When `False` the logout is disabled through the user interface.
+
+|===

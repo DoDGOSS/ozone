@@ -59,11 +59,12 @@ python manage.py shell
 >>> Person.objects.create_user(email='', username='', password='')
 ```
 
+[#cac-config]
 === CAC Authentication - X.509 Certificate (PKI)
 
 CAC authentication is a certificate based authentication. Because OWF does not support communication over secure channels out-of-the-box, the proper way to enable certficate based authentication is to standup OWF behind a reverse proxy to handle the validation and decryption of client certificates.
 
-When CAC authentication is enabled, OWF assumes the client's certficiate has been validated and decrypted for any request it receives. 
+When CAC authentication is enabled, OWF assumes the client's certficiate has been validated and decrypted for any request it receives.
 
 The following options are used for configuring certificate authentication in the OWF application config.
 |===
@@ -112,6 +113,8 @@ The `testUser1` certificate grants regular user permissions to use the applicati
 Please refer to the *Ozone Quick Start Guide* for detailed instructions on importing the user certificates into a web browser.
 
 === CAS Authentication
+
+[#cas-config]
 
 OWF comes with support for CAS based authentication. OWF leverages the `django-ng-cas` package to implement the CAS client used for this security mechanism.
 
