@@ -97,131 +97,134 @@ if settings.ENABLE_CAS:
         path('cas/logout/', django_cas_ng.views.LogoutView.as_view(), name='cas_ng_logout'),
     ])
 
-# TODO: all the logic below could probably extracted into something more reusable
-admin_widget_type = WidgetType.objects.get(name="administration")
-default_admin_group = OwfGroup.objects.get(name='OWF Administrators')
+try:
+    # TODO: all the logic below could probably extracted into something more reusable
+    admin_widget_type = WidgetType.objects.get(name="administration")
+    default_admin_group = OwfGroup.objects.get(name='OWF Administrators')
 
-# widget admin widget
-widget_admin_widget_exists = WidgetDefinition.objects.filter(
-    universal_name="org.ozoneplatform.owf.admin.WidgetAdmin",
-    widget_url="local:widget_admin"
-).exists()
-if(not widget_admin_widget_exists):
-    widget_admin_widget = WidgetDefinition.objects.create(
-        visible=True,
-        image_url_medium="static/images/widgets/widgets-manager.png",
-        image_url_small="static/images/widgets/widgets-manager.png",
-        width=400,
-        height=400,
-        widget_version="1.0",
-        widget_url="local:widget_admin",
-        display_name="Widget Administration",
-        background=False,
+    # widget admin widget
+    widget_admin_widget_exists = WidgetDefinition.objects.filter(
         universal_name="org.ozoneplatform.owf.admin.WidgetAdmin",
-        mobile_ready=False
-    )
-    WidgetDefinitionWidgetTypes.objects.create(
-        widget_type=admin_widget_type,
-        widget_definition=widget_admin_widget
-    )
-    default_admin_group.add_widget(widget_admin_widget)
+        widget_url="local:widget_admin"
+    ).exists()
+    if(not widget_admin_widget_exists):
+        widget_admin_widget = WidgetDefinition.objects.create(
+            visible=True,
+            image_url_medium="static/images/widgets/widgets-manager.png",
+            image_url_small="static/images/widgets/widgets-manager.png",
+            width=400,
+            height=400,
+            widget_version="1.0",
+            widget_url="local:widget_admin",
+            display_name="Widget Administration",
+            background=False,
+            universal_name="org.ozoneplatform.owf.admin.WidgetAdmin",
+            mobile_ready=False
+        )
+        WidgetDefinitionWidgetTypes.objects.create(
+            widget_type=admin_widget_type,
+            widget_definition=widget_admin_widget
+        )
+        default_admin_group.add_widget(widget_admin_widget)
 
-# stack admin widget
-stack_admin_widget_exists = WidgetDefinition.objects.filter(
-    universal_name="org.ozoneplatform.owf.admin.DashboardAdmin",
-    widget_url="local:dashboard_admin"
-).exists()
-if(not stack_admin_widget_exists):
-    stack_admin_widget = WidgetDefinition.objects.create(
-        visible=True,
-        image_url_medium="static/images/widgets/dashboards-manager.png",
-        image_url_small="static/images/widgets/dashboards-manager.png",
-        width=400,
-        height=400,
-        widget_version="1.0",
-        widget_url="local:dashboard_admin",
-        display_name="Stack Administration",
-        background=False,
+    # stack admin widget
+    stack_admin_widget_exists = WidgetDefinition.objects.filter(
         universal_name="org.ozoneplatform.owf.admin.DashboardAdmin",
-        mobile_ready=False
-    )
-    WidgetDefinitionWidgetTypes.objects.create(
-        widget_type=admin_widget_type,
-        widget_definition=stack_admin_widget
-    )
-    default_admin_group.add_widget(stack_admin_widget)
+        widget_url="local:dashboard_admin"
+    ).exists()
+    if(not stack_admin_widget_exists):
+        stack_admin_widget = WidgetDefinition.objects.create(
+            visible=True,
+            image_url_medium="static/images/widgets/dashboards-manager.png",
+            image_url_small="static/images/widgets/dashboards-manager.png",
+            width=400,
+            height=400,
+            widget_version="1.0",
+            widget_url="local:dashboard_admin",
+            display_name="Stack Administration",
+            background=False,
+            universal_name="org.ozoneplatform.owf.admin.DashboardAdmin",
+            mobile_ready=False
+        )
+        WidgetDefinitionWidgetTypes.objects.create(
+            widget_type=admin_widget_type,
+            widget_definition=stack_admin_widget
+        )
+        default_admin_group.add_widget(stack_admin_widget)
 
-# user admin widget
-user_admin_widget_exists = WidgetDefinition.objects.filter(
-    universal_name="org.ozoneplatform.owf.admin.UserAdmin",
-    widget_url="local:user_admin"
-).exists()
-if(not user_admin_widget_exists):
-    user_admin_widget = WidgetDefinition.objects.create(
-        visible=True,
-        image_url_medium="static/images/widgets/users-manager.png",
-        image_url_small="static/images/widgets/users-manager.png",
-        width=400,
-        height=400,
-        widget_version="1.0",
-        widget_url="local:user_admin",
-        display_name="User Administration",
-        background=False,
+    # user admin widget
+    user_admin_widget_exists = WidgetDefinition.objects.filter(
         universal_name="org.ozoneplatform.owf.admin.UserAdmin",
-        mobile_ready=False
-    )
-    WidgetDefinitionWidgetTypes.objects.create(
-        widget_type=admin_widget_type,
-        widget_definition=user_admin_widget
-    )
-    default_admin_group.add_widget(user_admin_widget)
+        widget_url="local:user_admin"
+    ).exists()
+    if(not user_admin_widget_exists):
+        user_admin_widget = WidgetDefinition.objects.create(
+            visible=True,
+            image_url_medium="static/images/widgets/users-manager.png",
+            image_url_small="static/images/widgets/users-manager.png",
+            width=400,
+            height=400,
+            widget_version="1.0",
+            widget_url="local:user_admin",
+            display_name="User Administration",
+            background=False,
+            universal_name="org.ozoneplatform.owf.admin.UserAdmin",
+            mobile_ready=False
+        )
+        WidgetDefinitionWidgetTypes.objects.create(
+            widget_type=admin_widget_type,
+            widget_definition=user_admin_widget
+        )
+        default_admin_group.add_widget(user_admin_widget)
 
-# groups admin widget
-group_admin_widget_exists = WidgetDefinition.objects.filter(
-    universal_name="org.ozoneplatform.owf.admin.GroupAdmin",
-    widget_url="local:group_admin"
-).exists()
-if(not group_admin_widget_exists):
-    group_admin_widget = WidgetDefinition.objects.create(
-        visible=True,
-        image_url_medium="static/images/widgets/groups-manager.png",
-        image_url_small="static/images/widgets/groups-manager.png",
-        width=400,
-        height=400,
-        widget_version="1.0",
-        widget_url="local:group_admin",
-        display_name="Group Administration",
-        background=False,
+    # groups admin widget
+    group_admin_widget_exists = WidgetDefinition.objects.filter(
         universal_name="org.ozoneplatform.owf.admin.GroupAdmin",
-        mobile_ready=False
-    )
-    WidgetDefinitionWidgetTypes.objects.get_or_create(
-        widget_type=admin_widget_type,
-        widget_definition=group_admin_widget
-    )
-    default_admin_group.add_widget(group_admin_widget)
+        widget_url="local:group_admin"
+    ).exists()
+    if(not group_admin_widget_exists):
+        group_admin_widget = WidgetDefinition.objects.create(
+            visible=True,
+            image_url_medium="static/images/widgets/groups-manager.png",
+            image_url_small="static/images/widgets/groups-manager.png",
+            width=400,
+            height=400,
+            widget_version="1.0",
+            widget_url="local:group_admin",
+            display_name="Group Administration",
+            background=False,
+            universal_name="org.ozoneplatform.owf.admin.GroupAdmin",
+            mobile_ready=False
+        )
+        WidgetDefinitionWidgetTypes.objects.get_or_create(
+            widget_type=admin_widget_type,
+            widget_definition=group_admin_widget
+        )
+        default_admin_group.add_widget(group_admin_widget)
 
-# system config widget
-system_config_widget_exists = WidgetDefinition.objects.filter(
-    universal_name="org.ozoneplatform.owf.admin.SystemConfig",
-    widget_url="local:system_config"
-).exists()
-if(not system_config_widget_exists):
-    system_config_widget = WidgetDefinition.objects.create(
-        visible=True,
-        image_url_medium="static/images/widgets/configuration-manager.png",
-        image_url_small="static/images/widgets/configuration-manager.png",
-        width=400,
-        height=400,
-        widget_version="1.0",
-        widget_url="local:system_config",
-        display_name="System Configuration",
-        background=False,
+    # system config widget
+    system_config_widget_exists = WidgetDefinition.objects.filter(
         universal_name="org.ozoneplatform.owf.admin.SystemConfig",
-        mobile_ready=False
-    )
-    WidgetDefinitionWidgetTypes.objects.get_or_create(
-        widget_type=admin_widget_type,
-        widget_definition=system_config_widget
-    )
-    default_admin_group.add_widget(system_config_widget)
+        widget_url="local:system_config"
+    ).exists()
+    if(not system_config_widget_exists):
+        system_config_widget = WidgetDefinition.objects.create(
+            visible=True,
+            image_url_medium="static/images/widgets/configuration-manager.png",
+            image_url_small="static/images/widgets/configuration-manager.png",
+            width=400,
+            height=400,
+            widget_version="1.0",
+            widget_url="local:system_config",
+            display_name="System Configuration",
+            background=False,
+            universal_name="org.ozoneplatform.owf.admin.SystemConfig",
+            mobile_ready=False
+        )
+        WidgetDefinitionWidgetTypes.objects.get_or_create(
+            widget_type=admin_widget_type,
+            widget_definition=system_config_widget
+        )
+        default_admin_group.add_widget(system_config_widget)
+except:
+    pass
