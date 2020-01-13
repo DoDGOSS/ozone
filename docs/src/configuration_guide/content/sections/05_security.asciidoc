@@ -98,7 +98,7 @@ include::installation/nginx-config-example.asciidoc[]
 ```
 More details on the nginx http ssl module can be found http://nginx.org/en/docs/http/ngx_http_ssl_module.html
 
-For development and testing purposes, you can run nginx in a container using the docker-compose.yml provided in `config/ssl_auth/samples` directory. The sample certificates are also included in the same directory, and need to be copied into the container or modify the docker-compose.yml to mount the necessary files.
+For more info on how to test with the provided samples, refer to the README in the `/ozone-framework-python-server/config/ssl_auth` directory.
 
 
 ==== Installing User Certificates (PKI)
