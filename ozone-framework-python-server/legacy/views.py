@@ -4,11 +4,11 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view, parser_classes, permission_classes
 from rest_framework.parsers import FormParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from .serializers import PreferenceValueSerializer
+from .serializers import PreferenceValueSerializer, WidgetTypeListSerializer
 
 from domain_mappings.models import RelationshipType, MappingType, DomainMapping
 
@@ -19,7 +19,7 @@ from people.serializers import PersonBaseSerializer
 from preferences.models import Preference
 from preferences.serializer import PreferenceSerializer
 
-from widgets.models import WidgetDefinition
+from widgets.models import WidgetDefinition, WidgetType
 from widgets.serializers import WidgetDefinitionSerializer
 
 from rest_framework.authentication import SessionAuthentication
@@ -146,3 +146,19 @@ def whoami(request):
 def widget_has_marketplace(request):
     exists = WidgetDefinition.objects.filter(types__name='marketplace').exists()
     return Response({'data': exists})
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def widget_type_list(request):
+    order = request.GET.get('order', 'asc')
+    widget_types = WidgetType.objects.all().order_by('-display_name' if order == 'desc' else 'display_name')
+    serialized = WidgetTypeListSerializer(widget_types, many=True).data
+
+    response = {
+        'success': True,
+        'count': len(serialized),
+        'results': serialized,
+    }
+
+    return Response(response)

@@ -2,7 +2,7 @@ from django.urls import path, re_path
 
 from .views import (
     has_preference, prefs_widget_list_user_and_group, server_resources, whoami, widget_has_marketplace,
-    PreferencesViewSet
+    widget_type_list, PreferencesViewSet
 )
 
 preferences = PreferencesViewSet.as_view({
@@ -18,4 +18,5 @@ urlpatterns = [
     path('prefs/server/resources/', server_resources),
     re_path(r'prefs/widget/listUserAndGroupWidgets/?$', prefs_widget_list_user_and_group),
     path('widget/hasMarketplace/', widget_has_marketplace),
+    path('widgettype/list/', widget_type_list),
 ]
