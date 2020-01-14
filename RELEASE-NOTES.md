@@ -1,6 +1,30 @@
 # Release Notes
 All notable changes to this project will be documented in this file.
 
+## [OWF 8.0.0.0-GA] - 2020-01-13
+
+Backend:
+* Rewrite backend from Java (Grails) to Python (Django)
+* Postgres, Mysql, Mssql, Oracle database support
+* Add database migration scripts
+* CAC and CAS Authentication
+* Database schema improvements
+* Add endpoints for legacy endpoints called directly from widget API
+* Server-side configurable login and consent pages
+* Add .env files for easy configuration
+
+
+Frontend:
+* Rewrite frontend client from ExtJS to React (Typescript)
+* Functionality from 7.17.2.X replicated
+* Removal of ExtJS
+* AML Marketplace Integration
+* Updated Dashboard Builder
+* Add configurable consent page
+* Add configurable classification banners
+* UI/UX Improvements
+
+
 ## [OWF 8.0.0.0-RC2] - 2019-12-02
 
 Backend:

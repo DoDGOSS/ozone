@@ -40,9 +40,6 @@ _Requires running instances of the Ozone Framework Server and the Ozone Framewor
  
  
 ## Copyrights
-> Software (c) 2015 [Next Century Corporation](http://www.nextcentury.com/ "Next Century")
-
-> Portions (c) 2009 TexelTek Inc.
 
 > The United States Government has unlimited rights in this software, pursuant to the contracts under which it was developed.  
  
