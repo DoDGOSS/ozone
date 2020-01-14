@@ -1,59 +1,110 @@
 ## Interested in becoming a contributor? 
 Fork the code for this repository. Make your changes and submit a pull request. The Ozone team will review your pull request and evaluate if it should be part of the project. For more information on the patch process please review the Patch Process at https://ozone.nextcentury.com/patch_process.
 
-# OZONE Widget Framework
+# OZONE Widget Framework Backend
  
-## Description
-
-The OZONE Widget Framework (OWF) is a framework that allows data from different servers to communicate inside a browser window without sending information back to the respective servers. This unique capability allows the OWF web portal to offer decentralized data manipulation. It includes a secure, in-browser, pub-sub eventing system which allows widgets from different domains to share information. The combination of decentralized content and in-browser messaging makes OWF particularly suited for large distributed enterprises with legacy stovepipes that need to combine capability. Use it to quickly link applications and make composite tools.
-
-## Technology components
-For OWF Version 8.0.0.0-RC2, the front-end user interface uses Typescript (React), and the backend uses Python (Django).  User preferences are stored in a relational database - anything supported by Django.
-
-### Required Software
-
-* Python (3.7.4)
-
-## Browser Support
-Internet Explorer: > 11
-Microsoft Edge: > 44
-Chrome: > 74
-Firefox: > 60
-
 ### Getting Started
 
-#### Installation and Run (Bundle)
+#### Installation and Run
+
+1. `pip install -r requirements.txt` - install the root dependencies
+2. `./start-dev.sh` - Run backend in development mode
+
+OWF v8.0.0.0 introduced server-side rendering for the pages requested by the client(browser). Which requires the both the client and the backend to be built, in order to properly run OWF. A more detailed explanation of the server-side mechanism exists in the development section of the Quick Start Guide.
+
+#### Client setup
 
 ```
-cp ozone-framework-8.0.0.0.zip /opt
-cd /opt
-unzip ozone-framework-8.0.0.0.zip
-OWF-8.X.X.X/start.sh
-In a supported browser, navigate to: http://localhost:8000/
-Authenticate access to OWF by entering username admin and password password
+# from the /ozone-framework-client/packages/application directory
+
+# install dependencies
+npm install
+
+# build the client project bundle
+npm run build
+# or if the webpack hot-reload feature is desired
+npm run start
+
+# copy the static files(icon images and etc.) to the build directory 
+npm run copy-required-public
+
 ```
 
-#### Installation and Run (Dev)
+#### Example widgets setup
 
-##### Frontend
+```
+# from the /ozone-example-widgets directory
 
-from the client project directory (`ozone-framework-client/`)
+# install dependencies
+npm install
 
-1. `npm install` - install the root dependencies
-2. `npm run bootstrap` - bootstrap (install and link) the packages
+# build the client project bundle
+npm run build
+# or if the OWF application expects the widgets to be hosted on a standalone server running on localhost:4000
+npm run start
 
-##### Backend
+# copy the pre-bundled client widget api to the build directory
+npm run copy-owf-js
 
-from the server project directory (`ozone-framework-python-server`)
+```
+The repo includes a set of example widgets that will run inside of a dashboard in OWF. The loading of these example widgets will depend on the location of the widgets defined in the database.
 
-. Option 1 - View Build Instructions (`docs/OWF Build Instructions`)
-. Option 2 - Run via docker (`./start-dev.sh`)
-. Visit http://localhost:8000
+#### Backend setup
+```
+# from the /ozone-framework-python-server directory
+
+# it is recommended that you create a virtual python environment to avoid poluting the global packages environment
+# this can be achieved using the pipenv package
+pip install pipenv
+# create virtual env
+pipenv shell
+
+# install dependencies
+pip install -r requirements.txt
+
+# run migrations to create the database schema, if needed
+python manage.py makemigrations
+
+# run the start script, which will assure that the database schema is up-to-date and load the default data.
+./start-dev.sh
+
+```
+
+#### Running OWF via Docker
+To facilitate running OWF in any environment, a `/docker-compose.yml` in the root of the repo exists to run OWF inside a Docker container.
+
+Run the following command to start OWF inside a Docker container
+```
+# from the repo root 
+
+docker-compose up -d
+```
+
+
+#### Migration
+See Upgrading section of Configuration Guide 
+
+##### Run unit tests
+
+`./manage.py test`
  
-## Copyrights
-> Software (c) 2015 [Next Century Corporation](http://www.nextcentury.com/ "Next Century")
+##### Test Data
 
-> Portions (c) 2009 TexelTek Inc.
+| Users | Passwords |
+|---|---|
+| admin | password |
+| user  | password |
+
+##### CAS Configuration
+
+To enable CAS, set the `OWF_ENABLE_CAS` environment variable to `'True'` and set the `OWF_CAS_SERVER_URL` environment variable to the CAS server's URL.
+
+Optional parameters:
+* `OWF_CAS_EXTRA_LOGIN_PARAMETERS`. A Python dict with additional values to send to the CAS server on login. Example: `{'key': 'value'}`
+* `OWF_CAS_USERNAME_ATTRIBUTE`. The CAS response attribute to use to set the user's username. Defaults to `uid`. Example: `nickname`
+* `OWF_CAS_VERSION`. The CAS version to use, defaults to `2`. Example: `3`
+
+## Copyrights
 
 > The United States Government has unlimited rights in this software, pursuant to the contracts under which it was developed.  
  
@@ -61,16 +112,6 @@ The OZONE Widget Framework is released to the public as Open Source Software, be
 
 Released under the [Apache License, Version 2](http://www.apache.org/licenses/LICENSE-2.0.html "Apache License v2").
  
-## Community
-
-[Support Guidance] (https://github.com/ozoneplatform/owf-framework/wiki/Support-Guidance): Provides information about resources including related projects.
-
-### Google Groups
-
-[ozoneplatform-users](https://groups.google.com/forum/?fromgroups#!forum/ozoneplatform-users) : This list is for users, for questions about the platform, for feature requests, for discussions about the platform and its roadmap, etc.
-
-[ozoneplatform-dev](https://groups.google.com/forum/?fromgroups#!forum/ozoneplatform-dev) : This deprecated list provides historical information relating to extending the platform. It is no longer maintained but old posts often serve as resources for developers new to the platform. 
-
 
 ### OWF GOSS Board
 OWF started as a project at a single US Government agency, but developed into a collaborative project spanning multiple federal agencies.  Overall project direction is managed by "The OWF Government Open Source Software Board"; i.e. what features should the core team work on next, what patches should get accepted, etc.  Gov't agencies wishing to be represented on the board should check http://owfgoss.org for more details.  Membership on the board is currently limited to Government agencies that are using OWF and have demonstrated willingness to invest their own energy and resources into developing it as a shared resource of the community.  At this time, the board is not considering membership for entities that are not US Government Agencies, but we would be willing to discuss proposals.
@@ -84,9 +125,3 @@ Contributions to the baseline project from outside the US Federal Government sho
 Contributions from government agencies do not need to have a CLA on file, but do require verification that the government has unlimited rights to the contribution.  An email to goss-support@owfgoss.org is sufficient, stating that the contribution was developed by an employee of the United States Government in the course of his or her duties. Alternatively, if the contribution was developed by a contractor, the email should provide the name of the Contractor, Contract number, and an assertion that the contract included the standard "Unlimited rights" clause specified by [DFARS 252.227.7014](http://www.acq.osd.mil/dpap/dars/dfars/html/current/252227.htm#252.227-7014) "Rights in noncommercial computer software and noncommercial computer software documentation".
  
 Government agencies are encouraged to submit contributions as pull requests on GitHub.  If your agency cannot use GitHub, contributions can be emailed as patches to goss-support@owfgoss.org.
- 
-### Related projects
-
-#### OZONE Marketplace
-A sister project of OWF, [Marketplace](https://github.com/ozoneplatform/omp-marketplace) is a search engine for "widgets", effectively the "apps store" for OWF.  
-
