@@ -2,7 +2,7 @@ from django.urls import path, re_path
 
 from .views import (
     has_preference, prefs_widget_list_user_and_group, server_resources, whoami, widget_has_marketplace,
-    widget_type_list, PreferencesViewSet
+    widget_type_list, PreferencesViewSet, access_get_config
 )
 
 preferences = PreferencesViewSet.as_view({
@@ -12,6 +12,7 @@ preferences = PreferencesViewSet.as_view({
 })
 
 urlpatterns = [
+    path('access/getConfig/', access_get_config),
     path('person/whoami/', whoami),
     path('prefs/hasPreference/<str:namespace>/<str:path>', has_preference),
     path('prefs/preference/<str:namespace>/<str:path>', preferences),

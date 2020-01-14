@@ -107,7 +107,7 @@ try:
         universal_name="org.ozoneplatform.owf.admin.WidgetAdmin",
         widget_url="local:widget_admin"
     ).exists()
-    if(not widget_admin_widget_exists):
+    if not widget_admin_widget_exists:
         widget_admin_widget = WidgetDefinition.objects.create(
             visible=True,
             image_url_medium="static/images/widgets/widgets-manager.png",
@@ -132,7 +132,7 @@ try:
         universal_name="org.ozoneplatform.owf.admin.DashboardAdmin",
         widget_url="local:dashboard_admin"
     ).exists()
-    if(not stack_admin_widget_exists):
+    if not stack_admin_widget_exists:
         stack_admin_widget = WidgetDefinition.objects.create(
             visible=True,
             image_url_medium="static/images/widgets/dashboards-manager.png",
@@ -157,7 +157,7 @@ try:
         universal_name="org.ozoneplatform.owf.admin.UserAdmin",
         widget_url="local:user_admin"
     ).exists()
-    if(not user_admin_widget_exists):
+    if not user_admin_widget_exists:
         user_admin_widget = WidgetDefinition.objects.create(
             visible=True,
             image_url_medium="static/images/widgets/users-manager.png",
@@ -182,7 +182,7 @@ try:
         universal_name="org.ozoneplatform.owf.admin.GroupAdmin",
         widget_url="local:group_admin"
     ).exists()
-    if(not group_admin_widget_exists):
+    if not group_admin_widget_exists:
         group_admin_widget = WidgetDefinition.objects.create(
             visible=True,
             image_url_medium="static/images/widgets/groups-manager.png",
@@ -207,7 +207,7 @@ try:
         universal_name="org.ozoneplatform.owf.admin.SystemConfig",
         widget_url="local:system_config"
     ).exists()
-    if(not system_config_widget_exists):
+    if not system_config_widget_exists:
         system_config_widget = WidgetDefinition.objects.create(
             visible=True,
             image_url_medium="static/images/widgets/configuration-manager.png",
@@ -226,5 +226,6 @@ try:
             widget_definition=system_config_widget
         )
         default_admin_group.add_widget(system_config_widget)
-except:
+
+except Exception:
     pass

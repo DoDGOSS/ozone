@@ -126,6 +126,19 @@ def server_resources(request):
     return Response({'serverVersion': settings.SYSTEM_VERSION})
 
 
+# Temporary fix
+# TODO - May need additional configuration / investigation
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def access_get_config(request):
+    return Response({
+        'restrictMessages': False,
+        'auditAllMessages': True,
+        'allowMessagesWithoutAccessLevel': True,
+        'accessLevelCacheTimeout': 3600000
+    })
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def whoami(request):
