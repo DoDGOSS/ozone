@@ -8,40 +8,46 @@ from migration_tool.adapters.postgres import PostgresAdapter
 from migration_tool.json2sql import JSONtoSQL
 
 if __name__ == '__main__':
-    postgres = PostgresAdapter({
-        'host': 'localhost',
-        'database': 'postgres',
-        'user': 'user',
-        'password': '123123',
-    })
 
-    mysql = MySQLAdapter({
-        'host': 'localhost',
-        'database': 'owf',
-        'user': 'root',
-        'password': 'password',
-        'unix_socket': "/tmp/mysql.sock",
-    })
+    # postgres = PostgresAdapter({
+    #     'host': 'localhost',
+    #     'database': 'postgres',
+    #     'user': 'owf',
+    #     'password': 'password',
+    # })
 
-    oracle = OracleAdapter({
-        'host': 'database-1.cu1fayu7dbph.us-east-1.rds.amazonaws.com',
-        'database': 'oracle',
-        'user': 'admin',
-        'password': 'adminadmin',
-        'port': '1521',
-    })
+    # mysql = MySQLAdapter({
+    #     'host': 'localhost',
+    #     'database': 'mysql_db',
+    #     'user': 'root',
+    #     'password': 'password',
+    #     # 'unix_socket': "/tmp/mysql.sock",
+    # })
+
+    # oracle = OracleAdapter({
+    #     'host': 'localhost',
+    #     'database': 'ORCLCDB.localdomain',
+    #     'user': 'dummy',
+    #     'password': 'dummy',
+    #     'port': '1521',
+    # })
 
     mssql = MSSQLAdapter({
         'host': 'localhost',
-        'database': 'owf',
+        'database': 'owf_new',
         'user': 'sa',
-        'password': 'reallyStrongPwd123',
+        'password': 'superstrong_password123',
     })
 
-    JSONtoSQL(mssql) \
+    # TODO - improve
+    import_db = mssql
+    import_db_var = 'mssql'
+
+    # add .reset() \ if you wish the destination db to be wiped
+    JSONtoSQL(import_db) \
         .reset() \
         .to_sql(
-        json_db_path='migration_result/mysql_owf',
-        schema_path='migration_result/mysql_owf_schema',
+        json_db_path=f'migration_result/{import_db_var}_owf',
+        schema_path=f'migration_result/{import_db_var}_owf_schema',
         transformer=import_transform
     )

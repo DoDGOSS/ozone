@@ -9,32 +9,38 @@ from migration_tool.sql2json import SQLtoJSON
 if __name__ == '__main__':
 
     databases = [
-        PostgresAdapter({
-            'host': 'localhost',
-            'database': 'postgres',
-            'user': 'user',
-            'password': '123123',
-        }),
-        MySQLAdapter({
-            'host': 'localhost',
-            'database': 'owf',
-            'user': 'root',
-            'password': 'password',
-            'unix_socket': "/tmp/mysql.sock",
-        }),
-        OracleAdapter({
-            'host': 'database-1.cu1fayu7dbph.us-east-1.rds.amazonaws.com',
-            'database': 'oracle',
-            'user': 'admin',
-            'password': 'adminadmin',
-            'port': '1521',
-        }),
+
+        # PostgresAdapter({
+        #     'host': 'localhost',
+        #     'database': 'owf',
+        #     'user': 'owf',
+        #     'password': 'password',
+        # }),
+
+        # MySQLAdapter({
+        #     'host': 'localhost',
+        #     'database': 'owf',
+        #     'user': 'root',
+        #     'password': 'password',
+        #     # 'unix_socket': "/tmp/mysql.sock",
+        # }),
+
+        # OracleAdapter({
+        #     'host': 'localhost',
+        #     'database': 'ORCLCDB.localdomain',
+        #     'user': 'system',
+        #     'password': 'dummy',
+        #     'port': '1521',
+        #     'client_path': 'C:\instantclient_19_5',  # needed for windows.
+        # }),
+
         MSSQLAdapter({
             'host': 'localhost',
             'database': 'owf',
             'user': 'sa',
-            'password': 'reallyStrongPwd123',
+            'password': 'superstrong_password123',
         })
+
     ]
 
     for adapter in databases:

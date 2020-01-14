@@ -9,7 +9,7 @@ services:
     container_name: "ozone"
     entrypoint: /code/start.sh
     environment:
-      OWF_DB_HOST: 'db'
+      OWF_DB_HOST: 'postgresdb'
     ports:
       - "8000:8000"
     networks:
@@ -25,7 +25,7 @@ services:
     networks:
       - owf
   
-  db:
+  postgresdb:
     image: postgres
     container_name: "ozone_postgres"
     environment:

@@ -5,6 +5,14 @@ from django.contrib.auth.hashers import make_password
 from migration_tool import utils
 
 
+def configure_settings():
+    try:
+        from django.conf import settings
+        settings.configure()
+    except:
+        pass
+
+
 def import_transform(data_set, table_name, target_db, **kwargs):
     results = data_set.copy()
 
@@ -18,6 +26,11 @@ def import_transform(data_set, table_name, target_db, **kwargs):
         # so lets ignore this table.
         pass
 
+    # We must set a password for users.
+    # if table_name == 'person' and 'password' not in results.keys():
+    #     configure_settings()
+    #     results["password"] = make_password("password")
+
     # some mappings cannot be defined within json, so lets manipulate them here.
     data_set.update(results)
     for k in data_set.keys():
@@ -29,9 +42,9 @@ def import_transform(data_set, table_name, target_db, **kwargs):
 
         # We dont want to create password for users.
         # if k == 'password' and table_name == 'person':
-        #     if results[k] is None:
-        #         password = utils.generate_password()
-        #         results[k] = make_password(password)
+        #     if results[k] is not None:
+        #         configure_settings()
+        #         results[k] = make_password(results[k])
 
         # some values might be null from testing source db
         # fix and assign default value to those.
@@ -40,9 +53,13 @@ def import_transform(data_set, table_name, target_db, **kwargs):
                 if results[k] is None:
                     results[k] = datetime.now(timezone.utc)
 
-        # string to timezone, oracle throws ORA-01843 otherwise.
-        if target_db.get_db_adapter_name().lower() in ('oracle',) and table_name == 'dashboard':
-            if k in ('edited_date', 'created_date'):
+        # Oracle - convert date strings to datetime instances.
+        if target_db.get_db_adapter_name().lower() in ('oracle',):
+            if (k.endswith('_date') or k.startswith('prev_') or k.startswith('last_')) and results[k]:
                 results[k] = utils.convert_string_to_time(results[k], 'UTC')
+
+        if target_db.get_db_adapter_name().lower() in ('oracle',) and table_name == 'application_configuration':
+            if k in ('created_date', 'edited_date') and isinstance(results[k], datetime):
+                results[k] = datetime.strptime(str(results[k])[:10], '%Y-%m-%d')
 
     return results

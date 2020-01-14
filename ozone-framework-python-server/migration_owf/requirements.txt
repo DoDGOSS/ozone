@@ -1,11 +1,8 @@
 pytz
 Cython
 cx_Oracle
-pymssql
 pymysql
+pymssql==2.1.4
 django-mssql-backend
-
-# MYSQL
-#brew tap microsoft/mssql-release https://github.com/Microsoft/homebrew-mssql-release
-#brew update
-#brew install msodbcsql mssql-tools
+mysqlclient==1.4.6
+cryptography

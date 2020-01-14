@@ -28,14 +28,12 @@ class PostgresAdapter(DatabaseAdapter):
 
     def drop_all(self):
         self.foreign_keys_freeze()
-        for table_name in self.get_table_names():
-            self.query('DROP TABLE %s' % table_name)
+        self.query('DROP TABLE %s' % ', '.join(self.get_table_names()))
         self.foreign_keys_unfreeze()
 
     def reset(self):
         self.foreign_keys_freeze()
-        for table_name in self.get_table_names():
-            self.query('TRUNCATE TABLE %s' % table_name)
+        self.query('TRUNCATE TABLE %s' % ', '.join(self.get_table_names()))
         self.foreign_keys_unfreeze()
 
     def insert(self, table_name, dict_data):

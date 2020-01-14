@@ -26,6 +26,7 @@ class MySQLAdapter(DatabaseAdapter):
             'db': self.params.get('database'),
             'charset': self.DB_CHARSET,
             'cursorclass': pymysql.cursors.DictCursor,
+            'autocommit': True,
         }
 
         if self.params.get('unix_socket'):
@@ -41,26 +42,32 @@ class MySQLAdapter(DatabaseAdapter):
         self.query('SET GLOBAL FOREIGN_KEY_CHECKS=0')
 
     def foreign_keys_unfreeze(self):
-        self.query('SET GLOBAL FOREIGN_KEY_CHECKS=1')
+        # self.query('SET GLOBAL FOREIGN_KEY_CHECKS=1')
+        pass
 
     def drop_all(self):
         self.foreign_keys_freeze()
         for table_name in self.get_table_names():
+            table_name = '`%s`.`%s`' % (self.params.get('database'), table_name)
             self.query('DROP TABLE %s' % table_name)
         self.foreign_keys_unfreeze()
 
     def reset(self):
         self.foreign_keys_freeze()
-        for table_name in self.get_table_names():
-            self.query('TRUNCATE TABLE %s' % table_name)
+        self.query('''
+                SELECT CONCAT('TRUNCATE TABLE ', TABLE_NAME, ';')
+                FROM INFORMATION_SCHEMA.TABLES
+                WHERE TABLE_SCHEMA = database()
+        ''')
         self.foreign_keys_unfreeze()
 
     def insert(self, table_name, dict_data):
         placeholders = ', '.join(['%s'] * len(dict_data))
         columns = ', '.join(dict_data.keys())
+        table_name = '`%s`.`%s`' % (self.params.get('database'), table_name)
         sql = "INSERT INTO %s ( %s ) VALUES ( %s )" % (table_name, columns, placeholders)
 
-        return self.query(sql, dict_data.values())
+        return self.query(sql, tuple(dict_data.values()))
 
     def query(self, q: str, params=()):
         super().query(q, params)
@@ -76,7 +83,7 @@ class MySQLAdapter(DatabaseAdapter):
 
     def table_exists(self, table_name):
         self.query("""
-            SELECT COUNT(*) as table_count FROM information_schema.tables WHERE table_schema = database() AND table_name = %s
+            SELECT COUNT(*) as table_count FROM information_schema.tables WHERE TABLE_SCHEMA = database() AND TABLE_NAME = %s
             """, table_name)
 
         return bool(self.fetchone()['table_count'])
@@ -85,7 +92,7 @@ class MySQLAdapter(DatabaseAdapter):
         self.query("""
             SELECT table_name AS "table" -- , ROUND(((data_length + index_length) / 1024 / 1024), 2) "size_in_mb"
             FROM information_schema.TABLES
-            WHERE table_schema = database()
+            WHERE TABLE_SCHEMA = database()
             ORDER BY 1 -- (data_length + index_length) DESC
             """)
 
@@ -93,7 +100,8 @@ class MySQLAdapter(DatabaseAdapter):
 
     def get_table_schema(self, table_name):
         self.query("""
-            SELECT column_name, data_type, is_nullable FROM information_schema.COLUMNS WHERE TABLE_NAME = %s 
+            SELECT column_name, data_type, is_nullable FROM information_schema.COLUMNS WHERE 
+            TABLE_NAME = %s AND TABLE_SCHEMA = database()
             ORDER BY LENGTH(column_name), column_name ASC
             """, table_name)
         results = []
@@ -103,6 +111,7 @@ class MySQLAdapter(DatabaseAdapter):
         return results
 
     def get_records_count(self, table_name):
+        table_name = '`%s`.`%s`' % (self.params.get('database'), table_name)
         self.query("""
             SELECT count(*) AS count FROM {}
             """.format(table_name))
@@ -116,6 +125,7 @@ class MySQLAdapter(DatabaseAdapter):
         schema = self.get_table_schema(table_name)
         column_names = [col['column_name'] for col in schema]
         columns = ', '.join(chain(*zip(map(lambda x: '"%s"' % x, column_names), column_names)))
+        table_name = '`%s`.`%s`' % (self.params.get('database'), table_name)
 
         self.query("""
             SELECT JSON_ARRAYAGG(JSON_OBJECT({columns})) as results FROM {table_name};

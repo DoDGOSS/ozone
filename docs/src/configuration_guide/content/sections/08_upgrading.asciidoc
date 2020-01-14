@@ -3,7 +3,7 @@ include::../_variables.asciidoc[]
 [#upgrading]
 = Upgrading
 
-OWF v8.0.0.0-GA is a complete rewrite of the OWF backend. Because of the new technology that OWF leverages, the legacy config files will no longer be used and the only thing that needs to migrate is the data in the database.
+OWF v8.0.0.0 is a complete rewrite of the OWF backend. Because of the new technology that OWF leverages, the legacy config files will no longer be used and the only thing that needs to migrate is the data in the database.
 
 == Data Migration
 There are 2 modules in OWF that handle the exporting and importing of legacy data, into the new application. These modules are located with the rest of the OWF application modules. `ozone-framework-python-server/` in the repo and `OWF-8.x.x.x/` in the bundle.
@@ -14,54 +14,90 @@ a standalone library which helps connect different databases (mysql, postgres, o
 ./migration_owf/
 a wrapper built on top of migration_tool which utilizes the library to import, export and transform data.
 
+./migration_owf/test_data
+contains docker configurations for MYSQL, MSSQL, and POSTGRES databases as well as example dumps/migrations
+
 === SETUP
 .Install requirements from pip.
 `pip install -r migration_owf/requirements.txt`
 
-.Start a mssql-server instance running as the SQL Express edition
-`docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=reallyStrongPwd123' -e 'MSSQL_PID=Express' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2017-latest-ubuntu`
+==== Install drivers
+You may need to install additional drivers to connect to a MSSQL database
 
-.Database configuration for django app to set up initial tables on default django postgres db.
+* Download Microsoft® ODBC Driver 17 for SQL Server
+** https://www.microsoft.com/en-us/download/details.aspx?id=56567
 
-    DATABASES = {
-        # POSTGRES
-        # 'default': {
-        #     'ENGINE': 'django.db.backends.postgresql',
-        #     'NAME': 'postgres',
-        #     'USER': 'postgres',
-        #     'PASSWORD': 'postgres',
-        #     'HOST': 'localhost',
-        #     'PORT': 5432,
-        # }
-        # ORACLE
-        # 'default': {
-        #     'ENGINE': 'django.db.backends.oracle',
-        #     'NAME': 'oracle',
-        #     'USER': 'admin',
-        #     'PASSWORD': 'adminadmin',
-        #     'HOST': 'database-1.cu1fayu7dbph.us-east-1.rds.amazonaws.com',
-        #     'PORT': '1521',
-        # }
-        # MS SQL
-        'default': {
-            'ENGINE': 'sql_server.pyodbc',
-            'NAME': 'owf2',
-            'USER': 'sa',
-            'PASSWORD': 'reallyStrongPwd123',
-            'HOST': 'localhost',
-            'PORT': '1433',
+
+.Configure Django to set up initial tables on your desired database type
+        # MYSQL
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': 'mysql_db',
+                'USER': 'admin',
+                'PASSWORD': 'password',
+                'HOST': 'localhost', # if localhost doesn't work, try '127.0.0.1'
+                'PORT': '3306',
+                # Wraps each web request in a transaction. So if anything fails, it will rollback automatically.
+                'ATOMIC_REQUESTS': True,
+            }
         }
-    }
+
+        # Postgres
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': 'postgres',
+                'USER': 'owf',
+                'PASSWORD': 'password',
+                'HOST': 'localhost', # if localhost doesn't work, try '127.0.0.1'
+                'PORT': '5432',
+                # Wraps each web request in a transaction. So if anything fails, it will rollback automatically.
+                'ATOMIC_REQUESTS': True,
+            }
+        }
+
+        # MSSQL
+        DATABASES = {
+            'default': {
+                'ENGINE': 'sql_server.pyodbc',
+                'NAME': 'owf_new',
+                'USER': 'sa',
+                'PASSWORD': 'superstrong_password123',
+                'HOST': 'localhost',
+                'PORT': '1433',
+                # Wraps each web request in a transaction. So if anything fails, it will rollback automatically.
+                'ATOMIC_REQUESTS': True,
+                'OPTIONS': {
+                    'driver': 'ODBC Driver 17 for SQL Server', # You may need to select a different driver
+                },
+            }
+        }
+
+        # Oracle
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.oracle',
+                'NAME': 'localhost:1521/ORCLDB.localadmin',
+                'USER': 'user',
+                'PASSWORD': 'password',
+            }
+        }
 
 === USAGE
 .  Change the database connections in import.py and export.py files. +
-.  Export the databases by running cd migration_owf; python export.py +
+.  Export the databases by running `cd migration_owf; python export.py` +
 
 .Generate Field Map:
-generate_mapping.py is a helper script which would show the fields which does not exists in target database. for example, legacy db (source db) does not have fields for password, is_active, is_admin in person table. But target db requires those fields so the mapping file helps you define a default value to those fields. Or you can simply remove those fields from the mapping file and it wont be included while inserting the data. Sometimes a field requires more than a string or a bool, int, for example, in case of password field, we cannot simply write a default password for all users. In this case, we modify migration_owf/transformers/ file and define how to handle password field, like generating a random password compatible with django. Once mapping is defined how the data needs to be exported in your case, you can simple run +
+generate_mapping.py is a helper script which would show the fields which does not exists in target database. for example, legacy db (source db) does not have fields for password, is_active, is_admin in person table. But target db requires those fields so the mapping file helps you define a default value to those fields. Or you can simply remove those fields from the mapping file and it wont be included while inserting the data. Sometimes a field requires more than a string or a bool, int, for example, in case of password field, we cannot simply write a default password for all users. In this case, we modify migration_owf/transformers/ file and define how to handle password field, like generating a random password compatible with django. Once mapping is defined how the data needs to be exported in your case, you can simply run +
 
 `cd migration_owf; python import.py` +
 
-Make sure to change source json data path and target database connection.
+Make sure to change `import_db` and `import_db_var` in import.py to the desired database.
 
 NOTE: On a fresh django db, make sure to run ./manage.py migrate for initial table setup.
+
+Start the backend server by running `python manage.py runserver`
+
+NOTE: If you wish to create a new administrator account you can do so by running
+`python manage.py createsuperuser`
