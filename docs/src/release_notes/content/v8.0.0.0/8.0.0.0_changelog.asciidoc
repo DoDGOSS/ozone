@@ -1,0 +1,29 @@
+= v8.0.0.0
+
+This release is a major rewrite of OWF V7 including a complete rewrite of the frontend and backend.
+Ozone V8 remains backwards compatible with v7.17.1.0 and newer widgets.
+
+*General*
+
+* Convert documents to ascidoc
+* Docker support
+
+*Backend:*
+
+* Rewrite backend from Java (Grails) to Python (Django)
+* Postgres, Mysql, Mssql, Oracle database support
+* Add database migration scripts
+* CAC and CAS Authentication
+* Database schema improvements
+* Add endpoints for legacy endpoints called directly from widget API
+
+*Frontend:*
+
+* Rewrite frontend client from ExtJS to React (Typescript)
+* Functionality from 7.17.2.X replicated
+* Removal of ExtJS
+* AML Marketplace Integration
+* Updated Dashboard Builder
+* Add configurable consent page
+* Add configurable classification banners
+* UI/UX Improvements

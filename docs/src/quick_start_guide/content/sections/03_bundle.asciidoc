@@ -26,6 +26,7 @@ The bundle will include a Dockerfile that can be used to launch OWF in a contain
 NOTE: The following is a summary. Please refer to the sections below for extended details.
 
 . Unzip the zipped OWF bundle.
+. Activate python virtual environment (optional)
 . From a command-line, start the bundle +
   `{bundle-start-script}` +
 . In a supported browser, navigate to: http://localhost:8000/

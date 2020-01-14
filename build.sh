@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO - Add widgets
+
 rm -rf ./ozone-framework-client/packages/application/build
 rm -rf ./docs/build
 

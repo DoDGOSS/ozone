@@ -18,8 +18,8 @@ class CleanCommand(Command):
 
 setup(
     name='OWF',
-    version='v8.0.0.0-GA',
-    description="The OWF application",
+    version='v8.0.0.0ga',
+    description="OZONE Framework",
     # TODO: eventually use find_packages() from setuptools, when the project is organized with a better structure.
     packages=[
         'config',
