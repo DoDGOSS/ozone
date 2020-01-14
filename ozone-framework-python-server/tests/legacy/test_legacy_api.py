@@ -12,6 +12,20 @@ def login_as_admin():
 class TestingLegacyApi(TestCase):
     fixtures = ['resources/fixtures/default_data.json', ]
 
+    def test_access_get_config(self):
+        login_as_admin()
+        response = requests.get('/access/getConfig/')
+
+        expected_response = {
+            'restrictMessages': False,
+            'auditAllMessages': True,
+            'allowMessagesWithoutAccessLevel': True,
+            'accessLevelCacheTimeout': 3600000
+        }
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, expected_response)
+
     def test_person_whoami(self):
         login_as_admin()
         response = requests.get('/person/whoami/')
