@@ -22,7 +22,7 @@ npm install
 
 # build the client project bundle
 npm run build
-# or if the webpack hot-reload feature is desired
+# or if the webpack hot-reload feature is desired changes will be seen from the the server side `index.html` page (default `localhost:8000`).
 npm run start
 
 # copy the static files(icon images and etc.) to the build directory 

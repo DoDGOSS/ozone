@@ -26,10 +26,10 @@ ozone/ozone-framework-client/packages/application$ npm install
 
 # build the client project bundle once
 ozone/ozone-framework-client/packages/application$ npm run build
-# or if the webpack hot-reload feature is desired, to see runtime changes to the frontend
+# or if the webpack hot-reload feature is desired, to see runtime changes to the frontend view the server side `index.html` page (default `localhost:8000`).
 ozone/ozone-framework-client/packages/application$ npm run start
 
-# copy the static files(icon images and etc.) to the build directory 
+# copy the static files(icon images and etc.) to the build directory
 ozone/ozone-framework-client/packages/application$ npm run copy-required-public
 
 ----
