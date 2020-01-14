@@ -1,7 +1,7 @@
 # coding: utf-8
 
-import pymssql
 import types
+import pymssql
 from itertools import chain
 from .abstract import DatabaseAdapter
 

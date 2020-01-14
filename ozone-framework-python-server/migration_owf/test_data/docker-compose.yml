@@ -1,0 +1,104 @@
+version: '3'
+
+services:
+
+####################################################
+
+  postgresdb:
+    image: postgres
+    container_name: "postgresdb"
+    environment:
+      POSTGRES_USER: owf
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    networks:
+      - owf
+
+  adminer:
+    image: adminer
+    container_name: "adminer"
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - owf
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: "pgadmin"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "5555:80"
+    networks:
+      - owf
+
+####################################################
+
+  mysqldb:
+    image: mysql
+    container_name: "mysqldb"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: mysql_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    networks:
+      - owf
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: "phpmyadmin"
+    environment:
+      PMA_HOST: mysqldb
+      MYSQL_ROOT_PASSWORD: password 
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+    ports:
+      - "5000:80"
+    networks:
+      - owf
+
+####################################################
+
+  mssqldb:
+    image: "mcr.microsoft.com/mssql/server:2017-latest"
+    container_name: "mssqldb"
+    environment:
+      SA_PASSWORD: "superstrong_password123"
+      ACCEPT_EULA: "Y"
+      #USER=SA
+    ports:
+      - "1433:1433"
+    networks:
+      - owf
+
+####################################################
+
+  oracledb:
+    image: "store/oracle/database-enterprise:12.2.0.1-slim"
+    container_name: "oracledb"
+    restart: unless-stopped
+    ports:
+      - "1521:1521"
+    networks:
+      - owf
+
+  oracledb18c:
+    image: "oracle/database:18.3.0-ee"
+    container_name: "oracledb18c"
+    restart: unless-stopped
+    ports:
+      - "1521:1521"
+    networks:
+      - owf
+
+####################################################
+
+networks:
+  owf:
+    driver: bridge

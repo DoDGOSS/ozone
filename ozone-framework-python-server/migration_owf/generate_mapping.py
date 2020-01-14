@@ -6,7 +6,7 @@ import operator
 from migration_tool import utils
 
 source_schema_path = 'migration_result/mysql_owf_schema'
-target_schema_path = 'migration_result/postgres_postgres_schema'
+target_schema_path = 'migration_result/mysql_owf_schema'
 exclude_starting_with = ('django', 'auth', 'raster', 'spatial', 'geography', 'geometry')
 
 for dirName, subdirList, fileList in os.walk(source_schema_path):

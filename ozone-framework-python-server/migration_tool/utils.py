@@ -41,9 +41,14 @@ def get_mapping_for_table(table_name, path='migration_result'):
 
 
 def convert_string_to_time(date_string, timezone):
-    from datetime import datetime
+
+    import dateutil.parser
+    date_time_obj = dateutil.parser.parse(date_string, ignoretz=True)
+
+    # from datetime import datetime
     import pytz
-    date_time_obj = datetime.strptime(date_string[:26], '%Y-%m-%d %H:%M:%S.%f')
+    #
+    # date_time_obj = datetime.strptime(date_string[:26], '%Y-%m-%d %H:%M:%S.%f')
     date_time_obj_timezone = pytz.timezone(timezone).localize(date_time_obj)
 
     return date_time_obj_timezone
