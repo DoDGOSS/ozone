@@ -2,7 +2,6 @@ import { NightwatchAPI } from "nightwatch";
 import { MainPage } from "./selectors";
 import { loggedInAs } from "./helpers";
 
-
 module.exports = {
     "As an Administrator, I can view the widget sidebar": (browser: NightwatchAPI) => {
         loggedInAs(browser, "admin", "password", "Test Administrator 1");
@@ -44,6 +43,5 @@ module.exports = {
         browser.click(MainPage.WIDGETS_SORT);
 
         browser.closeWindow().end();
-    },
-
+    }
 };

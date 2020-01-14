@@ -11,12 +11,13 @@ import { AMLListingDTO } from "../models/AMLStoreDTO";
 import { AMLListing } from "../../models/AMLListing";
 import { isNil } from "lodash";
 import { parseInt10, stringTruncate } from "../../utility/collections";
-import { dashboardStore } from "../../stores/DashboardStore";
 import { showToast } from "../../components/toaster/Toaster";
 import { Intent } from "@blueprintjs/core";
 import { dashboardLayoutToDto } from "../../codecs/Dashboard.codec";
 import { dashboardApi } from "./DashboardAPI";
 import { DashboardDTO } from "../models/DashboardDTO";
+import { widgetApi } from "./WidgetAPI";
+import { WidgetDTO } from "../models/WidgetDTO";
 
 export class AmlMarketplaceAPI implements MarketplaceAPI {
     private readonly gateway: Gateway;
@@ -41,42 +42,46 @@ export class AmlMarketplaceAPI implements MarketplaceAPI {
         return new Promise(() => []);
     }
 
-    storeListingAsWidget(listing: any): Widget | undefined {
-        const baseWidget = this.findListingInOzone(listing);
-
-        if (baseWidget && baseWidget.version && parseInt10(baseWidget.version) >= parseInt10(listing.versionName)) {
+    async storeListingAsWidget(listing: any): Promise<Widget | undefined> {
+        const baseWidget: WidgetDTO | undefined = await this.findListingInOzone(listing);
+        if (
+            baseWidget &&
+            baseWidget.value.widgetVersion &&
+            parseInt10(baseWidget.value.widgetVersion) >= parseInt10(listing.versionName)
+        ) {
             return undefined;
         } else {
             return new Widget({
                 // TODO: Once the backend rewrite is completed, the description field should no longer be limited to 255 chars
                 description: stringTruncate(listing.description, 255),
-                descriptorUrl: baseWidget ? baseWidget.descriptorUrl : undefined,
-                height: baseWidget ? baseWidget.height : 200,
+                descriptorUrl:
+                    baseWidget && baseWidget.value.descriptorUrl ? baseWidget.value.descriptorUrl : undefined,
+                height: baseWidget ? baseWidget.value.height : 200,
                 id: baseWidget ? baseWidget.id : undefined,
                 images: {
                     smallUrl: listing.icon.url,
                     largeUrl: listing.bannerIcon.url
                 },
                 intents: {
-                    send: baseWidget ? baseWidget.intents.send : [],
-                    receive: baseWidget ? baseWidget.intents.receive : []
+                    send: baseWidget ? baseWidget.value.intents.send : [],
+                    receive: baseWidget ? baseWidget.value.intents.receive : []
                 },
-                isBackground: baseWidget ? baseWidget.isBackground : false,
-                isDefinitionVisible: baseWidget ? baseWidget.isDefinitionVisible : true,
-                isMaximized: baseWidget ? baseWidget.isMaximized : false,
-                isMinimized: baseWidget ? baseWidget.isMinimized : false,
-                isMobileReady: baseWidget ? baseWidget.isMobileReady : false,
-                isSingleton: baseWidget ? baseWidget.isSingleton : false,
-                isVisible: baseWidget ? baseWidget.isVisible : true,
+                isBackground: baseWidget ? baseWidget.value.background : false,
+                isDefinitionVisible: baseWidget ? baseWidget.value.definitionVisible : true,
+                isMaximized: baseWidget ? baseWidget.value.maximized : false,
+                isMinimized: baseWidget ? baseWidget.value.minimized : false,
+                isMobileReady: baseWidget ? baseWidget.value.mobileReady : false,
+                isSingleton: baseWidget ? baseWidget.value.singleton : false,
+                isVisible: baseWidget ? baseWidget.value.visible : true,
                 title: listing.title,
-                types: baseWidget ? baseWidget.types : [],
+                types: baseWidget ? baseWidget.value.widgetTypes : [],
                 universalName: listing.uniqueName,
                 widgetGuid: listing.widgetGuid,
                 url: listing.launchUrl,
                 version: listing.versionName,
-                width: baseWidget ? baseWidget.width : 200,
-                x: baseWidget ? baseWidget.x : 0,
-                y: baseWidget ? baseWidget.y : 0
+                width: baseWidget ? baseWidget.value.width : 200,
+                x: baseWidget ? baseWidget.value.x : 0,
+                y: baseWidget ? baseWidget.value.y : 0
             });
         }
     }
@@ -225,10 +230,12 @@ export class AmlMarketplaceAPI implements MarketplaceAPI {
         }
     }
 
-    private findListingInOzone(listing: any): Widget | undefined {
-        const existingUserWidget = dashboardStore.findUserWidgetByUniversalName(listing.uniqueName);
-        const existingWidget = existingUserWidget ? existingUserWidget.widget : undefined;
-        return existingWidget;
+    private async findListingInOzone(listing: any): Promise<WidgetDTO | undefined> {
+        const allWidgets: WidgetDTO[] = (await widgetApi.getWidgets()).data.data;
+        const existingWidgetDTO: WidgetDTO | undefined = allWidgets.find(
+            (w: WidgetDTO) => w.value.universalName === listing.uniqueName
+        );
+        return existingWidgetDTO;
     }
 
     private async findListingInStore(listing: AMLListing): Promise<any | undefined | null> {

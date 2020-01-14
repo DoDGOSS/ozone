@@ -59,13 +59,15 @@ export const MainPage: React.FC<{}> = () => {
 
     return (
         <DragDropContextProvider backend={HTML5Backend}>
-            {(!isLoginEnabled && !consentAcknowledged) && <LoginPage hideLogin={true} onConsentAcknowledged={() => setConsentAcknowledge(true)} />}
-            {(isLoginEnabled || consentAcknowledged) &&
+            {!isLoginEnabled && !consentAcknowledged && (
+                <LoginPage hideLogin={true} onConsentAcknowledged={() => setConsentAcknowledge(true)} />
+            )}
+            {(isLoginEnabled || consentAcknowledged) && (
                 <ClassificationWrapper>
                     {authStatus === AuthStatus.PENDING && <Spinner className={styles.loadingSpinner} />}
                     {authStatus === AuthStatus.LOGGED_IN && <HomeScreen />}
                 </ClassificationWrapper>
-            }
+            )}
         </DragDropContextProvider>
     );
 };

@@ -14,5 +14,7 @@ import { LoginPage } from "./LoginPage";
 import { setDefaultEnvironment } from "../../environment";
 
 setDefaultEnvironment();
-
-ReactDOM.render(<LoginPage hideLogin={false} onConsentAcknowledged={() => {}} />, document.getElementById("root") as HTMLElement);
+// tslint:disable-next-line: no-empty
+ReactDOM.render(<LoginPage hideLogin={false} onConsentAcknowledged={() => {}} />, document.getElementById(
+    "root"
+) as HTMLElement);
