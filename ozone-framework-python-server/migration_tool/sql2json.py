@@ -1,5 +1,7 @@
 # coding: utf-8
 import json
+import os
+import subprocess
 from . import utils
 
 
@@ -34,6 +36,18 @@ class SQLtoJSON(object):
         self.get_schema = True
         return self
 
+    def run_post_export_scripts(self, rootdir: list = None):
+        if not rootdir:
+            rootdir = './post_export'
+
+        for root, subFolders, files in utils.sortedWalk(rootdir):
+            for script in files:
+                file = os.path.join(root, script)
+                print(f'\nExecuting Post Export Script: {file}')
+                print('=' * 50)
+                argument = '{}_{}'.format(self.db.get_db_adapter_name().lower(), self.db.params.get('database'))
+                subprocess.call(f"python {file} '{argument}'", shell=True)
+
     def to_json(self, path: str = 'migration_result', schema_only=False):
         assert self.tables, 'No tables found.'
 
@@ -56,3 +70,6 @@ class SQLtoJSON(object):
                     utils.file_write(output, path, table.lower())
             print(
                 '  {} \n    {} records {}'.format(table.upper(), total_records, 'dumped' if total_records > 0 else ''))
+
+        print('Export Finished.')
+        self.run_post_export_scripts()
