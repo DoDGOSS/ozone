@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 
 Backend:
 * Rewrite backend from Java (Grails) to Python (Django)
-* Postgres, Mysql, Mssql, Oracle database support
+* Postgres, Mysql, and Mssql database support
 * Add database migration scripts
 * CAC and CAS Authentication
 * Database schema improvements

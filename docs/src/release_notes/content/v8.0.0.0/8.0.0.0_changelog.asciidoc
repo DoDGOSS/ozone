@@ -7,11 +7,12 @@ Ozone V8 remains backwards compatible with v7.17.1.0 and newer widgets.
 
 * Convert documents to ascidoc
 * Docker support
+* Bundled CMAPI widget
 
 *Backend:*
 
 * Rewrite backend from Java (Grails) to Python (Django)
-* Postgres, Mysql, Mssql, Oracle database support
+* Postgres, Mysql, and MSSQL database support
 * Add database migration scripts
 * CAC and CAS Authentication
 * Database schema improvements
