@@ -3,23 +3,33 @@ import { Dashboard } from "../../models/Dashboard";
 import { Stack } from "../../models/Stack";
 import { StackDTO } from "../models/StackDTO";
 import { Intent } from "@blueprintjs/core";
+import { AuthUserDTO } from "../models/AuthUserDTO";
 
 export abstract class MarketplaceAPI {
-    // abstract getWidget(widgetId: string): Widget; // may need this and others to implement sync.
-
     abstract getListingType(listing: any): string | undefined;
 
-    abstract storeListingAsDashboard(stackID: number, dashListing: any): Promise<Dashboard | undefined>;
+    abstract async storeListingAsDashboard(
+        listing: any,
+        importingUser: AuthUserDTO,
+        stackId: number,
+        marketplaceAPI: MarketplaceAPI
+    ): Promise<Dashboard | undefined>;
 
-    abstract storeListingAsStack(stackID: number, stackListing: any): Promise<Stack | undefined>;
+    abstract async storeListingAsStack(
+        stackID: number,
+        stackListing: any,
+        marketplaceAPI: MarketplaceAPI
+    ): Promise<Stack | undefined>;
+
+    abstract async cleanUpAndVerifyStoreListing(listing: any): Promise<any | undefined>;
 
     abstract listingAsSimpleNewStack(listing: any): StackDTO | undefined;
 
-    abstract getAllUniqueWidgetsFromStackListing(listing: any): Promise<Widget[]>;
+    abstract async getAllUniqueWidgetsFromStackListing(listing: any): Promise<Widget[]>;
 
     abstract uploadStack(stack: Stack): Promise<{ intent: Intent; message: string }>;
 
-    abstract storeListingAsWidget(listing: any): Promise<Widget | undefined>;
+    abstract async storeListingAsWidget(listing: any): Promise<Widget | undefined>;
 
     abstract storeListingHasNecessaryFields(listing: any): boolean;
 }

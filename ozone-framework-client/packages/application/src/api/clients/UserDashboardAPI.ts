@@ -18,8 +18,11 @@ export class UserDashboardAPI {
         });
     }
 
-    async createDashboard(opts: DashboardCreateOpts): Promise<Response<DashboardDTO>> {
-        // TODO: this should be refactored.
+    async createDashboard(
+        opts: DashboardCreateOpts,
+        guid?: string,
+        publish?: boolean
+    ): Promise<Response<DashboardDTO>> {
         const stack = {
             name: opts.name,
             id: opts.stackId
@@ -28,13 +31,14 @@ export class UserDashboardAPI {
         const dashboard = {
             name: opts.name,
             isdefault: !isNil(opts.isDefault) ? opts.isDefault : false,
+            guid: guid ? guid : uuid(),
             state: [],
             layoutConfig: dashboardLayoutToDto({
                 backgroundWidgets: [],
                 tree: opts.tree,
                 panels: opts.panels || {}
             }),
-            publishedToStore: false
+            publishedToStore: publish ? publish : false
         };
 
         const requestData = {
