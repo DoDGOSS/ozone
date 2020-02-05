@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+
+  ozone:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "ozone_bundle"
+    entrypoint: /code/ozone/start.sh
+    ports:
+      - "8000:8000"
+    networks:
+      - owf
+
+networks:
+  owf:
+    driver: bridge

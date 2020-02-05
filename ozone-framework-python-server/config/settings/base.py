@@ -125,15 +125,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Database
+# Database - Use sqlite if .env variables are not set
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('OWF_DB_ENGINE', 'django.db.backends.postgresql'),
-        'NAME': os.getenv('OWF_DB_NAME', 'postgres'),
-        'USER': os.getenv('OWF_DB_USER', 'postgres'),
-        'PASSWORD': os.getenv('OWF_DB_PASSWORD', 'postgres'),
-        'HOST': os.getenv('OWF_DB_HOST', 'localhost'),
-        'PORT': os.getenv('OWF_DB_PORT', '5432'),
+        'ENGINE': os.getenv('OWF_DB_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.getenv('OWF_DB_NAME', 'owf_db'),
+        'USER': os.getenv('OWF_DB_USER', ''),
+        'PASSWORD': os.getenv('OWF_DB_PASSWORD', ''),
+        'HOST': os.getenv('OWF_DB_HOST', ''),
+        'PORT': os.getenv('OWF_DB_PORT', ''),
         # Wraps each web request in a transaction. So if anything fails, it will rollback automatically.
         'ATOMIC_REQUESTS': True,
     }
