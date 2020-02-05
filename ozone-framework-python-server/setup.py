@@ -17,8 +17,8 @@ class CleanCommand(Command):
 
 
 setup(
-    name='OWF',
-    version='v8.0.0.0ga',
+    name='OZONE',
+    version='v8.0.0.0-GA',
     description="OZONE Framework",
     # TODO: eventually use find_packages() from setuptools, when the project is organized with a better structure.
     packages=[
@@ -34,6 +34,9 @@ setup(
 
         'migration_owf',
         'migration_owf.transformers',
+        'migration_owf.migration_result',
+        'migration_owf.migration_result.mapping',
+        'migration_owf.post_export',
         'migration_tool',
         'migration_tool.adapters',
 

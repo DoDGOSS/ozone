@@ -5,10 +5,16 @@ Fork the code for this repository. Make your changes and submit a pull request. 
  
 ### Getting Started
 
-#### Installation and Run
+#### Bundle Installation and Run
+1. `./start.sh` - installs dependencies, migrates sample data, and starts web server
+2. Visit `http://localhost:8000`
+3. Username and passwords included below in Test Data
+
+#### Repo Installation and Run
 
 1. `pip install -r requirements.txt` - install the root dependencies
 2. `./start-dev.sh` - Run backend in development mode
+3. Visit `http://localhost:8000`
 
 OWF v8.0.0.0 introduced server-side rendering for the pages requested by the client(browser). Which requires the both the client and the backend to be built, in order to properly run OWF. A more detailed explanation of the server-side mechanism exists in the development section of the Quick Start Guide.
 

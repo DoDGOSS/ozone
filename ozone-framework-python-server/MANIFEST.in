@@ -3,6 +3,7 @@ include manage.py
 include requirements_prod.txt
 include start.sh
 include config/webpack-stats.json
+include migration_owf/migration_result/mapping/*.json
 recursive-include config/templates *
 recursive-include config/staticfiles *
 recursive-include config/help_files *
