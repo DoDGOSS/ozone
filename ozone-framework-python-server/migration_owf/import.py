@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     # oracle = OracleAdapter({
     #     'host': 'localhost',
-    #     'database': 'ORCLCDB.localdomain',
+    #     'database': 'orclpdb1',
     #     'user': 'dummy',
     #     'password': 'dummy',
     #     'port': '1521',
@@ -41,13 +41,13 @@ if __name__ == '__main__':
 
     # TODO - improve
     import_db = mssql
-    import_db_var = 'mssql'
+    import_db_var = 'mssql_owf'
 
     # add .reset() \ if you wish the destination db to be wiped
     JSONtoSQL(import_db) \
         .reset() \
         .to_sql(
-        json_db_path=f'migration_result/{import_db_var}_owf',
-        schema_path=f'migration_result/{import_db_var}_owf_schema',
+        json_db_path=f'migration_result/{import_db_var}',
+        schema_path=f'migration_result/{import_db_var}_schema',
         transformer=import_transform
     )

@@ -12,7 +12,7 @@ There are 2 modules in OWF that handle the exporting and importing of legacy dat
 a standalone library which helps connect different databases (mysql, postgres, oracle, mssql) and provides a core functionality to import / export data (SQL to JSON or JSON to SQL) where SQL can be any of the mentioned databases.
 
 ./migration_owf/
-a wrapper built on top of migration_tool which utilizes the library to import, export and transform data.
+a wrapper built on top of migration_tool which utilizes the library to import, export and transform data *this is the directory that you will be accessing to run the migrations to the new database*  This directory also contains a `README.md` that has more fine-grained details for using the tool.
 
 ./migration_owf/test_data
 contains docker configurations for MYSQL, MSSQL, and POSTGRES databases as well as example dumps/migrations
@@ -78,24 +78,24 @@ You may need to install additional drivers to connect to a MSSQL database
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.oracle',
-                'NAME': 'localhost:1521/ORCLDB.localadmin',
-                'USER': 'user',
-                'PASSWORD': 'password',
+                'NAME': 'localhost:1521/ORCLDB',
+                'USER': 'system',
+                'PASSWORD': 'Welcome1',
             }
         }
 
 === USAGE
-.  Change the database connections in import.py and export.py files. +
-.  Export the databases by running `cd migration_owf; python export.py` +
+.  Change the database connections in `import.py` and `export.py` files. +
+.  Export the databases by running ``cd migration_owf` & `python export.py` +
 
-.Generate Field Map:
-generate_mapping.py is a helper script which would show the fields which does not exists in target database. for example, legacy db (source db) does not have fields for password, is_active, is_admin in person table. But target db requires those fields so the mapping file helps you define a default value to those fields. Or you can simply remove those fields from the mapping file and it wont be included while inserting the data. Sometimes a field requires more than a string or a bool, int, for example, in case of password field, we cannot simply write a default password for all users. In this case, we modify migration_owf/transformers/ file and define how to handle password field, like generating a random password compatible with django. Once mapping is defined how the data needs to be exported in your case, you can simply run +
+//.Generate Field Map:
+//generate_mapping.py is a helper script which would show the fields which does not exists in target database. for example, legacy db (source db) does not have fields for password, is_active, is_admin in person table. But target db requires those fields so the mapping file helps you define a default value to those fields. Or you can simply remove those fields from the mapping file and it wont be included while inserting the data. Sometimes a field requires more than a string or a bool, int, for example, in case of password field, we cannot simply write a default password for all users. In this case, we modify migration_owf/transformers/ file and define how to handle password field, like generating a random password compatible with django. Once mapping is defined how the data needs to be exported in your case, you can simply run +
 
-`cd migration_owf; python import.py` +
+`cd migration_owf` & `python import.py` +
 
 Make sure to change `import_db` and `import_db_var` in import.py to the desired database.
 
-NOTE: On a fresh django db, make sure to run ./manage.py migrate for initial table setup.
+NOTE: On a fresh django db, make sure to run `./manage.py migrate` for initial table setup.
 
 Start the backend server by running `python manage.py runserver`
 

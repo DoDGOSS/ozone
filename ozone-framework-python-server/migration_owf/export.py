@@ -27,9 +27,9 @@ if __name__ == '__main__':
 
         # OracleAdapter({
         #     'host': 'localhost',
-        #     'database': 'ORCLCDB.localdomain',
+        #     'database': 'ORCLCDB',
         #     'user': 'system',
-        #     'password': 'dummy',
+        #     'password': 'Welcome1',
         #     'port': '1521',
         #     'client_path': 'C:\instantclient_19_5',  # needed for windows.
         # }),
