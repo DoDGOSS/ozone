@@ -100,8 +100,8 @@ def main():
                 except Exception as e:
                     continue
 
-    def generate_new_layout_config(dashboards_file=dashboards_file):
-        with open(dashboards_file) as dashboards:
+    def generate_new_layout_config(dashboard_file=dashboards_file):
+        with open(dashboard_file) as dashboards:
             dashboards_rewritten = []
             dashboards = json.load(dashboards)
             for dashboard in dashboards:
@@ -130,18 +130,19 @@ def main():
         rootdir = f"./migration_result/{migration_result_directory}"
         for root, subFolders, files in os.walk(rootdir):
             for script in files:
-                if script.endswith('.old'):
+                if script.endswith('_old.json'):
                     file = os.path.join(root, script)
                     os.remove(file)
 
         # Rename the previous dashboard.json file to old.dashboard.json
         try:
-            os.rename(dashboards_file, f'{dashboards_file}.old')
+            old_dashboard_file = dashboard_file.replace('.json', '_old.json')
+            os.rename(dashboard_file, old_dashboard_file)
         except FileNotFoundError:
             pass
 
         # # Re-write dashboards json file with updated layout config.
-        with open(dashboards_file, 'w') as f:
+        with open(dashboard_file, 'w') as f:
             json.dump(dashboards_rewritten, f)
 
     generate_new_layout_config()

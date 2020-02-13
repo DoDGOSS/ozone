@@ -55,7 +55,7 @@ services:
     container_name: "phpmyadmin"
     environment:
       PMA_HOST: mysqldb
-      MYSQL_ROOT_PASSWORD: password 
+      MYSQL_ROOT_PASSWORD: password
       MYSQL_USER: admin
       MYSQL_PASSWORD: password
     ports:
@@ -71,33 +71,11 @@ services:
     environment:
       SA_PASSWORD: "superstrong_password123"
       ACCEPT_EULA: "Y"
-      #USER=SA
+      USER: SA
     ports:
       - "1433:1433"
     networks:
       - owf
-
-####################################################
-
-  oracledb:
-    image: "store/oracle/database-enterprise:12.2.0.1-slim"
-    container_name: "oracledb"
-    restart: unless-stopped
-    ports:
-      - "1521:1521"
-    networks:
-      - owf
-
-  oracledb18c:
-    image: "oracle/database:18.3.0-ee"
-    container_name: "oracledb18c"
-    restart: unless-stopped
-    ports:
-      - "1521:1521"
-    networks:
-      - owf
-
-####################################################
 
 networks:
   owf:

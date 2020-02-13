@@ -4,6 +4,8 @@ import cx_Oracle
 import types
 import os
 import re
+import csv
+import json
 from .abstract import DatabaseAdapter
 
 
@@ -83,9 +85,12 @@ class OracleAdapter(DatabaseAdapter):
 
     def query(self, q: str, params=()):
         super().query(q, params)
-        executed = self.cursor.execute(q, params)
-        self.connection.commit()
-        return executed
+        try:
+            executed = self.cursor.execute(q, params)
+            self.connection.commit()
+            return executed
+        except Exception as e:
+            print(e)
 
     def column_exists(self, table_name, column_name):
         self.query("""
@@ -140,14 +145,87 @@ class OracleAdapter(DatabaseAdapter):
             SELECT JSON_ARRAYAGG( JSON_OBJECT( {columns} ) returning clob ) AS dataset FROM {table_name}
         """.format(columns=columns, table_name=table_name.upper()))
 
-        clob = self.fetchone()[0]
-        results = clob.read()
-        if isinstance(transformer, types.FunctionType):
-            results = transformer(results)
-        return results
+        for i in schema:
+            if i['data_type'] == "LONG":
+                self.csv_gen(table_name=table_name)
+                # csv_gen(table_name=table_name, user=self.params['user'], password=self.params['password'],
+                #         host=self.params['host'], database=self.params['database'], port=self.params['port'])
+                self.csv_json(schema=schema,
+                              csv_file_path=f"./migration_result/oracle_{self.params['database']}/{table_name.lower()}.csv",
+                              json_file_path=f"./migration_result/oracle_{self.params['database']}/{table_name.lower()}.json"
+                              )
+                os.remove(f"./migration_result/oracle_{self.params['database']}/{table_name.lower()}.csv")
+
+        try:
+            clob = self.cursor.fetchone()[0]
+            results = clob.read()
+            if isinstance(transformer, types.FunctionType):
+                results = transformer(results)
+            return results
+        except Exception as e:
+            print(e)
+            # Insert function here for dashboards
+            self.csv_gen(table_name=table_name)
+            # csv_gen(table_name=table_name, user=self.params['user'], password=self.params['password'],
+            #         host=self.params['host'], database=self.params['database'], port=self.params['port'])
+            self.csv_json(schema=schema,
+                          csv_file_path=f"./migration_result/oracle_{self.params['database']}/{table_name.lower()}.csv",
+                          json_file_path=f"./migration_result/oracle_{self.params['database']}/{table_name.lower()}.json")
+            os.remove(f"./migration_result/oracle_{self.params['database']}/{table_name.lower()}.csv")
 
     def fetchone(self):
         return self.cursor.fetchone()
 
     def fetchall(self):
         return self.cursor.fetchall()
+
+    def csv_gen(self, table_name):
+        # db = cx_Oracle.connect(f'{user}/{password}@{host}:{port}/{database}')
+        # cursor = db.cursor()
+        SQL = f"SELECT * FROM {table_name}"
+        self.cursor.execute(SQL)
+
+        # Extract headers from cursor.description:
+        headers = [i[0] for i in self.cursor.description]
+
+        # Open a file for writing, and create a csv.writer instance:
+
+        with open(f"./migration_result/oracle_{self.params['database']}/{table_name.lower()}.csv", "w") as f:
+            fcsv = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
+
+            # Write header row, then write the rest of the data:
+            fcsv.writerow(headers)
+            for record in self.cursor:
+                fcsv.writerow(record)
+
+        assert f.closed
+
+    @staticmethod
+    def lower_dict_key(d):
+        new_dict = dict((k.lower(), v) for k, v in d.items())
+        return new_dict
+
+    def csv_json(self, schema, csv_file_path, json_file_path):
+        arr = []
+        with open(csv_file_path) as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            data = {}
+            for rows in csv_reader:
+                data = rows
+                arr.append(data)
+
+        transform_arr = []
+        with open(json_file_path, 'w') as json_file:
+            for item in arr:
+                low_key = self.lower_dict_key(item)
+                for i in schema:
+                    var = i['column_name'].lower()
+                    if var in low_key.keys() and i["data_type"] == "NUMBER" and low_key[var] is not '':
+                        low_key[var] = int(low_key[var])
+                    elif var in low_key.keys() and i["data_type"] == "NUMBER" and low_key[var] is '':
+                        low_key[var] = None
+                    elif var in low_key.keys() and low_key[var] is '' and i["nullable"] == "Y":
+                        low_key[var] = None
+
+                transform_arr.append(low_key)
+            json_file.write(json.dumps(transform_arr, indent=4))

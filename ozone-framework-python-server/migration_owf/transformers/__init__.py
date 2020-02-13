@@ -48,12 +48,20 @@ def import_transform(data_set, table_name, target_db, **kwargs):
 
         # some values might be null from testing source db
         # fix and assign default value to those.
-        if target_db.get_db_adapter_name().lower() in ('oracle', 'mssql') and table_name == 'person':
-            if k in ('last_login', 'prev_login', 'last_notification'):
+        if target_db.get_db_adapter_name().lower() in ('mssql',) and table_name == 'person':
+            if k.lower() in ('last_login', 'prev_login', 'last_notification'):
                 if results[k] is None:
                     results[k] = datetime.now(timezone.utc)
 
         # Oracle - convert date strings to datetime instances.
+        if target_db.get_db_adapter_name().lower() in ('oracle',) and table_name == 'owf_group' and k == 'stack_id':
+            del results[k]
+
+        if target_db.get_db_adapter_name().lower() in ('oracle',) and table_name == 'person':
+            if k.lower() in ('last_login', 'prev_login', 'last_notification'):
+                if results[k] is None:
+                    results[k] = str(datetime.now(timezone.utc))
+
         if target_db.get_db_adapter_name().lower() in ('oracle',):
             if (k.endswith('_date') or k.startswith('prev_') or k.startswith('last_')) and results[k]:
                 results[k] = utils.convert_string_to_time(results[k], 'UTC')
