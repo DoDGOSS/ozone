@@ -2,8 +2,8 @@
 // Metadata:
 :doctype: book
 :author: DOD GOSS
-:revnumber: 8.0.0.0-GA
-:revdate: 2019-12-31
+:revnumber: 8.0.0.1-RC1
+:revdate: 2020-02-13
 // Settings:
 :reproducible:
 :experimental:
@@ -19,6 +19,14 @@
 == Publication & Revision History
 
 include::revision_history.asciidoc[]
+
+:leveloffset: +1'
+
+include::v8.0.0.1/8.0.0.1.asciidoc[]
+
+:leveloffset: +1'
+
+include::v8.0.0.0/8.0.0.0.asciidoc[]
 
 :leveloffset: +1
 

@@ -1,0 +1,21 @@
+= v8.0.0.0
+
+== Installation Information
+
+Directions on how to install OZONE Widget Framework are found in the Configuration Guide for OWF.
+
+
+== Upgrade Information
+
+Upgrading:
+* Please see Ozone Configuration Guide for details (`ozone-documents/Ozone Configuration Guide`)
+
+== Change Log
+
+:leveloffset: +2
+
+include::8.0.0.1_changelog.asciidoc[]
+
+
+:leveloffset: -2
+

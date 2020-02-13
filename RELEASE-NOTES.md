@@ -1,6 +1,17 @@
 # Release Notes
 All notable changes to this project will be documented in this file.
 
+## [OWF 8.0.0.1-RC1] - 2020-02-13
+
+Backend:
+* Add migration support for Oracle database
+* Add two new example widgets
+
+General: 
+* Documentation improvements
+* Improve bundle creation script (build.sh)
+
+
 ## [OWF 8.0.0.0-GA] - 2020-01-13
 
 Backend:

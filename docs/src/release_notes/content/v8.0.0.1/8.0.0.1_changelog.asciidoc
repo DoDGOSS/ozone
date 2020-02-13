@@ -1,0 +1,11 @@
+= v8.0.0.1
+
+*General*
+
+* Documentation improvements
+* Improve bundle creation script (build.sh)
+
+*Backend:*
+
+* Add migration support for Oracle database
+* Add two new example widgets

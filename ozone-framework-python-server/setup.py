@@ -18,7 +18,7 @@ class CleanCommand(Command):
 
 setup(
     name='OZONE',
-    version='v8.0.0.0-GA',
+    version='v8.0.0.1-RC1',
     description="OZONE Framework",
     # TODO: eventually use find_packages() from setuptools, when the project is organized with a better structure.
     packages=[
