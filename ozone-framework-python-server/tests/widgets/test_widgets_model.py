@@ -71,9 +71,9 @@ class WidgetModelTests(TestCase):
 
         self.assertEqual(intent_send.count(), 2)
         self.assertEqual(intent_receive.count(), 2)
-        self.assertEqual(IntentDataTypes.objects.count(), 3)
-        self.assertEqual(WidgetDefIntent.objects.count(), 4)
-        self.assertEqual(WidgetDefIntentDataTypes.objects.count(), 6)
+        self.assertEqual(IntentDataTypes.objects.count(), 4)
+        self.assertEqual(WidgetDefIntent.objects.count(), 6)
+        self.assertEqual(WidgetDefIntentDataTypes.objects.count(), 8)
 
         self.assertIn('act', intent_send.values_list('intent__action', flat=True))
         self.assertIn('act', intent_receive.values_list('intent__action', flat=True))

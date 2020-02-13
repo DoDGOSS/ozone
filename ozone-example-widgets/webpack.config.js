@@ -20,6 +20,8 @@ const HTML_TEMPLATES = [
     htmlTemplate("src/widgets/color-server/index.html", "color_server.html"),
     htmlTemplate("src/widgets/preferences/index.html", "preferences.html"),
     htmlTemplate("src/widgets/widget-search/index.html", "widget_search.html"),
+    htmlTemplate("src/widgets/mapping-client/index.html", "mapping_client.html"),
+
 ];
 
 const STATS_OPTIONS = {
@@ -83,7 +85,11 @@ module.exports = {
         widget_search: [
             "react-hot-loader/patch",
             path.join(__dirname, "/src/widgets/widget-search/index.tsx")
-        ]
+        ],
+        mapping_client: [
+            "react-hot-loader/patch",
+            path.join(__dirname, "/src/widgets/mapping-client/index.tsx")
+        ],
     },
 
     output: {

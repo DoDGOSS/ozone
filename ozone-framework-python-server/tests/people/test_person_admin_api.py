@@ -55,7 +55,7 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
         response = requests.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 17)
+        self.assertEqual(response.data['count'], 21)
         requests.logout()
 
     def test_admin_detail_person_widget(self):
@@ -85,7 +85,7 @@ class PersonWidgetDefinitionAdminApiTests(TestCase):
         response = requests.get(filter_url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['count'], 11)
+        self.assertEqual(response.data['count'], 13)
 
         # Non existing group_people entry
         filter_url = f'{url}?person=3'

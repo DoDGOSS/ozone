@@ -1,0 +1,22 @@
+.app {
+  padding: .5em;
+
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.color-box {
+  border: 1px solid #666;
+  border-radius: 2em;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-grow {
+  flex: 1 0 auto;
+}
