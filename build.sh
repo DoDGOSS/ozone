@@ -44,25 +44,25 @@ cp -r ./docs/build/*.pdf ./dist/ozone-documentation
 
 # TODO: make the zip name configurable
 pushd ./dist/
-rm -rf OZONE-v8.0.0.0-GA
-unzip OZONE-v8.0.0.0-GA.zip
+rm -rf OZONE-8.0.0.1rc1
+unzip OZONE-8.0.0.1rc1.zip
 
 # Copy required files
-mv ./ozone-documentation ./OZONE-v8.0.0.0-GA/ozone-documentation
-cp ../aml_ozone_patch.zip ../esri-1.4.31.war ../RELEASE-NOTES.md ../LICENSE OZONE-v8.0.0.0-GA/
-cp ../ozone-framework-python-server/.env  OZONE-v8.0.0.0-GA/
+mv ./ozone-documentation ./OZONE-8.0.0.1rc1/ozone-documentation
+cp ../aml_ozone_patch.zip ../esri-1.4.31.war ../RELEASE-NOTES.md ../LICENSE OZONE-8.0.0.1rc1/
+cp ../ozone-framework-python-server/.env  OZONE-8.0.0.1rc1/
 # TODO: Add docker files if built in different node environment
-cp ../ozone-framework-python-server/bundle_config/*  OZONE-v8.0.0.0-GA/
+cp ../ozone-framework-python-server/bundle_config/*  OZONE-8.0.0.1rc1/
 
 # Modify .env file for bundle
 # TODO: improve to not be hardcoded
-pushd OZONE-v8.0.0.0-GA
+pushd OZONE-8.0.0.1rc1
 sed 's/django.db.backends.postgresql/django.db.backends.sqlite3/g' -i .env
 sed 's/OWF_DB_NAME=postgres/OWF_DB_NAME=owf_db/g' -i .env
 popd
 
 # Clean up and re-zip
-rm OZONE-v8.0.0.0-GA.zip
+rm OZONE-8.0.0.1rc1.zip
 
 # Note requires zip installed - this step may require someone to manually zip folder if this package is not installed
-zip -r OZONE-v8.0.0.0-GA.zip .
+zip -r OZONE-8.0.0.1rc1.zip .
