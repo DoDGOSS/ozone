@@ -9,7 +9,7 @@ import { DashboardCreateOpts, userDashboardApi, UserDashboardAPI } from "../api/
 import { dashboardApi, DashboardAPI } from "../api/clients/DashboardAPI";
 import { stackApi } from "../api/clients/StackAPI";
 
-import { Dashboard, EMPTY_DASHBOARD } from "../models/Dashboard";
+import { Dashboard, DashboardLayout, EMPTY_DASHBOARD } from "../models/Dashboard";
 import { UserWidget } from "../models/UserWidget";
 import { StackCreateRequest } from "../api/models/StackDTO";
 
@@ -64,8 +64,6 @@ export class DashboardStore {
 
     fetchUserDashboards = async (newCurrentDashGuid?: string | any) => {
         this.isLoading$.next(true);
-
-        // TODO --- TEMPORARY TEST
 
         let response = await this.userDashboardApi.getOwnDashboards();
 
@@ -123,6 +121,24 @@ export class DashboardStore {
         }
         const createdDashboard = response.data;
         await this.fetchUserDashboards(createdDashboard.guid);
+        return createdDashboard;
+    };
+
+    createSpecificDashboardFromStore = async (dashboard: Dashboard, layoutConfig: DashboardLayout, stackId: number) => {
+        const opts: DashboardCreateOpts = {
+            name: dashboard.name,
+            tree: layoutConfig.tree,
+            panels: layoutConfig.panels,
+            backgroundWidgets: layoutConfig.backgroundWidgets,
+            stackId: stackId
+        };
+        // This function is only called when importing a dashboard from a store of some type.  Thus it is always published.
+        const publish: boolean = true;
+        const response = await this.userDashboardApi.createDashboard(opts, dashboard.guid, publish);
+        if (!(response.status >= 200 && response.status < 400)) {
+            throw new Error("Failed to create new dashboard");
+        }
+        const createdDashboard = response.data;
         return createdDashboard;
     };
 

@@ -33,6 +33,10 @@ class Stack(models.Model):
     def save(self, *args, **kwargs):
         # Version saver for incrementing as time
         self.version = int(time.time())
+
+        if not self.stack_context:
+            self.stack_context = uuid.uuid4()
+
         super(Stack, self).save(*args, **kwargs)
 
     def add_dashboard(self, user, kwargs):
@@ -42,6 +46,8 @@ class Stack(models.Model):
             **kwargs)
         DomainMapping.create_group_dashboard_mapping(self.default_group, new_group_dashboard)
 
+        if 'guid' in kwargs.keys():
+            kwargs.pop('guid')
         new_user_dashboard = Dashboard.objects.create(
             stack=self,
             user=user,

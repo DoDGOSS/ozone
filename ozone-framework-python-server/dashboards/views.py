@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .permissions import IsStackOwner
 from .models import Dashboard
 from .serializers import DashboardBaseSerializer
@@ -43,3 +43,11 @@ class DashboardViewSet(viewsets.ModelViewSet):
 
         serialized_dashboard = DashboardBaseSerializer(dashboard)
         return Response(serialized_dashboard.data)
+
+
+class DashboardAdminViewSet(viewsets.ModelViewSet):
+    queryset = Dashboard.objects.all()
+    serializer_class = DashboardBaseSerializer
+    permission_classes = (IsAdminUser,)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['guid', ]

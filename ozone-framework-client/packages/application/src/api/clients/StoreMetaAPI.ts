@@ -37,18 +37,13 @@ export class StoreMetaAPI {
         // If the store does not have the proper listings for Ozone to interact when the store is added, attempt to add them.
         const missingListings = await this.findMissingListings(storeBackUrl);
         if (store && missingListings && missingListings.length > 0) {
-            // We would need to add the missing listing types.
-            // console.log("Need to add missing listing types.");
             if (this.addMissingListingsToStore(storeBackUrl, missingListings)) {
-                // Positive result means we have added the listing types we needed.
-                // console.log("Successfully Added Necessary Listing Types to AML Store.");
+                // Positive result means we have added the listing types we needed. Probably do not need a Toast Notification.
             } else {
-                // Negative result indicates there was a problem of some kind adding the listing types.
-                // console.log("Failed to add necessary listing types to AML store.");
+                // Negative result indicates there was a problem of some kind adding the listing types. Probably do not need a Toast Notification.
             }
         } else {
-            // The store already has all of the listing types needed for Ozone.
-            // console.log("Store has all of the correct listing types.");
+            // The store already has all of the listing types needed for Ozone. Probably do not need a Toast Notification.
         }
 
         return store;
@@ -136,13 +131,7 @@ export class StoreMetaAPI {
         storeBackUrl: string,
         maybeAMLstoreData: { data: string }
     ): Promise<Widget | undefined> {
-        console.log(storeFrontUrl);
-        console.log(storeBackUrl);
-        console.log(maybeAMLstoreData);
-
         const store = await this.createAmlStoreWidget(storeFrontUrl, storeBackUrl);
-        console.log(store);
-
         return store;
     }
 

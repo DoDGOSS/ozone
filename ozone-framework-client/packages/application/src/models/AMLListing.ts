@@ -26,7 +26,7 @@ export class AMLListingProps {
     title: string;
     description: string;
     launch_url: string;
-    version_name: string;
+    version_name: any;
     unique_name: string;
     description_short?: string;
     is_enabled: boolean;

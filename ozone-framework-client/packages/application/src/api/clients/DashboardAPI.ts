@@ -1,7 +1,4 @@
-import { isNil } from "lodash";
-
 import { Gateway, getGateway, ListOf, Response } from "../interfaces";
-
 import {
     DashboardDTO,
     DashboardUpdateRequest,
@@ -28,6 +25,10 @@ export class DashboardAPI {
 
     async getDashboardByGuid(dashboardGuid: string): Promise<Response<DashboardDTO>> {
         return this.gateway.get(`dashboards/?guid=${dashboardGuid}`);
+    }
+
+    async getDashboardByGuidAsAdmin(dashboardGuid: string): Promise<Response<any>> {
+        return this.gateway.get(`admin/dashboards/?guid=${dashboardGuid}`);
     }
 
     async restoreDashboard(data: DashboardUpdateRequest): Promise<Response<DashboardDTO>> {

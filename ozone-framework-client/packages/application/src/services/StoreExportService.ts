@@ -22,9 +22,9 @@ export interface InfractingItemUrl {
 
 class StoreExportService {
     async uploadStack(stackID: any, store: Widget): Promise<void> {
-        // Taking input of stackID instead of actual stack means they'll need to save any changes before
-        // pushing their current stack, else those changes won't get pushed.
-        // Do that automatically, or show notification.
+        /* Taking input of stackID instead of actual stack means they'll need to save any changes before
+           pushing their current stack, else those changes won't get pushed.
+           Do that automatically, or show notification. */
         const allUserStacks = dashboardStore.userDashboards().value.stacks;
         const stack = allUserStacks[stackID];
 
@@ -45,14 +45,17 @@ class StoreExportService {
             });
         }
 
+        /* The following check is currently disabled as we can identify a number of use cases where users might push up 
+           a widget that necessarily refers to local resources on purpose. */
+
         // check that all urls are fully-qualified.
         // Stores are remote, and so can't use local urls.
-        if (!this.stackUrlsValid(stack)) {
-            console.log("Attempted to push a Stack with invalid URLs.");
-            return new Promise(() => {
-                return;
-            });
-        }
+        // if (!this.stackUrlsValid(stack)) {
+        //     console.log("Attempted to push a Stack with invalid URLs.");
+        //     return new Promise(() => {
+        //         return;
+        //     });
+        // }
 
         this.checkStoreAndUploadStack(stack, store);
     }

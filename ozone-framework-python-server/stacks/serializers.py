@@ -41,7 +41,7 @@ class StackSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Stack
-        read_only_fields = ('version', 'stack_context', 'owner')
+        read_only_fields = ('version', 'owner')
         extra_kwargs = {'name': {'required': True}}
         fields = '__all__'
 
