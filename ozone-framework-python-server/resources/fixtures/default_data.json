@@ -180,6 +180,54 @@
     }
 },
 {
+    "model": "domain_mappings.domainmapping",
+    "pk": 23,
+    "fields": {
+        "version": 1581456055,
+        "src_id": 1,
+        "src_type": "group",
+        "relationship_type": "owns",
+        "dest_id": 12,
+        "dest_type": "widget_definition"
+    }
+},
+{
+    "model": "domain_mappings.domainmapping",
+    "pk": 24,
+    "fields": {
+        "version": 1581456412,
+        "src_id": 1,
+        "src_type": "group",
+        "relationship_type": "owns",
+        "dest_id": 13,
+        "dest_type": "widget_definition"
+    }
+},
+{
+    "model": "intents.intent",
+    "pk": 1,
+    "fields": {
+        "version": 1581452033,
+        "action": "iss"
+    }
+},
+{
+    "model": "intents.intentdatatype",
+    "pk": 1,
+    "fields": {
+        "version": 1581452062,
+        "data_type": "application/json"
+    }
+},
+{
+    "model": "intents.intentdatatypes",
+    "pk": 1,
+    "fields": {
+        "intent_data_type": 1,
+        "intent": 1
+    }
+},
+{
     "model": "owf_groups.owfgroup",
     "pk": 1,
     "fields": {
@@ -582,6 +630,78 @@
     }
 },
 {
+    "model": "people.personwidgetdefinition",
+    "pk": 24,
+    "fields": {
+        "version": 1581456419,
+        "person": [
+            "admin@goss.com"
+        ],
+        "visible": true,
+        "pwd_position": null,
+        "widget_definition": 12,
+        "group_widget": true,
+        "favorite": null,
+        "display_name": null,
+        "disabled": null,
+        "user_widget": true
+    }
+},
+{
+    "model": "people.personwidgetdefinition",
+    "pk": 25,
+    "fields": {
+        "version": 1581456656,
+        "person": [
+            "user@goss.com"
+        ],
+        "visible": true,
+        "pwd_position": null,
+        "widget_definition": 12,
+        "group_widget": true,
+        "favorite": null,
+        "display_name": null,
+        "disabled": null,
+        "user_widget": true
+    }
+},
+{
+    "model": "people.personwidgetdefinition",
+    "pk": 26,
+    "fields": {
+        "version": 1581456656,
+        "person": [
+            "user@goss.com"
+        ],
+        "visible": true,
+        "pwd_position": null,
+        "widget_definition": 13,
+        "group_widget": true,
+        "favorite": null,
+        "display_name": null,
+        "disabled": null,
+        "user_widget": true
+    }
+},
+{
+    "model": "people.personwidgetdefinition",
+    "pk": 27,
+    "fields": {
+        "version": 1581456419,
+        "person": [
+            "admin@goss.com"
+        ],
+        "visible": true,
+        "pwd_position": null,
+        "widget_definition": 13,
+        "group_widget": true,
+        "favorite": null,
+        "display_name": null,
+        "disabled": null,
+        "user_widget": true
+    }
+},
+{
     "model": "roles.role",
     "pk": 1,
     "fields": {
@@ -923,6 +1043,97 @@
     }
 },
 {
+    "model": "widgets.widgetdefinition",
+    "pk": 12,
+    "fields": {
+        "version": 1581456033,
+        "visible": true,
+        "image_url_medium": "static/images/widget-icons/MappingControler.svg",
+        "image_url_small": "static/images/widget-icons/MappingControler.svg",
+        "singleton": false,
+        "width": 200,
+        "widget_version": "1581455989",
+        "height": 200,
+        "widget_url": "http://localhost:4000/MappingSender.html",
+        "widget_guid": "551b3954-ff02-4ff8-90e4-1860e5e5cc52",
+        "display_name": "Mapping Sender",
+        "background": false,
+        "universal_name": "org.ozoneplatform.owf.examples.MappingSender",
+        "descriptor_url": null,
+        "description": "Mapping Sender Widget Sends Intent For Mapping",
+        "mobile_ready": false
+    }
+},
+{
+    "model": "widgets.widgetdefinition",
+    "pk": 13,
+    "fields": {
+        "version": 1581456394,
+        "visible": true,
+        "image_url_medium": "static/images/widget-icons/Rocket.svg",
+        "image_url_small": "static/images/widget-icons/Rocket.svg",
+        "singleton": false,
+        "width": 200,
+        "widget_version": "1581456371",
+        "height": 200,
+        "widget_url": "http://localhost:4000/mapping_client.html",
+        "widget_guid": "60caa9e6-4caf-4ab3-8251-290eacec0249",
+        "display_name": "Mapping Client",
+        "background": false,
+        "universal_name": "org.owfgoss.owf.examples.MappingClient",
+        "descriptor_url": null,
+        "description": "Mapping Widget For Plotting Mapping Sender",
+        "mobile_ready": false
+    }
+},
+{
+    "model": "widgets.widgetdefintent",
+    "pk": 1,
+    "fields": {
+        "version": 1581456033,
+        "receive": false,
+        "send": true,
+        "intent": 1,
+        "widget_definition": 12
+    }
+},
+{
+    "model": "widgets.widgetdefintent",
+    "pk": 2,
+    "fields": {
+        "version": 1581456394,
+        "receive": true,
+        "send": false,
+        "intent": 1,
+        "widget_definition": 13
+    }
+},
+{
+    "model": "widgets.widgetdefintentdatatypes",
+    "pk": 1,
+    "fields": {
+        "intent_data_type": 1,
+        "widget_definition_intent": 1
+    }
+},
+{
+    "model": "widgets.widgetdefintentdatatypes",
+    "pk": 2,
+    "fields": {
+        "intent_data_type": 1,
+        "widget_definition_intent": 2
+    }
+},
+{
+    "model": "widgets.widgettype",
+    "pk": 2,
+    "fields": {
+        "version": 1571152465,
+        "name": "administration",
+        "display_name": "administration"
+    }
+},
+{
     "model": "widgets.widgetdefinitionwidgettypes",
     "pk": 1,
     "fields": {
@@ -1008,6 +1219,22 @@
     "fields": {
         "widget_definition": 5,
         "widget_type": 2
+    }
+},
+{
+    "model": "widgets.widgetdefinitionwidgettypes",
+    "pk": 17,
+    "fields": {
+        "widget_definition": 12,
+        "widget_type": 3
+    }
+},
+{
+    "model": "widgets.widgetdefinitionwidgettypes",
+    "pk": 19,
+    "fields": {
+        "widget_definition": 13,
+        "widget_type": 3
     }
 },
 {

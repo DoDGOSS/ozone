@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    html,body{background-color:#2b2a2a;}
+
+.container {
+  width: 200px;
+  height: 100%;
+  margin: 0 auto 0;
+}
+
+.pulse-button {
+
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border: none;
+  box-shadow: 0 0 0 0 rgba(232, 76, 61, 0.7);
+  border-radius: 50%;
+  background-color: #e4e5e8;
+  background-image: url(owf.svg);
+  background-size:cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  -webkit-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+  -moz-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+  -ms-animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+  animation: pulse 1.25s infinite cubic-bezier(0.66, 0, 0, 1);
+    outline: none;
+}
+.pulse-button:hover
+{
+  -webkit-animation: none;-moz-animation: none;-ms-animation: none;animation: none;
+}
+
+@-webkit-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
+@-moz-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
+@-ms-keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
+@keyframes pulse {to {box-shadow: 0 0 0 45px rgba(232, 76, 61, 0);}}
+</style>
+<head>
+    <meta charset="utf-8"/>
+    <title>Mapping Sender</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript" src="./owf-widget.js"></script>
+    <script type="text/javascript" src="./MappingSender.js"></script>
+
+</head>
+<div align="center" style="margin-top:70px;">
+<div class="container">
+    <button class="pulse-button" id="send" type="button" onclick="sendLocation()"></button>
+</div>
+</div>
+
+
+<div align="center"
+     style=" padding:5px; color:#ffffff; font-weight:300; font-size:30px; font-family:'Roboto';padding-top:20px;">
+    Click The Ship
+</div>
+<a style="text-decoration:none;" target="parent">
+    <div align="center" style="  color:#ffffff; font-weight:300; font-size:20px; font-family:'Roboto';">
+        International Space Ship Tracker
+    </div></a>
+</html>
