@@ -96,3 +96,4 @@ $RECYCLE.BIN/
 
 config/staticfiles/
 webpack-stats.json
+appconf/inactive_users.txt
