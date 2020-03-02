@@ -56,9 +56,15 @@ cp ../ozone-framework-python-server/bundle_config/*  OZONE-8.0.0.1rc1/
 
 # Modify .env file for bundle
 # TODO: improve to not be hardcoded
-pushd OZONE-8.0.0.1rc1
-sed 's/django.db.backends.postgresql/django.db.backends.sqlite3/g' -i .env
-sed 's/OWF_DB_NAME=postgres/OWF_DB_NAME=owf_db/g' -i .env
+pushd OZONE-8.0.0.1rc1/
+if [[ "$OSTYPE" == "darwin"* ]];
+then
+  sed -i "" "s/django.db.backends.postgresql/django.db.backends.sqlite3/g" .env
+  sed -i "" 's/OWF_DB_NAME=postgres/OWF_DB_NAME=owf_db/g' .env
+else
+  sed 's/django.db.backends.postgresql/django.db.backends.sqlite3/g' -i .env
+  sed 's/OWF_DB_NAME=postgres/OWF_DB_NAME=owf_db/g' -i .env
+fi
 popd
 
 # Clean up and re-zip
