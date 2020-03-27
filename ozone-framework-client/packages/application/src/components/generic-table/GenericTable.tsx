@@ -1,5 +1,5 @@
 import React from "react";
-import Measure from "react-measure";
+// import Measure from "react-measure";
 import { InputGroup } from "@blueprintjs/core";
 
 // @ts-ignore
@@ -93,16 +93,17 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
 
     render() {
         return (
-            <Measure
-                bounds
-                onResize={(contentRect) => {
-                    if (contentRect.bounds && this.state.dimensions.width !== contentRect.bounds.width) {
-                        this.setState({ dimensions: contentRect.bounds });
-                    }
-                }}
-            >
-                {({ measureRef }) => (
-                    <div ref={measureRef}>
+            // <Measure
+            //     bounds
+            //     onResize={(contentRect) => {
+            //         if (contentRect.bounds && this.state.dimensions.width !== contentRect.bounds.width) {
+            //             this.setState({ dimensions: contentRect.bounds });
+            //         }
+            //     }}
+            // >
+            //     {({ measureRef }) => (
+            //         <div ref={measureRef}>
+                      <div>
                         {this.filterable && this.getSearchBox()}
                         <div className={styles.table}>
                             <ReactTabulator
@@ -117,8 +118,8 @@ export class GenericTable<T> extends React.Component<Props<T>, State<T>> {
                             />
                         </div>
                     </div>
-                )}
-            </Measure>
+                // )}
+            // </Measure>
         );
     }
 
