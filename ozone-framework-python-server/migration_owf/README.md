@@ -335,7 +335,7 @@ and its migrations as well as load the data. For Django to run it will
 require a driver from Oracle
 (`https://oracle.github.io/odpi/doc/installation.html`). Once the driver
 is downloaded we can proceed to exporting the location of the drivers
-with `export LD_LIBRARY_PATH=~/Geocent/opt/oracle/instantclient_19_3:$LD_LIBRARY_PATH`.
+with `export LD_LIBRARY_PATH=~/path/opt/oracle/instantclient_19_3:$LD_LIBRARY_PATH`.
 
 * Modify the "DATABASE" setting in `config/base.py` Django will need the following as the database object:
 

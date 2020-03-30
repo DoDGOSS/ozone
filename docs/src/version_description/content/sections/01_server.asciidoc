@@ -5,8 +5,8 @@
 |===
 | Dependency | Version
 
-| Django | 2.2.8
-| waitress | 1.4.2
+| Django | 2.2.10
+| waitress | 1.4.3
 |===
 
 
