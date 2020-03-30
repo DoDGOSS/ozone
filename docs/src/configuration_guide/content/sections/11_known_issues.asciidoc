@@ -3,10 +3,7 @@
 
 == Backend
 
-* Upgrading (migration_owf scripts)
-    ** The migration script does not work for users upgrading from an Oracle database
-        *** This issue is related to a 4000 character limit that Oracle has in place. Presently the dashboards and preferences tables cause errors.
-        *** Note: There are no issues connecting to oracle database in the backend if no migration was required
+* Docker script for development sometimes fails when linking the postgres database to the ozone application.
 
 == Frontend
 

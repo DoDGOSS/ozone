@@ -40,7 +40,7 @@ Deploying a custom security warning requires modifications to one of the files i
 
 == Connecting to AML (Marketplace)
 
-In order to the connect AML Marketplace with {app-bundle}, you must modify the following files in your AML installation: +
+In order to the connect AML Marketplace (`https://github.com/aml-development/aml-backend` & `https://github.com/aml-development/frontend/tree/master/src/components/shared`) with {app-bundle}, you must modify/integrate the following provided files in your AML installation: +
 
     aml-backend\Makefile
     aml-frontend\webpack.dev.js

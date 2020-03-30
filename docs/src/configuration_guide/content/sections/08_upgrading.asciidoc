@@ -22,10 +22,13 @@ contains docker configurations for MYSQL, MSSQL, and POSTGRES databases as well 
 `pip install -r migration_owf/requirements.txt`
 
 ==== Install drivers
-You may need to install additional drivers to connect to a MSSQL database
+You may need to install additional drivers to connect to a MSSQL and Oracle database
 
 * Download Microsoft® ODBC Driver 17 for SQL Server
 ** https://www.microsoft.com/en-us/download/details.aspx?id=56567
+
+* Download the Oracle Driver here
+** https://oracle.github.io/odpi/doc/installation.html
 
 
 .Configure Django to set up initial tables on your desired database type

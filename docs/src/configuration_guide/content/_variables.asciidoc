@@ -1,4 +1,4 @@
-:app-bundle: OWF-8.0.0.0ga
+:app-bundle: OWF-8.x.x.x
 :prod-requirements-file: requirements_prod.txt
 :path-to-config: {app-bundle}/config/
 
